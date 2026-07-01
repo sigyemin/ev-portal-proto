@@ -7,6 +7,9 @@
 *.xlsx
 CHANGELOG*.md
 
+# 로컬 배포 스크립트 (사이트에 올리지 않음)
+배포하기.bat
+
 # OS 부산물
 Thumbs.db
 Desktop.ini
