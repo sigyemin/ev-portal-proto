@@ -50,10 +50,10 @@
 <main id="main">
   <section class="page-hero compact">
     <div class="container container-wide">
-      <nav class="breadcrumb">
-        <a href="index.html" data-i18n="info.bc.home">홈</a><span class="sep">›</span>
-        <a href="info.html" data-i18n="info.beginner.bc.lib">정보 자료실</a><span class="sep">›</span>
-        <span class="current" data-i18n="info.lib.bc.current">자료실</span>
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="info-regulation.html?tab=law">정보 자료실</a><span class="sep" aria-hidden="true">›</span>
+        <a href="info-library.html?tab=general">자료실</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" aria-current="page">일반 자료실</span>
       </nav>
       <h1 data-i18n="info.lib.h1">자료실</h1>
       <p class="hero-lead" data-i18n="info.lib.lead">각종 자료, 서식, 사용자 매뉴얼 등 업무에 필요한 자료를 통합 제공합니다.</p>
@@ -653,6 +653,17 @@
     location.href = 'request-write.html';
   });
   render();
+})();
+</script>
+<script>
+/* 브레드크럼 3뎁스 = 활성 탭 라벨 동기화 (탭 전환·언어변경 반영) */
+(function(){
+  var crumb=document.querySelector('.breadcrumb .current');
+  var g=document.querySelector('[data-tabs]');
+  if(!crumb||!g) return;
+  function sync(){var a=g.querySelector('.tab.active'); if(a){var s=(a.textContent||'').trim(); if(s) crumb.textContent=s;}}
+  new MutationObserver(sync).observe(g,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class']});
+  sync();
 })();
 </script>
 </body>

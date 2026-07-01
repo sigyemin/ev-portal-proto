@@ -215,10 +215,10 @@
 <main id="main">
   <section class="page-hero compact">
     <div class="container container-wide">
-      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
-        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging.html" data-i18n="charging.crumb.parent">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" data-i18n="charging.find.title">충전소 찾기</span>
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging-find.html?tab=map">충전소 찾기</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" aria-current="page">통합 지도 (전기+수소)</span>
       </nav>
       <h1 data-i18n="charging.find.title">충전소 찾기</h1>
       <p class="hero-lead" data-i18n-html="charging.find.lead">전기·수소 충전소를 하나의 지도에서 <strong>통합 검색</strong>하고, <strong>GPS 반경 1·5·10km</strong>·<strong>경로 기반 검색</strong>으로 최적의 충전소를 찾습니다.</p>
@@ -984,6 +984,17 @@
     b.addEventListener('click', function () { setNearMode(this.dataset.nearmode); });
   });
   setNearMode('ev');
+})();
+</script>
+<script>
+/* 브레드크럼 3뎁스 = 활성 탭 라벨 동기화 (탭 전환·언어변경 반영) */
+(function(){
+  var crumb=document.querySelector('.breadcrumb .current');
+  var g=document.querySelector('[data-tabs]');
+  if(!crumb||!g) return;
+  function sync(){var a=g.querySelector('.tab.active'); if(a){var s=(a.textContent||'').trim(); if(s) crumb.textContent=s;}}
+  new MutationObserver(sync).observe(g,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class']});
+  sync();
 })();
 </script>
 </body>

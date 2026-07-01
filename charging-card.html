@@ -45,7 +45,35 @@
   .st-normal{background:#e6f6ee;color:#0f7a44;} .st-ship{background:#e7f0fe;color:#1559c2;}
   .st-temp{background:#fff4e0;color:#a25b00;} .st-suspend{background:#fde7e7;color:#b5341f;}
   .st-lost{background:#fbe2e2;color:#a01b1b;} .st-cancel{background:#eef0f3;color:#8a93a0;}
+  .st-pay{background:#fdeede;color:#b5600a;} /* 미납정지 (신규) */
+  /* 상태 셀: 상태칩 + 이용가능/불가 USE 뱃지 + 발급 미니스텝 */
+  .st-cell{display:inline-flex;flex-direction:column;align-items:center;gap:4px;}
+  .use-badge{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:-.01em;padding:1px 7px;border-radius:6px;}
+  .use-ok{background:#e6f6ee;color:#0f7a44;} .use-no{background:#fce8e8;color:#b5341f;}
+  .cc-mini{display:flex;align-items:center;gap:3px;margin-top:2px;}
+  .cc-mini i{width:6px;height:6px;border-radius:50%;background:var(--border-medium);display:inline-block;}
+  .cc-mini i.on{background:var(--color-primary-500);}
+  .cc-mini small{font-size:10.5px;color:var(--text-tertiary);font-weight:600;margin-left:3px;}
   @media (max-width:880px){ .cch-wrap{overflow-x:auto;} .cch-list{min-width:860px;} }
+  /* 개발자용 카드상태 정의 노트 */
+  .cc-devnote{margin-top:16px;border:1px dashed var(--border-medium);border-radius:12px;background:var(--color-gray-50,#f7f8fa);}
+  .cc-devnote>summary{cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--text-secondary);list-style:none;user-select:none;}
+  .cc-devnote>summary::-webkit-details-marker{display:none;}
+  .cc-devnote>summary::before{content:'▸';margin-right:8px;color:var(--text-tertiary);}
+  .cc-devnote[open]>summary::before{content:'▾';}
+  .cc-devnote-body{padding:2px 16px 16px;font-size:12.5px;color:var(--text-secondary);line-height:1.7;}
+  .cc-devnote code{font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);font-size:11.5px;background:#eef1f4;color:#334;padding:1px 5px;border-radius:5px;}
+  .cc-devnote .ccd-lead{margin:6px 0 12px;}
+  .cc-devnote .ccd-axes{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin:0 0 12px;}
+  @media (max-width:720px){ .cc-devnote .ccd-axes{grid-template-columns:1fr;} }
+  .cc-devnote .ccd-axes>div{background:#fff;border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;}
+  .cc-devnote .ccd-todo{display:block;margin-top:4px;color:#b5600a;font-size:11.5px;}
+  .cc-devnote .ccd-tbl{width:100%;border-collapse:collapse;font-size:12px;margin:2px 0 12px;background:#fff;}
+  .cc-devnote .ccd-tbl th,.cc-devnote .ccd-tbl td{border:1px solid var(--border-light);padding:7px 9px;text-align:left;vertical-align:middle;}
+  .cc-devnote .ccd-tbl th{background:var(--color-gray-100);font-weight:700;color:var(--text-primary);white-space:nowrap;}
+  .cc-devnote .ccd-new{color:#b5600a;font-weight:800;font-size:11px;}
+  .cc-devnote .ccd-notes{margin:0;padding-left:18px;list-style:disc;}
+  .cc-devnote .ccd-notes li{margin:3px 0;}
 
   /* 모달 */
   .cc-modal-bd{position:fixed;inset:0;background:rgba(15,23,32,.46);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
@@ -85,10 +113,10 @@
 <main id="main">
   <section class="page-hero compact">
     <div class="container container-wide">
-      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
-        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging.html" data-i18n="charging.crumb.parent">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" data-i18n="charging.card.title">회원카드 관리</span>
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging-card.html?tab=mycard">회원카드 관리</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" aria-current="page">내 회원카드</span>
       </nav>
       <h1 data-i18n="charging.card.title">회원카드 관리</h1>
       <p class="hero-lead" data-i18n-html="charging.card.lead">내 보유 카드를 한 곳에서 — <strong>발급조회·정보수정·분실신고·재발급</strong>을 카드별로 처리합니다.</p>
@@ -156,7 +184,7 @@
             <div class="fld"><label for="mcType">카드유형</label>
               <select id="mcType"><option value="">전체</option><option>실물카드</option><option>모바일카드</option><option>실물카드(EV등록)</option></select></div>
             <div class="fld"><label for="mcStat">카드상태</label>
-              <select id="mcStat"><option value="">전체</option><option value="normal">정상</option><option value="ship">발급중</option><option value="suspend">일시정지</option><option value="lost">분실(정지)</option><option value="cancel">해지</option></select></div>
+              <select id="mcStat"><option value="">전체</option><option value="normal">정상</option><option value="ship">발급중</option><option value="suspend">일시정지</option><option value="pay">미납정지</option><option value="lost">분실(정지)</option><option value="cancel">해지</option></select></div>
             <div class="fld"><label for="mcPay">결제카드</label>
               <select id="mcPay"><option value="">전체</option><option value="y">등록</option><option value="n">미등록</option></select></div>
             <div class="fld grow"><label for="mcSearch">검색</label>
@@ -195,6 +223,41 @@
           <div class="alert-icon"></div>
           <div class="alert-body"><strong>차량번호 중복 안내</strong> 이미 다른 회원에게 발급된 차량번호로는 신규 발급이 제한됩니다(차량 1대당 1카드). 중복 시 발급이 불가하며, 자세한 사항은 한국자동차환경협회(1661-9408)로 문의해 주세요. <span style="color:var(--text-tertiary);">※ 예외차량(중복확인 면제)은 기관 관리 영역으로 본 화면에서 등록·노출되지 않습니다.</span></div>
         </div>
+
+        <!-- ===== 개발자용: 카드상태 정의 (레거시 2축 우선순위 판정) ===== -->
+        <details class="cc-devnote">
+          <summary>🛠 카드상태 정의 (개발자용) — 단일코드 아님, 2축 우선순위 판정</summary>
+          <div class="cc-devnote-body">
+            <p class="ccd-lead">표시 상태는 저장된 단일 상태코드가 아니라 <b>2축 플래그</b>를 <code>resolveStatus()</code>로 <b>위에서부터 먼저 매칭</b>해 결정합니다.</p>
+
+            <div class="ccd-axes">
+              <div><b>축1 · 발급진행</b> <code>issueStatCd</code><br>
+                <code>0001</code> 신청접수 → <code>0002</code> 발급(제작) → <code>0003</code> 발송(등기) → <code>0004</code> 수령완료 · <code>0005</code> 반려
+                <span class="ccd-todo">※ TODO: EVCS_CODE_DETAIL 확정 전 잠정 코드·라벨</span></div>
+              <div><b>축2 · 운영플래그</b> (Y/N)<br>
+                <code>delYn</code> 해지 · <code>lossYn</code> 분실 · <code>paymentYn</code> 미납 · <code>stopYn</code> 일시정지</div>
+            </div>
+
+            <table class="ccd-tbl">
+              <thead><tr><th>우선순위</th><th>판정 조건</th><th>표시 상태</th><th>USE</th><th>노출 액션</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td><code>delYn=Y</code></td><td><span class="st-chip st-cancel">해지</span></td><td>종료</td><td>발급조회</td></tr>
+                <tr><td>2</td><td><code>lossYn=Y</code></td><td><span class="st-chip st-lost">분실(정지)</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b> · 해지</td></tr>
+                <tr><td>3</td><td><code>paymentYn=Y</code> <span class="ccd-new">★신규</span></td><td><span class="st-chip st-pay">미납정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b> · 해지</td></tr>
+                <tr><td>4</td><td><code>stopYn=Y</code></td><td><span class="st-chip st-suspend">일시정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b> · 해지</td></tr>
+                <tr><td>5</td><td><code>issueStatCd ≠ 0004</code></td><td><span class="st-chip st-ship">발급중</span></td><td>단계표시</td><td>발급조회 · <b>분실신고</b> · 정보수정 · 해지</td></tr>
+                <tr><td>6</td><td>그 외 (수령완료·플래그 전부 N)</td><td><span class="st-chip st-normal">정상</span></td><td>이용가능</td><td>발급조회 · <b>분실신고</b> · 정보수정 · 해지</td></tr>
+              </tbody>
+            </table>
+
+            <ul class="ccd-notes">
+              <li><b>우선순위 예:</b> 분실·미납·정지 플래그가 동시에 Y여도 위 순서상 <b>분실</b>로 판정(분실 &gt; 미납 &gt; 정지).</li>
+              <li><b>USE 뱃지:</b> 정상=이용가능 / 분실·미납·정지=이용불가 / 해지=종료. <b>발급중</b>은 가·불가 대신 진행단계(●●●○) 표시. (레거시 <code>USE_YN=(LOSS_YN=N &amp; STOP_YN=N)</code>에 미납·해지 축 확장)</li>
+              <li><b>액션 매핑:</b> 발급조회=항상 · 분실신고=정상/발급중 · 정보수정=해지 아님 · 재발급=일시정지/미납/분실 · 해지=해지 아님.</li>
+              <li><b>상태 전이:</b> 분실신고→<code>lossYn='Y'</code>, 해지→<code>delYn='Y'</code> (단일 상태코드 재대입 없음).</li>
+            </ul>
+          </div>
+        </details>
       </div>
 
       <!-- ===== 이용요금·명세서 ===== -->
@@ -326,59 +389,109 @@
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
-/* ===== 회원카드 허브 — 리스트 + 카드별 액션 + 결제카드 일괄등록 (소스 기반) =====
-   소스(nevro app/card·payment) 코드 매핑:
-   · CARD_TYPE: C 실물카드 / M 모바일카드 / T 실물카드(EV등록)  (※소스 T=가상T-money → 사용자 정의 라벨)
-   · 카드상태(LOSS_YN/STOP_YN, cardStCd 00발급·01정상·90일시정지·99해지): 정상/발급중/일시정지/분실/해지
-   · 발급상태(CARD_ISSUE_STAT, EVCS_CODE_DETAIL, 신규기본 0001): 0001 신청접수→0002 카드제작→0003 발송→0004 수령완료, 0009 반려
-   · 발급사유(ISSUE_REASON, 0005=기타): 신규(신차)/신규(중고)/분실/파손/기타
-   · 결제카드 일괄등록: 결제수단(신용·체크)을 보유 회원카드에 일괄 등록(updateCardPayMethod).
-     단 '실물카드(EV등록=한전등록회원)'·'결제실패 내역 카드'는 제외(2번째 이미지 규칙). */
+/* ===== 회원카드 허브 — 리스트 + 카드별 액션 + 결제카드 일괄등록 (레거시 정합) =====
+   ── 상태모델: 단일코드(cardStCd) 폐기 → 레거시 2축(발급진행 + 운영플래그) 우선순위 판정.
+   [축1] 발급진행 issueStatCd (절차): 0001 신청접수 → 0002 발급(제작) → 0003 발송(등기) → 0004 수령완료
+        · TODO(EVCS_CODE_DETAIL 확보 전 잠정): 코드값/라벨 미확정. 0005=반려(예외)로 잠정 매핑. 수령완료(0004) 이전=발급중.
+   [축2] 운영플래그: delYn(해지) · lossYn(분실) · paymentYn(미납) · stopYn(일시정지)  ※Y/N
+   [표시상태] 아래 '우선순위'로 결정(레거시 CASE 정합) — 단일코드 재도입 금지:
+        1) delYn=Y     → 해지(종료)
+        2) lossYn=Y    → 분실(정지)·이용불가
+        3) paymentYn=Y → 미납정지·이용불가        ★신규 상태
+        4) stopYn=Y    → 일시정지·이용불가
+        5) issueStatCd 수령완료 전(≠0004) → 발급중(세부단계)
+        6) 그 외        → 정상·이용가능
+   [USE 뱃지] 레거시 USE_YN=(LOSS_YN=N & STOP_YN=N) 기준에 미납·해지 축 확장 → 정상만 이용가능.
+   · CARD_TYPE: C 실물카드 / M 모바일카드 / T 실물카드(EV등록)
+   · 발급사유(ISSUE_REASON, 0005=기타): 신규(신차)/신규(중고)/분실/파손/기타  ※TODO: 실코드 미확정
+   · 결제카드 일괄등록: '실물카드(EV등록=한전등록회원)'·'결제실패 내역 카드' 제외. */
 (function () {
   'use strict';
   function toast(m, t){ if (window.__toast) window.__toast(m, t||'info'); }
+  function isY(v){ return v==='Y'; }
 
-  // 카드상태 → {label, chip class}
-  var CARD_STAT = {
-    normal:  { label:'정상',       cls:'st-normal' },
-    ship:    { label:'발급중',     cls:'st-ship' },
-    suspend: { label:'일시정지',   cls:'st-suspend' },
-    lost:    { label:'분실(정지)', cls:'st-lost' },
-    cancel:  { label:'해지',       cls:'st-cancel' },
-    temp:    { label:'임시번호',   cls:'st-temp' }
+  // 표시상태 정의 (우선순위 판정 결과 → {label, chip class, usable})
+  var STATUS = {
+    cancel:  { label:'해지',       cls:'st-cancel',  usable:false },
+    lost:    { label:'분실(정지)', cls:'st-lost',    usable:false },
+    pay:     { label:'미납정지',   cls:'st-pay',     usable:false }, // ★신규
+    suspend: { label:'일시정지',   cls:'st-suspend', usable:false },
+    ship:    { label:'발급중',     cls:'st-ship',    usable:false }, // 수령 전 → 이용불가
+    normal:  { label:'정상',       cls:'st-normal',  usable:true  }
   };
-  // 발급상태(CARD_ISSUE_STAT) → {label, step(1~4·반려0)}
+  // 발급상태(issueStatCd) → {label, step(1~4·반려0)}  ※TODO: EVCS_CODE_DETAIL 확정 전 잠정 라벨
   var ISSUE_STAT = {
-    '0001': { label:'신청접수', step:1 },
-    '0002': { label:'카드제작', step:2 },
+    '0001': { label:'신청접수',   step:1 },
+    '0002': { label:'발급(제작)', step:2 },
     '0003': { label:'발송(등기)', step:3 },
-    '0004': { label:'수령완료', step:4 },
-    '0009': { label:'반려',     step:0 }
+    '0004': { label:'수령완료',   step:4 },
+    '0005': { label:'반려',       step:0 }  // TODO: 반려/예외 코드값 미확정
   };
-  var STEP_LABELS = ['신청접수','카드제작','발송','수령완료'];
+  var STEP_LABELS = ['신청접수','발급(제작)','발송(등기)','수령완료'];
+  var ISSUE_DONE = '0004'; // 수령완료
 
-  // 보유 카드(mock) — payCard/cardCorp/pointPay/kepco/payFail 추가, cardStat·issueStat 분리
+  // ── 우선순위 판정: 2축 플래그 → 표시상태 key (레거시 CASE 정합) ──
+  function resolveStatus(c){
+    if (isY(c.delYn))      return 'cancel';   // 1) 해지(종료)
+    if (isY(c.lossYn))     return 'lost';     // 2) 분실(정지)
+    if (isY(c.paymentYn))  return 'pay';      // 3) 미납정지 ★
+    if (isY(c.stopYn))     return 'suspend';  // 4) 일시정지
+    if (c.issueStatCd !== ISSUE_DONE) return 'ship'; // 5) 수령완료 전 → 발급중
+    return 'normal';                          // 6) 정상
+  }
+
+  // 보유 카드(mock) — 상태는 2축 플래그(issueStatCd + del/loss/payment/stopYn)로만 표현. 단일 상태코드 없음.
+  //   기본 플래그 N. 우선순위 판정(resolveStatus)으로 표시상태 결정.
   var CARDS = [
+    // 1) 정상 (모든 플래그 N, 수령완료)
     { cardNo:'EVCD-2024-0123-4567', cardType:'실물카드', carNo:'12가 3456', carNm:'아이오닉6',
       applyDate:'2024-03-05', issueDate:'2024-03-12', carNoApply:'12가 3456',
       reason:'신규(신차)', issueMethod:'등기배송', shipZip:'03175', shipAddr:'서울특별시 종로구 세종대로 209', reqName:'홍길동',
-      cardStat:'normal', issueStat:'0004', payCard:'****-****-****-1234', cardCorp:'신한카드', pointPay:true, kepco:false, payFail:false,
+      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
+      payCard:'****-****-****-1234', cardCorp:'신한카드', pointPay:true, kepco:false, payFail:false,
       stepDates:['2024-03-05','2024-03-08','2024-03-10','2024-03-12'] },
+    // 2) 발급중 (수령완료 전 0003 발송단계, 플래그 N)
     { cardNo:'EVCD-2026-0456-7788', cardType:'실물카드', carNo:'34나 5678', carNm:'EV6',
       applyDate:'2026-06-16', issueDate:'—', carNoApply:'34나 5678',
       reason:'신규(중고)', issueMethod:'등기배송', shipZip:'06236', shipAddr:'서울특별시 강남구 테헤란로 152', reqName:'홍길동',
-      cardStat:'ship', issueStat:'0003', payCard:'', cardCorp:'', pointPay:false, kepco:false, payFail:false,
+      issueStatCd:'0003', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
+      payCard:'', cardCorp:'', pointPay:false, kepco:false, payFail:false,
       stepDates:['2026-06-16','2026-06-18','2026-06-20','—'] },
+    // 3) 미납정지 ★신규 (paymentYn=Y, 수령완료) — 이용불가
     { cardNo:'EVCD-2025-0789-0011', cardType:'모바일카드', carNo:'78라 9012', carNm:'레이 EV',
       applyDate:'2025-09-01', issueDate:'2025-09-01', carNoApply:'78라 9012',
       reason:'신규(신차)', issueMethod:'모바일 즉시발급', shipZip:'—', shipAddr:'모바일 EV이음앱(NFC)', reqName:'홍길동',
-      cardStat:'normal', issueStat:'0004', payCard:'****-****-****-9012', cardCorp:'국민카드', pointPay:true, kepco:false, payFail:true,
+      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'Y', stopYn:'N',
+      payCard:'****-****-****-9012', cardCorp:'국민카드', pointPay:true, kepco:false, payFail:true,
       stepDates:['2025-09-01','2025-09-01','2025-09-01','2025-09-01'] },
+    // 4) 일시정지 (stopYn=Y) — 이용불가
+    { cardNo:'EVCD-2024-0640-1188', cardType:'실물카드', carNo:'56버 2200', carNm:'니로 EV',
+      applyDate:'2024-11-02', issueDate:'2024-11-09', carNoApply:'56버 2200',
+      reason:'신규(신차)', issueMethod:'등기배송', shipZip:'34123', shipAddr:'대전광역시 유성구 대학로 99', reqName:'홍길동',
+      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'Y',
+      payCard:'****-****-****-4455', cardCorp:'삼성카드', pointPay:false, kepco:false, payFail:false,
+      stepDates:['2024-11-02','2024-11-05','2024-11-07','2024-11-09'] },
+    // 5) 우선순위 검증: loss=Y & payment=Y & stop=Y (동시) → '분실'이 최우선으로 판정되어야 함
+    { cardNo:'EVCD-2023-0321-6543', cardType:'실물카드', carNo:'11주 7788', carNm:'아이오닉5',
+      applyDate:'2023-02-14', issueDate:'2023-02-21', carNoApply:'11주 7788',
+      reason:'신규(중고)', issueMethod:'등기배송', shipZip:'48058', shipAddr:'부산광역시 해운대구 센텀중앙로 55', reqName:'홍길동',
+      issueStatCd:'0004', delYn:'N', lossYn:'Y', paymentYn:'Y', stopYn:'Y',
+      payCard:'****-****-****-6677', cardCorp:'현대카드', pointPay:true, kepco:false, payFail:false,
+      stepDates:['2023-02-14','2023-02-17','2023-02-19','2023-02-21'] },
+    // 6) EV등록(한전) 정상 — 일괄등록 제외 대상(kepco)
     { cardNo:'EVCD-2023-0555-3322', cardType:'실물카드(EV등록)', carNo:'90마 1357', carNm:'코나 일렉트릭',
       applyDate:'2023-05-10', issueDate:'2023-05-18', carNoApply:'90마 1357',
       reason:'기타', issueMethod:'등기배송', shipZip:'13529', shipAddr:'경기도 성남시 분당구 판교로 242', reqName:'홍길동',
-      cardStat:'normal', issueStat:'0004', payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', pointPay:false, kepco:true, payFail:false,
-      stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] }
+      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
+      payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', pointPay:false, kepco:true, payFail:false,
+      stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] },
+    // 7) 해지 (delYn=Y) — 종료. 최우선 판정
+    { cardNo:'EVCD-2022-0910-2001', cardType:'실물카드', carNo:'42고 3030', carNm:'봉고3 EV',
+      applyDate:'2022-08-03', issueDate:'2022-08-11', carNoApply:'42고 3030',
+      reason:'기타', issueMethod:'등기배송', shipZip:'21554', shipAddr:'인천광역시 남동구 정각로 29', reqName:'홍길동',
+      issueStatCd:'0004', delYn:'Y', lossYn:'N', paymentYn:'N', stopYn:'N',
+      payCard:'', cardCorp:'', pointPay:false, kepco:false, payFail:false,
+      stepDates:['2022-08-03','2022-08-06','2022-08-08','2022-08-11'] }
   ];
 
   var body = document.getElementById('ccListBody');
@@ -390,7 +503,7 @@
     var ty=mcVal('mcType'), st=mcVal('mcStat'), pay=mcVal('mcPay'), q=(mcVal('mcSearch')||'').trim().toLowerCase();
     return CARDS.filter(function(c){
       if (ty && c.cardType!==ty) return false;
-      if (st && c.cardStat!==st) return false;
+      if (st && resolveStatus(c)!==st) return false;
       if (pay==='y' && !c.payCard) return false;
       if (pay==='n' && c.payCard) return false;
       if (q && (c.cardNo+' '+c.carNo+' '+c.carNm).toLowerCase().indexOf(q)<0) return false;
@@ -405,16 +518,31 @@
     if (!rows.length) { body.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 회원카드가 없습니다.</td></tr>'; return; }
     body.innerHTML = rows.map(function (c, di) {
       var i = CARDS.indexOf(c);
-      var s = CARD_STAT[c.cardStat] || { label:c.cardStat, cls:'st-cancel' };
+      var key = resolveStatus(c);
+      var s = STATUS[key] || STATUS.cancel;
+      // 액션 노출 조건 (§3, 판정된 표시상태 기준)
       var acts = [];
-      acts.push('<button class="btn btn-ghost btn-sm" data-act="check" data-i="'+i+'">발급조회</button>');
-      if (c.cardStat==='normal' || c.cardStat==='ship') acts.push('<button class="btn btn-ghost btn-sm" data-act="lost" data-i="'+i+'">분실신고</button>');
-      if (c.cardStat!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');
-      if (c.cardStat==='suspend' || c.cardStat==='lost') acts.push('<a class="btn btn-primary btn-sm" href="charging-card-apply.html?reason=lost">재발급</a>');
-      if (c.cardStat!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="cancel" data-i="'+i+'" style="color:var(--color-danger,#b5341f);">해지</button>');
+      acts.push('<button class="btn btn-ghost btn-sm" data-act="check" data-i="'+i+'">발급조회</button>');           // 항상
+      if (key==='normal' || key==='ship') acts.push('<button class="btn btn-ghost btn-sm" data-act="lost" data-i="'+i+'">분실신고</button>');     // 정상/발급중
+      if (key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');                       // 해지 아님
+      if (key==='suspend' || key==='pay' || key==='lost') acts.push('<a class="btn btn-primary btn-sm" href="charging-card-apply.html?reason=lost">재발급</a>'); // 일시정지/미납정지/분실
+      if (key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="cancel" data-i="'+i+'" style="color:var(--color-danger,#b5341f);">해지</button>'); // 해지 아님
       var payHtml = c.payCard
         ? '<strong style="color:var(--text-primary);">'+c.cardCorp+'</strong><br><small style="color:var(--text-tertiary);">'+c.payCard+'</small>'
         : '<span style="color:var(--color-danger,#b5341f);">미등록</span>';
+      // 카드상태 셀: 상태칩 + (발급중이면 미니스텝) + USE 뱃지
+      var info = ISSUE_STAT[c.issueStatCd] || { label:c.issueStatCd, step:0 };
+      var mini = '';
+      if (key==='ship') {
+        var dots = '';
+        for (var k=1;k<=4;k++) dots += '<i class="'+(k<=info.step?'on':'')+'"></i>';
+        mini = '<span class="cc-mini">'+dots+'<small>'+info.label+'</small></span>';
+      }
+      // USE 뱃지: 발급중은 진행단계로 대체(가/불가 미표기). 해지=종료. 그 외 정상=이용가능/그 외=이용불가.
+      var useBadge = '';
+      if (key==='cancel') useBadge = '<span class="use-badge use-no">종료</span>';
+      else if (key!=='ship') useBadge = '<span class="use-badge '+(s.usable?'use-ok':'use-no')+'">'+(s.usable?'이용가능':'이용불가')+'</span>';
+      var statCell = '<div class="st-cell"><span class="st-chip '+s.cls+'">'+s.label+'</span>'+mini+useBadge+'</div>';
       return '<tr>'
         + '<td>'+(di+1)+'</td>'
         + '<td class="cardno">'+c.cardNo+'</td>'
@@ -422,7 +550,7 @@
         + '<td><span class="carno">'+c.carNo+'</span><br><small style="color:var(--text-tertiary);">'+c.carNm+'</small></td>'
         + '<td>'+payHtml+'</td>'
         + '<td>'+(c.pointPay ? '<span class="st-chip st-normal">사용</span>' : '<span style="color:var(--text-tertiary);">미사용</span>')+'</td>'
-        + '<td><span class="st-chip '+s.cls+'">'+s.label+'</span></td>'
+        + '<td>'+statCell+'</td>'
         + '<td><div class="cch-acts">'+acts.join('')+'</div></td>'
         + '</tr>';
     }).join('');
@@ -450,9 +578,9 @@
 
   /* ── 발급조회: 발급상태(CARD_ISSUE_STAT) 스텝퍼 + 발급조회 항목(1번째 이미지) ── */
   function actCheck(c) {
-    var info = ISSUE_STAT[c.issueStat] || { label:c.issueStat, step:0 };
+    var info = ISSUE_STAT[c.issueStatCd] || { label:c.issueStatCd, step:0 };
     var cur = info.step;
-    var rejected = (c.issueStat === '0009');
+    var rejected = (c.issueStatCd === '0005');
     var steps = STEP_LABELS.map(function (lb, idx) {
       var n = idx+1;
       var cls = (cur > 0 && n < cur) ? 'done' : (n === cur ? 'active' : 'todo');
@@ -469,7 +597,7 @@
       + '<dt>차량번호(유효)</dt><dd>'+c.carNo+'</dd>'
       + '<dt>차량번호(신청시)</dt><dd>'+(c.carNoApply||c.carNo)+'</dd>'
       + '<dt>발급방법</dt><dd>'+c.issueMethod+'</dd>'
-      + '<dt>발급상태</dt><dd>'+info.label+' <small style="color:var(--text-tertiary);font-weight:500;">(CARD_ISSUE_STAT '+c.issueStat+')</small></dd>'
+      + '<dt>발급상태</dt><dd>'+info.label+' <small style="color:var(--text-tertiary);font-weight:500;">(issueStatCd '+c.issueStatCd+')</small></dd>'
       + '<dt>발급요청사유</dt><dd>'+c.reason+'</dd>'
       + '<dt>배송지</dt><dd>'+(c.shipZip && c.shipZip!=='—' ? '('+c.shipZip+') ' : '')+c.shipAddr+'</dd>'
       + '<dt>회원카드</dt><dd>'+c.cardType+'</dd>'
@@ -499,7 +627,7 @@
     openModal('분실신고', c.cardNo + ' · ' + c.carNo, bodyFor(false), footFor(false));
     var stopBtn = document.getElementById('ccLostStop');
     if (stopBtn) stopBtn.addEventListener('click', function () {
-      c.cardStat = 'lost'; // 분실신고(정지)
+      c.lossYn = 'Y'; // 분실신고 → LOSS_YN=Y (판정상 '분실(정지)')
       render();
       mBody.innerHTML = bodyFor(true); mFoot.innerHTML = footFor(true);
       toast('카드가 정지되었습니다. 이어서 재발급을 신청할 수 있습니다.', 'success');
@@ -535,7 +663,7 @@
       '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccCancelOk" style="background:var(--color-danger,#b5341f);border-color:var(--color-danger,#b5341f);">해지하기</button>');
     var ok = document.getElementById('ccCancelOk');
     if (ok) ok.addEventListener('click', function () {
-      c.cardStat = 'cancel'; render(); closeModal();
+      c.delYn = 'Y'; render(); closeModal(); // 해지 → DEL_YN=Y (판정상 '해지')
       toast('회원카드가 해지되었습니다.', 'info');
     });
   }
@@ -552,10 +680,10 @@
   });
 
   /* ── 결제카드 일괄등록 (소스: 결제수단을 보유 회원카드에 일괄 등록) ── */
-  function eligibleForBatch(c){ return (c.cardStat==='normal' || c.cardStat==='ship') && !c.kepco && !c.payFail; }
+  function eligibleForBatch(c){ var k=resolveStatus(c); return (k==='normal' || k==='ship') && !c.kepco && !c.payFail; }
   function actBatch() {
     var eligible = CARDS.filter(eligibleForBatch);
-    var excluded = CARDS.filter(function(c){ return !eligibleForBatch(c) && c.cardStat!=='cancel'; });
+    var excluded = CARDS.filter(function(c){ return !eligibleForBatch(c) && resolveStatus(c)!=='cancel'; });
     if (!eligible.length) { toast('일괄등록 가능한 회원카드가 없습니다.', 'warning'); return; }
     var exNote = excluded.length
       ? '<p style="margin:10px 0 0;font-size:12.5px;color:var(--color-danger,#b5341f);">※ 제외 '+excluded.length+'건 — 실물카드(EV등록=한전등록회원)·결제실패 내역 카드는 일괄등록되지 않습니다.</p>'
@@ -725,6 +853,17 @@
   var map = { apply:'mycard', check:'mycard', mycard:'mycard', history:'history', point:'point' };
   var target = map[tab];
   if (target) { var btn = document.querySelector('#cardTabs .tab[data-tab="'+target+'"]'); if (btn) btn.click(); }
+})();
+</script>
+<script>
+/* 브레드크럼 3뎁스 = 활성 탭 라벨 동기화 (탭 전환·언어변경 모두 반영) */
+(function(){
+  var crumb = document.querySelector('.breadcrumb .current');
+  var tabs = document.getElementById('cardTabs');
+  if(!crumb || !tabs) return;
+  function sync(){ var a = tabs.querySelector('.tab.active'); if(a){ var s=(a.textContent||'').trim(); if(s) crumb.textContent = s; } }
+  new MutationObserver(sync).observe(tabs, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['class']});
+  sync();
 })();
 </script>
 </html>

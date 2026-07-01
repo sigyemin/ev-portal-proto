@@ -706,10 +706,10 @@
 <main id="main">
   <section class="page-hero compact">
     <div class="container container-wide">
-      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
-        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging.html" data-i18n="charging.crumb.parent">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" data-i18n="charging.fee.title">전기차 충전요금 안내</span>
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging-fee.html?tab=ev">충전 요금 안내</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" aria-current="page">전기차 충전요금</span>
       </nav>
       <h1 data-i18n="charging.fee.title">전기차 충전요금 안내</h1>
       <p class="hero-lead" data-i18n-html="charging.fee.lead">사업자별·시간대별 전기차 충전요금을 <strong>매트릭스로 비교</strong>하고, 로밍 요금과 월 예상 충전비를 시뮬레이션합니다.</p>
@@ -1297,6 +1297,17 @@
   btn.addEventListener('click', function(e){ e.stopPropagation(); var open=tip.classList.toggle('is-open'); btn.setAttribute('aria-expanded', open?'true':'false'); });
   document.addEventListener('click', function(e){ if(!e.target.closest('.info-tip-wrap')) close(); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script>
+/* 브레드크럼 3뎁스 = 활성 탭 라벨 동기화 (탭 전환·언어변경 반영) */
+(function(){
+  var crumb=document.querySelector('.breadcrumb .current');
+  var g=document.querySelector('[data-tabs]');
+  if(!crumb||!g) return;
+  function sync(){var a=g.querySelector('.tab.active'); if(a){var s=(a.textContent||'').trim(); if(s) crumb.textContent=s;}}
+  new MutationObserver(sync).observe(g,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class']});
+  sync();
 })();
 </script>
 </body>
