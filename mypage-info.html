@@ -38,9 +38,6 @@
               <h2 data-i18n="mpi.content.h2">회원 정보</h2>
               <p class="mp-content-desc" data-i18n="mpi.content.desc">개인정보보호법에 따라 본인이 직접 수정한 정보만 저장됩니다.</p>
             </div>
-            <div class="mp-content-actions">
-              <button type="button" class="btn btn-secondary btn-sm" data-i18n="mpi.btn.history">최근 변경 이력</button>
-            </div>
           </div>
 
           <form class="mp-form-card" id="mpiProfileForm">
@@ -70,14 +67,6 @@
               <label class="mp-form-label" for="mi-birth" data-i18n="mpi.field.birth">생년월일</label>
               <div class="mp-form-control">
                 <input type="text" id="mi-birth" value="1985-08-12" readonly>
-              </div>
-            </div>
-
-            <div class="mp-form-row">
-              <label class="mp-form-label" data-i18n="mpi.field.type">회원 유형</label>
-              <div class="mp-form-control">
-                <span class="mp-meta-chip green" style="background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--color-primary-700);" data-i18n="mpi.chip.personal">일반 회원</span>
-                <span class="mp-meta-chip" style="background:var(--color-gray-100);border-color:var(--color-gray-200);color:var(--text-secondary);" data-i18n="mpi.chip.joined">가입일 2022.03.15</span>
               </div>
             </div>
 
@@ -120,20 +109,6 @@
                 <input type="text" value="서울특별시 중구 세종대로 110" style="margin-top:8px;" aria-label="기본 주소" data-i18n-attr="value:mpi.address.basic.value,aria-label:mpi.address.basic.aria">
                 <input type="text" data-i18n-attr="placeholder:mpi.field.addr.detail" placeholder="상세 주소를 입력하세요" style="margin-top:8px;" aria-label="상세 주소">
                 <div class="mp-form-help" data-i18n="mpi.field.addr.help">서식 발송 등 우편 안내가 필요한 경우에 사용합니다.</div>
-              </div>
-            </div>
-
-            <div class="mp-form-row">
-              <label class="mp-form-label" data-i18n="mpi.field.interest">관심 차종</label>
-              <div class="mp-form-control">
-                <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                  <label class="auth-chip"><input type="checkbox" checked> <span data-i18n="mpi.interest.passenger">전기 승용</span></label>
-                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.commercial">전기 화물·승합</span></label>
-                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.h2">수소차</span></label>
-                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.moto">전기 이륜차</span></label>
-                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.const">전기 건설기계</span></label>
-                </div>
-                <div class="mp-form-help" data-i18n="mpi.field.interest.help">관심 차종에 맞춘 보조금·공모 알림을 우선 안내합니다.</div>
               </div>
             </div>
 
