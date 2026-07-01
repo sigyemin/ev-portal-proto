@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공지사항 | 알림·공지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="notice.bc.home">홈</a><span class="sep">›</span>
+        <a href="#" data-i18n="notice.bc.community">소통·지원</a><span class="sep">›</span>
+        <a href="notice.html" data-i18n="notice.list.bc.notice">알림·공지</a><span class="sep">›</span>
+        <span class="current" data-i18n="notice.list.bc.current">공지사항</span>
+      </nav>
+      <h1 data-i18n="notice.list.h1">공지사항</h1>
+      <p class="hero-lead" data-i18n="notice.list.lead">무공해차 정책·사업·시스템 관련 주요 공지를 전달합니다. 긴급 공지는 상단 고정으로 표시됩니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 툴바 -->
+      <div class="board-toolbar">
+        <div class="board-toolbar-filters">
+          <!-- 분류 컬럼 없는 게시판: 분류·기간 select 제거, 검색바만 유지 -->
+          <div class="board-search">
+            <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="ntSearch" placeholder="제목·내용 검색" aria-label="검색어 입력" data-i18n-attr="placeholder:notice.list.search.ph,aria-label:notice.list.search.aria">
+            <button type="button" id="ntSearchBtn" data-i18n="notice.list.search.btn">검색</button>
+          </div>
+          <button class="btn" type="button" id="ntReset" aria-label="필터 초기화">초기화</button>
+        </div>
+      </div>
+
+      <!-- 결과 메타 -->
+      <div class="board-result-meta">
+        <div data-i18n-html="notice.list.count">전체 <strong id="ntCount">284</strong>건</div>
+      </div>
+
+      <!-- 테이블 -->
+      <table class="board-table std-board" id="ntTable">
+        <thead>
+          <tr>
+            <th class="num" data-i18n="notice.list.col.no">번호</th>
+            <th data-i18n="notice.list.col.title">게시물명</th>
+            <th class="writer">작성자</th>
+            <th class="date" data-i18n="notice.list.col.date">등록일</th>
+            <th class="views" data-i18n="notice.list.col.views">조회</th>
+            <th class="attach">첨부파일</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="pinned" data-cat="notice" data-days="1" data-notice-id="n001">
+            <td class="num">286</td>
+            <td><div class="title-cell"><span data-i18n="notice.list.r1">서버 점검 안내 · 2026.04.28(화) 02:00~04:00</span></div></td>
+            <td class="date">2026.04.23</td>
+            <td class="views">1,240</td>
+            <td class="attach">-</td>
+          </tr>
+          <tr class="pinned" data-cat="subsidy" data-days="1" data-notice-id="n002">
+            <td class="num">285</td>
+            <td><div class="title-cell"><span data-i18n="notice.list.r2">2026년 2분기 전기차 구매 보조금 본공고 게시</span></div></td>
+            <td class="date">2026.04.22</td>
+            <td class="views">4,820</td>
+            <td class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></td>
+          </tr>
+          <tr data-cat="charge" data-days="3" data-notice-id="n003">
+            <td class="num">284</td>
+            <td><div class="title-cell"><span data-i18n="notice.list.r3">환경부 공공 급속 충전 요금 개정 안내</span></div></td>
+            <td class="date">2026.04.20</td>
+            <td class="views">1,842</td>
+            <td class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></td>
+          </tr>
+          <tr data-cat="policy" data-days="5" data-notice-id="n004">
+            <td class="num">283</td>
+            <td><div class="title-cell" data-i18n="notice.list.r4">2026 전기이륜차 충전시설 구축 공모 접수 중</div></td>
+            <td class="date">2026.04.18</td>
+            <td class="views">924</td>
+            <td class="attach">-</td>
+          </tr>
+          <tr data-cat="subsidy" data-days="8" data-notice-id="n005">
+            <td class="num">282</td>
+            <td><div class="title-cell" data-i18n="notice.list.r5">전기승합차(버스) 국비 단가 조정 안내</div></td>
+            <td class="date">2026.04.15</td>
+            <td class="views">620</td>
+            <td class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></td>
+          </tr>
+          <tr data-cat="tax" data-days="12" data-notice-id="n006">
+            <td class="num">281</td>
+            <td><div class="title-cell" data-i18n="notice.list.r6">2026년 전기차 취득세·개별소비세 감면 한도 안내</div></td>
+            <td class="date">2026.04.11</td>
+            <td class="views">1,120</td>
+            <td class="attach">-</td>
+          </tr>
+          <tr data-cat="charge" data-days="18" data-notice-id="n007">
+            <td class="num">280</td>
+            <td><div class="title-cell" data-i18n="notice.list.r7">공용 완속충전 시설 설치 매뉴얼 개정판 배포</div></td>
+            <td class="date">2026.04.05</td>
+            <td class="views">840</td>
+            <td class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></td>
+          </tr>
+          <tr data-cat="policy" data-days="21" data-notice-id="n008">
+            <td class="num">279</td>
+            <td><div class="title-cell" data-i18n="notice.list.r8">K-EV100 참여 기업 대상 ESG 평가 가점 시행 안내</div></td>
+            <td class="date">2026.04.02</td>
+            <td class="views">750</td>
+            <td class="attach">-</td>
+          </tr>
+          <tr data-cat="notice" data-days="25" data-notice-id="n009">
+            <td class="num">278</td>
+            <td><div class="title-cell" data-i18n="notice.list.r9">마이페이지 기능 개선 안내 (신규 민원 이력 추가)</div></td>
+            <td class="date">2026.03.29</td>
+            <td class="views">520</td>
+            <td class="attach">-</td>
+          </tr>
+          <tr data-cat="subsidy" data-days="30" data-notice-id="n010">
+            <td class="num">277</td>
+            <td><div class="title-cell" data-i18n="notice.list.r10">전기차 보조금 신청 시 유의사항 안내</div></td>
+            <td class="date">2026.03.24</td>
+            <td class="views">1,240</td>
+            <td class="attach">-</td>
+          </tr>
+          <tr data-cat="charge" data-days="36">
+            <td class="num">276</td>
+            <td><div class="title-cell" data-i18n="notice.list.r11">전기차 충전기 인증 기준 개정 고시</div></td>
+            <td class="date">2026.03.18</td>
+            <td class="views">680</td>
+            <td class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></td>
+          </tr>
+          <tr data-cat="policy" data-days="45">
+            <td class="num">275</td>
+            <td><div class="title-cell" data-i18n="notice.list.r12">2026년 1분기 완속·급속 충전기 공모 결과 발표</div></td>
+            <td class="date">2026.03.10</td>
+            <td class="views">1,840</td>
+            <td class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination" data-total="24" data-current="1" style="margin-top:20px;"></div>
+
+      <div id="ntEmpty" class="board-empty" style="display:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <h4 data-i18n="notice.empty.title">검색 결과가 없습니다</h4>
+        <p data-i18n="notice.empty.desc">다른 검색어를 입력하시거나 필터를 변경해 주세요.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- 첨부파일 다운로드 팝업 (일반자료실과 동일 컴포넌트) -->
+<div class="modal-backdrop" data-for="libDownloadModal"></div>
+<div class="modal" id="libDownloadModal" role="dialog" aria-modal="true" aria-labelledby="libDlTitle" aria-hidden="true">
+  <div class="modal-header">
+    <h3 id="libDlTitle">첨부파일 다운로드</h3>
+    <button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p id="libDlDocName"></p>
+    <div class="lib-dl-selectall">
+      <label><input type="checkbox" id="libDlAll"> 전체 선택</label>
+      <span id="libDlCount" aria-live="polite">0개 선택</span>
+    </div>
+    <ul class="lib-file-list" id="libFileList" role="group" aria-label="첨부파일 목록"></ul>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" type="button" data-modal-close>닫기</button>
+    <button class="btn btn-primary" type="button" id="libDlSelected">선택 다운로드</button>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-notice.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/board-standard.js"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  const cat = document.getElementById('ntCat');
+  const period = document.getElementById('ntPeriod');
+  const search = document.getElementById('ntSearch');
+  const searchBtn = document.getElementById('ntSearchBtn');
+  const reset = document.getElementById('ntReset');
+  const rows = document.querySelectorAll('#ntTable tbody tr');
+  const count = document.getElementById('ntCount');
+  const empty = document.getElementById('ntEmpty');
+
+  // 일반자료실 형태로 변환: 작성자 열 삽입 + 첨부 아이콘 → 다운로드 버튼
+  rows.forEach(r => {
+    const cells = r.children;
+    const writerTd = document.createElement('td');
+    writerTd.className = 'writer'; writerTd.textContent = '환경부';
+    // 제목(3번째) 다음, 등록일 앞에 삽입
+    r.insertBefore(writerTd, cells[3]);
+    const attachTd = r.querySelector('td.attach');
+    if (attachTd) {
+      const title = (r.querySelector('.title-cell') ? r.querySelector('.title-cell').textContent : '').replace(/^(고정|NEW)/, '').trim();
+      if (attachTd.querySelector('svg')) {
+        attachTd.innerHTML = '<button type="button" class="lib-dl-btn" data-doc="' + title.replace(/"/g,'') + '" data-files=\'[{"name":"' + title.replace(/"/g,'') + '.pdf","size":"PDF"}]\' aria-haspopup="dialog">다운로드</button>';
+      }
+    }
+  });
+
+  function apply() {
+    const kw = (search.value || '').trim().toLowerCase();
+    let visible = 0;
+    rows.forEach(r => {
+      if (r.classList.contains('pinned')) { r.style.display = ''; visible++; return; }
+      const textOk = !kw || r.querySelector('.title-cell').textContent.toLowerCase().includes(kw);
+      r.style.display = textOk ? '' : 'none';
+      if (textOk) visible++;
+    });
+    count.textContent = visible;
+    empty.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  if (search) search.addEventListener('input', apply);
+  if (searchBtn) searchBtn.addEventListener('click', apply);
+  if (reset) reset.addEventListener('click', function(){ search.value=''; apply(); });
+
+  const urlQ = new URLSearchParams(location.search).get('q');
+  if (urlQ) { search.value = urlQ; apply(); }
+
+  // 행 클릭 → 상세 페이지 (다운로드 버튼 셀 제외)
+  rows.forEach(r => {
+    r.style.cursor = 'pointer';
+    r.setAttribute('tabindex', '0');
+    r.setAttribute('role', 'link');
+    const id = r.dataset.noticeId;
+    if (!id) return;
+    const goto = (e) => { if (e && (e.target.closest('.attach') || e.target.closest('.lib-dl-btn'))) return; location.href = `notice-detail.html?id=${id}`; };
+    r.addEventListener('click', goto);
+    r.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); goto(); } });
+  });
+})();
+</script>
+<script>
+/* 첨부파일 다운로드 팝업 (일반자료실과 동일 로직) */
+(function(){
+  var modal=document.getElementById('libDownloadModal'); if(!modal) return;
+  var listEl=document.getElementById('libFileList');
+  var allCb=document.getElementById('libDlAll');
+  var countEl=document.getElementById('libDlCount');
+  var docNameEl=document.getElementById('libDlDocName');
+  var dlBtn=document.getElementById('libDlSelected');
+  var lastFocus=null;
+  function boxes(){ return listEl.querySelectorAll('input[type=checkbox]'); }
+  function update(){
+    var items=boxes(), checked=0; items.forEach(function(c){ if(c.checked) checked++; });
+    countEl.textContent=checked+'개 선택'; dlBtn.disabled = checked===0;
+    allCb.checked = checked>0 && checked===items.length;
+    allCb.indeterminate = checked>0 && checked<items.length;
+  }
+  function openPopup(btn){
+    lastFocus=btn;
+    var files=[]; try{ files=JSON.parse(btn.getAttribute('data-files')||'[]'); }catch(e){}
+    docNameEl.textContent=btn.getAttribute('data-doc')||'';
+    listEl.innerHTML='';
+    files.forEach(function(f,i){
+      var id='libf_'+i;
+      var li=document.createElement('li'); li.className='lib-file-item';
+      var lab=document.createElement('label'); lab.setAttribute('for',id);
+      lab.innerHTML='<input type="checkbox" id="'+id+'"><span class="lib-file-name"></span><span class="lib-file-size"></span>';
+      lab.querySelector('.lib-file-name').textContent=f.name;
+      lab.querySelector('.lib-file-size').textContent=f.size||'';
+      lab.querySelector('input').value=f.name;
+      li.appendChild(lab); listEl.appendChild(li);
+    });
+    boxes().forEach(function(c){ c.addEventListener('change', update); });
+    allCb.checked=false; allCb.indeterminate=false; update();
+    if(window.__openModal) window.__openModal('libDownloadModal');
+    var first=listEl.querySelector('input[type=checkbox]')||modal.querySelector('.modal-close');
+    if(first) setTimeout(function(){ first.focus(); }, 40);
+  }
+  document.addEventListener('click', function(e){
+    var b=e.target.closest('.lib-dl-btn'); if(b){ e.preventDefault(); e.stopPropagation(); openPopup(b); }
+  });
+  allCb.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked=allCb.checked; }); update(); });
+  dlBtn.addEventListener('click', function(){
+    var names=[]; boxes().forEach(function(c){ if(c.checked) names.push(c.value); });
+    if(!names.length) return;
+    var msg = names.length===1 ? ('"'+names[0]+'" 다운로드가 시작됩니다.') : (names.length+'개 파일 다운로드가 시작됩니다.');
+    if(window.__toast) window.__toast(msg,'success');
+    if(window.__closeModal) window.__closeModal(modal);
+  });
+  modal.addEventListener('transitionend', function(){
+    if(modal.getAttribute('aria-hidden')==='true' && lastFocus){ var t=lastFocus; lastFocus=null; t.focus(); }
+  });
+})();
+</script>
+</body>
+</html>

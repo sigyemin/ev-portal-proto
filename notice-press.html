@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보도자료 | 알림·공지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+<style>.cat-chip.press{background:#e6f0fb;color:#1f5fa8}</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="#">소통·지원</a><span class="sep">›</span>
+        <a href="notice.html">알림·공지</a><span class="sep">›</span>
+        <span class="current">보도자료</span>
+      </nav>
+      <h1>보도자료</h1>
+      <p class="hero-lead">무공해차 정책·보급사업 관련 보도자료와 설명자료를 제공합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <div class="board-toolbar">
+        <div class="board-toolbar-filters">
+          <!-- 분류 컬럼 없는 게시판: 분류 필터·컬럼만 제거. 연도 필터는 유지 -->
+          <div class="form-group">
+            <label class="form-label">연도</label>
+            <select class="form-select" id="prYear" aria-label="연도"><option value="all">전체 연도</option></select>
+          </div>
+          <div class="board-search">
+            <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="prSearch" placeholder="제목·내용 검색" aria-label="검색어 입력">
+            <button type="button" id="prSearchBtn">검색</button>
+          </div>
+          <button class="btn" type="button" id="prReset" aria-label="필터 초기화">초기화</button>
+        </div>
+      </div>
+
+      <div class="board-result-meta">
+        <div>전체 <strong id="prCount">0</strong>건</div>
+      </div>
+
+      <table class="board-table std-board" id="prTable">
+        <thead>
+          <tr>
+            <th class="num">번호</th>
+            <th>게시물명</th>
+            <th class="writer">작성자</th>
+            <th class="date">등록일</th>
+            <th class="views">조회</th>
+            <th class="attach">첨부파일</th>
+          </tr>
+        </thead>
+        <tbody id="prBody"></tbody>
+      </table>
+
+      <div class="pagination" data-total="1" data-current="1" style="margin-top:20px;"></div>
+
+      <div id="prEmpty" class="board-empty" style="display:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <h4>검색 결과가 없습니다</h4>
+        <p>다른 검색어를 입력하시거나 필터를 변경해 주세요.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- 첨부파일 다운로드 팝업 (일반자료실과 동일 컴포넌트) -->
+<div class="modal-backdrop" data-for="libDownloadModal"></div>
+<div class="modal" id="libDownloadModal" role="dialog" aria-modal="true" aria-labelledby="libDlTitle" aria-hidden="true">
+  <div class="modal-header">
+    <h3 id="libDlTitle">첨부파일 다운로드</h3>
+    <button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p id="libDlDocName"></p>
+    <div class="lib-dl-selectall">
+      <label><input type="checkbox" id="libDlAll"> 전체 선택</label>
+      <span id="libDlCount" aria-live="polite">0개 선택</span>
+    </div>
+    <ul class="lib-file-list" id="libFileList" role="group" aria-label="첨부파일 목록"></ul>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" type="button" data-modal-close>닫기</button>
+    <button class="btn btn-primary" type="button" id="libDlSelected">선택 다운로드</button>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-notice.js?v=20260520"></script>
+<script src="js/news-data.js?v=20260613"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/board-standard.js"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function () {
+  var ITEMS = Object.values(window.NEWS_ITEMS || {}).filter(function (n) { return n.cat === 'press'; });
+  function catOf(n) {
+    var t = n.title || '';
+    if (/정책|대책|계획|로드맵|개정|지침|제도/.test(t)) return '정책';
+    if (/행사|캠페인|박람회|세미나|포럼|페스티벌|체험|공모전|간담회/.test(t)) return '행사';
+    return '보도';
+  }
+  function catClass(c) { return c === '정책' ? 'policy' : c === '행사' ? 'charge' : 'press'; }
+  function yearOf(n) { return (n.date || '').slice(0, 4); }
+  function daysAgo(n) { var p = (n.date || '').split('.'); if (p.length < 3) return 9999; var d = new Date(+p[0], +p[1] - 1, +p[2]); return Math.floor((Date.now() - d.getTime()) / 86400000); }
+  function esc(s){ return String(s).replace(/"/g,'&quot;'); }
+
+  var body = document.getElementById('prBody');
+  var count = document.getElementById('prCount');
+  var empty = document.getElementById('prEmpty');
+  var yearSel = document.getElementById('prYear'),
+      search = document.getElementById('prSearch'),
+      searchBtn = document.getElementById('prSearchBtn'), reset = document.getElementById('prReset');
+
+  // 연도 옵션 동적 구성
+  var years = ITEMS.map(yearOf).filter(function (v, i, a) { return v && a.indexOf(v) === i; }).sort().reverse();
+  years.forEach(function (y) { var o = document.createElement('option'); o.value = y; o.textContent = y + '년'; yearSel.appendChild(o); });
+
+  function render() {
+    var kw = (search.value || '').trim().toLowerCase();
+    var y = yearSel.value;
+    var list = ITEMS.filter(function (n) {
+      var okY = y === 'all' || yearOf(n) === y;
+      var okKw = !kw || (n.title + n.desc).toLowerCase().indexOf(kw) >= 0;
+      return okY && okKw;
+    });
+    list.sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
+    body.innerHTML = list.map(function (n, i) {
+      var c = catOf(n);
+      var dl = n.attach
+        ? '<button type="button" class="lib-dl-btn" data-doc="' + esc(n.title) + '" data-files=\'[{"name":"' + esc(n.title) + '.pdf","size":"PDF"}]\' aria-haspopup="dialog">다운로드</button>'
+        : '-';
+      return '<tr data-id="' + n.id + '">' +
+        '<td class="num">' + (list.length - i) + '</td>' +
+        '<td><div class="title-cell">' + (daysAgo(n) <= 14 ? '<span class="new-tag">NEW</span>' : '') + n.title + '</div></td>' +
+        '<td class="writer">환경부</td>' +
+        '<td class="date">' + n.date + '</td>' +
+        '<td class="views">' + (n.views || '0') + '</td>' +
+        '<td class="attach">' + dl + '</td>' +
+        '</tr>';
+    }).join('');
+    count.textContent = list.length;
+    empty.style.display = list.length ? 'none' : 'block';
+    body.querySelectorAll('tr').forEach(function (tr) {
+      tr.style.cursor = 'pointer'; tr.tabIndex = 0; tr.setAttribute('role', 'link');
+      var go = function (e) {
+        if (e && (e.target.closest('.attach') || e.target.closest('.lib-dl-btn'))) return;
+        location.href = 'notice-detail.html?id=' + tr.dataset.id;
+      };
+      tr.addEventListener('click', go);
+      tr.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+    });
+  }
+  yearSel.addEventListener('change', render);
+  search.addEventListener('input', render);
+  searchBtn.addEventListener('click', render);
+  reset.addEventListener('click', function () { yearSel.value = 'all'; search.value = ''; render(); });
+  render();
+})();
+</script>
+<script>
+/* 첨부파일 다운로드 팝업 (일반자료실과 동일 로직) */
+(function(){
+  var modal=document.getElementById('libDownloadModal'); if(!modal) return;
+  var listEl=document.getElementById('libFileList');
+  var allCb=document.getElementById('libDlAll');
+  var countEl=document.getElementById('libDlCount');
+  var docNameEl=document.getElementById('libDlDocName');
+  var dlBtn=document.getElementById('libDlSelected');
+  var lastFocus=null;
+  function boxes(){ return listEl.querySelectorAll('input[type=checkbox]'); }
+  function update(){
+    var items=boxes(), checked=0; items.forEach(function(c){ if(c.checked) checked++; });
+    countEl.textContent=checked+'개 선택'; dlBtn.disabled = checked===0;
+    allCb.checked = checked>0 && checked===items.length;
+    allCb.indeterminate = checked>0 && checked<items.length;
+  }
+  function openPopup(btn){
+    lastFocus=btn;
+    var files=[]; try{ files=JSON.parse(btn.getAttribute('data-files')||'[]'); }catch(e){}
+    docNameEl.textContent=btn.getAttribute('data-doc')||'';
+    listEl.innerHTML='';
+    files.forEach(function(f,i){
+      var id='libf_'+i;
+      var li=document.createElement('li'); li.className='lib-file-item';
+      var lab=document.createElement('label'); lab.setAttribute('for',id);
+      lab.innerHTML='<input type="checkbox" id="'+id+'"><span class="lib-file-name"></span><span class="lib-file-size"></span>';
+      lab.querySelector('.lib-file-name').textContent=f.name;
+      lab.querySelector('.lib-file-size').textContent=f.size||'';
+      lab.querySelector('input').value=f.name;
+      li.appendChild(lab); listEl.appendChild(li);
+    });
+    boxes().forEach(function(c){ c.addEventListener('change', update); });
+    allCb.checked=false; allCb.indeterminate=false; update();
+    if(window.__openModal) window.__openModal('libDownloadModal');
+    var first=listEl.querySelector('input[type=checkbox]')||modal.querySelector('.modal-close');
+    if(first) setTimeout(function(){ first.focus(); }, 40);
+  }
+  document.addEventListener('click', function(e){
+    var b=e.target.closest('.lib-dl-btn'); if(b){ e.preventDefault(); e.stopPropagation(); openPopup(b); }
+  });
+  allCb.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked=allCb.checked; }); update(); });
+  dlBtn.addEventListener('click', function(){
+    var names=[]; boxes().forEach(function(c){ if(c.checked) names.push(c.value); });
+    if(!names.length) return;
+    var msg = names.length===1 ? ('"'+names[0]+'" 다운로드가 시작됩니다.') : (names.length+'개 파일 다운로드가 시작됩니다.');
+    if(window.__toast) window.__toast(msg,'success');
+    if(window.__closeModal) window.__closeModal(modal);
+  });
+  modal.addEventListener('transitionend', function(){
+    if(modal.getAttribute('aria-hidden')==='true' && lastFocus){ var t=lastFocus; lastFocus=null; t.focus(); }
+  });
+})();
+</script>
+</body>
+</html>

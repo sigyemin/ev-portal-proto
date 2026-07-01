@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자료실 | 정보 자료실 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+<style>
+  /* 요청자료 탭 상태 뱃지 */
+  .req-status{display:inline-block;padding:3px 10px;border-radius:14px;font-size:12px;font-weight:700;white-space:nowrap}
+  .req-status.done{background:#dff5e8;color:#19a76d}
+  .req-status.ing{background:#e6f0fb;color:#1f5fa8}
+  .req-status.approve{background:#e1f5ee;color:#0f6e56}
+  .req-status.reject{background:#fcebeb;color:#a32d2d}
+  .req-note{color:var(--text-secondary,#5a6675);font-size:13.5px;margin:0 0 18px}
+  /* 서식/매뉴얼 게시판 — 파일유형 칩 · 제목 보조설명 */
+  .file-chip{display:inline-block;min-width:46px;text-align:center;padding:3px 9px;border-radius:6px;font-size:11.5px;font-weight:800;letter-spacing:.02em}
+  .file-chip.hwp{background:#e6f0fb;color:#1f5fa8}
+  .file-chip.pdf{background:#fcebeb;color:#c0392b}
+  .file-chip.xlsx{background:#e1f5ee;color:#0f7a52}
+  .file-chip.docx{background:#eef2ff;color:#4338ca}
+  .board-desc{display:none}
+  .form-board .board-link{color:var(--text-primary,#1f2937);text-decoration:none}
+  .form-board .board-link:hover b{color:inherit;text-decoration:none}
+  /* 일반자료실 행 전체 클릭 영역 */
+  [data-tab-content="general"] .board-table tbody tr{cursor:pointer}
+  .form-board .form-download,.form-board .lib-dl-btn{padding:6px 14px;font-size:13px;border-radius:8px;border:1px solid var(--color-primary-300,#9fd3bb);background:#fff;color:var(--color-primary-700,#0f6e56);font-weight:700;cursor:pointer;white-space:nowrap}
+  .form-board .form-download:hover,.form-board .lib-dl-btn:hover{background:var(--color-primary-50,#eefaf4)}
+  .form-board .cat-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--color-primary-50,#eefaf4);color:var(--color-primary-700,#0f6e56)}
+  .form-board .cat-badge.guide{background:#fff3e0;color:#e8760a}
+  /* 카테고리(분류) 배지 색상 — 서식/매뉴얼 공통 */
+  .cat-badge.cat-c-subsidy{background:#e6f0fb;color:#1f5fa8}
+  .cat-badge.cat-c-install{background:#e1f5ee;color:#0f7a52}
+  .cat-badge.cat-c-contest{background:#eef2ff;color:#4338ca}
+  .cat-badge.cat-c-kev{background:#fff3e0;color:#b45309}
+  .cat-badge.cat-c-guide{background:#f3eafe;color:#6b21a8}
+  .cat-badge.cat-c-card{background:#fdeef3;color:#9d174d}
+  .cat-badge.cat-c-minwon{background:#fef3e2;color:#b45309}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="info.bc.home">홈</a><span class="sep">›</span>
+        <a href="info.html" data-i18n="info.beginner.bc.lib">정보 자료실</a><span class="sep">›</span>
+        <span class="current" data-i18n="info.lib.bc.current">자료실</span>
+      </nav>
+      <h1 data-i18n="info.lib.h1">자료실</h1>
+      <p class="hero-lead" data-i18n="info.lib.lead">각종 자료, 서식, 사용자 매뉴얼 등 업무에 필요한 자료를 통합 제공합니다.</p>
+    </div>
+  </section>
+
+  <nav class="tab-nav">
+    <div class="container container-wide">
+      <div class="tabs-pill" data-tabs id="libTabs">
+        <button class="tab active" data-tab="general" type="button" data-i18n="info.lib.tab.gen">일반 자료실</button>
+        <button class="tab" data-tab="form" type="button" data-i18n="info.lib.tab.form">서식 다운로드</button>
+        <button class="tab" data-tab="manual" type="button" data-i18n="info.lib.tab.man">사용자 매뉴얼</button>
+        <button class="tab" data-tab="request" type="button" data-i18n="info.lib.tab.req">요청자료</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 일반 자료실 -->
+      <div class="tab-content active" data-tab-content="general">
+        <div class="board-toolbar">
+          <div class="board-toolbar-filters">
+            <!-- TODO(DB): 일반자료실 BLBD_ID의 분류 컬럼(BOARD_GUBUN) 존재 여부 미확인.
+                 확인 시 BOARD_GUBUN 코드그룹으로 분류 필터·컬럼 복원. 확인 전까지 분류 제거. -->
+            <div class="form-group">
+            <label class="form-label" data-i18n="info.lib.year.aria">연도</label>
+            <select class="form-select" data-i18n-aria="info.lib.year.aria" aria-label="연도">
+              <option data-i18n="info.lib.year.all">전체</option><option>2026</option><option>2025</option><option>2024</option>
+            </select>
+          </div>
+            <div class="board-search">
+              <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" placeholder="자료 제목·작성자 검색" data-i18n-attr="placeholder:info.lib.search.ph">
+              <button type="button" data-i18n="info.lib.search.btn">검색</button>
+            </div>
+            <button class="btn" type="button" data-board-reset aria-label="필터 초기화" data-i18n="info.lib.reset">초기화</button>
+          </div>
+          <!-- v0.12 [19] 필터 영역 '목록 Excel' 다운로드 버튼 삭제. 원본 보존(주석)
+          <div class="board-toolbar-actions">
+            <button class="btn btn-ghost btn-sm" type="button" data-action="download" data-action-label="자료실 목록 전체.xlsx">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<span data-i18n="info.lib.btn.excel">              목록 Excel</span>
+            </button>
+          </div>
+          -->
+        </div>
+
+        <div class="board-result-meta">
+          <div data-i18n-html="info.lib.count.gen">전체 <strong>188</strong>건</div>
+        </div>
+
+        <table class="board-table form-board std-board">
+          <thead>
+            <tr>
+              <th class="num" data-i18n="info.lib.col.no">번호</th>
+              <th data-i18n="info.lib.col.title">게시물명</th>
+              <th class="writer" data-i18n="info.lib.col.writer">작성자</th>
+              <th class="date" data-i18n="info.lib.col.date">등록일</th>
+              <th class="date size" data-i18n="info.lib.col.size">용량</th>
+              <th class="attach" data-i18n="info.lib.col.dl">첨부파일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">188</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=188"><b data-i18n="info.lib.g1.title">2026년 무공해차 보급 확대 종합 대책 발표</b></a></div></td>
+              <td class="writer">환경부</td><td class="date">2026.04.18</td><td class="date size">12.4MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="2026년 무공해차 보급 확대 종합 대책 발표" data-files='[{"name": "2026년 무공해차 보급 확대 종합 대책.pdf", "size": "PDF · 12.4MB"}, {"name": "붙임1_세부 추진과제.xlsx", "size": "XLSX · 1.4MB"}, {"name": "붙임2_보도참고자료.hwp", "size": "HWP · 280KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">187</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=187"><b data-i18n="info.lib.g2.title">2026년 1분기 무공해차 보급 현황 통계</b></a></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.04.10</td><td class="date size">2.8MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="2026년 1분기 무공해차 보급 현황 통계" data-files='[{"name": "2026년 1분기 보급 통계.xlsx", "size": "XLSX · 2.8MB"}, {"name": "데이터 정의서.pdf", "size": "PDF · 360KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">186</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=186"><b data-i18n="info.lib.g3.title">무공해차 전환 로드맵 2030 (전자책)</b></a></div></td>
+              <td class="writer">환경부</td><td class="date">2026.04.02</td><td class="date size">18.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="무공해차 전환 로드맵 2030 (전자책)" data-files='[{"name": "무공해차 전환 로드맵 2030.pdf", "size": "PDF · 18.2MB"}, {"name": "요약본.pdf", "size": "PDF · 2.1MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">185</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=185"><b data-i18n="info.lib.g4.title">전기차 배터리 재활용 산업 실태 조사 보고서</b></a></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.03.28</td><td class="date size">9.4MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="전기차 배터리 재활용 산업 실태 조사 보고서" data-files='[{"name": "배터리 재활용 실태.pdf", "size": "PDF · 9.4MB"}, {"name": "부록_통계표.xlsx", "size": "XLSX · 1.1MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">184</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=184"><b data-i18n="info.lib.g5.title">K-EV100 추진 성과 보고서 (2025년 결산)</b></a></div></td>
+              <td class="writer">한국자동차환경협회</td><td class="date">2026.03.20</td><td class="date size">6.8MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="K-EV100 추진 성과 보고서 (2025년 결산)" data-files='[{"name": "K-EV100 2025 성과.pdf", "size": "PDF · 6.8MB"}, {"name": "참여기업 명단.xlsx", "size": "XLSX · 420KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">183</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=183"><b data-i18n="info.lib.g6.title">지자체별 충전 인프라 구축 현황 (2025 연간)</b></a></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.03.12</td><td class="date size">3.6MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="지자체별 충전 인프라 구축 현황 (2025 연간)" data-files='[{"name": "지자체별 충전 인프라 2025.xlsx", "size": "XLSX · 3.6MB"}, {"name": "시각화 자료.pdf", "size": "PDF · 1.8MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">182</td>
+              <td><div class="title-cell"><a class="board-link" href="info-library-detail.html?id=182"><b data-i18n="info.lib.g7.title">수소충전소 안전성 평가 연구 (중간 보고)</b></a></div></td>
+              <td class="writer">가스안전공사</td><td class="date">2026.03.05</td><td class="date size">11.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="수소충전소 안전성 평가 연구 (중간 보고)" data-files='[{"name": "수소충전소 안전성 평가.pdf", "size": "PDF · 11.2MB"}, {"name": "안전 점검 체크리스트.hwp", "size": "HWP · 240KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" data-total="27" data-current="1" style="margin-top: 28px;"></div>
+      </div>
+
+      <!-- 서식 다운로드 -->
+      <div class="tab-content" data-tab-content="form">
+        <div class="board-toolbar">
+          <div class="board-toolbar-filters">
+            <div class="form-group">
+            <label class="form-label" data-i18n="info.lib.work.aria">카테고리</label>
+            <!-- 서식다운로드 신설 분류 6종 (info-forms.html 과 통일) -->
+            <select class="form-select" data-i18n-aria="info.lib.work.aria" aria-label="카테고리">
+              <option value="all" data-i18n="info.lib.work.all">전체 카테고리</option>
+              <option value="subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</option>
+              <option value="contest" data-i18n="info.lib.work.contest">공모 신청</option>
+              <option value="install" data-i18n="info.lib.work.install">충전기 설치</option>
+              <option value="minwon" data-i18n="info.lib.work.minwon">민원·신고</option>
+              <option value="card" data-i18n="info.lib.work.card">회원·카드</option>
+              <option value="kev100" data-i18n="info.lib.work.kev100">K-EV100</option>
+            </select>
+          </div>
+            <div class="board-search">
+              <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" placeholder="서식명, 작성자 검색" data-i18n-attr="placeholder:info.lib.form.ph">
+              <button type="button" data-i18n="info.lib.search.btn">검색</button>
+            </div>
+            <button class="btn" type="button" data-board-reset aria-label="필터 초기화" data-i18n="info.lib.reset">초기화</button>
+          </div>
+        </div>
+
+        <div class="board-result-meta">
+          <div data-i18n-html="info.lib.count.form">전체 <strong>42</strong>종 서식</div>
+        </div>
+
+        <table class="board-table form-board std-board">
+          <thead>
+            <tr>
+              <th class="num" data-i18n="info.lib.col.no">번호</th>
+              <th class="cat" data-i18n="info.lib.col.cat">분류</th>
+              <th data-i18n="info.lib.col.title">게시물명</th>
+              <th class="writer" data-i18n="info.lib.col.writer">작성자</th>
+              <th class="date" data-i18n="info.lib.col.date">등록일</th>
+              <th class="date size" data-i18n="info.lib.col.size">용량</th>
+              <th class="attach" data-i18n="info.lib.col.dl">첨부파일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">42</td><td class="cat"><span class="cat-badge cat-c-subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f1.title">전기차 구매 보조금 지원 신청서 (별지 제1호 서식)</b><span class="board-desc" data-i18n="info.lib.f1.desc">전기승용차·화물차·이륜차 구매 보조금 신청 시 제출</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.04.01</td><td class="date size">180KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="전기차 구매 보조금 지원 신청서 (별지 제1호 서식)" data-files='[{"name": "전기차 구매 보조금 지원 신청서.hwp", "size": "HWP · 180KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">41</td><td class="cat"><span class="cat-badge cat-c-install" data-i18n="info.lib.work.install">충전기 설치</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f2.title">공용 완속충전기 설치 신청서 (별지 제2호 서식)</b><span class="board-desc" data-i18n="info.lib.f2.desc">공동주택·사업장 공용 완속충전기 직접 설치 신청용</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.04.01</td><td class="date size">240KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="공용 완속충전기 설치 신청서 (별지 제2호 서식)" data-files='[{"name": "공용 완속충전기 설치 신청서.pdf", "size": "PDF · 240KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">40</td><td class="cat"><span class="cat-badge cat-c-contest" data-i18n="info.lib.work.contest">공모 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f3.title">전기승합차 공모 신청서 (별지 제3호 서식)</b><span class="board-desc" data-i18n="info.lib.f3.desc">시내·시외 버스 등 전기승합차 보급 공모 신청용</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.03.15</td><td class="date size">220KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="전기승합차 공모 신청서 (별지 제3호 서식)" data-files='[{"name": "전기승합차 공모 신청서.hwp", "size": "HWP · 220KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">39</td><td class="cat"><span class="cat-badge cat-c-subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f4.title">무공해 건설기계 구매 보조금 사업계획서</b><span class="board-desc" data-i18n="info.lib.f4.desc">굴착기·지게차 등 무공해 건설기계 구매 사업자용</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.03.10</td><td class="date size">156KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="무공해 건설기계 구매 보조금 사업계획서" data-files='[{"name": "무공해 건설기계 구매 보조금 사업계획서.xlsx", "size": "XLSX · 156KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">38</td><td class="cat"><span class="cat-badge cat-c-kev" data-i18n="info.lib.work.kev100">K-EV100 참여</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f5.title">K-EV100 참여 신청서 및 실적 보고서</b><span class="board-desc" data-i18n="info.lib.f5.desc">업무용 차량 100% 무공해 전환 선언·실적 보고용</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.02.28</td><td class="date size">186KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="K-EV100 참여 신청서 및 실적 보고서" data-files='[{"name": "K-EV100 참여 신청서 및 실적 보고서.hwp", "size": "HWP · 186KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">37</td><td class="cat"><span class="cat-badge cat-c-subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f6.title">불편 민원·보조금 부적정집행 신고서</b><span class="board-desc" data-i18n="info.lib.f6.desc">서비스 불편·보조금 부당 수령 신고 시 제출</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.02.20</td><td class="date size">92KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="불편 민원·보조금 부적정집행 신고서" data-files='[{"name": "불편 민원·보조금 부적정집행 신고서.docx", "size": "DOCX · 92KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">36</td><td class="cat"><span class="cat-badge cat-c-install" data-i18n="info.lib.work.install">충전기 설치</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f7.title">충전 카드 발급·변경 신청서</b><span class="board-desc" data-i18n="info.lib.f7.desc">환경부 통합카드 신규 발급·정보 변경 신청용</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.02.15</td><td class="date size">124KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="충전 카드 발급·변경 신청서" data-files='[{"name": "충전 카드 발급·변경 신청서.hwp", "size": "HWP · 124KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">35</td><td class="cat"><span class="cat-badge cat-c-subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f8.title">의무운행기간 위반 소명 신청서</b><span class="board-desc" data-i18n="info.lib.f8.desc">이사·상속 등 불가항력 사유 소명 시 제출</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.01.28</td><td class="date size">148KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="의무운행기간 위반 소명 신청서" data-files='[{"name": "의무운행기간 위반 소명 신청서.pdf", "size": "PDF · 148KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">34</td><td class="cat"><span class="cat-badge cat-c-contest" data-i18n="info.lib.work.contest">공모 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.f9.title">전기이륜차 충전시설 공모 사업계획서</b><span class="board-desc" data-i18n="info.lib.f9.desc">배달 플랫폼·소상공인 전기이륜차 충전시설 공모</span></div></td>
+              <td class="writer">환경부</td><td class="date">2026.01.20</td><td class="date size">178KB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="전기이륜차 충전시설 공모 사업계획서" data-files='[{"name": "전기이륜차 충전시설 공모 사업계획서.xlsx", "size": "XLSX · 178KB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" data-total="5" data-current="1" style="margin-top: 28px;"></div>
+      </div>
+
+      <!-- 사용자 매뉴얼 -->
+      <div class="tab-content" data-tab-content="manual">
+        <div class="board-toolbar">
+          <div class="board-toolbar-filters">
+            <!-- 신설 게시판: 분류 신설(포털 이용/보조금 신청/공모 신청/충전기 설치·운영/회원·카드) -->
+            <div class="form-group">
+              <label class="form-label" data-i18n="info.lib.man.target.aria">카테고리</label>
+              <select class="form-select" id="manCat" data-i18n-aria="info.lib.man.target.aria" aria-label="카테고리">
+                <option value="all" data-i18n="info.lib.man.target.all">전체 카테고리</option>
+                <option value="portal" data-i18n="info.lib.man.cat.portal">포털 이용</option>
+                <option value="subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</option>
+                <option value="contest" data-i18n="info.lib.work.contest">공모 신청</option>
+                <option value="operate" data-i18n="info.lib.man.cat.operate">충전기 설치·운영</option>
+                <option value="card" data-i18n="info.lib.work.card">회원·카드</option>
+              </select>
+            </div>
+            <div class="board-search">
+              <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="manSearch" placeholder="매뉴얼명 검색" data-i18n-attr="placeholder:info.lib.man.ph">
+              <button type="button" id="manSearchBtn" data-i18n="info.lib.search.btn">검색</button>
+            </div>
+            <button class="btn" type="button" id="manReset" aria-label="필터 초기화" data-i18n="info.lib.reset">초기화</button>
+          </div>
+        </div>
+
+        <div class="board-result-meta">
+          <div data-i18n-html="info.lib.count.man">총 <strong id="manCount">6</strong>건 매뉴얼</div>
+        </div>
+
+        <table class="board-table form-board std-board">
+          <thead>
+            <tr>
+              <th class="num" data-i18n="info.lib.col.no">번호</th>
+              <th class="cat" data-i18n="info.lib.col.cat">분류</th>
+              <th data-i18n="info.lib.col.title">게시물명</th>
+              <th class="writer" data-i18n="info.lib.col.writer">작성자</th>
+              <th class="date" data-i18n="info.lib.col.date">등록일</th>
+              <th class="date size" data-i18n="info.lib.col.size">용량</th>
+              <th class="attach" data-i18n="info.lib.col.dl">첨부파일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-cat="portal">
+              <td class="num">18</td><td class="cat"><span class="cat-badge cat-c-guide" data-i18n="info.lib.man.cat.portal">포털 이용</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.m1.title">통합누리집 사용자 매뉴얼 v2.4</b><span class="board-desc" data-i18n="info.lib.m1.desc">회원가입부터 보조금·충전·민원까지 전체 서비스 이용 안내</span></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.04.10</td><td class="date size">8.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="통합누리집 사용자 매뉴얼 v2.4" data-files='[{"name": "통합누리집 사용자 매뉴얼 v2.4.pdf", "size": "PDF · 8.2MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr data-cat="subsidy">
+              <td class="num">17</td><td class="cat"><span class="cat-badge cat-c-subsidy" data-i18n="info.lib.work.subsidy">보조금 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.m2.title">보조금 신청자 매뉴얼 (개인 구매용)</b><span class="board-desc" data-i18n="info.lib.m2.desc">전기·수소차 개인 구매 시 보조금 신청 절차 단계별 안내</span></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.04.01</td><td class="date size">4.6MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="보조금 신청자 매뉴얼 (개인 구매용)" data-files='[{"name": "보조금 신청자 매뉴얼 (개인 구매용).pdf", "size": "PDF · 4.6MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr data-cat="contest">
+              <td class="num">16</td><td class="cat"><span class="cat-badge cat-c-contest" data-i18n="info.lib.work.contest">공모 신청</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.m3.title">법인·사업자 공모 참여 매뉴얼</b><span class="board-desc" data-i18n="info.lib.m3.desc">전기승합차·건설기계·K-EV100 공모 사업 참여 안내</span></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.03.20</td><td class="date size">6.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="법인·사업자 공모 참여 매뉴얼" data-files='[{"name": "법인·사업자 공모 참여 매뉴얼.pdf", "size": "PDF · 6.2MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr data-cat="operate">
+              <td class="num">15</td><td class="cat"><span class="cat-badge cat-c-install" data-i18n="info.lib.man.cat.operate">충전기 설치·운영</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.m4.title">충전 사업자 설치·운영 매뉴얼</b><span class="board-desc" data-i18n="info.lib.m4.desc">완속·급속·초급속 충전기 설치 신청, 운영 관리 방법</span></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.03.12</td><td class="date size">9.8MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="충전 사업자 설치·운영 매뉴얼" data-files='[{"name": "충전 사업자 설치·운영 매뉴얼.pdf", "size": "PDF · 9.8MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr data-cat="card">
+              <td class="num">14</td><td class="cat"><span class="cat-badge cat-c-card" data-i18n="info.lib.work.card">회원·카드</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.m5.title">충전 카드 이용 매뉴얼</b><span class="board-desc" data-i18n="info.lib.m5.desc">통합카드 신청·사용·결제·포인트·분실 처리 안내</span></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.02.28</td><td class="date size">3.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="충전 카드 이용 매뉴얼" data-files='[{"name": "충전 카드 이용 매뉴얼.pdf", "size": "PDF · 3.2MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr data-cat="portal">
+              <td class="num">13</td><td class="cat"><span class="cat-badge cat-c-guide" data-i18n="info.lib.man.cat.portal">포털 이용</span></td>
+              <td><div class="title-cell"><b data-i18n="info.lib.m6.title">AI 헬프데스크 이용 가이드</b><span class="board-desc" data-i18n="info.lib.m6.desc">AI 맞춤 상담·보조금 큐레이터·장애 대응 활용법</span></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.02.15</td><td class="date size">2.4MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-i18n="info.lib.action.dl" data-doc="AI 헬프데스크 이용 가이드" data-files='[{"name": "AI 헬프데스크 이용 가이드.pdf", "size": "PDF · 2.4MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" data-total="3" data-current="1" style="margin-top: 28px;"></div>
+      </div>
+
+      <!-- 요청자료 (info-request.html → 탭 이관) -->
+      <div class="tab-content" data-tab-content="request">
+        <p class="req-note" data-i18n="info.lib.req.note">* 업무 절차는 승인/반려, 처리중, 처리완료이며 회신자료는 게시물에서 받아보실 수 있습니다.</p>
+
+        <div class="board-toolbar">
+          <div class="board-toolbar-filters">
+            <div class="form-group">
+              <label class="form-label" data-i18n="info.lib.req.status.aria">처리 상태</label>
+              <select class="form-select" id="rqStatus" data-i18n-aria="info.lib.req.status.aria" aria-label="처리 상태">
+                <option value="all" data-i18n="info.lib.req.status.all">전체 상태</option>
+                <option value="approve" data-i18n="info.lib.req.status.approve">승인</option>
+                <option value="reject" data-i18n="info.lib.req.status.reject">반려</option>
+                <option value="ing" data-i18n="info.lib.req.status.ing">처리중</option>
+                <option value="done" data-i18n="info.lib.req.status.done">처리완료</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="info.lib.req.field.aria">검색 항목</label>
+              <select class="form-select" id="rqField" data-i18n-aria="info.lib.req.field.aria" aria-label="검색 항목">
+                <option value="title" data-i18n="info.lib.req.field.title">제목/내용</option>
+                <option value="writer" data-i18n="info.lib.req.field.writer">작성자</option>
+              </select>
+            </div>
+            <div class="board-search">
+              <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="rqSearch" placeholder="검색어를 입력하세요." data-i18n-attr="placeholder:info.lib.req.search.ph" aria-label="검색어 입력">
+              <button type="button" id="rqSearchBtn" data-i18n="info.lib.search.btn">검색</button>
+            </div>
+            <button class="btn" type="button" id="rqReset" data-i18n="info.lib.req.reset" aria-label="필터 초기화">초기화</button>
+          </div>
+        </div>
+
+        <div class="alert alert-info mb-4">
+          <div class="alert-icon"></div>
+          <div class="alert-body">본 목록은 <strong>행정전자서명(GPKI)</strong>으로 로그인한 소속 기관(<strong id="rqOrgName">서울특별시</strong>)이 요청한 건만 표시됩니다. 다른 기관의 요청 내역은 조회할 수 없습니다.</div>
+        </div>
+
+        <div class="board-result-meta">
+          <div>전체 <strong id="rqCount">0</strong>건</div>
+        </div>
+
+        <table class="board-table std-board" id="rqTable">
+          <thead>
+            <tr>
+              <th class="num" data-i18n="info.lib.req.col.no">번호</th>
+              <th class="cat" data-i18n="info.lib.req.col.status">상태</th>
+              <th data-i18n="info.lib.req.col.title">게시물명</th>
+              <th class="writer" data-i18n="info.lib.req.col.writer">작성자</th>
+              <th class="date" data-i18n="info.lib.req.col.date">등록일</th>
+              <th class="date size" data-i18n="info.lib.col.size">용량</th>
+              <th class="attach" data-i18n="info.lib.req.col.reply">회신</th>
+            </tr>
+          </thead>
+          <tbody id="rqBody"></tbody>
+        </table>
+
+        <div class="board-actions-bottom">
+          <button class="btn btn-primary" type="button" id="rqWrite" data-i18n="info.lib.req.write">등록</button>
+        </div>
+
+        <div class="pagination" data-total="3" data-current="1" style="margin-top:20px;"></div>
+
+        <div id="rqEmpty" class="board-empty" style="display:none;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <h4 data-i18n="info.lib.req.empty.h">조회된 내용이 없습니다.</h4>
+          <p data-i18n="info.lib.req.empty.p">다른 검색 조건으로 다시 시도해 주세요.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- v0.12 [21·22] 일반 자료실 첨부파일 다중선택 다운로드 팝업 (기존 .modal 시스템 재사용 · role=dialog/aria-modal/포커스 트랩) -->
+<div class="modal-backdrop" data-for="libDownloadModal"></div>
+<div class="modal" id="libDownloadModal" role="dialog" aria-modal="true" aria-labelledby="libDlTitle" aria-hidden="true">
+  <div class="modal-header">
+    <h3 id="libDlTitle">첨부파일 다운로드</h3>
+    <button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p id="libDlDocName"></p>
+    <div class="lib-dl-selectall">
+      <label><input type="checkbox" id="libDlAll"> 전체 선택</label>
+      <span id="libDlCount" aria-live="polite">0개 선택</span>
+    </div>
+    <ul class="lib-file-list" id="libFileList" role="group" aria-label="첨부파일 목록"></ul>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" type="button" data-modal-close>닫기</button>
+    <button class="btn btn-primary" type="button" id="libDlSelected">선택 다운로드</button>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-info.js?v=20260630e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/board-standard.js"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 표준 게시판 — 필터 초기화 버튼([data-board-reset]) 공통 처리 */
+(function(){
+  document.querySelectorAll('[data-board-reset]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var box = btn.closest('.board-toolbar-filters'); if(!box) return;
+      box.querySelectorAll('select').forEach(function(s){ s.selectedIndex = 0; });
+      box.querySelectorAll('input[type=text]').forEach(function(i){ i.value = ''; });
+      if (window.__toast) window.__toast('필터가 초기화되었습니다.', 'info');
+    });
+  });
+})();
+</script>
+<script>
+/* 일반자료실 — 행 전체 클릭으로 상세 페이지 이동 (다운로드 버튼 셀 제외) */
+(function(){
+  var rows = document.querySelectorAll('[data-tab-content="general"] .board-table tbody tr');
+  rows.forEach(function(tr){
+    var link = tr.querySelector('.board-link'); if(!link) return;
+    tr.addEventListener('click', function(e){
+      if (e.target.closest('.attach') || e.target.closest('.lib-dl-btn') || e.target.closest('a')) return;
+      location.href = link.getAttribute('href');
+    });
+  });
+})();
+</script>
+<script>
+/* 사용자 매뉴얼 — 신설 분류·검색 필터 */
+(function(){
+  var rows = document.querySelectorAll('[data-tab-content="manual"] tbody tr');
+  var cat = document.getElementById('manCat'), search = document.getElementById('manSearch'),
+      searchBtn = document.getElementById('manSearchBtn'), reset = document.getElementById('manReset');
+  if (!rows.length) return;
+  function apply(){
+    var c = cat ? cat.value : 'all', kw = (search && search.value || '').trim().toLowerCase(), vis = 0;
+    rows.forEach(function(r){
+      var okC = c === 'all' || r.dataset.cat === c;
+      var t = (r.querySelector('.title-cell')||{}).textContent || '';
+      var okKw = !kw || t.toLowerCase().indexOf(kw) >= 0;
+      var ok = okC && okKw; r.style.display = ok ? '' : 'none'; if (ok) vis++;
+    });
+    var count = document.getElementById('manCount'); // applyLang가 노드를 교체할 수 있어 매번 조회
+    if (count) count.textContent = vis;
+  }
+  if (cat) cat.addEventListener('change', apply);
+  if (search) search.addEventListener('input', apply);
+  if (searchBtn) searchBtn.addEventListener('click', apply);
+  if (reset) reset.addEventListener('click', function(){ if(cat) cat.value='all'; if(search) search.value=''; apply(); });
+  apply();
+  setTimeout(apply, 0); // i18n applyLang 이후 카운트 재반영
+})();
+</script>
+<script>
+/* ── info-library 정렬 라벨 동기화 ── */
+(function(){
+  const sortSel = document.getElementById('libSort');
+  const sortLabel = document.getElementById('libSortLabel');
+  if (!sortSel || !sortLabel) return;
+  const labels = {
+    latest:'최신 업로드순', downloads:'다운로드 많은순',
+    views:'조회순', title:'제목순(가나다)', size:'파일 용량순'
+  };
+  sortSel.addEventListener('change', () => {
+    sortLabel.textContent = labels[sortSel.value] || '최신 업로드순';
+    if (window.__toast) window.__toast(`${labels[sortSel.value]}으로 정렬되었습니다.`, 'info');
+  });
+})();
+</script>
+<script>
+/* v0.12 [21·22] 일반 자료실 첨부파일 다중선택 다운로드 팝업 로직 (페이지 스코프) */
+(function(){
+  var modal=document.getElementById('libDownloadModal'); if(!modal) return;
+  var listEl=document.getElementById('libFileList');
+  var allCb=document.getElementById('libDlAll');
+  var countEl=document.getElementById('libDlCount');
+  var docNameEl=document.getElementById('libDlDocName');
+  var dlBtn=document.getElementById('libDlSelected');
+  var lastFocus=null;
+  function boxes(){ return listEl.querySelectorAll('input[type=checkbox]'); }
+  function update(){
+    var items=boxes(), checked=0; items.forEach(function(c){ if(c.checked) checked++; });
+    countEl.textContent=checked+'개 선택';
+    dlBtn.disabled = checked===0;
+    allCb.checked = checked>0 && checked===items.length;
+    allCb.indeterminate = checked>0 && checked<items.length;
+  }
+  function openPopup(btn){
+    lastFocus=btn;
+    var files=[]; try{ files=JSON.parse(btn.getAttribute('data-files')||'[]'); }catch(e){}
+    docNameEl.textContent=btn.getAttribute('data-doc')||'';
+    listEl.innerHTML='';
+    files.forEach(function(f,i){
+      var id='libf_'+i;
+      var li=document.createElement('li'); li.className='lib-file-item';
+      var lab=document.createElement('label'); lab.setAttribute('for',id);
+      lab.innerHTML='<input type="checkbox" id="'+id+'"><span class="lib-file-name"></span><span class="lib-file-size"></span>';
+      lab.querySelector('.lib-file-name').textContent=f.name;
+      lab.querySelector('.lib-file-size').textContent=f.size||'';
+      lab.querySelector('input').value=f.name;
+      li.appendChild(lab); listEl.appendChild(li);
+    });
+    boxes().forEach(function(c){ c.addEventListener('change', update); });
+    allCb.checked=false; allCb.indeterminate=false; update();
+    if(window.__openModal) window.__openModal('libDownloadModal');
+    var first=listEl.querySelector('input[type=checkbox]')||modal.querySelector('.modal-close');
+    if(first) setTimeout(function(){ first.focus(); }, 40);
+  }
+  document.addEventListener('click', function(e){
+    var b=e.target.closest('.lib-dl-btn'); if(b){ e.preventDefault(); openPopup(b); }
+  });
+  allCb.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked=allCb.checked; }); update(); });
+  dlBtn.addEventListener('click', function(){
+    var names=[]; boxes().forEach(function(c){ if(c.checked) names.push(c.value); });
+    if(!names.length) return;
+    var msg = names.length===1 ? ('"'+names[0]+'" 다운로드가 시작됩니다.') : (names.length+'개 파일 다운로드가 시작됩니다.');
+    if(window.__toast) window.__toast(msg,'success');
+    if(window.__closeModal) window.__closeModal(modal);
+  });
+  modal.addEventListener('transitionend', function(){
+    if(modal.getAttribute('aria-hidden')==='true' && lastFocus){ var t=lastFocus; lastFocus=null; t.focus(); }
+  });
+  modal.addEventListener('keydown', function(e){
+    if(e.key!=='Tab') return;
+    var f=Array.prototype.filter.call(modal.querySelectorAll('button,input,[href],[tabindex]:not([tabindex="-1"])'), function(el){ return !el.disabled && el.offsetParent!==null; });
+    if(!f.length) return;
+    var first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  });
+})();
+</script>
+<script>
+/* 요청자료 탭 — 처리현황 목록 렌더/필터 (info-request.html 에서 이관) */
+(function () {
+  var ATTACH = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>';
+  var STATUS = { approve:['승인','approve'], reject:['반려','reject'], ing:['처리중','ing'], done:['처리완료','done'] };
+  // 로그인 기관(행정전자서명 GPKI) — 이 기관의 요청 건만 조회 가능
+  var ORG = '서울특별시';
+  try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.org) ORG = u.org; } catch(e){}
+  var so = document.getElementById('rqOrgName'); if (so) so.textContent = ORG;
+  var ITEMS = [
+    { no:214, status:'ing',     org:'서울특별시', title:'관내 공용 충전기 가동률 원자료(raw) 제공 요청',      writer:'김담당', date:'2026.04.15', reply:false, size:'-' },
+    { no:205, status:'done',    org:'서울특별시', title:'서울시 무공해차 등록 대수 자치구별 추이 데이터 요청', writer:'이주무관', date:'2026.04.02', reply:true,  size:'2.4MB' },
+    { no:198, status:'approve', org:'서울특별시', title:'전기버스 보급 현황 통계 자료 요청(차종·연도별)',     writer:'박담당', date:'2026.03.22', reply:false, size:'-' },
+    { no:187, status:'done',    org:'서울특별시', title:'서울시 보조금 잔여 예산 현황 자료 요청',            writer:'최주무관', date:'2026.03.10', reply:true,  size:'1.6MB' },
+    { no:176, status:'reject',  org:'서울특별시', title:'개인 충전 이용내역 상세 자료 요청',                 writer:'김담당', date:'2026.02.28', reply:false, size:'-' },
+    // 타 기관 데이터(전체 DB) — 본인 기관 아니므로 스코프에서 제외됨
+    { no:128, status:'done',    org:'경기도청',   title:'경기도 보조금 집행 실적 자료 요청',                writer:'정담당', date:'2026.04.18', reply:true,  size:'1.8MB' },
+    { no:126, status:'approve', org:'부산광역시', title:'부산 전기버스 보급 통계 자료 요청',                writer:'한담당', date:'2026.04.10', reply:false, size:'-' }
+  ];
+
+  var body = document.getElementById('rqBody');
+  if (!body) return;
+  var count = document.getElementById('rqCount');
+  var empty = document.getElementById('rqEmpty');
+  var statusSel = document.getElementById('rqStatus'), fieldSel = document.getElementById('rqField'),
+      search = document.getElementById('rqSearch'), searchBtn = document.getElementById('rqSearchBtn'),
+      reset = document.getElementById('rqReset'), writeBtn = document.getElementById('rqWrite');
+
+  function render() {
+    var kw = (search.value || '').trim().toLowerCase();
+    var st = statusSel.value, field = fieldSel.value;
+    var list = ITEMS.filter(function (it) {
+      if (it.org !== ORG) return false;   // 본인 기관 스코프(행정전자서명 GPKI)
+      var okSt = st === 'all' || it.status === st;
+      var hay = (field === 'writer' ? it.writer : (it.title + it.writer)).toLowerCase();
+      var okKw = !kw || hay.indexOf(kw) >= 0;
+      return okSt && okKw;
+    });
+    body.innerHTML = list.map(function (it) {
+      var s = STATUS[it.status];
+      var reply = it.reply
+        ? '<button type="button" class="lib-dl-btn" data-doc="' + it.title + ' 회신자료" data-files=\'[{"name":"' + it.title + '_회신자료.pdf","size":"PDF · ' + it.size + '"}]\' aria-haspopup="dialog">다운로드</button>'
+        : '-';
+      return '<tr>' +
+        '<td class="num">' + it.no + '</td>' +
+        '<td class="cat"><span class="req-status ' + s[1] + '">' + s[0] + '</span></td>' +
+        '<td><div class="title-cell">' + it.title + '</div></td>' +
+        '<td class="writer">' + it.writer + '</td>' +
+        '<td class="date">' + it.date + '</td>' +
+        '<td class="date size">' + it.size + '</td>' +
+        '<td class="attach">' + reply + '</td>' +
+        '</tr>';
+    }).join('');
+    count.textContent = list.length;
+    empty.style.display = list.length ? 'none' : 'block';
+  }
+  [statusSel, fieldSel].forEach(function (el) { el.addEventListener('change', render); });
+  search.addEventListener('input', render);
+  searchBtn.addEventListener('click', render);
+  reset.addEventListener('click', function () { statusSel.value = 'all'; fieldSel.value = 'title'; search.value = ''; render(); });
+  writeBtn.addEventListener('click', function () {
+    location.href = 'request-write.html';
+  });
+  render();
+})();
+</script>
+</body>
+</html>

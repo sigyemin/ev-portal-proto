@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>참여기업 현황 | K-EV100 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="extra.bc.purchase">구매·보조금</a><span class="sep">›</span>
+        <a href="kev100.html" data-i18n="kev.bc.kev">K-EV100</a><span class="sep">›</span>
+        <span class="current" data-i18n="kcp.bc.current">참여기업 현황</span>
+      </nav>
+      <h1 data-i18n="kcp.h1">참여기업 현황</h1>
+      <p class="hero-lead" data-i18n-html="kcp.lead">K-EV100에 참여한 <strong style="color:#fff;">412개 기업</strong>의 명단과 전환 실적을 투명하게 공개합니다.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- Summary -->
+      <div class="grid grid-4 mb-8" style="gap: 20px;" data-reveal>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s1.lbl">누적 참여 기업</div><div class="stat-value"><span data-counter="412">0</span><span class="unit" data-i18n="kev.unit.firms">社</span></div><span class="stat-trend up" data-i18n="kcp.s1.trend">↑ 2024 대비 38%</span></div>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s2.lbl">누적 전환 차량</div><div class="stat-value"><span data-counter="38500">0</span><span class="unit" data-i18n="kev.unit.units">대</span></div><span class="stat-trend up" data-i18n="kcp.s2.trend">↑ 월 평균 +580대</span></div>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s3.lbl">100% 달성 기업</div><div class="stat-value"><span data-counter="23">0</span><span class="unit" data-i18n="kev.unit.firms">社</span></div><span class="stat-trend up" data-i18n="kcp.s3.trend">↑ 전년 +12社</span></div>
+        <div class="stat-card" style="background: var(--gradient-primary); color: #fff; border: none;"><div class="stat-label" style="color: rgba(255,255,255,0.8);" data-i18n="kcp.s4.lbl">CO₂ 감축 효과</div><div class="stat-value" style="color: #fff;"><span data-counter="128">0</span><span class="unit" style="color: rgba(255,255,255,0.9);" data-i18n="kev.unit.kton">천톤</span></div><span class="stat-trend up" style="background: rgba(255,255,255,0.2); color: #fff;" data-i18n="kcp.s4.trend">연간 환산</span></div>
+      </div>
+
+      <!-- Filter -->
+      <div class="card mb-6" data-reveal>
+        <div class="grid" style="grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 16px; align-items: end;">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" data-i18n="kcp.f.search">기업 검색</label>
+            <div class="search-field">
+              <input class="form-input" type="text" placeholder="기업명, 업종 검색" data-table-search="company-table" data-i18n-attr="placeholder:kcp.f.ph">
+            </div>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" data-i18n="kcp.f.industry">업종</label>
+            <select class="form-select">
+              <option data-i18n="kcp.f.all">전체</option>
+              <option data-i18n="kcp.f.mfg">제조업</option>
+              <option data-i18n="kcp.f.logi">운수·물류</option>
+              <option data-i18n="kcp.f.fin">금융·보험</option>
+              <option data-i18n="kcp.f.it">IT·서비스</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" data-i18n="kcp.f.target">목표 연도</label>
+            <select class="form-select">
+              <option data-i18n="kcp.f.all">전체</option>
+              <option data-i18n="kcp.f.2030">2030년</option>
+              <option data-i18n="kcp.f.2040">2040년</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" data-i18n="kcp.f.rate">달성률</label>
+            <select class="form-select">
+              <option data-i18n="kcp.f.all">전체</option>
+              <option data-i18n="kcp.f.100">100% 달성</option>
+              <option data-i18n="kcp.f.70">70% 이상</option>
+              <option data-i18n="kcp.f.50">50% 이상</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" data-i18n="kcp.f.btn">조회</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div data-reveal>
+        <div class="flex justify-between items-center mb-4">
+          <h3 style="font-size: 20px;" data-i18n="kcp.h3.list">전체 참여기업 목록</h3>
+          <div class="btn-group">
+            <button class="btn active" data-i18n="kcp.btn.list">리스트</button>
+            <button class="btn" data-i18n="kcp.btn.card">카드</button>
+          </div>
+        </div>
+
+        <table class="data-table" id="company-table">
+          <thead>
+            <tr>
+              <th class="sortable" data-i18n="kcp.th.firm">기업명</th>
+              <th class="sortable" data-i18n="kcp.th.industry">업종</th>
+              <th class="sortable" data-i18n="kcp.th.join">참여 연도</th>
+              <th class="sortable" data-i18n="kcp.th.target">목표 연도</th>
+              <th class="sortable" data-i18n="kcp.th.count">전환 대수</th>
+              <th class="sortable" data-i18n="kcp.th.rate">달성률</th>
+              <th style="text-align:center;width:80px;" data-i18n="kcp.th.detail">상세</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="expandable" data-expand="k1">
+              <td><strong data-i18n="kcp.k1.firm">CJ대한통운</strong></td><td data-i18n="kcp.f.logi">운수·물류</td><td>2021</td><td>2030</td><td data-i18n="kcp.k1.units">3,240대</td>
+              <td><div class="progress" style="width: 120px;"><div class="progress-bar" style="width: 68%;"></div></div><span style="font-size: 12px;">68%</span></td>
+              <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+            </tr>
+            <tr class="detail-row" id="k1"><td colspan="7">
+              <div class="detail-content">
+                <div class="detail-block"><h5 data-i18n="kcp.k1.d1.h5">주요 전환 차량</h5><p data-i18n-html="kcp.k1.d1.p">・1톤 전기화물 2,100대<br>・전기지게차 480대<br>・전기승합 120대</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k1.d2.h5">충전 인프라</h5><p data-i18n-html="kcp.k1.d2.p">・전국 터미널 124개소<br>・완속 3,200기, 급속 560기</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k1.d3.h5">감축 효과</h5><p data-i18n-html="kcp.k1.d3.p">・연 CO₂ 감축 12,800톤<br>・연료비 42억원 절감</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k1.d4.h5">미래 계획</h5><p data-i18n="kcp.k1.d4.p">2027년까지 90%, 2030년 100% 전환</p></div>
+              </div>
+            </td></tr>
+
+            <tr class="expandable" data-expand="k2">
+              <td><strong data-i18n="kcp.k2.firm">쿠팡로지스틱스</strong></td><td data-i18n="kcp.f.logi">운수·물류</td><td>2021</td><td>2030</td><td data-i18n="kcp.k2.units">2,850대</td>
+              <td><div class="progress" style="width: 120px;"><div class="progress-bar" style="width: 72%;"></div></div><span style="font-size: 12px;">72%</span></td>
+              <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+            </tr>
+            <tr class="detail-row" id="k2"><td colspan="7">
+              <div class="detail-content">
+                <div class="detail-block"><h5 data-i18n="kcp.k2.d1.h5">주요 전환 차량</h5><p data-i18n-html="kcp.k2.d1.p">・전기화물 2,580대<br>・전기이륜 270대</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k2.d2.h5">주요 성과</h5><p data-i18n-html="kcp.k2.d2.p">도심 배송 전량 무공해<br>새벽배송 시간 단축</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k2.d3.h5">특이사항</h5><p data-i18n="kcp.k2.d3.p">자체 충전 네트워크 ·쿠팡EV차지' 운영</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k2.d4.h5">목표</h5><p data-i18n="kcp.k2.d4.p">2028년 완전 전환</p></div>
+              </div>
+            </td></tr>
+
+            <tr class="expandable" data-expand="k3">
+              <td><strong data-i18n="kcp.k3.firm">SK네트웍스</strong></td><td data-i18n="kcp.f.it">IT·서비스</td><td>2022</td><td>2030</td><td data-i18n="kcp.k3.units">480대</td>
+              <td><div class="progress" style="width: 120px;"><div class="progress-bar" style="width: 100%;"></div></div><span style="font-size: 12px; color: var(--color-primary-700); font-weight: 700;">100%</span></td>
+              <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+            </tr>
+            <tr class="detail-row" id="k3"><td colspan="7">
+              <div class="detail-content">
+                <div class="detail-block"><h5 data-i18n="kcp.k3.d1.h5">달성 현황</h5><p style="color: var(--color-primary-700); font-weight: 700;" data-i18n="kcp.k3.d1.p">✓ 2025년 12월 100% 달성</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k3.d2.h5">전환 차량</h5><p data-i18n-html="kcp.k3.d2.p">・전기승용 420대<br>・전기화물 60대</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k3.d3.h5">수상</h5><p data-i18n="kcp.k3.d3.p">2026 환경부 장관 표창</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k3.d4.h5">향후</h5><p data-i18n="kcp.k3.d4.p">신규 도입 차량 100% 무공해차 유지</p></div>
+              </div>
+            </td></tr>
+
+            <tr class="expandable" data-expand="k4">
+              <td><strong data-i18n="kcp.k4.firm">삼성SDS</strong></td><td data-i18n="kcp.f.it">IT·서비스</td><td>2022</td><td>2040</td><td data-i18n="kcp.k4.units">320대</td>
+              <td><div class="progress" style="width: 120px;"><div class="progress-bar" style="width: 42%;"></div></div><span style="font-size: 12px;">42%</span></td>
+              <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+            </tr>
+            <tr class="detail-row" id="k4"><td colspan="7">
+              <div class="detail-content">
+                <div class="detail-block"><h5 data-i18n="kcp.k4.d1.h5">전환 현황</h5><p data-i18n="kcp.k4.d1.p">업무용 세단 85%, 화물 28%</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k4.d2.h5">전략</h5><p data-i18n="kcp.k4.d2.p">계약 만료 후 무공해차로 교체</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k4.d3.h5">특이사항</h5><p data-i18n="kcp.k4.d3.p">자율주행 EV 시범 운영</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k4.d4.h5">목표</h5><p data-i18n="kcp.k4.d4.p">2035년 조기 달성</p></div>
+              </div>
+            </td></tr>
+
+            <tr class="expandable" data-expand="k5">
+              <td><strong data-i18n="kcp.k5.firm">현대글로비스</strong></td><td data-i18n="kcp.f.logi">운수·물류</td><td>2023</td><td>2030</td><td data-i18n="kcp.k5.units">1,680대</td>
+              <td><div class="progress" style="width: 120px;"><div class="progress-bar" style="width: 54%;"></div></div><span style="font-size: 12px;">54%</span></td>
+              <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+            </tr>
+            <tr class="detail-row" id="k5"><td colspan="7">
+              <div class="detail-content">
+                <div class="detail-block"><h5 data-i18n="kcp.k5.d1.h5">전환 차량</h5><p data-i18n-html="kcp.k5.d1.p">・전기트럭 1,420대<br>・수소트럭 120대 (시범)</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k5.d2.h5">특징</h5><p data-i18n="kcp.k5.d2.p">수소트럭 보급 선도 기업</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k5.d3.h5">인프라</h5><p data-i18n="kcp.k5.d3.p">주요 항만 수소충전소 3개소 운영</p></div>
+                <div class="detail-block"><h5 data-i18n="kcp.k5.d4.h5">목표</h5><p data-i18n="kcp.k5.d4.p">2030년 100%</p></div>
+              </div>
+            </td></tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" data-total="14" data-current="1"></div>
+      </div>
+
+      <!-- 업종별 분포 차트 -->
+      <div class="mt-8" data-reveal>
+        <h3 style="font-size: 22px; margin-bottom: 16px;" data-i18n="kcp.chart.h3">업종별 참여 분포</h3>
+        <div class="bar-chart">
+          <div class="bar-chart-item"><span class="bar" style="height: 95%;"><span class="bar-value" data-i18n="kcp.bar.142">142社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.logi">운수·물류</span></div>
+          <div class="bar-chart-item"><span class="bar" style="height: 72%;"><span class="bar-value" data-i18n="kcp.bar.98">98社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.mfg">제조업</span></div>
+          <div class="bar-chart-item"><span class="bar" style="height: 55%;"><span class="bar-value" data-i18n="kcp.bar.72">72社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.it">IT·서비스</span></div>
+          <div class="bar-chart-item"><span class="bar" style="height: 38%;"><span class="bar-value" data-i18n="kcp.bar.51">51社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.fin">금융·보험</span></div>
+          <div class="bar-chart-item"><span class="bar" style="height: 28%;"><span class="bar-value" data-i18n="kcp.bar.32">32社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.con">건설</span></div>
+          <div class="bar-chart-item"><span class="bar" style="height: 15%;"><span class="bar-value" data-i18n="kcp.bar.17">17社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.pub">공공기관</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-extra.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+</body>
+</html>

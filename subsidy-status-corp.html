@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>법인 보조금 신청현황 | 마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/subsidy-status.css?v=20260630a">
+<style>
+  .corp-scope code{font-family:var(--font-mono,monospace);font-weight:700;color:var(--color-primary-700);}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true;</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html" data-i18n="extra.bc.home">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <span class="current">법인 보조금 신청현황</span>
+      </nav>
+      <h1>법인 보조금 신청현황</h1>
+      <p class="hero-lead">법인 명의로 신청한 무공해차 보조금을 차량별로 확인합니다. 카드를 펼치면 단계별 진행 상황과 일정을 볼 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 인증 게이트 (인증 통과 전에는 리스트 비노출) -->
+      <div id="subsidyGate"></div>
+
+      <!-- 신청현황 리스트 (인증 성공 후 노출) -->
+      <div id="subsidyView" hidden>
+
+      <!-- 매칭 안내 (인증 유형에 따라 갱신) -->
+      <div class="alert alert-info mb-6 corp-scope">
+        <div class="alert-icon"></div>
+        <div class="alert-body" id="corpScope"><strong>법인 명의 신청 내역</strong> 사업자번호 <code>123-45-67890</code> (무공해모빌리티㈜) 로 신청한 전체 건을 표시합니다.</div>
+      </div>
+
+      <!-- 인사 + 요약 -->
+      <div class="ssp-greet">
+        <h2><b id="memberName">무공해모빌리티㈜</b>의 보조금 신청현황</h2>
+        <div class="ssp-sum" id="sumPills"></div>
+      </div>
+
+      <!-- 카드 리스트 -->
+      <div class="ssp-list" id="sspList"></div>
+
+      <!-- 빈상태 -->
+      <div class="ssp-empty" id="sspEmptyWrap" hidden>
+        <p>신청 내역이 없습니다. 판매사가 입력한 신청정보가 누락·상이하면 조회되지 않을 수 있으니, 판매사 또는 고객센터(1661-0970)로 정정을 요청하세요.</p>
+        <a href="subsidy-target.html" class="btn btn-primary">보조금 신청 바로가기 →</a>
+      </div>
+
+      </div><!-- /#subsidyView -->
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/subsidy-status-common.js?v=20260630a"></script>
+<script src="js/subsidy-auth.js?v=20260701a"></script>
+<script>
+(function(){
+  var S = window.SubsidyStatus;
+
+  // ── mock (법인 1곳, 차량 10대 = 10건). 화면에 지급계좌·소유자·내역할 표시 안 함 ──
+  var RAW = [
+    { reqSeq:'2026-EVC-10412', carType:'전기승용', carNo:'서울12가3456', vin:'KMHL00ABCDP100412', region:'서울특별시', amount:1180, appStep:501,
+      dates:['2026-05-20','2026-05-22','2026-05-27','2026-06-03','2026-06-12'] },
+    { reqSeq:'2026-EVC-10398', carType:'전기화물', carNo:'서울80바1199', vin:'KMFTRUCK26P010398', region:'서울특별시', amount:1650, appStep:203,
+      dates:['2026-05-18','2026-05-21','2026-05-26','2026-06-02',''] },
+    { reqSeq:'2026-EVC-10375', carType:'전기승용', carNo:'경기34나5678', vin:'KMHL00ABCDP100375', region:'경기도', amount:1130, appStep:130,
+      dates:['2026-05-15','2026-05-19','2026-05-23','',''] },
+    { reqSeq:'2026-EVC-10361', carType:'전기승합', carNo:'경기75사0021', vin:'KMJBUS0026P010361', region:'경기도', amount:6000, appStep:121,
+      dates:['2026-05-12','2026-05-16','','',''] },
+    { reqSeq:'2026-EVC-10340', carType:'전기승용', carNo:'인천11가7788', vin:'KMHL00ABCDP100340', region:'인천광역시', amount:1180, appStep:101,
+      dates:['2026-05-08','','','',''] },
+    { reqSeq:'2026-EVC-10318', carType:'전기승용', carNo:'서울13가9090', vin:'KMHL00ABCDP100318', region:'서울특별시', amount:1180, appStep:110,
+      dates:['2026-05-05','2026-05-09','','',''],
+      suppReason:'사업자등록증 사본의 업태·종목이 식별되지 않습니다. 선명한 사본을 다시 제출해 주세요.',
+      suppDocs:['사업자등록증 사본(선명본)','차량 구매계약서'] },
+    { reqSeq:'2026-EVC-10299', carType:'전기화물', carNo:'경기81바5512', vin:'KMFTRUCK26P010299', region:'경기도', amount:1650, appStep:210,
+      dates:['2026-05-02','2026-05-06','2026-05-10','2026-05-16',''],
+      suppReason:'출고(자동차등록증) 서류의 차대번호가 신청 내역과 일치하지 않습니다. 확인 후 재첨부해 주세요.',
+      suppDocs:['자동차등록증','출고증명서'] },
+    { reqSeq:'2026-EVC-10277', carType:'전기승용', carNo:'서울14가1212', vin:'KMHL00ABCDP100277', region:'서울특별시', amount:1180, appStep:910,
+      dates:['2026-04-28','2026-05-02','','',''],
+      cancelReason:'신청자(법인) 요청으로 신청이 취소되었습니다. (차량 구매 취소)' },
+    { reqSeq:'2026-EVC-10255', carType:'전기승용', carNo:'대전20가3434', vin:'KMHL00ABCDP100255', region:'대전광역시', amount:1100, appStep:940,
+      dates:['2026-04-25','2026-04-29','','',''],
+      cancelReason:'제출 서류로 지원 자격이 확인되지 않아 승인 불가 처리되었습니다.' },
+    { reqSeq:'2025-EVC-09980', carType:'전기화물', carNo:'경기80바2200', vin:'KMFTRUCK25P009980', region:'경기도', amount:1600, appStep:501,
+      dates:['2025-11-10','2025-11-14','2025-11-20','2025-11-27','2025-12-08'] }
+  ];
+
+  var DATA = S.decorate(RAW);
+
+  // ── 인증 게이트 통과 후에만 렌더 (법인 = 사업자번호 / 공공 = 기관ID 스코프) ──
+  function renderCorpList(auth){
+    if (auth && auth.type === 'gov') {
+      document.getElementById('memberName').textContent = auth.org || '서울특별시청';
+      document.getElementById('corpScope').innerHTML = '<strong>공공기관·지자체 신청 내역</strong> 기관ID <code>' + (auth.instId||'6110000') + '</code> (' + (auth.org||'서울특별시청') + ') 로 신청한 전체 건을 표시합니다. <span style="color:var(--text-tertiary);">· GPKI(행정전자서명) 인증</span>';
+    } else {
+      var org = (auth && auth.org) || '무공해모빌리티㈜', biz = (auth && auth.bizNo) || '123-45-67890';
+      document.getElementById('memberName').textContent = org;
+      document.getElementById('corpScope').innerHTML = '<strong>법인·단체 신청 내역</strong> 사업자번호 <code>' + biz + '</code> (' + org + ') 로 신청한 전체 건을 표시합니다. <span style="color:var(--text-tertiary);">· 공동인증서 인증</span>';
+    }
+    S.renderPills(document.getElementById('sumPills'), DATA);
+    var list = document.getElementById('sspList');
+    if (DATA.length) {
+      S.renderCards(list, DATA, { supplementHref:'#' });  // TODO: 업무지원시스템 구매보조금 신청현황 URL 연동
+      document.getElementById('sspEmptyWrap').hidden = true;
+    } else {
+      list.innerHTML = '';
+      document.getElementById('sspEmptyWrap').hidden = false;
+    }
+  }
+  // 법인/공공 인증(인증서 보유=권한). 개인 인증으로 진입 시 게이트가 개인 페이지로 라우팅.
+  window.SubsidyAuth.mount({ pageType:'corp', onAuthed:renderCorpList });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공개자료 | 알림·공지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+<style>
+  .cat-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap}
+  .cat-badge.c-charge{background:#e1f5ee;color:#0f7a52}
+  .cat-badge.c-supply{background:#e6f0fb;color:#1f5fa8}
+  .cat-badge.c-subsidy{background:#fff3e0;color:#b45309}
+  .cat-badge.c-policy{background:#eef2ff;color:#4338ca}
+  .cat-badge.c-k100{background:#f3eafe;color:#6b21a8}
+  .fmt-chip{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11.5px;font-weight:700;background:#f1f4f7;color:#5a6675}
+  .board-table td.fmt,.board-table th.fmt{text-align:center;width:150px;white-space:nowrap}
+  .board-table td.cycle,.board-table th.cycle{text-align:center;width:110px;white-space:nowrap}
+  #dsTable td.attach,#dsTable th.attach{width:auto;min-width:184px;text-align:right;white-space:nowrap}
+  #dsTable .dl-actions{display:inline-flex;gap:6px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+  .ds-link{color:var(--text-primary,#1f2937);text-decoration:none}
+  .ds-link:hover{color:var(--color-primary-700,#0f6e56);text-decoration:underline}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="notice.bc.home">홈</a><span class="sep">›</span>
+        <a href="#" data-i18n="notice.bc.community">소통·지원</a><span class="sep">›</span>
+        <a href="notice.html" data-i18n="notice.list.bc.notice">알림·공지</a><span class="sep">›</span>
+        <span class="current" data-i18n="notice.data.bc.current">공개자료</span>
+      </nav>
+      <h1 data-i18n="notice.data.h1">공개자료</h1>
+      <p class="hero-lead" data-i18n-html="notice.data.lead">주요 공공 데이터셋을 <strong>CSV·JSON·XLSX</strong> 형태로 제공합니다. 공공누리 제1유형에 따라 자유롭게 내려받아 이용하실 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 툴바 -->
+      <div class="board-toolbar">
+        <div class="board-toolbar-filters">
+          <!-- DB상 콘텐츠 분류 없음: 테마(분류) 필터·컬럼 제거. 제공형식(포맷)만 유지 -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="notice.data.format.aria">데이터 포맷</label>
+            <select class="form-select" id="dsFormat" data-i18n-aria="notice.data.format.aria" aria-label="데이터 포맷">
+            <option value="all" data-i18n="notice.data.format.all">전체 포맷</option>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+            <option value="xlsx">XLSX</option>
+          </select>
+          </div>
+          <div class="board-search">
+            <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="dsSearch" placeholder="데이터셋 이름·설명 검색" aria-label="검색어 입력" data-i18n-attr="placeholder:notice.data.search.ph,aria-label:notice.data.search.aria">
+            <button type="button" id="dsSearchBtn" data-i18n="notice.data.search.btn">검색</button>
+          </div>
+          <button class="btn" type="button" id="dsReset" aria-label="필터 초기화">초기화</button>
+        </div>
+      </div>
+
+      <div class="board-result-meta">
+        <div>전체 <strong id="dsCount">12</strong>개 데이터셋</div>
+      </div>
+
+      <table class="board-table std-board" id="dsTable">
+        <thead>
+          <tr>
+            <th class="num">번호</th>
+            <th>게시물명</th>
+            <th class="fmt">제공형식</th>
+            <th class="date">최종 업데이트</th>
+            <th class="attach">다운로드</th>
+          </tr>
+        </thead>
+        <tbody id="dsGrid">
+          <tr data-theme="charge" data-format="csv json"><td class="num">12</td><td><div class="title-cell"><b data-i18n="notice.data.d1.title">전기차 충전소 위치 데이터 v2.4</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span> <span class="fmt-chip">JSON</span></td><td class="date">2026.04.19</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="전기차 충전소 위치 데이터 v2.4" data-files='[{"name":"충전소_위치데이터.csv","size":"CSV · 42.6MB"},{"name":"충전소_위치데이터.json","size":"JSON · 48.2MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="supply" data-format="csv xlsx"><td class="num">11</td><td><div class="title-cell"><b data-i18n="notice.data.d2.title">월간 무공해차 등록 현황</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span> <span class="fmt-chip">XLSX</span></td><td class="date">2026.04.10</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="월간 무공해차 등록 현황" data-files='[{"name":"무공해차_등록현황.csv","size":"CSV · 2.8MB"},{"name":"무공해차_등록현황.xlsx","size":"XLSX · 3.1MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="subsidy" data-format="csv xlsx"><td class="num">10</td><td><div class="title-cell"><b data-i18n="notice.data.d3.title">2026년 지자체별 보조금 단가 표</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span> <span class="fmt-chip">XLSX</span></td><td class="date">2026.04.01</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="2026년 지자체별 보조금 단가 표" data-files='[{"name":"지자체별_보조금_단가.csv","size":"CSV · 486KB"},{"name":"지자체별_보조금_단가.xlsx","size":"XLSX · 540KB"}]'>다운로드</button></td></tr>
+          <tr data-theme="charge" data-format="csv"><td class="num">9</td><td><div class="title-cell"><b data-i18n="notice.data.d4.title">수소충전소 운영 현황 데이터</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span></td><td class="date">실시간</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="수소충전소 운영 현황 데이터" data-files='[{"name":"수소충전소_운영현황.csv","size":"CSV · 1.1MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="subsidy" data-format="csv xlsx"><td class="num">8</td><td><div class="title-cell"><b data-i18n="notice.data.d5.title">월간 보조금 집행 현황 데이터</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span> <span class="fmt-chip">XLSX</span></td><td class="date">2026.04.10</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="월간 보조금 집행 현황 데이터" data-files='[{"name":"보조금_집행현황.csv","size":"CSV · 1.4MB"},{"name":"보조금_집행현황.xlsx","size":"XLSX · 1.6MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="k100" data-format="xlsx"><td class="num">7</td><td><div class="title-cell"><b data-i18n="notice.data.d6.title">K-EV100 참여 기업 현황</b></div></td><td class="fmt"><span class="fmt-chip">XLSX</span></td><td class="date">2026.03.31</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="K-EV100 참여 기업 현황" data-files='[{"name":"K-EV100_참여기업.xlsx","size":"XLSX · 320KB"}]'>다운로드</button></td></tr>
+          <tr data-theme="policy" data-format="csv"><td class="num">6</td><td><div class="title-cell"><b data-i18n="notice.data.d7.title">무공해차 공고·공모 이력 데이터</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span></td><td class="date">2026.04.05</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="무공해차 공고·공모 이력 데이터" data-files='[{"name":"공고공모_이력.csv","size":"CSV · 720KB"}]'>다운로드</button></td></tr>
+          <tr data-theme="charge" data-format="csv xlsx"><td class="num">5</td><td><div class="title-cell"><b data-i18n="notice.data.d8.title">사업자별 충전 요금 매트릭스</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span> <span class="fmt-chip">XLSX</span></td><td class="date">2026.04.01</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="사업자별 충전 요금 매트릭스" data-files='[{"name":"사업자별_충전요금.csv","size":"CSV · 124KB"},{"name":"사업자별_충전요금.xlsx","size":"XLSX · 156KB"}]'>다운로드</button></td></tr>
+          <tr data-theme="subsidy" data-format="csv"><td class="num">4</td><td><div class="title-cell"><b data-i18n="notice.data.d9.title">무공해차 보조금 지원 차종 목록</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span></td><td class="date">2026.04.01</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="무공해차 보조금 지원 차종 목록" data-files='[{"name":"보조금_지원차종.csv","size":"CSV · 1.2MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="charge" data-format="csv"><td class="num">3</td><td><div class="title-cell"><b data-i18n="notice.data.d10.title">충전기 가동률·고장률 (사업자별)</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span></td><td class="date">실시간</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="충전기 가동률·고장률 (사업자별)" data-files='[{"name":"충전기_가동률_고장률.csv","size":"CSV · 2.3MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="charge" data-format="csv"><td class="num">2</td><td><div class="title-cell"><b data-i18n="notice.data.d11.title">충전 이용 통계 (시간대·요일별)</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span></td><td class="date">2026.04.01</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="충전 이용 통계 (시간대·요일별)" data-files='[{"name":"충전_이용통계.csv","size":"CSV · 8.4MB"}]'>다운로드</button></td></tr>
+          <tr data-theme="supply" data-format="csv"><td class="num">1</td><td><div class="title-cell"><b data-i18n="notice.data.d12.title">전기차 화재 사고 통계 (분기별)</b></div></td><td class="fmt"><span class="fmt-chip">CSV</span></td><td class="date">2026.04.10</td><td class="attach"><button type="button" class="lib-dl-btn" data-doc="전기차 화재 사고 통계 (분기별)" data-files='[{"name":"화재사고_통계.csv","size":"CSV · 240KB"}]'>다운로드</button></td></tr>
+        </tbody>
+      </table>
+      <div class="dataset-grid-removed" hidden>
+
+        <div class="dataset-card" data-theme="charge" data-format="csv json api">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip charge" data-i18n="notice.data.chip.charge">충전 인프라</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d1.title">전기차 충전소 위치 데이터 v2.4</h3>
+              <p class="dc-desc" data-i18n="notice.data.d1.desc">전국 전기차 충전소의 위경도·운영 상태·충전기 유형(완속/급속/초급속)·커넥터·요금 정보. 5분 주기 실시간 갱신.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="json">JSON</span>
+              <span class="api">API</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.19</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.record">레코드</div><div class="mv">124,580</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">42.6 MB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">58,420</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="충전소 위치 데이터.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-secondary" type="button" data-action="download" data-action-label="충전소 위치 데이터.json" data-i18n="notice.data.btn.json">JSON 다운로드</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="supply" data-format="csv xlsx">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip subsidy" data-i18n="notice.data.chip.supply">보급 현황</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d2.title">월간 무공해차 등록 현황</h3>
+              <p class="dc-desc" data-i18n="notice.data.d2.desc">월별·지역별·차종별(전기승용/화물/이륜/버스/수소) 신규 등록 대수 및 누적 보급 현황.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="xlsx">XLSX</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.10</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.period">기간</div><div class="mv" data-i18n="notice.data.mv.period15">2015 ~ 현재</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">2.8 MB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">34,280</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="월간 무공해차 등록 현황.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-secondary" type="button" data-action="download" data-action-label="월간 무공해차 등록 현황.xlsx" data-i18n="notice.data.btn.xlsx">XLSX 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="subsidy" data-format="csv xlsx api">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip subsidy" data-i18n="notice.data.chip.subsidy">보조금</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d3.title">2026년 지자체별 보조금 단가 표</h3>
+              <p class="dc-desc" data-i18n="notice.data.d3.desc">전국 243개 지자체의 연도별 국비·지방비 지원 단가 및 의무운행기간 정보.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="xlsx">XLSX</span>
+              <span class="api">API</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.01</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.record">레코드</div><div class="mv" data-i18n="notice.data.mv.region243">243 지자체</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">486 KB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">24,180</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="지자체별 보조금 단가.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-secondary" type="button" data-action="download" data-action-label="지자체별 보조금 단가.xlsx" data-i18n="notice.data.btn.xlsx">XLSX 다운로드</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="charge" data-format="csv api">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip charge" data-i18n="notice.data.chip.charge">충전 인프라</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d4.title">수소충전소 운영 현황 데이터</h3>
+              <p class="dc-desc" data-i18n="notice.data.d4.desc">전국 247개 수소충전소의 운영 상태(정상/정비/장애)·정비 일정·운영사 정보. H2KOREA 연동.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="api">API</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv" data-i18n="notice.data.mv.realtime">실시간</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.record">레코드</div><div class="mv" data-i18n="notice.data.mv.station247">247 개소</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.cycle">갱신 주기</div><div class="mv" data-i18n="notice.data.mv.cycle1h">1시간</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">14,820</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="수소충전소 운영 현황.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-secondary" type="button" data-action="notify" data-action-label="실시간 API 호출 테스트 페이지" data-i18n="notice.data.btn.apitest">API 테스트</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="subsidy" data-format="csv xlsx">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip policy" data-i18n="notice.data.chip.exec">보조금 집행</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d5.title">월간 보조금 집행 현황 데이터</h3>
+              <p class="dc-desc" data-i18n="notice.data.d5.desc">월별·지자체별 보조금 배정·접수·지급 현황. 부적정 집행 환수 통계 포함.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="xlsx">XLSX</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.10</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.record">레코드</div><div class="mv">12,420</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">1.4 MB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">8,920</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="월간 보조금 집행 현황.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-secondary" type="button" data-action="download" data-action-label="월간 보조금 집행 현황.xlsx" data-i18n="notice.data.btn.xlsx">XLSX 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="k100" data-format="xlsx">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip policy">K-EV100</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d6.title">K-EV100 참여 기업 현황</h3>
+              <p class="dc-desc" data-i18n="notice.data.d6.desc">K-EV100 참여 선언 기업 500여 개의 전환 계획·실적 데이터. 업종·규모·지역별 분류.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="xlsx">XLSX</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.03.31</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.record">레코드</div><div class="mv" data-i18n="notice.data.mv.company">524 기업</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">320 KB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">4,240</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="K-EV100 참여 기업 현황.xlsx" data-i18n="notice.data.btn.xlsx">XLSX 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="policy" data-format="csv api">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip notice" data-i18n="notice.data.chip.notice">공고·공모</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d7.title">무공해차 공고·공모 이력 데이터</h3>
+              <p class="dc-desc" data-i18n="notice.data.d7.desc">연도별 보조금·충전시설 공고·공모 이력. 접수·선정 결과 포함.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="api">API</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.05</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.period">기간</div><div class="mv" data-i18n="notice.data.mv.period20">2020 ~ 현재</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.record">레코드</div><div class="mv">2,840</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">3,120</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="공고·공모 이력.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button>
+          </div>
+        </div>
+
+        <div class="dataset-card" data-theme="charge" data-format="csv xlsx">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip charge" data-i18n="notice.data.chip.fee">충전 요금</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d8.title">사업자별 충전 요금 매트릭스</h3>
+              <p class="dc-desc" data-i18n="notice.data.d8.desc">환경부·민간 사업자별 완속/급속/초급속 요금 및 시간대별 TOU 요금 데이터.</p>
+            </div>
+            <div class="file-type-badges">
+              <span class="csv">CSV</span>
+              <span class="xlsx">XLSX</span>
+            </div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.01</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.operator">사업자 수</div><div class="mv" data-i18n="notice.data.mv.operator28">28 개사</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">124 KB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">2,840</div></div>
+          </div>
+          <div class="dc-actions">
+            <button class="btn btn-primary" type="button" data-action="download" data-action-label="사업자별 충전 요금.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-secondary" type="button" data-action="download" data-action-label="사업자별 충전 요금.xlsx" data-i18n="notice.data.btn.xlsx">XLSX 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button>
+          </div>
+        </div>
+        <!-- v0.12 [8] 공개 데이터 목록(data-open.html)에는 있으나 공개자료에 없던 데이터셋 4건 추가. 메타 수치는 예시값 -->
+        <div class="dataset-card" data-theme="subsidy" data-format="csv">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip subsidy" data-i18n="notice.data.chip.subsidy">보조금</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d9.title">무공해차 보조금 지원 차종 목록</h3>
+              <p class="dc-desc" data-i18n="notice.data.d9.desc">연도별 보조금 지원 대상 전기·수소차 차종 및 국비 지원액 목록. 월 단위 갱신.</p>
+            </div>
+            <div class="file-type-badges"><span class="csv">CSV</span></div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.01</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">1.2 MB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">1,920</div></div>
+          </div>
+          <div class="dc-actions"><button class="btn btn-primary" type="button" data-action="download" data-action-label="무공해차 보조금 지원 차종.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button></div>
+        </div>
+        <div class="dataset-card" data-theme="charge" data-format="csv">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip charge" data-i18n="notice.data.chip.charge">충전 인프라</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d10.title">충전기 가동률·고장률 (사업자별)</h3>
+              <p class="dc-desc" data-i18n="notice.data.d10.desc">사업자별 충전기 가동률·고장률·평균 복구 시간 통계. 일 단위 갱신.</p>
+            </div>
+            <div class="file-type-badges"><span class="api">API</span></div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">실시간</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">Open API</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">8,310</div></div>
+          </div>
+          <div class="dc-actions"><button class="btn btn-primary" type="button" data-action="notify" data-action-label="Open API 명세">Open API</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button></div>
+        </div>
+        <div class="dataset-card" data-theme="charge" data-format="csv">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip charge" data-i18n="notice.data.chip.charge">충전 인프라</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d11.title">충전 이용 통계 (시간대·요일별)</h3>
+              <p class="dc-desc" data-i18n="notice.data.d11.desc">시간대·요일·충전 속도별 이용 건수 및 충전량 통계.</p>
+            </div>
+            <div class="file-type-badges"><span class="csv">CSV</span></div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.01</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">8.4 MB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">1,540</div></div>
+          </div>
+          <div class="dc-actions"><button class="btn btn-primary" type="button" data-action="download" data-action-label="충전 이용 통계.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button></div>
+        </div>
+        <div class="dataset-card" data-theme="supply" data-format="csv">
+          <div class="dc-head">
+            <div style="flex:1;">
+              <span class="cat-chip supply" data-i18n="notice.data.chip.safety">안전</span>
+              <h3 class="dc-title" style="margin-top:8px;" data-i18n="notice.data.d12.title">전기차 화재 사고 통계 (분기별)</h3>
+              <p class="dc-desc" data-i18n="notice.data.d12.desc">분기별 전기차 화재 사고 발생 건수·원인·차종 분류 통계.</p>
+            </div>
+            <div class="file-type-badges"><span class="csv">CSV</span></div>
+          </div>
+          <div class="dc-meta-row">
+            <div><div class="mk" data-i18n="notice.data.mk.update">최종 업데이트</div><div class="mv">2026.04.10</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.size">파일 크기</div><div class="mv">240 KB</div></div>
+            <div><div class="mk" data-i18n="notice.data.mk.dl">다운로드</div><div class="mv">2,210</div></div>
+          </div>
+          <div class="dc-actions"><button class="btn btn-primary" type="button" data-action="download" data-action-label="전기차 화재 사고 통계.csv" data-i18n="notice.data.btn.csv">CSV 다운로드</button>
+            <button class="btn btn-ghost" type="button" data-action="notify" data-action-label="데이터 메타 정보" data-i18n="notice.data.btn.meta">메타 정보</button></div>
+        </div>
+      </div>
+
+      <div class="pagination" data-total="8" data-current="1" style="margin-top:24px;"></div>
+
+      <!-- 데이터 이용 안내 -->
+      <div class="grid mt-8" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="alert alert-info">
+          <div class="alert-icon"></div>
+          <div class="alert-body">
+            <strong data-i18n="notice.data.alert.kogl.title">공공누리 제1유형 제공</strong>
+<span data-i18n="notice.data.alert.kogl.body">            모든 데이터셋은 「공공데이터법」에 근거해 공공누리 제1유형(출처 표시 + 상업적·비상업적 자유 이용)으로 제공됩니다. 데이터 이용 시 "무공해차 통합누리집" 출처를 표기해 주세요.</span>
+          </div>
+        </div>
+        <div class="alert alert-success">
+          <div class="alert-icon"></div>
+          <div class="alert-body">
+            <strong data-i18n="notice.data.alert.req.title">원하는 데이터가 없으신가요?</strong>
+<span data-i18n-html="notice.data.alert.req.body">            연구·정책·서비스 개발에 필요한 데이터를 <a href="qna-write.html?cat=계정·기타&subject=[데이터 요청] 공개자료 추가 요청">데이터 요청 게시판</a>에 남겨 주세요. 환경부 검토 후 공개 가능한 범위 내에서 추가 제공해 드립니다.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- 데이터셋 다운로드 팝업 (일반자료실과 동일 컴포넌트) -->
+<div class="modal-backdrop" data-for="libDownloadModal"></div>
+<div class="modal" id="libDownloadModal" role="dialog" aria-modal="true" aria-labelledby="libDlTitle" aria-hidden="true">
+  <div class="modal-header">
+    <h3 id="libDlTitle">데이터셋 다운로드</h3>
+    <button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="modal-body">
+    <p id="libDlDocName"></p>
+    <div class="lib-dl-selectall"><label><input type="checkbox" id="libDlAll"> 전체 선택</label><span id="libDlCount" aria-live="polite">0개 선택</span></div>
+    <ul class="lib-file-list" id="libFileList" role="group" aria-label="파일 목록"></ul>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" type="button" data-modal-close>닫기</button>
+    <button class="btn btn-primary" type="button" id="libDlSelected">선택 다운로드</button>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-notice.js?v=20260630a"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/board-standard.js"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  var format = document.getElementById('dsFormat'),
+      search = document.getElementById('dsSearch'), searchBtn = document.getElementById('dsSearchBtn'),
+      reset = document.getElementById('dsReset'), count = document.getElementById('dsCount');
+  var rows = document.querySelectorAll('#dsGrid tr');
+  function apply() {
+    var kw = (search.value || '').trim().toLowerCase(), f = format.value, vis = 0;
+    rows.forEach(function(r){
+      var tc = r.querySelector('.title-cell');
+      var title = (tc ? tc.textContent : '').toLowerCase();
+      var formats = (r.dataset.format || '').split(/\s+/);
+      var textOk = !kw || title.indexOf(kw) >= 0;
+      var fmtOk = f === 'all' || formats.indexOf(f) >= 0;
+      var ok = textOk && fmtOk;
+      r.style.display = ok ? '' : 'none';
+      if (ok) vis++;
+    });
+    if (count) count.textContent = vis;
+  }
+  format && format.addEventListener('change', apply);
+  search && search.addEventListener('input', apply);
+  searchBtn && searchBtn.addEventListener('click', apply);
+  reset && reset.addEventListener('click', function(){ format.value='all'; search.value=''; apply(); });
+
+  // 제목 → 데이터셋 상세 링크
+  rows.forEach(function(r){
+    var numEl = r.querySelector('td.num');
+    var num = numEl ? numEl.textContent.trim() : '';
+    var bEl = r.querySelector('.title-cell b');
+    var name = bEl ? bEl.textContent.trim() : '';
+    if (bEl && !bEl.parentNode.closest('a')) {
+      var a = document.createElement('a');
+      a.className = 'ds-link';
+      a.href = 'data-dataset-detail.html?id=' + encodeURIComponent(num) + '&name=' + encodeURIComponent(name) + '&cat=' + encodeURIComponent((r.querySelector('.cat-badge') || {}).textContent || '') + '&fmt=' + encodeURIComponent(r.dataset.format || '');
+      bEl.parentNode.insertBefore(a, bEl);
+      a.appendChild(bEl);
+    }
+  });
+})();
+</script>
+<script>
+/* 데이터셋 다운로드 팝업 (일반자료실과 동일 로직) */
+(function(){
+  var modal=document.getElementById('libDownloadModal'); if(!modal) return;
+  var listEl=document.getElementById('libFileList');
+  var allCb=document.getElementById('libDlAll');
+  var countEl=document.getElementById('libDlCount');
+  var docNameEl=document.getElementById('libDlDocName');
+  var dlBtn=document.getElementById('libDlSelected');
+  var lastFocus=null;
+  function boxes(){ return listEl.querySelectorAll('input[type=checkbox]'); }
+  function update(){
+    var items=boxes(), checked=0; items.forEach(function(c){ if(c.checked) checked++; });
+    countEl.textContent=checked+'개 선택'; dlBtn.disabled = checked===0;
+    allCb.checked = checked>0 && checked===items.length;
+    allCb.indeterminate = checked>0 && checked<items.length;
+  }
+  function openPopup(btn){
+    lastFocus=btn;
+    var files=[]; try{ files=JSON.parse(btn.getAttribute('data-files')||'[]'); }catch(e){}
+    docNameEl.textContent=btn.getAttribute('data-doc')||'';
+    listEl.innerHTML='';
+    files.forEach(function(f,i){
+      var id='libf_'+i;
+      var li=document.createElement('li'); li.className='lib-file-item';
+      var lab=document.createElement('label'); lab.setAttribute('for',id);
+      lab.innerHTML='<input type="checkbox" id="'+id+'"><span class="lib-file-name"></span><span class="lib-file-size"></span>';
+      lab.querySelector('.lib-file-name').textContent=f.name;
+      lab.querySelector('.lib-file-size').textContent=f.size||'';
+      lab.querySelector('input').value=f.name;
+      li.appendChild(lab); listEl.appendChild(li);
+    });
+    boxes().forEach(function(c){ c.addEventListener('change', update); });
+    allCb.checked=false; allCb.indeterminate=false; update();
+    if(window.__openModal) window.__openModal('libDownloadModal');
+    var first=listEl.querySelector('input[type=checkbox]')||modal.querySelector('.modal-close');
+    if(first) setTimeout(function(){ first.focus(); }, 40);
+  }
+  document.addEventListener('click', function(e){
+    var b=e.target.closest('.lib-dl-btn'); if(b){ e.preventDefault(); openPopup(b); }
+  });
+  allCb.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked=allCb.checked; }); update(); });
+  dlBtn.addEventListener('click', function(){
+    var names=[]; boxes().forEach(function(c){ if(c.checked) names.push(c.value); });
+    if(!names.length) return;
+    var msg = names.length===1 ? ('"'+names[0]+'" 다운로드가 시작됩니다.') : (names.length+'개 파일 다운로드가 시작됩니다.');
+    if(window.__toast) window.__toast(msg,'success');
+    if(window.__closeModal) window.__closeModal(modal);
+  });
+  modal.addEventListener('transitionend', function(){
+    if(modal.getAttribute('aria-hidden')==='true' && lastFocus){ var t=lastFocus; lastFocus=null; t.focus(); }
+  });
+})();
+</script>
+</body>
+</html>

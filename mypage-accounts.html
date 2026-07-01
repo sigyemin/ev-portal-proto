@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>계정 연결 | 마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true; window.__activeMp = 'accounts';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="mypage.html" data-i18n="crumb.mypage">마이페이지</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="mpa.title">계정 연결</span>
+      </nav>
+      <h1 data-i18n="mpa.title">계정 연결</h1>
+      <p class="hero-lead" data-i18n="mpa.lead">소셜 계정과 간편 인증을 등록하여 본인 확인을 간소화합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="mp-shell">
+        <div id="mp-side-slot"></div>
+
+        <div class="mp-content">
+
+          <div class="mp-content-head">
+            <div>
+              <h2 data-i18n="mpa.content.h2">계정 연결</h2>
+              <p class="mp-content-desc" data-i18n="mpa.content.desc">무공해차 통합누리집에서 사용하는 본인확인 방법을 관리합니다. 소셜 1건, 인증서 1건이 등록되어 있습니다.</p>
+            </div>
+          </div>
+
+          <!-- [요청] 계정연결 (네이버 + 카카오 추가 + 행정전자서명(GPKI) 추가) -->
+          <div class="mp-form-card">
+            <h3 class="mp-form-card-title" data-i18n="mpa.social.title">계정연결</h3>
+            <p class="mp-form-card-desc" data-i18n="mpa.social.desc">네이버 계정으로 빠르게 로그인할 수 있습니다.</p>
+
+            <div class="mp-account-card">
+              <div class="mp-account-logo naver" aria-hidden="true">N</div>
+              <div class="mp-account-info">
+                <strong data-i18n="mpa.naver">네이버</strong>
+                <span data-i18n="mpa.naver.meta">hjshin***@naver.com · 연결일 2024-08-12</span>
+              </div>
+              <span class="mp-account-status linked">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span data-i18n="mpa.status.linked">연결됨</span>
+              </span>
+              <button type="button" class="btn btn-secondary btn-sm mpa-unlink-btn" data-provider="네이버" data-provider-en="Naver" style="margin-left:8px;" data-i18n="mpa.btn.unlink">연결 해제</button>
+            </div>
+
+            <!-- [요청] 카카오 추가 — 네이버와 동일 형식(연결됨/연결 해제) -->
+            <div class="mp-account-card">
+              <div class="mp-account-logo kakao" aria-hidden="true">K</div>
+              <div class="mp-account-info">
+                <strong data-i18n="mpa.kakao">카카오</strong>
+                <span data-i18n="mpa.kakao.meta">hjshin***@kakao.com · 연결일 2024-08-12</span>
+              </div>
+              <span class="mp-account-status linked">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span data-i18n="mpa.status.linked">연결됨</span>
+              </span>
+              <button type="button" class="btn btn-secondary btn-sm mpa-unlink-btn" data-provider="카카오" data-provider-en="Kakao" style="margin-left:8px;" data-i18n="mpa.btn.unlink">연결 해제</button>
+            </div>
+
+            <!-- [요청] 행정전자서명(GPKI) 추가 — 공동인증서와 동일 형식(미등록/등록하기) -->
+            <div class="mp-account-card">
+              <div class="mp-account-logo" style="background:#003A70;color:#fff;font-weight:700;" aria-hidden="true" data-i18n="mpa.gpki.label">행정</div>
+              <div class="mp-account-info">
+                <strong data-i18n="mpa.gpki.title">행정전자서명(GPKI)</strong>
+                <span data-i18n="mpa.gpki.desc">행정기관 발급 전자서명 · 공공 행정서비스 본인확인 시 사용</span>
+              </div>
+              <span class="mp-account-status unlinked" data-i18n="mpa.status.unlinked">미등록</span>
+              <button type="button" class="btn btn-primary btn-sm mpa-reg-gpki" style="margin-left:8px;" data-i18n="mpa.btn.register">등록하기</button>
+            </div>
+          </div>
+
+          <!-- v0.12 [24] '본인 확인 수단' 영역 블라인드(주석) — 추후 필요 시 해제. 원본 보존 (ev.or.kr 표준: 휴대폰 본인확인 + 공동/금융 인증서):
+          <div class="mp-form-card">
+            <h3 class="mp-form-card-title" data-i18n="mpa.verify.title">본인 확인 수단</h3>
+            <p class="mp-form-card-desc" data-i18n="mpa.verify.desc">회원가입·보조금 신청·민원 처리 등 본인 확인이 필요할 때 사용합니다. 「전자서명법」에 따라 안전하게 처리됩니다.</p>
+
+            <div class="mp-account-card">
+              <div class="mp-account-logo" style="background:var(--color-primary-500);color:#fff;font-weight:700;" aria-hidden="true" data-i18n="mpa.mobile.label">휴대폰</div>
+              <div class="mp-account-info">
+                <strong data-i18n="mpa.mobile.title">휴대폰 본인확인</strong>
+                <span data-i18n="mpa.mobile.desc">SKT·KT·LG U+ 통신 3사 본인 명의 휴대폰 SMS 인증</span>
+              </div>
+              <span class="mp-account-status linked">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span data-i18n="mpa.status.registered">등록됨</span>
+              </span>
+              <button type="button" class="btn btn-secondary btn-sm mpa-renew-mobile" style="margin-left:8px;" data-i18n="mpa.btn.renew">갱신</button>
+            </div>
+
+            <div class="mp-account-card">
+              <div class="mp-account-logo cert" aria-hidden="true" data-i18n="mpa.coint.label">공동</div>
+              <div class="mp-account-info">
+                <strong data-i18n="mpa.coint.title">공동인증서</strong>
+                <span data-i18n="mpa.coint.desc">구 공인인증서 · 개인·법인·사업자 인증, 보조금 신청 시 사용</span>
+              </div>
+              <span class="mp-account-status unlinked" data-i18n="mpa.status.unlinked">미등록</span>
+              <button type="button" class="btn btn-primary btn-sm mpa-reg-coint" style="margin-left:8px;" data-i18n="mpa.btn.register">등록하기</button>
+            </div>
+
+            <div class="mp-account-card">
+              <div class="mp-account-logo" style="background:#005BAA;color:#fff;font-weight:700;font-size:11px;" aria-hidden="true" data-i18n="mpa.fin.label">금융</div>
+              <div class="mp-account-info">
+                <strong data-i18n="mpa.fin.title">금융인증서</strong>
+                <span data-i18n="mpa.fin.desc">금융결제원 발급 · 클라우드 보관, 비밀번호로 사용</span>
+              </div>
+              <span class="mp-account-status unlinked" data-i18n="mpa.status.unlinked">미등록</span>
+              <button type="button" class="btn btn-primary btn-sm mpa-reg-fin" style="margin-left:8px;" data-i18n="mpa.btn.register">등록하기</button>
+            </div>
+          </div>
+          -->
+
+          <!-- 본인 확인 활동 이력 -->
+          <div class="mp-form-card">
+            <h3 class="mp-form-card-title" data-i18n="mpa.history.title">최근 본인 확인 활동</h3>
+            <p class="mp-form-card-desc" data-i18n="mpa.history.desc">최근 30일 내의 본인 확인 이력입니다. 본인이 한 활동이 아니라면 즉시 비밀번호를 변경해 주세요.</p>
+
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <caption class="sr-only" data-i18n="mpa.history.title">최근 본인 확인 활동</caption>
+              <thead>
+                <tr style="background:var(--color-gray-50);text-align:left;">
+                  <th scope="col" style="padding:10px 12px;border-bottom:1px solid var(--border-light);width:160px;" data-i18n="mpa.col.time">일시</th>
+                  <th scope="col" style="padding:10px 12px;border-bottom:1px solid var(--border-light);width:140px;" data-i18n="mpa.col.method">방식</th>
+                  <th scope="col" style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.col.purpose">목적</th>
+                  <th scope="col" style="padding:10px 12px;border-bottom:1px solid var(--border-light);width:100px;" data-i18n="mpa.col.result">결과</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);">2026-04-27 09:07</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.method.mobile">휴대폰 본인확인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.purpose.login">로그인 본인확인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);"><span style="color:var(--color-success);font-weight:600;" data-i18n="mpa.result.success">성공</span></td></tr>
+                <tr><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);">2026-04-18 14:32</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.method.naver">네이버</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.purpose.social">소셜 로그인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);"><span style="color:var(--color-success);font-weight:600;" data-i18n="mpa.result.success">성공</span></td></tr>
+                <tr><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);">2026-04-12 10:15</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.method.mobile">휴대폰 본인확인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.purpose.subsidy">보조금 신청 본인확인</td><td style="padding:10px 12px;"><span style="color:var(--color-success);font-weight:600;" data-i18n="mpa.result.success">성공</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mp-policy">
+            <strong data-i18n="mpa.policy.title">안전한 계정 사용을 위한 권장 사항</strong>
+            <ul>
+              <li data-i18n="mpa.policy.li1">최소 1개 이상의 간편 인증 등록을 권장합니다.</li>
+              <li data-i18n="mpa.policy.li2">소셜 계정 연결 해제 시, 기존에 연결된 알림 채널도 함께 해제됩니다.</li>
+              <li data-i18n="mpa.policy.li3">본인이 한 활동이 아닌 인증 이력이 보이면 즉시 비밀번호를 변경하고 고객센터로 문의해 주세요.</li>
+            </ul>
+          </div>
+
+        </div><!-- /.mp-content -->
+      </div><!-- /.mp-shell -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-mypage.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+
+<script>
+  // V3.2: i18n 적용 + 인라인 onclick 외부화
+  (function () {
+    function _t(key, fallback) {
+      return (window.__i18n && window.__i18n.t) ? window.__i18n.t(key) : fallback;
+    }
+    function providerName(btn) {
+      var lang = (window.__i18n && window.__i18n.getLang) ? window.__i18n.getLang() : 'ko';
+      return lang === 'en' ? (btn.dataset.providerEn || btn.dataset.provider) : btn.dataset.provider;
+    }
+    // 연결 해제
+    document.querySelectorAll('.mpa-unlink-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var name = providerName(btn);
+        if (confirm(name + _t('mpa.msg.confirm.unlink', ' 연결을 해제하시겠습니까? 해당 계정의 알림 수신도 함께 중단됩니다.'))) {
+          alert(name + _t('mpa.msg.unlinked', ' 연결이 해제되었습니다.'));
+        }
+      });
+    });
+    // 휴대폰 갱신
+    var renewMobile = document.querySelector('.mpa-renew-mobile');
+    if (renewMobile) renewMobile.addEventListener('click', function () {
+      alert(_t('mpa.msg.mobile.renew', '휴대폰 본인확인 정보를 갱신합니다.'));
+    });
+    // 공동인증서 등록
+    var regCoint = document.querySelector('.mpa-reg-coint');
+    if (regCoint) regCoint.addEventListener('click', function () {
+      alert(_t('mpa.msg.coint.register', '공동인증서 등록 창으로 이동합니다.'));
+    });
+    // 금융인증서 등록
+    var regFin = document.querySelector('.mpa-reg-fin');
+    if (regFin) regFin.addEventListener('click', function () {
+      alert(_t('mpa.msg.fin.register', '금융인증서 등록 창으로 이동합니다.'));
+    });
+    // [요청] 행정전자서명(GPKI) 등록
+    var regGpki = document.querySelector('.mpa-reg-gpki');
+    if (regGpki) regGpki.addEventListener('click', function () {
+      alert(_t('mpa.msg.gpki.register', '행정전자서명(GPKI) 등록 창으로 이동합니다.'));
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지자체별 차종·모델 보조금 | 구매·보조금 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/subsidy-local.css?v=20260630a">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="subsidy-target.html">구매·보조금</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current">지자체별 차종·모델 보조금</span>
+      </nav>
+      <h1>지자체별 차종·모델 보조금</h1>
+      <p class="hero-lead">지자체를 펼치면 <strong style="color:#fff;">차급별 차량</strong>의 국비·지방비·소계와 <strong style="color:#fff;">전환지원금</strong>을 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- (A) 상단 필터바 — 모든 펼침에 공통 적용 -->
+      <div class="sl-filterbar">
+        <!-- 광역시도 / 시군구 / 지자체 검색 + 글로벌 버튼 -->
+        <div class="sl-fb-row">
+          <div class="form-group">
+            <label class="sl-fb-lab" for="slSido">광역시도</label>
+            <select id="slSido"></select>
+          </div>
+          <div class="form-group">
+            <label class="sl-fb-lab" for="slSigungu">시군구</label>
+            <select id="slSigungu" disabled><option value="전체">전체 시군구</option></select>
+          </div>
+          <div class="form-group sl-fb-grow">
+            <label class="sl-fb-lab" for="slLocaleSearch">지자체 검색</label>
+            <input id="slLocaleSearch" type="text" placeholder="지자체명 입력 (예: 성남, 제주)">
+          </div>
+          <div class="sl-globalbtns">
+            <a href="subsidy-info.html" class="btn btn-secondary btn-sm">보조금 계산기</a>
+            <a href="compare-tool.html" id="slCompareBtn" class="btn btn-primary btn-sm">차종 비교 도구</a>
+          </div>
+        </div>
+        <!-- 차종 / 규격 / 모델 검색 -->
+        <div class="sl-fb-row">
+          <div class="form-group">
+            <label class="sl-fb-lab" for="slCat">차종</label>
+            <select id="slCat"></select>
+          </div>
+          <div class="form-group">
+            <label class="sl-fb-lab" for="slTier">규격</label>
+            <select id="slTier" disabled><option value="전체">전체 규격</option></select>
+          </div>
+          <div class="form-group sl-fb-grow">
+            <label class="sl-fb-lab" for="slModelSearch">모델명 검색</label>
+            <input id="slModelSearch" type="text" placeholder="모델명 입력 (예: 아이오닉)">
+          </div>
+        </div>
+      </div>
+
+      <p class="sl-note" style="margin-bottom:18px;">
+        지자체 행을 클릭하면 해당 지자체의 차량 목록이 펼쳐집니다. 한 번에 한 곳만 펼쳐집니다.
+        금액이 없을 때는 <strong>미공시</strong>(지원 대상이나 미공고) 또는 <strong>해당 없음</strong>(그 차종이 해당 지자체 지원 항목 아님)으로 표시됩니다.
+      </p>
+
+      <!-- (B) 지자체 아코디언 리스트 -->
+      <div id="slList" aria-live="polite"></div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/subsidy-local.js?v=20260630b"></script>
+</body>
+</html>

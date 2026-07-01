@@ -1,0 +1,266 @@
+/* =======================================================
+   data.css — 데이터·통계 섹션 (오피넷 벤치마킹)
+   Pretendard · KRDS · WCAG AA 준수
+   ======================================================= */
+
+.data-section {
+  font-family: 'Pretendard', 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', -apple-system, sans-serif;
+}
+
+/* ===== 실시간 주요 지표 스트립 (오피넷 스타일) ===== */
+.ds-live-strip {
+  background: linear-gradient(135deg, #0F1B3D 0%, #1E3A8A 100%);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.ds-live-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+.ds-live-head h3 { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.025em; display: flex; align-items: center; gap: 10px; }
+.ds-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #79CA6E; box-shadow: 0 0 0 4px rgba(121,202,110,0.3); animation: dsLivePulse 1.8s ease-in-out infinite; }
+@keyframes dsLivePulse {
+  0%,100% { box-shadow: 0 0 0 4px rgba(121,202,110,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(121,202,110,0.1); }
+}
+.ds-live-timestamp { color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; }
+
+.ds-live-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+}
+.ds-live-tile {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 16px 18px;
+  backdrop-filter: blur(8px);
+}
+.ds-live-tile .lt-label { font-size: 14px; color: rgba(255,255,255,0.78); font-weight: 600; letter-spacing: -0.01em; margin-bottom: 10px; }
+.ds-live-tile .lt-val {
+  font-size: 30px; font-weight: 800; color: #fff;
+  letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.ds-live-tile .lt-val .unit { font-size: 14.5px; font-weight: 600; color: rgba(255,255,255,0.65); margin-left: 4px; }
+.ds-live-tile .lt-delta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 13.5px; font-weight: 700; margin-top: 10px;
+  padding: 4px 10px; border-radius: 6px;
+}
+.ds-live-tile .lt-delta.up { background: rgba(121,202,110,0.18); color: #86EFAC; }
+.ds-live-tile .lt-delta.down { background: rgba(239,68,68,0.18); color: #FCA5A5; }
+.ds-live-tile .lt-delta.flat { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+/* ===== 대시보드 메뉴 카드 4종 ===== */
+.ds-dashboards {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin-bottom: 40px;
+}
+.ds-dash-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 22px 24px;
+  text-decoration: none; color: inherit;
+  transition: all 0.22s ease;
+  position: relative;
+}
+.ds-dash-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #79CA6E, #4CA2E2);
+  border-radius: 14px 14px 0 0;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.ds-dash-card:hover { border-color: var(--color-primary-400); box-shadow: 0 12px 28px rgba(15,23,42,0.08); transform: translateY(-3px); }
+.ds-dash-card:hover::before { transform: scaleX(1); }
+.ds-dash-card .dc-ico {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--color-primary-50); color: var(--color-primary-700);
+  display: grid; place-items: center;
+  margin-bottom: 14px;
+}
+.ds-dash-card.scheme-blue .dc-ico { background: var(--color-secondary-50); color: var(--color-secondary-700); }
+.ds-dash-card.scheme-orange .dc-ico { background: #FFF3E0; color: #E8760A; }
+.ds-dash-card.scheme-purple .dc-ico { background: #EEF2FF; color: #4F46E5; }
+.ds-dash-card h4 { font-size: 18px; font-weight: 700; color: #111; letter-spacing: -0.025em; margin-bottom: 8px; line-height: 1.35; }
+.ds-dash-card p { font-size: 14.5px; color: #4B5563; line-height: 1.65; }
+.ds-dash-card .dc-meta {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px dashed var(--border-light);
+  font-size: 14.5px; color: #1F2937; font-weight: 700;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ds-dash-card .dc-meta span { color: #6B7280; font-weight: 500; font-size: 13.5px; }
+
+/* ===== 지역별 랭킹 섹션 ===== */
+.ds-ranking-wrap {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 28px;
+}
+.ds-ranking-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px;
+}
+.ds-ranking-head h3 { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; color: #111; }
+.ds-ranking-head p { font-size: 15px; color: #4B5563; margin-top: 6px; line-height: 1.6; }
+.ds-ranking-filter { display: flex; gap: 8px; align-items: center; }
+.ds-ranking-filter select {
+  height: 40px; padding: 0 16px 0 14px;
+  border: 1px solid #D1D5DB; border-radius: 8px;
+  font-size: 15px; color: #1F2937; font-weight: 500;
+  background: #fff;
+}
+
+.ds-rank-list {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px 28px;
+}
+.ds-rank-item {
+  display: grid; grid-template-columns: 40px 1fr auto; gap: 14px;
+  align-items: center; padding: 12px 4px;
+  border-bottom: 1px solid #F1F3F5;
+  font-size: 15.5px;
+}
+.ds-rank-item:last-child, .ds-rank-item:nth-last-child(2) { border-bottom: none; }
+.ds-rank-num {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: grid; place-items: center;
+  font-size: 14.5px; font-weight: 800;
+  background: #F3F4F6; color: #4B5563;
+  font-variant-numeric: tabular-nums;
+}
+.ds-rank-item.top-3 .ds-rank-num { background: var(--color-primary-500); color: #fff; }
+.ds-rank-item:nth-child(1) .ds-rank-num,
+.ds-rank-item:nth-child(2) .ds-rank-num { background: linear-gradient(135deg, #FFC94D, #FF9500); color: #fff; }
+.ds-rank-name { font-weight: 600; color: #1F2937; letter-spacing: -0.01em; }
+.ds-rank-val {
+  font-weight: 800; color: #111;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  display: inline-flex; align-items: baseline; gap: 3px;
+}
+.ds-rank-val .unit { font-size: 13.5px; font-weight: 600; color: #6B7280; }
+.ds-rank-bar {
+  grid-column: 2 / 3; height: 4px; border-radius: 2px;
+  background: #F1F3F5; overflow: hidden;
+  margin-top: 4px;
+}
+.ds-rank-bar .fill {
+  height: 100%; background: linear-gradient(90deg, #79CA6E, #4CA2E2);
+  border-radius: 2px;
+  transition: width 1s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* ===== 트렌드 차트 ===== */
+.ds-chart-wrap {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 28px;
+}
+.ds-chart-period {
+  display: inline-flex; gap: 4px;
+  background: #F3F4F6; border-radius: 10px; padding: 4px;
+}
+.ds-chart-period button {
+  padding: 8px 16px; font-size: 14.5px; font-weight: 600;
+  background: transparent; border: none; color: #4B5563;
+  border-radius: 7px; cursor: pointer;
+  letter-spacing: -0.01em;
+}
+.ds-chart-period button.active { background: #fff; color: #1F2937; box-shadow: 0 1px 3px rgba(15,23,42,0.1); }
+
+.ds-chart-area {
+  position: relative; height: 280px;
+  margin-top: 18px;
+  padding: 10px 0 30px 40px;
+}
+.ds-chart-area svg { width: 100%; height: 100%; overflow: visible; }
+
+/* ===== 공개 데이터 다운로드 리스트 ===== */
+.ds-open-list {
+  display: grid; gap: 12px;
+}
+.ds-open-item {
+  display: grid; grid-template-columns: 48px 1fr auto auto;
+  gap: 16px; align-items: center;
+  padding: 18px 22px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  transition: all 0.22s ease;
+}
+.ds-open-item:hover { border-color: var(--color-primary-400); box-shadow: 0 6px 18px rgba(15,23,42,0.06); }
+.ds-open-ico {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--color-primary-50); color: var(--color-primary-700);
+  display: grid; place-items: center;
+}
+.ds-open-body h4 { font-size: 17.5px; font-weight: 700; color: #111; letter-spacing: -0.02em; margin-bottom: 6px; line-height: 1.4; }
+.ds-open-body p { font-size: 14.5px; color: #4B5563; line-height: 1.65; }
+.ds-open-meta {
+  display: inline-flex; flex-direction: column; align-items: flex-end;
+  gap: 4px; font-size: 14px; color: #4B5563; font-weight: 500;
+}
+.ds-open-meta .size { font-weight: 700; color: #1F2937; font-variant-numeric: tabular-nums; }
+.ds-open-format {
+  display: inline-flex; gap: 4px; flex-wrap: wrap;
+}
+.ds-open-format span {
+  font-size: 11.5px; font-weight: 700; padding: 3px 9px;
+  border-radius: 5px; letter-spacing: 0.02em;
+}
+.ds-open-format .csv { background: #EEF2FF; color: #4F46E5; }
+.ds-open-format .json { background: var(--color-primary-50); color: var(--color-primary-700); }
+.ds-open-format .xlsx { background: #E8F7EF; color: #166534; }
+.ds-open-format .api { background: #FFF3E0; color: #E8760A; }
+.ds-open-actions {
+  display: inline-flex; gap: 6px;
+}
+.ds-open-download {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; height: 36px;
+  background: var(--color-primary-500); color: #fff;
+  border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: background var(--t-fast);
+}
+.ds-open-download:hover { background: var(--color-primary-600); }
+
+/* ===== 정책 동향 카드 ===== */
+.ds-trend-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.ds-trend-card {
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: 14px; padding: 24px;
+  transition: all 0.22s ease;
+}
+.ds-trend-card:hover { border-color: var(--color-primary-400); }
+.ds-trend-card .tr-cat {
+  display: inline-block; font-size: 11.5px; font-weight: 700;
+  padding: 3px 9px; border-radius: 5px;
+  background: var(--color-primary-50); color: var(--color-primary-700);
+  margin-bottom: 10px; letter-spacing: -0.01em;
+}
+.ds-trend-card h4 { font-size: 16px; font-weight: 700; color: #111; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.45; }
+.ds-trend-card p { font-size: 13.5px; color: #4B5563; line-height: 1.7; }
+
+/* ===== 반응형 ===== */
+@media (max-width: 1080px) {
+  .ds-live-grid { grid-template-columns: repeat(3, 1fr); }
+  .ds-dashboards { grid-template-columns: repeat(2, 1fr); }
+  .ds-rank-list { grid-template-columns: 1fr; }
+  .ds-trend-cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .ds-live-grid { grid-template-columns: repeat(2, 1fr); }
+  .ds-dashboards { grid-template-columns: 1fr; }
+  .ds-ranking-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .ds-open-item { grid-template-columns: 1fr; gap: 10px; }
+}

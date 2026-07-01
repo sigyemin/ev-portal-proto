@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자료 요청 등록 | 요청자료 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/inquiry.css">
+<style>
+  .qw-writer{display:flex;align-items:center;gap:16px;height:44px;}
+  .qw-writer .nm{font-weight:800;font-size:15px;color:var(--text-primary);}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>
+  window.__activeNav = 'info';
+  window.__loggedIn = true; // 로그인 필수 페이지 (프로토타입: 로그인 상태로 간주)
+</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="#">정보 자료실</a><span class="sep" aria-hidden="true">›</span>
+        <a href="info-library.html">자료실</a><span class="sep" aria-hidden="true">›</span>
+        <a href="info-library.html?tab=request">요청자료</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current">자료 요청 등록</span>
+      </nav>
+      <h1>자료 요청 등록</h1>
+      <p class="hero-lead">필요한 자료를 요청하면 담당 부서 검토 후 공개 가능한 범위 내에서 회신자료를 제공해 드립니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container" style="max-width:880px;">
+      <div class="card">
+        <form data-validate id="reqWriteForm">
+          <div class="grid grid-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">요청 구분 <span class="required">*</span></label>
+              <select class="form-select" id="rwCat" required>
+                <option value="">선택</option>
+                <option value="charger">충전기</option>
+                <option value="subsidy">보조금</option>
+                <option value="etc">기타</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">요청기관</label>
+              <div class="qw-writer"><span class="nm" id="rwOrg">서울특별시</span></div>
+              <p class="form-help">행정전자서명(GPKI)으로 로그인한 소속 기관으로 등록됩니다.</p>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">제목 <span class="required">*</span></label>
+              <input class="form-input" type="text" id="rwTitle" required placeholder="요청 자료의 핵심 내용을 한 문장으로 작성해 주세요 (최대 80자)" maxlength="80">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">요청 내용 <span class="required">*</span></label>
+              <textarea class="form-textarea" id="rwBody" rows="9" required placeholder="필요한 자료의 항목·기간·형식 등 구체적인 요청 내용을 기재해 주세요."></textarea>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">요청 양식 <span class="required">*</span></label>
+              <input type="file" class="form-input" id="rwFile" accept=".xls,.xlsx" style="max-width:280px;">
+              <p class="form-help">* 원하시는 자료 양식을 첨부해 주세요. (업로드 가능 확장자: .xls, .xlsx)</p>
+            </div>
+          </div>
+
+          <label class="check-row" style="margin-top:10px;">
+            <input type="checkbox" required>
+            <span>개인정보 수집·이용에 동의합니다. <strong style="color:var(--color-danger);">(필수)</strong></span>
+          </label>
+
+          <div class="flex gap-2 mt-4">
+            <a href="info-library.html?tab=request" class="btn btn-ghost btn-lg">목록</a>
+            <button type="submit" class="btn btn-primary btn-lg" style="flex:1;">등록</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  // ── 로그인 필수 게이트 (프로토타입) ──
+  var loggedIn = false;
+  try { loggedIn = !!(window.__loggedIn || JSON.parse(sessionStorage.getItem('mp_user')||'null')); } catch(e){}
+  if (!loggedIn) { alert('로그인 후 이용할 수 있습니다.'); location.replace('login.html?redirect=request-write.html'); return; }
+
+  var org = '서울특별시';
+  try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.org) org = u.org; } catch(e){}
+  var oEl = document.getElementById('rwOrg'); if (oEl) oEl.textContent = org;
+
+  document.getElementById('reqWriteForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = document.getElementById('rwFile');
+    if (f && f.files && f.files.length) {
+      var name = f.files[0].name.toLowerCase();
+      if (!/\.(xls|xlsx)$/.test(name)) { if (window.__toast) window.__toast('요청 양식은 .xls, .xlsx 파일만 업로드할 수 있습니다.', 'error'); else alert('요청 양식은 .xls, .xlsx 파일만 업로드할 수 있습니다.'); return; }
+    }
+    var msg = '자료 요청이 등록되었습니다. 담당 부서 검토 후 처리 현황과 회신자료를 안내해 드립니다.';
+    if (window.__toast) window.__toast(msg, 'success'); else alert(msg);
+    setTimeout(function(){ location.href = 'info-library.html?tab=request'; }, 1400);
+  });
+})();
+</script>
+</body>
+</html>

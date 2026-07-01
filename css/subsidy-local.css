@@ -1,0 +1,102 @@
+/* subsidy-local.css — 지자체별 차종·모델 보조금 (아코디언형)
+   ── subsidy-local.html 의 인라인 <style>을 전부 이전(인라인 금지 표준).
+   타 표준 페이지(subsidy-*) 톤과 통일. */
+
+/* ── 상단 필터바 ── */
+.sl-filterbar { display:flex; flex-direction:column; gap:14px; margin-bottom:22px; }
+.sl-fb-row { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; }
+.sl-fb-row .form-group { margin:0; }
+.sl-fb-lab { font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px; }
+.sl-filterbar select, .sl-filterbar input {
+  height:44px; padding:0 14px; border:1px solid var(--border-medium);
+  border-radius:8px; font-size:14.5px; font-family:inherit; background:#fff; color:var(--text-primary);
+}
+.sl-filterbar select:focus, .sl-filterbar input:focus { outline:2px solid var(--color-primary-300); outline-offset:1px; }
+.sl-fb-grow { flex:1; min-width:200px; }
+.sl-fb-grow input { width:100%; }
+
+/* 차종 칩 */
+.sl-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.sl-chip { padding:9px 16px; border:1px solid var(--border-medium); border-radius:999px; background:#fff;
+  font-size:13.5px; font-weight:700; color:var(--text-secondary); cursor:pointer; transition:.15s; }
+.sl-chip:hover { border-color:var(--color-primary-400); }
+.sl-chip.active { background:var(--color-primary-600); border-color:var(--color-primary-600); color:#fff; }
+
+/* 우측 글로벌 버튼 묶음 */
+.sl-globalbtns { margin-left:auto; display:flex; gap:8px; }
+.sl-globalbtns .btn { white-space:nowrap; }
+
+/* ── 안내 주석 ── */
+.sl-note { font-size:12.5px; color:var(--text-tertiary); line-height:1.7; margin:0 0 14px; }
+.sl-note strong { color:var(--text-secondary); font-weight:700; }
+
+/* ── 지자체 아코디언 리스트 ── */
+#slList { display:flex; flex-direction:column; gap:10px; }
+.sl-acc { border:1px solid var(--border-light); border-radius:14px; background:#fff; overflow:hidden; }
+.sl-acc.open { border-color:var(--color-primary-400); box-shadow:0 0 0 1px var(--color-primary-300) inset; }
+.sl-acc-head {
+  display:flex; align-items:center; gap:16px; width:100%; text-align:left;
+  padding:18px 20px; border:0; background:none; cursor:pointer; transition:.15s;
+}
+.sl-acc-head:hover { background:var(--color-primary-50); }
+.sl-acc.open .sl-acc-head { background:var(--color-primary-50); }
+.sl-acc-name { font-size:16px; font-weight:800; color:var(--text-primary); flex:0 0 250px; }
+.sl-acc-name small { display:block; font-size:12px; font-weight:600; color:var(--text-tertiary); margin-top:2px; }
+.sl-acc-badges { flex:1; display:flex; flex-wrap:wrap; gap:5px; }
+.sl-badge { font-size:11px; font-weight:700; color:var(--color-primary-700); background:var(--color-primary-50);
+  border:1px solid var(--color-primary-100,#dcefe2); border-radius:6px; padding:2px 8px; }
+.sl-acc-chev { flex:0 0 auto; color:var(--text-tertiary); transition:transform .18s; }
+.sl-acc.open .sl-acc-chev { transform:rotate(180deg); color:var(--color-primary-600); }
+.sl-acc-panel { padding:6px 20px 22px; border-top:1px dashed var(--border-light); }
+.sl-empty { padding:40px; text-align:center; color:var(--text-tertiary); border:1px dashed var(--border-light); border-radius:14px; }
+
+@media(max-width:760px){ .sl-acc-name { flex-basis:100%; } .sl-acc-head { flex-wrap:wrap; } }
+
+/* ── 펼친 차량 표 (7컬럼) ── */
+.sl-tablewrap { overflow-x:auto; }
+.sl-vtable { width:100%; border-collapse:collapse; font-size:13px; min-width:720px; }
+.sl-vtable th { background:var(--color-gray-100); border-top:2px solid var(--color-gray-700);
+  border-bottom:1px solid var(--border-light); padding:11px 12px; font-weight:700; color:var(--text-primary);
+  text-align:center; white-space:nowrap; }
+.sl-vtable th.l { text-align:left; }
+.sl-vtable th.num { text-align:right; }
+.sl-vtable td { border-bottom:1px solid var(--border-light); padding:11px 12px; color:var(--text-secondary); vertical-align:middle; }
+.sl-vtable td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.sl-vtable td.l strong { color:var(--text-primary); }
+.sl-vtable tbody tr:hover { background:var(--color-gray-50); }
+
+/* 정렬 헤더 */
+.sl-th-sort { cursor:pointer; user-select:none; }
+.sl-th-sort:hover { background:var(--color-gray-200,#e7ebef); }
+.sl-th-sort .sl-arrow { font-size:10px; color:var(--text-tertiary); margin-left:3px; }
+.sl-th-sort.sorted .sl-arrow { color:var(--color-primary-600); }
+
+/* 차급 그룹 헤더 행 */
+.sl-grp td { background:var(--color-secondary-50); color:var(--color-secondary-800,#16407e);
+  font-weight:800; font-size:12.5px; padding:9px 12px; letter-spacing:.01em; }
+.sl-grp .sl-cat-chip { margin-right:8px; }
+.sl-cat-chip { display:inline-block; font-size:11px; font-weight:700; border-radius:6px; padding:2px 8px; }
+.cat-ev_car{background:#e6f6ee;color:#0f7a44;} .cat-ev_truck{background:#e7f0fe;color:#1559c2;}
+.cat-ev_bus{background:#fef0e0;color:#a25b00;} .cat-ev_moto{background:#f1ecfb;color:#6b3fb0;}
+.cat-const_eq{background:#eef0f3;color:#54616e;} .cat-h2{background:#e9f6fb;color:#0a6f96;}
+
+/* 소계 강조 */
+.sl-vtable td.sub strong { color:var(--color-accent-600); }
+
+/* 빈상태 2종 */
+.sl-st { font-weight:700; font-size:12px; white-space:nowrap; }
+.sl-st-miss { color:var(--text-tertiary); }            /* 미공시 — 회색 */
+.sl-st-na { color:var(--border-medium,#c2cad3); }      /* 해당 없음 — 더 흐리게 */
+.sl-na-dash { color:var(--text-tertiary); }            /* 전환 비대상 – */
+
+/* 전환지원금 헤더 툴팁 */
+.sl-tip { position:relative; cursor:help; border-bottom:1px dotted currentColor; }
+.sl-tip:hover .sl-tip-box, .sl-tip:focus .sl-tip-box { opacity:1; visibility:visible; }
+.sl-tip-box {
+  position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+  width:230px; background:var(--color-gray-800,#27303a); color:#fff; font-size:11.5px; font-weight:500;
+  line-height:1.5; text-align:left; padding:9px 11px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.22);
+  opacity:0; visibility:hidden; transition:.15s; z-index:20; white-space:normal;
+}
+.sl-tip-box::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+  border:6px solid transparent; border-top-color:var(--color-gray-800,#27303a); }

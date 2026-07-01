@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로밍사업자 이용신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/business-apply.css">
+<style>
+  .bf-radio-wide { display:flex; gap:14px; flex-wrap:wrap; }
+  .bf-radio-wide label { display:inline-flex; gap:7px; align-items:center; white-space:nowrap; padding:9px 16px; border:1px solid var(--border-light); border-radius:10px; cursor:pointer; font-size:14px; }
+  .bf-radio-wide input:checked + span { font-weight:700; color:var(--color-primary-700); }
+  .bf-inline { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  /* .bf-row input{width:100%} 를 덮어써서 인라인 입력칸이 늘어나지 않도록 */
+  .bf-card .bf-inline input, .bf-card .bf-inline select { width:auto; flex:0 0 auto; min-width:0; }
+  .bf-card .bf-inline input[type=text], .bf-card .bf-inline input[type=tel] { width:118px; }
+  .bf-card .bf-inline select.area-sel { width:84px; }
+  .bf-card .bf-inline select.email-sel { width:120px; }
+  .bf-card .bf-inline .email-id { width:140px; }
+  .bf-card .bf-inline .email-domain { width:148px; }
+  .bf-mini-btn { white-space:nowrap; padding:9px 14px; border:1px solid var(--color-primary-500); background:#fff; color:var(--color-primary-700); border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .bf-mini-btn:hover { background:var(--color-primary-50); }
+  .bf-hint { font-size:12.5px; color:var(--text-tertiary,#94a3b8); margin-left:2px; }
+  .bf-file-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .bf-file-name { flex:1; min-width:160px; padding:9px 12px; border:1px solid var(--border-light); border-radius:9px; background:var(--color-gray-50,#f6f8fa); font-size:13.5px; color:var(--text-tertiary,#94a3b8); }
+  .bf-file-name.has { color:var(--text-primary); }
+  .bf-card .bf-inline .bf-num-narrow, .bf-num-narrow { width:110px; }
+  .bf-card .bf-inline .bf-seg, .bf-seg { width:58px; text-align:center; }
+  /* 주소 검색 팝업 */
+  .addr-modal { position:fixed; inset:0; background:rgba(15,23,42,.45); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .addr-modal.open { display:flex; }
+  .addr-box { background:#fff; width:min(480px,92vw); border-radius:14px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .addr-box h3 { font-size:18px; margin:0 0 14px; }
+  .addr-box .addr-search { display:flex; gap:6px; margin-bottom:12px; }
+  .addr-box .addr-search input { flex:1; height:42px; }
+  .addr-results { list-style:none; margin:0; padding:0; max-height:240px; overflow-y:auto; border:1px solid var(--border-light); border-radius:10px; }
+  .addr-results li { padding:11px 14px; border-bottom:1px solid var(--border-light); cursor:pointer; font-size:14px; }
+  .addr-results li:last-child { border-bottom:0; }
+  .addr-results li:hover { background:var(--color-primary-50); }
+  .addr-results .zip { color:var(--color-primary-700); font-weight:700; margin-right:8px; }
+  .addr-box .addr-foot { text-align:right; margin-top:14px; }
+  /* 문의 사항 */
+  .bf-contact { display:flex; align-items:center; gap:18px; border:1px solid var(--border-light); border-radius:12px; padding:18px 24px; margin-top:14px; }
+  .bf-contact-ico { color:var(--color-secondary-600,#1f5fa8); flex:none; }
+  .bf-contact-body { font-size:14.5px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .bf-contact-body strong { font-size:16px; color:var(--text-primary); }
+  .bf-contact-item { color:var(--text-secondary); }
+  .bf-contact-item::before { content:'· '; color:var(--color-secondary-600,#1f5fa8); font-weight:700; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'mypage';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <a href="mypage.html#mp-business">업무지원시스템 이용신청</a><span class="sep">›</span>
+        <span class="current">로밍사업자 이용신청</span>
+      </nav>
+      <h1>로밍사업자 이용신청</h1>
+      <p class="hero-lead">로밍 연동을 위한 <strong style="color:#fff;">로밍사업자 정보·계좌·담당자</strong>를 등록하여 무공해차 업무지원시스템 이용을 신청합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+      <!-- 개발자 확인용 신청 전/후 전환 (실서비스에서는 로그인 계정 상태로 분기) -->
+      <div class="bf-statetoggle-wrap">
+        <div class="bf-statetoggle" role="group" aria-label="개발자 확인용 전/후 전환">
+          <a href="business-apply-roaming.html">신청 전</a>
+          <a href="business-status-roaming.html" aria-current="page">신청 후</a>
+        </div>
+        <span class="bf-statetoggle-lab">개발자 확인용 (실서비스: 계정 상태로 분기)</span>
+      </div>
+
+      <div class="bf-status-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        이용신청이 <strong>승인 완료</strong>되었습니다. (신청일자 2026-06-10)
+      </div>
+
+
+      <div class="alert alert-info alert-inline mb-4">
+        <div class="alert-icon"></div>
+        <div class="alert-body" style="line-height:1.7;">신청 후 관리자 승인을 받아야 이용이 가능합니다.<br>동시 로그인이 안 되니 개인별로 가입하여 이용합니다.</div>
+      </div>
+
+      <form class="bf-card" id="roamForm" onsubmit="alert('재신청이 접수되었습니다.');location.href='mypage.html#mp-business';return false;">
+
+        <div class="bf-block">
+          <h3 class="bf-h">신청자 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">이름</span><input type="text" value="모비젠" readonly></label>
+            <label class="bf-row"><span class="bf-lab">아이디</span><input type="text" value="mobigen4" readonly></label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">신청 구분 <em style="color:var(--color-danger,#e11d48);">*</em></h3>
+          <div class="bf-radio-wide">
+            <label><input type="radio" name="member_kind" value="new" checked><span>신규 로밍 사업자</span></label>
+            <label><input type="radio" name="member_kind" value="add"><span>기존 로밍 사업자 운영자 추가</span></label>
+          </div>
+        </div>
+
+        <!-- 운영자 추가 모드 -->
+        <div class="bf-block mode-add" style="display:none;">
+          <div class="bf-grid">
+            <label class="bf-row bf-row-full"><span class="bf-lab">신청 로밍사업자 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>선택</option><option>SK일렉링크</option><option>차지비</option><option>에버온</option><option>파워큐브</option><option>한국전기차충전서비스</option></select></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">증빙자료 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_proof">파일선택</button><input type="file" id="f_proof" hidden></span>
+              <p class="bf-attach-note" style="margin:6px 0 0;">※ 재직증명서 첨부</p>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">비고</span><input type="text" placeholder="비고"></label>
+          </div>
+        </div>
+
+        <!-- 신규 로밍 사업자 모드 -->
+        <div class="mode-new">
+        <div class="bf-block">
+          <h3 class="bf-h">사업자 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row bf-row-full"><span class="bf-lab">사업자번호 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="num-only bf-seg" maxlength="3" required>
+                <span>-</span><input type="text" class="num-only" style="width:60px;" maxlength="2" required>
+                <span>-</span><input type="text" class="num-only" style="width:90px;" maxlength="5" required>
+                <button type="button" class="bf-mini-btn" id="bizNoCheck">확인</button>
+              </span>
+            </label>
+            <label class="bf-row"><span class="bf-lab">사업자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="사업자명" required></label>
+            <label class="bf-row"><span class="bf-lab">대표자 성명</span><input type="text" placeholder="대표자 성명"></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">고객센터번호</span>
+              <span class="bf-inline">
+                <input type="text" class="num-only bf-seg" maxlength="4">
+                <span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+                <span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">주소 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" id="zipno" class="bf-num-narrow" placeholder="우편번호" readonly>
+                <button type="button" class="bf-mini-btn" id="zipSearch">우편번호검색</button>
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">&nbsp;</span><input type="text" id="addr" placeholder="주소" readonly required></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">&nbsp;</span><input type="text" id="addrDetail" placeholder="상세주소"></label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">첨부 서류</h3>
+          <div class="bf-grid" style="gap:14px;">
+            <label class="bf-row bf-row-full"><span class="bf-lab">사업자등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_busi">파일첨부</button><input type="file" id="f_busi" hidden></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">사업자 로고 이미지 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_logo">파일첨부</button><input type="file" id="f_logo" hidden></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">사업자 서명 이미지 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_sign">파일첨부</button><input type="file" id="f_sign" hidden></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">계좌(정산) 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">기관ID <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" id="bid" style="width:96px; text-transform:uppercase;" maxlength="2" required>
+                <button type="button" class="bf-mini-btn" id="bidCheck">중복확인</button>
+                <span class="bf-hint" style="flex-basis:100%;">영문 대문자 2자리만 사용 가능</span>
+              </span>
+            </label>
+            <label class="bf-row"><span class="bf-lab">사용 중인 기관ID</span>
+              <select id="useBid"><option value="">사용 중인 기관ID</option><option>AC</option><option>AE</option><option>AH</option><option>AI</option><option>AL</option><option>AM</option><option>AP</option><option>AZ</option><option>BA</option><option>BC</option><option>BE</option><option>BG</option><option>BK</option><option>BN</option><option>BP</option><option>BS</option><option>CA</option><option>CB</option><option>CC</option><option>CG</option><option>CH</option><option>CN</option><option>CO</option><option>CP</option><option>DA</option><option>DC</option><option>DG</option><option>EV</option><option>GS</option><option>HD</option><option>HM</option><option>KC</option><option>KG</option><option>KT</option><option>ME</option><option>SK</option><option>SS</option></select>
+            </label>
+            <label class="bf-row"><span class="bf-lab">은행 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <select id="bnkCd" required><option value="">은행 선택</option><option>KB국민은행</option><option>IBK기업은행</option><option>NH농협은행</option><option>신한은행</option><option>우리은행</option><option>하나은행</option><option>SC제일은행</option><option>한국씨티은행</option><option>부산은행</option><option>대구은행</option><option>광주은행</option><option>전북은행</option><option>경남은행</option><option>제주은행</option><option>새마을금고</option><option>신협</option><option>우체국</option><option>수협</option><option>한국산업은행</option><option>한국수출입은행</option><option>카카오뱅크</option><option>케이뱅크</option><option>토스뱅크</option></select>
+            </label>
+            <label class="bf-row"><span class="bf-lab">예금주 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab">계좌번호 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" class="num-only" placeholder="숫자만 입력" required></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">계좌 사본 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_acnt">파일첨부</button><input type="file" id="f_acnt" hidden></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 담당자 3종 -->
+        <div class="bf-block">
+          <h3 class="bf-h">협약 담당자</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">담당자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="업무 담당자명" required></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">이메일 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="email-id" required><span>@</span>
+                <input type="text" class="email-domain" required>
+                <select class="email-sel"><option value="">직접입력</option><option>naver.com</option><option>daum.net</option><option>hanmail.net</option><option>nate.com</option><option>gmail.com</option><option>hotmail.com</option><option>yahoo.co.kr</option></select>
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">연락처 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <select class="area-sel"><option>02</option><option>031</option><option>032</option><option>033</option><option>041</option><option>042</option><option>043</option><option>044</option><option>051</option><option>052</option><option>053</option><option>054</option><option>055</option><option>061</option><option>062</option><option>063</option><option>064</option><option>070</option></select>
+                <span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">휴대전화 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="num-only bf-seg" maxlength="3" value="010"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">시스템 담당자</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">담당자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="시스템 담당자명" required></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">이메일 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="email-id" required><span>@</span>
+                <input type="text" class="email-domain" required>
+                <select class="email-sel"><option value="">직접입력</option><option>naver.com</option><option>daum.net</option><option>hanmail.net</option><option>nate.com</option><option>gmail.com</option><option>hotmail.com</option><option>yahoo.co.kr</option></select>
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">연락처 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <select class="area-sel"><option>02</option><option>031</option><option>032</option><option>033</option><option>041</option><option>042</option><option>043</option><option>044</option><option>051</option><option>052</option><option>053</option><option>054</option><option>055</option><option>061</option><option>062</option><option>063</option><option>064</option><option>070</option></select>
+                <span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">휴대전화 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="num-only bf-seg" maxlength="3" value="010"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">정산 담당자</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">담당자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">이메일 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="email-id" required><span>@</span>
+                <input type="text" class="email-domain" required>
+                <select class="email-sel"><option value="">직접입력</option><option>naver.com</option><option>daum.net</option><option>hanmail.net</option><option>nate.com</option><option>gmail.com</option><option>hotmail.com</option><option>yahoo.co.kr</option></select>
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">연락처 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <select class="area-sel"><option>02</option><option>031</option><option>032</option><option>033</option><option>041</option><option>042</option><option>043</option><option>044</option><option>051</option><option>052</option><option>053</option><option>054</option><option>055</option><option>061</option><option>062</option><option>063</option><option>064</option><option>070</option></select>
+                <span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">휴대전화 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="num-only bf-seg" maxlength="3" value="010"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">전기신사업 및 충전기 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row bf-row-full"><span class="bf-lab">전기신사업 등록번호 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline"><span>제</span><input type="text" class="num-only" style="width:140px;" required><span>호</span><button type="button" class="bf-mini-btn" id="elecCheck">등록확인</button></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">전기신사업 등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_elec">파일첨부</button><input type="file" id="f_elec" hidden></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">충전기 목록 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_chgr">파일첨부</button>
+                <button type="button" class="bf-mini-btn" id="chgrTemplate">충전기 목록 양식 다운로드</button>
+                <button type="button" class="bf-mini-btn" id="chgrVerify">충전기목록 파일검증</button>
+                <input type="file" id="f_chgr" hidden>
+              </span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">비고</span><input type="text" placeholder="비고"></label>
+          </div>
+        </div>
+        </div><!-- /mode-new -->
+
+        <div class="bf-block">
+          <h3 class="bf-h">진행상태</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">승인여부</span><input type="text" value="승인" readonly></label>
+            <label class="bf-row"><span class="bf-lab">신청일자</span><input type="text" value="2026-06-10 14:37:17" readonly></label>
+          </div>
+        </div>
+
+        <div class="bf-foot">
+          <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
+          <button type="submit" class="btn btn-primary">재신청</button>
+        </div>
+      </form>
+
+      <div class="alert alert-info alert-inline" style="margin-top:24px;">
+        <div class="alert-icon"></div>
+        <div class="alert-body">신청 후 승인을 받아야 이용이 가능하며, 승인까지 1~2일 소요됩니다</div>
+      </div>
+      <div class="bf-contact">
+        <div class="bf-contact-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 1 3-3c0 1.6-1.2 2.2-1.2 3.4 0 .9 .5 1.6 1.2 1.6h.0"/><path d="M5 17h14"/><rect x="4.5" y="17" width="15" height="3.2" rx="1.2"/></svg></div>
+        <div class="bf-contact-body"><strong>문의 사항</strong><span class="bf-contact-item">플랫폼 사업팀 | 070-4027-1633</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 주소 검색 팝업 -->
+<div class="addr-modal" id="addrModal" role="dialog" aria-modal="true" aria-label="주소 검색">
+  <div class="addr-box">
+    <h3>주소 검색</h3>
+    <div class="addr-search"><input type="text" id="addrInput" class="form-input" placeholder="도로명 또는 지번 주소를 입력하세요"><button type="button" class="bf-mini-btn" id="addrGo">검색</button></div>
+    <ul class="addr-results" id="addrResults">
+      <li data-zip="22689" data-addr="인천광역시 서구 환경로 42 (오류동)"><span class="zip">22689</span>인천광역시 서구 환경로 42 (오류동)</li>
+      <li data-zip="06241" data-addr="서울특별시 강남구 테헤란로 152 (역삼동)"><span class="zip">06241</span>서울특별시 강남구 테헤란로 152 (역삼동)</li>
+      <li data-zip="13529" data-addr="경기도 성남시 분당구 판교역로 235 (삼평동)"><span class="zip">13529</span>경기도 성남시 분당구 판교역로 235 (삼평동)</li>
+      <li data-zip="48058" data-addr="부산광역시 해운대구 센텀중앙로 79 (우동)"><span class="zip">48058</span>부산광역시 해운대구 센텀중앙로 79 (우동)</li>
+    </ul>
+    <div class="addr-foot"><button type="button" class="btn btn-secondary" id="addrClose">닫기</button></div>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function toast(msg, type){ if(window.__toast) window.__toast(msg, type||'info'); else console.log(msg); }
+
+  // 1) 신청 구분에 따라 입력 항목 전환 (운영자 추가 시 축소)
+  function updateMode(){
+    var r=document.querySelector('input[name=member_kind]:checked'); var v=r?r.value:'new';
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-new'), function(e){ e.style.display = (v==='new')?'':'none'; });
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-add'), function(e){ e.style.display = (v==='add')?'':'none'; });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=member_kind]'), function(r){ r.addEventListener('change', updateMode); });
+  updateMode();
+
+  // 12·10) 숫자만 입력
+  document.querySelectorAll('.num-only').forEach(function(el){
+    el.addEventListener('input', function(){ this.value = this.value.replace(/[^0-9]/g,''); });
+  });
+  // 기관ID 대문자
+  var bid = document.getElementById('bid');
+  if(bid) bid.addEventListener('input', function(){ this.value = this.value.toUpperCase().replace(/[^A-Z]/g,''); });
+
+  // 11) 이메일 도메인 드롭다운 → @뒤 인풋 자동 입력
+  document.querySelectorAll('.email-sel').forEach(function(sel){
+    sel.addEventListener('change', function(){
+      var dom = this.closest('.bf-inline').querySelector('.email-domain');
+      if(this.value){ dom.value = this.value; dom.readOnly = true; }
+      else { dom.value=''; dom.readOnly = false; dom.focus(); }
+    });
+  });
+
+  // 8) 사용 중인 기관ID 선택 → 기관ID 입력에 반영
+  var useBid = document.getElementById('useBid');
+  if(useBid) useBid.addEventListener('change', function(){ if(this.value && bid){ bid.value = this.value; } });
+
+  // 4) 사업자등록증 진위확인 — 소스 방식: 공공데이터포털 금융위원회 기업기본정보(법인 개요) 조회 + 환경공단 BID 기등록 여부 확인
+  var bizNoCheck = document.getElementById('bizNoCheck');
+  if(bizNoCheck) bizNoCheck.addEventListener('click', function(){
+    toast('금융위원회 기업기본정보(법인 개요) 조회로 법인명·사업자번호를 대조하고, 환경공단 BID 기준 기등록 사업자 여부를 확인했습니다. (정상 사업자)', 'success');
+  });
+
+  // 전기신사업자 등록확인 — 소스 방식: 등록번호 형식검증 + 전기신사업자 등록증 첨부로 진위 확인
+  var elecCheck = document.getElementById('elecCheck');
+  if(elecCheck) elecCheck.addEventListener('click', function(){
+    var inp = elecCheck.closest('.bf-inline').querySelector('input');
+    if(!inp || !inp.value){ toast('전기신사업자 등록번호를 입력하세요.', 'error'); return; }
+    var f = document.getElementById('f_elec');
+    if(!f || !f.files || !f.files.length){ toast('등록번호 형식을 확인했습니다. 진위 확인을 위해 전기신사업자 등록증을 첨부해 주세요.', 'warning'); return; }
+    toast('전기신사업자 등록번호 형식 및 등록증 첨부를 확인했습니다.', 'success');
+  });
+
+  // 7) 기관ID 중복확인 (DB 검색 모사)
+  var bidCheck = document.getElementById('bidCheck');
+  if(bidCheck) bidCheck.addEventListener('click', function(){
+    if(!bid.value || bid.value.length!==2){ toast('기관ID는 영문 대문자 2자리로 입력하세요.', 'error'); return; }
+    toast('"'+bid.value+'" 는 사용 가능한 기관ID입니다.', 'success');
+  });
+
+  // 6) 파일첨부 버튼 → 우측 푸시 + 파일 첨부 팝업(파일 선택창)
+  document.querySelectorAll('.bf-file-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(this.getAttribute('data-target'));
+      toast('파일 첨부 창을 호출합니다.', 'info');
+      if(input) input.click();
+    });
+  });
+  document.querySelectorAll('input[type=file]').forEach(function(input){
+    input.addEventListener('change', function(){
+      var row = this.closest('.bf-file-row');
+      var nameEl = row ? row.querySelector('.bf-file-name') : null;
+      if(nameEl){
+        if(this.files && this.files.length){ nameEl.textContent = this.files[0].name; nameEl.classList.add('has'); }
+        else { nameEl.textContent = '선택된 파일 없음'; nameEl.classList.remove('has'); }
+      }
+    });
+  });
+
+  // 16) 충전기 목록 양식 다운로드 / 파일검증
+  var tpl = document.getElementById('chgrTemplate');
+  if(tpl) tpl.addEventListener('click', function(){ toast('충전기 목록 양식(.xlsx) 다운로드가 시작됩니다.', 'success'); });
+  var ver = document.getElementById('chgrVerify');
+  if(ver) ver.addEventListener('click', function(){
+    var input = document.getElementById('f_chgr');
+    if(!input.files || !input.files.length){ toast('먼저 충전기 목록 파일을 첨부하세요.', 'error'); return; }
+    toast('충전기 목록 파일을 검증했습니다. (오류 0건)', 'success');
+  });
+
+  // 5) 주소 검색 팝업
+  var modal = document.getElementById('addrModal');
+  var zipBtn = document.getElementById('zipSearch');
+  if(zipBtn) zipBtn.addEventListener('click', function(){ toast('주소 검색 팝업을 띄웁니다.', 'info'); modal.classList.add('open'); var ai=document.getElementById('addrInput'); if(ai) setTimeout(function(){ai.focus();},40); });
+  document.getElementById('addrClose').addEventListener('click', function(){ modal.classList.remove('open'); });
+  modal.addEventListener('click', function(e){ if(e.target===modal) modal.classList.remove('open'); });
+  document.getElementById('addrResults').addEventListener('click', function(e){
+    var li = e.target.closest('li'); if(!li) return;
+    document.getElementById('zipno').value = li.getAttribute('data-zip');
+    document.getElementById('addr').value = li.getAttribute('data-addr');
+    modal.classList.remove('open');
+    var d = document.getElementById('addrDetail'); if(d) d.focus();
+  });
+
+  // === 첨부 서류 목록/필수검증 ===
+  var fileInputs = Array.prototype.slice.call(document.querySelectorAll('input[type=file]'));
+  function fileRow(inp){ return inp.closest('.bf-row'); }
+  function fileVisible(inp){ var r=fileRow(inp); return !!(r && r.offsetParent !== null); }
+  function fileRequired(inp){ var r=fileRow(inp); return !!(r && r.querySelector('.bf-lab em')); }
+  function fileLabel(inp){ var r=fileRow(inp), l=r&&r.querySelector('.bf-lab'); var t=l?l.textContent:(inp.id||'첨부'); return t.replace(/[*\s]+$/,'').trim(); }
+
+  var statusBlock = document.createElement('div');
+  statusBlock.className = 'bf-block';
+  statusBlock.innerHTML = '<h3 class="bf-h">첨부 현황</h3><ul id="attachStatus" style="list-style:none;margin:0;padding:0;"></ul>';
+  var foot = document.querySelector('.bf-foot');
+  if(foot && foot.parentNode) foot.parentNode.insertBefore(statusBlock, foot);
+  var statusUl = document.getElementById('attachStatus');
+
+  function renderStatus(){
+    if(!statusUl) return;
+    statusUl.innerHTML = fileInputs.filter(fileVisible).map(function(inp){
+      var has = inp.files && inp.files.length, req = fileRequired(inp);
+      var color = has ? 'var(--color-primary-600,#16a34a)' : (req ? 'var(--color-danger,#e11d48)' : 'var(--text-tertiary,#94a3b8)');
+      var mark = has ? '첨부완료' : (req ? '미첨부 (필수)' : '미첨부');
+      return '<li style="display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13.5px;border-bottom:1px solid var(--border-light);padding:8px 2px;"><span>'+fileLabel(inp)+(req?' <em style="color:var(--color-danger,#e11d48);">*</em>':'')+'</span><span style="font-weight:600;color:'+color+';text-align:right;">'+mark+(has?' · '+inp.files[0].name:'')+'</span></li>';
+    }).join('');
+  }
+  fileInputs.forEach(function(inp){ inp.addEventListener('change', renderStatus); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=member_kind]'), function(r){ r.addEventListener('change', renderStatus); });
+  renderStatus();
+
+  // 제출 시 필수 첨부 검증
+  var submitBtn = document.querySelector('button[type=submit]');
+  if(submitBtn) submitBtn.addEventListener('click', function(e){
+    var missing = fileInputs.filter(function(inp){ return fileVisible(inp) && fileRequired(inp) && !(inp.files && inp.files.length); });
+    if(missing.length){
+      e.preventDefault();
+      toast('필수 첨부서류가 누락되었습니다: '+missing.map(fileLabel).join(', '), 'error');
+      renderStatus();
+      statusBlock.scrollIntoView({behavior:'smooth', block:'center'});
+    } else {
+      e.preventDefault();
+      toast('신청서가 접수되었습니다. 접수 결과는 등록하신 연락처로 안내됩니다.', 'success');
+    }
+  });
+})();
+</script>
+</body>
+</html>

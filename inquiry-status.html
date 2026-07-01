@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>민원 처리 현황 조회 | 민원·문의 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/inquiry.css">
+<link rel="stylesheet" href="css/notice.css">
+<style>
+  /* 비회원 휴대폰 인증 게이트 */
+  .ms-gate{max-width:560px;margin:0 auto;}
+  .ms-gate .cf-auth-card{display:flex;align-items:center;gap:18px;padding:22px 24px;border:1px solid var(--border-light);border-radius:14px;background:var(--color-gray-50);margin-top:14px;}
+  .ms-gate .cf-auth-ico{color:var(--color-primary-600);flex:0 0 auto;}
+  .ms-auth-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:var(--color-primary-600);color:#fff;border:0;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;}
+  .ms-auth-btn:hover{background:var(--color-primary-700);} .ms-auth-btn:disabled{opacity:.7;cursor:default;}
+
+  /* 다중선택 드롭다운 */
+  .flt-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;}
+  .flt-field{display:flex;flex-direction:column;gap:5px;}
+  .flt-field > label{font-size:12px;font-weight:700;color:var(--text-secondary);}
+  .ms-dd{position:relative;}
+  .ms-dd-btn{height:42px;min-width:148px;display:inline-flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;border:1px solid var(--border-medium);border-radius:8px;background:#fff;font-size:13.5px;font-weight:600;color:var(--text-primary);cursor:pointer;}
+  .ms-dd-btn .caret{transition:transform .15s;color:var(--text-tertiary);flex:0 0 auto;}
+  .ms-dd.open .ms-dd-btn{border-color:var(--color-primary-500);}
+  .ms-dd.open .ms-dd-btn .caret{transform:rotate(180deg);}
+  .ms-dd-panel{position:absolute;z-index:40;top:calc(100% + 4px);left:0;min-width:210px;max-height:300px;overflow:auto;background:#fff;border:1px solid var(--border-light);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.14);padding:6px;}
+  .ms-dd-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:13.5px;color:var(--text-primary);cursor:pointer;white-space:nowrap;}
+  .ms-dd-item:hover{background:var(--color-gray-50);}
+  .ms-dd-item input{width:15px;height:15px;accent-color:var(--color-primary-600);}
+  .ms-dd-item.all{border-bottom:1px solid var(--border-light);margin-bottom:4px;font-weight:700;}
+  .ms-dd-empty{padding:12px 10px;color:var(--text-tertiary);font-size:13px;}
+  .flt-bar select,.flt-bar input[type=date]{height:42px;padding:0 12px;border:1px solid var(--border-medium);border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;}
+  .flt-dates{display:flex;align-items:center;gap:6px;}
+  .flt-dates .tilde{color:var(--text-tertiary);}
+  .flt-reset{height:42px;}
+
+  /* 상태 배지 4종 (처리불가는 별도 색) */
+  .stt{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.6;white-space:nowrap;}
+  .stt-received{background:#eef2f6;color:#54616e;} .stt-progress{background:#e7f0fe;color:#1559c2;}
+  .stt-done{background:#e6f6ee;color:#0f7a44;} .stt-rejected{background:#fdeede;color:#9a5b00;border:1px solid #f1c27a;}
+
+  /* 게시판 표 — 민원 */
+  #miBody tr{cursor:pointer;}
+  .mi-type-chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:3px 9px;white-space:nowrap;}
+  .ty-complaint{background:#e6f6ee;color:#0f7a44;} .ty-report{background:#fdeede;color:#9a5b00;}
+  .ty-discount{background:#e7f0fe;color:#1559c2;} .ty-qna{background:#eef2f6;color:#54616e;}
+  .ty-api{background:#e9f6fb;color:#0a6f96;} .ty-data{background:#f1ecfb;color:#6b3fb0;} .ty-h2help{background:#fef0e0;color:#a25b00;}
+  .mi-sub{color:var(--text-tertiary);font-size:12.5px;}
+
+  /* 상세(공지 상세 패턴) — 가로 스텝퍼 */
+  #dArticle h3{margin-top:26px;}
+  .ms-hsteps{display:flex;align-items:flex-start;margin:10px 0 4px;}
+  .ms-hstep{flex:1;text-align:center;position:relative;min-width:0;}
+  .ms-hstep::before{content:'';position:absolute;top:17px;left:-50%;width:100%;height:3px;background:var(--border-light);z-index:0;}
+  .ms-hstep:first-child::before{display:none;}
+  .ms-hstep.done::before,.ms-hstep.active::before{background:var(--color-primary-500);}
+  .ms-hstep.rejected::before{background:#d98a1f;}
+  .ms-hstep .dot{position:relative;z-index:1;width:36px;height:36px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;background:#fff;border:2px solid var(--border-medium);color:var(--text-tertiary);}
+  .ms-hstep.done .dot,.ms-hstep.active .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;}
+  .ms-hstep.active .dot{box-shadow:0 0 0 5px var(--color-primary-100,#e6f3ec);}
+  .ms-hstep.rejected .dot{background:#d98a1f;border-color:#d98a1f;color:#fff;}
+  .ms-hstep .lbl{font-size:13.5px;font-weight:700;color:var(--text-secondary);}
+  .ms-hstep.done .lbl,.ms-hstep.active .lbl{color:var(--text-primary);} .ms-hstep.rejected .lbl{color:#9a5b00;}
+  .ms-hstep .dt{font-size:11.5px;color:var(--text-tertiary);margin-top:3px;}
+  .ms-result-box{padding:16px 18px;background:var(--color-secondary-50);border-radius:10px;border:1px solid rgba(44,123,229,0.15);}
+  .ms-result-box.rejected{background:#fff6e8;border-color:#f1c27a;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로" data-i18n-aria="aria.bc.path">
+        <a href="index.html" data-i18n="extra.bc.home">홈</a><span class="sep">›</span>
+        <a href="#" data-i18n="inq.bc.community">소통·지원</a><span class="sep">›</span>
+        <a href="inquiry.html" data-i18n="inq.bc.current">민원·문의</a><span class="sep">›</span>
+        <span class="current" id="staCrumb">민원 처리 현황 조회</span>
+      </nav>
+      <h1 id="staH1">민원 처리 현황 조회</h1>
+      <p class="hero-lead">내가 접수한 민원·신청을 한 곳에서 — 상태·유형·기간으로 필터링하고, 게시물을 클릭해 상세를 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 데모: 회원/비회원 전환 -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+        <button type="button" class="btn btn-ghost btn-sm" id="demoMember" title="데모용 로그인 상태 전환">데모: 비회원으로 보기</button>
+      </div>
+
+      <!-- 비회원 휴대폰 인증 게이트 -->
+      <div class="ms-gate" id="gateNonmember" hidden>
+        <div class="status-search-card" style="padding:26px 26px 24px;border:1px solid var(--border-light);border-radius:14px;background:#fff;">
+          <h3 style="font-size:18px;letter-spacing:-0.02em;margin:0 0 6px;">휴대폰 본인인증</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin:0;">비회원은 휴대폰 본인인증 후 조회할 수 있습니다. <strong style="color:var(--text-primary);">본인 휴대폰번호로 접수한 민원만 조회됩니다.</strong></p>
+          <div class="cf-auth-card">
+            <div class="cf-auth-ico" aria-hidden="true">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg>
+            </div>
+            <button type="button" class="ms-auth-btn" id="gateAuthBtn">휴대전화 인증하기
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+          <p style="font-size:12px;color:var(--text-tertiary);line-height:1.7;margin:16px 0 0;">민원 번호를 모르셔도 됩니다. 인증한 번호로 접수된 민원이 자동으로 표시됩니다. 회원은 로그인 시 인증 없이 바로 조회됩니다.</p>
+        </div>
+      </div>
+
+      <!-- 목록(게시판) -->
+      <div id="mineWrap" hidden>
+        <div class="alert alert-info mb-6" id="mineScope">
+          <div class="alert-icon"></div>
+          <div class="alert-body" id="mineScopeText"><strong>내 민원·신청 전체</strong> 로그인 회원정보 기준으로 접수한 모든 건을 표시합니다.</div>
+        </div>
+
+        <!-- 필터 바 -->
+        <div class="board-toolbar">
+          <div class="flt-bar">
+            <div class="flt-field"><label>상태</label><div class="ms-dd" data-ms="status"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">상태 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
+            <div class="flt-field"><label>유형</label><div class="ms-dd" data-ms="type"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">유형 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
+            <div class="flt-field"><label>세부 유형</label><div class="ms-dd" data-ms="sub"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">세부 유형 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
+            <div class="flt-field"><label>기간(접수일)</label>
+              <select id="fltPeriod">
+                <option value="all">전체 기간</option>
+                <option value="30">최근 1개월</option>
+                <option value="90">최근 3개월</option>
+                <option value="180">최근 6개월</option>
+                <option value="custom">직접입력</option>
+              </select>
+            </div>
+            <div class="flt-field" id="fltDateWrap" hidden><label>날짜 범위</label>
+              <div class="flt-dates"><input type="date" id="fltFrom" aria-label="시작일"><span class="tilde">~</span><input type="date" id="fltTo" aria-label="종료일"></div>
+            </div>
+            <div class="flt-field" style="flex:1;min-width:220px;"><label>검색</label>
+              <div class="board-search"><svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="fltSearch" placeholder="제목·접수번호·내용 검색" aria-label="검색어"><button type="button" id="fltSearchBtn">검색</button></div>
+            </div>
+            <button type="button" class="btn flt-reset" id="fltReset">초기화</button>
+          </div>
+        </div>
+
+        <div class="board-result-meta">
+          <div>전체 <strong id="miCount">0</strong>건</div>
+          <div class="meta-aux" style="font-size:12.5px;color:var(--text-tertiary);">열 머리글을 클릭하면 정렬됩니다</div>
+        </div>
+
+        <div class="table-wrap" style="overflow-x:auto;">
+          <table class="board-table std-board" id="miTable">
+            <thead>
+              <tr>
+                <th class="num sortable" data-sk="received" data-snum="1">번호</th>
+                <th class="cat sortable" data-sk="type">유형</th>
+                <th class="cat sortable" data-sk="sub">세부 유형</th>
+                <th class="sortable" data-sk="title">제목</th>
+                <th class="cat sortable" data-sk="status" data-snum="1">상태</th>
+                <th class="date sortable" data-sk="received" data-snum="1">접수일</th>
+              </tr>
+            </thead>
+            <tbody id="miBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 상세 (게시물 클릭 시) — 공지사항 상세 패턴 -->
+      <div id="detailWrap" hidden>
+        <div class="nd-page nd-single">
+          <div class="nd-main">
+            <header class="nd-head">
+              <div class="nd-head-chips" id="dChips"></div>
+              <h2 class="nd-title" id="dTitle">제목</h2>
+              <dl class="nd-meta-strip" id="dMeta"></dl>
+            </header>
+            <article class="nd-article" id="dArticle"></article>
+            <div class="nd-actions-bar">
+              <div class="nd-btn-group">
+                <button type="button" class="nd-btn primary" id="detailBack">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                  목록으로
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-inquiry.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* ===== 민원 처리 현황 — 게시판형 + 다중필터 + 상세(공지 상세 패턴) ===== */
+(function () {
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+  function toast(m,t){ if (window.__toast) window.__toast(m,t||'info'); }
+
+  /* 유형 / 세부유형 / 상태 사전 */
+  var TYPES = [
+    { k:'complaint', label:'불편민원' }, { k:'report', label:'부적정집행' },
+    { k:'discount', label:'충전요금 할인 미적용' }, { k:'qna', label:'질의응답' },
+    { k:'data', label:'요청자료' }, { k:'h2help', label:'수소충전소 Help Desk' }
+  ];
+  var TYPE_LABEL = {}; TYPES.forEach(function(t){ TYPE_LABEL[t.k]=t.label; });
+  var SUBS = {
+    complaint:['충전기 고장','결제 오류','AS·콜센터 지연','기타'],
+    report:['부당수령','허위설치','중복수령','운영의무 위반'],
+    discount:['회원할인 미적용','로밍협약요금 미적용','심야할인 미적용'],
+    qna:['보조금','충전','세제','기타'],
+    data:['통계자료','정책자료','기타'],
+    h2help:['고장신고','운영문의','안전점검']
+  };
+  var STATUS = { received:'접수', progress:'처리중', done:'완료(정상)', rejected:'완료(처리불가)' };
+  var STATUS_ORDER = { received:0, progress:1, done:2, rejected:3 };
+  function statusLabel(it){ return it.statusLabel || STATUS[it.status]; }
+
+  /* ── 데이터(mock) ── */
+  var ITEMS = [
+    { no:'CV-2026-001245', type:'complaint', sub:'기타', title:'보조금 신청 시 지역 선택 드롭다운 오류', status:'progress', received:'2026.06.21 10:24', done:'', handler:'이정훈 주무관', content:"보조금 신청 화면에서 구매 지역을 '경기도'로 선택하면 세부 지자체(시·군) 목록이 일부만 표시됩니다. 성남시·용인시 등이 누락되어 신청을 진행할 수 없습니다.", result:'경기도 세부 지자체 API 응답 포맷 불일치로 확인되었습니다. 데이터 소스 수정 후 배포 예정이며, 완료 후 다시 안내드리겠습니다.', resultAt:'2026.06.22 15:30' },
+    { no:'CV-2026-000950', type:'complaint', sub:'AS·콜센터 지연', title:'고장 신고 후 출동이 지연됩니다', status:'done', received:'2026.05.30 18:40', done:'2026.06.02 11:20', handler:'박서연 주무관', content:'급속충전기 고장 신고 후 3일째 조치가 없습니다. 처리 일정을 알고 싶습니다.', result:'운영사 점검 일정 지연 건으로 확인되어 6월 2일 수리 완료했습니다. 불편을 드려 죄송합니다.' },
+    { no:'RP-2026-000132', type:'report', sub:'허위설치', title:'충전기 설치 현장과 보조금 지급 건수 불일치 의심', status:'received', received:'2026.06.25 11:42', done:'', content:'관내 A충전소의 실제 설치 충전기 수와 보조금 지급 건수가 맞지 않는 것으로 보입니다. 현장 2기, 지급 4기 기준 의심. 확인 부탁드립니다.' },
+    { no:'CV-2026-000987', type:'complaint', sub:'기타', title:'모바일 환경에서 첨부 파일 업로드 실패', status:'rejected', received:'2026.03.15 20:05', done:'2026.03.17 10:30', handler:'김도현 주무관', content:'모바일(안드로이드)에서 민원 접수 시 사진 첨부가 계속 실패합니다. iOS·PC는 정상입니다.', result:'제출 환경에서 오류를 재현하지 못했고 추가 정보 요청에 회신이 없어 사실관계 확인이 불가하여 처리불가로 종결합니다. 재발 시 화면 캡처와 함께 재접수해 주세요.' },
+    { no:'DC-2026-000210', type:'discount', sub:'회원할인 미적용', title:'회원 할인이 적용되지 않았습니다', status:'progress', received:'2026.06.15 13:11', done:'', handler:'정민재 주무관', content:'회원카드로 결제했는데 회원 할인가가 아닌 일반 단가로 청구되었습니다. 차액 환급 요청합니다. (카드 …4567)', result:'사업자 측 단가 적용 오류 확인 중입니다. 확인 후 차액 환급 처리하겠습니다.', resultAt:'2026.06.16 09:40' },
+    { no:'DC-2026-000198', type:'discount', sub:'심야할인 미적용', title:'심야 할인이 적용되지 않았습니다', status:'done', received:'2026.05.20 23:55', done:'2026.05.23 16:00', handler:'정민재 주무관', content:'23시 이후 충전인데 심야 할인이 빠진 것 같습니다.', result:'심야 할인 미반영 확인되어 차액 1,820원 환급 완료했습니다.' },
+    { no:'QA-2026-002201', type:'qna', sub:'보조금', title:'구매 후 지방비 지급이 지연되는데, 확인 가능한 방법이 있나요?', status:'done', received:'2026.04.02 09:10', done:'2026.04.05 16:20', handler:'박서연 주무관', content:'전기차 구매 후 국비는 지급되었으나 지방비가 한 달 넘게 입금되지 않았습니다. 확인 방법을 알고 싶습니다.', result:'지자체 예산 집행 일정상 지연된 건으로, 4월 5일자 지급 처리 완료되었습니다. 입금까지 영업일 2~3일 소요될 수 있습니다.' },
+    { no:'QA-2026-002180', type:'qna', sub:'충전', title:'회원카드 등록 방법이 궁금합니다', status:'done', received:'2026.03.28 14:02', done:'2026.03.29 10:15', handler:'이정훈 주무관', content:'회원카드 신규 발급 후 차량번호 등록은 어디서 하나요?', result:'회원카드 관리 > 내 회원카드 > 정보수정에서 차량번호를 등록할 수 있습니다.' },
+    { no:'DATA-2026-000045', type:'data', sub:'통계자료', title:'지자체별 충전기 보급 통계 자료 요청', status:'done', statusLabel:'완료', received:'2026.05.12 10:30', done:'2026.05.15 17:00', handler:'데이터정책팀', content:'2024~2026년 지자체별 공공 급속/완속 충전기 보급 현황 통계를 요청합니다. (연구 목적)', result:'요청하신 통계는 공개자료실에 게시했습니다. 자료 링크를 회신 메일로 안내드렸습니다.' },
+    { no:'H2-2026-000077', type:'h2help', sub:'고장신고', title:'○○ 수소충전소 결제 단말 오류', status:'progress', received:'2026.06.24 08:50', done:'', handler:'수소인프라팀', content:'○○ 수소충전소에서 카드 결제 단말이 인식되지 않습니다. 현장 점검 요청합니다.', result:'운영사에 현장 점검 요청 접수했습니다. 처리 결과를 안내드리겠습니다.', resultAt:'2026.06.24 13:20' }
+  ];
+
+  /* ── 상태(전역) ── */
+  var sel = { status:new Set(), type:new Set(), sub:new Set() };
+  var period = 'all', dateFrom = '', dateTo = '', query = '';
+  var sortKey = null, sortDir = 0; // sortDir: 0 기본(최신순) · 1 내림 · 2 올림
+  function sortVal(it, key){
+    if (key === 'received') { var d = parseDate(it.received); return d ? d.getTime() : 0; }
+    if (key === 'status') return STATUS_ORDER[it.status];
+    if (key === 'type') return TYPE_LABEL[it.type] || '';
+    if (key === 'sub') return it.sub || '';
+    if (key === 'title') return it.title || '';
+    return '';
+  }
+
+  /* ── 다중선택 드롭다운 ── */
+  function msName(key){ return key==='status'?'상태':key==='type'?'유형':'세부 유형'; }
+  function msOptions(key){
+    if (key==='status') return Object.keys(STATUS).map(function(k){ return { v:k, t:STATUS[k] }; });
+    if (key==='type') return TYPES.map(function(t){ return { v:t.k, t:t.label }; });
+    // sub: 선택된 유형들의 세부유형 합집합 (없으면 전체 유형의 합집합)
+    var types = sel.type.size ? Array.from(sel.type) : TYPES.map(function(t){return t.k;});
+    var set = []; var seen = {};
+    types.forEach(function(tk){ (SUBS[tk]||[]).forEach(function(s){ if(!seen[s]){ seen[s]=1; set.push(s); } }); });
+    return set.map(function(s){ return { v:s, t:s }; });
+  }
+  function msLabel(key){
+    var s = sel[key], n = msName(key);
+    if (!s.size) return n + ' 전체';
+    var txt = {}; msOptions(key).forEach(function(o){ txt[o.v] = o.t; });
+    var arr = Array.from(s);
+    var first = txt[arr[0]] || arr[0];
+    return s.size === 1 ? first : (first + ' 외 ' + (s.size - 1));
+  }
+  function renderMsPanel(key){
+    var dd = document.querySelector('.ms-dd[data-ms="' + key + '"]');
+    var panel = dd.querySelector('.ms-dd-panel');
+    var opts = msOptions(key);
+    if (!opts.length) { panel.innerHTML = '<div class="ms-dd-empty">유형을 먼저 선택하세요</div>'; return; }
+    panel.innerHTML = '<label class="ms-dd-item all"><input type="checkbox" data-all> <span>전체</span></label>'
+      + opts.map(function(o){ return '<label class="ms-dd-item"><input type="checkbox" value="'+esc(o.v)+'"'+(sel[key].has(o.v)?' checked':'')+'> <span>'+esc(o.t)+'</span></label>'; }).join('');
+    var allCb = panel.querySelector('[data-all]');
+    if (allCb) allCb.checked = sel[key].size === 0;
+    dd.querySelector('.ms-dd-label').textContent = msLabel(key);
+  }
+  function setupMs(key){
+    var dd = document.querySelector('.ms-dd[data-ms="' + key + '"]');
+    var btn = dd.querySelector('.ms-dd-btn'), panel = dd.querySelector('.ms-dd-panel');
+    renderMsPanel(key);
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = dd.classList.contains('open');
+      closeAllMs();
+      if (!open){ dd.classList.add('open'); panel.hidden = false; }
+    });
+    panel.addEventListener('click', function(e){ e.stopPropagation(); });
+    panel.addEventListener('change', function(e){
+      var cb = e.target;
+      if (cb.hasAttribute('data-all')) { if (cb.checked) sel[key].clear(); renderMsPanel(key); }
+      else {
+        if (cb.checked) sel[key].add(cb.value); else sel[key].delete(cb.value);
+        dd.querySelector('.ms-dd-label').textContent = msLabel(key);
+        var allCb = panel.querySelector('[data-all]'); if (allCb) allCb.checked = sel[key].size === 0;
+      }
+      if (key === 'type') { // 유형 변경 → 세부유형 옵션 재구성(선택 초기화)
+        // 선택된 유형에 없는 세부유형 제거
+        var valid = {}; msOptions('sub').forEach(function(o){ valid[o.v]=1; });
+        Array.from(sel.sub).forEach(function(s){ if(!valid[s]) sel.sub.delete(s); });
+        renderMsPanel('sub');
+      }
+      render();
+    });
+  }
+  function closeAllMs(){ document.querySelectorAll('.ms-dd.open').forEach(function(d){ d.classList.remove('open'); d.querySelector('.ms-dd-panel').hidden = true; }); }
+  document.addEventListener('click', closeAllMs);
+
+  /* ── 필터/정렬 ── */
+  function parseDate(s){ var p = (s||'').slice(0,10).split('.'); return p.length===3 ? new Date(+p[0], +p[1]-1, +p[2]) : null; }
+  var NOW = new Date(2026, 5, 29); // 기준일 2026-06-29
+  function inPeriod(it){
+    var d = parseDate(it.received); if (!d) return true;
+    if (period === 'all') return true;
+    if (period === 'custom') {
+      if (dateFrom && d < parseDate(dateFrom.replace(/-/g,'.'))) return false;
+      if (dateTo && d > parseDate(dateTo.replace(/-/g,'.'))) return false;
+      return true;
+    }
+    var days = parseInt(period, 10);
+    return (NOW - d) <= days * 86400000;
+  }
+  function filtered(){
+    var rows = ITEMS.filter(function(it){
+      if (sel.status.size && !sel.status.has(it.status)) return false;
+      if (sel.type.size && !sel.type.has(it.type)) return false;
+      if (sel.sub.size && !sel.sub.has(it.sub)) return false;
+      if (!inPeriod(it)) return false;
+      if (query) {
+        var hay = (it.title + ' ' + it.no + ' ' + (it.content||'')).toLowerCase();
+        if (hay.indexOf(query.toLowerCase()) < 0) return false;
+      }
+      return true;
+    });
+    rows.sort(function(a, b){
+      if (sortKey && sortDir) {
+        var va = sortVal(a, sortKey), vb = sortVal(b, sortKey);
+        var c = (typeof va === 'number') ? (va - vb) : String(va).localeCompare(String(vb), 'ko');
+        if (c) return sortDir === 1 ? -c : c; // 1 내림 · 2 올림
+      }
+      // 기본 정렬: 최신순(접수일 내림)
+      return parseDate(b.received) - parseDate(a.received);
+    });
+    return rows;
+  }
+
+  /* ── 게시판 렌더 ── */
+  function render(){
+    var rows = filtered();
+    $('miCount').textContent = rows.length;
+    var n = rows.length;
+    $('miBody').innerHTML = rows.length ? rows.map(function(it, i){
+      var s = it.status, cls = 'stt-' + s;
+      return '<tr data-no="' + esc(it.no) + '">'
+        + '<td class="num">' + (n - i) + '</td>'
+        + '<td class="cat"><span class="mi-type-chip ty-' + it.type + '">' + esc(TYPE_LABEL[it.type]) + '</span></td>'
+        + '<td class="cat"><span class="mi-sub">' + esc(it.sub || '–') + '</span></td>'
+        + '<td><div class="title-cell">' + esc(it.title) + ' <span style="color:var(--text-tertiary);font-size:11.5px;">' + esc(it.no) + '</span></div></td>'
+        + '<td class="cat"><span class="stt ' + cls + '">' + esc(statusLabel(it)) + '</span></td>'
+        + '<td class="date">' + esc((it.received||'').slice(0,10)) + '</td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="6"><div class="board-empty" style="padding:40px;"><h4>조건에 맞는 항목이 없습니다</h4><p>필터를 조정하거나 초기화해 주세요.</p></div></td></tr>';
+  }
+
+  /* ── 상세(공지 상세 패턴) ── */
+  var KIND_CHIP = '<span class="cat-chip" style="background:var(--color-gray-100);color:var(--color-gray-700);">';
+  function metaDl(label, val){ return '<dl><dt>'+esc(label)+'</dt><dd>'+esc(val)+'</dd></dl>'; }
+  function timelineHtml(it){
+    var st = it.status;
+    var s2 = (st==='received') ? 'todo' : (st==='progress' ? 'active' : 'done');
+    var s3 = (st==='done') ? 'done' : (st==='rejected' ? 'done rejected' : 'todo');
+    var doneTitle = (st==='rejected') ? '완료(처리불가)' : '완료';
+    function step(cls, dot, lbl, dt){ return '<div class="ms-hstep '+cls+'"><div class="dot">'+dot+'</div><div class="lbl">'+lbl+'</div><div class="dt">'+esc(dt)+'</div></div>'; }
+    return '<div class="ms-hsteps">'
+      + step('done','✓','접수완료', it.received)
+      + step(s2,(s2==='done'?'✓':'2'),'처리중',(st==='received'?'대기 중':(st==='progress'?'진행 중':'완료')))
+      + step(s3,(s3.indexOf('done')===0?'✓':'3'),doneTitle,(it.done||'예정'))
+      + '</div>';
+  }
+  function renderMinwon(it){
+    $('dChips').innerHTML = '<span class="stt stt-'+it.status+'">'+esc(statusLabel(it))+'</span>' + KIND_CHIP + esc(TYPE_LABEL[it.type]) + '</span>' + KIND_CHIP + esc(it.sub) + '</span>';
+    $('dTitle').textContent = it.title;
+    $('dMeta').innerHTML = metaDl('접수번호', it.no) + metaDl('유형', TYPE_LABEL[it.type]) + metaDl('세부 유형', it.sub)
+      + metaDl('접수일', it.received) + metaDl('처리상태', statusLabel(it)) + (it.handler ? metaDl('처리자', it.handler) : '');
+    var art = '<h3>처리 진행</h3>' + timelineHtml(it);
+    if (it.content) art += '<h3>'+(it.type==='qna'?'문의 내용':it.type==='data'?'요청 내용':'신고 내용')+'</h3><p style="font-size:14px;line-height:1.85;color:var(--text-secondary);">'+esc(it.content)+'</p>';
+    if (it.result) art += '<h3>처리결과</h3><div class="ms-result-box'+(it.status==='rejected'?' rejected':'')+'">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap;"><strong style="font-size:13px;color:var(--color-secondary-700);">'+esc(it.handler||'처리자')+'</strong>'
+      + '<span style="font-size:11.5px;color:var(--text-tertiary);">'+esc(it.resultAt||it.done||'')+'</span></div>'
+      + '<p style="font-size:14px;line-height:1.8;color:var(--text-secondary);margin:0;">'+esc(it.result)+'</p></div>';
+    art += '<p style="font-size:13px;color:var(--text-tertiary);margin-top:18px;">처리 단계가 변경되면 접수 시 인증한 휴대폰으로 SMS가 발송됩니다. 접수번호는 식별·문의용입니다.</p>';
+    $('dArticle').innerHTML = art;
+  }
+  function setPageName(detail){
+    var h1 = $('staH1'), bc = $('staCrumb');
+    if (h1) h1.textContent = detail ? '민원 처리 현황 조회-상세' : '민원 처리 현황 조회';
+    if (bc) bc.textContent = detail ? '상세 보기' : '민원 처리 현황 조회';
+  }
+  function openDetail(no){
+    var it = null; for (var i=0;i<ITEMS.length;i++) if (ITEMS[i].no===no) { it = ITEMS[i]; break; }
+    if (!it) return;
+    renderMinwon(it);
+    $('mineWrap').hidden = true; $('gateNonmember').hidden = true; $('detailWrap').hidden = false;
+    setPageName(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── 회원/비회원 게이트 ── */
+  function loggedIn(){ try { return !!(sessionStorage.getItem('mp_user') || window.__loggedIn); } catch(e){ return false; } }
+  var memberView = loggedIn() || true; // 데모 기본 회원 (실서비스 = loggedIn())
+  function showList(scopeText){ $('gateNonmember').hidden = true; $('detailWrap').hidden = true; $('mineWrap').hidden = false; $('mineScopeText').innerHTML = scopeText; }
+  function applyGate(){
+    $('detailWrap').hidden = true;
+    if (memberView) showList('<strong>내 민원·신청 전체</strong> 로그인 회원정보 기준으로 접수한 모든 건을 표시합니다.');
+    else { $('gateNonmember').hidden = false; $('mineWrap').hidden = true; }
+  }
+
+  function init(){
+    setupMs('status'); setupMs('type'); setupMs('sub');
+    $('fltPeriod').addEventListener('change', function(){ period = this.value; $('fltDateWrap').hidden = (period !== 'custom'); render(); });
+    $('fltFrom').addEventListener('change', function(){ dateFrom = this.value; render(); });
+    $('fltTo').addEventListener('change', function(){ dateTo = this.value; render(); });
+    function doSearch(){ query = $('fltSearch').value.trim(); render(); }
+    $('fltSearchBtn').addEventListener('click', doSearch);
+    $('fltSearch').addEventListener('input', doSearch);
+
+    // 표 헤더 클릭 정렬 (표준: 기본 → 내림 → 올림 → 기본)
+    function clearSortInd(){ document.querySelectorAll('#miTable thead th').forEach(function(t){ t.classList.remove('sort-asc','sort-desc'); }); }
+    document.querySelectorAll('#miTable thead th.sortable').forEach(function(th){
+      th.tabIndex = 0; th.setAttribute('role','button');
+      function cycle(){
+        var key = th.dataset.sk;
+        if (sortKey !== key) { sortKey = key; sortDir = 1; }
+        else { sortDir = (sortDir + 1) % 3; if (sortDir === 0) sortKey = null; }
+        clearSortInd();
+        if (sortKey) { th.classList.toggle('sort-desc', sortDir === 1); th.classList.toggle('sort-asc', sortDir === 2); }
+        render();
+      }
+      th.addEventListener('click', cycle);
+      th.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cycle(); } });
+    });
+
+    $('fltReset').addEventListener('click', function(){
+      sel.status.clear(); sel.type.clear(); sel.sub.clear();
+      period='all'; dateFrom=''; dateTo=''; query=''; sortKey=null; sortDir=0;
+      $('fltPeriod').value='all'; $('fltDateWrap').hidden=true; $('fltFrom').value=''; $('fltTo').value=''; $('fltSearch').value='';
+      clearSortInd();
+      renderMsPanel('status'); renderMsPanel('type'); renderMsPanel('sub');
+      render();
+    });
+    $('miBody').addEventListener('click', function(e){ var tr = e.target.closest('tr[data-no]'); if (tr) openDetail(tr.dataset.no); });
+
+    var authBtn = $('gateAuthBtn');
+    if (authBtn) authBtn.addEventListener('click', function(){ this.textContent='✓ 본인인증 완료'; this.disabled=true; toast('본인인증이 완료되었습니다. (데모)','info'); showList('<strong>휴대폰 인증 완료</strong> 인증한 번호(010-1234-5678)로 접수한 민원만 조회됩니다.'); });
+    var demoBtn = $('demoMember');
+    if (demoBtn) demoBtn.addEventListener('click', function(){ memberView = !memberView; this.textContent = memberView ? '데모: 비회원으로 보기' : '데모: 회원으로 보기'; if (authBtn){ authBtn.textContent='휴대전화 인증하기'; authBtn.disabled=false; } applyGate(); });
+    var back = $('detailBack');
+    if (back) back.addEventListener('click', function(){ $('detailWrap').hidden = true; $('mineWrap').hidden = false; setPageName(false); window.scrollTo({ top:0, behavior:'smooth' }); });
+
+    render();
+    applyGate();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>급속 충전시설 지점관리 이용신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/business-apply.css">
+<style>
+  .bf-radio-line { display:flex; gap:12px 22px; align-items:center; flex-wrap:wrap; }
+  .bf-radio-line label { display:inline-flex; gap:7px; align-items:center; white-space:nowrap; font-size:14px; margin:0; cursor:pointer; }
+  .bf-mini-btn { white-space:nowrap; padding:9px 14px; border:1px solid var(--color-primary-500); background:#fff; color:var(--color-primary-700); border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .bf-mini-btn:hover { background:var(--color-primary-50); }
+  .bf-inline { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .bf-card .bf-inline input, .bf-card .bf-inline select { width:auto; }
+  .dept-area { display:flex; gap:12px 22px; align-items:center; flex-wrap:wrap; }
+  .dept-area .sub { display:inline-flex; gap:8px; align-items:center; }
+  .dept-area .sub-lab { color:var(--text-secondary); font-size:13.5px; white-space:nowrap; }
+  .dept-area input, .dept-area select { width:auto; min-width:120px; }
+  .dept-area input.lock-box { background:var(--color-gray-100,#eef1f5); color:var(--text-secondary); min-width:240px; }
+  .bf-seg { width:60px; text-align:center; }
+  .bf-contact { display:flex; align-items:center; gap:18px; border:1px solid var(--border-light); border-radius:12px; padding:18px 24px; margin-top:14px; }
+  .bf-contact-ico { color:var(--color-secondary-600,#1f5fa8); flex:none; }
+  .bf-contact-body { font-size:14.5px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .bf-contact-body strong { font-size:16px; color:var(--text-primary); }
+  .bf-contact-item { color:var(--text-secondary); }
+  .bf-contact-item::before { content:'· '; color:var(--color-secondary-600,#1f5fa8); font-weight:700; }
+  .srch-modal { position:fixed; inset:0; background:rgba(15,23,42,.45); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .srch-modal.open { display:flex; }
+  .srch-box { background:#fff; width:min(560px,94vw); max-height:88vh; overflow-y:auto; border-radius:14px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .srch-box h3 { font-size:18px; margin:0 0 16px; }
+  .srch-form { width:100%; border-collapse:collapse; margin-bottom:8px; }
+  .srch-form th { width:120px; background:var(--color-gray-50,#f6f8fa); border:1px solid var(--border-light); padding:10px 12px; text-align:left; font-size:13.5px; color:var(--text-secondary); }
+  .srch-form td { border:1px solid var(--border-light); padding:8px 10px; }
+  .srch-form input { width:100%; height:38px; border:1px solid var(--border-light); border-radius:8px; padding:0 10px; }
+  .srch-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .srch-table th { background:var(--color-gray-700,#334155); color:#fff; padding:10px; }
+  .srch-table td { border-bottom:1px solid var(--border-light); padding:9px 10px; text-align:center; }
+  .srch-table td:nth-child(2) { text-align:left; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'mypage';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <a href="mypage.html#mp-business">업무지원시스템 이용신청</a><span class="sep">›</span>
+        <span class="current">급속 충전시설 지점관리 이용신청</span>
+      </nav>
+      <h1>급속 충전시설 지점관리 이용신청</h1>
+      <p class="hero-lead">급속 충전시설 지점관리 시스템 이용을 위한 <strong style="color:#fff;">구분·소속·전화번호</strong> 정보를 등록하여 신청합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+      <!-- 개발자 확인용 신청 전/후 전환 (실서비스에서는 로그인 계정 상태로 분기) -->
+      <div class="bf-statetoggle-wrap">
+        <div class="bf-statetoggle" role="group" aria-label="개발자 확인용 전/후 전환">
+          <a href="business-apply-fast-station.html" aria-current="page">신청 전</a>
+          <a href="business-status-fast-station.html">신청 후</a>
+        </div>
+        <span class="bf-statetoggle-lab">개발자 확인용 (실서비스: 계정 상태로 분기)</span>
+      </div>
+
+      <form class="bf-card" onsubmit="alert('이용신청이 접수되었습니다. 승인 후 사용하실 수 있습니다.');location.href='mypage.html#mp-business';return false;">
+
+        <div class="bf-block">
+          <h3 class="bf-h">신청 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">이름</span><input type="text" value="모비젠" readonly></label>
+            <label class="bf-row"><span class="bf-lab">아이디</span><input type="text" value="mobigen4" readonly></label>
+
+            <div class="bf-row bf-row-full"><span class="bf-lab">충전시설 지점관리 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-radio-line">
+                <label><input type="radio" name="epRate" value="me" checked> 환경부</label>
+                <label><input type="radio" name="epRate" value="keco"> 한국환경공단</label>
+                <label><input type="radio" name="epRate" value="wide"> 광역지자체</label>
+                <label><input type="radio" name="epRate" value="basic"> 기초지자체</label>
+                <label><input type="radio" name="epRate" value="vendor"> 용역사</label>
+                <label><input type="radio" name="epRate" value="public"> 공공기관</label>
+                <label><input type="radio" name="epRate" value="private"> 민간</label>
+                <label><input type="radio" name="epRate" value="gov"> 국가기관</label>
+              </span>
+            </div>
+
+            <div class="bf-row bf-row-full"><span class="bf-lab">충전시설 지점관리<br>소속정보 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <div class="dept-area">
+                <span class="sub" data-show="wide basic"><span class="sub-lab">시도명 :</span><select><option>선택</option><option>서울특별시</option><option>부산광역시</option><option>대구광역시</option><option>인천광역시</option><option>광주광역시</option><option>대전광역시</option><option>울산광역시</option><option>세종특별자치시</option><option>경기도</option><option>충청북도</option><option>충청남도</option><option>전라남도</option><option>경상북도</option><option>경상남도</option><option>제주특별자치도</option><option>강원특별자치도</option><option>전북특별자치도</option></select></span>
+                <span class="sub" data-show="basic"><span class="sub-lab">시군구명 :</span><select><option>선택</option></select></span>
+                <span class="sub" data-show="vendor"><span class="sub-lab">업체명 :</span><input type="text"></span>
+                <span class="sub" data-show="vendor"><span class="sub-lab">사업자번호 :</span><span class="bf-inline"><input type="text" class="num-only bf-seg" maxlength="3"><span>-</span><input type="text" class="num-only bf-seg" maxlength="2"><span>-</span><input type="text" class="num-only bf-seg" maxlength="5"></span></span>
+                <span class="sub" data-show="public"><span class="sub-lab">공공기관명 :</span><input type="text" id="pubName" class="lock-box" readonly><button type="button" class="bf-mini-btn" id="pubSearchBtn">공공기관 검색</button></span>
+                <span class="sub" data-show="gov"><span class="sub-lab">국가기관명 :</span><input type="text" id="govName" class="lock-box" readonly><button type="button" class="bf-mini-btn" id="govSearchBtn">국가기관 검색</button></span>
+                <span class="sub" data-show="private"><span class="sub-lab">민간소속명 :</span><input type="text"></span>
+                <span class="sub" data-show="me keco wide basic public gov"><span class="sub-lab">부서명 :</span><input type="text"></span>
+              </div>
+            </div>
+
+            <div class="bf-row bf-row-full"><span class="bf-lab">전화번호 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" class="num-only bf-seg" maxlength="3" value="010"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4"><span>-</span><input type="text" class="num-only bf-seg" maxlength="4">
+              </span>
+            </div>
+            <div class="bf-row bf-row-full"><span class="bf-lab">이메일 주소 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline">
+                <input type="text" style="width:150px;"><span>@</span>
+                <input type="text" class="email-domain" style="width:160px;">
+                <select class="email-sel" style="width:130px;"><option value="">직접입력</option><option>naver.com</option><option>daum.net</option><option>hanmail.net</option><option>nate.com</option><option>gmail.com</option><option>hotmail.com</option><option>yahoo.co.kr</option></select>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">진행상태</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">승인여부</span><input type="text" value="신청 전" readonly></label>
+            <label class="bf-row"><span class="bf-lab">신청일자</span><input type="text" placeholder="-" readonly></label>
+          </div>
+        </div>
+
+        <div class="bf-foot">
+          <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
+          <button type="submit" class="btn btn-primary">신청</button>
+        </div>
+      </form>
+
+      <div class="alert alert-info alert-inline" style="margin-top:24px;">
+        <div class="alert-icon"></div>
+        <div class="alert-body">신청 후 관리자 승인을 받아야 이용이 가능합니다.</div>
+      </div>
+      <div class="bf-contact">
+        <div class="bf-contact-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 1 3-3c0 1.6-1.2 2.2-1.2 3.4 0 .9 .5 1.6 1.2 1.6"/><rect x="4.5" y="17" width="15" height="3.2" rx="1.2"/></svg></div>
+        <div class="bf-contact-body"><strong>승인 요청</strong><span class="bf-contact-item">무공해차인프라사업부 | 032-590-4417 | 032-590-5038 | 032-590-4416 | 032-590-4412 | 032-590-5038</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 공공기관/국가기관 검색 팝업 -->
+<div class="srch-modal" id="srchModal" role="dialog" aria-modal="true" aria-labelledby="srchTitle">
+  <div class="srch-box">
+    <h3 id="srchTitle">충전시설지점관리 공공기관 선택</h3>
+    <table class="srch-form"><tbody>
+      <tr><th>기관명</th><td><input type="text" id="srchName"></td></tr>
+    </tbody></table>
+    <div style="text-align:right; margin:10px 0;"><button type="button" class="bf-mini-btn" id="srchGo">조 회</button></div>
+    <table class="srch-table"><thead><tr><th id="srchIdCol" style="width:120px;">공공기관ID</th><th>명칭</th><th style="width:72px;">선택</th></tr></thead><tbody id="srchResults"></tbody></table>
+    <div class="pagination" data-total="10" data-current="1" style="margin-top:16px; justify-content:center;"></div>
+    <div style="text-align:right; margin-top:8px;"><button type="button" class="btn btn-secondary" id="srchClose">닫기</button></div>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function getEp(){ var r=document.querySelector('input[name=epRate]:checked'); return r?r.value:'me'; }
+
+  // 충전시설 지점관리 유형에 따라 소속정보 입력란 표시/숨김
+  function update(){
+    var v=getEp();
+    Array.prototype.forEach.call(document.querySelectorAll('.dept-area .sub'), function(s){
+      s.style.display = s.getAttribute('data-show').split(' ').indexOf(v) >= 0 ? '' : 'none';
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=epRate]'), function(r){ r.addEventListener('change', update); });
+
+  // 숫자만 입력
+  Array.prototype.forEach.call(document.querySelectorAll('.num-only'), function(el){ el.addEventListener('input', function(){ this.value=this.value.replace(/[^0-9]/g,''); }); });
+  // 이메일 도메인 드롭다운 → @뒤 자동 입력
+  Array.prototype.forEach.call(document.querySelectorAll('.email-sel'), function(sel){
+    sel.addEventListener('change', function(){
+      var dom=this.closest('.bf-inline').querySelector('.email-domain');
+      if(this.value){ dom.value=this.value; dom.readOnly=true; } else { dom.value=''; dom.readOnly=false; dom.focus(); }
+    });
+  });
+  update();
+
+  // 공공기관/국가기관 검색 팝업
+  var modal=$('srchModal'), target=null;
+  var PUBLIC=[['L00001','서울특별시청'],['L00003','서울특별시 종로구청'],['L00004','서울특별시 중구청'],['L00005','서울특별시 용산구청'],['L00006','서울특별시 성동구청'],['L00007','서울특별시 광진구청'],['L00008','서울특별시 동대문구청'],['L00009','서울특별시 중랑구청'],['L00010','서울특별시 성북구청'],['L00011','서울특별시 강북구청']];
+  var GOV=[['G00100','(사)한국디자인산업연합회'],['G00106','(사)한국문화유산협회'],['G00103','(사)한국쌀가공식품협회'],['G00097','(사)한국여신전문금융업협회'],['G00096','(사)한국여행업협회'],['G00102','(사)한국자동차튜닝산업협회'],['G00092','(재)한국정보통신산업연구원'],['G00093','(재)한국청년기업가정신재단'],['G00001','감사원'],['G00002','개인정보보호위원회']];
+  function openSearch(type, inputId){
+    target=$(inputId);
+    $('srchTitle').textContent = type==='pub' ? '충전시설지점관리 공공기관 선택' : '충전시설지점관리 국가기관 선택';
+    $('srchIdCol').textContent = type==='pub' ? '공공기관ID' : '국가기관ID';
+    var data = type==='pub' ? PUBLIC : GOV;
+    $('srchResults').innerHTML = data.map(function(d){ return '<tr><td>'+d[0]+'</td><td>'+d[1]+'</td><td><button type="button" class="bf-mini-btn srch-pick" data-name="'+d[1]+'">선택</button></td></tr>'; }).join('');
+    $('srchName').value='';
+    modal.classList.add('open');
+  }
+  if($('pubSearchBtn')) $('pubSearchBtn').addEventListener('click', function(){ openSearch('pub','pubName'); });
+  if($('govSearchBtn')) $('govSearchBtn').addEventListener('click', function(){ openSearch('gov','govName'); });
+  $('srchResults').addEventListener('click', function(e){ var b=e.target.closest('.srch-pick'); if(b && target){ target.value=b.getAttribute('data-name'); modal.classList.remove('open'); } });
+  $('srchClose').addEventListener('click', function(){ modal.classList.remove('open'); });
+  $('srchGo').addEventListener('click', function(){ if(window.__toast) window.__toast('조회되었습니다.','info'); });
+  modal.addEventListener('click', function(e){ if(e.target===modal) modal.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>

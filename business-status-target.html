@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보급목표제 이용신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/business-apply.css">
+<style>
+  .bf-contact { display:flex; align-items:center; gap:18px; border:1px solid var(--border-light); border-radius:12px; padding:18px 24px; margin-top:14px; }
+  .bf-contact-ico { color:var(--color-secondary-600,#1f5fa8); flex:none; }
+  .bf-contact-body { font-size:14.5px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .bf-contact-body strong { font-size:16px; color:var(--text-primary); }
+  .bf-contact-item { color:var(--text-secondary); }
+  .bf-contact-item::before { content:'· '; color:var(--color-secondary-600,#1f5fa8); font-weight:700; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'mypage';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <a href="mypage.html#mp-business">업무지원시스템 이용신청</a><span class="sep">›</span>
+        <span class="current">보급목표제 이용신청</span>
+      </nav>
+      <h1>보급목표제 이용신청</h1>
+      <p class="hero-lead">보급목표제 이용을 위한 <strong style="color:#fff;">회원 구분·판매자</strong> 정보를 등록하여 신청합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+      <!-- 개발자 확인용 신청 전/후 전환 (실서비스에서는 로그인 계정 상태로 분기) -->
+      <div class="bf-statetoggle-wrap">
+        <div class="bf-statetoggle" role="group" aria-label="개발자 확인용 전/후 전환">
+          <a href="business-apply-target.html">신청 전</a>
+          <a href="business-status-target.html" aria-current="page">신청 후</a>
+        </div>
+        <span class="bf-statetoggle-lab">개발자 확인용 (실서비스: 계정 상태로 분기)</span>
+      </div>
+
+      <div class="bf-status-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        이용신청이 <strong>승인 완료</strong>되었습니다. (신청일자 2026-05-06)
+      </div>
+
+
+      <form class="bf-card" onsubmit="alert('재신청이 접수되었습니다.');location.href='mypage.html#mp-business';return false;">
+
+        <div style="padding-bottom:16px; border-bottom:1px solid var(--border-light); margin-bottom:18px; font-size:13.5px; line-height:1.8; color:var(--text-secondary);">
+          ※ 신청 후 관리자(한국환경공단)에게 승인을 받아야 이용이 가능합니다.<br>
+          ※ 동시 로그인이 안되니 개인별로 가입하여 이용합니다.
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">신청 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">이름</span><input type="text" value="모비젠" readonly></label>
+            <label class="bf-row"><span class="bf-lab">아이디</span><input type="text" value="mobigen1" readonly></label>
+            <div class="bf-row bf-row-full"><span class="bf-lab">회원 구분 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span style="display:flex; gap:14px 28px; align-items:center; flex-wrap:wrap;">
+                <label style="display:inline-flex; gap:7px; align-items:center; white-space:nowrap;"><input type="radio" name="sgGubun" value="seller" checked> 보급목표제 판매담당자</label>
+                <label style="display:inline-flex; gap:7px; align-items:center; white-space:nowrap;"><input type="radio" name="sgGubun" value="admin"> 보급목표제 관리자</label>
+              </span>
+            </div>
+            <label class="bf-row" id="row_seller"><span class="bf-lab">보급목표제 판매자 <em style="color:var(--color-danger,#e11d48);">*</em></span><select><option>선택</option><option>환경공단</option><option>현대</option><option>기아</option><option>한국지엠</option><option>르노코리아</option><option>KG모빌리티</option><option>벤츠</option><option>BMW</option><option>토요타</option><option>폭스바겐그룹코리아</option><option>혼다</option><option>바스맨테크놀러지</option><option>범한자동차</option><option>블루샤크코리아</option><option>비와이디코리아</option><option>대창모터스</option><option>대동모빌리티</option><option>더좋은사람</option><option>디피코</option></select></label>
+            <label class="bf-row"><span class="bf-lab">승인여부</span><input type="text" value="승인" readonly></label>
+            <label class="bf-row"><span class="bf-lab">신청일자</span><input type="text" value="2026-05-06" readonly></label>
+          </div>
+        </div>
+
+        <div class="bf-foot">
+          <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
+          <button type="submit" class="btn btn-primary">재신청</button>
+        </div>
+      </form>
+
+      <div class="alert alert-info alert-inline" style="margin-top:24px;">
+        <div class="alert-icon"></div>
+        <div class="alert-body">신청 후 관리자 승인을 받아야 이용이 가능합니다.</div>
+      </div>
+      <div class="bf-contact">
+        <div class="bf-contact-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 1 3-3c0 1.6-1.2 2.2-1.2 3.4 0 .9 .5 1.6 1.2 1.6"/><rect x="4.5" y="17" width="15" height="3.2" rx="1.2"/></svg></div>
+        <div class="bf-contact-body"><strong>승인 요청</strong><span class="bf-contact-item">녹색수송계획부 | 032-590-3693</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  var row = document.getElementById('row_seller');
+  function update(){
+    var r = document.querySelector('input[name=sgGubun]:checked');
+    var v = r ? r.value : '';
+    if(row) row.style.display = (v==='seller') ? '' : 'none';  // 판매자: 판매담당자만
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=sgGubun]'), function(r){ r.addEventListener('change', update); });
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전기지게차 공모 신청 내역 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="subsidy-target.html">구매·보조금</a><span class="sep">›</span>
+        <a href="public-offering.html">공모·신청</a><span class="sep">›</span>
+        <a href="public-construction.html">전기지게차 공모 신청</a><span class="sep">›</span>
+        <span class="current">신청조회</span>
+      </nav>
+      <h1>전기지게차 공모 신청 내역</h1>
+      <p class="hero-lead">제출한 신청 건의 <strong>진행 상태·상세</strong>를 신청번호별로 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div id="contestDetailRoot"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/contest-detail.js?v=20260701b"></script>
+<script>
+ContestDetail.mount({
+  applyHref:'public-construction.html', applyName:'전기지게차 공모 신청', supplementHref:'#',
+  apps:[
+    { appId:'PC-2026-000188', project:'전기지게차 공모 신청', applyDate:'2026.04.10', status:'현장평가 대기', result:'progress',
+      notice:{ name:'2026년 전기건설기계(지게차) 보급 공모', no:'환경부공고 제2026-176호', org:'한국환경공단', period:'2026.03.15 ~ 2026.04.10', announce:'2026.05.15(예정)', scale:'전국 90대', contact:'무공해차보급팀 044-201-6000' },
+      applicant:{ org:'대한물류(주)', rep:'정대표', bizNo:'220-88-11223', manager:'김담당', tel:'031-777-8888' },
+      block4:{ title:'신청 내용 · 대상 (차량)', rows:[['대상 차종·규격','전기지게차 3톤급'],['신청 대수','8대'],['제작·수입사','HD현대사이트솔루션(주)'],['국비 단가','2,365만원'],['지방비 단가','700만원']] },
+      timeline:[{label:'접수 완료',date:'2026.04.10',state:'done'},{label:'서류심사',date:'2026.04.18',state:'done'},{label:'현장평가',date:'',state:'current'},{label:'선정심의',date:'',state:''},{label:'선정발표',date:'',state:''}],
+      docs:[{name:'사업계획서',ok:true},{name:'장비 도입계획서',ok:true},{name:'사업장 현황 증빙',ok:false}],
+      action:'현장평가 일정이 확정되면 담당자 연락처로 안내드립니다.' }
+  ]
+});
+</script>
+</body>
+</html>

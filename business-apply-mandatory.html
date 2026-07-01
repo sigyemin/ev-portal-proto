@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>의무구매임차제 지원시스템 이용신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/business-apply.css">
+<style>
+  .bf-radio-line { display:flex; gap:12px 22px; align-items:center; flex-wrap:wrap; }
+  .bf-radio-line label { display:inline-flex; gap:7px; align-items:center; white-space:nowrap; font-size:14px; margin:0; cursor:pointer; }
+  .bf-mini-btn { white-space:nowrap; padding:9px 14px; border:1px solid var(--color-primary-500); background:#fff; color:var(--color-primary-700); border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .bf-mini-btn:hover { background:var(--color-primary-50); }
+  .bf-inline { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .org-row { display:flex; align-items:center; gap:8px; }
+  .org-row .org-lab { width:80px; flex:none; color:var(--text-secondary); font-size:13.5px; }
+  .org-row input.lock-box { flex:1; min-width:200px; background:var(--color-gray-100,#eef1f5); color:var(--text-secondary); }
+  .org-stack { display:flex; flex-direction:column; gap:10px; }
+  /* 검색 팝업 */
+  .srch-modal { position:fixed; inset:0; background:rgba(15,23,42,.45); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .srch-modal.open { display:flex; }
+  .srch-box { background:#fff; width:min(560px,94vw); max-height:88vh; overflow-y:auto; border-radius:14px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .srch-box h3 { font-size:18px; margin:0 0 16px; }
+  .srch-form { width:100%; border-collapse:collapse; margin-bottom:8px; }
+  .srch-form th { width:120px; background:var(--color-gray-50,#f6f8fa); border:1px solid var(--border-light); padding:10px 12px; text-align:left; font-size:13.5px; color:var(--text-secondary); }
+  .srch-form td { border:1px solid var(--border-light); padding:8px 10px; }
+  .srch-form input { width:100%; height:38px; border:1px solid var(--border-light); border-radius:8px; padding:0 10px; }
+  .srch-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .srch-table th { background:var(--color-gray-700,#334155); color:#fff; padding:10px; }
+  .srch-table td { border-bottom:1px solid var(--border-light); padding:9px 10px; text-align:center; }
+  .srch-table td:nth-child(2) { text-align:left; }
+  .bf-topnote { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding-bottom:16px; border-bottom:1px solid var(--border-light); margin-bottom:18px; font-size:13.5px; line-height:1.6; }
+  .bf-topnote .req { color:var(--color-secondary-700,#1f5fa8); font-weight:600; white-space:nowrap; }
+  .bf-contact { display:flex; align-items:center; gap:18px; border:1px solid var(--border-light); border-radius:12px; padding:18px 24px; margin-top:14px; }
+  .bf-contact-ico { color:var(--color-secondary-600,#1f5fa8); flex:none; }
+  .bf-contact-body { font-size:14.5px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .bf-contact-body strong { font-size:16px; color:var(--text-primary); }
+  .bf-contact-item { color:var(--text-secondary); }
+  .bf-contact-item::before { content:'· '; color:var(--color-secondary-600,#1f5fa8); font-weight:700; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'mypage';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <a href="mypage.html#mp-business">업무지원시스템 이용신청</a><span class="sep">›</span>
+        <span class="current">의무구매임차제 지원시스템 이용신청</span>
+      </nav>
+      <h1>의무구매임차제 지원시스템 이용신청</h1>
+      <p class="hero-lead">의무 구매·임차제 지원시스템 이용을 위한 <strong style="color:#fff;">회원구분·기관(대표기관·소속기관)</strong> 정보를 등록하여 신청합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+      <!-- 개발자 확인용 신청 전/후 전환 (실서비스에서는 로그인 계정 상태로 분기) -->
+      <div class="bf-statetoggle-wrap">
+        <div class="bf-statetoggle" role="group" aria-label="개발자 확인용 전/후 전환">
+          <a href="business-apply-mandatory.html" aria-current="page">신청 전</a>
+          <a href="business-status-mandatory.html">신청 후</a>
+        </div>
+        <span class="bf-statetoggle-lab">개발자 확인용 (실서비스: 계정 상태로 분기)</span>
+      </div>
+
+      <form class="bf-card" onsubmit="alert('이용신청이 접수되었습니다. 승인 후 사용하실 수 있습니다.');location.href='mypage.html#mp-business';return false;">
+
+        <div class="bf-topnote">
+          <span style="color:var(--text-secondary);">* 기관관리자 신청 후 소속기관 담당자는 대표기관 담당자, 대표기관 담당자는 공단에 승인 요청이 필요합니다.(070-8065-4225/4259)</span>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">신청 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">이름</span><input type="text" value="모비젠" readonly></label>
+            <label class="bf-row"><span class="bf-lab">아이디</span><input type="text" value="mobigen4" readonly></label>
+
+            <div class="bf-row bf-row-full"><span class="bf-lab">회원구분 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-radio-line">
+                <label><input type="radio" name="cpGubun" value="1" checked> 의무 구매임차제 기관관리자</label>
+                <label><input type="radio" name="cpGubun" value="2"> 의무 구매임차제 한국환경공단 관리자</label>
+                <label><input type="radio" name="cpGubun" value="3"> 의무 구매임차제 한국환경공단 검토자</label>
+              </span>
+            </div>
+
+            <div class="bf-row bf-row-full" id="row_inst"><span class="bf-lab">의무 구매임차제 기관 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <div class="org-stack">
+                <div class="org-row"><span class="org-lab">대표기관</span><input type="text" id="instName" class="lock-box" placeholder="대표기관 검색을 통해 선택" readonly><button type="button" class="bf-mini-btn" id="instSearchBtn">대표기관 검색</button></div>
+                <div class="org-row"><span class="org-lab">소속기관</span><input type="text" id="instbrName" class="lock-box" placeholder="소속기관 검색을 통해 선택" readonly><button type="button" class="bf-mini-btn" id="instbrSearchBtn">소속기관 검색</button></div>
+              </div>
+            </div>
+            <label class="bf-row"><span class="bf-lab">승인여부</span><input type="text" value="" readonly></label>
+            <label class="bf-row"><span class="bf-lab">신청일자</span><input type="text" value="" readonly></label>
+          </div>
+        </div>
+
+        <div class="bf-foot">
+          <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
+          <button type="submit" class="btn btn-primary">신청</button>
+        </div>
+      </form>
+
+      <div class="alert alert-info alert-inline" style="margin-top:24px;">
+        <div class="alert-icon"></div>
+        <div class="alert-body">신청 후 관리자 승인을 받아야 이용이 가능합니다. 승인 받으신 경우, 로그아웃 이후 재로그인이 필요합니다.</div>
+      </div>
+      <div class="bf-contact">
+        <div class="bf-contact-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 1 3-3c0 1.6-1.2 2.2-1.2 3.4 0 .9 .5 1.6 1.2 1.6"/><rect x="4.5" y="17" width="15" height="3.2" rx="1.2"/></svg></div>
+        <div class="bf-contact-body"><strong>승인 요청</strong><span class="bf-contact-item">녹색수송계획부 | 032-590-3681</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 대표기관/소속기관 검색 팝업 -->
+<div class="srch-modal" id="srchModal" role="dialog" aria-modal="true" aria-labelledby="srchTitle">
+  <div class="srch-box">
+    <h3 id="srchTitle">대표기관 선택</h3>
+    <table class="srch-form"><tbody>
+      <tr><th id="srchCodeLab">기관 코드</th><td><input type="text" id="srchCode"></td></tr>
+      <tr><th id="srchNameLab">기관명</th><td><input type="text" id="srchName"></td></tr>
+    </tbody></table>
+    <div style="text-align:right; margin:10px 0;"><button type="button" class="bf-mini-btn" id="srchGo">조 회</button></div>
+    <table class="srch-table"><thead><tr><th>코드</th><th>명칭</th><th style="width:80px;">선택</th></tr></thead><tbody id="srchResults"></tbody></table>
+    <div class="pagination" data-total="10" data-current="1" style="margin-top:16px; justify-content:center;"></div>
+    <div style="text-align:right; margin-top:8px;"><button type="button" class="btn btn-secondary" id="srchClose">닫기</button></div>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  var modal=$('srchModal'), target=null;
+  var INST=[['1000','서울특별시청'],['2000','부산광역시청'],['3000','한국환경공단'],['4000','국토교통부'],['5000','경기도청'],['6000','인천광역시청'],['7000','대구광역시청'],['8000','광주광역시청'],['9000','대전광역시청'],['9100','울산광역시청']];
+  var INSTBR=[['1001','서울 강남구청'],['1002','서울 송파구청'],['1003','서울 마포구청'],['3001','한국환경공단 수도권본부'],['3002','한국환경공단 부산울산경남본부'],['3003','한국환경공단 대구경북본부'],['5001','경기 수원시청'],['5002','경기 성남시청']];
+  function openSearch(type, inputId){
+    target=$(inputId);
+    $('srchTitle').textContent = type==='inst' ? '대표기관 선택' : '소속기관 선택';
+    $('srchCodeLab').textContent = type==='inst' ? '대표기관 코드' : '소속기관 코드';
+    $('srchNameLab').textContent = type==='inst' ? '대표기관명' : '소속기관명';
+    var data = type==='inst' ? INST : INSTBR;
+    $('srchResults').innerHTML = data.map(function(d){ return '<tr><td>'+d[0]+'</td><td>'+d[1]+'</td><td><button type="button" class="bf-mini-btn srch-pick" data-name="'+d[1]+'">선택</button></td></tr>'; }).join('');
+    $('srchCode').value=''; $('srchName').value='';
+    modal.classList.add('open');
+  }
+  $('instSearchBtn').addEventListener('click', function(){ openSearch('inst','instName'); });
+  $('instbrSearchBtn').addEventListener('click', function(){
+    if(!$('instName').value){ alert('대표기관을 먼저 검색하여 선택해 주세요.'); return; }
+    openSearch('instbr','instbrName');
+  });
+
+  // 회원구분에 따라 '의무 구매임차제 기관' 행 표시 (기관관리자만)
+  function updateGubun(){
+    var r=document.querySelector('input[name=cpGubun]:checked'); var v=r?r.value:'';
+    var row=$('row_inst'); if(row) row.style.display = (v==='1') ? '' : 'none';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=cpGubun]'), function(r){ r.addEventListener('change', updateGubun); });
+  updateGubun();
+  $('srchResults').addEventListener('click', function(e){ var b=e.target.closest('.srch-pick'); if(b && target){ target.value=b.getAttribute('data-name'); modal.classList.remove('open'); } });
+  $('srchClose').addEventListener('click', function(){ modal.classList.remove('open'); });
+  $('srchGo').addEventListener('click', function(){ if(window.__toast) window.__toast('조회되었습니다.','info'); });
+  modal.addEventListener('click', function(e){ if(e.target===modal) modal.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터·통계 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/data.css">
+<!-- [블라인드 처리] 사업자별 운영 현황(임시) 대시보드 스타일 비활성화
+<link rel="stylesheet" href="css/tindex-modal.css">
+-->
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'data';</script>
+<div id="header-slot"></div>
+
+<main id="main" class="data-section">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로" data-i18n-aria="aria.bc.path">
+        <a href="index.html" data-i18n="extra.bc.home">홈</a><span class="sep">›</span>
+        <span class="current" data-i18n="data.bc.current">데이터·통계</span>
+      </nav>
+      <h1 data-i18n="data.h1">데이터·통계</h1>
+      <p class="hero-lead" data-i18n-html="data.lead.html">무공해차 보급·충전 인프라·보조금 집행·K-EV100 전환 현황을 <strong>실시간 대시보드</strong>와 <strong>공개 데이터</strong>로 제공합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 실시간 주요 지표 스트립 (오피넷 스타일) -->
+      <div class="ds-live-strip">
+        <div class="ds-live-head">
+          <h3><span class="ds-live-dot"></span><span data-i18n="data.live.h3">실시간 주요 지표</span></h3>
+          <span class="ds-live-timestamp" data-i18n="data.live.ts">2026.04.24 15:40 기준 · 5분 주기 자동 갱신</span>
+        </div>
+        <div class="ds-live-grid">
+          <div class="ds-live-tile">
+            <div class="lt-label" data-i18n="data.kpi.zev">누적 무공해차</div>
+            <div class="lt-val"><span data-counter="1048620">0</span><span class="unit" data-i18n="data.unit.units">대</span></div>
+            <div class="lt-delta up" data-i18n="data.kpi.zev.delta">▲ 이번 달 +12,840</div>
+          </div>
+          <div class="ds-live-tile">
+            <div class="lt-label" data-i18n="data.kpi.chgr">전국 충전기</div>
+            <div class="lt-val"><span data-counter="596368">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div>
+            <div class="lt-delta up" data-i18n="data.kpi.chgr.delta">▲ 4,280 / 주</div>
+          </div>
+          <div class="lt-label" style="display:none;"></div>
+          <div class="ds-live-tile">
+            <div class="lt-label" data-i18n="data.kpi.ops">충전 사업자</div>
+            <div class="lt-val"><span data-counter="159">0</span><span class="unit" data-i18n="data.unit.firms">개사</span></div>
+            <div class="lt-delta flat" data-i18n="data.kpi.ops.delta">투명성지수 공개</div>
+          </div>
+          <div class="ds-live-tile">
+            <div class="lt-label" data-i18n="data.kpi.kev">K-EV100 참여</div>
+            <div class="lt-val"><span data-counter="524">0</span><span class="unit" data-i18n="data.unit.firmscn">社</span></div>
+            <div class="lt-delta up" data-i18n="data.kpi.kev.delta">▲ +18 / 월</div>
+          </div>
+          <div class="ds-live-tile">
+            <div class="lt-label" data-i18n="data.kpi.sub">올해 집행 보조금</div>
+            <div class="lt-val"><span data-counter="1.84">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div>
+            <div class="lt-delta up" data-i18n="data.kpi.sub.delta">예산 대비 66% 소진</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 대시보드 4개 메뉴 -->
+      <div class="ds-dashboards" id="dashboard" data-reveal>
+        <a href="#tindex" class="ds-dash-card scheme-blue">
+          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>
+          <h4 data-i18n="data.dc1.h4">충전사업자 투명성지수</h4>
+          <p data-i18n="data.dc1.p">전국 159개 충전 사업자의 가격 투명성·운영 안정성·인프라 규모·신뢰도를 종합한 정량 평가 지수입니다.</p>
+          <div class="dc-meta"><span data-i18n="data.dc1.date">2026.04.20 업데이트</span><span style="color:var(--color-primary-700);" data-i18n="data.dc1.link">159개사 →</span></div>
+        </a>
+        <a href="#supply" class="ds-dash-card">
+          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h4 data-i18n="data.dc2.h4">무공해차 보급 현황</h4>
+          <p data-i18n="data.dc2.p">연도별·지역별·차종별 누적 보급 현황과 월간 신규 등록 추이를 제공합니다.</p>
+          <div class="dc-meta"><span data-i18n="data.dc2.date">2026.04.23 업데이트</span><span style="color:var(--color-primary-700);" data-i18n="data.dc2.link">17개 시·도 →</span></div>
+        </a>
+        <a href="#infra" class="ds-dash-card scheme-orange">
+          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <h4 data-i18n="data.dc3.h4">충전 인프라 현황</h4>
+          <p data-i18n="data.dc3.p">완속·급속·초급속 충전기 설치 및 가동률, 지역별 분포, 운영사별 비중을 시각화합니다.</p>
+          <div class="dc-meta"><span data-i18n="data.dc3.date">실시간 갱신</span><span style="color:var(--color-primary-700);" data-i18n="data.dc3.link">59.6만 기 →</span></div>
+        </a>
+        <a href="#k100" class="ds-dash-card scheme-purple">
+          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></div>
+          <h4 data-i18n="data.dc4.h4">K-EV100 전환 현황</h4>
+          <p data-i18n="data.dc4.p">참여 기업 524개사의 업무용 차량 무공해 전환 비율 및 업종별 성과를 추적합니다.</p>
+          <div class="dc-meta"><span data-i18n="data.dc4.date">분기 갱신</span><span style="color:var(--color-primary-700);" data-i18n="data.dc4.link">524사 →</span></div>
+        </a>
+      </div>
+
+      <!-- 충전 사업자 T-INDEX 랭킹 -->
+      <div class="ds-ranking-wrap" id="tindex">
+        <div class="ds-ranking-head">
+          <div>
+            <h3 data-i18n="data.tx.h3">충전사업자 투명성지수 TOP 30</h3>
+            <p data-i18n="data.tx.p">가격 투명성(20) · 운영 상태(20) · 가동률(10) · 인프라(15) · 신뢰도(10) 기준 종합 평가 (100점 만점)</p>
+          </div>
+          <div class="ds-ranking-filter">
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.grade">등급</label><select>
+              <option data-i18n="data.tx.f.allgrade">전체 등급</option>
+              <option data-i18n="data.tx.f.good">🟢 우수 (19개사)</option>
+              <option data-i18n="data.tx.f.normal">🟡 보통 (140개사)</option>
+              <!-- [삭제 작업14·15] 개선필요 옵션 주석처리 (개선필요 31개사는 보통으로 편입)
+              <option data-i18n="data.tx.f.improve">🔴 개선필요 (31개사)</option>
+              -->
+            </select></div>
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.sort">정렬</label><select>
+              <option data-i18n="data.tx.f.idx">지수 순</option>
+              <option data-i18n="data.tx.f.count">충전기 수 순</option>
+              <option data-i18n="data.tx.f.alpha">가나다 순</option>
+            </select></div>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table" style="box-shadow:none;">
+            <thead>
+              <tr>
+                <th style="width:60px;text-align:center;" data-i18n="data.tx.th.rank">순위</th>
+                <th data-i18n="data.tx.th.firm">사업자명</th>
+                <th class="num" data-i18n="data.tx.th.cnt">충전기</th>
+                <th class="num" data-i18n="data.tx.th.idx">투명성지수</th>
+                <th style="width:90px;text-align:center;" data-i18n="data.tx.th.grade">등급</th>
+                <th class="num" data-i18n="data.tx.th.price">가격</th>
+                <th class="num" data-i18n="data.tx.th.ops">운영</th>
+                <th class="num" data-i18n="data.tx.th.infra">인프라</th>
+                <th class="num" data-i18n="data.tx.th.trust">신뢰도</th>
+              </tr>
+            </thead>
+            <tbody id="tindexRows"></tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-between items-center mt-4" style="font-size:13px;color:#4B5563;">
+          <span data-i18n="data.tx.source">자료 출처 · 투명성지수 2026.04.20 · 환경부 전기차충전소 DB + 공공 API + 사업자 공시</span>
+          <a href="#" style="color:var(--color-primary-700);font-weight:700;cursor:pointer;" data-action="download" data-action-label="투명성지수 전체 159개사 데이터.csv" data-i18n="data.tx.dl">전체 159개사 CSV 다운로드 →</a>
+        </div>
+      </div>
+
+      <!-- 지역별 보급 랭킹 -->
+      <div class="ds-ranking-wrap mt-8" id="supply">
+        <div class="ds-ranking-head">
+          <div>
+            <h3 data-i18n="data.sp.h3">지역별 무공해차 보급 현황 TOP 10</h3>
+            <p data-i18n="data.sp.p">2026년 3월 말 기준 누적 등록 대수 (전기·수소차 합산)</p>
+          </div>
+          <div class="ds-ranking-filter">
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.vtype">차종</label><select><option data-i18n="data.sp.f.all">전체 차종</option><option data-i18n="data.sp.f.ev">전기승용</option><option data-i18n="data.sp.f.truck">전기화물</option><option data-i18n="data.sp.f.h2">수소차</option></select></div>
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.year">연도</label><select><option data-i18n="data.sp.f.y26">2026년 누적</option><option data-i18n="data.sp.f.y25">2025년</option><option data-i18n="data.sp.f.y24">2024년</option></select></div>
+          </div>
+        </div>
+
+        <div class="ds-rank-list" id="supplyRank"></div>
+      </div>
+
+      <!-- 충전 인프라 현황 (anchor) -->
+      <div class="ds-ranking-wrap mt-8" id="infra">
+        <div class="ds-ranking-head">
+          <div>
+            <h3 data-i18n="data.if.h3">충전 인프라 현황</h3>
+            <p data-i18n="data.if.p">완속·급속·초급속 충전기 설치 및 가동률 (2026.04 기준)</p>
+          </div>
+          <div class="ds-ranking-filter">
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.region">지역</label><select aria-label="시도"><option data-i18n="data.if.f.nation">전국</option><option data-i18n="data.if.f.metro">수도권</option><option data-i18n="data.if.f.nonmetro">비수도권</option></select></div>
+          </div>
+        </div>
+        <div class="grid grid-4 mt-4" style="gap:14px;">
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.slow">완속 (7kW)</div><div class="stat-value"><span data-counter="421000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.fast">급속 (50kW)</div><div class="stat-value"><span data-counter="142000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.ultra">초급속 (100kW+)</div><div class="stat-value"><span data-counter="33368">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.uptime">평균 가동률</div><div class="stat-value"><span data-counter="92.4">0</span><span class="unit">%</span></div></div>
+        </div>
+      </div>
+
+      <!-- 보조금 집행 현황 (anchor) -->
+      <div class="ds-ranking-wrap mt-8" id="subsidy">
+        <div class="ds-ranking-head">
+          <div>
+            <h3 data-i18n="data.sb.h3">보조금 집행 현황</h3>
+            <p data-i18n="data.sb.p">2026년 누적 · 17개 시·도 · 243개 지자체 합계</p>
+          </div>
+        </div>
+        <div class="grid grid-3 mt-4" style="gap:14px;">
+          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.last">전년도 집행액</div><div class="stat-value"><span data-counter="2.78">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.cur">올해 집행액</div><div class="stat-value"><span data-counter="1.84">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.rate">예산 대비 소진률</div><div class="stat-value"><span data-counter="66">0</span><span class="unit">%</span></div></div>
+        </div>
+      </div>
+
+      <!-- K-EV100 전환 현황 (anchor) -->
+      <div class="ds-ranking-wrap mt-8" id="k100">
+        <div class="ds-ranking-head">
+          <div>
+            <h3 data-i18n="data.kv.h3">K-EV100 전환 현황</h3>
+            <p data-i18n="data.kv.p">참여 기업 524개사 · 무공해차 전환 진행 현황</p>
+          </div>
+        </div>
+        <div class="grid grid-3 mt-4" style="gap:14px;">
+          <div class="stat-card"><div class="stat-label" data-i18n="data.kv.l.firms">참여 기업</div><div class="stat-value"><span data-counter="524">0</span><span class="unit" data-i18n="data.kv.unit.firms">사</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.kv.l.avg">평균 전환율</div><div class="stat-value"><span data-counter="42.7">0</span><span class="unit">%</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.kv.l.full">100% 달성 기업</div><div class="stat-value"><span data-counter="38">0</span><span class="unit" data-i18n="data.kv.unit.firms">사</span></div></div>
+        </div>
+      </div>
+
+      <!-- 시장·정책 동향 -->
+      <div class="mt-8" id="trend">
+        <h3 style="font-size:20px;font-weight:800;letter-spacing:-0.025em;margin-bottom:6px;" data-i18n="data.tr.h3">시장·정책 동향</h3>
+        <p style="font-size:13.5px;color:#4B5563;margin-bottom:20px;" data-i18n="data.tr.p">무공해차 관련 최신 시장 동향, 정책 추진 성과, 지역별 보급 격차를 분석합니다.</p>
+        <div class="ds-trend-cards" id="trend-market">
+          <div class="ds-trend-card">
+            <span class="tr-cat" data-i18n="data.tr.c1.cat">시장 동향</span>
+            <h4 data-i18n="data.tr.c1.h4">2026년 1분기 전기차 판매 전년비 48% 성장</h4>
+            <p data-i18n="data.tr.c1.p">보급형 전기차 가격 하락과 초급속 충전 인프라 확대가 판매 증가를 견인했습니다. 특히 전기화물차는 택배·배송 분야 중심으로 68% 급증했습니다.</p>
+          </div>
+          <div class="ds-trend-card" id="trend-policy">
+            <span class="tr-cat" style="background:var(--color-secondary-50);color:var(--color-secondary-700);" data-i18n="data.tr.c2.cat">정책 추진</span>
+            <h4 data-i18n="data.tr.c2.h4">2050 탄소중립 로드맵 · 무공해차 450만 대 목표</h4>
+            <p data-i18n="data.tr.c2.p">환경부는 2030년 무공해차 누적 450만 대 보급을 목표로 보조금 개편, 충전 인프라 2배 확충, K-EV100 500개사 참여를 추진 중입니다.</p>
+          </div>
+          <div class="ds-trend-card" id="trend-region">
+            <span class="tr-cat" style="background:#FFF3E0;color:#E8760A;" data-i18n="data.tr.c3.cat">지역 보급</span>
+            <h4 data-i18n="data.tr.c3.h4">수도권-비수도권 보급 격차 완화</h4>
+            <p data-i18n="data.tr.c3.p">2025년까지 수도권 편중이었던 보급 양상이 2026년 들어 제주·광주·경남 등 비수도권 집중 지원으로 격차가 18%포인트 축소되었습니다.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- [블라인드 처리] 충전인프라 투명성 지수 (T-INDEX) v3 / 사업자별 운영 현황(임시) 영역 비활성화
+       아래 원본 코드는 추후 복구할 수 있도록 삭제하지 않고 주석 처리함.
+
+       ───────── [추가 작업2] 사업자별 운영 현황(임시) ─────────
+       charging-fee.html '사업자별 운영 현황' 모달 대시보드를 통계 대시보드 하단으로 이전.
+       렌더링: js/tindex-inline.js?v=20260624tx (charging-fee의 tindex-modal.js와 독립된 복제본)
+  <section class="section-sm" id="tindexInline" aria-labelledby="tindexInlineTitle">
+    <div class="container container-wide">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:18px;">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--color-primary-700);letter-spacing:.02em;" data-i18n="data.tindex.eyebrow">충전인프라 투명성지수 v3</div>
+          <h3 id="tindexInlineTitle" style="font-size:20px;font-weight:800;letter-spacing:-0.025em;margin-top:4px;" data-i18n="data.tindex.title">사업자별 운영 현황(임시)</h3>
+        </div>
+        <div class="tx-role-switcher" role="tablist" data-i18n-aria="data.tindex.role.aria" aria-label="역할 선택">
+          <button type="button" class="tx-role-btn tx-inline-role-btn active" data-role="public" role="tab" aria-selected="true" data-i18n="data.tindex.role.public">사용자</button>
+          <button type="button" class="tx-role-btn tx-inline-role-btn" data-role="cpo" role="tab" aria-selected="false" data-i18n="data.tindex.role.cpo">사업자</button>
+          <button type="button" class="tx-role-btn tx-inline-role-btn" data-role="admin" role="tab" aria-selected="false" data-i18n="data.tindex.role.admin">담당자</button>
+        </div>
+      </div>
+      <div id="tindexInlineBody" class="tx-modal-body" style="overflow:visible;padding:0;"></div>
+    </div>
+  </section>
+  -->
+
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-data.js?v=20260624tx"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<!-- [블라인드 처리] 사업자별 운영 현황(임시) 데이터 + 인라인 렌더러 비활성화
+<script src="js/tindex-data.js?v=20260624tx"></script>
+<script src="js/tindex-inline.js?v=20260624tx"></script>
+-->
+<script>
+// i18n helper for dynamic data
+const _dataLang = () => (window.__i18n && window.__i18n.getLang) ? window.__i18n.getLang() : 'ko';
+const _GRADE_EN = { '우수':'Excellent', '보통':'Average', '개선필요':'Needs Improvement' };
+const _REGION_EN = {
+  '경기도':'Gyeonggi-do', '서울특별시':'Seoul', '인천광역시':'Incheon',
+  '부산광역시':'Busan', '제주특별자치도':'Jeju', '경상남도':'Gyeongsangnam-do',
+  '대구광역시':'Daegu', '충청남도':'Chungcheongnam-do', '경상북도':'Gyeongsangbuk-do',
+  '충청북도':'Chungcheongbuk-do'
+};
+const _trGrade = (k) => _dataLang() === 'en' ? (_GRADE_EN[k] || k) : k;
+const _trRegion = (k) => _dataLang() === 'en' ? (_REGION_EN[k] || k) : k;
+// T-INDEX TOP 30 실데이터 (data_v3.json 기반)
+const TINDEX_DATA = [{"rank": 1, "bnm": "한국전기차충전서비스", "charger_count": 6657, "t_index": 86.5, "grade": "우수", "p_uptime": 17.8, "p_state": 17.9, "p_phys": 13.4, "p_trust": 8.0}, {"rank": 2, "bnm": "채비", "charger_count": 15580, "t_index": 84.6, "grade": "우수", "p_uptime": 15.4, "p_state": 15.1, "p_phys": 13.4, "p_trust": 8.0}, {"rank": 3, "bnm": "스타코프", "charger_count": 20805, "t_index": 83.1, "grade": "우수", "p_uptime": 19.0, "p_state": 18.0, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 4, "bnm": "이브이시스", "charger_count": 7163, "t_index": 83.0, "grade": "우수", "p_uptime": 17.4, "p_state": 17.3, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 5, "bnm": "에버온", "charger_count": 54189, "t_index": 81.3, "grade": "우수", "p_uptime": 14.0, "p_state": 13.6, "p_phys": 13.4, "p_trust": 8.0}, {"rank": 6, "bnm": "제주전기자동차서비스", "charger_count": 2053, "t_index": 80.7, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 7, "bnm": "SK일렉링크", "charger_count": 10662, "t_index": 79.4, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 3.2}, {"rank": 8, "bnm": "엔라이튼", "charger_count": 10, "t_index": 79.3, "grade": "우수", "p_uptime": 18.0, "p_state": 18.0, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 9, "bnm": "기후에너지환경부", "charger_count": 9800, "t_index": 79.1, "grade": "우수", "p_uptime": 17.0, "p_state": 16.9, "p_phys": 13.4, "p_trust": 3.2}, {"rank": 10, "bnm": "LG유플러스 볼트업(플러그인)", "charger_count": 2574, "t_index": 78.4, "grade": "우수", "p_uptime": 18.2, "p_state": 18.0, "p_phys": 13.4, "p_trust": 3.2}, {"rank": 11, "bnm": "서울씨엔지", "charger_count": 5403, "t_index": 78.4, "grade": "우수", "p_uptime": 15.6, "p_state": 15.4, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 12, "bnm": "아이파킹", "charger_count": 9895, "t_index": 77.9, "grade": "우수", "p_uptime": 16.4, "p_state": 16.2, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 13, "bnm": "휴맥스이브이", "charger_count": 18679, "t_index": 77.7, "grade": "우수", "p_uptime": 15.6, "p_state": 15.3, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 14, "bnm": "NICE인프라", "charger_count": 19615, "t_index": 77.4, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 15, "bnm": "펌프킨", "charger_count": 2544, "t_index": 77.4, "grade": "우수", "p_uptime": 14.0, "p_state": 13.5, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 16, "bnm": "GS차지비", "charger_count": 90491, "t_index": 76.8, "grade": "우수", "p_uptime": 15.2, "p_state": 14.8, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 17, "bnm": "동양이엔피", "charger_count": 792, "t_index": 75.5, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 18, "bnm": "파워큐브", "charger_count": 69210, "t_index": 75.0, "grade": "우수", "p_uptime": 16.4, "p_state": 16.2, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 19, "bnm": "리셀파워", "charger_count": 226, "t_index": 74.0, "grade": "우수", "p_uptime": 20.0, "p_state": 18.0, "p_phys": 13.4, "p_trust": 0.0}, {"rank": 20, "bnm": "대성물류건설", "charger_count": 250, "t_index": 72.9, "grade": "우수", "p_uptime": 13.0, "p_state": 13.5, "p_phys": 13.4, "p_trust": 4.8}];
+
+// TINDEX 테이블 렌더
+function renderTindexRows() {
+  const tbody = document.getElementById('tindexRows');
+  if (!tbody) return;
+  tbody.innerHTML = TINDEX_DATA.map(op => {
+    const gradeStyle = op.grade === '우수' ? 'background:#DCFCE7;color:#166534;' :
+                       op.grade === '보통' ? 'background:#FEF3C7;color:#92400E;' :
+                       'background:#FEE2E2;color:#991B1B;';
+    const lightIcon = op.grade === '우수' ? '🟢' : op.grade === '보통' ? '🟡' : '🔴';
+    const gradeLabel = _trGrade(op.grade);
+    return `<tr>
+      <td style="text-align:center;font-weight:800;font-variant-numeric:tabular-nums;">${op.rank}</td>
+      <td style="font-weight:700;letter-spacing:-0.015em;">${op.bnm}</td>
+      <td class="num">${op.charger_count.toLocaleString('ko-KR')}</td>
+      <td class="num" style="font-weight:800;font-size:15px;color:${op.grade==='우수'?'#1AAD6C':op.grade==='보통'?'#E8760A':'#DC2626'};">${op.t_index.toFixed(1)}</td>
+      <td style="text-align:center;"><span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;${gradeStyle}">${lightIcon} ${gradeLabel}</span></td>
+      <td class="num">${op.p_uptime.toFixed(1)}</td>
+      <td class="num">${op.p_state.toFixed(1)}</td>
+      <td class="num">${op.p_phys.toFixed(1)}</td>
+      <td class="num">${op.p_trust.toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+}
+renderTindexRows();
+
+// 지역별 보급 현황 랭킹 (Mock 실데이터)
+const SUPPLY_RANK = [
+  ['경기도', 248640, 100], ['서울특별시', 187420, 75.4], ['인천광역시', 84820, 34.1],
+  ['부산광역시', 72140, 29.0], ['제주특별자치도', 68260, 27.5], ['경상남도', 58920, 23.7],
+  ['대구광역시', 48380, 19.5], ['충청남도', 42150, 17.0], ['경상북도', 38760, 15.6],
+  ['충청북도', 32540, 13.1]
+];
+
+function renderSupplyRank() {
+  const el = document.getElementById('supplyRank');
+  if (!el) return;
+  el.innerHTML = SUPPLY_RANK.map((item, i) => `
+    <div class="ds-rank-item${i < 3 ? ' top-3' : ''}">
+      <span class="ds-rank-num">${i+1}</span>
+      <div>
+        <div class="ds-rank-name">${_trRegion(item[0])}</div>
+        <div class="ds-rank-bar"><div class="fill" style="width:${item[2]}%;"></div></div>
+      </div>
+      <span class="ds-rank-val">${item[1].toLocaleString('ko-KR')}<span class="unit">${_dataLang()==='en'?' units':'대'}</span></span>
+    </div>
+  `).join('');
+}
+renderSupplyRank();
+// 언어 전환 시 동적 데이터 재렌더
+window.addEventListener('langChange', () => {
+  try { renderTindexRows(); renderSupplyRank(); } catch(e){}
+});
+</script>
+</body>
+</html>

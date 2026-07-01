@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지자체별 보조금 현황 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/subsidy-region.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="subsidy-info.html" data-i18n="subsidy.crumb.parent">구매·보조금</a><span class="sep" aria-hidden="true">›</span>
+        <a href="subsidy-target.html" data-i18n="subsidy.crumb.info">무공해차 구매보조금 안내</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="subsidy.region.crumb">지자체별 보조금 현황</span>
+      </nav>
+      <h1 data-i18n="subsidy.region.title">지자체별 보조금 현황</h1>
+      <p class="hero-lead" data-i18n-html="subsidy.region.lead">전국 17개 시·도, 243개 시·군·구의 차종별 <strong>공고대수·접수대수·출고대수·잔여대수</strong>를 실시간으로 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- ============== FILTER BAR ============== -->
+      <div class="card mb-6 filter-panel" data-reveal>
+        <div class="filter-top">
+          <div class="filter-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <span data-i18n="subsidy.region.filter.title">상세 조회 필터</span>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-ghost btn-sm" type="button" id="btn-reset">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <span data-i18n="subsidy.region.filter.reset">조건 초기화</span>
+            </button>
+            <button class="btn btn-primary btn-sm" type="button" id="btn-apply" data-i18n="subsidy.region.filter.apply">필터 적용</button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <div class="form-group">
+            <label class="form-label" for="f-year" data-i18n="subsidy.region.field.year">기준년도</label>
+            <select class="form-select" id="f-year">
+              <option value="2026" data-i18n="subsidy.region.opt.year2026">2026년</option>
+              <option value="2025" data-i18n="subsidy.region.opt.year2025">2025년</option>
+              <option value="2024" data-i18n="subsidy.region.opt.year2024">2024년</option>
+              <option value="2023" data-i18n="subsidy.region.opt.year2023">2023년</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-vehicle" data-i18n="subsidy.region.field.vehicle">차종</label>
+            <select class="form-select" id="f-vehicle">
+              <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
+              <option value="전기승용" data-i18n="subsidy.region.opt.ev">전기승용</option>
+              <option value="수소승용" data-i18n="subsidy.region.opt.h2">수소승용</option>
+              <option value="전기승합" data-i18n="subsidy.region.opt.bus">전기승합</option>
+              <option value="전기화물" data-i18n="subsidy.region.opt.cargo">전기화물</option>
+              <option value="전기이륜" data-i18n="subsidy.region.opt.moto">전기이륜</option>
+              <option value="수소버스" data-i18n="subsidy.region.opt.h2bus">수소버스</option>
+              <option value="수소트럭" data-i18n="subsidy.region.opt.h2truck">수소트럭</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-sub" data-i18n="subsidy.region.field.sub">세부 차종</label>
+            <select class="form-select" id="f-sub">
+              <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-sido" data-i18n="subsidy.region.field.sido">시도</label>
+            <select class="form-select" id="f-sido">
+              <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
+              <option value="서울" data-i18n="subsidy.region.sido.seoul">서울특별시</option>
+              <option value="부산" data-i18n="subsidy.region.sido.busan">부산광역시</option>
+              <option value="대구" data-i18n="subsidy.region.sido.daegu">대구광역시</option>
+              <option value="인천" data-i18n="subsidy.region.sido.incheon">인천광역시</option>
+              <option value="광주" data-i18n="subsidy.region.sido.gwangju">광주광역시</option>
+              <option value="대전" data-i18n="subsidy.region.sido.daejeon">대전광역시</option>
+              <option value="울산" data-i18n="subsidy.region.sido.ulsan">울산광역시</option>
+              <option value="세종" data-i18n="subsidy.region.sido.sejong">세종특별자치시</option>
+              <option value="경기" data-i18n="subsidy.region.sido.gyeonggi">경기도</option>
+              <option value="강원" data-i18n="subsidy.region.sido.gangwon">강원특별자치도</option>
+              <option value="충북" data-i18n="subsidy.region.sido.chungbuk">충청북도</option>
+              <option value="충남" data-i18n="subsidy.region.sido.chungnam">충청남도</option>
+              <option value="전북" data-i18n="subsidy.region.sido.jeonbuk">전북특별자치도</option>
+              <option value="전남" data-i18n="subsidy.region.sido.jeonnam">전라남도</option>
+              <option value="경북" data-i18n="subsidy.region.sido.gyeongbuk">경상북도</option>
+              <option value="경남" data-i18n="subsidy.region.sido.gyeongnam">경상남도</option>
+              <option value="제주" data-i18n="subsidy.region.sido.jeju">제주특별자치도</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-sigungu" data-i18n="subsidy.region.field.sigungu">시군구</label>
+            <select class="form-select" id="f-sigungu">
+              <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-method" data-i18n="subsidy.region.field.method">접수방법</label>
+            <select class="form-select" id="f-method">
+              <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
+              <option value="선착순" data-i18n="subsidy.region.opt.fcfs">선착순</option>
+              <option value="추첨" data-i18n="subsidy.region.opt.lottery">추첨</option>
+              <option value="공모" data-i18n="subsidy.region.opt.bid">공모</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-status" data-i18n="subsidy.region.field.status">접수상태</label>
+            <select class="form-select" id="f-status">
+              <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
+              <option value="접수중" data-i18n="subsidy.region.opt.open">접수중</option>
+              <option value="대기" data-i18n="subsidy.region.opt.wait">대기</option>
+              <option value="소진임박" data-i18n="subsidy.region.opt.lowstock">소진임박</option>
+              <option value="마감" data-i18n="subsidy.region.opt.closed">마감</option>
+              <option value="신규확대" data-i18n="subsidy.region.opt.expanded">신규확대</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick region chips -->
+        <div class="filter-quick-chips">
+          <span class="quick-chips-label" data-i18n="subsidy.region.quick.label">자주 찾는 지역</span>
+          <div class="region-grid">
+            <button class="region-chip selected" data-chip-region="전체" type="button" data-i18n="subsidy.region.quick.all">전체 보기</button>
+            <button class="region-chip" data-chip-region="서울" type="button" data-i18n="subsidy.region.sido.seoul">서울</button>
+            <button class="region-chip" data-chip-region="부산" type="button" data-i18n="subsidy.region.sido.busan">부산</button>
+            <button class="region-chip" data-chip-region="대구" type="button" data-i18n="subsidy.region.sido.daegu">대구</button>
+            <button class="region-chip" data-chip-region="인천" type="button" data-i18n="subsidy.region.sido.incheon">인천</button>
+            <button class="region-chip" data-chip-region="광주" type="button" data-i18n="subsidy.region.sido.gwangju">광주</button>
+            <button class="region-chip" data-chip-region="대전" type="button" data-i18n="subsidy.region.sido.daejeon">대전</button>
+            <button class="region-chip" data-chip-region="울산" type="button" data-i18n="subsidy.region.sido.ulsan">울산</button>
+            <button class="region-chip" data-chip-region="세종" type="button" data-i18n="subsidy.region.sido.sejong">세종</button>
+            <button class="region-chip" data-chip-region="경기" type="button" data-i18n="subsidy.region.sido.gyeonggi">경기</button>
+            <button class="region-chip" data-chip-region="제주" type="button" data-i18n="subsidy.region.sido.jeju">제주</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== SUMMARY STATS ============== -->
+      <div class="grid grid-4 mb-6" style="gap: 20px;" data-reveal>
+        <div class="stat-card">
+          <div class="stat-label"><span id="stat-year">2026년</span> <span data-i18n="subsidy.region.stat.announce">총 공고대수</span></div>
+          <div class="stat-value"><span id="stat-announcement">0</span><span class="unit" data-i18n="subsidy.region.stat.unit">대</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" data-i18n="subsidy.region.stat.received">누적 접수대수</div>
+          <div class="stat-value"><span id="stat-received">0</span><span class="unit" data-i18n="subsidy.region.stat.unit">대</span></div>
+          <div class="progress mt-2"><div class="progress-bar" id="stat-received-bar" style="width: 0%;"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" data-i18n="subsidy.region.stat.delivered">누적 출고대수</div>
+          <div class="stat-value"><span id="stat-delivered">0</span><span class="unit" data-i18n="subsidy.region.stat.unit">대</span></div>
+          <div class="progress mt-2"><div class="progress-bar" id="stat-delivered-bar" style="width: 0%; background: var(--color-secondary-500);"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" data-i18n="subsidy.region.stat.remaining">출고 잔여대수</div>
+          <div class="stat-value" style="color: var(--color-accent-600);"><span id="stat-remaining">0</span><span class="unit" data-i18n="subsidy.region.stat.unit">대</span></div>
+        </div>
+      </div>
+
+      <!-- ============== RESULT SUMMARY + ACTIONS ============== -->
+      <div class="result-header" data-reveal>
+        <div class="result-count">
+          <span data-i18n="subsidy.region.result.count.prefix">조회 결과</span> <strong id="result-count">0</strong><span data-i18n="subsidy.region.result.count.suffix">건</span> · <span id="result-summary" data-i18n="subsidy.region.result.summary.all">전체 조회</span>
+        </div>
+        <div class="result-actions">
+          <label class="sr-fav-only-toggle" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);font-weight:600;cursor:pointer;padding:6px 14px;border:1px solid var(--border-medium);border-radius:999px;background:#fff;transition:background var(--t-fast),border-color var(--t-fast);">
+            <input type="checkbox" id="subsidyFavOnly" style="accent-color:var(--color-accent-500);cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9A2E" stroke="#FF9A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg>
+            <span data-i18n="subsidy.region.btn.favonly">즐겨찾기만 보기</span>
+          </label>
+          <div class="btn-group" data-view-toggle="#region-views">
+            <button class="btn active" data-view="table" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <span data-i18n="subsidy.region.view.table">표형</span>
+            </button>
+            <button class="btn" data-view="card" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              <span data-i18n="subsidy.region.view.card">카드형</span>
+            </button>
+          </div>
+          <button class="btn btn-secondary btn-sm" type="button" id="btn-excel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span data-i18n="subsidy.region.btn.excel">엑셀 다운로드</span>
+          </button>
+          <button class="btn btn-ghost btn-sm" type="button" id="btn-print" data-action="print">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span data-i18n="subsidy.region.btn.print">인쇄</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============== DATA VIEWS ============== -->
+      <div id="region-views">
+        <!-- 표형 뷰 (기본) -->
+        <div data-view-panel="table">
+          <div class="board-hint">목록에는 <b>전체 기준</b> 대수 현황(공고·접수·<b>선정</b>·출고·<b>선정잔여</b>·출고잔여)만 간단히 표시합니다. 우선순위·법인·기관·택시·일반 <b>분류별 상세</b>와 <b>예산 소진율·잔여 예산 비율</b>, 공고문·모델별 지방비는 <b>펼치기(상세)</b>에서 확인하세요.</div>
+          <div class="table-wrap">
+            <table class="data-table subsidy-table" id="subsidy-table">
+              <caption class="sr-only" data-i18n="subsidy.region.title">지자체별 보조금 현황</caption>
+              <thead>
+                <tr>
+                  <th scope="col" class="sortable" data-sort-key="sido" rowspan="2">지역구분<br><span class="th-sub">(시도)</span></th>
+                  <th scope="col" rowspan="2">차종</th>
+                  <th scope="col" rowspan="2">공고종류</th>
+                  <th scope="col" rowspan="2">공고별<br>접수기간</th>
+                  <th scope="col" rowspan="2">신청 마감<br><span class="th-sub">(최종·시간까지)</span></th>
+                  <th scope="col" class="cnt-cols-th" colspan="6">대수 현황 <span class="th-sub" style="display:inline;">(전체 기준 · 상세는 펼침)</span></th>
+                  <th scope="col" class="remark-th" rowspan="2">비고</th>
+                  <th scope="col" rowspan="2" style="text-align:center; width: 84px;">상세</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="cnt-sub">공고</th>
+                  <th scope="col" class="cnt-sub">접수</th>
+                  <th scope="col" class="cnt-sub cnt-sel">선정</th>
+                  <th scope="col" class="cnt-sub">출고</th>
+                  <th scope="col" class="cnt-sub cnt-sel">선정잔여</th>
+                  <th scope="col" class="cnt-sub">출고잔여</th>
+                </tr>
+              </thead>
+              <tbody id="subsidy-tbody">
+                <!-- JS 렌더링 -->
+              </tbody>
+            </table>
+          </div>
+          <div id="empty-state" class="empty-state" style="display:none;">
+            <h4 data-i18n="subsidy.region.empty.title">조회 결과가 없습니다</h4>
+            <p data-i18n="subsidy.region.empty.desc">필터 조건을 변경하거나 초기화해 주세요.</p>
+            <button class="btn btn-primary btn-sm" type="button" id="empty-state-reset" data-i18n="subsidy.region.filter.reset">조건 초기화</button>
+          </div>
+          <script>
+          (function(){
+            var btn = document.getElementById('empty-state-reset');
+            if (btn) btn.addEventListener('click', function(){
+              var r = document.getElementById('btn-reset');
+              if (r) r.click();
+            });
+          })();
+          </script>
+          <div class="pagination" id="pagination"></div>
+        </div>
+
+        <!-- 카드형 뷰 -->
+        <div data-view-panel="card" style="display:none;">
+          <div class="region-cards-grid" id="subsidy-cards">
+            <!-- JS 렌더링 -->
+          </div>
+          <div id="empty-state-card" class="empty-state" style="display:none;">
+            <h4 data-i18n="subsidy.region.empty.title">조회 결과가 없습니다</h4>
+            <p data-i18n="subsidy.region.empty.desc">필터 조건을 변경하거나 초기화해 주세요.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Helpful notes -->
+      <div class="alert alert-info mt-6">
+        <div class="alert-icon"></div>
+        <div class="alert-body">
+          <strong data-i18n="subsidy.region.source.title">데이터 출처·갱신</strong>
+<span data-i18n="subsidy.region.source.line1">          환경부 보조금관리시스템(한국환경공단) 실시간 연동. 매 영업일 09시·14시 집계 반영.</span>
+<span data-i18n="subsidy.region.source.line2">          접수대수는 지자체 자체 예산 및 추경 배정 결과에 따라 변동될 수 있습니다.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-subsidy.js?v=20260630a"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/favorites.js"></script>
+<script src="js/subsidy-region.js"></script>
+<script>
+  // 지자체 보조금 — 즐겨찾기만 보기 토글
+  (function () {
+    const toggle = document.getElementById('subsidyFavOnly');
+    const label  = toggle && toggle.closest('.sr-fav-only-toggle');
+    if (!toggle) return;
+    function syncLabel() {
+      if (toggle.checked) { label.style.borderColor = 'var(--color-accent-500)'; label.style.background = '#FFF7ED'; label.style.color = '#9A3412'; }
+      else { label.style.borderColor = ''; label.style.background = ''; label.style.color = ''; }
+    }
+    toggle.addEventListener('change', () => {
+      syncLabel();
+      const apply = document.getElementById('btn-apply');
+      if (apply) apply.click();
+    });
+    document.addEventListener('favorites:changed', () => {
+      // 다른 탭에서 즐겨찾기 변경 시: "즐겨찾기만 보기" 상태일 때만 재필터
+      if (toggle.checked) {
+        const apply = document.getElementById('btn-apply');
+        if (apply) apply.click();
+      }
+    });
+  })();
+</script>
+<style>
+  .sr-fav-btn:hover, .sr-fav-btn-card:hover { background:#FFF7ED !important; border-color:#FED7AA !important; transform:scale(1.05); }
+  .sr-fav-btn[aria-pressed="true"], .sr-fav-btn-card[aria-pressed="true"] { background:#FFF7ED !important; border-color:#FED7AA !important; }
+  .sr-fav-only-toggle:hover { border-color:var(--color-accent-500) !important; }
+
+  /* v0.16 — 컴팩트 보드테이블 (공고/접수/출고/잔여 4지표 동시 표시 · 화면 폭 내 수용) */
+  #subsidy-table { min-width: 1180px; }
+  #subsidy-table th, #subsidy-table td { vertical-align: top; }
+  #subsidy-table .th-sub { display: block; font-size: 10.5px; font-weight: 600; color: var(--text-tertiary, #94a3b8); margin-top: 3px; letter-spacing: -0.02em; white-space: nowrap; }
+  /* 안내 배너 */
+  .board-hint { font-size: 12.5px; color: var(--text-secondary); background: var(--color-gray-50, #f6f8fa); border: 1px solid var(--border-light); border-radius: 10px; padding: 10px 14px; margin: 0 0 12px; line-height: 1.6; }
+  .board-hint b { color: var(--color-primary-700, #0f6e56); }
+  /* 지역구분 — 가로 스크롤 시 고정 */
+  #subsidy-table th:first-child, #subsidy-table td.cell-sido { position: sticky; left: 0; z-index: 2; background: #fff; white-space: nowrap; }
+  #subsidy-table thead th:first-child { z-index: 3; background: var(--color-gray-50, #f6f8fa); }
+  #subsidy-table td.cell-sido .sido-sub { display: block; font-size: 12px; color: var(--text-secondary); font-weight: 400; margin-top: 2px; white-space: nowrap; }
+  /* 차종 칩 — 가로 1줄 */
+  #subsidy-table td .vehicle-chip { white-space: nowrap; }
+  #subsidy-table td .vehicle-chip .sub { display: inline; margin-left: 5px; }
+  /* 공고파일 / 공고별 접수기간 — 공고별 행 정렬 */
+  #subsidy-table .nt-list { list-style: none; margin: 0; padding: 0; }
+  #subsidy-table .nt-list > li { min-height: 30px; display: flex; align-items: center; padding: 3px 0; border-bottom: 1px dashed var(--border-light); }
+  #subsidy-table .nt-list > li:last-child { border-bottom: 0; }
+  #subsidy-table .nt-list > li.muted { color: var(--text-tertiary, #94a3b8); }
+  .notice-pill { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 6px; border: 1px solid var(--color-secondary-300, #9fc3f0); background: var(--color-secondary-50, #eef5ff); color: var(--color-secondary-700, #1f5fa8); cursor: pointer; white-space: nowrap; transition: background var(--t-fast); }
+  .notice-pill:hover { background: #dceafe; }
+  #subsidy-table .nt-sched > li { font-size: 11.5px; color: var(--text-secondary); white-space: nowrap; }
+  /* 접수방법 / 신청마감 */
+  #subsidy-table td.cell-method-c { white-space: nowrap; font-size: 12.5px; color: var(--text-secondary); }
+  #subsidy-table td.cell-deadline-c { white-space: nowrap; font-size: 12.5px; font-weight: 700; color: #c0392b; }
+  /* 대수 현황 — 내부 매트릭스 표 (5행 × 4지표) */
+  #subsidy-table td.cell-matrix { padding: 6px 8px; }
+  .cnt-matrix { border-collapse: collapse; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .cnt-matrix th, .cnt-matrix td { padding: 3px 7px; border: 1px solid var(--border-light); white-space: nowrap; }
+  .cnt-matrix thead th { background: var(--color-gray-50, #f6f8fa); color: var(--text-secondary); font-weight: 700; text-align: center; font-size: 10.5px; }
+  .cnt-matrix tbody th { text-align: left; color: var(--text-tertiary, #94a3b8); font-weight: 600; background: #fff; }
+  .cnt-matrix tbody td { text-align: right; color: var(--text-secondary); }
+  .cnt-matrix tr.mx-total th { color: var(--text-primary); font-weight: 800; }
+  .cnt-matrix tr.mx-total td { color: var(--text-primary); font-weight: 800; }
+  /* 선정·선정잔여(신규 지표) 강조 */
+  .cnt-matrix .mx-sel { background: var(--color-primary-50, #eefaf4); }
+  .cnt-matrix thead th.mx-sel { background: var(--color-primary-100, #dcf3e7); color: var(--color-primary-700, #0f6e56); }
+  .cnt-matrix tr.mx-total td.mx-sel { background: var(--color-primary-100, #dcf3e7); }
+  /* 비고 — 한눈에 3줄 미리보기(말줄임) · 전문은 펼침에서 */
+  #subsidy-table th.remark-th, #subsidy-table td.cell-remark-c { width: 200px; max-width: 200px; }
+  .remark-clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 11.5px; color: var(--text-secondary); line-height: 1.55; white-space: normal; word-break: keep-all; }
+  /* 상세 펼침 — 공고별 일정 표 */
+  .detail-top-v2 { display: flex; flex-direction: column; gap: 16px; margin-bottom: 18px; }
+  .detail-top-v2 .dt-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .notice-sched-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .notice-sched-table th, .notice-sched-table td { padding: 8px 12px; border: 1px solid var(--border-light); text-align: left; vertical-align: middle; }
+  .notice-sched-table thead th { background: var(--color-gray-50, #f6f8fa); font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
+  .notice-sched-table td .nf-date { display: block; font-size: 11px; color: var(--text-tertiary, #94a3b8); margin-top: 2px; }
+  .notice-sched-table td.nf-deadline { font-weight: 700; color: #c0392b; white-space: nowrap; }
+  @media (max-width: 760px) { .detail-top-v2 .dt-two { grid-template-columns: 1fr; } }
+
+  /* v0.17 — 공고종류 pill (목록 간소화) */
+  .kind-pill { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 6px; white-space: nowrap; }
+  .kind-pill.kind-main { background: var(--color-secondary-50, #eef5ff); color: var(--color-secondary-700, #1f5fa8); }
+  .kind-pill.kind-supp { background: #FFF7E8; color: var(--color-accent-600, #c2703d); }
+  .kind-pill.kind-bid { background: var(--color-primary-50, #eefaf4); color: var(--color-primary-700, #0f6e56); }
+  #subsidy-table td.cell-deadline-c { font-size: 12px; }
+  /* 상세 — 선정·선정잔여 카드 강조 */
+  .detail-card.v2.dc-emph { border: 1.5px solid var(--color-primary-400, #57c79a); background: var(--color-primary-50, #eefaf4); box-shadow: 0 2px 10px rgba(26,173,108,.12); }
+  .detail-card.v2.dc-emph .dc-title::after { content: ' ★'; color: var(--color-primary-600, #1aa46a); font-size: 11px; }
+  /* 상세 — 예산 소진율/잔여 비율 (실예산 비공개) */
+  .budget-ratio { border: 1px solid var(--border-light); border-radius: 12px; padding: 16px 18px; margin: 0 0 18px; background: #fff; }
+  .budget-ratio .br-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .budget-ratio .br-title { font-size: 14.5px; font-weight: 800; color: var(--text-primary); }
+  .budget-ratio .br-note { font-size: 11.5px; color: var(--text-tertiary, #94a3b8); }
+  .budget-ratio .br-bar { display: flex; height: 30px; border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 800; color: #fff; }
+  .budget-ratio .br-used { background: linear-gradient(90deg, #1aa46a, #15915d); display: flex; align-items: center; justify-content: center; min-width: 42px; }
+  .budget-ratio .br-remain { background: var(--color-gray-200, #e2e8f0); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; min-width: 42px; }
+  .budget-ratio .br-stats { display: flex; gap: 28px; margin-top: 12px; }
+  .budget-ratio .br-stat { display: flex; flex-direction: column; gap: 2px; }
+  .budget-ratio .br-stat span { font-size: 11.5px; color: var(--text-secondary); }
+  .budget-ratio .br-stat strong { font-size: 22px; font-weight: 800; color: var(--color-primary-700, #0f6e56); font-variant-numeric: tabular-nums; }
+  .budget-ratio .br-stat strong.rem { color: var(--text-tertiary, #94a3b8); }
+
+  /* v0.17-b — 접수/출고/출고잔여 카드 폰트색 제거(중립) */
+  .detail-card.v2[data-card="received"] .dc-title, .detail-card.v2[data-card="delivered"] .dc-title, .detail-card.v2[data-card="remaining"] .dc-title,
+  .detail-card.v2[data-card="received"] .dc-num, .detail-card.v2[data-card="delivered"] .dc-num, .detail-card.v2[data-card="remaining"] .dc-num,
+  .detail-card.v2[data-card="received"] .dc-pct, .detail-card.v2[data-card="delivered"] .dc-pct, .detail-card.v2[data-card="remaining"] .dc-pct { color: var(--text-primary) !important; }
+  .detail-card.v2[data-card="received"] .dc-pct, .detail-card.v2[data-card="delivered"] .dc-pct, .detail-card.v2[data-card="remaining"] .dc-pct { color: var(--text-tertiary, #94a3b8) !important; }
+  /* 메인표 대수현황 — 열 분할(2행 헤더 병합) */
+  #subsidy-table td.cnt-c { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--text-secondary); }
+  #subsidy-table th.cnt-sub { text-align: center; font-size: 11.5px; white-space: nowrap; padding: 6px 10px; }
+  #subsidy-table .cnt-sel { background: var(--color-primary-50, #eefaf4); }
+  #subsidy-table td.cnt-sel { color: var(--color-primary-700, #0f6e56); font-weight: 700; }
+  #subsidy-table th.cnt-sel { color: var(--color-primary-700, #0f6e56); }
+  #subsidy-table th.cnt-cols-th { text-align: center; }
+  /* 카드형 — 선정/선정잔여 강조 */
+  .subsidy-card .sc-stat.sc-sel .s-value { color: var(--color-primary-700, #0f6e56); }
+  .subsidy-card .sc-stat.sc-sel .s-label { color: var(--color-primary-600, #1aa46a); font-weight: 700; }
+  .subsidy-card .sc-stats { flex-wrap: wrap; }
+</style>
+</body>
+</html>

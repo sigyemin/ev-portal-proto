@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충전소·요금 정보 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/charging.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+
+  <!-- ================= Hero + 실시간 현황 ================= -->
+  <section class="charge-hero-wrap">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="charging.fee.sim.bc.home">홈</a><span class="sep">›</span>
+        <span class="current" data-i18n="charging.fee.sim.bc.charging">충전소·요금 정보</span>
+      </nav>
+
+      <div class="charge-hero-grid">
+        <div>
+          <span class="hero-eyebrow">
+            <span class="live-dot" style="width:6px;height:6px;"></span>
+<span data-i18n="charging.main.hero.eyebrow">            전국 충전 인프라 실시간 현황</span>
+          </span>
+          <h1 data-i18n="charging.main.hero.title">충전, 한 곳에서 전부.</h1>
+          <p class="hero-lead" data-i18n-html="charging.main.hero.lead">전기·수소 <strong>통합 지도 검색</strong>, <strong>사업자별 요금 비교</strong>, <strong>통합카드 관리</strong>, <strong>설치 공모</strong>부터 <strong>수소충전소 장애 대응</strong>까지&mdash; 충전 생애주기를 한 플랫폼에서 제공합니다.</p>
+
+          <div class="flex gap-2 flex-wrap mt-6">
+            <a href="charging-find.html" class="btn btn-primary btn-lg">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+<span data-i18n="charging.main.hero.btn.find">              지금 가까운 충전소 찾기</span>
+            </a>
+            <a href="charging-fee.html?tab=simulator" class="btn btn-secondary btn-lg" data-i18n="charging.main.hero.btn.sim">월 충전요금 계산</a>
+            <a href="charging-card.html?tab=apply" class="btn btn-ghost btn-lg" data-i18n="charging.main.hero.btn.card">통합카드 신청</a>
+          </div>
+        </div>
+
+        <!-- 실시간 현황 카드 -->
+        <div class="live-status-card">
+          <div class="sc-head">
+            <div class="sc-title"><span class="live-dot"></span><span data-i18n="charging.main.sc.title">실시간 가동 현황</span></div>
+            <span style="font-size:11px;color:var(--color-gray-500);" data-i18n="charging.main.sc.update">5분 전 갱신 · 2026.04.23 08:15</span>
+          </div>
+
+          <div class="sc-grid">
+            <div class="sc-tile ev">
+              <div class="sc-label" data-i18n="charging.main.sc.ev.label">전기 충전소</div>
+              <div class="sc-val"><span data-counter="124580">0</span></div>
+              <div class="sc-sub" data-i18n="charging.main.sc.ev.sub">급속 32,140 · 완속 92,440</div>
+            </div>
+            <div class="sc-tile h2">
+              <div class="sc-label" data-i18n="charging.main.sc.h2.label">수소 충전소</div>
+              <div class="sc-val"><span data-counter="247">0</span></div>
+              <div class="sc-sub" data-i18n="charging.main.sc.h2.sub">승용 182 · 상용 65</div>
+            </div>
+            <div class="sc-tile">
+              <div class="sc-label" data-i18n="charging.main.sc.avail.label">현재 이용 가능</div>
+              <div class="sc-val" style="color:#22C55E;"><span data-counter="86">0</span>%</div>
+              <div class="sc-sub" data-i18n="charging.main.sc.avail.sub">전국 평균 가동률</div>
+            </div>
+            <div class="sc-tile">
+              <div class="sc-label" data-i18n="charging.main.sc.card.label">카드 발급 누계</div>
+              <div class="sc-val"><span data-counter="1280000">0</span></div>
+              <div class="sc-sub" data-i18n="charging.main.sc.card.sub">이번 달 +12,800</div>
+            </div>
+          </div>
+
+          <div class="region-heat">
+            <div class="rh-title" data-i18n="charging.main.rh.title">지역별 급속충전기 가동률 (TOP 5)</div>
+            <div class="rh-bar"><span class="rh-name" data-i18n="charging.main.rh.seoul">서울</span><div class="rh-track"><div class="rh-fill" style="width:0%" data-fill="92"></div></div><span class="rh-value">92%</span></div>
+            <div class="rh-bar"><span class="rh-name" data-i18n="charging.main.rh.gyeonggi">경기</span><div class="rh-track"><div class="rh-fill" style="width:0%" data-fill="88"></div></div><span class="rh-value">88%</span></div>
+            <div class="rh-bar"><span class="rh-name" data-i18n="charging.main.rh.busan">부산</span><div class="rh-track"><div class="rh-fill" style="width:0%" data-fill="84"></div></div><span class="rh-value">84%</span></div>
+            <div class="rh-bar"><span class="rh-name" data-i18n="charging.main.rh.daegu">대구</span><div class="rh-track"><div class="rh-fill" style="width:0%" data-fill="81"></div></div><span class="rh-value">81%</span></div>
+            <div class="rh-bar"><span class="rh-name" data-i18n="charging.main.rh.jeju">제주</span><div class="rh-track"><div class="rh-fill" style="width:0%" data-fill="76"></div></div><span class="rh-value">76%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5개 Lv2 메뉴 ================= -->
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="flex justify-between items-end mb-6">
+        <div>
+          <h2 style="font-size:26px;letter-spacing:-0.025em;" data-i18n="charging.main.sec.title">5개 핵심 서비스</h2>
+          <p style="color:var(--text-secondary);font-size:14px;margin-top:6px;" data-i18n="charging.main.sec.desc">IA Lv2 기준, 충전 생애주기 전 과정을 커버합니다.</p>
+        </div>
+        <a href="sitemap.html#charging" style="font-size:13px;color:var(--color-primary-700);font-weight:700;" data-i18n="charging.main.sec.fullmenu">전체 메뉴 보기 →</a>
+      </div>
+
+      <div class="charge-menus" data-reveal>
+        <!-- 1. 충전소 찾기 -->
+        <a href="charging-find.html" class="charge-menu">
+          <div class="cm-top">
+            <div class="cm-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+          </div>
+          <h3 data-i18n="charging.main.card1.title">충전소 찾기</h3>
+          <p data-i18n="charging.main.card1.desc">전기·수소 충전소를 하나의 통합 지도에서 검색하고, 경로·GPS 반경·즐겨찾기로 최적의 충전소를 찾습니다.</p>
+          <div class="cm-links">
+            <a href="charging-find.html?tab=map"><span data-i18n="charging.main.card1.link1">통합 지도 (전기+수소)</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-find.html?tab=near"><span data-i18n="charging.main.card1.link2">내 주변 충전소</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-find.html?tab=route"><span data-i18n="charging.main.card1.link3">경로 검색 (신규)</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </a>
+
+        <!-- 2. 충전 요금 안내 -->
+        <a href="charging-fee.html?tab=ev" class="charge-menu scheme-blue">
+          <div class="cm-top">
+            <div class="cm-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+          </div>
+          <h3 data-i18n="charging.main.card2.title">충전 요금 안내</h3>
+          <p data-i18n="charging.main.card2.desc">사업자별·시간대별 요금 매트릭스, 로밍 요금 비교, 월 예상 충전비 시뮬레이터를 제공합니다.</p>
+          <div class="cm-links">
+            <a href="charging-fee.html?tab=ev"><span data-i18n="charging.main.card2.link1">전기차 충전요금</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-fee.html?tab=h2"><span data-i18n="charging.main.card2.link2">수소차 충전요금</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-fee.html?tab=simulator"><span data-i18n="charging.main.card2.link3">요금 시뮬레이터</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </a>
+
+        <!-- 3. 충전 카드 관리 -->
+        <a href="charging-card.html" class="charge-menu scheme-orange">
+          <div class="cm-top">
+            <div class="cm-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
+            </div>
+          </div>
+          <h3 data-i18n="charging.main.card3.title">충전 카드 관리</h3>
+          <p data-i18n-html="charging.main.card3.desc">전국 모든 공공·민간 충전소에서 로밍 수수료 없이 사용하는 통합카드&mdash;신청·이용내역·포인트를 통합 관리합니다.</p>
+          <div class="cm-links">
+            <a href="charging-card.html?tab=apply"><span data-i18n="charging.main.card3.link1">카드 신청·발급조회</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-card.html?tab=history"><span data-i18n="charging.main.card3.link2">이용요금·명세서</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-card.html?tab=point"><span data-i18n="charging.main.card3.link3">충전 포인트</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </a>
+
+        <!-- 4. 충전시설 설치 -->
+        <a href="charging-install.html" class="charge-menu scheme-purple">
+          <div class="cm-top">
+            <div class="cm-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            </div>
+          </div>
+          <h3 data-i18n="charging.main.card4.title">충전시설 설치</h3>
+          <p data-i18n-html="charging.main.card4.desc">공용 완속충전기 직접 신청, 완속·급속·초급속·전기이륜차 공모, 인증 제품 안내&mdash;설치 사업자를 위한 원스톱.</p>
+          <div class="cm-links">
+            <a href="charging-install-slow.html"><span data-i18n="charging.main.card4.link1">공용 완속충전 신청</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-install-contest.html"><span data-i18n="charging.main.card4.link2">완속/급속 공모</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-install-products.html"><span data-i18n="charging.main.card4.link3">인증 제품 안내</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </a>
+
+        <!-- 5. 수소 Help Desk -->
+        <a href="charging-help.html" class="charge-menu scheme-red">
+          <div class="cm-top">
+            <div class="cm-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <span class="cm-badge" data-i18n="charging.main.card5.badge">전용</span>
+          </div>
+          <h3 data-i18n="charging.main.card5.title">수소충전소 Help Desk</h3>
+          <p data-i18n="charging.main.card5.desc">수소충전소 장애·고장 신고, 전국 247개소 실시간 운영 현황, 정비 일정 안내 및 대체 충전소 자동 추천.</p>
+          <div class="cm-links">
+            <a href="charging-help.html?tab=report"><span data-i18n="charging.main.card5.link1">장애·고장 신고</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-help.html?tab=status"><span data-i18n="charging.main.card5.link2">운영 현황 안내 (신규)</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+            <a href="charging-help.html?tab=history"><span data-i18n="charging.main.card5.link3">신고 처리 이력</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </a>
+
+        <!-- 6. 통합 시뮬레이터 CTA -->
+        <a href="charging-fee.html?tab=simulator" class="charge-menu cta">
+          <div class="cm-top">
+            <div class="cm-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="14" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+            </div>
+            <span class="cm-badge" style="background:rgba(255,255,255,0.25);color:#fff;">AI</span>
+          </div>
+          <h3 data-i18n="charging.main.card6.title">월 충전요금 시뮬레이터</h3>
+          <p data-i18n="charging.main.card6.desc">주행거리·차종·주 이용 충전기를 입력하면 월 예상 충전요금과 최적 요금제를 AI가 추천합니다.</p>
+          <div class="cm-links">
+            <a href="charging-fee.html?tab=simulator"><span data-i18n="charging.main.card6.link1">시뮬레이션 시작</span> <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AI 충전 컨시어지 ================= -->
+  <section style="padding: 24px 0;">
+    <div class="container container-wide">
+      <div class="concierge-banner" data-reveal>
+        <div>
+          <span class="chip chip-success" style="margin-bottom: 6px; display: inline-block;" data-i18n="charging.main.ai.badge">NEW · AI 서비스</span>
+          <h3 data-i18n="charging.main.ai.title">AI 충전 컨시어지</h3>
+          <p data-i18n-html="charging.main.ai.desc">오늘 밤 자택 심야 충전 vs. 내일 아침 급속 충전&mdash;어떤 선택이 더 경제적일까요? 자연어로 질문하면 요금·동선·가용성을 분석해 최적의 충전 동선을 제안합니다.</p>
+        </div>
+        <div class="concierge-cta">
+          <a href="#" class="btn btn-primary btn-lg" data-action="notify" data-action-label="AI 충전 컨시어지가 곧 서비스됩니다." data-i18n="charging.main.ai.btn.start">챗봇 시작하기</a>
+          <a href="charging-fee.html?tab=simulator" class="btn btn-ghost btn-lg" data-i18n="charging.main.ai.btn.compare">요금 직접 비교</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 공지 + 고객센터 ================= -->
+  <section class="section-sm" style="padding-top: 24px;">
+    <div class="container container-wide">
+      <div class="grid" style="grid-template-columns: 1.4fr 1fr; gap: 32px;" data-reveal>
+
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h3 style="font-size: 22px; letter-spacing:-0.025em;" data-i18n="charging.main.notice.title">충전 인프라 공지</h3>
+              <p style="color:var(--text-tertiary);font-size:12.5px;margin-top:4px;" data-i18n="charging.main.notice.desc">요금 개정·정비 일정·신규 구축 등 중요 공지 사항</p>
+            </div>
+            <a href="#" style="font-size: 13px; color: var(--color-primary-700); font-weight: 700;" data-i18n="charging.main.notice.all">전체 보기 →</a>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <a href="charging-help.html?tab=status" class="info-box">
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span class="chip" style="background:#FEF0F0;color:var(--color-danger);flex-shrink:0;margin-top:2px;" data-i18n="charging.main.notice.urgent">긴급</span>
+                <div style="flex:1;">
+                  <h4 data-i18n="charging.main.notice.item1.title">서울 강남역 수소충전소 정비 안내 (2026.04.25~27)</h4>
+                  <p style="color:var(--text-tertiary);font-size:12px;margin-top:4px;" data-i18n="charging.main.notice.item1.meta">2026.04.23 · 대체 충전소: 양재IC · 수서</p>
+                </div>
+                <span style="color:var(--color-gray-400);font-size:18px;">→</span>
+              </div>
+            </a>
+            <a href="charging-fee.html?tab=ev" class="info-box">
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span class="chip chip-success" style="flex-shrink:0;margin-top:2px;" data-i18n="charging.main.notice.update">업데이트</span>
+                <div style="flex:1;">
+                  <h4 data-i18n="charging.main.notice.item2.title">환경부 공공 급속 충전 요금 개정 (2026년 2분기)</h4>
+                  <p style="color:var(--text-tertiary);font-size:12px;margin-top:4px;" data-i18n="charging.main.notice.item2.meta">2026.04.01 · 347원/kWh → 354원/kWh</p>
+                </div>
+                <span style="color:var(--color-gray-400);font-size:18px;">→</span>
+              </div>
+            </a>
+            <a href="charging-find.html" class="info-box">
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span class="chip chip-warning" style="flex-shrink:0;margin-top:2px;" data-i18n="charging.main.notice.new">신규</span>
+                <div style="flex:1;">
+                  <h4 data-i18n="charging.main.notice.item3.title">초급속 충전기(350kW+) 전국 80개소 추가 구축</h4>
+                  <p style="color:var(--text-tertiary);font-size:12px;margin-top:4px;" data-i18n="charging.main.notice.item3.meta">2026.03.28 · 고속도로 휴게소 우선 설치</p>
+                </div>
+                <span style="color:var(--color-gray-400);font-size:18px;">→</span>
+              </div>
+            </a>
+            <a href="charging-install-contest.html" class="info-box">
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span class="chip chip-info" style="flex-shrink:0;margin-top:2px;" data-i18n="charging.main.notice.contest">공모</span>
+                <div style="flex:1;">
+                  <h4 data-i18n="charging.main.notice.item4.title">2026 전기이륜차 충전시설 구축 공모 접수 중 (~06.30)</h4>
+                  <p style="color:var(--text-tertiary);font-size:12px;margin-top:4px;" data-i18n="charging.main.notice.item4.meta">2026.04.15 · 배달 플랫폼·소상공인 대상 3,500기</p>
+                </div>
+                <span style="color:var(--color-gray-400);font-size:18px;">→</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="card-hero">
+            <h3 style="font-size: 20px; margin-bottom: 12px; letter-spacing:-0.02em;" data-i18n="charging.main.cs.title">충전 관련 문의</h3>
+            <p style="color: var(--text-secondary); font-size: 13.5px; margin-bottom: 20px; line-height: 1.7;">
+<span data-i18n="charging.main.cs.desc">              충전 카드·이용요금·시설 설치·장애 신고 등 모든 충전 관련 문의는 고객센터로 연락 주세요.</span>
+            </p>
+            <div style="padding:18px;background:var(--color-primary-50);border-radius:12px;margin-bottom:16px;">
+              <div style="font-size:11.5px;color:var(--color-primary-700);font-weight:700;letter-spacing:0.06em;margin-bottom:4px;" data-i18n="charging.main.cs.center">고객센터</div>
+              <div style="font-size:28px;font-weight:800;color:var(--color-primary-700);letter-spacing:-0.02em;">1661-0970</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;" data-i18n="charging.main.cs.hours">평일 09:00~18:00 (연중무휴 상담)</div>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              <a href="charging-help.html?tab=report" class="btn btn-primary btn-sm" style="flex:1;" data-i18n="charging.main.cs.btn.report">장애 신고</a>
+              <a href="#" class="btn btn-ghost btn-sm" style="flex:1;" data-action="notify" data-action-label="1:1 문의" data-i18n="charging.main.cs.btn.inquiry">1:1 문의</a>
+            </div>
+
+            <div class="divider" style="margin:20px 0;"></div>
+
+            <h4 style="font-size:13px;margin-bottom:10px;" data-i18n="charging.main.cs.direct.title">운영사별 직통</h4>
+            <div style="font-size:12.5px;color:var(--text-secondary);line-height:2;">
+              <div style="display:flex;justify-content:space-between;"><span data-i18n="charging.fee.h2.op.cohygen">코하이젠</span><span style="font-weight:600;color:var(--text-primary);">02-0000-0001</span></div>
+              <div style="display:flex;justify-content:space-between;"><span data-i18n="charging.fee.h2.op.hynet">하이넷</span><span style="font-weight:600;color:var(--text-primary);">02-0000-0002</span></div>
+              <div style="display:flex;justify-content:space-between;"><span data-i18n="charging.fee.h2.op.hyosung">효성</span><span style="font-weight:600;color:var(--text-primary);">02-0000-0003</span></div>
+              <div style="display:flex;justify-content:space-between;"><span data-i18n="charging.fee.h2.op.skenergy">SK에너지</span><span style="font-weight:600;color:var(--text-primary);">02-0000-0004</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+// 지역 가동률 바 애니메이션
+(function(){
+  const fills = document.querySelectorAll('.rh-fill');
+  const animate = () => fills.forEach(f => {
+    f.style.width = (f.dataset.fill || 0) + '%';
+  });
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { animate(); io.disconnect(); } });
+    });
+    const target = document.querySelector('.region-heat');
+    if (target) io.observe(target); else animate();
+  } else animate();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보조금 안내·계산기 | 구매·보조금 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/subsidy-calc.css?v=20260613">
+<style>
+/* subsidy-info — 하단 안내 보강 섹션 (v0.17) · 공통 .stepper/.stat-card/.alert 재사용 */
+.si-sec{margin-top:44px}
+.si-head{font-size:20px;font-weight:800;color:#14233a;margin:0 0 6px}
+.si-sub{font-size:14px;color:#6b7480;margin:0 0 18px;line-height:1.6}
+/* ② 지역 민감도 */
+.rs-hint{font-size:13.5px;color:#6b7480;margin:0}
+.rs-list{display:flex;flex-direction:column;gap:10px}
+.rs-row{display:grid;grid-template-columns:130px 1fr 96px;align-items:center;gap:14px}
+.rs-region{font-size:13.5px;font-weight:700;color:#14233a}
+.rs-region small{display:block;font-weight:600;color:#9aa3af;font-size:11.5px}
+.rs-bar{height:24px;border-radius:7px;background:#eef2f6;overflow:hidden}
+.rs-bar > i{display:block;height:100%;background:#cdeede;border-radius:7px;transition:width .5s}
+.rs-row.best .rs-bar > i{background:#34b06f}
+.rs-total{font-size:14px;font-weight:800;color:#23a06a;text-align:right}
+.rs-row.best .rs-total{color:#0f6e56}
+.rs-summary{margin:16px 0 0;font-size:13.5px;color:#3a4654;border-top:1px dashed #dbe2ea;padding-top:14px}
+.rs-summary b{color:#23a06a}
+/* 구매 가이드 탭 패널 — 긴 탭(계산식 g7)이 카드를 과도하게 늘리지 않도록 내부 스크롤 */
+.guide-panel.active{max-height:560px;overflow-y:auto;overscroll-behavior:contain;padding-right:8px}
+.guide-panel.active::-webkit-scrollbar{width:8px}
+.guide-panel.active::-webkit-scrollbar-thumb{background:#d4dbe3;border-radius:8px}
+.guide-panel.active::-webkit-scrollbar-track{background:transparent}
+#g7 .data-table{margin-top:6px}
+#g7 .data-table th,#g7 .data-table td{padding:7px 10px}
+/* ⑥ 시나리오 비교 — 가로형 컴팩트 카드, 고정 높이로 위에서부터 하나씩 쌓임 */
+.scen-grid{display:grid;grid-template-columns:1fr;gap:12px;align-content:start}
+.scen-card{position:relative;display:flex;align-items:center;gap:16px;height:104px;border:1px solid #e4e9ef;border-radius:14px;padding:14px 18px;background:#fff}
+.scen-card.best{border-color:#34b06f;background:#f7fdfa}
+.scen-badge{position:absolute;top:-9px;left:14px;background:#23a06a;color:#fff;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px}
+.scen-x{position:absolute;top:9px;right:9px;width:22px;height:22px;border:0;border-radius:7px;background:#f1f4f8;color:#8a93a0;cursor:pointer;font-size:12px;line-height:1}
+.scen-main{flex:1 1 auto;min-width:0;padding-right:22px}
+.scen-tag{display:inline-block;font-size:11px;font-weight:700;color:#0f6e56;background:#eaf7f0;border-radius:6px;padding:2px 8px;margin-bottom:5px}
+.scen-model{font-size:15px;font-weight:800;color:#14233a;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scen-meta{font-size:12px;color:#8a93a0;margin-top:2px}
+.scen-nums{flex:0 0 auto;text-align:right}
+.scen-row{display:flex;gap:14px;justify-content:flex-end;font-size:12.5px;color:#3a4654;padding:1px 0}
+.scen-row span:first-child{color:#8a93a0}
+.scen-total{flex:0 0 auto;text-align:right;padding-left:18px;border-left:1px dashed #dbe2ea}
+.scen-total .lbl{display:block;font-size:11px;color:#8a93a0;font-weight:700;margin-bottom:1px}
+.scen-total b{font-size:21px;color:#23a06a}
+/* ⑦ 자가진단 */
+.diag-q{padding:16px 0;border-bottom:1px solid #eef2f6}
+.diag-q:first-child{padding-top:0}
+.diag-qlabel{font-size:14px;font-weight:700;color:#14233a;margin-bottom:10px}
+.diag-opts{display:flex;gap:8px;flex-wrap:wrap}
+.diag-opt{padding:9px 16px;border:1px solid #dbe2ea;border-radius:999px;background:#fff;font-size:13px;font-weight:700;color:#566;cursor:pointer;transition:.15s}
+.diag-opt:hover{border-color:#34b06f}
+.diag-opt.on{border-color:#34b06f;background:#eaf7f0;color:#0f6e56}
+.diag-res{margin-top:18px;border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.65}
+.diag-res h4{margin:0 0 8px;font-size:16px}
+.diag-res ul{margin:6px 0 0;padding-left:18px;font-size:13.5px}
+.diag-res.ok{background:#eaf7f0;color:#0f6e56}
+.diag-res.caution{background:#fff6e6;color:#8a5a00}
+.diag-res.no{background:#fdecec;color:#a3261f}
+.si-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.si-links{grid-template-columns:1fr}}
+.si-link{display:flex;align-items:center;gap:12px;padding:18px 20px;border:1px solid #e4e9ef;border-radius:14px;background:#fff;text-decoration:none;color:#14233a;transition:.15s}
+.si-link:hover{border-color:#34b06f;background:#f7fdfa}
+.si-link .ic{font-size:24px;flex:0 0 auto}
+.si-link .t{font-size:14.5px;font-weight:700}
+.si-link .d{font-size:12px;color:#6b7480;margin-top:2px}
+.si-link .arr{margin-left:auto;color:#9aa3af}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="subsidy-target.html">구매·보조금</a><span class="sep">›</span>
+        <span class="current">보조금 안내·계산기</span>
+      </nav>
+      <h1>보조금 안내·계산기</h1>
+      <p class="hero-lead">친환경차 구매, 보조금 얼마나 받을까? <strong style="color:#fff;">환경부·지자체 보조금</strong>을 한 번에 계산하고 국비·지방비 합산 예상액을 확인하세요.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+        <!-- 구매 가이드 & 안내 -->
+        <div class="calc-card">
+          <h2 class="calc-card-head">ℹ️ 구매 가이드 & 안내</h2>
+          <div class="guide-tabs" id="guideTabs">
+            <button type="button" class="guide-tab active" data-tab="g1">미지원 대상</button>
+            <button type="button" class="guide-tab" data-tab="g2">사용법 안내</button>
+            <button type="button" class="guide-tab" data-tab="g3">선택 항목</button>
+            <button type="button" class="guide-tab" data-tab="g4">의무 준수</button>
+            <button type="button" class="guide-tab" data-tab="g5">환수 기준</button>
+            <button type="button" class="guide-tab" data-tab="g6">보조금 안내</button>
+            <button type="button" class="guide-tab" data-tab="g7" style="color:#a3261f;">계산식 (삭제예정, 안내)</button>
+          </div>
+
+          <div class="guide-panel active" id="g1">
+            <h4>1. 보조금 미지원 대상</h4>
+            <ul>
+              <li><strong>전기자동차 제작·수입사</strong>: 자사 차량을 직접 구매하는 경우</li>
+              <li><strong>재지원제한기간 내 중복 구매</strong>: 동일 차종 2대 이상 구매 시 최초 1대 외 지원 불가</li>
+              <li><strong>지원제한 대상자</strong>: 부정 수령 등으로 지원이 제한된 기간 중인 개인·법인</li>
+              <li><strong>거주(사업장) 요건 미충족</strong>: 지자체 공고가 정한 관내 거주·등록 기간 미달</li>
+            </ul>
+            <h4>2. 재지원제한기간</h4>
+            <ul>
+              <li>승용·승합·화물: <strong>2년</strong> (구매 후 2년 내 동일 차종 재구매 시 미지원)</li>
+              <li>초소형 승용·화물: 재지원제한기간 <strong>없음</strong></li>
+              <li>개인과 개인사업자는 제한기간이 <strong>각각 별개</strong>로 적용</li>
+            </ul>
+            <h4>3. 예외</h4>
+            <ul>
+              <li>교통사고·천재지변 등 불가피한 폐차는 기간 경과 전이라도 지원 가능(증빙 필요)</li>
+            </ul>
+          </div>
+          <div class="guide-panel" id="g2">
+            <h4>계산기 사용법</h4>
+            <ul>
+              <li>① 구매 차종과 구매자 유형(개인/법인·사업자)을 선택합니다.</li>
+              <li>② 구매(등록) 지역을 대분류·소분류로 선택합니다. <strong>보조금 지자체는 구매자 주소지(법인은 사업장) 기준</strong>입니다.</li>
+              <li>③ 제조사·모델을 선택합니다.</li>
+              <li>④ 해당하는 선택 항목(전환지원금·가산 등)을 고른 뒤 계산하기를 누릅니다.</li>
+            </ul>
+            <p>국비와 지방비를 합산한 <strong>예상</strong> 보조금이 표시됩니다. 실제 지급액은 해당 연도 공고·지자체 예산·심사 결과에 따라 달라질 수 있습니다.</p>
+          </div>
+          <div class="guide-panel" id="g3">
+            <h4>선택 항목(추가·가산 지원)</h4>
+            <ul>
+              <li><strong>전환지원금</strong>: 노후 경유차 폐차 후 전기차 구매 시 정액 추가 <span style="font-size:12px;color:#8a93a0;">· 증빙: 폐차인수증명서</span></li>
+              <li><strong>취약계층·차상위</strong>: 국비의 <strong>+20%</strong> <span style="font-size:12px;color:#8a93a0;">· 증빙: 수급자·차상위 증명서</span></li>
+              <li><strong>청년·생애최초</strong>: <strong>+10%</strong> <span style="font-size:12px;color:#8a93a0;">· 증빙: 주민등록·자동차 미보유 확인서</span></li>
+              <li><strong>다자녀 가구(3인 이상)</strong>: <strong>+10%</strong> <span style="font-size:12px;color:#8a93a0;">· 증빙: 가족관계증명서</span></li>
+              <li><strong>국내 조립(생산) 차량 +50만원</strong> · <strong>소상공인 +100만원</strong> 등 <span style="font-size:12px;color:#8a93a0;">· 증빙: 사업자등록증 등</span></li>
+            </ul>
+            <p style="background:#f5f8fb;border-left:3px solid #23a06a;padding:10px 12px;border-radius:4px;margin-top:10px;">
+              <strong>유의사항</strong><br>
+              · 위 항목은 <strong>지자체별로 지급 여부와 지급액이 다릅니다</strong>(시행하지 않는 지자체도 있음).<br>
+              · 각 항목은 해당 <strong>증빙자료를 제출한 경우에만</strong> 인정됩니다.<br>
+              · 가산은 중복 적용될 수 있으나, 지자체 공고·예산 한도 내에서 지급됩니다.
+            </p>
+          </div>
+          <div class="guide-panel" id="g4">
+            <h4>의무 준수 사항</h4>
+            <ul>
+              <li><strong>의무운행기간</strong>: 승용 <strong>2년</strong>(승합·화물 등 차종별 상이) 동안 등록·운행·보유</li>
+              <li>의무기간 내 <strong>시·도 외 전출, 양도·매도·폐차·말소</strong> 시 사전 신고</li>
+              <li>의무운행거리 미달, 목적 외 사용 금지</li>
+              <li>위반 시 보조금 환수 대상</li>
+            </ul>
+          </div>
+          <div class="guide-panel" id="g5">
+            <h4>환수 기준</h4>
+            <ul>
+              <li>의무운행기간 미준수: <strong>잔여기간에 비례</strong>하여 환수</li>
+              <li>거짓·부정 수령, 목적 외 사용: <strong>전액 환수</strong> + 향후 지원 제한</li>
+              <li>사고·천재지변 등 불가피한 사유: 증빙 시 환수 제외</li>
+            </ul>
+            <p style="margin-bottom:10px;">의무기간 미준수 시 환수 예상액이 궁금하다면 아래에서 바로 계산해 보세요.</p>
+            <a href="subsidy-refund.html" class="btn btn-primary btn-sm" style="display:inline-flex;align-items:center;gap:6px;">
+              보조금 환수금 계산기로 이동
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+          <div class="guide-panel" id="g6">
+            <h4>1. 보조금 구성</h4>
+            <ul>
+              <li><strong>보조금 = 국비(성능보조금) + 지방비 + 가산</strong></li>
+              <li><strong>국비</strong>: 전국 공통. 1회충전 주행거리·전비(에너지효율)·저온 주행거리 비율 등 <strong>성능에 따라 차등</strong> 산정</li>
+              <li><strong>지방비</strong>: 지자체별 상이(예산·단가 다름). <a href="subsidy-region.html">지자체별 보조금 현황</a>에서 확인</li>
+              <li><strong>가산</strong>: 취약계층·청년·다자녀 등 대상 요건별 추가(선택 항목 탭 참고)</li>
+            </ul>
+            <h4>2. 차량가격 구간별 차등(전기승용)</h4>
+            <ul>
+              <li><strong>5,500만원 이하</strong> → 국비 100% 지급</li>
+              <li><strong>5,500만원 초과 ~ 8,500만원 미만</strong> → 국비 50% 지급</li>
+              <li><strong>8,500만원 이상</strong> → 국비 미지원</li>
+            </ul>
+            <h4>3. 차종별 국비 상한(예시)</h4>
+            <ul>
+              <li>전기승용 최대 약 <strong>650만원</strong> · 전기화물(소형) 최대 약 <strong>1,100만원</strong></li>
+              <li>전기승합(대형 버스) 최대 약 <strong>7,000만원</strong> · 수소승용 최대 약 <strong>2,250만원</strong></li>
+              <li>실제 금액은 모델 성능·해당 연도 공고에 따라 달라집니다.</li>
+            </ul>
+            <h4>4. 지급 방식 · 예산</h4>
+            <ul>
+              <li>판매자(제조사)가 구매자를 <strong>대행 신청</strong> → 출고·등록 후 <strong>지자체가 판매자에게 지급</strong></li>
+              <li>구매자는 <strong>차량 가격에서 보조금을 뺀 금액</strong>만 부담</li>
+              <li>접수는 <strong>출고등록순(선착순)</strong>이 일반적이며, 지자체 <strong>예산 소진 시 조기 마감</strong></li>
+            </ul>
+            <h4>5. 함께 보기</h4>
+            <ul>
+              <li><a href="subsidy-vehicles.html">보조금 지급대상 차종</a> · <a href="subsidy-region.html">지자체별 보조금 현황</a> · <a href="tax-region.html">지역별 추가 혜택</a></li>
+            </ul>
+          </div>
+
+          <!-- g7 : 2026 계산식 (내부 검토용 · 삭제예정) -->
+          <div class="guide-panel" id="g7">
+            <div class="alert alert-warning" style="margin:0 0 14px;border-radius:10px;">
+              <div class="alert-body" style="font-size:12.5px;line-height:1.6;">
+                <strong style="color:#a3261f;">내부 검토용 · 삭제 예정</strong> — 본 탭은 2026년 업무처리지침과 <code>ev_ps</code> 시뮬레이터 로직(<code>psSubsiSimulCalc.jsp</code> / <code>h2SellerApplyForm.jsp</code>)을 기준으로 정리한 계산식 메모입니다. 실제 지급액은 공고·지자체 예산·심사 결과에 따라 달라집니다.
+              </div>
+            </div>
+
+            <h4>0. 공통 구조 (2026)</h4>
+            <ul>
+              <li><strong>보조금 = (기본국비 + 추가국비) + (기본지방비 + 추가지방비) + 전환지원금(국비+지방비)</strong>, × 신청대수</li>
+              <li><strong>추가국비 분배(2026 신규):</strong> 모든 추가 국비는 지자체 지방비율(<code>lamt_rate</code>)로 국비:지방비 분배<br>
+                <code>지방비 = round(추가액 × rate ÷ (rate+100) ÷ 1000) × 1000</code>, <code>국비 = 추가액 − 지방비</code> &nbsp;(제주는 <code>add_lamt_rate</code> 우선)</li>
+              <li><strong>국비 상한:</strong> 전기승용 970만 · 전기화물 2,000만 · 전기버스 9,000만 · 수소 2,250만</li>
+              <li><strong>배타규칙:</strong> 개인 1대만 · 택시+다자녀 동시 불가 · 법인택시(Y) → 다자녀·청년생애최초 불가</li>
+            </ul>
+
+            <h4>1. 전기승용 — 일반·경형 (RIDE / RIDELGT)</h4>
+            <table class="data-table" style="font-size:12.5px;">
+              <thead><tr><th>가산 항목</th><th>조건</th><th>금액 → 분배</th></tr></thead>
+              <tbody>
+                <tr><td>차상위·취약계층</td><td>개인</td><td>기본국비 × <strong>20%</strong> → 분배</td></tr>
+                <tr><td>청년·생애최초</td><td>개인, 만19~34</td><td>기본국비 × <strong>20%</strong> → 분배</td></tr>
+                <tr><td>다자녀</td><td>개인·비사업자</td><td>2자녀 100 / 3자녀 200 / 4자녀 300만 → 분배</td></tr>
+                <tr><td>전기택시</td><td>법인(중기Y) 또는 법인B</td><td><strong>250만</strong> → 분배</td></tr>
+                <tr><td>BMS 미지원차 폐차 후 신차</td><td>—</td><td><strong>20만</strong> → 분배</td></tr>
+                <tr><td>전환지원금</td><td>개인·내연 3년경과 교체</td><td>국비≥500만 → 100만 전액 / 미만 → 100만 × 국비/500만(만원반올림)</td></tr>
+              </tbody>
+            </table>
+
+            <h4>2. 전기승용 — 초소형 (RIDESML)</h4>
+            <ul><li>차상위 20% · 청년생애최초 20%만 적용(택시·다자녀·전환지원금 없음).</li></ul>
+
+            <h4>3. 전기화물 (TRUCK*)</h4>
+            <ul>
+              <li><strong>경형·소형·초소형:</strong> 차상위(개인)·소상공인 <strong>국비 30%</strong> · 농업인 <strong>30%</strong> · 택배/물류 <strong>30%</strong>(모두 분배), 초소형 지자체 추가국비, 전환지원금(승용과 동일 산식).</li>
+              <li><strong>중형·대형:</strong> 기본국비 + 사회계층 지방비.</li>
+              <li>국비 상한 <strong>2,000만</strong>. <span style="color:#8a93a0;">※ 다(多)대수 폐차조합(row 반복) 로직은 단일대 기준으로 단순화(정밀 포팅 진행 항목).</span></li>
+            </ul>
+
+            <h4>4. 전기승합 (BUSSML·BUSMID·BUSBIG + 어린이 통학차량용)</h4>
+            <ul>
+              <li><strong>일반 승합(소형·중형·대형):</strong> 기본국비 + 사회계층 지방비. 국비 상한 <strong>9,000만</strong>.</li>
+              <li><strong>어린이 통학차량용(school_bus_yn) — 연도별 분기 그대로 포팅:</strong>
+                <table class="data-table" style="font-size:12.5px;margin-top:6px;">
+                  <thead><tr><th>연도</th><th>가산</th></tr></thead>
+                  <tbody>
+                    <tr><td>2024</td><td>기본국비 <strong>+20%</strong> (상한 9,000만)</td></tr>
+                    <tr><td>≤2023</td><td>+ school_bus_gamt(국비) / + school_bus_lamt(지방비) (상한 9,000만)</td></tr>
+                    <tr><td><strong>2025·2026</strong></td><td><strong>런타임 가산 없음</strong> → 어린이버스는 <strong>별도 모델</strong>(높은 기본국비, 예: 카운티 어린이버스)로 반영. school_bus 단가는 0으로 세팅(상시 노출).</td></tr>
+                  </tbody>
+                </table>
+              </li>
+              <li>2026 적용분: 어린이 전용 모델을 선택하면 모델 기본국비에 어린이 가산이 반영됩니다.</li>
+            </ul>
+
+            <h4>5. 수소차 (H2) — 정액, 분배·%가산 없음</h4>
+            <ul>
+              <li><strong>수소승용:</strong> 기본국비(넥쏘 2,250만) + 택시 국비가산 → <strong>상한 2,250만</strong>(이미 상한이라 택시 효과 상쇄).</li>
+              <li><strong>수소버스·트럭:</strong> 기본국비 정액(가산·상한 없음).</li>
+              <li><strong>지방비:</strong> 기본 + 화물추가 + 노후경유폐차(대당) + 사회계층(소상공인 일부 제외) + 택시.</li>
+              <li>전기차의 %가산·국비:지방비 분배·전환지원금은 <strong>수소에 없음</strong>.</li>
+            </ul>
+
+            <h4>6. 전기이륜 · 전기건설기계 — 소스 대조 결과</h4>
+            <ul>
+              <li><strong>이륜(car_type 21):</strong> <code>psSubsiSimulCalc.jsp</code> <code>calAmt()</code>에 <strong>이륜 계산 분기 없음</strong>. <code>getLocalAmt()</code>에서 특정 지자체(4122) 총액 70:30 분배만 존재. → 본 계산기는 기본국비 + 사회계층/배달 지방비 + 폐차 등급별 추가국비로 근사(차이 항목).</li>
+              <li><strong>건설기계(EXCVT):</strong> <code>setModelChangeView()</code>에만 존재, <code>calAmt()</code>에 <strong>계산 분기 없음</strong>. → 기본국비 + 사회계층/폐차 지방비로 근사(차이 항목).</li>
+            </ul>
+
+            <p style="font-size:12px;color:#8a93a0;margin-top:14px;border-top:1px dashed #dbe2ea;padding-top:12px;">
+              기준: 2026 업무처리지침 · <code>ev_ps</code> 로직(<code>calAmt</code>/<code>calAddAmt</code>/<code>roundByUnit</code>). 기본 국비·지방비 단가는 프로토타입 mock이며, 계산식·분배·상한·배타규칙은 소스와 1:1. 실지급은 공고·예산·심사에 따라 상이. <strong>내부 검토용 · 삭제 예정.</strong>
+            </p>
+          </div>
+        </div>
+
+      <!-- 보조금 계산기 + 시나리오 비교 -->
+      <div class="calc-grid">
+        <div class="calc-card subsidy-calc" data-subsidy-calc>
+          <h2 class="calc-card-head">📝 보조금 계산기</h2>
+
+          <div class="calc-field">
+            <label>구매 차종</label>
+            <div class="chip-group" data-calc-type>
+              <button type="button" class="chip-opt active" data-type="ev_car"><span class="ic">🚗</span>전기승용</button>
+              <button type="button" class="chip-opt" data-type="ev_truck"><span class="ic">🚚</span>전기화물</button>
+              <button type="button" class="chip-opt" data-type="ev_bus"><span class="ic">🚌</span>전기승합</button>
+              <button type="button" class="chip-opt" data-type="ev_moto"><span class="ic">🛵</span>전기이륜</button>
+              <button type="button" class="chip-opt" data-type="fcev"><span class="ic">💧</span>수소자동차</button>
+              <button type="button" class="chip-opt" data-type="const_eq"><span class="ic">🚜</span>건설기계</button>
+            </div>
+          </div>
+
+          <div class="calc-field">
+            <label>구매자 유형</label>
+            <div class="chip-group" data-calc-buyer>
+              <button type="button" class="chip-opt active" data-buyer="personal"><span class="ic">🧑</span>개인</button>
+              <button type="button" class="chip-opt" data-buyer="biz"><span class="ic">🪪</span>개인사업자</button>
+              <button type="button" class="chip-opt" data-buyer="org"><span class="ic">🏢</span>단체</button>
+            </div>
+          </div>
+
+          <div class="calc-field">
+            <label>구매 지역</label>
+            <div class="calc-two">
+              <select class="calc-select" data-calc-region1><option value="">지자체 대분류 선택</option></select>
+              <select class="calc-select" data-calc-region2><option value="">지자체 소분류</option></select>
+            </div>
+          </div>
+
+          <div class="calc-field">
+            <label>제조사 / 모델</label>
+            <div class="calc-two">
+              <select class="calc-select" data-calc-maker><option value="">제조사 선택</option></select>
+              <select class="calc-select" data-calc-model><option value="">제조사 먼저 선택</option></select>
+            </div>
+          </div>
+
+          <!-- 차종별 조건부 입력 항목 (subsidy-calc.js가 동적 렌더링) -->
+          <div data-calc-conditions></div>
+
+          <button type="button" class="calc-run" data-calc-run>📊 계산하기</button>
+
+          <div class="calc-result" data-calc-result>
+            <div class="calc-res-total"><span style="font-weight:800;">총 예상 보조금</span><span><b data-res-total>0</b> 만원</span></div>
+            <div class="calc-res-row"><span>국고 보조금</span><span data-res-nat>0만원</span></div>
+            <div class="calc-res-row"><span>지방 보조금</span><span data-res-local>0만원</span></div>
+            <div class="calc-res-row"><span>추가지원 합계 (국비+지방비)</span><span data-res-extra>0만원</span></div>
+            <button type="button" class="btn btn-secondary mt-3" id="scenAddBtn" style="width:100%;">＋ 이 결과 시나리오로 담기</button>
+            <p style="font-size:12px;color:#8a93a0;margin-top:10px;">※ 데모용 추정치입니다. 실제 보조금은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="calc-card scen-col">
+          <h2 class="calc-card-head">🗂 시나리오 비교</h2>
+          <p style="font-size:13px;color:#6b7480;margin:0 0 14px;line-height:1.6;">계산 결과를 최대 3개까지 담아 모델·지역 조합을 나란히 비교하세요. 계산기에서 <b>‘＋ 이 결과 시나리오로 담기’</b>를 누르면 추가됩니다.</p>
+          <div id="scenarioWrap">
+            <p class="text-muted" id="scenEmpty">아직 담은 시나리오가 없습니다. 계산하기 → ‘이 결과 시나리오로 담기’를 눌러보세요.</p>
+            <div class="scen-grid" id="scenGrid" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 상세] ⑦ 자격 자가진단 위저드 -->
+      <div class="si-sec">
+        <h2 class="si-head">받을 수 있나요? 30초 자가진단</h2>
+        <p class="si-sub">아래 4가지만 체크하면 지원 가능 여부를 미리 가늠할 수 있습니다. 참고용 안내이며, 최종 판정은 지자체 심사에 따릅니다.</p>
+        <div class="calc-card">
+          <div class="diag-q">
+            <div class="diag-qlabel">1. 최근 2년 이내, 같은 차종으로 보조금을 받은 적이 있나요?</div>
+            <div class="diag-opts" data-diag="q1">
+              <button type="button" class="diag-opt" data-val="no">아니오</button>
+              <button type="button" class="diag-opt" data-val="yes">예</button>
+            </div>
+          </div>
+          <div class="diag-q">
+            <div class="diag-qlabel">2. 구매 차량을 본인(또는 사업자) 명의로 등록하고, 2년 이상 보유·운행할 수 있나요?</div>
+            <div class="diag-opts" data-diag="q2">
+              <button type="button" class="diag-opt" data-val="yes">예</button>
+              <button type="button" class="diag-opt" data-val="no">아니오</button>
+            </div>
+          </div>
+          <div class="diag-q">
+            <div class="diag-qlabel">3. 차량 가격(부가세 제외)이 보조금 100% 지급 상한 이내인가요?</div>
+            <div class="diag-opts" data-diag="q3">
+              <button type="button" class="diag-opt" data-val="full">8,500만원 미만 (100%)</button>
+              <button type="button" class="diag-opt" data-val="half">8,500만 ~ 1억 미만 (50%)</button>
+              <button type="button" class="diag-opt" data-val="none">1억원 이상 (미지원)</button>
+            </div>
+          </div>
+          <div class="diag-q">
+            <div class="diag-qlabel">4. 구매(등록) 지역에 본인 주소지 또는 사업장이 있나요?</div>
+            <div class="diag-opts" data-diag="q4">
+              <button type="button" class="diag-opt" data-val="yes">예</button>
+              <button type="button" class="diag-opt" data-val="no">아니오</button>
+            </div>
+          </div>
+          <div id="diagResult" aria-live="polite"></div>
+          <button type="button" class="btn btn-secondary mt-3" id="diagReset" style="display:none;">다시 진단하기</button>
+        </div>
+      </div>
+
+      <!-- 관련 안내 바로가기 -->
+      <div class="si-sec">
+        <h2 class="si-head">관련 안내 바로가기</h2>
+        <div class="si-links">
+          <a class="si-link" href="subsidy-vehicles.html">
+            <span class="ic" aria-hidden="true">🚙</span>
+            <span><span class="t">보조금 지급대상 차종</span><span class="d">모델별 국비 지원액 조회</span></span>
+            <span class="arr" aria-hidden="true">›</span>
+          </a>
+          <a class="si-link" href="subsidy-region.html">
+            <span class="ic" aria-hidden="true">🗺️</span>
+            <span><span class="t">지역별 보조금 현황</span><span class="d">지자체별 지방비·잔여 예산</span></span>
+            <span class="arr" aria-hidden="true">›</span>
+          </a>
+          <a class="si-link" href="subsidy-target.html">
+            <span class="ic" aria-hidden="true">📋</span>
+            <span><span class="t">지원 대상·요건</span><span class="d">신청 자격과 제출 서류 안내</span></span>
+            <span class="arr" aria-hidden="true">›</span>
+          </a>
+          <a class="si-link" href="subsidy-refund.html">
+            <span class="ic" aria-hidden="true">↩️</span>
+            <span><span class="t">환수금 안내·계산기</span><span class="d">의무기간 미준수 시 환수액</span></span>
+            <span class="arr" aria-hidden="true">›</span>
+          </a>
+          <a class="si-link" href="charging-install-slow.html">
+            <span class="ic" aria-hidden="true">🔌</span>
+            <span><span class="t">충전기 설치 보조금</span><span class="d">완속충전시설 설치 지원</span></span>
+            <span class="arr" aria-hidden="true">›</span>
+          </a>
+          <a class="si-link" href="subsidy-vehicles.html">
+            <span class="ic" aria-hidden="true">💧</span>
+            <span><span class="t">수소차 보조금</span><span class="d">수소승용·버스 지원 안내</span></span>
+            <span class="arr" aria-hidden="true">›</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/subsidy-calc.js?v=20260626c"></script>
+<script>
+(function () {
+  // 가이드 탭
+  var tabs = document.getElementById('guideTabs');
+  tabs.addEventListener('click', function (e) {
+    var b = e.target.closest('.guide-tab'); if (!b) return;
+    tabs.querySelectorAll('.guide-tab').forEach(function (x) { x.classList.remove('active'); });
+    b.classList.add('active');
+    document.querySelectorAll('.guide-panel').forEach(function (p) { p.classList.toggle('active', p.id === b.getAttribute('data-tab')); });
+  });
+})();
+</script>
+
+<!-- 상세 계산기 전용 기능: ② 지역 민감도 · ⑥ 시나리오 비교 · ⑦ 자가진단 (메인페이지 간단 계산기와 무관) -->
+<script>
+(function () {
+  'use strict';
+  var calcRoot = document.querySelector('[data-subsidy-calc]');
+  if (!calcRoot) return;
+  function fmt(n) { return Number(n).toLocaleString('ko-KR'); }
+  function num(t) { return parseInt(String(t).replace(/[^0-9]/g, '') || '0', 10); }
+  function toast(msg) { if (window.__toast) window.__toast(msg, 'info'); else alert(msg); }
+  function chipLabel(btn) { var c = btn.cloneNode(true); var ic = c.querySelector('.ic'); if (ic) ic.remove(); return c.textContent.trim(); }
+
+  /* ===== ⑥ 시나리오 비교 ===== */
+  var scenarios = [];
+  function readCurrent() {
+    var resultShown = calcRoot.querySelector('[data-calc-result]').classList.contains('show');
+    var modelSel = calcRoot.querySelector('[data-calc-model]');
+    var model = modelSel ? modelSel.value : '';
+    if (!resultShown || !model) { toast('먼저 모델을 선택하고 계산하기를 눌러주세요.'); return null; }
+    var typeBtn = calcRoot.querySelector('[data-calc-type] .chip-opt.active');
+    var r1 = (calcRoot.querySelector('[data-calc-region1]') || {}).value || '';
+    var r2 = (calcRoot.querySelector('[data-calc-region2]') || {}).value || '';
+    return {
+      type: typeBtn ? chipLabel(typeBtn) : '',
+      model: model,
+      region: (r1 && r2) ? (r1 + ' ' + r2) : '지역 미선택',
+      nat: num(calcRoot.querySelector('[data-res-nat]').textContent),
+      loc: num(calcRoot.querySelector('[data-res-local]').textContent),
+      total: num(calcRoot.querySelector('[data-res-total]').textContent)
+    };
+  }
+  function renderScenarios() {
+    var grid = document.getElementById('scenGrid'), empty = document.getElementById('scenEmpty');
+    if (!scenarios.length) { grid.style.display = 'none'; empty.style.display = ''; grid.innerHTML = ''; return; }
+    empty.style.display = 'none'; grid.style.display = '';
+    var best = Math.max.apply(null, scenarios.map(function (s) { return s.total; }));
+    grid.innerHTML = scenarios.map(function (s, i) {
+      var isBest = s.total === best;
+      return '<div class="scen-card' + (isBest ? ' best' : '') + '">'
+        + (isBest ? '<span class="scen-badge">최대</span>' : '')
+        + '<button class="scen-x" type="button" data-rm="' + i + '" aria-label="삭제">✕</button>'
+        + '<div class="scen-main">'
+        +   '<span class="scen-tag">' + (s.type || '차종') + '</span>'
+        +   '<div class="scen-model">' + s.model + '</div>'
+        +   '<div class="scen-meta">' + s.region + '</div>'
+        + '</div>'
+        + '<div class="scen-nums">'
+        +   '<div class="scen-row"><span>국고</span><span>' + fmt(s.nat) + '만원</span></div>'
+        +   '<div class="scen-row"><span>지방</span><span>' + fmt(s.loc) + '만원</span></div>'
+        + '</div>'
+        + '<div class="scen-total"><span class="lbl">총 보조금</span><b>' + fmt(s.total) + '</b> 만원</div>'
+        + '</div>';
+    }).join('');
+  }
+  var addBtn = document.getElementById('scenAddBtn');
+  if (addBtn) addBtn.addEventListener('click', function () {
+    if (scenarios.length >= 3) { toast('최대 3개까지 비교할 수 있어요. 기존 시나리오를 삭제 후 추가하세요.'); return; }
+    var cur = readCurrent(); if (!cur) return;
+    scenarios.push(cur); renderScenarios();
+    var grid = document.getElementById('scenGrid'); if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  document.getElementById('scenGrid').addEventListener('click', function (e) {
+    var x = e.target.closest('[data-rm]'); if (!x) return;
+    scenarios.splice(parseInt(x.getAttribute('data-rm'), 10), 1); renderScenarios();
+  });
+
+  /* ===== ⑦ 자격 자가진단 ===== */
+  var answers = {};
+  function evaluate() {
+    if (!(answers.q1 && answers.q2 && answers.q3 && answers.q4)) return;
+    var blockers = [], cautions = [];
+    if (answers.q1 === 'yes') blockers.push('재지원제한기간(2년) 내 재구매로 지원이 제한될 수 있습니다.');
+    if (answers.q4 === 'no') blockers.push('구매(등록) 지역에 주소지·사업장이 없으면 신청이 어렵습니다.');
+    if (answers.q3 === 'none') blockers.push('차량가가 보조금 지급 상한(1억원)을 초과해 미지원 대상입니다.');
+    if (answers.q3 === 'half') cautions.push('차량가 8,500만~1억원 구간은 국비의 50%만 지급됩니다.');
+    if (answers.q2 === 'no') cautions.push('의무운행기간(2년) 보유·운행이 어려우면 환수 위험이 있습니다.');
+    var level = blockers.length ? 'no' : (cautions.length ? 'caution' : 'ok');
+    var title = level === 'no' ? '지원이 어려울 수 있어요' : (level === 'caution' ? '조건부 지원 가능' : '지원 가능성이 높아요');
+    var icon = level === 'no' ? '⚠' : (level === 'caution' ? '◐' : '✓');
+    var items = blockers.concat(cautions);
+    var html = '<div class="diag-res ' + level + '"><h4>' + icon + ' ' + title + '</h4>'
+      + (items.length ? '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>'
+        : '<p style="margin:0;">입력하신 조건에서는 특이 제한 사항이 없습니다. 잔여 예산 범위 내에서 지원받을 수 있습니다.</p>')
+      + '<p style="margin:10px 0 0;font-size:12px;opacity:.8;">※ 참고용 자가진단입니다. 최종 판정은 지자체 심사 결과에 따릅니다.</p></div>';
+    document.getElementById('diagResult').innerHTML = html;
+    document.getElementById('diagReset').style.display = '';
+  }
+  document.querySelectorAll('[data-diag]').forEach(function (g) {
+    g.addEventListener('click', function (e) {
+      var b = e.target.closest('.diag-opt'); if (!b) return;
+      g.querySelectorAll('.diag-opt').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      answers[g.getAttribute('data-diag')] = b.getAttribute('data-val');
+      evaluate();
+    });
+  });
+  document.getElementById('diagReset').addEventListener('click', function () {
+    answers = {};
+    document.querySelectorAll('.diag-opt.on').forEach(function (x) { x.classList.remove('on'); });
+    document.getElementById('diagResult').innerHTML = '';
+    this.style.display = 'none';
+  });
+
+})();
+</script>
+</body>
+</html>

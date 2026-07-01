@@ -1,0 +1,220 @@
+/* ==========================================================================
+   business-apply.css — 업무지원시스템 이용신청 폼 (단정한 단일 카드)
+   - 사업자/담당자/신청내용/첨부서류/약관 → 한 카드 내 5블록
+   - 디자인 토큰 (style.css) 정합
+   ========================================================================== */
+
+.container-narrow { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+/* === 신청 카드 === */
+.bf-card {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 16px;
+  padding: 44px 56px 40px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+/* === 블록 === */
+.bf-block {
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+.bf-block:last-of-type { border-bottom: none; padding-bottom: 16px; margin-bottom: 16px; }
+
+.bf-h {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.02em;
+}
+.bf-h::before {
+  content: '';
+  width: 4px;
+  height: 15px;
+  background: var(--color-primary-500);
+  border-radius: 2px;
+}
+
+/* === 그리드 === */
+.bf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+}
+
+/* === 행 === */
+.bf-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+.bf-row-full { grid-column: 1 / -1; }
+.bf-lab {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+}
+.bf-row input,
+.bf-row select,
+.bf-row textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 160ms ease;
+}
+.bf-row textarea { resize: vertical; min-height: 56px; }
+.bf-row input:focus,
+.bf-row select:focus,
+.bf-row textarea:focus { border-color: var(--color-primary-500); }
+.bf-row input::placeholder, .bf-row textarea::placeholder { color: var(--text-tertiary); }
+
+.bf-input-wrap { display: flex; align-items: center; gap: 8px; }
+.bf-input-wrap input { flex: 1; }
+.bf-unit {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* === 첨부 서류 (리스트) === */
+.bf-attach-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.bf-attach-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+.bf-attach-item:hover { border-color: var(--color-primary-300); background: var(--color-primary-50); }
+.bf-attach-num {
+  width: 22px;
+  height: 22px;
+  background: var(--color-primary-500);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.bf-attach-name {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.bf-attach-pick {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 160ms ease;
+}
+.bf-attach-pick:hover { border-color: var(--color-primary-500); color: var(--color-primary-700); }
+.bf-attach-note {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin: 10px 0 0;
+  letter-spacing: -0.01em;
+}
+
+/* === 약관 동의 === */
+.bf-agree {
+  background: var(--color-gray-50);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.bf-agree label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.bf-agree input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary-500);
+  cursor: pointer;
+}
+.bf-agree strong { color: var(--color-primary-700); font-weight: 700; }
+.bf-agree-link {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--color-primary-600);
+  text-decoration: underline;
+}
+
+/* === 푸터 === */
+.bf-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.bf-foot .btn {
+  min-width: 120px;
+  padding: 12px 24px;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.bf-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin: 14px 0 0;
+  letter-spacing: -0.01em;
+}
+
+/* === 모바일 === */
+@media (max-width: 720px) {
+  .bf-card { padding: 24px 20px; }
+  .bf-grid { grid-template-columns: 1fr; }
+  .bf-row-full { grid-column: 1; }
+  .bf-attach-item { flex-wrap: wrap; }
+  .bf-foot { flex-direction: column-reverse; }
+  .bf-foot .btn { width: 100%; }
+}
+/* 개발자 확인용 전/후 전환 토글 + 승인 상태 배너 */
+.bf-statetoggle-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+.bf-statetoggle{display:inline-flex;border:1px solid var(--border-medium,#cbd5e1);border-radius:10px;overflow:hidden;font-size:13.5px}
+.bf-statetoggle a{padding:8px 18px;color:var(--text-secondary);text-decoration:none;font-weight:600;background:#fff}
+.bf-statetoggle a+a{border-left:1px solid var(--border-medium,#cbd5e1)}
+.bf-statetoggle a[aria-current="page"]{background:var(--color-primary-600,#0f7a52);color:#fff}
+.bf-statetoggle-lab{font-size:12px;color:var(--text-tertiary,#94a3b8)}
+.bf-status-banner{display:flex;align-items:center;gap:12px;background:#e1f5ee;border:1px solid #b6e3d2;color:#0f7a52;border-radius:12px;padding:14px 18px;margin-bottom:22px;font-weight:600}

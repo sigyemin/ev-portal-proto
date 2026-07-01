@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>통합관리시스템 이용신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/business-apply.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'mypage';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="extra.bc.home">홈</a><span class="sep">›</span>
+        <a href="mypage.html" data-i18n="biz.bc.mypage">마이페이지</a><span class="sep">›</span>
+        <span class="current" data-i18n="biz.smg.bc.full">통합관리시스템 이용신청</span>
+      </nav>
+      <h1 data-i18n="biz.smg.bc.full">통합관리시스템 이용신청</h1>
+      <p class="hero-lead" data-i18n="biz.smg.lead.full">환경부·환경공단이 운영하는 무공해차 통합관리 행정시스템 (사업자 등록·실적·정산·민원 통합)</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+
+      <form class="bf-card" onsubmit="alert(window.__i18n&&window.__i18n.getLang()==='en'?'Application submitted. You will receive a result via email/SMS within 5–7 business days.':'이용신청이 접수되었습니다. 영업일 5~7일 이내 등록 이메일·SMS로 결과가 통보됩니다.');location.href='mypage.html';return false;">
+
+        <div class="bf-block">
+          <h3 class="bf-h" data-i18n="biz.h.bizinfo">사업자 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.bizno">사업자 등록번호</span><input type="text" placeholder="000-00-00000" required></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.firm">법인·상호명</span><input type="text" placeholder="(주)○○에너지" required data-i18n-attr="placeholder:biz.ph.firm"></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.rep">대표자명</span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.ind">업종·업태</span><input type="text" placeholder="예: 전기차 충전 서비스업" data-i18n-attr="placeholder:biz.ph.ind"></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab" data-i18n="biz.lab.addr">사업장 소재지</span><input type="text" placeholder="시·도 → 시군구 → 상세주소" required data-i18n-attr="placeholder:biz.ph.addr"></label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h" data-i18n="biz.h.poc">담당자 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.pocname">담당자명</span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.poctitle">직책·부서</span><input type="text" placeholder="예: 사업운영팀 과장" data-i18n-attr="placeholder:biz.ph.poctitle"></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.tel">휴대폰</span><input type="tel" placeholder="010-0000-0000" required></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.email">이메일</span><input type="email" placeholder="manager@example.com" required></label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h" data-i18n="biz.h.req">신청 내용</h3>
+          <div class="bf-grid">
+            <label class="bf-row bf-row-full"><span class="bf-lab" data-i18n="biz.smg.lab.purpose">이용 목적</span><select required><option data-i18n="biz.smg.opt.settle">보조금 정산</option><option data-i18n="biz.smg.opt.report">실적 신고</option><option data-i18n="biz.smg.opt.site">지점 등록</option><option data-i18n="biz.smg.opt.cs">민원 처리</option><option data-i18n="biz.smg.opt.all">종합 (전체 권한)</option></select></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.smg.lab.role">사용자 권한</span><select required><option data-i18n="biz.smg.opt.view">조회 전용</option><option data-i18n="biz.smg.opt.edit">입력·수정</option><option data-i18n="biz.smg.opt.admin">관리자</option></select></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.smg.lab.cnt">관리 대상 건수</span><span class="bf-input-wrap"><input type="number" min="0" required> <span class="bf-unit" data-i18n="biz.unit.case">건</span></span></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.smg.lab.link">연동 시스템</span><select required><option data-i18n="biz.smg.opt.single">단독</option><option data-i18n="biz.smg.opt.subl">보조금시스템 연동</option><option data-i18n="biz.smg.opt.sitelink">지점관리 연동</option><option data-i18n="biz.smg.opt.alllink">전체 연동</option></select></label>
+            <label class="bf-row"><span class="bf-lab" data-i18n="biz.smg.lab.start">이용 시작 희망일</span><input type="date" required></label>
+          </div>
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h" data-i18n="biz.h.attach">첨부 서류</h3>
+          <ul class="bf-attach-list">
+            <li class="bf-attach-item"><span class="bf-attach-num">1</span><span class="bf-attach-name" data-i18n="biz.attach.bizreg">사업자 등록증</span><button type="button" class="bf-attach-pick">파일</button></li>
+            <li class="bf-attach-item"><span class="bf-attach-num">2</span><span class="bf-attach-name" data-i18n="biz.smg.attach.poc">담당자 임명장 또는 재직증명서</span><button type="button" class="bf-attach-pick">파일</button></li>
+          </ul>
+          <p class="bf-attach-note" data-i18n="biz.attach.note">PDF·JPG·PNG 형식, 각 10MB 이내 / 모든 서류는 발급일 3개월 이내</p>
+        </div>
+
+        <div class="bf-agree">
+          <label><input type="checkbox" required> <span data-i18n-html="biz.agree.html"><strong>[필수]</strong> 이용약관·개인정보 수집·이용에 동의합니다.</span> <a href="info-terms.html" class="bf-agree-link" data-i18n="biz.agree.view">전체보기</a></label>
+        </div>
+
+        <div class="bf-foot">
+          <a href="mypage.html" class="btn btn-secondary" data-i18n="biz.btn.cancel">취소</a>
+          <button type="submit" class="btn btn-primary" data-i18n="biz.btn.submit">이용신청 제출</button>
+        </div>
+
+        <p class="bf-note" data-i18n="biz.note">처리 기간 영업일 5~7일 · 결과 등록 이메일·SMS 통보 · 문의 1661-0970 (평일 09~18시)</p>
+      </form>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-business.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+</body>
+</html>

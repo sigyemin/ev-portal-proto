@@ -1,0 +1,838 @@
+/* =========================================================
+   subsidy-region.css — 지자체별 보조금 현황 전용 스타일
+   Figma 참조: 구매보조금 지급현황 v0.1
+   ========================================================= */
+
+/* -------- 필터 패널 -------- */
+.filter-panel { padding: 24px; }
+.filter-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+.filter-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary-700);
+  letter-spacing: -0.02em;
+}
+.filter-title svg { color: var(--color-primary-600); }
+.filter-actions { display: flex; gap: 8px; }
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px 16px;
+}
+.filter-grid .form-group { margin: 0; }
+.filter-grid .form-label { font-size: 12.5px; margin-bottom: 6px; color: var(--color-gray-600); }
+.filter-grid .form-select { padding: 10px 36px 10px 12px; font-size: 14px; }
+
+.filter-quick-chips {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-light);
+}
+.quick-chips-label {
+  display: block;
+  font-size: 12.5px;
+  color: var(--color-gray-500);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.filter-quick-chips .region-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.filter-quick-chips .region-chip {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 1px solid var(--border-light);
+  background: #fff;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all var(--t-fast);
+}
+.filter-quick-chips .region-chip:hover {
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+}
+.filter-quick-chips .region-chip.selected {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* -------- 결과 헤더 -------- */
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 4px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.result-count {
+  font-size: 14px;
+  color: var(--color-gray-600);
+}
+.result-count strong {
+  color: var(--color-primary-700);
+  font-size: 16px;
+  font-weight: 700;
+}
+.result-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* -------- 테이블 스타일 강화 -------- */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  background: #fff;
+}
+.subsidy-table {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  min-width: 1100px;
+}
+.subsidy-table thead { background: #F8FAFC; }
+.subsidy-table th {
+  font-size: 12.5px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 14px 12px;
+  color: var(--color-gray-700);
+  border-bottom: 1px solid var(--border-medium);
+  background: #F8FAFC;
+}
+.subsidy-table th.num { text-align: right; }
+.subsidy-table .th-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--color-gray-500);
+  font-weight: 500;
+  margin-top: 2px;
+}
+.subsidy-table td {
+  padding: 14px 12px;
+  font-size: 13.5px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+.subsidy-table td.num {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.subsidy-table td.num.received { color: var(--color-secondary-600); }
+.subsidy-table td.num.delivered { color: var(--color-primary-700); }
+.subsidy-table td.num.remaining { color: var(--color-accent-600); }
+.subsidy-table tr.main-row:hover td { background: var(--color-primary-50); cursor: pointer; }
+
+.method-chip {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border-radius: 999px;
+}
+.vehicle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+.vehicle-chip .sub {
+  font-size: 11px;
+  color: var(--color-gray-500);
+  font-weight: 500;
+  margin-left: 4px;
+}
+.status-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 999px;
+}
+.status-chip.approach { background: var(--color-primary-50); color: var(--color-primary-700); }
+.status-chip.warning { background: #FFF3E0; color: var(--color-accent-600); }
+.status-chip.danger { background: #FEE2E2; color: var(--color-danger); }
+.status-chip.info { background: var(--color-secondary-50); color: var(--color-secondary-700); }
+.status-chip.gray { background: var(--color-gray-100); color: var(--color-gray-600); }
+
+.expand-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: transparent;
+  color: var(--color-secondary-600);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.expand-toggle:hover { background: var(--color-secondary-50); }
+.expand-toggle svg { transition: transform var(--t-base); }
+.subsidy-table tr.main-row.open .expand-toggle { background: var(--color-secondary-50); }
+.subsidy-table tr.main-row.open .expand-toggle svg { transform: rotate(180deg); }
+
+/* -------- 상세 행 -------- */
+.subsidy-table tr.detail-row { background: #F8FAFC; display: none; }
+.subsidy-table tr.detail-row.show { display: table-row; }
+.subsidy-table tr.detail-row td {
+  padding: 0 !important;
+  border-bottom: 2px solid var(--color-primary-200);
+}
+.detail-body {
+  padding: 28px 32px;
+  animation: detailFade 300ms ease;
+}
+@keyframes detailFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-notices-wrap {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.notice-block {
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+}
+.notice-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-secondary-700);
+  margin-bottom: 12px;
+}
+.notice-head svg { color: var(--color-secondary-600); }
+.notice-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.notice-file-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-secondary-600);
+  background: #fff;
+  border: 1px solid var(--color-secondary-200, #BBDEFB);
+  border-radius: 999px;
+  transition: all var(--t-fast);
+  cursor: pointer;
+}
+.notice-file-btn:hover {
+  background: var(--color-secondary-500);
+  color: #fff;
+  border-color: var(--color-secondary-500);
+  transform: translateY(-1px);
+}
+.notice-file-btn svg { width: 12px; height: 12px; }
+.notice-remark {
+  padding: 10px 14px;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-gray-700);
+  border: 1px solid var(--border-light);
+}
+
+.dept-info {
+  padding: 12px 18px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-gray-700);
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.dept-info .dept-label {
+  font-weight: 700;
+  color: var(--color-primary-700);
+  margin-right: 6px;
+}
+
+.detail-cards-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-gray-800);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.detail-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.detail-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.detail-card .dc-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-gray-600);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 12px;
+}
+.detail-card[data-card="announcement"] .dc-title { color: var(--color-gray-700); }
+.detail-card[data-card="received"] .dc-title { color: var(--color-secondary-700); }
+.detail-card[data-card="delivered"] .dc-title { color: var(--color-primary-700); }
+.detail-card[data-card="remaining"] .dc-title { color: var(--color-accent-600); }
+.detail-card .dc-body { margin: 0; }
+.detail-card .dc-body > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  font-size: 13px;
+  color: var(--color-gray-600);
+}
+.detail-card .dc-body > div.total {
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 4px;
+  padding-bottom: 10px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+.detail-card[data-card="received"] .dc-body > div.total { color: var(--color-secondary-700); }
+.detail-card[data-card="delivered"] .dc-body > div.total { color: var(--color-primary-700); }
+.detail-card[data-card="remaining"] .dc-body > div.total { color: var(--color-accent-600); }
+.detail-card .dc-body .num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.detail-card[data-card="received"] .dc-body .num { color: var(--color-secondary-600); }
+.detail-card[data-card="delivered"] .dc-body .num { color: var(--color-primary-700); }
+.detail-card[data-card="remaining"] .dc-body .num { color: var(--color-accent-600); }
+
+/* -------- Empty state -------- */
+.empty-state {
+  padding: 56px 24px;
+  text-align: center;
+  background: #fff;
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+  margin-top: 16px;
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h4 { margin-bottom: 6px; }
+.empty-state p { color: var(--color-gray-500); font-size: 13.5px; margin-bottom: 16px; }
+
+/* -------- 카드형 뷰 (기존 스타일 조금 정리) -------- */
+.subsidy-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+  cursor: pointer;
+  position: relative;
+}
+.subsidy-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(15,23,42,0.08);
+  border-color: var(--color-primary-300);
+}
+.subsidy-card .sc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+.subsidy-card .sc-head h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.35;
+}
+.subsidy-card .sc-meta {
+  display: flex;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--color-gray-500);
+  margin-bottom: 14px;
+}
+.subsidy-card .sc-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  background: #F8FAFC;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.subsidy-card .sc-stat {
+  text-align: center;
+  padding: 0 4px;
+  border-right: 1px solid var(--border-light);
+}
+.subsidy-card .sc-stat:last-child { border-right: none; }
+.subsidy-card .sc-stat .s-label {
+  display: block;
+  font-size: 11px;
+  color: var(--color-gray-500);
+  margin-bottom: 4px;
+}
+.subsidy-card .sc-stat .s-value {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.subsidy-card .sc-stat.received .s-value { color: var(--color-secondary-600); }
+.subsidy-card .sc-stat.delivered .s-value { color: var(--color-primary-700); }
+.subsidy-card .sc-stat.remaining .s-value { color: var(--color-accent-600); }
+.subsidy-card .sc-progress {
+  margin-bottom: 10px;
+}
+.subsidy-card .sc-progress-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: var(--color-gray-600);
+}
+.subsidy-card .sc-progress-head strong { color: var(--color-primary-700); font-weight: 700; }
+.subsidy-card .sc-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-gray-500);
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-light);
+}
+.subsidy-card .sc-footer .notices-count {
+  color: var(--color-secondary-600);
+  font-weight: 600;
+}
+
+/* ================================================
+   상세 영역 — 실무형 단정한 디자인
+   ================================================ */
+.detail-body.v2 {
+  padding: 24px 28px;
+  background: #F8FAFC;
+}
+
+/* 상단 3단 (공고파일 · 비고 · 담당) */
+.detail-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.4fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.dt-block {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+}
+.dt-head {
+  padding: 10px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-gray-700);
+  border-bottom: 1px solid var(--border-light);
+  background: #FAFBFC;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dt-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-gray-500);
+  background: var(--color-gray-100);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.dt-body { padding: 12px 14px; flex: 1; }
+.notice-files { display: flex; flex-wrap: wrap; gap: 6px; }
+.notice-file-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-secondary-700);
+  background: var(--color-secondary-50);
+  border: 1px solid var(--color-secondary-100);
+  border-radius: 6px;
+  transition: background var(--t-fast), border-color var(--t-fast);
+  cursor: pointer;
+}
+.notice-file-btn:hover {
+  background: var(--color-secondary-500);
+  color: #fff;
+  border-color: var(--color-secondary-500);
+}
+.notice-file-btn svg { flex-shrink: 0; }
+.notice-remark {
+  font-size: 13px;
+  color: var(--color-gray-700);
+  line-height: 1.55;
+}
+.dept-list { display: flex; flex-direction: column; gap: 6px; margin: 0; font-size: 12.5px; }
+.dept-list > div {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: baseline;
+}
+.dept-list dt {
+  color: var(--color-gray-500);
+  font-weight: 500;
+  font-size: 11.5px;
+}
+.dept-list dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* 섹션 헤드라인 */
+.detail-sec-h {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-gray-700);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+  padding-left: 2px;
+}
+
+/* 4카드 */
+.detail-cards.v2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.detail-card.v2 {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+}
+.detail-card.v2 .dc-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+.detail-card.v2 .dc-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-gray-600);
+  letter-spacing: -0.01em;
+}
+.detail-card.v2 .dc-pct {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-gray-500);
+}
+.detail-card.v2 .dc-total {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed var(--border-light);
+}
+.detail-card.v2 .dc-num {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.detail-card.v2 .dc-unit {
+  font-size: 12px;
+  color: var(--color-gray-500);
+  font-weight: 500;
+}
+.detail-card.v2[data-card="received"]  .dc-num { color: var(--color-secondary-700); }
+.detail-card.v2[data-card="delivered"] .dc-num { color: var(--color-primary-700); }
+.detail-card.v2[data-card="remaining"] .dc-num { color: var(--color-accent-600); }
+.detail-card.v2[data-card="received"]  .dc-pct { color: var(--color-secondary-700); }
+.detail-card.v2[data-card="delivered"] .dc-pct { color: var(--color-primary-700); }
+.detail-card.v2[data-card="remaining"] .dc-pct { color: var(--color-accent-600); }
+
+/* 카드 내부 분류 목록 (단순 정렬) */
+.detail-card.v2 .dc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+}
+.detail-card.v2 .dc-list > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+}
+.detail-card.v2 .dc-list dt {
+  color: var(--color-gray-600);
+  font-weight: 500;
+}
+.detail-card.v2 .dc-list dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 스택 바 차트 — 실무형 간결 */
+.stack-chart {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.stack-chart .sc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.stack-chart .sc-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-gray-700);
+  letter-spacing: -0.01em;
+}
+.stack-chart .sc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.stack-chart .sc-leg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  color: var(--color-gray-600);
+  font-weight: 500;
+}
+.stack-chart .sc-swatch {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+}
+.stack-chart .sc-row {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+.stack-chart .sc-row:last-child { border-bottom: none; padding-bottom: 0; }
+.stack-chart .sc-row-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  margin-bottom: 5px;
+}
+.stack-chart .sc-row-label {
+  color: var(--color-gray-700);
+  font-weight: 600;
+}
+.stack-chart .sc-row-total {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.stack-chart .sc-bar {
+  display: flex;
+  height: 22px;
+  background: var(--color-gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.stack-chart .sc-seg {
+  display: grid; place-items: center;
+  min-width: 0;
+  color: #fff;
+  position: relative;
+  cursor: default;
+  overflow: hidden;
+}
+.stack-chart .sc-seg:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.55); }
+.stack-chart .sc-seg span {
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+/* ================================================
+   모델별 지방비 상세 (AS-IS psPopupLocalCarModelPrice 반영)
+   ================================================ */
+.model-price-wrap {
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.model-price-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-light);
+  background: #FAFBFC;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.model-price-head .mp-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-gray-800);
+  letter-spacing: -0.01em;
+}
+.model-price-head .mp-sub {
+  font-size: 11.5px;
+  color: var(--color-gray-500);
+  margin-left: 6px;
+}
+.model-price-table-wrap {
+  overflow-x: auto;
+}
+.model-price-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+  background: #fff;
+}
+.model-price-table thead th {
+  padding: 10px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-gray-600);
+  text-align: left;
+  background: #F8FAFC;
+  border-bottom: 1px solid var(--border-light);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.model-price-table thead th.num { text-align: right; }
+.model-price-table thead th.hi { color: var(--color-primary-700); }
+.model-price-table tbody td {
+  padding: 10px 12px;
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--color-gray-100);
+  vertical-align: middle;
+  color: var(--text-primary);
+}
+.model-price-table tbody tr:last-child td { border-bottom: none; }
+.model-price-table tbody tr:hover td { background: var(--color-primary-50); }
+.model-price-table tbody tr.disabled td { opacity: 0.5; background: #FAFBFC; }
+.model-price-table tbody tr.disabled:hover td { background: #F1F5F9; }
+.model-price-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--color-gray-700);
+}
+.model-price-table td.num.hi {
+  color: var(--color-primary-700);
+  font-weight: 700;
+  font-size: 13px;
+}
+.model-price-table tbody td strong {
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.model-price-note {
+  padding: 10px 18px 14px;
+  font-size: 11.5px;
+  color: var(--color-gray-600);
+  line-height: 1.7;
+  background: #FAFBFC;
+  border-top: 1px dashed var(--border-light);
+}
+.model-price-note strong {
+  color: var(--color-primary-700);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* -------- Responsive -------- */
+@media (max-width: 1200px) {
+  .filter-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 900px) {
+  .filter-grid { grid-template-columns: repeat(2, 1fr); }
+  .detail-notices-wrap { grid-template-columns: 1fr; }
+  .detail-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .filter-grid { grid-template-columns: 1fr; }
+  .result-header { flex-direction: column; align-items: flex-start; }
+  .detail-cards { grid-template-columns: 1fr; }
+  .detail-body { padding: 20px 16px; }
+}
+
+/* -------- Print -------- */
+@media print {
+  .filter-panel, .result-actions, .pagination, .fab, .scroll-top { display: none !important; }
+  .subsidy-table tr.detail-row { display: table-row !important; }
+  .expand-toggle { display: none; }
+}

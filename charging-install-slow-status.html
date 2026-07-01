@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공용 완속충전시설 직접신청 내역 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="charging.html">충전소·요금 정보</a><span class="sep">›</span>
+        <a href="charging-install.html">충전시설 설치</a><span class="sep">›</span>
+        <a href="charging-install-slow.html">공용 완속충전시설 직접신청</a><span class="sep">›</span>
+        <span class="current">신청조회</span>
+      </nav>
+      <h1>공용 완속충전시설 직접신청 내역</h1>
+      <p class="hero-lead">제출한 신청 건의 <strong>진행 상태·상세</strong>를 신청번호별로 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div id="contestDetailRoot"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/contest-detail.js?v=20260701b"></script>
+<script>
+ContestDetail.mount({
+  applyHref:'charging-install-slow.html', applyName:'공용 완속충전시설 직접신청', supplementHref:'#',
+  apps:[
+    { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'보완요청 반영 · 재신청 접수', result:'progress',
+      notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)', contact:'충전인프라팀 044-201-6100' },
+      applicant:{ org:'○○상가번영회', rep:'상가 대표', bizNo:'개인(대표자 인증)', manager:'김담당', tel:'032-111-2222' },
+      block4:{ title:'신청 내용 · 대상 (완속 직접설치)', rows:[['설치 장소','인천 연수구 ○○상가 주차장'],['영업용 전기차','법인 택시 6대'],['소상공인 여부','해당(소상공인)'],['충전기 규격','완속 7kW · 4기']] },
+      timeline:[{label:'접수 완료',date:'2026.04.28',state:'done'},{label:'서류심사(재검토)',date:'2026.05.06',state:'current'},{label:'설치 승인',date:'',state:''},{label:'설치·점검',date:'',state:''},{label:'정산 완료',date:'',state:''}],
+      docs:[{name:'설치 계획서',ok:true},{name:'임대차계약서(사용승낙 포함)',ok:true},{name:'전기증설 확인서',ok:false}],
+      supplement:{ reason:'설치 장소 임대차계약서의 사용 승낙 범위가 확인되지 않아 보완요청되었으며, 보완서류 반영 후 재신청 접수되었습니다.', due:'2026.05.02', docs:['임대차계약서(사용승낙 포함)','전기증설 확인서'] },
+      action:'보완서류가 접수되어 재검토 중입니다. 결과를 기다려 주세요.' },
+    { appId:'CIS-2026-002210', project:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', status:'설치 승인·정산 완료', result:'done',
+      notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)', contact:'충전인프라팀 044-201-6100' },
+      applicant:{ org:'행복아파트 입주자대표회의', rep:'관리소장', bizNo:'개인(대표자 인증)', manager:'이담당', tel:'032-333-4444' },
+      block4:{ title:'신청 내용 · 대상 (완속 직접설치)', rows:[['설치 장소','인천 남동구 행복아파트 지하주차장'],['영업용 전기차','—'],['소상공인 여부','해당없음'],['충전기 규격','완속 7kW · 6기']] },
+      timeline:[{label:'접수 완료',date:'2026.02.20',state:'done'},{label:'서류심사',date:'2026.02.27',state:'done'},{label:'설치 승인',date:'2026.03.10',state:'done'},{label:'설치·점검',date:'2026.04.18',state:'done'},{label:'정산 완료',date:'2026.04.30',state:'current'}],
+      docs:[{name:'설치 계획서',ok:true},{name:'임대차계약서(사용승낙 포함)',ok:true},{name:'전기증설 확인서',ok:true},{name:'준공·점검 확인서',ok:true}],
+      action:'설치·정산이 완료되어 모든 절차가 종료되었습니다.' }
+  ]
+});
+</script>
+</body>
+</html>

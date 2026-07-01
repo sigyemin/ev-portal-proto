@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 차 저공해 등급 확인 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="extra.bc.purchase">구매·보조금</a><span class="sep">›</span>
+        <a href="tax-integrated.html" data-i18n="tax.bc.tax">세제·정보 안내</a><span class="sep">›</span>
+        <span class="current" data-i18n="tgr.bc.current">내 차 저공해 등급 확인</span>
+      </nav>
+      <h1 data-i18n="tgr.h1">내 차 저공해 등급 확인</h1>
+      <p class="hero-lead" data-i18n-html="tgr.lead">차량번호만 입력하면 내 차의 <strong style="color:#fff;">저공해 등급(1·2·3)</strong>과 받을 수 있는 혜택을 즉시 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid" style="grid-template-columns: 1fr 1.2fr; gap: 48px;" data-reveal>
+
+        <!-- 입력 폼 -->
+        <div>
+          <div class="card-hero" style="padding: 40px;">
+            <span class="eyebrow-label">간편 조회</span>
+            <h2 style="font-size: 28px; margin-bottom: 12px;" data-i18n="tgr.h2.lookup">차량번호 조회</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 18px;">차량등록번호(번호판) 또는 차대번호로 내 차의 저공해 등급을 조회할 수 있습니다.</p>
+            <div style="display:flex;gap:10px;align-items:flex-start;background:#fff8ec;border:1px solid #f4d89a;border-radius:10px;padding:12px 14px;margin-bottom:24px;font-size:12.5px;color:#92590a;line-height:1.6;">
+              <strong style="white-space:nowrap;">⚠ 조회 전 확인</strong>
+              <span>차량 인증 유효기간 만료 및 재인증으로 인해 일부 차량의 <strong>저공해차 종류가 표지 발급 정보와 불일치</strong>할 수 있습니다. 이 경우 <strong>차량등록사업소</strong>에서 확인하실 수 있습니다.</span>
+            </div>
+
+            <form id="grade-form" onsubmit="return false;">
+              <div class="form-group">
+                <label class="form-label" for="gradeLookupType">조회 구분 <span class="required">*</span></label>
+                <select class="form-select" id="gradeLookupType">
+                  <option value="plate">차량등록번호</option>
+                  <option value="vin">차대번호</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="gradeLookupValue">차량등록번호 또는 차대번호 <span class="required">*</span></label>
+                <input type="text" class="form-input" id="gradeLookupValue" placeholder="예) 12가 3456  또는  KMHXX00XXXX000000" required style="font-size: 18px; font-weight: 700; text-align: center; letter-spacing: 1px; padding: 16px;">
+                <p class="form-help">차량등록번호(번호판) 또는 17자리 차대번호(VIN)를 정확히 입력해 주세요.</p>
+              </div>
+              <button class="btn btn-primary btn-lg" style="width: 100%;" type="submit" data-action="check-grade" data-i18n="tgr.btn.check">
+                저공해 등급 조회하기
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </form>
+
+            <div class="alert alert-info mt-6">
+              <div class="alert-icon"></div>
+              <div class="alert-body"><strong>개인정보 보호</strong> 입력한 차량등록번호·차대번호는 조회 목적에만 이용되며, 저장되지 않습니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 등급 안내 -->
+        <div>
+          <span class="eyebrow-label" data-i18n="tgr.eyebrow.sys">저공해 등급 체계</span>
+          <h2 style="font-size: 28px; margin-bottom: 24px;" data-i18n="tgr.h2.criteria">등급별 기준과 혜택</h2>
+
+          <div class="flex flex-col gap-4">
+            <!-- 1등급 -->
+            <div class="info-box" style="">
+              <div class="info-box-icon" style="background: var(--color-primary-500); color: #fff;">
+                <strong style="font-size: 22px;">1</strong>
+              </div>
+              <div style="flex: 1;">
+                <h4 style="display: flex; gap: 8px; align-items: center;">
+                  <span data-i18n="tgr.g1.h4">1등급 (전기·수소차)</span>
+                  <span class="chip chip-success" data-i18n="tgr.g1.chip">모든 혜택</span>
+                </h4>
+                <p data-i18n="tgr.g1.p">배출가스 미발생 차량. 공영주차 50%, 혼잡통행료 면제, 보조금 지원, 세제 감면 등 모든 혜택 적용.</p>
+              </div>
+            </div>
+            <!-- 2등급 -->
+            <div class="info-box" style="">
+              <div class="info-box-icon" style="background: var(--color-secondary-500); color: #fff;">
+                <strong style="font-size: 22px;">2</strong>
+              </div>
+              <div style="flex: 1;">
+                <h4 style="display: flex; gap: 8px; align-items: center;">
+                  <span>2등급 (하이브리드 등)</span>
+                  <span class="chip chip-info">일부 혜택</span>
+                </h4>
+                <p>배출허용기준을 충족한 하이브리드(HEV·PHEV)·CNG 차량. 공영주차 감면(지자체별 30~50%) 등 일부 혜택이 적용됩니다. 적용 범위·요율은 연도·지자체에 따라 다르고 단계적으로 축소되고 있습니다.</p>
+              </div>
+            </div>
+            <!-- 3등급 -->
+            <div class="info-box" style="">
+              <div class="info-box-icon" style="background: var(--color-gray-400); color: #fff;">
+                <strong style="font-size: 22px;">3</strong>
+              </div>
+              <div style="flex: 1;">
+                <h4 style="display: flex; gap: 8px; align-items: center;">
+                  <span>3등급 (휘발유·LPG 등)</span>
+                  <span class="chip">제한 혜택</span>
+                </h4>
+                <p>배출허용기준을 충족한 휘발유·LPG 차량(경유차는 2023년부터 저공해차 대상에서 제외). 저공해차 표지 발급 대상이나 실질 혜택은 제한적입니다.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout-box mt-6">
+            <strong style="display: block; margin-bottom: 4px;" data-i18n="tgr.callout.t">알려 드립니다</strong>
+            <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.7;" data-i18n="tgr.callout.p">
+              등급 확인 결과는 환경부 저공해차 인증 DB를 기준으로 실시간 조회되며, 연비·배기가스 개선 등으로 등급이 변경될 수 있습니다.
+              2005년 이전 생산 디젤차는 조기폐차 지원 우선 대상입니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 조회 결과 (폼 제출 후 애니메이션으로 펼쳐짐) -->
+      <div class="mt-8 result-panel" id="grade-result-section" data-reveal>
+        <div class="section-title">
+          <span class="eyebrow" data-i18n="tgr.res.eyebrow">조회 결과</span>
+          <h2 data-i18n="tgr.res.h2">내 차량의 저공해 등급</h2>
+        </div>
+
+        <div class="card" style="max-width: 720px; margin: 0 auto;">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="chip chip-success" data-i18n="tgr.res.chip">조회 완료</span>
+              <h3 style="font-size: 24px; margin-top: 8px;" data-i18n="tgr.res.plate">12가 3456</h3>
+              <p style="color: var(--text-tertiary);" data-i18n="tgr.res.model">현대 아이오닉 6 · 2026년형</p>
+            </div>
+            <div style="text-align: right;">
+              <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-primary); display: grid; place-items: center; color: #fff; font-size: 36px; font-weight: 700; box-shadow: var(--shadow-glow-green); margin-left: auto;">1</div>
+              <p style="font-size: 14px; font-weight: 600; margin-top: 8px; color: var(--color-primary-700);" data-i18n="tgr.res.gradetxt">저공해 1등급</p>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="grid grid-2 gap-3">
+            <div><span style="font-size: 12px; color: var(--text-tertiary);" data-i18n="tgr.res.lbl.type">차종</span><p style="font-weight: 600;" data-i18n="tgr.res.v.type">전기승용차</p></div>
+            <div><span style="font-size: 12px; color: var(--text-tertiary);" data-i18n="tgr.res.lbl.fuel">연료</span><p style="font-weight: 600;" data-i18n="tgr.res.v.fuel">전기 (EV)</p></div>
+            <div><span style="font-size: 12px; color: var(--text-tertiary);" data-i18n="tgr.res.lbl.emit">배출가스</span><p style="font-weight: 600;" data-i18n="tgr.res.v.emit">0 g/km</p></div>
+            <div><span style="font-size: 12px; color: var(--text-tertiary);" data-i18n="tgr.res.lbl.cert">인증 기준</span><p style="font-weight: 600;" data-i18n="tgr.res.v.cert">ZEV (Zero Emission Vehicle)</p></div>
+          </div>
+          <div class="divider"></div>
+          <h4 style="margin-bottom: 12px;" data-i18n="tgr.res.h4.ben">받을 수 있는 혜택</h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="chip chip-success" data-i18n="tgr.res.b1">✓ 공영주차 50%</span>
+            <span class="chip chip-success" data-i18n="tgr.res.b2">✓ 혼잡통행료 면제</span>
+            <span class="chip chip-success" data-i18n="tgr.res.b3">✓ 고속도로 50%</span>
+            <span class="chip chip-success" data-i18n="tgr.res.b4">✓ 충전요금 할인</span>
+            <span class="chip chip-success" data-i18n="tgr.res.b5">✓ 세제 감면 530만원</span>
+            <span class="chip chip-success" data-i18n="tgr.res.b6">✓ 보조금 대상</span>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <a href="tax-region.html" class="btn btn-primary flex-1" data-i18n="tgr.res.btn2">지역 혜택 확인</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-extra.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+</body>
+</html>

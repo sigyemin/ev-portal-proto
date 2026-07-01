@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자료 상세 | 일반 자료실 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+<style>
+  .cat-chip.libcat-policy{background:#e6f0fb;color:#1f5fa8}
+  .cat-chip.libcat-stats{background:#e1f5ee;color:#0f7a52}
+  .cat-chip.libcat-research{background:#fff3e0;color:#b45309}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="info.html">정보 자료실</a><span class="sep" aria-hidden="true">›</span>
+        <a href="info-library.html?tab=general">일반 자료실</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current">상세 보기</span>
+      </nav>
+      <h1 id="pageH1">[일반자료실-상세]</h1>
+      <p class="hero-lead">자료의 세부 내용을 확인하고, 첨부 자료를 다운로드할 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="nd-page nd-single">
+
+      <div class="nd-main">
+        <header class="nd-head">
+          <!-- 일반자료실 분류 미적용(BOARD_GUBUN 미확인): 타이틀 위 분류 칩 제거 -->
+          <h2 class="nd-title" id="ndTitle">—</h2>
+          <dl class="nd-meta-strip">
+            <dl class="nd-meta-dept">
+              <dt>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+                <span>작성자</span>
+              </dt>
+              <dd id="ndDept">—</dd>
+            </dl>
+            <dl class="nd-meta-date">
+              <dt>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <span>등록일</span>
+              </dt>
+              <dd id="ndDate">—</dd>
+            </dl>
+            <dl class="nd-meta-views">
+              <dt>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>조회수</span>
+              </dt>
+              <dd id="ndViews">—</dd>
+            </dl>
+            <dl class="nd-meta-size">
+              <dt>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>용량</span>
+              </dt>
+              <dd id="ndSize">—</dd>
+            </dl>
+            <dl class="nd-meta-attach">
+              <dt>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                <span>첨부파일</span>
+              </dt>
+              <dd id="ndAttachCount">—</dd>
+            </dl>
+            <dl class="nd-meta-docno">
+              <dt>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg>
+                <span>문서번호</span>
+              </dt>
+              <dd id="ndDocNo">—</dd>
+            </dl>
+          </dl>
+        </header>
+
+        <article class="nd-article" id="ndArticle"></article>
+
+        <!-- 담당자 문의 (첨부파일 영역 아래 · 목록 버튼 위) -->
+        <div class="nd-contact">
+          <h4>담당자 문의</h4>
+          <div class="nd-side-contact">
+            <a href="tel:1661-0970" class="btn-call">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>통합 콜센터 1661-0970</span>
+            </a>
+            <a href="inquiry-qna.html" class="btn-mail">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>질의응답 게시판</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="nd-actions-bar">
+          <div class="nd-btn-group">
+            <a href="info-library.html?tab=general" class="nd-btn primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <span>목록으로</span>
+            </a>
+          </div>
+        </div>
+
+        <nav class="nd-siblings" aria-label="이전·다음 게시글">
+          <a class="nd-sibling" id="ndPrev">
+            <span class="nd-sib-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>이전글</span>
+            </span>
+            <span class="nd-sib-title">—</span>
+            <span class="nd-sib-meta">—</span>
+          </a>
+          <a class="nd-sibling" id="ndNext">
+            <span class="nd-sib-label">
+              <span>다음글</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+            <span class="nd-sib-title">—</span>
+            <span class="nd-sib-meta">—</span>
+          </a>
+        </nav>
+      </div><!-- /.nd-main -->
+
+      </div><!-- /.nd-page -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-info.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 일반 자료실 상세 — 공지사항 상세(notice-detail)와 동일 레이아웃 */
+(function(){
+  var DATA = {
+    '188': { title:'2026년 무공해차 보급 확대 종합 대책 발표', cat:'정책 발표', catClass:'libcat-policy', writer:'환경부', date:'2026.04.18', views:'3,182', size:'12.4MB',
+      body:['<p>환경부는 2026년 무공해차 보급을 가속화하기 위한 종합 대책을 발표했습니다. 전기·수소차 구매 보조금 확대, 충전 인프라 집중 구축, 상용차 전환 지원 등을 핵심 과제로 담고 있습니다.</p>','<p>세부 추진과제와 연차별 목표는 첨부된 본문과 붙임 자료에서 확인하실 수 있습니다.</p>'],
+      files:[['2026년 무공해차 보급 확대 종합 대책.pdf','PDF · 12.4MB','pdf'],['붙임1_세부 추진과제.xlsx','XLSX · 1.4MB','xlsx'],['붙임2_보도참고자료.hwp','HWP · 280KB','hwp']] },
+    '187': { title:'2026년 1분기 무공해차 보급 현황 통계', cat:'통계 자료', catClass:'libcat-stats', writer:'한국환경공단', date:'2026.04.10', views:'1,940', size:'2.8MB',
+      body:['<p>2026년 1분기 기준 전기·수소차의 신규 등록 및 누적 보급 현황을 지역·차종별로 정리한 통계입니다.</p>','<p>데이터 정의서를 함께 제공하니 활용 시 참고해 주세요.</p>'],
+      files:[['2026년 1분기 보급 통계.xlsx','XLSX · 2.8MB','xlsx'],['데이터 정의서.pdf','PDF · 360KB','pdf']] },
+    '186': { title:'무공해차 전환 로드맵 2030 (전자책)', cat:'정책 발표', catClass:'libcat-policy', writer:'환경부', date:'2026.04.02', views:'2,517', size:'18.2MB',
+      body:['<p>2030년까지의 무공해차 전환 전략을 담은 전자책입니다. 부문별 전환 시나리오와 정책 수단을 종합적으로 제시합니다.</p>','<p>분량이 큰 자료로, 요약본을 함께 제공합니다.</p>'],
+      files:[['무공해차 전환 로드맵 2030.pdf','PDF · 18.2MB','pdf'],['요약본.pdf','PDF · 2.1MB','pdf']] },
+    '185': { title:'전기차 배터리 재활용 산업 실태 조사 보고서', cat:'연구 보고서', catClass:'libcat-research', writer:'한국환경공단', date:'2026.03.28', views:'1,326', size:'9.4MB',
+      body:['<p>전기차 사용후 배터리의 회수·재사용·재활용 산업 실태를 조사한 연구 보고서입니다. 시장 규모, 기술 동향, 제도 개선 과제를 다룹니다.</p>'],
+      files:[['배터리 재활용 실태.pdf','PDF · 9.4MB','pdf'],['부록_통계표.xlsx','XLSX · 1.1MB','xlsx']] },
+    '184': { title:'K-EV100 추진 성과 보고서 (2025년 결산)', cat:'정책 발표', catClass:'libcat-policy', writer:'한국자동차환경협회', date:'2026.03.20', views:'1,108', size:'6.8MB',
+      body:['<p>민간 무공해차 전환 캠페인 K-EV100의 2025년 추진 성과를 결산한 보고서입니다. 참여 기업 현황과 전환 실적을 정리했습니다.</p>'],
+      files:[['K-EV100 2025 성과.pdf','PDF · 6.8MB','pdf'],['참여기업 명단.xlsx','XLSX · 420KB','xlsx']] },
+    '183': { title:'지자체별 충전 인프라 구축 현황 (2025 연간)', cat:'통계 자료', catClass:'libcat-stats', writer:'한국환경공단', date:'2026.03.12', views:'982', size:'3.6MB',
+      body:['<p>2025년 연간 기준 전국 지자체별 전기·수소차 충전 인프라 구축 현황을 정리한 통계입니다. 시각화 자료를 함께 제공합니다.</p>'],
+      files:[['지자체별 충전 인프라 2025.xlsx','XLSX · 3.6MB','xlsx'],['시각화 자료.pdf','PDF · 1.8MB','pdf']] },
+    '182': { title:'수소충전소 안전성 평가 연구 (중간 보고)', cat:'연구 보고서', catClass:'libcat-research', writer:'가스안전공사', date:'2026.03.05', views:'760', size:'11.2MB',
+      body:['<p>수소충전소의 안전성을 평가한 연구의 중간 보고 자료입니다. 평가 방법론과 점검 체크리스트를 포함합니다.</p>'],
+      files:[['수소충전소 안전성 평가.pdf','PDF · 11.2MB','pdf'],['안전 점검 체크리스트.hwp','HWP · 240KB','hwp']] }
+  };
+  var ORDER = ['188','187','186','185','184','183','182'];
+
+  function qp(k){ return new URLSearchParams(location.search).get(k); }
+  var id = qp('id'); if (!id || !DATA[id]) id = '188';
+  var item = DATA[id];
+
+  document.title = item.title + ' | 일반 자료실 | 무공해차 통합누리집';
+  document.getElementById('pageH1').textContent = '[일반자료실-상세]';
+  document.getElementById('ndTitle').textContent = item.title;
+  document.getElementById('ndDept').textContent = item.writer;
+  document.getElementById('ndDate').textContent = item.date;
+  document.getElementById('ndViews').textContent = item.views;
+  document.getElementById('ndAttachCount').textContent = item.files.length + '건';
+
+  var docNo = 'LIB-2026-' + String(id).padStart(4, '0');
+  var setTxt = function(elId, v){ var el = document.getElementById(elId); if (el) el.textContent = v; };
+  setTxt('ndDocNo', docNo);
+  setTxt('ndSize', item.size);
+
+  // 본문 + 첨부파일 (다중 체크박스 선택 → 선택 다운로드)
+  var html = item.body.join('');
+  html += '<div class="nd-attach-wrap"><div class="nd-attach-head"><h4>첨부 파일 <span class="nd-attach-count">' + item.files.length + '</span></h4>' +
+    '<label class="nd-attach-selall"><input type="checkbox" id="ndAtAll"> 전체 선택</label></div>' +
+    '<ul class="nd-attach-list">' +
+    item.files.map(function(f){
+      return '<li class="nd-attach-item"><label>' +
+        '<input type="checkbox" class="nd-at-cb" value="' + f[0] + '">' +
+        '<span class="nd-attach-ico ' + f[2] + '">' + f[2].toUpperCase() + '</span>' +
+        '<span class="nd-attach-name">' + f[0] + '</span>' +
+        '<span class="nd-attach-size">' + f[1] + '</span>' +
+        '</label></li>';
+    }).join('') + '</ul>' +
+    '<div class="nd-attach-foot"><span class="nd-at-count" id="ndAtSel">0개 선택</span>' +
+    '<button type="button" class="nd-attach-btn primary" id="ndAtDl" disabled>선택 다운로드</button></div></div>';
+  var articleEl = document.getElementById('ndArticle');
+  articleEl.innerHTML = html;
+
+  // 첨부파일 다중 선택 다운로드 로직
+  (function(){
+    var all = document.getElementById('ndAtAll');
+    var dlBtn = document.getElementById('ndAtDl');
+    var selEl = document.getElementById('ndAtSel');
+    if (!dlBtn) return;
+    var boxes = function(){ return articleEl.querySelectorAll('.nd-at-cb'); };
+    function update(){
+      var items = boxes(), checked = 0;
+      items.forEach(function(c){ if (c.checked) checked++; });
+      if (selEl) selEl.textContent = checked + '개 선택';
+      dlBtn.disabled = checked === 0;
+      if (all){ all.checked = checked > 0 && checked === items.length; all.indeterminate = checked > 0 && checked < items.length; }
+    }
+    if (all) all.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked = all.checked; }); update(); });
+    boxes().forEach(function(c){ c.addEventListener('change', update); });
+    dlBtn.addEventListener('click', function(){
+      var names = []; boxes().forEach(function(c){ if (c.checked) names.push(c.value); });
+      if (!names.length) return;
+      var msg = names.length === 1 ? ('"' + names[0] + '" 다운로드가 시작됩니다.') : (names.length + '개 파일 다운로드가 시작됩니다.');
+      if (window.__toast) window.__toast(msg, 'success');
+    });
+    update();
+  })();
+
+  // 이전/다음 글
+  var idx = ORDER.indexOf(id);
+  function sib(elId, sid, label){
+    var el = document.getElementById(elId);
+    if (!sid || !DATA[sid]) { el.classList.add('disabled'); el.querySelector('.nd-sib-title').textContent = label; el.querySelector('.nd-sib-meta').textContent = '—'; return; }
+    el.href = 'info-library-detail.html?id=' + sid;
+    el.querySelector('.nd-sib-title').textContent = DATA[sid].title;
+    el.querySelector('.nd-sib-meta').textContent = DATA[sid].date;
+  }
+  sib('ndPrev', ORDER[idx - 1], '이전 글이 없습니다.');
+  sib('ndNext', ORDER[idx + 1], '다음 글이 없습니다.');
+
+  // 관련 자료 (현재 글 제외 최대 3개)
+  var rel = ORDER.filter(function(x){ return x !== id; }).slice(0, 3);
+  var relGridEl = document.getElementById('ndRelGrid');
+  if (relGridEl) relGridEl.innerHTML = rel.map(function(rid){
+    var r = DATA[rid];
+    return '<a href="info-library-detail.html?id=' + rid + '" class="nd-rel-card"><span class="cat-chip ' + r.catClass + '">' + r.cat + '</span>' +
+      '<h5>' + r.title + '</h5><div class="nd-rel-meta"><span>' + r.date + '</span><span class="views">조회 ' + r.views + '</span></div></a>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

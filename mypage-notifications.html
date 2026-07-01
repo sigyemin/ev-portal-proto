@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>알림 설정 | 마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true; window.__activeMp = 'notifications';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="mypage.html" data-i18n="crumb.mypage">마이페이지</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="mpn.title">알림 설정</span>
+      </nav>
+      <h1 data-i18n="mpn.title">알림 설정</h1>
+      <p class="hero-lead" data-i18n="mpn.lead">보조금 진행, 충전 완료, 공지사항 등 알림 채널과 카테고리를 설정합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="mp-shell">
+        <div id="mp-side-slot"></div>
+
+        <div class="mp-content">
+
+          <div class="mp-content-head">
+            <div>
+              <h2 data-i18n="mpn.content.h2">알림 설정</h2>
+              <p class="mp-content-desc" data-i18n="mpn.content.desc">이메일·SMS 채널과 카테고리별 수신 여부를 관리합니다.</p>
+            </div>
+            <div class="mp-content-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="mpnAllOff" data-i18n="mpn.btn.alloff">전체 끄기</button>
+            </div>
+          </div>
+
+          <div class="mp-form-card">
+            <h3 class="mp-form-card-title" data-i18n="mpn.channel.title">수신 채널</h3>
+            <p class="mp-form-card-desc" data-i18n="mpn.channel.desc">알림이 전송될 기본 채널을 먼저 설정해 주세요.</p>
+
+            <div class="mp-form-row">
+              <div class="mp-form-label" data-i18n="mpn.channel.email">이메일 알림</div>
+              <div class="mp-form-control" style="display:flex;align-items:center;gap:14px;">
+                <button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.channel.email" aria-label="이메일 알림" data-toggle></button>
+                <div>
+                  <div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--text-primary);">hjshin@example.com</strong></div>
+                  <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px;" data-i18n-html="mpn.channel.email.note">변경은 <a href="mypage-info.html">회원 정보</a>에서 가능합니다.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <div class="mp-form-label" data-i18n="mpn.channel.sms">SMS 알림</div>
+              <div class="mp-form-control" style="display:flex;align-items:center;gap:14px;">
+                <button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.channel.sms" aria-label="SMS 알림" data-toggle></button>
+                <div>
+                  <div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--text-primary);">010-1234-5678</strong></div>
+                  <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px;" data-i18n="mpn.channel.sms.note">긴급 공지·본인확인 SMS는 항상 발송됩니다.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <div class="mp-form-label" data-i18n="mpn.channel.kakao">카카오 알림톡</div>
+              <div class="mp-form-control" style="display:flex;align-items:center;gap:14px;">
+                <button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.channel.kakao" aria-label="카카오 알림톡" data-toggle></button>
+                <div>
+                  <div style="font-size:13px;color:var(--text-secondary);" data-i18n="mpn.channel.kakao.note">카카오 계정 연결 후 사용 가능합니다.</div>
+                  <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px;"><a href="mypage-accounts.html" data-i18n="mpn.channel.kakao.link">계정 연결로 이동 →</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mp-form-card">
+            <h3 class="mp-form-card-title" data-i18n="mpn.cat.title">카테고리별 알림</h3>
+            <p class="mp-form-card-desc" data-i18n="mpn.cat.desc">받고 싶은 알림 유형을 채널별로 선택해 주세요.</p>
+
+            <div class="mp-notify-head" aria-hidden="true">
+              <div data-i18n="mpn.col.type">알림 유형</div>
+              <div data-i18n="mpn.col.email">이메일</div>
+              <div data-i18n="mpn.col.sms">SMS</div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.subsidy.title">보조금 신청·심사 진행</strong>
+                <span data-i18n="mpn.cat.subsidy.desc">접수 완료, 심사 단계 변경, 지급 완료 등 단계별 안내</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.toggle.subsidy.email" aria-label="보조금 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.toggle.subsidy.sms" aria-label="보조금 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.charge.title">충전 완료·이용 안내</strong>
+                <span data-i18n="mpn.cat.charge.desc">충전 완료 알림, 월별 이용 요약, 명세서 발행</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.toggle.charging.email" aria-label="충전 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.charging.sms" aria-label="충전 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.card.title">회원카드·포인트</strong>
+                <span data-i18n="mpn.cat.card.desc">카드 발급·만료, 포인트 적립·사용</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.toggle.card.email" aria-label="회원카드 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.toggle.card.sms" aria-label="회원카드 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.inquiry.title">민원 처리 단계</strong>
+                <span data-i18n="mpn.cat.inquiry.desc">접수·배정·처리·완료 단계 안내</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch is-on" role="switch" aria-checked="true" data-i18n-aria="mpn.toggle.inquiry.email" aria-label="민원 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.inquiry.sms" aria-label="민원 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.public.title">공모·이벤트</strong>
+                <span data-i18n="mpn.cat.public.desc">전기승합·건설기계 등 공모 모집 공고, 참여 이벤트</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.public.email" aria-label="공모 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.public.sms" aria-label="공모 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.notice.title">공지·새소식</strong>
+                <span data-i18n="mpn.cat.notice.desc">주요 공지, 보도자료, 정책 변경 안내</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.notice.email" aria-label="공지 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.notice.sms" aria-label="공지 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-notify-row">
+              <div class="mp-notify-info">
+                <strong data-i18n="mpn.cat.mkt.title">마케팅·홍보</strong>
+                <span data-i18n="mpn.cat.mkt.desc">이벤트·캠페인·프로모션 정보 (선택)</span>
+              </div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.mkt.email" aria-label="마케팅 이메일 알림" data-toggle></button></div>
+              <div style="text-align:center;"><button type="button" class="mp-switch" role="switch" aria-checked="false" data-i18n-aria="mpn.toggle.mkt.sms" aria-label="마케팅 SMS 알림" data-toggle></button></div>
+            </div>
+
+            <div class="mp-form-foot">
+              <button type="button" class="btn btn-secondary" id="mpnCancelBtn" data-i18n="mpn.btn.cancel">취소</button>
+              <button type="button" class="btn btn-primary" id="mpnSaveBtn" data-i18n="mpn.btn.save">저장하기</button>
+            </div>
+          </div>
+
+          <div class="mp-policy">
+            <strong data-i18n="mpn.policy.title">알림 발송 안내</strong>
+            <ul>
+              <li data-i18n="mpn.policy.li1">본인 확인·보안 관련 알림(예: 비밀번호 변경, 의심 접속 차단 등)은 항상 발송됩니다.</li>
+              <li data-i18n="mpn.policy.li2">SMS 알림은 통신사 사정에 따라 지연될 수 있으며, 별도 비용이 발생하지 않습니다.</li>
+              <li data-i18n="mpn.policy.li3">「정보통신망법」 제50조에 따라 마케팅·홍보 알림은 별도 동의 후에만 발송됩니다.</li>
+            </ul>
+          </div>
+
+        </div><!-- /.mp-content -->
+      </div><!-- /.mp-shell -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-mypage.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+
+<script>
+  // V3.2: i18n 적용 + 인라인 onclick 외부화
+  (function () {
+    function _t(key, fallback) {
+      return (window.__i18n && window.__i18n.t) ? window.__i18n.t(key) : fallback;
+    }
+    // 토글 스위치 동작
+    document.addEventListener('click', function(e) {
+      const sw = e.target.closest('[data-toggle]');
+      if (!sw) return;
+      const on = sw.classList.toggle('is-on');
+      sw.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    // 전체 끄기
+    const allOffBtn = document.getElementById('mpnAllOff');
+    if (allOffBtn) allOffBtn.addEventListener('click', function () {
+      if (!confirm(_t('mpn.msg.confirm.alloff', '모든 알림을 끄시겠습니까? 보안 알림은 계속 발송됩니다.'))) return;
+      document.querySelectorAll('[data-toggle]').forEach(function (sw) {
+        sw.classList.remove('is-on');
+        sw.setAttribute('aria-checked', 'false');
+      });
+    });
+    // 취소 / 저장
+    const cancelBtn = document.getElementById('mpnCancelBtn');
+    const saveBtn = document.getElementById('mpnSaveBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', function () {
+      alert(_t('mpn.msg.cancel', '변경 사항이 취소되었습니다.'));
+    });
+    if (saveBtn) saveBtn.addEventListener('click', function () {
+      alert(_t('mpn.msg.saved', '알림 설정이 저장되었습니다.'));
+    });
+  })();
+</script>
+</body>
+</html>

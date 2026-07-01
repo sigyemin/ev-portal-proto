@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보조금 환수금 안내·계산기 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/screens-v2.css">
+<style>
+  /* 환수금 계산 폼 (라벨 좌 · 입력 우) */
+  .refund-grid { display: flex; flex-direction: column; }
+  .rf-row { display: grid; grid-template-columns: 170px 1fr; align-items: center; gap: 16px; padding: 13px 4px; border-bottom: 1px solid var(--border-light); }
+  .rf-row:first-child { border-top: 1px solid var(--border-light); }
+  .rf-label { font-weight: 700; color: var(--text-secondary); font-size: 14px; }
+  .rf-field { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .rf-unit { color: var(--text-secondary); font-size: 14px; }
+  .rf-hint { color: var(--color-secondary-700, #1f5fa8); font-size: 13px; }
+  .rf-check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-primary); cursor: pointer; }
+  .rf-check input { width: 16px; height: 16px; accent-color: var(--color-primary-500); }
+  .rf-notes { margin-top: 16px; }
+  .rf-notes p { margin: 4px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .rf-result { margin-top: 18px; padding: 18px 20px; border: 1px solid var(--color-primary-200, #bfe3d2); background: var(--color-primary-50, #eefaf4); border-radius: 12px; }
+  .rf-result-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .rf-result .rf-amt { font-size: 26px; font-weight: 800; color: var(--color-primary-700, #0f6e56); font-variant-numeric: tabular-nums; }
+  .rf-result .rf-note { margin: 8px 0 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  /* 회수요율 표 */
+  .refund-rate-table th, .refund-rate-table td { text-align: center; white-space: nowrap; }
+  .refund-rate-table th { background: var(--color-gray-50, #f6f8fa); font-weight: 700; color: var(--text-secondary); font-size: 13px; line-height: 1.4; }
+  .refund-rate-table th:first-child, .refund-rate-table td:first-child { background: var(--color-gray-50, #f6f8fa); font-weight: 700; color: var(--text-primary); min-width: 116px; }
+  .refund-rate-table td { font-size: 13px; font-variant-numeric: tabular-nums; }
+  .rate-cap { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; margin: 0 0 8px; }
+  .rate-cap::before { content: "▸"; color: var(--color-primary-600, #0f7a52); }
+  @media (max-width: 640px) { .rf-row { grid-template-columns: 1fr; gap: 6px; } }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="subsidy-target.html">구매·보조금</a><span class="sep">›</span>
+        <a href="subsidy-info.html">무공해차 구매보조금 안내</a><span class="sep">›</span>
+        <span class="current">보조금 환수금 안내·계산기</span>
+      </nav>
+      <h1>보조금 환수금 안내·계산기</h1>
+      <p class="hero-lead">의무운행기간을 채우지 못한 경우 발생할 수 있는 <strong>보조금 환수금</strong>의 기준을 안내하고, 잔여 의무기간을 기준으로 예상 환수금을 계산합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <h3 class="section-h">환수금 계산</h3>
+      <p class="mt-2" style="color:var(--text-secondary);line-height:1.7;">차량등록일과 운행 불가 해당일을 기준으로 전기차 운행기간을 산정하고, 환수 사유 구분에 따른 <strong>보조금 회수요율</strong>을 적용해 예상 환수금을 계산합니다.</p>
+
+      <div class="card mt-3" style="max-width:860px;">
+        <div class="refund-grid">
+          <div class="rf-row">
+            <label class="rf-label" for="rfType">구분</label>
+            <select class="form-select" id="rfType" style="max-width:380px;">
+              <option value="export">수출을 목적으로 등록을 말소하는 경우</option>
+              <option value="other">그 밖의 경우</option>
+            </select>
+          </div>
+          <div class="rf-row">
+            <label class="rf-label" for="rfRegDate">차량등록일</label>
+            <input class="form-input" type="date" id="rfRegDate" style="max-width:200px;">
+          </div>
+          <div class="rf-row">
+            <label class="rf-label" for="rfStopDate">운행 불가 해당일</label>
+            <input class="form-input" type="date" id="rfStopDate" style="max-width:200px;">
+          </div>
+          <div class="rf-row">
+            <span class="rf-label">폐차 사유</span>
+            <label class="rf-check"><input type="checkbox" id="rfScrap"> 교통사고 등 불가피한 사유로 폐차</label>
+          </div>
+          <div class="rf-row">
+            <label class="rf-label" for="rfSubsidy">보조받은 금액</label>
+            <div class="rf-field"><input class="form-input" type="text" inputmode="numeric" id="rfSubsidy" placeholder="0" style="max-width:240px;"> <span class="rf-unit">원</span></div>
+          </div>
+          <div class="rf-row">
+            <label class="rf-label" for="rfSelf">자부담금</label>
+            <div class="rf-field"><input class="form-input" type="text" inputmode="numeric" id="rfSelf" placeholder="0" style="max-width:240px;"> <span class="rf-hint">* 보상금 있는 경우 입력</span></div>
+          </div>
+          <div class="rf-row">
+            <label class="rf-label" for="rfComp">보상 금액(차량 보상금)</label>
+            <div class="rf-field"><input class="form-input" type="text" inputmode="numeric" id="rfComp" placeholder="0" style="max-width:240px;"> <span class="rf-hint">* 보상금 있는 경우 입력</span></div>
+          </div>
+        </div>
+
+        <div class="rf-notes">
+          <p>* 교통사고 등 불가피한 사유로 폐차 시에는 원칙적으로 보조금 미환수 합니다.</p>
+          <p>* 폐차 시 보험사 등으로부터 보상받은 금액(차량 보상금)이 구매 당시 자부담금을 초과하는 경우 차액 환수 합니다.</p>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+          <button type="button" id="rfRun" class="btn btn-primary btn-lg" style="min-width:120px;">계산</button>
+        </div>
+
+        <div class="rf-result" id="rfResultBox" hidden>
+          <div class="rf-result-row">
+            <span style="font-weight:700;">예상 환수금</span>
+            <span><b class="rf-amt" id="rfAmt">0</b> 원</span>
+          </div>
+          <p class="rf-note" id="rfNote"></p>
+        </div>
+      </div>
+
+      <!-- 회수요율 표 -->
+      <h3 class="rate-cap mt-6">수출을 목적으로 등록을 말소하는 경우</h3>
+      <div class="table-wrap mt-2">
+        <table class="data-table refund-rate-table">
+          <tbody>
+            <tr>
+              <th scope="row">전기차<br>운행기간</th>
+              <td>6개월<br>미만</td><td>6개월 이상<br>12개월 미만</td><td>12개월 이상<br>18개월 미만</td><td>18개월 이상<br>24개월 미만</td><td>24개월 이상<br>30개월 미만</td><td>30개월 이상<br>36개월 미만</td><td>36개월 이상<br>48개월 미만</td><td>48개월 이상<br>96개월 미만</td>
+            </tr>
+            <tr>
+              <th scope="row">보조금<br>회수요율</th>
+              <td>70%</td><td>65%</td><td>60%</td><td>55%</td><td>50%</td><td>40%</td><td>30%</td><td>20%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="rate-cap mt-5">그 밖의 경우</h3>
+      <div class="table-wrap mt-2">
+        <table class="data-table refund-rate-table">
+          <tbody>
+            <tr>
+              <th scope="row">전기차<br>운행기간</th>
+              <td>3개월<br>미만</td><td>3개월 이상<br>6개월 미만</td><td>6개월 이상<br>9개월 미만</td><td>9개월 이상<br>12개월 미만</td><td>12개월 이상<br>15개월 미만</td><td>15개월 이상<br>18개월 미만</td><td>18개월 이상<br>21개월 미만</td><td>21개월 이상<br>24개월 미만</td>
+            </tr>
+            <tr>
+              <th scope="row">보조금<br>회수요율</th>
+              <td>70%</td><td>65%</td><td>60%</td><td>55%</td><td>50%</td><td>40%</td><td>30%</td><td>20%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-3" style="color:var(--text-tertiary);font-size:13px;">※ 회수요율·산식은 차종·연도·지자체 기준에 따라 달라질 수 있습니다. 정확한 환수금은 관할 지자체에 확인하세요. (참고용 추정치)</p>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function el(id){ return document.getElementById(id); }
+  function num(id){ return parseInt(String(el(id).value).replace(/[^0-9]/g,''),10) || 0; }
+  function fmt(n){ return (n||0).toLocaleString('ko-KR'); }
+  // 차량등록일 ~ 운행불가일 사이 운행기간(개월)
+  function monthsBetween(a, b){
+    if (!a || !b) return -1;
+    var d1 = new Date(a), d2 = new Date(b);
+    if (isNaN(d1) || isNaN(d2) || d2 < d1) return -1;
+    var m = (d2.getFullYear()-d1.getFullYear())*12 + (d2.getMonth()-d1.getMonth());
+    if (d2.getDate() < d1.getDate()) m--;
+    return Math.max(0, m);
+  }
+  // 구분 + 운행기간 → 보조금 회수요율(%)
+  function rateFor(type, m){
+    if (type === 'export') {
+      if (m < 6) return 70; if (m < 12) return 65; if (m < 18) return 60; if (m < 24) return 55;
+      if (m < 30) return 50; if (m < 36) return 40; if (m < 48) return 30; if (m < 96) return 20; return 0;
+    }
+    if (m < 3) return 70; if (m < 6) return 65; if (m < 9) return 60; if (m < 12) return 55;
+    if (m < 15) return 50; if (m < 18) return 40; if (m < 21) return 30; if (m < 24) return 20; return 0;
+  }
+  function run(){
+    var type = el('rfType').value;
+    var months = monthsBetween(el('rfRegDate').value, el('rfStopDate').value);
+    var subsidy = num('rfSubsidy'), self = num('rfSelf'), comp = num('rfComp');
+    var scrap = el('rfScrap').checked;
+    var box = el('rfResultBox'), amt = el('rfAmt'), note = el('rfNote');
+    var amount = 0, msg = '';
+
+    if (scrap) {
+      // 불가피한 사유 폐차 → 원칙 미환수, 단 보상금이 자부담금 초과 시 차액 환수
+      var diff = Math.max(comp - self, 0);
+      amount = diff;
+      msg = diff > 0
+        ? '불가피한 사유 폐차로 원칙적으로 미환수하나, 보상금(' + fmt(comp) + '원)이 자부담금(' + fmt(self) + '원)을 초과하여 차액 ' + fmt(diff) + '원을 환수합니다.'
+        : '교통사고 등 불가피한 사유 폐차로 원칙적으로 보조금을 환수하지 않습니다.';
+    } else if (months < 0) {
+      box.hidden = false;
+      amt.textContent = '0';
+      note.textContent = '차량등록일과 운행 불가 해당일을 정확히 입력해 주세요. (운행 불가일이 등록일 이후여야 합니다)';
+      return;
+    } else {
+      var r = rateFor(type, months);
+      amount = Math.round(subsidy * r / 100);
+      var label = type === 'export' ? '수출 목적 등록 말소' : '그 밖의 경우';
+      msg = '운행기간 ' + months + '개월 → 회수요율 ' + r + '% 적용(' + label + ' 기준). 보조받은 금액 ' + fmt(subsidy) + '원 × ' + r + '%.';
+    }
+
+    box.hidden = false;
+    amt.textContent = fmt(amount);
+    note.textContent = msg + ' (참고용 추정치)';
+  }
+  // 금액 입력란: 숫자만 입력 + 입력 종료(blur) 시 천단위 콤마, 재편집(focus) 시 콤마 제거
+  ['rfSubsidy','rfSelf','rfComp'].forEach(function(id){
+    var input = el(id);
+    if (!input) return;
+    input.addEventListener('input', function(){
+      var d = this.value.replace(/[^\d]/g, '');
+      if (this.value !== d) this.value = d;     // 숫자 외 문자(붙여넣기 포함) 제거
+    });
+    input.addEventListener('blur', function(){
+      var d = this.value.replace(/[^\d]/g, '');
+      this.value = d ? Number(d).toLocaleString('ko-KR') : '';
+    });
+    input.addEventListener('focus', function(){
+      this.value = this.value.replace(/[^\d]/g, '');
+    });
+  });
+
+  el('rfRun').addEventListener('click', run);
+})();
+</script>
+</body>
+</html>

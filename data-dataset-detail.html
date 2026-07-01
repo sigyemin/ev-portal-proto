@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터셋 상세 | 공개자료 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+<style>
+  .ds-fmt-chip{display:inline-block;padding:2px 9px;border-radius:5px;font-size:11.5px;font-weight:700;background:#f1f4f7;color:#5a6675;margin-left:4px}
+  .ds-nofile{color:var(--text-tertiary);font-size:13.5px;padding:14px 0;margin:0}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="#">소통·지원</a><span class="sep" aria-hidden="true">›</span>
+        <a href="notice.html">알림·공지</a><span class="sep" aria-hidden="true">›</span>
+        <a href="notice-data.html">공개자료</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current">데이터셋 상세</span>
+      </nav>
+      <h1>[공개자료-상세]</h1>
+      <p class="hero-lead">데이터셋의 내용을 확인하고 첨부파일을 다운로드합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="nd-page nd-single">
+
+      <div class="nd-main">
+        <header class="nd-head">
+          <div class="nd-head-chips">
+            <!-- 공개자료 분류 없음: 타이틀 위 분류 칩 제거. 제공형식 칩만 유지 -->
+            <span id="dFmts"></span>
+          </div>
+          <h2 class="nd-title" id="dTitle">전기차 충전소 위치 데이터</h2>
+          <dl class="nd-meta-strip">
+            <dl class="nd-meta-dept">
+              <dt><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg><span>제공기관</span></dt>
+              <dd>환경부 / 한국환경공단</dd>
+            </dl>
+            <dl class="nd-meta-date">
+              <dt><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>수정일</span></dt>
+              <dd id="dDate">2026.04.19</dd>
+            </dl>
+            <dl class="nd-meta-views">
+              <dt><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M5 8l7-7 7 7"/></svg><span>비용</span></dt>
+              <dd>무료</dd>
+            </dl>
+            <dl class="nd-meta-fmt">
+              <dt><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><span>제공형식</span></dt>
+              <dd id="mFmt">CSV · JSON</dd>
+            </dl>
+            <dl class="nd-meta-license">
+              <dt><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z"/></svg><span>이용허락</span></dt>
+              <dd>공공누리 제1유형</dd>
+            </dl>
+          </dl>
+        </header>
+
+        <article class="nd-article">
+          <h3>내용</h3>
+          <p id="dDesc" style="font-size:14.5px;line-height:1.85;color:var(--text-secondary);margin:6px 0 4px;">환경부·한국환경공단이 보유한 무공해차 관련 공개데이터입니다. 아래 첨부파일에서 최신 데이터를 내려받아 활용하실 수 있으며, 데이터 항목 정의·코드값은 첨부된 설명 문서를 함께 참고해 주세요. 이용 중 오류·문의 사항은 하단 문의처로 알려주시기 바랍니다.</p>
+
+          <h3>첨부 파일</h3>
+          <!-- 첨부파일 다운로드 (여타 상세 페이지와 동일 · 다중 체크박스 선택 다운로드) -->
+          <div id="dAttachSlot"></div>
+          <p id="dNoFile" class="ds-nofile" hidden>등록된 첨부파일이 없습니다.</p>
+        </article>
+
+        <!-- 담당자 문의 (목록 버튼 위) -->
+        <div class="nd-contact">
+          <h4>문의처</h4>
+          <div class="nd-side-contact">
+            <a href="tel:1661-0970" class="btn-call">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>통합 콜센터 1661-0970</span>
+            </a>
+            <a href="qna-write.html" id="dErrorBtn" class="btn-mail">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>오류신고 및 문의</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="nd-actions-bar">
+          <div class="nd-btn-group">
+            <a href="notice-data.html" class="nd-btn primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <span>목록으로</span>
+            </a>
+          </div>
+        </div>
+      </div><!-- /.nd-main -->
+
+      </div><!-- /.nd-page -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  var p = new URLSearchParams(location.search);
+  function set(id, v){ var el = document.getElementById(id); if (el && v) el.textContent = v; }
+  var name = p.get('name');
+  if (name) { set('dTitle', name); document.title = name + ' | 공개자료 | 무공해차 통합누리집'; }
+  var cat = p.get('cat'); set('dCat', cat);
+  var fmtRaw = (p.get('fmt') || 'csv').toLowerCase();
+  var labels = { csv:'CSV', json:'JSON', xlsx:'XLSX' };
+  var sizes = { csv:'CSV · 42.6MB', json:'JSON · 48.2MB', xlsx:'XLSX · 3.1MB' };
+  // 제공형식은 파일 형식만 표시·다운로드
+  var fmts = fmtRaw.split(/\s+/).filter(Boolean).filter(function(f){ return f !== 'api' && f !== 'openapi'; });
+  if (!fmts.length) fmts = ['csv'];
+  var chipWrap = document.getElementById('dFmts');
+  if (chipWrap) chipWrap.innerHTML = fmts.map(function(f){ return '<span class="ds-fmt-chip">' + (labels[f]||f.toUpperCase()) + '</span>'; }).join('');
+  set('mFmt', fmts.map(function(f){ return labels[f]||f.toUpperCase(); }).join(' · '));
+  var fileFmts = fmts;
+
+  // 첨부파일 다운로드 — 여타 상세 페이지와 동일한 다중 체크박스 선택 다운로드
+  var slot = document.getElementById('dAttachSlot');
+  var noFile = document.getElementById('dNoFile');
+  if (slot && fileFmts.length) {
+    var baseName = (name || '데이터셋');
+    var files = fileFmts.map(function(f){ return { name: baseName + '.' + f, size: sizes[f] || (f.toUpperCase() + ' 파일') }; });
+    slot.innerHTML = '<div class="nd-attach-wrap"><div class="nd-attach-head"><h4>첨부 파일 <span class="nd-attach-count">' + files.length + '</span></h4>' +
+      '<label class="nd-attach-selall"><input type="checkbox" id="ndAtAll"> 전체 선택</label></div>' +
+      '<ul class="nd-attach-list">' +
+      files.map(function(f){
+        var ext = f.name.split('.').pop();
+        return '<li class="nd-attach-item"><label><input type="checkbox" class="nd-at-cb" value="' + f.name + '">' +
+          '<span class="nd-attach-ico ' + ext + '">' + ext.toUpperCase() + '</span>' +
+          '<span class="nd-attach-name">' + f.name + '</span><span class="nd-attach-size">' + f.size + '</span></label></li>';
+      }).join('') + '</ul>' +
+      '<div class="nd-attach-foot"><span class="nd-at-count" id="ndAtSel">0개 선택</span>' +
+      '<button type="button" class="nd-attach-btn primary" id="ndAtDl" disabled>선택 다운로드</button></div></div>';
+    var all = document.getElementById('ndAtAll'), dlBtn = document.getElementById('ndAtDl'), selEl = document.getElementById('ndAtSel');
+    var boxes = function(){ return slot.querySelectorAll('.nd-at-cb'); };
+    function upd(){ var it = boxes(), c = 0; it.forEach(function(x){ if (x.checked) c++; }); if (selEl) selEl.textContent = c + '개 선택'; dlBtn.disabled = c === 0; if (all){ all.checked = c > 0 && c === it.length; all.indeterminate = c > 0 && c < it.length; } }
+    if (all) all.addEventListener('change', function(){ boxes().forEach(function(x){ x.checked = all.checked; }); upd(); });
+    boxes().forEach(function(x){ x.addEventListener('change', upd); });
+    dlBtn.addEventListener('click', function(){ var n = []; boxes().forEach(function(x){ if (x.checked) n.push(x.value); }); if (!n.length) return; var msg = n.length === 1 ? ('"' + n[0] + '" 다운로드가 시작됩니다.') : (n.length + '개 파일 다운로드가 시작됩니다.'); if (window.__toast) window.__toast(msg, 'success'); });
+    upd();
+  } else if (noFile) {
+    noFile.hidden = false;
+  }
+
+  // 오류신고 → 질의응답 등록 연결
+  if (name) {
+    var errBtn = document.getElementById('dErrorBtn');
+    if (errBtn) errBtn.href = 'qna-write.html?cat=' + encodeURIComponent('계정·기타') + '&subject=' + encodeURIComponent('[오류신고] ' + name + ' 데이터셋 문의');
+  }
+  var dDateEl = document.getElementById('dDate'), iDateEl = document.getElementById('iDate');
+  if (dDateEl && iDateEl) iDateEl.textContent = dDateEl.textContent;
+})();
+</script>
+</body>
+</html>

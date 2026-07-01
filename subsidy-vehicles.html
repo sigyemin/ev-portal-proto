@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보조금 지급대상 차종 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="subsidy-info.html" data-i18n="subsidy.crumb.parent">구매·보조금</a><span class="sep" aria-hidden="true">›</span>
+        <a href="subsidy-target.html" data-i18n="subsidy.crumb.info">무공해차 구매보조금 안내</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="subsidy.vehicles.crumb">보조금 지급대상 차종</span>
+      </nav>
+      <h1 data-i18n="subsidy.vehicles.title">보조금 지급대상 차종</h1>
+      <p class="hero-lead" data-i18n-html="subsidy.vehicles.lead">2026년 기준 보조금 지원이 가능한 전기·수소차 <strong style="color:#fff;">128종</strong>의 목록을 검색·조회합니다.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- Search / Filter -->
+      <div class="card mb-6" data-reveal>
+        <div class="grid" style="grid-template-columns: 2fr 1fr 1fr auto; gap: 16px; align-items: end;">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="sv-search" data-i18n="subsidy.vehicles.field.search">차종 검색</label>
+            <div class="search-field">
+              <input class="form-input" id="sv-search" type="text" placeholder="제조사, 모델명 검색" data-i18n-attr="placeholder:subsidy.vehicles.field.search.ph" data-table-search="vehicle-table">
+            </div>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="sv-type" data-i18n="subsidy.vehicles.field.type">차종 유형</label>
+            <select class="form-select" id="sv-type">
+              <option data-i18n="subsidy.vehicles.opt.all">전체</option>
+              <option data-i18n="subsidy.vehicles.opt.ev">전기승용</option>
+              <option data-i18n="subsidy.vehicles.opt.h2">수소승용</option>
+              <option data-i18n="subsidy.vehicles.opt.cargo">전기화물</option>
+              <option data-i18n="subsidy.vehicles.opt.bus">전기승합</option>
+              <option data-i18n="subsidy.vehicles.opt.moto">전기이륜</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="sv-maker" data-i18n="subsidy.vehicles.field.maker">제조사</label>
+            <select class="form-select" id="sv-maker">
+              <option data-i18n="subsidy.vehicles.opt.all">전체</option>
+              <option data-i18n="subsidy.vehicles.maker.hyundai">현대자동차</option>
+              <option data-i18n="subsidy.vehicles.maker.kia">기아</option>
+              <option data-i18n="subsidy.vehicles.maker.tesla">테슬라</option>
+              <option data-i18n="subsidy.vehicles.maker.bmw">BMW</option>
+              <option data-i18n="subsidy.vehicles.maker.benz">벤츠</option>
+              <option data-i18n="subsidy.vehicles.maker.kg">KG모빌리티</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" type="button" data-action="filter-apply" data-filter-target="#vehicle-table" data-i18n="subsidy.vehicles.btn.search">조회</button>
+            <button class="btn" type="button" id="sv-reset" aria-label="필터 초기화">초기화</button>
+          </div>
+        </div>
+        <div class="flex gap-2 mt-4 flex-wrap" data-chip-filter-group>
+          <button class="chip chip-active" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.korean">✓ 국내 조립</button>
+          <button class="chip" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.400km">400km 이상</button>
+          <button class="chip" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.under50m">5천만원 이하</button>
+          <button class="chip" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.cargo">소형 화물</button>
+        </div>
+      </div>
+
+      <!-- 정렬 (필터 아님 · 결과 영역 상단 별도 배치) -->
+      <div class="mb-4" data-reveal style="display:flex; justify-content:flex-end; align-items:center; gap:8px;">
+        <label class="form-label" for="sv-sort" style="margin:0; white-space:nowrap;" data-i18n="subsidy.vehicles.field.sort">정렬</label>
+        <select class="form-select" id="sv-sort" style="width:auto; min-width:160px;">
+          <option data-i18n="subsidy.vehicles.sort.subsidy">보조금 높은순</option>
+          <option data-i18n="subsidy.vehicles.sort.price">가격 낮은순</option>
+          <option data-i18n="subsidy.vehicles.sort.range">주행거리 긴순</option>
+          <option data-i18n="subsidy.vehicles.sort.recent">최근 등록순</option>
+        </select>
+      </div>
+
+      <!-- Vehicle Grid Cards -->
+      <div>
+        <div class="grid grid-3" style="gap: 20px;" data-reveal>
+          <!-- CARD 1 -->
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="아이오닉 6 전기승용차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.ioniq6"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;" data-i18n="subsidy.vehicles.car.ioniq6">아이오닉 6</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success" data-i18n="subsidy.vehicles.chip.evpassenger">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="subsidy.vehicles.model.makerline.hd2026">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);" data-i18n="subsidy.vehicles.amount.ioniq6">1,180만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>524km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>18분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>77.4kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>5,200만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <!-- CARD 2 -->
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-crossover-ev6.svg" alt="EV6 전기승용차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.ev6"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;" data-i18n="subsidy.vehicles.car.ev6">EV6</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success" data-i18n="subsidy.vehicles.chip.evpassenger">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="subsidy.vehicles.model.makerline.kia2026">기아 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);" data-i18n="subsidy.vehicles.amount.ev6">1,150만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>475km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>18분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>77.4kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>4,995만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <!-- CARD 3 -->
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-sedan-model3.svg" alt="Model 3 전기승용차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.model3"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;" data-i18n="subsidy.vehicles.car.model3">Model 3</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success" data-i18n="subsidy.vehicles.chip.evpassenger">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="subsidy.vehicles.model.makerline.tesla2026">테슬라 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);" data-i18n="subsidy.vehicles.amount.model3">680만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>513km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>27분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>60kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>5,199만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <!-- CARD 4 -->
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-truck-porter.svg" alt="포터 II 일렉트릭 전기화물차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.porter"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;" data-i18n="subsidy.vehicles.car.porter">포터 II 일렉트릭</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-warning" data-i18n="subsidy.vehicles.chip.evtruck">전기화물</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="subsidy.vehicles.model.makerline.hd2026">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);" data-i18n="subsidy.vehicles.amount.porter">1,600만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>211km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>54분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>58.8kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>4,395만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <!-- CARD 5 -->
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/fcev-suv-nexo.svg" alt="NEXO 수소승용차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.nexo"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;" >NEXO</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-info" data-i18n="subsidy.vehicles.chip.fcevpassenger">수소승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="subsidy.vehicles.model.makerline.hd2026">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);" data-i18n="subsidy.vehicles.amount.nexo">3,250만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>609km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>5분</strong><span data-i18n="subsidy.vehicles.spec.h2charge">수소 충전</span></div>
+              <div class="car-spec-item"><strong>6.33kg</strong><span data-i18n="subsidy.vehicles.spec.h2cap">수소 용량</span></div>
+              <div class="car-spec-item"><strong>6,765만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <!-- CARD 6 -->
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-bus-elec-city.svg" alt="일렉시티 전기승합차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.eleccity"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;" data-i18n="subsidy.vehicles.car.eleccity">일렉시티</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-warning" data-i18n="subsidy.vehicles.chip.evbus">전기승합</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="subsidy.vehicles.model.makerline.hdbus">현대자동차 · 대형버스</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);" data-i18n="subsidy.vehicles.amount.eleccity">7,000만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>319km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>60분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>256kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>3억원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+        </div>
+
+        <!-- Also provide table view -->
+        <div class="mt-8" data-reveal>
+          <div class="flex justify-between items-center mb-4">
+            <h3 style="font-size: 20px;" data-i18n="subsidy.vehicles.tbl.title">전체 목록</h3>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="vehicle-table">
+              <thead>
+                <tr>
+                  <th class="sortable" data-i18n="subsidy.vehicles.tbl.head.type">차종</th>
+                  <th class="sortable" data-i18n="subsidy.vehicles.tbl.head.maker">제조사</th>
+                  <th class="sortable" data-i18n="subsidy.vehicles.tbl.head.model">모델명</th>
+                  <th class="sortable" data-i18n="subsidy.vehicles.tbl.head.range">주행거리</th>
+                  <th class="sortable" data-i18n="subsidy.vehicles.tbl.head.price">판매가</th>
+                  <th class="sortable" data-i18n="subsidy.vehicles.tbl.head.maxsub">최대 보조금</th>
+                  <th style="text-align:center; width: 80px;" data-i18n="subsidy.vehicles.tbl.head.detail">상세</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="expandable" data-expand="v1">
+                  <td><span class="chip chip-success" data-i18n="subsidy.vehicles.chip.evpassenger">전기승용</span></td>
+                  <td data-i18n="subsidy.vehicles.maker.hyundai">현대자동차</td>
+                  <td><strong data-i18n="subsidy.vehicles.car.ioniq6">아이오닉 6</strong></td>
+                  <td>524km</td>
+                  <td data-i18n="subsidy.vehicles.tbl.price.ioniq6">5,200만원</td>
+                  <td style="color: var(--color-primary-700); font-weight: 700;" data-i18n="subsidy.vehicles.tbl.sub.ioniq6">1,180만원</td>
+                  <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+                </tr>
+                <tr class="detail-row" id="v1"><td colspan="7">
+                  <div class="detail-content">
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.battery">배터리·충전</h5><p data-i18n-html="subsidy.vehicles.det.ioniq6.battery">・용량: 77.4kWh<br>・급속(80%): 18분<br>・완속(10~100%): 7시간 30분</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.subsidy">보조금 구성</h5><p data-i18n-html="subsidy.vehicles.det.ioniq6.subsidy">・국비: 650만원<br>・지방비(평균): 430만원<br>・국내 조립 가산: 50만원<br>・V2L 가산: 50만원</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.specs">제원</h5><p data-i18n-html="subsidy.vehicles.det.ioniq6.specs">・복합전비: 6.2km/kWh<br>・공차중량: 2,020kg<br>・모터 최고출력: 239kW</p></div><div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.link">바로가기</h5><p style="margin-top: 8px;" data-i18n-html="subsidy.vehicles.det.ioniq6.link"><a href="compare-tool.html" class="btn btn-sm btn-primary">비교하기</a></p></div>
+                  </div>
+                </td></tr>
+
+                <tr class="expandable" data-expand="v2">
+                  <td><span class="chip chip-success" data-i18n="subsidy.vehicles.chip.evpassenger">전기승용</span></td>
+                  <td data-i18n="subsidy.vehicles.maker.kia">기아</td>
+                  <td><strong>EV6</strong></td>
+                  <td>475km</td>
+                  <td data-i18n="subsidy.vehicles.tbl.price.ev6">4,995만원</td>
+                  <td style="color: var(--color-primary-700); font-weight: 700;" data-i18n="subsidy.vehicles.tbl.sub.ev6">1,150만원</td>
+                  <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+                </tr>
+                <tr class="detail-row" id="v2"><td colspan="7">
+                  <div class="detail-content">
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.battery">배터리·충전</h5><p data-i18n-html="subsidy.vehicles.det.ev6.battery">・용량: 77.4kWh<br>・급속(80%): 18분</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.subsidy">보조금 구성</h5><p data-i18n-html="subsidy.vehicles.det.ev6.subsidy">・국비 650 + 지방비 430<br>・국내 조립 +50<br>・V2L 가산 +50</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.specs">제원</h5><p data-i18n-html="subsidy.vehicles.det.ev6.specs">・복합전비: 5.6km/kWh<br>・공차중량: 2,025kg<br>・모터 최고출력: 168kW</p></div><div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.link">바로가기</h5><p style="margin-top: 8px;" data-i18n-html="subsidy.vehicles.det.ev6.link"><a href="compare-tool.html" class="btn btn-sm btn-primary">비교하기</a></p></div>
+                  </div>
+                </td></tr>
+
+                <tr class="expandable" data-expand="v3">
+                  <td><span class="chip chip-info" data-i18n="subsidy.vehicles.chip.fcevpassenger">수소승용</span></td>
+                  <td data-i18n="subsidy.vehicles.maker.hyundai">현대자동차</td>
+                  <td><strong>NEXO</strong></td>
+                  <td>609km</td>
+                  <td data-i18n="subsidy.vehicles.tbl.price.nexo">6,765만원</td>
+                  <td style="color: var(--color-primary-700); font-weight: 700;" data-i18n="subsidy.vehicles.tbl.sub.nexo">3,250만원</td>
+                  <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+                </tr>
+                <tr class="detail-row" id="v3"><td colspan="7">
+                  <div class="detail-content">
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.h2fuel">수소 연료</h5><p data-i18n-html="subsidy.vehicles.det.nexo.h2fuel">・용량: 6.33kg<br>・충전: 5분<br>・주행: 609km</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.subsidy">보조금 구성</h5><p data-i18n-html="subsidy.vehicles.det.nexo.subsidy">・국비: 2,250만원<br>・지방비: 1,000만원</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.specs">제원</h5><p data-i18n-html="subsidy.vehicles.det.nexo.specs">・복합연비: 96.2km/kg<br>・공차중량: 1,889kg<br>・모터 최고출력: 120kW</p></div><div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.link">바로가기</h5><p style="margin-top: 8px;" data-i18n-html="subsidy.vehicles.det.nexo.link"><a href="compare-tool.html" class="btn btn-sm btn-primary">비교하기</a></p></div>
+                  </div>
+                </td></tr>
+
+                <tr class="expandable" data-expand="v4">
+                  <td><span class="chip chip-warning" data-i18n="subsidy.vehicles.chip.evtruck">전기화물</span></td>
+                  <td data-i18n="subsidy.vehicles.maker.hyundai">현대자동차</td>
+                  <td><strong data-i18n="subsidy.vehicles.car.porter">포터 II 일렉트릭</strong></td>
+                  <td>211km</td>
+                  <td data-i18n="subsidy.vehicles.tbl.price.porter">4,395만원</td>
+                  <td style="color: var(--color-primary-700); font-weight: 700;" data-i18n="subsidy.vehicles.tbl.sub.porter">1,600만원</td>
+                  <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+                </tr>
+                <tr class="detail-row" id="v4"><td colspan="7">
+                  <div class="detail-content">
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.battery">배터리·충전</h5><p data-i18n-html="subsidy.vehicles.det.porter.battery">・용량: 58.8kWh<br>・급속(80%): 54분<br>・완속: 약 9시간</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.subsidy">보조금 구성</h5><p data-i18n-html="subsidy.vehicles.det.porter.subsidy">・국비 1,100 + 지방비 400<br>・소상공인 +100<br>・택시 전환 +200</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.specs">제원</h5><p data-i18n-html="subsidy.vehicles.det.porter.specs">・복합전비: 3.1km/kWh<br>・공차중량: 1,970kg<br>・최대적재: 1,000kg</p></div><div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.link">바로가기</h5><p style="margin-top: 8px;" data-i18n-html="subsidy.vehicles.det.porter.link"><a href="compare-tool.html" class="btn btn-sm btn-primary">비교하기</a></p></div>
+                  </div>
+                </td></tr>
+
+                <tr class="expandable" data-expand="v5">
+                  <td><span class="chip chip-success" data-i18n="subsidy.vehicles.chip.evpassenger">전기승용</span></td>
+                  <td data-i18n="subsidy.vehicles.maker.kgm">KG모빌리티</td>
+                  <td><strong data-i18n="subsidy.vehicles.car.toresevx">토레스 EVX</strong></td>
+                  <td>433km</td>
+                  <td data-i18n="subsidy.vehicles.tbl.price.toresevx">4,857만원</td>
+                  <td style="color: var(--color-primary-700); font-weight: 700;" data-i18n="subsidy.vehicles.tbl.sub.toresevx">1,130만원</td>
+                  <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
+                </tr>
+                <tr class="detail-row" id="v5"><td colspan="7">
+                  <div class="detail-content">
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.battery">배터리·충전</h5><p data-i18n-html="subsidy.vehicles.det.toresevx.battery">・용량: 73.4kWh (LFP)<br>・급속(80%): 35분<br>・완속: 약 8시간</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.subsidy">보조금 구성</h5><p data-i18n-html="subsidy.vehicles.det.toresevx.subsidy">・국비: 650만원<br>・지방비(평균): 430만원<br>・국내 조립 가산: 50만원</p></div>
+                    <div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.specs">제원</h5><p data-i18n-html="subsidy.vehicles.det.toresevx.specs">・복합전비: 4.7km/kWh<br>・공차중량: 1,890kg<br>・모터 최고출력: 152kW</p></div><div class="detail-block"><h5 data-i18n="subsidy.vehicles.h5.link">바로가기</h5><p style="margin-top: 8px;" data-i18n-html="subsidy.vehicles.det.toresevx.link"><a href="compare-tool.html" class="btn btn-sm btn-primary">비교하기</a></p></div>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination" data-total="10" data-current="1"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-subsidy.js?v=20260630a"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 메인 차량 카드에서 넘어온 검색어 자동 적용(?q=) + 필터 초기화 버튼 */
+(function () {
+  function fire(el, type) { el.dispatchEvent(new Event(type, { bubbles: true })); }
+  var search = document.getElementById('sv-search');
+  var table = document.getElementById('vehicle-table');
+
+  var q = new URLSearchParams(location.search).get('q');
+  if (q && search) {
+    search.value = q;
+    fire(search, 'input');               // data-table-search 라이브 필터 트리거
+    var box = search.closest('.card');
+    if (box && box.scrollIntoView) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  var reset = document.getElementById('sv-reset');
+  if (reset) {
+    reset.addEventListener('click', function () {
+      if (search) { search.value = ''; fire(search, 'input'); }
+      ['sv-type', 'sv-maker', 'sv-sort'].forEach(function (id) {
+        var s = document.getElementById(id); if (s) { s.selectedIndex = 0; fire(s, 'change'); }
+      });
+      document.querySelectorAll('[data-chip-filter-group] [data-chip-filter]').forEach(function (c) {
+        c.classList.remove('chip-active');
+      });
+      if (table) table.querySelectorAll('tbody tr').forEach(function (tr) { tr.style.display = ''; });
+    });
+  }
+})();
+</script>
+</body>
+</html>

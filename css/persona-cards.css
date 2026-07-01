@@ -1,0 +1,212 @@
+/* persona-cards.css — 메인 페르소나(후보2) 버튼 & 서비스 카드 스위처
+   home-main02.css 의 .m02-persona / .m02-evsvc-* 규칙을 보완한다.
+   페르소나 항목이 <a> 에서 <button> 으로 바뀌면서 버튼 기본 스타일 리셋 + 선택(active) 상태를 추가. */
+
+/* 페르소나 버튼/AI 링크 공통 — 기존 .m02-persona a 와 동일한 외형 */
+.m02-persona .m02-persona-btn,
+.m02-persona .m02-persona-ai {
+  flex: 1 1 0; min-width: 96px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 12px 6px; border-radius: 14px;
+  text-decoration: none; color: #2b3744;
+  background: none; border: 0; cursor: pointer;
+  font-family: inherit; transition: .16s;
+}
+.m02-persona .m02-persona-btn:hover,
+.m02-persona .m02-persona-ai:hover {
+  background: rgba(255,255,255,.7); transform: translateY(-3px);
+}
+.m02-persona .m02-persona-btn .ic,
+.m02-persona .m02-persona-ai .ic {
+  width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center;
+  background: #fff; box-shadow: 0 6px 14px rgba(20,35,58,.08); font-size: 22px;
+  transition: .16s;
+}
+.m02-persona .m02-persona-ai .ic.ai {
+  background: var(--color-primary-500); color: #fff; font-weight: 900; font-size: 14px; font-style: normal;
+}
+.m02-persona .m02-persona-btn span:last-child,
+.m02-persona .m02-persona-ai span:last-child {
+  font-size: 13px; font-weight: 700; letter-spacing: -0.02em;
+}
+
+/* 선택된 페르소나 — 탭처럼 강조 */
+.m02-persona .m02-persona-btn.is-active {
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(20,35,58,.12);
+}
+.m02-persona .m02-persona-btn.is-active .ic {
+  background: var(--color-primary-500); color: #fff;
+  box-shadow: 0 8px 18px rgba(45,127,209,.30);
+}
+.m02-persona .m02-persona-btn.is-active span:last-child {
+  color: var(--color-primary-600);
+}
+.m02-persona .m02-persona-btn.is-active::after {
+  content: ""; position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+  width: 22px; height: 3px; border-radius: 3px; background: var(--color-primary-500);
+}
+.m02-persona .m02-persona-btn { position: relative; }
+
+.m02-persona .m02-persona-btn:focus-visible,
+.m02-persona .m02-persona-ai:focus-visible {
+  outline: 2px solid var(--color-primary-500); outline-offset: 2px;
+}
+
+/* 서비스 카드 호버 시 위로 떠오르는(translateY) 카드와 그림자가
+   viewport overflow:hidden 에 잘리지 않도록 상·하 여유 공간 확보.
+   margin 으로 위치를 보정해 레이아웃 변화는 없게 유지. */
+.m02-evsvc-viewport {
+  overflow: hidden;
+  padding-top: 16px;
+  margin-top: -16px;
+  padding-bottom: 24px;
+  margin-bottom: -16px;
+}
+
+/* 히어로 키커(태그라인) — h1(40px)과 본문(16px)의 중간 크기(28px) + 2줄 노출 */
+.m02-hero-copy .m02-hero-kicker {
+  font-size: 28px;
+  line-height: 1.32;
+  font-weight: 700;
+  margin: 0 0 18px;
+}
+
+/* ===== 충전 요금 비교 — 사업자 다중선택 드롭다운 ===== */
+.m03-fee-filters { align-items: flex-end; }
+.m03-op-dropdown { position: relative; }
+.m03-op-toggle {
+  width: 190px; height: 38px; border: 0; border-bottom: 1px solid #111; background: #fff;
+  font-size: 12px; color: #333; padding: 0 4px; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 6px; white-space: nowrap;
+}
+.m03-op-toggle #m03OpLabel { overflow: hidden; text-overflow: ellipsis; }
+.m03-op-dropdown.open .m03-op-toggle svg { transform: rotate(180deg); }
+.m03-op-panel {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; min-width: 210px;
+  background: #fff; border: 1px solid #e4e9ef; border-radius: 12px;
+  box-shadow: 0 14px 30px rgba(20,35,58,.14); padding: 8px; max-height: 300px; overflow: auto;
+}
+.m03-op-item {
+  display: flex; align-items: center; gap: 9px; padding: 8px 9px; border-radius: 9px;
+  cursor: pointer; font-size: 13px; font-weight: 700; color: #2b3744;
+}
+.m03-op-item:hover { background: #f3f7fd; }
+.m03-op-item input { width: 16px; height: 16px; accent-color: var(--color-primary-500); }
+.m03-op-item .logo { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 11px; font-weight: 900; }
+
+/* 추가 사업자 로고 색 */
+.logo.k { background: #2f6fbf; }
+.logo.d { background: #e0533d; }
+
+/* ===== 충전 요금 비교 — 로밍가 보유카드 선택 행(필터와 카드 사이) ===== */
+.m03-card-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin: 0 0 14px; padding: 12px 16px;
+  background: #f3f7fd; border: 1px solid #e2ecf7; border-radius: 12px;
+}
+.m03-card-row[hidden] { display: none; }
+.m03-card-row-label { font-size: 13px; font-weight: 700; color: #2f6fbf; }
+.m03-card-row select {
+  height: 36px; border: 1px solid #cfd9e6; border-radius: 8px; background: #fff;
+  font-size: 13px; color: #333; padding: 0 28px 0 12px; min-width: 200px;
+}
+
+/* ===== 충전 요금 비교 — 무한 캐러셀 ===== */
+.m03-fee-cards { display: flex; align-items: stretch; gap: 8px; position: relative; }
+.m03-fee-viewport { flex: 1; overflow: hidden; padding: 10px 2px; }
+.m03-fee-track { display: flex; gap: 16px; will-change: transform; }
+.m03-fee-track .m03-fee-card { flex: 0 0 calc((100% - 48px) / 4); box-sizing: border-box; min-height: auto; }
+.m03-fee-empty { padding: 60px 0; text-align: center; color: #8b96a4; font-size: 14px; width: 100%; }
+.m03-fee-nav {
+  flex: 0 0 auto; align-self: center; width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid #e2e8ee; background: #fff; display: grid; place-items: center;
+  cursor: pointer; color: #5a6675; box-shadow: 0 6px 16px rgba(20,35,58,.12); transition: .15s;
+}
+.m03-fee-nav:hover { color: var(--color-primary-600); border-color: var(--color-primary-300); }
+.m03-fee-nav svg { width: 18px; height: 18px; }
+/* 최저가 카드만 초록 배지(캐러셀 회전으로 :first-child 가 바뀌어도 고정) */
+.m03-fee-card .m03-price-box mark { background: #fff0d6; color: #f0a128; }
+.m03-fee-card.is-lowest .m03-price-box mark { background: #dff5e8; color: #19a76d; }
+@media (max-width: 1200px) {
+  .m03-fee-track .m03-fee-card { flex-basis: calc((100% - 32px) / 3); }
+}
+@media (max-width: 720px) {
+  .m03-fee-track .m03-fee-card { flex-basis: calc((100% - 16px) / 2); }
+}
+
+/* ===== 오늘의 충전요금: 충전요금 비교와 한 영역처럼 붙이고 크게 ===== */
+.m03-fee-section { padding-bottom: 14px; }                 /* 아래 영역과 살짝만 띄움 */
+.m02-ticker-sec { padding: 0 0 44px; }
+.m02-ticker.m02-ticker-single { grid-template-columns: 1fr; }
+.m02-ticker.m02-ticker-single .m02-ticker-box {
+  min-height: 76px; padding: 20px 28px; gap: 16px; font-size: 16px; border-radius: 16px;
+}
+.m02-ticker.m02-ticker-single .m02-ticker-box .ttl { font-size: 17px; }
+.m02-ticker.m02-ticker-single .m02-ticker-box .price { font-size: 20px; margin-left: auto; }
+.m02-ticker.m02-ticker-single .m02-ticker-box .down { font-size: 15px; }
+
+/* ===== 새소식 탭(버튼형) — 기존 링크 탭과 동일 외형 ===== */
+.m02-sec-head .m02-tablinks button {
+  font-size: 14px; font-weight: 700; color: #8a93a0;
+  background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit;
+}
+.m02-sec-head .m02-tablinks button.active,
+.m02-sec-head .m02-tablinks button:hover { color: var(--color-primary-600); }
+
+/* ===== [카드비교] 가격 영역 재구성(숫자/단위 겹침 해결) + 시인성 강화 ===== */
+.m03-fee-card .m03-price-box {
+  position: relative; height: auto; min-height: 112px; padding: 14px 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+}
+.m03-fee-card .m03-price-box small {
+  font-size: 11px; font-weight: 700; color: #7c8794; margin: 0;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.m03-fee-card .m03-price-val { display: flex; align-items: baseline; gap: 3px; }
+.m03-fee-card .m03-price-box em { font-size: 40px; line-height: 1; font-weight: 900; letter-spacing: -.03em; }
+.m03-fee-card .m03-price-box b { position: static; right: auto; top: auto; font-size: 13px; color: #5a96d0; }
+.m03-fee-card .m03-price-box mark { position: static; margin: 0; }
+/* 최저가: 가격 박스만 초록 강조(테두리는 호버 전용으로 통일) */
+.m03-fee-card.is-lowest .m03-price-box { background: #ecfaf2; }
+.m03-fee-card.is-lowest .m03-price-box em,
+.m03-fee-card.is-lowest .m03-price-box b { color: #15a86b; }
+.m03-mycard-tag { background: #e7f0ff; color: #2f6fbf; font-size: 9.5px; font-weight: 800; border-radius: 4px; padding: 2px 6px; }
+/* 로밍 미공시 카드 */
+.m03-fee-card.is-na .m03-price-box { background: #f4f5f7; }
+.m03-fee-card.is-na .m03-price-box .na-em { font-size: 19px; font-weight: 800; color: #98a1ad; }
+.m03-fee-card.is-na .m03-price-box .na-mark { background: #eceef1; color: #98a1ad; }
+
+/* ===== [상세비교] 좌측 카드 2×2 그리드 + 우측 상세 패널 ===== */
+.m03-fee-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 24px; align-items: start; position: static; }
+.m03-fee-detail[hidden] { display: none !important; }
+.m03-detail-left { min-width: 0; }
+.m03-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.m03-detail-grid .m03-fee-empty { grid-column: 1 / -1; }
+.m03-detail-pager { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+.m03-detail-pager[hidden] { display: none; }
+.m03-detail-page { font-size: 13px; font-weight: 800; color: #5a6675; min-width: 52px; text-align: center; font-variant-numeric: tabular-nums; }
+.m03-dcard {
+  display: block; width: 100%; text-align: left; background: #fff; border: 1px solid #e4e9ef;
+  border-radius: 18px; padding: 16px; color: #111827; cursor: pointer; transition: .18s;
+}
+.m03-dcard:hover { transform: translateY(-2px); border-color: #11b875; }       /* 호버 전용 강조 */
+.m03-dcard.selected { border-color: #11b875; border-width: 2px; background: #f3fbf7; box-shadow: 0 8px 20px rgba(20,162,98,.10); }
+.m03-dcard-top { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+.m03-dcard-top .logo { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 16px; font-weight: 900; flex: 0 0 auto; }
+.m03-dcard-name { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.m03-dcard-name strong { font-size: 15px; font-weight: 900; line-height: 1.1; }
+.m03-dcard-stations { font-size: 11px; color: #7c8794; }
+.m03-dcard-chip { align-self: flex-start; margin-top: 2px; font-size: 10px; font-weight: 800; border-radius: 5px; padding: 2px 7px; }
+.m03-dcard-chip.mycard { background: #e7f0ff; color: #2f6fbf; }
+.m03-dcard-row { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 13px; background: #f8fafc; border-radius: 10px; margin-bottom: 7px; }
+.m03-dcard-row span { font-size: 12px; color: #798391; font-weight: 700; }
+.m03-dcard-row strong { font-size: 16px; font-weight: 900; color: #111; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.m03-dcard.is-na { background: #fafbfc; }
+.m03-dcard-na { display: grid; place-items: center; gap: 4px; padding: 22px 0; text-align: center; color: #98a1ad; }
+.m03-dcard-na i { font-size: 22px; }
+.m03-dcard-na span { font-size: 14px; font-weight: 800; }
+.m03-dcard-na small { font-size: 11px; }
+@media (max-width: 1200px) {
+  .m03-fee-detail { grid-template-columns: 1fr; }
+}

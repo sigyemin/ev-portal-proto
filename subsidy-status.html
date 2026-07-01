@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보조금 신청현황 | 마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/subsidy-status.css?v=20260630a">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true;</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html" data-i18n="extra.bc.home">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <span class="current">보조금 신청현황</span>
+      </nav>
+      <h1>보조금 신청현황</h1>
+      <p class="hero-lead">내 명의로 신청된 무공해차 보조금을 차량별로 확인합니다. 카드를 펼치면 단계별 진행 상황과 일정을 볼 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 인증 게이트 (인증 통과 전에는 리스트 비노출) -->
+      <div id="subsidyGate"></div>
+
+      <!-- 신청현황 리스트 (인증 성공 후 노출) -->
+      <div id="subsidyView" hidden>
+
+      <!-- 인사 + 요약 -->
+      <div class="ssp-greet">
+        <h2><b id="memberName">홍길동</b>님의 보조금 신청현황</h2>
+        <div class="ssp-sum" id="sumPills"></div>
+      </div>
+
+      <!-- 카드 리스트 -->
+      <div class="ssp-list" id="sspList"></div>
+
+      <!-- 빈상태 (신청 0건) -->
+      <div class="ssp-empty" id="sspEmptyWrap" hidden>
+        <p>신청 내역이 없습니다.</p>
+        <a href="subsidy-target.html" class="btn btn-primary">보조금 신청 바로가기 →</a>
+      </div>
+
+      <!-- fallback 안내 (판매사 대행입력 오타 대비) -->
+      <div class="alert alert-info ssp-fallback">
+        <div class="alert-icon"></div>
+        <div class="alert-body">
+          <strong>신청 내역이 보이지 않나요?</strong>
+          판매사가 입력한 정보와 회원정보가 다르면 조회되지 않을 수 있습니다. 판매사 또는 고객센터(<strong>1661-0970</strong>)로 정정을 요청하세요.
+        </div>
+      </div>
+
+      </div><!-- /#subsidyView -->
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/subsidy-status-common.js?v=20260630a"></script>
+<script src="js/subsidy-auth.js?v=20260701a"></script>
+<script>
+(function(){
+  var S = window.SubsidyStatus;
+
+  // ── 로그인 회원 신원 (가입 시 인증된 정보) ──
+  var ME = { name:'홍길동', birth:'1990-01-01', phone:'010-1234-5678' };
+  try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.name) ME.name = u.name; } catch(e){}
+  var ME_ID = { name:'홍길동', birth:'1990-01-01', phone:'010-1234-5678' };
+
+  // ── mock (개인 4건): 지급완료(501)·보완요청(110)·자격심사(121)·종료(940 승인불가) ──
+  // account/applicant/coOwner/householder = 본인매칭용 내부 데이터(화면 출력 안 함)
+  var RAW = [
+    { reqSeq:'2026-EVS-20451', carType:'전기승용', model:'아이오닉 6', region:'서울특별시', amount:1180, appStep:501,
+      account:'국민 123-45-6789-012', applicant:ME_ID, coOwner:null, householder:null,
+      dates:['2026-05-10','2026-05-17','2026-05-24','2026-05-30','2026-06-04'] },
+    { reqSeq:'2026-EVS-20488', carType:'전기승용', model:'EV6', region:'경기도', amount:1130, appStep:110,
+      account:'국민 123-45-6789-012', applicant:ME_ID, coOwner:null, householder:null,
+      dates:['2026-05-22','2026-05-26','','',''],
+      suppReason:'주민등록등본 상 거주지와 신청 지자체가 일치하지 않습니다. 최신 등본(거주지 기준)을 다시 제출해 주세요.',
+      suppDocs:['주민등록등본(최근 1개월)','신청자 명의 신분증 사본'] },
+    { reqSeq:'2026-EVS-20502', carType:'전기승용', model:'코나 일렉트릭', region:'인천광역시', amount:1180, appStep:121,
+      account:'신한 110-222-333444',
+      applicant:{ name:'홍부친', birth:'1962-03-08', phone:'010-9000-1111' },
+      coOwner:ME_ID, householder:{ name:'홍부친', birth:'1962-03-08', phone:'010-9000-1111' },
+      dates:['2026-05-28','2026-06-01','','',''] },
+    { reqSeq:'2026-EVS-20377', carType:'전기승용', model:'토레스 EVX', region:'부산광역시', amount:1130, appStep:940,
+      account:'국민 123-45-6789-012', applicant:ME_ID, coOwner:null, householder:null,
+      dates:['2026-05-15','2026-05-19','','',''],
+      cancelReason:'제출 서류로 지원 자격(거주요건)이 확인되지 않아 승인 불가 처리되었습니다. 자격 보완 후 재신청이 가능합니다.' }
+  ];
+
+  // ── 매칭: 회원(성명+생년월일+휴대폰)이 신청자/공동명의자/세대주 중 하나라도 일치 (표시는 안 함) ──
+  function sameId(a, b){ return a && b && a.name===b.name && a.birth===b.birth && a.phone===b.phone; }
+  function matchRole(it){
+    if (sameId(ME_ID, it.applicant)) return 'applicant';
+    if (sameId(ME_ID, it.coOwner)) return 'coowner';
+    if (sameId(ME_ID, it.householder)) return 'householder';
+    return null;
+  }
+  var DATA = S.decorate(RAW).filter(function(r){ r.role = matchRole(r); return r.role !== null; });
+
+  // ── 인증 게이트 통과 후에만 렌더 ──
+  function renderMyList(){
+    document.getElementById('memberName').textContent = ME.name;
+    S.renderPills(document.getElementById('sumPills'), DATA);
+    var list = document.getElementById('sspList');
+    if (DATA.length) {
+      S.renderCards(list, DATA, { supplementHref:'#' });  // TODO: 업무지원시스템 구매보조금 신청현황 URL 연동
+      document.getElementById('sspEmptyWrap').hidden = true;
+    } else {
+      list.innerHTML = '';
+      document.getElementById('sspEmptyWrap').hidden = false;
+    }
+  }
+  // 개인 인증 성공 + 인증신원==로그인계정 일 때만 개인 리스트 노출(게이트가 판정)
+  window.SubsidyAuth.mount({ pageType:'personal', login:ME_ID, onAuthed:renderMyList });
+})();
+</script>
+</body>
+</html>

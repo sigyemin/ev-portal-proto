@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>완속충전기 제품 안내 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/screens-v2.css">
+<style>
+/* charging-install-products — 제품 카탈로그 개편 (v0.17) · 공통 컴포넌트(.info-side-card/.chip/.badge/.btn/.modal) 재사용 */
+.view-toggle { display:inline-flex; gap:6px; }
+.prod-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+@media (max-width:900px){ .prod-grid{ grid-template-columns:repeat(2,1fr);} }
+@media (max-width:600px){ .prod-grid{ grid-template-columns:1fr;} }
+.prod-card { display:flex; flex-direction:column; }
+.prod-thumb { position:relative; height:148px; background:var(--color-gray-100); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:14px; }
+.prod-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:12px; }
+.prod-thumb .ph { font-size:46px; color:var(--color-gray-400); }
+.prod-card h4 { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 4px; }
+.prod-maker { font-size:12.5px; color:var(--color-gray-500); margin:0 0 12px; }
+.prod-spec { display:grid; grid-template-columns:max-content 1fr; gap:8px 14px; font-size:13px; margin:0; }
+.prod-spec dt { color:var(--color-gray-500); font-weight:600; }
+.prod-spec dd { margin:0; color:var(--color-gray-800); }
+.pay-chips { display:flex; flex-wrap:wrap; gap:5px; }
+.pay-chips .badge { background:var(--color-gray-100); color:var(--color-gray-600); font-weight:600; }
+.prod-actions { display:flex; gap:8px; margin-top:auto; padding-top:16px; }
+.prod-actions .btn { flex:1; }
+.prod-actions .btn-icononly { flex:0 0 auto; min-width:42px; }
+.maker-card .btn { width:100%; }
+/* 상세 모달 */
+.pd-top { display:flex; gap:18px; margin-bottom:18px; }
+.pd-thumb { flex:0 0 130px; height:130px; background:var(--color-gray-100); border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.pd-thumb img { width:100%; height:100%; object-fit:contain; padding:10px; }
+.pd-thumb .ph { font-size:44px; color:var(--color-gray-400); }
+.pd-price-grid { display:flex; gap:18px; }
+.pd-price-grid .v { font-size:22px; font-weight:700; color:var(--color-gray-900); line-height:1.2; }
+.pd-price-grid .v.sub { font-size:16px; font-weight:600; color:var(--color-gray-700); }
+.pd-price-grid .k { font-size:12px; color:var(--color-gray-500); }
+.pd-table { width:100%; border-collapse:collapse; font-size:13.5px; }
+.pd-table th { text-align:left; width:96px; color:var(--color-gray-500); font-weight:600; padding:8px 10px 8px 0; vertical-align:top; }
+.pd-table td { padding:8px 0; color:var(--color-gray-800); border-bottom:1px solid var(--color-gray-100); }
+.pd-list { margin:8px 0 0; padding-left:18px; }
+.pd-list li { margin:3px 0; font-size:13.5px; color:var(--color-gray-800); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="charging.card.apply.bc.home">홈</a><span class="sep">›</span>
+        <a href="charging.html" data-i18n="charging.card.apply.bc.charging">충전소·요금 정보</a><span class="sep">›</span>
+        <a href="charging-install.html" data-i18n="charging.install.bc.install">충전시설 설치</a><span class="sep">›</span>
+        <span class="current" data-i18n="charging.install.products.bc.current">완속충전기 제품 안내</span>
+      </nav>
+      <h1 data-i18n="charging.install.products.h1">완속충전기 제품 안내</h1>
+      <p class="hero-lead" data-i18n-html="charging.install.products.lead2">환경부 보조금 지원 대상 <strong>인증 완속충전기 제품</strong> 목록과 사양 정보입니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 보기 전환: 제품별 / 업체별 -->
+      <div class="flex-between mb-4" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div class="view-toggle" role="tablist" aria-label="보기 전환">
+          <button class="chip chip-active" type="button" role="tab" aria-selected="true" data-view="product">제품별 보기</button>
+          <button class="chip" type="button" role="tab" aria-selected="false" data-view="maker">업체별 보기</button>
+        </div>
+        <span class="text-muted" id="resultCount" style="font-size:13px;" aria-live="polite"></span>
+      </div>
+
+      <!-- 필터 -->
+      <div class="filter-bar" id="filterBar">
+        <div class="filter-grp">
+          <label data-i18n="charging.install.products.lbl.type">유형</label>
+          <select id="fType"><option value="all" data-i18n="charging.install.products.type.all">전체</option><option value="벽부형" data-i18n="charging.install.products.type.wall">벽부형</option><option value="스탠드형" data-i18n="charging.install.products.type.stand">스탠드형</option><option value="가정용" data-i18n="charging.install.products.type.home">가정용</option></select>
+        </div>
+        <div class="filter-grp">
+          <label data-i18n="charging.install.products.lbl.power">출력</label>
+          <select id="fPower"><option value="all" data-i18n="charging.install.products.type.all">전체</option><option value="3">3kW</option><option value="7">7kW</option><option value="11">11kW</option></select>
+        </div>
+        <div class="filter-grp">
+          <label>결제</label>
+          <select id="fPay"><option value="all">전체</option><option>로밍카드</option><option>신용카드</option><option>QR결제</option><option>APP결제</option></select>
+        </div>
+        <div class="filter-grp">
+          <label data-i18n="charging.install.products.lbl.maker">제조사</label>
+          <input type="text" id="fMaker" placeholder="제조사 검색" data-i18n-attr="placeholder:charging.install.products.ph.maker">
+        </div>
+        <button class="btn btn-secondary" type="button" id="fReset">초기화</button>
+      </div>
+
+      <!-- 렌더 영역 -->
+      <div class="prod-grid mt-4" id="catalogGrid"></div>
+      <p class="text-muted mt-4" id="emptyMsg" style="display:none;">조건에 맞는 제품이 없습니다.</p>
+
+      <p class="text-muted mt-4" data-i18n="charging.install.products.demo.note">⚠ 시연용 예시 데이터 — 실제 인증 제품 목록·사양·제조사 홈페이지 링크는 환경공단 인증 DB 연동 후 제공됩니다.</p>
+
+    </div>
+  </section>
+</main>
+
+<!-- 제품 상세 모달 (공통 .modal 시스템 재사용) -->
+<div class="modal-backdrop" data-for="productDetailModal"></div>
+<div class="modal" id="productDetailModal" role="dialog" aria-modal="true" aria-labelledby="pdTitle" aria-hidden="true">
+  <div class="modal-header">
+    <h3 id="pdTitle">제품 상세</h3>
+    <button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="modal-body" id="pdBody"></div>
+  <div class="modal-footer" style="justify-content:space-between;">
+    <span class="text-muted" id="pdPhone" style="font-size:13px;"></span>
+    <span style="display:flex;gap:8px;">
+      <button class="btn btn-secondary" type="button" data-modal-close>닫기</button>
+      <a class="btn btn-primary" id="pdHome" href="#" target="_blank" rel="noopener">제조사 홈페이지 ↗</a>
+    </span>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* ===== 완속충전기 제품 카탈로그 (v0.17) — 시연용 예시 데이터 ===== */
+(function(){
+  'use strict';
+  var makers = {
+    pcube:{ name:'파워큐브',       phone:'1670-1234', home:'https://www.powercube.co.kr' },
+    sks:  { name:'SK시그넷',       phone:'1600-5678', home:'https://www.signetev.com' },
+    dycb: { name:'대영채비',       phone:'1522-0000', home:'https://www.chaevi.com' },
+    cj:   { name:'중앙제어',       phone:'1666-2580', home:'https://www.joongang.com' },
+    pl:   { name:'피라인모터스',   phone:'1533-7000', home:'https://www.pline.co.kr' },
+    gsc:  { name:'GS커넥트',       phone:'1544-3000', home:'https://www.gsconnect.co.kr' }
+  };
+  var PAY_ALL = ['로밍카드','신용카드','QR결제','APP결제'];
+  var products = [
+    { id:'pcube-7c1', model:'PowerCube 7kW', maker:'pcube', type:'벽부형', power:'단상 220V', cap:7, cable:'일체형(C타입)', pay:PAY_ALL, size:'371(W)×450(H)×171(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:324, pMin:290, pMax:347, rate:140, notes:['7인치 LCD Display','스마트제어형 충전기','국내외 모든 전기차 충전가능'], addons:['스탠드폴 (20만원)','캐노피형 스탠드폴 (30만원)'] },
+    { id:'sks-11c', model:'EV Connect 11kW', maker:'sks', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'400(W)×1400(H)×210(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:330, pMin:300, pMax:352, rate:180, notes:['전력분배형 지원','스마트제어형 충전기'], addons:['캐노피 (30만원)'] },
+    { id:'dycb-7w', model:'GreenWall 7kW', maker:'dycb', type:'벽부형', power:'단상 220V', cap:7, cable:'일체형(C타입)', pay:['신용카드','QR결제','APP결제'], size:'360(W)×440(H)×165(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:318, pMin:295, pMax:330, rate:140, notes:['슬림 벽부형','스마트제어형 충전기'], addons:['스탠드폴 (20만원)'] },
+    { id:'cj-11f', model:'FastCharge 11kW', maker:'cj', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'410(W)×1450(H)×220(D) mm', material:'스테인리스', cert:'KC·KS·환경부', pAvg:335, pMin:305, pMax:355, rate:180, notes:['옥외 IP54 방수·방진','스마트제어형 충전기'], addons:[] },
+    { id:'pl-3h', model:'HomePlus 3kW', maker:'pl', type:'가정용', power:'단상 220V', cap:3, cable:'일체형(C타입)', pay:['신용카드','APP결제'], size:'160(W)×220(H)×95(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:300, pMin:280, pMax:312, rate:60, notes:['가정용 콘센트형','컴팩트 설계'], addons:[] },
+    { id:'gsc-11p', model:'PublicMax 11kW', maker:'gsc', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'420(W)×1480(H)×225(D) mm', material:'스테인리스', cert:'KC·KS·환경부', pAvg:332, pMin:308, pMax:350, rate:180, notes:['V2G 대응','스마트제어형 충전기'], addons:['캐노피 (30만원)'] },
+    { id:'pcube-7s', model:'SmartWall 7kW', maker:'pcube', type:'벽부형', power:'단상 220V', cap:7, cable:'일체형(C타입)', pay:PAY_ALL, size:'365(W)×455(H)×170(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:322, pMin:298, pMax:340, rate:140, notes:['7인치 터치 디스플레이','PnC 자동인증 지원'], addons:['스탠드폴 (20만원)'] },
+    { id:'dycb-7u', model:'UrbanCharge 7kW', maker:'dycb', type:'벽부형', power:'단상 220V', cap:7, cable:'분리형', pay:['신용카드','QR결제','APP결제'], size:'370(W)×460(H)×175(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:316, pMin:292, pMax:328, rate:140, notes:['도심형 디자인','스마트제어형 충전기'], addons:[] },
+    { id:'sks-11t', model:'TowerPlus 11kW', maker:'sks', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'405(W)×1420(H)×215(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:334, pMin:306, pMax:351, rate:180, notes:['멀티 커넥터(2구)','전력분배형 지원'], addons:['캐노피 (30만원)'] }
+  ];
+
+  var state = { view:'product', type:'all', power:'all', pay:'all', maker:'' };
+  var byId = {}; products.forEach(function(p){ byId[p.id]=p; });
+
+  var grid = document.getElementById('catalogGrid');
+  var empty = document.getElementById('emptyMsg');
+  var countEl = document.getElementById('resultCount');
+  var filterBar = document.getElementById('filterBar');
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function thumb(p, cls){ return '<div class="'+cls+'"><img src="assets/chargers/'+p.id+'.png" alt="'+esc(p.model)+' 제품 사진" onerror="this.remove()"><span class="ph" aria-hidden="true">🔌</span></div>'; }
+  function payChips(arr){ return '<div class="pay-chips">'+arr.map(function(t){ return '<span class="badge">'+esc(t)+'</span>'; }).join('')+'</div>'; }
+
+  function productCard(p){
+    var m = makers[p.maker];
+    return '<div class="info-side-card prod-card">'
+      + thumb(p,'prod-thumb')
+      + '<h4>'+esc(p.model)+' <span class="chip chip-info" style="font-weight:600;">'+p.cap+'kW</span></h4>'
+      + '<p class="prod-maker">'+esc(m.name)+'</p>'
+      + '<dl class="prod-spec">'
+        + '<dt>출력</dt><dd>'+esc(p.power)+'</dd>'
+        + '<dt>정격용량</dt><dd>'+p.cap+'kW</dd>'
+        + '<dt>충전케이블</dt><dd>'+esc(p.cable)+'</dd>'
+        + '<dt>결제타입</dt><dd>'+payChips(p.pay)+'</dd>'
+      + '</dl>'
+      + '<div class="prod-actions">'
+        + '<button class="btn btn-primary" type="button" data-detail="'+p.id+'">상세 보기</button>'
+        + '<a class="btn btn-secondary btn-icononly" href="'+esc(m.home)+'" target="_blank" rel="noopener" aria-label="'+esc(m.name)+' 홈페이지 바로가기" title="홈페이지 바로가기">↗</a>'
+      + '</div>'
+    + '</div>';
+  }
+
+  function makerCard(key){
+    var m = makers[key];
+    var list = products.filter(function(p){ return p.maker===key; });
+    return '<div class="info-side-card maker-card">'
+      + '<h4 style="margin-bottom:6px;">'+esc(m.name)+'</h4>'
+      + '<p class="prod-maker">스마트완속 '+list.length+'종 · 대표전화 '+esc(m.phone)+'</p>'
+      + '<dl class="prod-spec" style="margin-bottom:14px;">'
+        + '<dt>취급 모델</dt><dd>'+list.map(function(p){ return esc(p.model); }).join(', ')+'</dd>'
+      + '</dl>'
+      + '<div class="prod-actions" style="flex-direction:column;gap:8px;padding-top:4px;">'
+        + '<button class="btn btn-primary" type="button" data-maker-products="'+key+'">제품 '+list.length+'종 보기</button>'
+        + '<a class="btn btn-secondary" href="'+esc(m.home)+'" target="_blank" rel="noopener">홈페이지 바로가기 ↗</a>'
+      + '</div>'
+    + '</div>';
+  }
+
+  function applyFilters(list){
+    return list.filter(function(p){
+      if(state.type!=='all' && p.type!==state.type) return false;
+      if(state.power!=='all' && String(p.cap)!==state.power) return false;
+      if(state.pay!=='all' && p.pay.indexOf(state.pay)<0) return false;
+      if(state.maker){
+        var hay = (makers[p.maker].name + ' ' + p.model).toLowerCase();
+        if(hay.indexOf(state.maker.toLowerCase())<0) return false;
+      }
+      return true;
+    });
+  }
+
+  function render(){
+    var isProduct = state.view==='product';
+    filterBar.style.display = isProduct ? '' : 'none';
+    if(isProduct){
+      var list = applyFilters(products);
+      grid.innerHTML = list.map(productCard).join('');
+      empty.style.display = list.length ? 'none' : '';
+      countEl.textContent = '충전기 '+list.length+'종';
+    } else {
+      var keys = Object.keys(makers);
+      grid.innerHTML = keys.map(makerCard).join('');
+      empty.style.display = 'none';
+      countEl.textContent = '등록 업체 '+keys.length+'곳';
+    }
+  }
+
+  function openDetail(id){
+    var p = byId[id]; if(!p) return;
+    var m = makers[p.maker];
+    document.getElementById('pdTitle').textContent = p.model + ' · ' + m.name;
+    var rows = [['정격용량', p.cap+'kW'],['출력', p.power],['유형', p.type],['충전케이블', p.cable],['제품크기', p.size],['제품재질', p.material],['인증', p.cert],['보조금 지원단가', p.rate+'만원']];
+    var body = ''
+      + '<div class="pd-top">'
+        + thumb(p,'pd-thumb')
+        + '<div style="flex:1;">'
+          + '<p class="text-muted" style="font-size:12px;margin:0 0 6px;">충전요금 (원/kWh, 부가세 포함)</p>'
+          + '<div class="pd-price-grid">'
+            + '<div><div class="v">'+p.pAvg+'</div><div class="k">평균</div></div>'
+            + '<div><div class="v sub">'+p.pMin+'</div><div class="k">최저</div></div>'
+            + '<div><div class="v sub">'+p.pMax+'</div><div class="k">최고</div></div>'
+          + '</div>'
+          + '<div style="margin-top:12px;">'+payChips(p.pay)+'</div>'
+        + '</div>'
+      + '</div>'
+      + '<table class="pd-table"><tbody>'
+        + rows.map(function(r){ return '<tr><th>'+r[0]+'</th><td>'+esc(r[1])+'</td></tr>'; }).join('')
+      + '</tbody></table>'
+      + '<p style="font-size:13px;color:var(--color-gray-500);font-weight:600;margin:16px 0 0;">참고</p>'
+      + '<ul class="pd-list">'+p.notes.map(function(n){ return '<li>'+esc(n)+'</li>'; }).join('')+'</ul>'
+      + (p.addons.length ? '<p style="font-size:13px;color:var(--color-gray-500);font-weight:600;margin:14px 0 0;">부가제품</p><ul class="pd-list">'+p.addons.map(function(a){ return '<li>'+esc(a)+'</li>'; }).join('')+'</ul>' : '');
+    document.getElementById('pdBody').innerHTML = body;
+    document.getElementById('pdPhone').textContent = '대표전화 ' + m.phone;
+    document.getElementById('pdHome').setAttribute('href', m.home);
+    if(window.__openModal) window.__openModal('productDetailModal');
+  }
+
+  /* 이벤트 (위임) */
+  grid.addEventListener('click', function(e){
+    var d = e.target.closest('[data-detail]');
+    if(d){ openDetail(d.getAttribute('data-detail')); return; }
+    var mp = e.target.closest('[data-maker-products]');
+    if(mp){
+      var key = mp.getAttribute('data-maker-products');
+      state.view='product'; state.maker=makers[key].name;
+      document.getElementById('fMaker').value = makers[key].name;
+      document.querySelectorAll('.view-toggle .chip').forEach(function(c){
+        var on = c.getAttribute('data-view')==='product';
+        c.classList.toggle('chip-active', on); c.setAttribute('aria-selected', on?'true':'false');
+      });
+      render();
+      document.getElementById('filterBar').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+
+  document.querySelector('.view-toggle').addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    state.view = b.getAttribute('data-view');
+    document.querySelectorAll('.view-toggle .chip').forEach(function(c){
+      var on = c===b; c.classList.toggle('chip-active', on); c.setAttribute('aria-selected', on?'true':'false');
+    });
+    render();
+  });
+
+  document.getElementById('fType').addEventListener('change', function(e){ state.type=e.target.value; render(); });
+  document.getElementById('fPower').addEventListener('change', function(e){ state.power=e.target.value; render(); });
+  document.getElementById('fPay').addEventListener('change', function(e){ state.pay=e.target.value; render(); });
+  document.getElementById('fMaker').addEventListener('input', function(e){ state.maker=e.target.value.trim(); render(); });
+  document.getElementById('fReset').addEventListener('click', function(){
+    state.type='all'; state.power='all'; state.pay='all'; state.maker='';
+    document.getElementById('fType').value='all'; document.getElementById('fPower').value='all';
+    document.getElementById('fPay').value='all'; document.getElementById('fMaker').value='';
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

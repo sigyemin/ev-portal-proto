@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브랜드 사업 공모 신청 내역 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="charging.html">충전소·요금 정보</a><span class="sep">›</span>
+        <a href="charging-install.html">충전시설 설치</a><span class="sep">›</span>
+        <a href="charging-install-brand.html">지역별 무공해차 전환 브랜드 사업 공모 신청</a><span class="sep">›</span>
+        <span class="current">신청조회</span>
+      </nav>
+      <h1>브랜드 사업 공모 신청 내역</h1>
+      <p class="hero-lead">제출한 신청 건의 <strong>진행 상태·상세</strong>를 신청번호별로 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div id="contestDetailRoot"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/contest-detail.js?v=20260701b"></script>
+<script>
+ContestDetail.mount({
+  applyHref:'charging-install-brand.html', applyName:'지역별 무공해차 전환 브랜드 사업 공모 신청', supplementHref:'#',
+  apps:[
+    { appId:'CIB-2026-000045', project:'지역별 무공해차 전환 브랜드 사업 공모 신청', applyDate:'2026.01.30', status:'협약 체결 완료', result:'done',
+      notice:{ name:'2026년 지역별 무공해차 전환 브랜드 사업 공모', no:'환경부공고 제2026-032호', org:'한국환경공단', period:'2025.12.20 ~ 2026.01.30', announce:'2026.03.05', scale:'전국 10개 지역', contact:'무공해차전환팀 044-201-6200' },
+      applicant:{ org:'부산에코모빌리티(주)', rep:'윤대표', bizNo:'605-81-72340', manager:'강담당', tel:'051-700-8000',
+        consortium:[{name:'부산에코모빌리티(주)', role:'주관사'},{name:'○○충전(주)', role:'충전 인프라'},{name:'△△여객', role:'전환 수요처'}] },
+      block4:{ title:'신청 내용 · 대상 (브랜드 사업)', rows:[['브랜드 사업내용','무공해차 전환 + 충전 인프라 구축'],['설치 수량','급속 30기 / 완속 120기'],['대상 지역','부산광역시 전역']] },
+      timeline:[{label:'접수 완료',date:'2026.01.30',state:'done'},{label:'적격심사',date:'2026.02.10',state:'done'},{label:'평가·선정',date:'2026.03.05',state:'done'},{label:'협약 체결',date:'2026.03.12',state:'current'},{label:'사업 수행',date:'',state:''}],
+      docs:[{name:'사업계획서',ok:true},{name:'컨소시엄 협약서',ok:true},{name:'지자체 협조 공문',ok:true}],
+      selection:{ selected:true, volume:'충전 150기 + 전환 200대', rank:'—', note:'브랜드 사업자로 선정되었습니다.' },
+      agreement:{ date:'2026.03.12(체결완료)', guide:'협약이 체결되어 사업을 수행 중입니다. 단계별 정산은 실적 제출 후 진행됩니다.' },
+      action:'협약이 체결되었습니다. 사업 수행 및 정산 절차를 진행해 주세요.' }
+  ]
+});
+</script>
+</body>
+</html>

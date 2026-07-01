@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공모 신청 내역 | 마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/inquiry.css">
+<style>
+  /* 결과 배지 (board-table 내) — 공통 4종 */
+  .board-table .ct-badge{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;}
+  .board-table .ct-badge.r-progress{background:#e7f0fe;color:#1559c2;}
+  .board-table .ct-badge.r-selected{background:#e6f6ee;color:#0f7a44;}
+  .board-table .ct-badge.r-rejected{background:#fdecec;color:#c0392b;}
+  .board-table .ct-badge.r-done{background:#eceef1;color:#5f6b7a;}
+  .board-table .ct-status{font-weight:600;color:var(--text-secondary);white-space:nowrap;}
+  .board-table td.no,.board-table th.no{font-family:var(--font-mono,monospace);font-size:12.5px;white-space:nowrap;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true; window.__activeMp = 'public-status';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current">공모 신청 내역</span>
+      </nav>
+      <h1>공모 신청 내역</h1>
+      <p class="hero-lead">여러 공모 사업의 신청 건을 한 리스트에서 모아 봅니다. 같은 사업도 신청번호로 구분되며(재신청 포함), 항목을 클릭하면 해당 신청 건의 조회(상세) 화면으로 이동합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="mp-shell">
+        <div id="mp-side-slot"></div>
+        <div class="mp-content">
+
+          <section class="mp-section">
+
+            <!-- 필터 바 (표준 board-toolbar) -->
+            <div class="board-toolbar">
+              <div class="board-toolbar-filters">
+                <div class="form-group">
+                  <label class="form-label" for="fName">사업명</label>
+                  <select class="form-select" id="fName" aria-label="사업명 선택" style="min-width:260px;">
+                    <option value="all">전체 사업</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="fResult">결과</label>
+                  <select class="form-select" id="fResult" aria-label="결과 선택">
+                    <option value="all">전체 결과</option>
+                    <option value="progress">진행중</option>
+                    <option value="selected">선정</option>
+                    <option value="rejected">미선정</option>
+                    <option value="done">완료</option>
+                  </select>
+                </div>
+                <div class="board-search">
+                  <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                  <input type="text" id="fSearch" placeholder="사업명·신청번호·현재상태 검색" aria-label="검색어 입력">
+                  <button type="button" id="fSearchBtn">검색</button>
+                </div>
+                <button class="btn" type="button" id="fReset" aria-label="필터 초기화">초기화</button>
+              </div>
+            </div>
+
+            <div class="board-result-meta">
+              <div>전체 <strong id="resCount">0</strong>건</div>
+            </div>
+
+            <table class="board-table std-board" id="ctTable">
+              <thead>
+                <tr>
+                  <th class="num">번호</th>
+                  <th>사업명</th>
+                  <th class="date">신청번호</th>
+                  <th class="date">신청일</th>
+                  <th>현재 상태</th>
+                  <th class="cat">결과</th>
+                </tr>
+              </thead>
+              <tbody id="ctBody"></tbody>
+            </table>
+
+            <div id="ctEmpty" class="board-empty" style="display:none;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <h4>조회된 신청 내역이 없습니다.</h4>
+              <p>다른 필터 조건으로 다시 시도해 주세요.</p>
+            </div>
+
+            <div class="alert alert-info mt-6">
+              <div class="alert-icon"></div>
+              <div class="alert-body">‘현재 상태’는 <strong>사업별 원문</strong>이며, 결과(진행중·선정·미선정·완료)만 공통 기준입니다. 같은 사업이라도 <strong>신청번호</strong>로 각각 구분되어(보완 후 재신청 포함) 표시됩니다. 행을 클릭하면 해당 신청 건의 조회 화면으로 이동합니다.</div>
+            </div>
+
+          </section>
+
+        </div><!-- /.mp-content -->
+      </div><!-- /.mp-shell -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-mypage.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  // 사업키 → 상세(status) 페이지 매핑 (single source)
+  var STATUS_PAGE = {
+    ev:'public-ev-status.html', bus:'public-bus-status.html',
+    construction:'public-construction-status.html', moto:'public-moto-status.html',
+    islow:'charging-install-slow-status.html', icontest:'charging-install-contest-status.html',
+    ibrand:'charging-install-brand-status.html', ibss:'charging-install-moto-status.html'
+  };
+  var RESULT = { progress:['진행중','r-progress'], selected:['선정','r-selected'], rejected:['미선정','r-rejected'], done:['완료','r-done'] };
+
+  // ── mock: 공모 신청 건 (신청번호 단위. 같은 사업도 신청번호로 구분 — 보완 후 재신청 포함) ──
+  //   status = 사업별 원문(정규화 금지) · 보완 워크플로 근거: 소스 '보완요청→보완완료(승인전/후)'
+  var DATA = [
+    { key:'ev',  name:'전기자동차 수행자 선정 평가 신청', applyDate:'2026.04.22', appId:'PEV-2026-000771', result:'progress', status:'서류심사 중' },
+    { key:'bus', name:'전기승합차 공모 신청', applyDate:'2026.05.02', appId:'PB-2026-000512', result:'progress', status:'보완완료 · 재신청 심사 중', resubmit:true },
+    { key:'bus', name:'전기승합차 공모 신청', applyDate:'2026.04.18', appId:'PB-2026-000451', result:'selected', status:'선정 완료' },
+    { key:'construction', name:'전기지게차 공모 신청', applyDate:'2026.04.10', appId:'PC-2026-000188', result:'progress', status:'현장평가 대기' },
+    { key:'moto', name:'전기이륜차 수행자 선정 평가 신청', applyDate:'2026.03.28', appId:'PM-2026-000094', result:'rejected', status:'미선정 (평가점수 미달)' },
+    { key:'islow', name:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', appId:'CIS-2026-002455', result:'progress', status:'보완요청 반영 · 재신청 접수', resubmit:true },
+    { key:'islow', name:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', appId:'CIS-2026-002210', result:'done', status:'설치 승인·정산 완료' },
+    { key:'icontest', name:'완속/급속·중속 운영사·제조사 공모 신청', applyDate:'2026.04.15', appId:'CIC-2026-000377', result:'progress', status:'제안서 평가 중' },
+    { key:'ibrand', name:'지역별 무공해차 전환 브랜드 사업 공모 신청', applyDate:'2026.01.30', appId:'CIB-2026-000045', result:'done', status:'협약 체결 완료' },
+    { key:'ibss', name:'지역별 무공해차 전환 브랜드 사업 (BSS) 공모 신청', applyDate:'2025.11.10', appId:'CIM-2025-000980', result:'done', status:'사업 종료' }
+  ];
+  DATA.sort(function(a,b){ return a.applyDate < b.applyDate ? 1 : -1; });
+
+  function detailHref(it){ return (STATUS_PAGE[it.key] || '#') + '?appId=' + encodeURIComponent(it.appId); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  var body = document.getElementById('ctBody'), empty = document.getElementById('ctEmpty'), count = document.getElementById('resCount');
+  var fName = document.getElementById('fName'), fResult = document.getElementById('fResult'),
+      fSearch = document.getElementById('fSearch'), fSearchBtn = document.getElementById('fSearchBtn'), fReset = document.getElementById('fReset');
+
+  // 사업명 필터 옵션 (중복 제거, 등장 순서 유지)
+  (function(){
+    var seen = {}, opts = '';
+    DATA.slice().sort(function(a,b){ return a.name.localeCompare(b.name,'ko'); }).forEach(function(it){
+      if (seen[it.name]) return; seen[it.name] = 1;
+      opts += '<option value="'+esc(it.name)+'">'+esc(it.name)+'</option>';
+    });
+    fName.insertAdjacentHTML('beforeend', opts);
+  })();
+
+  function render(){
+    var kw = (fSearch.value||'').trim().toLowerCase();
+    var rows = DATA.filter(function(it){
+      if (fName.value!=='all' && it.name!==fName.value) return false;
+      if (fResult.value!=='all' && it.result!==fResult.value) return false;
+      if (kw && (it.name+it.appId+it.status).toLowerCase().indexOf(kw)<0) return false;
+      return true;
+    });
+    body.innerHTML = rows.map(function(it, i){
+      var r = RESULT[it.result];
+      return '<tr class="ct-row" data-href="'+esc(detailHref(it))+'" style="cursor:pointer;" tabindex="0">'
+        + '<td class="num">'+(i+1)+'</td>'
+        + '<td><div class="title-cell"><b>'+esc(it.name)+'</b></div></td>'
+        + '<td class="no">'+esc(it.appId)+'</td>'
+        + '<td class="date">'+esc(it.applyDate)+'</td>'
+        + '<td><span class="ct-status">'+esc(it.status)+'</span></td>'
+        + '<td class="cat"><span class="ct-badge '+r[1]+'">'+r[0]+'</span></td>'
+        + '</tr>';
+    }).join('');
+    count.textContent = rows.length;
+    empty.style.display = rows.length ? 'none' : 'block';
+    document.getElementById('ctTable').style.display = rows.length ? '' : 'none';
+    body.querySelectorAll('.ct-row').forEach(function(tr){
+      tr.addEventListener('click', function(){ location.href = tr.dataset.href; });
+      tr.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); location.href = tr.dataset.href; } });
+    });
+  }
+
+  [fName, fResult].forEach(function(el){ el.addEventListener('change', render); });
+  fSearch.addEventListener('input', render);
+  fSearchBtn.addEventListener('click', render);
+  fReset.addEventListener('click', function(){ fName.value='all'; fResult.value='all'; fSearch.value=''; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>

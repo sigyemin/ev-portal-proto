@@ -1,0 +1,103 @@
+/* contest-detail.css — 공모 신청 "상세" 공통 스켈레톤 (8개 status 페이지 공유)
+   ── contest-detail.js 가 렌더. 사업별로 다른 부분은 블록 #4(신청 내용·대상)뿐. */
+
+/* 결과 배지 (공통 4종) — 전역 .progress 충돌 회피 위해 접두어 r-* */
+.cd-badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12.5px;font-weight:800;white-space:nowrap;}
+.cd-badge.r-progress{background:#e7f0fe;color:#1559c2;}
+.cd-badge.r-selected{background:#e6f6ee;color:#0f7a44;}
+.cd-badge.r-rejected{background:#fdecec;color:#c0392b;}
+.cd-badge.r-done{background:#eceef1;color:#5f6b7a;}
+
+/* ── 목록 뷰 ── */
+.cd-list-meta{margin:0 0 12px;font-size:13.5px;color:var(--text-secondary);}
+.cd-list-meta strong{color:var(--color-primary-700);}
+.cd-list-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.cd-list-table th{background:var(--color-gray-100);border-top:2px solid var(--color-gray-700);border-bottom:1px solid var(--border-light);padding:11px 12px;font-weight:700;color:var(--text-primary);text-align:center;white-space:nowrap;}
+.cd-list-table td{border-bottom:1px solid var(--border-light);padding:12px;color:var(--text-secondary);text-align:center;vertical-align:middle;}
+.cd-list-table td.l{text-align:left;}
+.cd-list-table td.no{font-family:var(--font-mono,monospace);font-size:12.5px;white-space:nowrap;}
+.cd-list-table tr.cd-row{cursor:pointer;}
+.cd-list-table tr.cd-row:hover{background:var(--color-primary-50);}
+.cd-status-txt{font-weight:700;color:var(--text-secondary);white-space:nowrap;}
+.cd-empty{padding:40px;text-align:center;color:var(--text-tertiary);}
+
+/* ── 상세 뷰 ── */
+.cd-back{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--color-secondary-700,#1559c2);font-weight:700;font-size:14px;cursor:pointer;padding:6px 2px;margin-bottom:6px;font-family:inherit;}
+
+/* 1. 식별 헤더 */
+.cd-idhead{border:1px solid var(--border-light);border-radius:14px;background:linear-gradient(135deg,#f7fbff,#f4fff8);padding:20px 22px;margin-bottom:18px;}
+.cd-idhead .cd-idtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+.cd-idhead h2{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0;color:var(--text-primary);}
+.cd-idmeta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--text-secondary);}
+.cd-idmeta .no{font-family:var(--font-mono,monospace);font-weight:700;color:var(--text-primary);}
+.cd-idmeta .st{font-weight:700;}
+
+/* 공통 블록 */
+.cd-block{border:1px solid var(--border-light);border-radius:14px;background:#fff;padding:18px 22px;margin-bottom:14px;}
+.cd-block > h3{font-size:15px;font-weight:800;letter-spacing:-.01em;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px;}
+.cd-block > h3 .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--color-primary-600);color:#fff;font-size:12px;font-weight:800;flex:0 0 auto;}
+
+/* 정의 목록 (2열) */
+.cd-dl{display:grid;grid-template-columns:1fr 1fr;gap:2px 24px;margin:0;}
+@media(max-width:640px){.cd-dl{grid-template-columns:1fr;}}
+.cd-dl dl{display:flex;justify-content:space-between;gap:12px;margin:0;padding:9px 0;border-bottom:1px solid var(--border-light);}
+.cd-dl dt{font-size:13px;color:var(--text-secondary);flex:0 0 auto;}
+.cd-dl dd{margin:0;font-size:13.5px;font-weight:700;text-align:right;color:var(--text-primary);}
+.cd-dl.one{grid-template-columns:1fr;}
+
+/* 표 (컨소시엄·서류) */
+.cd-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.cd-tbl th{background:var(--color-gray-50);border-bottom:1px solid var(--border-light);padding:9px 12px;font-weight:700;color:var(--text-secondary);text-align:left;white-space:nowrap;}
+.cd-tbl td{border-bottom:1px solid var(--border-light);padding:10px 12px;color:var(--text-secondary);}
+.cd-tbl tbody tr:last-child td,.cd-tbl tr:last-child td{border-bottom:0;}
+.cd-doc-ok{color:var(--color-primary-700);font-weight:700;} .cd-doc-no{color:var(--color-danger,#c0392b);font-weight:700;}
+.cd-dl-btn{padding:4px 10px;border:1px solid var(--color-primary-500);background:#fff;color:var(--color-primary-700);border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;}
+.cd-dl-btn:hover{background:var(--color-primary-50);}
+
+/* 진행 타임라인 (세로) */
+.cd-timeline{list-style:none;margin:0;padding:0;position:relative;}
+.cd-timeline li{position:relative;padding:0 0 18px 26px;}
+.cd-timeline li::before{content:'';position:absolute;left:6px;top:2px;bottom:-4px;width:2px;background:var(--border-light);}
+.cd-timeline li:last-child::before{display:none;}
+.cd-timeline li .dot{position:absolute;left:0;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--border-medium);}
+.cd-timeline li.done .dot{background:var(--color-primary-500);border-color:var(--color-primary-500);}
+.cd-timeline li.current .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);box-shadow:0 0 0 4px var(--color-primary-100,#e6f3ec);}
+.cd-timeline li .tl-lab{font-size:13.5px;font-weight:700;color:var(--text-secondary);}
+.cd-timeline li.done .tl-lab,.cd-timeline li.current .tl-lab{color:var(--text-primary);}
+.cd-timeline li.current .tl-lab{color:var(--color-primary-700);}
+.cd-timeline li .tl-date{font-size:12px;color:var(--text-tertiary);margin-top:2px;}
+
+/* 콜아웃 (보완/선정/협약/액션) */
+.cd-callout{border-radius:12px;padding:15px 18px;margin-bottom:14px;font-size:13.5px;line-height:1.7;}
+.cd-callout h3{font-size:14.5px;font-weight:800;margin:0 0 8px;display:flex;align-items:center;gap:7px;}
+.cd-callout ul{margin:8px 0 0;padding-left:18px;} .cd-callout li{margin:3px 0;color:var(--text-secondary);}
+.cd-callout.supp{background:#fff6e8;border:1px solid #f1c27a;color:var(--text-secondary);} .cd-callout.supp h3{color:#9a5b00;}
+.cd-callout.win{background:#eefaf2;border:1px solid #b7e4c7;color:var(--text-secondary);} .cd-callout.win h3{color:#0f7a44;}
+.cd-callout.lose{background:#f6f7f9;border:1px solid var(--border-light);color:var(--text-secondary);} .cd-callout.lose h3{color:#5f6b7a;}
+.cd-callout.pact{background:#eef5ff;border:1px solid #cfe0f7;color:var(--text-secondary);} .cd-callout.pact h3{color:#16407e;}
+.cd-callout .cd-supp-btn{display:inline-flex;align-items:center;gap:6px;}
+
+/* 보완요청 재업로드 슬롯 (mock) */
+.cd-uploads{margin:12px 0 4px;border:1px solid #f1c27a;border-radius:10px;background:#fff;padding:12px 14px;}
+.cd-up-head{font-size:12.5px;font-weight:800;color:#9a5b00;margin-bottom:8px;}
+.cd-up-slot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 0;border-bottom:1px dashed var(--border-light);}
+.cd-up-slot:last-child{border-bottom:0;}
+.cd-up-name{flex:1 1 220px;min-width:160px;font-size:13px;font-weight:700;color:var(--text-primary);}
+.cd-up-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.cd-up-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);border:0;}
+.cd-up-btn{display:inline-flex;align-items:center;padding:6px 13px;border:1px solid var(--color-primary-500);background:#fff;color:var(--color-primary-700);border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;}
+.cd-up-btn:hover{background:var(--color-primary-50);}
+.cd-up-input:focus-visible + .cd-up-btn{outline:2px solid var(--color-primary-500);outline-offset:2px;}
+.cd-up-file{font-size:12.5px;color:var(--text-tertiary);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cd-up-file.has{color:var(--text-primary);font-weight:600;}
+.cd-up-del{border:0;background:none;color:var(--color-danger,#c0392b);font-size:12px;font-weight:700;cursor:pointer;padding:2px 4px;}
+.cd-supp-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.cd-supp-hint{margin:10px 0 0;font-size:13px;font-weight:700;color:#0f7a44;}
+
+/* 10. 문의·다음 액션 */
+.cd-foot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px;}
+@media(max-width:640px){.cd-foot{grid-template-columns:1fr;}}
+.cd-foot .cd-action{background:#eef5ff;border:1px solid #cfe0f7;border-radius:12px;padding:15px 18px;font-size:13.5px;line-height:1.6;color:#16407e;}
+.cd-foot .cd-action strong{display:block;margin-bottom:4px;}
+.cd-foot .cd-contact{background:#fff;border:1px solid var(--border-light);border-radius:12px;padding:15px 18px;font-size:13.5px;line-height:1.7;color:var(--text-secondary);}
+.cd-foot .cd-contact strong{color:var(--text-primary);}

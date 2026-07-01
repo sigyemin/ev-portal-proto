@@ -1,0 +1,342 @@
+# V3.2 i18n 언어팩 검수 리포트
+
+생성: 2026-06-08T03:13:26.678Z
+총 키: **2297**
+
+## 1. 영문 미작성 (총 11건)
+- `util.user.suffix` — ko: "님"
+- `mp.hero.name.suffix` — ko: "회원님"
+- `mp.stat.fav.unit` — ko: "곳"
+- `mpf.count.suffix` — ko: "곳"
+- `mpf.summary.unit` — ko: "곳"
+- `subsidy.region.stat.unit` — ko: "대"
+- `subsidy.region.result.count.suffix` — ko: "건"
+- `charging.find.result.suffix` — ko: "건"
+- `charging.fee.kpi.total.unit` — ko: "기"
+- `charging.card.kpi.cnt.unit` — ko: "회"
+- `charging.card.hist.sum.cnt.unit` — ko: "회"
+
+## 2. 한국어가 영문 값에 섞임 (총 2건)
+- `lang.label.ko` — en: "한국어"
+- `charging.card.field.car.ph` — en: "e.g., 12가 3456"
+
+## 3. 한글=영문 동일 (의심, 총 23건)
+> 영문/숫자/약어로 동일한 경우는 OK (예: K-EV100, NACS, POPUP, OPEN, BMW 등)
+- `util.popup` — "POPUP"
+- `footer.copy` — "Copyright 2026. KECO All rights reserved."
+- `lang.label.ko` — "한국어"
+- `lang.label.en` — "English"
+- `home.persona.ai.badge` — "OPEN"
+- `home.quick.eyebrow` — "QUICK ACCESS"
+- `mp.stat.point.unit` — "P"
+- `mpn.col.sms` — "SMS"
+- `mpwd.box.point.val` — "3,420 P"
+- `subsidy.target.stat.vuln.unit` — "%"
+- `subsidy.vehicles.maker.bmw` — "BMW"
+- `subsidy.vehicles.chip.v2l.short` — "V2L"
+- `subsidy.vehicles.car.ev6` — "EV6"
+- `subsidy.vehicles.car.model3` — "Model 3"
+- `subsidy.vehicles.car.nexo` — "NEXO"
+- `charging.find.opt.nacs` — "NACS"
+- `charging.card.benefit.roaming.rate` — "0"
+- `charging.card.benefit.point.unit` — "%"
+- `charging.card.benefit.night.unit` — "%"
+- `charging.card.myinfo.brand` — "ZERO EMISSION VEHICLE CARD"
+- `charging.find.route.kpi.distance.v` — "396 km"
+- `charging.find.sd.fac.tel.v` — "02-0000-0000"
+- `charging.install.slow.kpi4.v` — "30"
+
+## 4. 영문이 한글의 3배 초과 (레이아웃 위험, 총 124건)
+- `mega.purchase.compare` — 비율 3.6x | ko: "차량 비교" | en: "Vehicle Comparison"
+- `mega.purchase.public` — 비율 3.6x | ko: "공모·신청" | en: "Public Procurement"
+- `mega.purchase.kev100.companies` — 비율 3.3x | ko: "참여기업 현황" | en: "Participating Companies"
+- `mp.side.group.subsidy` — 비율 3.2x | ko: "보조금·민원" | en: "Subsidy & Inquiries"
+- `mp.side.item.notifications` — 비율 4.2x | ko: "알림 설정" | en: "Notification Settings"
+- `mp.side.item.withdraw` — 비율 3.8x | ko: "회원 탈퇴" | en: "Withdraw Membership"
+- `nav.anchor.aria` — 비율 3.6x | ko: "섹션 이동" | en: "Section navigation"
+- `home.persona.business.title` — 비율 3.3x | ko: "충전 사업자·제조사" | en: "Charger Operators & Manufacturers"
+- `home.card.owner.5.title` — 비율 3.6x | ko: "차종 비교" | en: "Vehicle Comparison"
+- `home.card.business.3.desc` — 비율 3.0x | ko: "전기승합차·건설기계 보조금 공모 접수" | en: "Procurement for electric buses and ZEV construction equipment"
+- `home.policy.email` — 비율 3.2x | ko: "이메일 무단수집거부" | en: "No Unauthorized Email Collection"
+- `hm.persona.org` — 비율 5.4x | ko: "법인·기관" | en: "Corporations & Institutions"
+- `hm.persona.first` — 비율 3.2x | ko: "처음 방문자" | en: "First-time Visitors"
+- `hm.evsvc.4.t` — 비율 3.7x | ko: "충전소 검색" | en: "Find Charging Stations"
+- `hm.evsvc.5.t` — 비율 3.2x | ko: "차량 비교" | en: "Compare Vehicles"
+- `hm.ai.chipsaria` — 비율 3.8x | ko: "추천 질문" | en: "Suggested questions"
+- `hm.ai.feat1.t` — 비율 3.8x | ko: "자연어 필터" | en: "Natural-language filter"
+- `hm.calc.h3` — 비율 3.2x | ko: "보조금 계산" | en: "Subsidy Calculation"
+- `hm.news.2.t` — 비율 3.4x | ko: "한국환경공단 창립기념일 휴무일 안내" | en: "Korea Environment Corporation founding-anniversary holiday notice"
+- `hm.fee.d.soft` — 비율 3.4x | ko: "급속 특화" | en: "Fast-charge focus"
+- `hm.fee.d.chajevi` — 비율 3.4x | ko: "할인 다양" | en: "Various discounts"
+- `hm.fee.d.power` — 비율 3.5x | ko: "초고속 전문" | en: "Ultra-fast specialist"
+- `mp.sec.apps.title` — 비율 3.4x | ko: "나의 신청·민원" | en: "My Applications & Inquiries"
+- `mp.card.withdraw.title` — 비율 3.8x | ko: "회원 탈퇴" | en: "Withdraw Membership"
+- `mp.card.withdraw.a1` — 비율 3.1x | ko: "회원 탈퇴 신청" | en: "Submit Withdrawal Request"
+- `mp.card.fav.title` — 비율 3.3x | ko: "나의 충전소" | en: "My Charging Stations"
+- `mp.card.public.title` — 비율 4.6x | ko: "공모 신청" | en: "Procurement Application"
+- `mpi.content.h2` — 비율 3.6x | ko: "회원 정보" | en: "Member Information"
+- `mpi.contact.title` — 비율 3.2x | ko: "연락처 정보" | en: "Contact Information"
+- `mpi.field.email.send` — 비율 3.3x | ko: "인증메일 발송" | en: "Send Verification Email"
+- `mpi.field.interest` — 비율 3.4x | ko: "관심 차종" | en: "Vehicle Interests"
+- `mpw.chip.recommend` — 비율 3.6x | ko: "변경 권장" | en: "Change Recommended"
+- `mpn.title` — 비율 4.2x | ko: "알림 설정" | en: "Notification Settings"
+- `mpn.content.h2` — 비율 4.2x | ko: "알림 설정" | en: "Notification Settings"
+- `mpn.channel.email` — 비율 3.2x | ko: "이메일 알림" | en: "Email Notifications"
+- `mpn.cat.title` — 비율 3.3x | ko: "카테고리별 알림" | en: "Per-Category Notifications"
+- `mpn.cat.inquiry.desc` — 비율 3.2x | ko: "접수·배정·처리·완료 단계 안내" | en: "Receipt, assignment, processing, and completion stages."
+- `mpn.cat.public.title` — 비율 3.3x | ko: "공모·이벤트" | en: "Procurement & Events"
+- `mpn.cat.mkt.title` — 비율 3.7x | ko: "마케팅·홍보" | en: "Marketing & Promotions"
+- `mpn.policy.title` — 비율 3.5x | ko: "알림 발송 안내" | en: "Notification Delivery Notice"
+- `mpa.mobile.title` — 비율 3.1x | ko: "휴대폰 본인확인" | en: "Mobile Phone Verification"
+- `mpa.coint.title` — 비율 3.4x | ko: "공동인증서" | en: "Joint Certificate"
+- `mpa.coint.desc` — 비율 3.0x | ko: "구 공인인증서 · 개인·법인·사업자 인증, 보조금 신청 시 사용" | en: "Formerly the public certificate · personal/corporate/business verification, used for subsidy applications."
+- `mpa.fin.title` — 비율 4.2x | ko: "금융인증서" | en: "Financial Certificate"
+- `mpa.gpki.desc` — 비율 3.1x | ko: "행정기관 발급 전자서명 · 공공 행정서비스 본인확인 시 사용" | en: "Government-issued digital signature · used for identity verification in public administrative services."
+- `mpwd.title` — 비율 3.8x | ko: "회원 탈퇴" | en: "Withdraw Membership"
+- `mpwd.box.apps.note` — 비율 3.1x | ko: "진행 중 신청은 탈퇴 후 자동 취소됩니다." | en: "In-progress applications will be canceled automatically upon withdrawal."
+- `mpwd.policy.li2` — 비율 3.5x | ko: "국세기본법: 세금 관련 자료 5년 보관" | en: "Framework Act on National Taxes: tax-related records retained for 5 years"
+- `mpwd.verify.title` — 비율 4.2x | ko: "본인 확인" | en: "Identity Verification"
+- `mpwd.btn.submit` — 비율 3.1x | ko: "회원 탈퇴 신청" | en: "Submit Withdrawal Request"
+- `mpwd.modal.li4` — 비율 3.2x | ko: "30일간 재가입 제한" | en: "Re-registration blocked for 30 days"
+- `mpn.toggle.charging.email` — 비율 3.1x | ko: "충전 이메일 알림" | en: "Charging email notifications"
+- `mpn.toggle.card.email` — 비율 3.2x | ko: "회원카드 이메일 알림" | en: "Membership card email notifications"
+- `mpn.toggle.public.email` — 비율 3.4x | ko: "공모 이메일 알림" | en: "Procurement email notifications"
+- `mpn.toggle.public.sms` — 비율 3.2x | ko: "공모 SMS 알림" | en: "Procurement SMS notifications"
+- `subsidy.target.stat.vuln.trend` — 비율 3.4x | ko: "추가 우선 지원" | en: "Priority additional support"
+- `subsidy.target.stepper.eyebrow` — 비율 3.8x | ko: "신청 절차" | en: "Application Process"
+- `subsidy.target.stepper.s1` — 비율 3.1x | ko: "차량 구매 계약" | en: "Vehicle Purchase Contract"
+- `subsidy.target.col.period` — 비율 3.6x | ko: "접수 기간" | en: "Application Period"
+- `subsidy.target.qual.2.h4` — 비율 3.7x | ko: "2년 의무운행" | en: "2-Year Mandatory Operation"
+- `subsidy.target.docs.h4` — 비율 3.2x | ko: "공통 서류" | en: "Common Documents"
+- `subsidy.target.docs.li3` — 비율 3.4x | ko: "신청서(지자체 양식)" | en: "Application form (municipal template)"
+- `subsidy.target.docs.alert.title` — 비율 3.3x | ko: "서류 사본 안내" | en: "Document Submission Notice"
+- `subsidy.region.col.acceptable.sub` — 비율 3.1x | ko: "(공고-접수)" | en: "(Announced - Received)"
+- `subsidy.vehicles.btn.compare` — 비율 3.8x | ko: "상세 비교" | en: "Detailed Comparison"
+- `subsidy.vehicles.btn.bid` — 비율 3.2x | ko: "공모 안내" | en: "Procurement Info"
+- `subsidy.vehicles.note.bidproc` — 비율 3.6x | ko: "공모 평가" | en: "Procurement Review"
+- `subsidy.target.btn.download` — 비율 3.1x | ko: "신청서 다운로드" | en: "Download Application Form"
+- `subsidy.target.h5.docs` — 비율 3.6x | ko: "필요 서류" | en: "Required Documents"
+- `subsidy.target.h5.contest` — 비율 3.2x | ko: "공모 안내" | en: "Procurement Info"
+- `subsidy.target.row.fcev.td1` — 비율 4.8x | ko: "개인·법인" | en: "Individuals/Corporations"
+- `subsidy.target.row.truck.td1` — 비율 3.8x | ko: "개인·법인, 소상공인 우대" | en: "Individuals/Corporations, priority for small business"
+- `subsidy.target.row.bus.td1` — 비율 4.8x | ko: "운수사업자" | en: "Transportation Operators"
+- `subsidy.target.row.bus.td3` — 비율 4.2x | ko: "공모 선정" | en: "Procurement Selection"
+- `subsidy.target.row.bus.td4` — 비율 3.4x | ko: "공모 별도 공고" | en: "Separate Procurement Notice"
+- `subsidy.target.row.moto.td1` — 비율 4.5x | ko: "개인·사업자" | en: "Individuals/Business Owners"
+- `subsidy.vehicles.btn.contest.guide` — 비율 3.2x | ko: "공모 안내" | en: "Procurement Info"
+- `subsidy.vehicles.amount.bus.label` — 비율 3.6x | ko: "공모 평가" | en: "Procurement Review"
+- `subsidy.vehicles.h5.feature` — 비율 4.0x | ko: "편의 사양" | en: "Convenience Features"
+- `subsidy.vehicles.h5.award` — 비율 4.6x | ko: "수상·인증" | en: "Awards & Certifications"
+- `subsidy.vehicles.h5.charginginfra` — 비율 3.8x | ko: "충전 인프라" | en: "Charging Infrastructure"
+- `subsidy.vehicles.det.porter.tax` — 비율 3.2x | ko: "・개소세 면제<br>・취득세 감면 140만원" | en: "· Individual consumption tax: Exempt<br>· Acquisition tax reduction: KRW 1.4M"
+- `charging.find.title` — 비율 3.7x | ko: "충전소 찾기" | en: "Find Charging Stations"
+- `charging.fee.kpi.private.label` — 비율 3.1x | ko: "민간 급속 평균" | en: "Private Fast Charger Avg."
+- `charging.fee.search.keyword` — 비율 3.1x | ko: "충전소명·주소" | en: "Station Name / Address"
+- `charging.fee.aria.sido` — 비율 4.0x | ko: "시도 선택" | en: "Select province/city"
+- `charging.fee.matrix.type.special` — 비율 4.0x | ko: "지원·조건별" | en: "Conditional / Subsidized"
+- `charging.fee.roaming.alert.title` — 비율 3.2x | ko: "로밍이란?" | en: "What is roaming?"
+- `charging.help.stepper.aria` — 비율 3.4x | ko: "신청 단계" | en: "Application Steps"
+- `charging.help.step.2` — 비율 3.1x | ko: "02. 본인인증" | en: "02. Identity Verification"
+- `charging.help.opt.private` — 비율 3.2x | ko: "민간사업자" | en: "Private Operator"
+- `charging.card.agree.priv.title` — 비율 3.7x | ko: "개인정보 제3자 제공 및 취급 위탁 동의" | en: "Consent to Third-party Provision & Processing Consignment of Personal Information"
+- `charging.install.slow.proc.h4` — 비율 3.8x | ko: "신청 절차" | en: "Application Process"
+- `charging.install.slow.docs.h4` — 비율 3.6x | ko: "제출 서류" | en: "Required Documents"
+- `charging.fee.h2.search.keyword` — 비율 3.1x | ko: "충전소명·주소" | en: "Station Name / Address"
+- `charging.fee.h2.aria.sido` — 비율 4.0x | ko: "시도 선택" | en: "Select province/city"
+- `charging.main.hero.btn.card` — 비율 3.6x | ko: "통합카드 신청" | en: "Apply for Integrated Card"
+- `charging.main.notice.title` — 비율 3.4x | ko: "충전 인프라 공지" | en: "Charging Infrastructure Notices"
+- `charging.main.cs.direct.title` — 비율 3.4x | ko: "운영사별 직통" | en: "Direct Lines by Operator"
+- `charging.find.route.reco2.s3` — 비율 3.1x | ko: "식당·편의시설" | en: "Restaurant · Amenities"
+- `charging.find.sd.tile.fault.sub` — 비율 3.2x | ko: "정상 운영" | en: "Normal operation"
+- `charging.find.sd.fee.night` — 비율 3.8x | ko: "심야 할인" | en: "Late-Night Discount"
+- `charging.card.edit.address` — 비율 3.2x | ko: "수령 주소" | en: "Delivery Address"
+- `charging.card.kpi.amt.label` — 비율 3.3x | ko: "이번 달 충전량" | en: "This Month Charging Volume"
+- `charging.card.apply.proc.title` — 비율 3.8x | ko: "신청 절차" | en: "Application Process"
+- `charging.card.edit.basic.title` — 비율 3.4x | ko: "기본 정보" | en: "Basic Information"
+- `charging.card.edit.note.li` — 비율 3.3x | ko: "이름·생년월일 변경은 본인인증 후 별도 신청" | en: "Name and date-of-birth changes require separate application after verification"
+- `charging.card.hist.btn.monthly` — 비율 3.1x | ko: "월별 통합 명세서" | en: "Monthly Integrated Statement"
+- `charging.install.moto.outline` — 비율 4.0x | ko: "공모 개요" | en: "Procurement Overview"
+- `charging.install.moto.dd2` — 비율 3.1x | ko: "배달 플랫폼, 편의점·식당, 소상공인 연합체, 지방자치단체" | en: "Delivery platforms, convenience stores/restaurants, small business associations, local governments"
+- `charging.install.moto.dt3` — 비율 4.4x | ko: "설치 조건" | en: "Installation Condition"
+- `charging.install.slow.outline` — 비율 3.2x | ko: "사업 개요" | en: "Project Overview"
+- `charging.install.slow.kpi1.l` — 비율 3.3x | ko: "설치 보조금" | en: "Installation Subsidy"
+- `charging.install.slow.kpi3.l` — 비율 3.6x | ko: "신청 기간" | en: "Application Period"
+- `charging.install.slow.proc.title2` — 비율 3.8x | ko: "신청 절차" | en: "Application Process"
+- `charging.install.moto.outline2` — 비율 3.2x | ko: "사업 개요" | en: "Project Overview"
+- `charging.install.moto.eval.title` — 비율 3.6x | ko: "선정 기준" | en: "Selection Criteria"
+- `charging.install.products.ph.maker` — 비율 3.2x | ko: "제조사 검색" | en: "Search manufacturer"
+- `charging.install.products.cert.std` — 비율 4.6x | ko: "인증 기준" | en: "Certification Standards"
+- `charging.install.slow.docs.title` — 비율 3.6x | ko: "필요 서류" | en: "Required Documents"
+- `charging.install.contest.past.title` — 비율 3.3x | ko: "최근 공모 결과" | en: "Recent Procurement Results"
+- `charging.fee.sim.card.title` — 비율 3.6x | ko: "충전요금 계산" | en: "Charging Cost Calculation"
+- `charging.fee.sim.lbl.charger` — 비율 4.0x | ko: "타사 충전기" | en: "Other Operator's Charger"
+- `charging.fee.sim.faq.q3` — 비율 3.2x | ko: "기후부 통합카드 추천" | en: "MCEE Integrated Card Recommendation"
+
+## 5. HTML 마크업 포함 (data-i18n-html로 처리 필요, 총 160건)
+- `home.hero.headline_sm`
+- `home.hero.title`
+- `home.ai.sub`
+- `home.s7.sub`
+- `home.mig.keeper.lead`
+- `home.mig.keeper.desc`
+- `home.cta.slow.desc`
+- `hm.hero.title`
+- `hm.fee.more`
+- `mp.business.alert`
+- `mp.business.t1`
+- `mp.business.t2`
+- `mp.business.t3`
+- `mp.business.t4`
+- `mp.business.t5`
+- `mp.business.t6`
+- `mp.business.t7`
+- `mp.business.t8`
+- `mp.business.t10`
+- `mp.sec.help`
+- `mpi.policy.li3`
+- `mpn.channel.email.note`
+- `mp.workspace.notice`
+- `mp.contact.note`
+- `subsidy.info.lead`
+- `subsidy.info.callout.li1`
+- `subsidy.info.callout.li2`
+- `subsidy.region.lead`
+- `subsidy.target.passenger.support`
+- `subsidy.target.passenger.bonus`
+- `subsidy.target.passenger.docs`
+- `subsidy.target.passenger.link`
+- `subsidy.target.fcev.support`
+- `subsidy.target.fcev.bonus`
+- `subsidy.target.fcev.docs`
+- `subsidy.target.fcev.link`
+- `subsidy.target.truck.support`
+- `subsidy.target.truck.bonus`
+- `subsidy.target.truck.docs`
+- `subsidy.target.truck.link`
+- `subsidy.target.bus.support`
+- `subsidy.target.bus.contest`
+- `subsidy.target.bus.docs`
+- `subsidy.target.bus.link`
+- `subsidy.target.moto.support`
+- `subsidy.target.moto.grade`
+- `subsidy.target.moto.docs`
+- `subsidy.target.moto.link`
+- `subsidy.vehicles.det.ioniq6.battery`
+- `subsidy.vehicles.det.ioniq6.subsidy`
+- `subsidy.vehicles.det.ioniq6.feature`
+- `subsidy.vehicles.det.ioniq6.link`
+- `subsidy.vehicles.det.ev6.battery`
+- `subsidy.vehicles.det.ev6.subsidy`
+- `subsidy.vehicles.det.ev6.award`
+- `subsidy.vehicles.det.ev6.link`
+- `subsidy.vehicles.det.nexo.h2fuel`
+- `subsidy.vehicles.det.nexo.subsidy`
+- `subsidy.vehicles.det.nexo.link`
+- `subsidy.vehicles.det.porter.cargo`
+- `subsidy.vehicles.det.porter.subsidy`
+- `subsidy.vehicles.det.porter.tax`
+- `subsidy.vehicles.det.porter.link`
+- `subsidy.vehicles.det.toresevx.spec`
+- `subsidy.vehicles.det.toresevx.link`
+- `charging.find.lead`
+- `charging.fee.lead`
+- `charging.card.lead`
+- `charging.install.lead`
+- `charging.fee.matrix.note`
+- `charging.install.slow.lead`
+- `charging.install.slow.proc.s1`
+- `charging.install.slow.proc.s2`
+- `charging.install.slow.proc.s3`
+- `charging.install.slow.proc.s4`
+- `charging.install.slow.proc.s5`
+- `charging.install.contest.lead`
+- `charging.fee.tariff.note`
+- `charging.fee.h2.compare.callout`
+- `charging.main.hero.lead`
+- `charging.help.file.label`
+- `charging.find.st.s1.status`
+- `charging.find.st.s2.status`
+- `charging.find.st.s3.status`
+- `charging.find.st.s4.status`
+- `charging.find.st.s5.status`
+- `charging.find.st.s6.status`
+- `charging.find.st.s7.status`
+- `charging.find.st.s8.status`
+- `charging.find.sort.s3.status`
+- `charging.find.sort.s1.status`
+- `charging.find.sort.s2.status`
+- `charging.find.sort.s4.status`
+- `charging.find.sort.s6.status`
+- `charging.find.sort.s5.status`
+- `charging.card.row.h1`
+- `charging.card.row.h2`
+- `charging.card.row.h3`
+- `charging.card.row.h4`
+- `charging.card.row.h5`
+- `charging.card.row.h6`
+- `charging.card.row.h7`
+- `charging.card.point.row.p1`
+- `charging.card.point.row.p2`
+- `charging.card.point.row.p3`
+- `charging.card.point.row.p4`
+- `charging.card.point.row.p5`
+- `charging.card.point.row.p6`
+- `charging.card.apply.lead`
+- `charging.card.apply.proc.s1`
+- `charging.card.apply.proc.s2`
+- `charging.card.apply.proc.s3`
+- `charging.card.apply.proc.s4`
+- `charging.card.apply.proc.s5`
+- `charging.card.edit.lead`
+- `charging.card.edit.payment.cc.val`
+- `charging.card.hist.row.r1`
+- `charging.card.hist.row.r2`
+- `charging.card.hist.row.r3`
+- `charging.card.hist.row.r4`
+- `charging.card.hist.row.r5`
+- `charging.card.point.guide`
+- `charging.install.moto.lead2`
+- `charging.install.moto.eval.r1`
+- `charging.install.moto.eval.r2`
+- `charging.install.products.lead2`
+- `charging.install.slow.docs.r1`
+- `charging.install.slow.docs.r2`
+- `charging.install.slow.docs.r3`
+- `charging.install.slow.docs.r4`
+- `charging.install.slow.docs.r5`
+- `charging.install.slow.docs.r6`
+- `charging.install.slow.contact.body`
+- `charging.install.contest.eval.r1`
+- `charging.install.contest.eval.r2`
+- `charging.install.contest.eval.r3`
+- `charging.install.contest.eval.r4`
+- `charging.install.contest.eval.r5`
+- `charging.install.contest.past.r1`
+- `charging.install.contest.past.r2`
+- `charging.install.contest.past.r3`
+- `charging.install.moto.eval.r3`
+- `charging.install.moto.eval.r4`
+- `charging.install.moto.eval.r5`
+- `charging.fee.h2.opsum.header`
+- `charging.fee.h2.opsum.row.cohygen`
+- `charging.fee.h2.opsum.row.hynet`
+- `charging.fee.h2.opsum.row.hyosung`
+- `charging.fee.h2.opsum.row.skenergy`
+- `charging.fee.h2.opsum.row.gscaltex`
+- `charging.fee.h2.opsum.row.hyundaimobis`
+- `charging.fee.h2.compare.header`
+- `charging.fee.h2.compare.row.ev_home`
+- `charging.fee.h2.compare.row.ev_public`
+- `charging.fee.h2.compare.row.h2_nexo`
+- `charging.fee.h2.compare.row.gasoline`
+- `charging.fee.h2.compare.row.diesel`
+- `charging.fee.sim.hero.lead`
+- `charging.fee.sim.alert.calc`
+- `charging.fee.sim.faq.a1`
+
+## 6. 통계
+- charging: 1043 keys
+- common: 169 keys
+- home: 375 keys
+- mypage: 368 keys
+- subsidy: 342 keys

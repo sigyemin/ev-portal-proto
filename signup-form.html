@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정보 입력 · 가입 완료 | 회원가입 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+<style>
+  .biz-check-row .btn{white-space:nowrap}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = '';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="auth-hero-v2">
+    <div class="container container-wide">
+      <span class="auth-hero-eyebrow">SIGN UP · STEP 02</span>
+      <h1 class="auth-hero-title" id="step3Title" data-i18n-html="signup.f.hero.title">회원 정보를 입력하시면<br>가입이 완료됩니다</h1>
+      <p class="auth-hero-lead" id="step3Lead" data-i18n="signup.f.hero.lead">로그인에 사용할 아이디·비밀번호와 연락처 정보를 등록합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 2단계 스테퍼 -->
+      <div class="signup-stepper-wrap" data-reveal>
+        <ol class="signup-stepper-v2 signup-stepper-2" data-i18n-aria="signup.stepper.aria" aria-label="회원가입 단계">
+          <li class="ssv-step done"><span class="ssv-num"><span class="ssv-num-inner">1</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="signup.step1.label">약관 동의 · 휴대전화 인증</span><span class="ssv-desc" data-i18n="signup.v.step1.desc">완료</span></div></li>
+          <li class="ssv-line"><span class="ssv-line-fill fill"></span></li>
+          <li class="ssv-step active"><span class="ssv-num"><span class="ssv-num-inner">2</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="signup.step2.label">정보 입력 · 가입 완료</span><span class="ssv-desc" data-i18n="auth.step.info.desc">정보 입력 후 즉시 시작</span></div></li>
+        </ol>
+      </div>
+
+      <!-- 입력 단계 (form) -->
+      <div class="signup-wrap-v2" id="formStage">
+        <article class="signup-main">
+          <header class="signup-main-head">
+            <span class="signup-step-pill"><span>STEP</span>02<span class="of">/02</span></span>
+            <h2 id="formTitle" data-i18n="signup.f.form.title">회원 정보 입력</h2>
+            <p data-i18n="signup.f.form.intro">본인 인증된 정보(이름·생년월일·휴대폰)는 자동 입력되며, 변경할 수 없습니다.</p>
+          </header>
+
+          <form class="signup-form-v3" id="signupForm" novalidate autocomplete="on">
+
+            <!-- 본인 인증 결과 (STEP01 휴대전화 인증 자동 기입) -->
+            <div class="form-section">
+              <h3 class="fs-title" data-i18n="signup.f.fs.idv">본인 인증 정보</h3>
+              <div class="form-row-3">
+                <div class="form-group">
+                  <label class="form-label" for="fName" data-i18n="signup.f.lbl.name">이름</label>
+                  <input type="text" class="form-input" id="fName" value="홍길동" readonly data-i18n-attr="value:signup.f.name.val">
+                  <div class="form-help" data-i18n="signup.f.help.idv">본인 인증 정보 자동 적용</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="fBirth" data-i18n="signup.f.lbl.birth">생년월일</label>
+                  <input type="text" class="form-input" id="fBirth" value="1990.01.01" readonly>
+                  <div class="form-help" data-i18n="signup.f.help.idv">본인 인증 정보 자동 적용</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="fPhoneRO" data-i18n="signup.f.lbl.phone">휴대폰</label>
+                  <input type="text" class="form-input" id="fPhoneRO" value="010-1234-5678" readonly>
+                  <div class="form-help" data-i18n-html="signup.f.verify.done"><span style="color:var(--color-primary-700);font-weight:700;">✓ 인증 완료</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 로그인 정보 (공통) -->
+            <div class="form-section">
+              <h3 class="fs-title" data-i18n="signup.f.fs.login">로그인 정보</h3>
+
+              <div class="form-group">
+                <label class="form-label" for="fId"><span data-i18n="signup.f.lbl.id">아이디</span> <span class="required">*</span></label>
+                <div class="form-row-inline">
+                  <input type="text" class="form-input" id="fId" placeholder="영문, 숫자 4~16자" autocomplete="username" minlength="4" maxlength="16" required data-i18n-attr="placeholder:signup.f.id.ph">
+                  <button type="button" class="btn btn-secondary" id="checkIdBtn" data-i18n="signup.f.btn.checkid">중복 확인</button>
+                </div>
+                <div class="form-help" id="idHelp" data-i18n="signup.f.id.help">영문 소문자로 시작하며, 영문·숫자만 사용할 수 있습니다.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="fPw"><span data-i18n="signup.f.lbl.pw">비밀번호</span> <span class="required">*</span></label>
+                <div class="form-row-inline">
+                  <input type="password" class="form-input" id="fPw" placeholder="영문 대·소문자 + 숫자 + 특수문자 8~16자" minlength="8" maxlength="16" autocomplete="new-password" required data-i18n-attr="placeholder:signup.f.pw.ph">
+                  <button type="button" class="btn btn-ghost btn-sm" id="togglePw" data-i18n-aria="signup.f.pw.toggle.aria" aria-label="비밀번호 표시"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+                <div class="pw-strength" id="pwStrength">
+                  <div class="pws-bar"><span class="pws-fill" id="pwsFill"></span></div>
+                  <div class="pws-meta">
+                    <span class="pws-label" id="pwsLabel" data-i18n="signup.f.pws.label">영문/숫자/특수문자를 조합하면 강도가 올라갑니다</span>
+                    <span class="pws-grade" id="pwsGrade">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="fPw2"><span data-i18n="signup.f.lbl.pw2">비밀번호 확인</span> <span class="required">*</span></label>
+                <input type="password" class="form-input" id="fPw2" placeholder="비밀번호를 다시 입력해 주세요" autocomplete="new-password" required data-i18n-attr="placeholder:signup.f.pw2.ph">
+                <div class="form-help" id="pw2Help" data-i18n="signup.f.pw2.help">비밀번호와 동일하게 입력해 주세요.</div>
+              </div>
+            </div>
+
+            <!-- 연락처 (공통) -->
+            <div class="form-section">
+              <h3 class="fs-title" id="contactTitle" data-i18n="signup.f.fs.contact">연락처 및 추가 정보</h3>
+
+              <div class="form-group">
+                <label class="form-label" for="fEmail"><span id="emailLabel" data-i18n="signup.f.lbl.email">이메일</span> <span class="required">*</span></label>
+                <div class="form-row-inline">
+                  <input type="email" class="form-input" id="fEmail" placeholder="example@domain.com" autocomplete="email" required>
+                  <button type="button" class="btn btn-secondary" id="verifyEmailBtn" data-i18n="signup.f.btn.verifyemail">이메일 인증</button>
+                </div>
+                <div class="form-help" id="emailHelp" data-i18n="signup.f.email.help">보조금 신청 결과·민원 처리 알림 발송에 사용됩니다.</div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="fSido" data-i18n="signup.f.lbl.sido">거주 시·도</label>
+                  <select class="form-select" id="fSido">
+                    <option value="" data-i18n="signup.f.sido.select">선택하세요</option>
+                    <option data-i18n="subsidy.region.sido.seoul">서울특별시</option><option data-i18n="subsidy.region.sido.busan">부산광역시</option><option data-i18n="subsidy.region.sido.daegu">대구광역시</option>
+                    <option data-i18n="subsidy.region.sido.incheon">인천광역시</option><option data-i18n="subsidy.region.sido.gwangju">광주광역시</option><option data-i18n="subsidy.region.sido.daejeon">대전광역시</option>
+                    <option data-i18n="subsidy.region.sido.ulsan">울산광역시</option><option data-i18n="subsidy.region.sido.sejong">세종특별자치시</option><option data-i18n="subsidy.region.sido.gyeonggi">경기도</option>
+                    <option data-i18n="subsidy.region.sido.gangwon">강원특별자치도</option><option data-i18n="subsidy.region.sido.chungbuk">충청북도</option><option data-i18n="subsidy.region.sido.chungnam">충청남도</option>
+                    <option data-i18n="subsidy.region.sido.jeonbuk">전북특별자치도</option><option data-i18n="subsidy.region.sido.jeonnam">전라남도</option><option data-i18n="subsidy.region.sido.gyeongbuk">경상북도</option>
+                    <option data-i18n="subsidy.region.sido.gyeongnam">경상남도</option><option data-i18n="subsidy.region.sido.jeju">제주특별자치도</option>
+                  </select>
+                  <div class="form-help" data-i18n="signup.f.sido.help">지자체별 보조금 자동 안내에 사용됩니다.</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="fCarNo" data-i18n="signup.f.lbl.carno">차량번호 (선택)</label>
+                  <input type="text" class="form-input" id="fCarNo" placeholder="00가0000" data-i18n-attr="placeholder:signup.f.carno.ph">
+                  <div class="form-help" data-i18n="signup.f.carno.help">저공해 등급 자동 조회에 사용됩니다.</div>
+                </div>
+              </div>
+
+              <!-- 사업자등록번호 (법인·기관 선택 입력 · 진위확인만) -->
+              <div class="form-group">
+                <label class="form-label" for="fBizNo" data-i18n="signup.f.lbl.bizno.opt">사업자등록번호 (선택 · 법인·기관)</label>
+                <div class="form-row-inline biz-check-row">
+                  <input type="text" class="form-input" id="fBizNo" inputmode="numeric" maxlength="12" placeholder='0000000000 (10자리, "-" 제외)' data-i18n-attr="placeholder:signup.f.bizno.ph">
+                  <button type="button" class="btn btn-secondary" id="checkBizBtn" data-i18n="signup.f.btn.checkbiz">진위 확인</button>
+                </div>
+                <div class="form-help" id="bizHelp" data-i18n="signup.f.biz.help.opt">법인·기관 명의 가입 시 입력하세요. 없어도 가입할 수 있습니다.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" data-i18n="signup.f.lbl.notify">알림 수신 방법</label>
+                <div class="vpf-carriers">
+                  <label class="vpf-carrier"><input type="checkbox" id="notifyEmail" checked><span data-i18n="signup.f.notify.email">이메일</span></label>
+                  <label class="vpf-carrier"><input type="checkbox" id="notifySms"><span>SMS</span></label>
+                  <label class="vpf-carrier"><input type="checkbox" id="notifyKakao"><span data-i18n="signup.f.notify.kakao">카카오톡</span></label>
+                </div>
+                <div class="form-help" data-i18n="signup.f.notify.help">알림 채널은 마이페이지에서 언제든 변경할 수 있습니다.</div>
+              </div>
+            </div>
+
+          </form>
+
+          <div class="signup-actions-v2">
+            <a href="signup.html" class="btn btn-ghost" data-i18n="signup.f.btn.prev">← 이전 단계</a>
+            <button type="button" class="btn btn-primary btn-lg" id="submitSignup" disabled>
+<span data-i18n="signup.f.btn.submit">              가입 완료</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <aside class="signup-side" data-i18n-aria="signup.f.side.aria" aria-label="입력 도움말">
+          <div class="signup-side-hero">
+            <div class="ssh-illust" aria-hidden="true">
+              <svg viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="36" fill="url(#fshg)"/>
+                <rect x="22" y="28" width="36" height="24" rx="4" fill="#fff"/>
+                <rect x="26" y="34" width="20" height="3" rx="1.5" fill="url(#fshg)"/>
+                <rect x="26" y="40" width="14" height="3" rx="1.5" fill="url(#fshg)"/>
+                <defs><linearGradient id="fshg" x1="0" x2="80" y1="0" y2="80"><stop stop-color="#1AAD6C"/><stop offset="1" stop-color="#4CA2E2"/></linearGradient></defs>
+              </svg>
+            </div>
+            <h3 data-i18n-html="signup.f.pw.title">안전한 비밀번호<br>설정 가이드</h3>
+            <p data-i18n-html="signup.f.pw.intro">다음 조건을 모두 충족하면 등급 <strong style="color:#79CA6E;">강력</strong>으로 표시됩니다.</p>
+          </div>
+
+          <ul class="signup-benefit-list">
+            <li><span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div><div class="sbl-title" data-i18n="signup.f.pw.g1.t">8~16자 길이</div><div class="sbl-desc" data-i18n="signup.f.pw.g1.d">너무 짧거나 긴 비밀번호는 피해주세요</div></div></li>
+            <li><span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div><div class="sbl-title" data-i18n="signup.f.pw.g2.t">영문 대·소문자 조합</div><div class="sbl-desc" data-i18n="signup.f.pw.g2.d">A~Z 와 a~z 모두 포함 권장</div></div></li>
+            <li><span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div><div class="sbl-title" data-i18n="signup.f.pw.g3.t">숫자·특수문자 포함</div><div class="sbl-desc" data-i18n="signup.f.pw.g3.d">!@#$%^&* 중 1자 이상 권장</div></div></li>
+            <li><span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span><div><div class="sbl-title" data-i18n="signup.f.pw.g4.t">아이디·이름과 다르게</div><div class="sbl-desc" data-i18n="signup.f.pw.g4.d">개인정보를 비밀번호로 쓰지 마세요</div></div></li>
+          </ul>
+
+          <div class="signup-side-help">
+            <div class="ssh-help-head">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+<span data-i18n="signup.f.lost.title">              아이디·비밀번호 분실 대비</span>
+            </div>
+            <p data-i18n="signup.f.lost.body">가입 후 마이페이지에서 본인 명의 휴대폰을 등록해두시면, 분실 시 즉시 재설정할 수 있습니다.</p>
+          </div>
+        </aside>
+      </div>
+
+      <!-- 가입 완료 단계 (제출 후 표시) -->
+      <div id="completeStage" hidden>
+        <div class="signup-complete-hero">
+          <div class="sch-illust" aria-hidden="true">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="56" fill="url(#schg)"/>
+              <path d="M40 60l14 14 28-32" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="schg" x1="0" x2="120" y1="0" y2="120"><stop stop-color="#1AAD6C"/><stop offset="1" stop-color="#0D8A54"/></linearGradient></defs>
+            </svg>
+          </div>
+          <h2 class="sch-title"><span id="welcomeName" data-i18n="signup.cmp.welcome.name">홍길동</span><span data-i18n="signup.cmp.welcome.suffix">님, 가입을 환영합니다!</span></h2>
+          <p class="sch-desc" data-i18n-html="signup.cmp.welcome.desc">로그인 한 번으로 보조금 신청·충전 카드 관리·민원 추적이 한 곳에서 가능합니다.<br>등록하신 정보는 마이페이지에서 언제든지 수정할 수 있습니다.</p>
+          <ul class="sch-summary">
+            <li><span class="schs-key" data-i18n="signup.f.sum.id">아이디</span><span class="schs-val" id="sumId">honggildong90</span></li>
+            <li><span class="schs-key" data-i18n="signup.f.sum.email">이메일</span><span class="schs-val" id="sumEmail">honggildong@example.com</span></li>
+            <li><span class="schs-key" data-i18n="signup.f.sum.phone">휴대폰</span><span class="schs-val">010-1234-5678</span></li>
+          </ul>
+        </div>
+
+        <section class="signup-next">
+          <div class="signup-next-head">
+            <h3 data-i18n="signup.cmp.start.title">지금 바로 시작해 보세요</h3>
+            <p id="nextSubtitle" data-i18n="signup.cmp.start.desc">가입 직후 가장 많이 이용하시는 서비스 3가지입니다.</p>
+          </div>
+          <div class="signup-next-grid" id="nextGrid">
+            <!-- JS로 추천 카드 렌더 -->
+          </div>
+        </section>
+
+        <div class="signup-complete-actions">
+          <p class="sca-countdown">
+<span data-i18n-html="signup.cmp.auto.body">            <span id="countdown">10</span>초 후 자동으로 마이페이지로 이동합니다.</span>
+            <button type="button" class="sca-cancel" id="cancelAuto" data-i18n="signup.cmp.auto.cancel">자동 이동 취소</button>
+          </p>
+          <div class="sca-buttons">
+            <a href="index.html" class="btn btn-ghost" data-i18n="signup.cmp.btn.main">메인으로</a>
+            <a href="mypage.html" class="btn btn-primary btn-lg" id="goMypage">
+<span data-i18n="signup.cmp.btn.mypage">              마이페이지 바로가기</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-auth.js?v=20260630c"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  // 비밀번호 강도
+  const pw = document.getElementById('fPw');
+  const pwsFill = document.getElementById('pwsFill');
+  const pwsLabel = document.getElementById('pwsLabel');
+  const pwsGrade = document.getElementById('pwsGrade');
+
+  function measurePw(v) {
+    let score = 0;
+    if (v.length >= 8) score++;
+    if (v.length >= 12) score++;
+    if (/[a-z]/.test(v) && /[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    return Math.min(score, 5);
+  }
+  function gradeOf(score) {
+    if (score <= 1) return { label: '매우 약함', color: '#DC2626', pct: 20 };
+    if (score === 2) return { label: '약함',     color: '#E8760A', pct: 40 };
+    if (score === 3) return { label: '보통',     color: '#D97706', pct: 60 };
+    if (score === 4) return { label: '강함',     color: '#1AAD6C', pct: 80 };
+    return { label: '매우 강함', color: '#0D8A54', pct: 100 };
+  }
+  pw?.addEventListener('input', () => {
+    const v = pw.value;
+    if (!v) {
+      pwsFill.style.width = '0%';
+      pwsFill.style.background = 'var(--color-gray-200)';
+      pwsLabel.textContent = '영문/숫자/특수문자를 조합하면 강도가 올라갑니다';
+      pwsGrade.textContent = '—';
+      pwsGrade.style.color = 'var(--color-gray-500)';
+      return;
+    }
+    const g = gradeOf(measurePw(v));
+    pwsFill.style.width = g.pct + '%';
+    pwsFill.style.background = g.color;
+    pwsLabel.textContent = '비밀번호 강도';
+    pwsGrade.textContent = g.label;
+    pwsGrade.style.color = g.color;
+    validateForm();
+  });
+  document.getElementById('togglePw')?.addEventListener('click', () => {
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+  });
+  document.getElementById('checkIdBtn')?.addEventListener('click', () => {
+    const id = document.getElementById('fId').value.trim();
+    const help = document.getElementById('idHelp');
+    if (!id || id.length < 4) { help.innerHTML = '<span style="color:var(--color-danger);">아이디를 4자 이상 입력해 주세요.</span>'; return; }
+    if (!/^[a-z][a-z0-9]*$/.test(id)) { help.innerHTML = '<span style="color:var(--color-danger);">영문 소문자로 시작하며, 영문·숫자만 사용할 수 있습니다.</span>'; return; }
+    if (id === 'admin') { help.innerHTML = '<span style="color:var(--color-danger);">이미 사용 중인 아이디입니다.</span>'; return; }
+    help.innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">✓ 사용 가능한 아이디입니다.</span>';
+    document.getElementById('fId').dataset.checked = 'true';
+    validateForm();
+  });
+  // ── 사업자등록번호: 선택 입력(법인·기관용) · 진위확인만 ──
+  const bizNoEl = document.getElementById('fBizNo');
+  const bizHelp = document.getElementById('bizHelp');
+  function bizDigits(){ return (bizNoEl?.value || '').replace(/\D/g, ''); }
+
+  document.getElementById('checkBizBtn')?.addEventListener('click', () => {
+    const no = bizDigits();
+    if (no.length !== 10) {
+      bizHelp.innerHTML = '<span style="color:var(--color-danger);">사업자등록번호 10자리를 정확히 입력해 주세요.</span>';
+      return;
+    }
+    bizHelp.innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">✓ 진위 확인이 완료되었습니다.</span>';
+  });
+  bizNoEl?.addEventListener('input', () => {
+    bizHelp.innerHTML = '법인·기관 명의 가입 시 입력하세요. 없어도 가입할 수 있습니다.';
+    bizHelp.style.color = '';
+  });
+  const pw2 = document.getElementById('fPw2');
+  pw2?.addEventListener('input', () => {
+    const help = document.getElementById('pw2Help');
+    if (!pw2.value) { help.textContent = '비밀번호와 동일하게 입력해 주세요.'; help.style.color = ''; }
+    else if (pw2.value === pw.value) help.innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">✓ 비밀번호가 일치합니다.</span>';
+    else help.innerHTML = '<span style="color:var(--color-danger);">비밀번호가 일치하지 않습니다.</span>';
+    validateForm();
+  });
+  document.getElementById('verifyEmailBtn')?.addEventListener('click', () => {
+    const email = document.getElementById('fEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (window.__toast) window.__toast('올바른 이메일 형식을 입력해 주세요.', 'warning'); return; }
+    if (window.__toast) window.__toast(`${email}로 인증 메일을 발송하였습니다. (데모)`, 'success');
+    document.getElementById('fEmail').dataset.verified = 'true';
+    validateForm();
+  });
+
+  // STEP01 휴대전화 인증 결과(이름·휴대폰)를 본인인증 정보에 자동 기입
+  try {
+    var auth = JSON.parse(sessionStorage.getItem('signup_auth') || 'null');
+    if (auth) {
+      if (auth.name) document.getElementById('fName').value = auth.name;
+      if (auth.phone) document.getElementById('fPhoneRO').value = auth.phone;
+      if (auth.birth) document.getElementById('fBirth').value = auth.birth;
+    }
+  } catch(e){}
+
+  function validateForm() {
+    const idEl = document.getElementById('fId');
+    const id = idEl.value.trim();
+    const idChecked = idEl.dataset.checked === 'true';
+    const pwOk = pw.value.length >= 8 && measurePw(pw.value) >= 3;
+    const pw2Ok = pw2.value && pw2.value === pw.value;
+    const email = document.getElementById('fEmail').value.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const ready = id.length >= 4 && idChecked && pwOk && pw2Ok && emailOk;
+    const btn = document.getElementById('submitSignup');
+    btn.disabled = !ready;
+    btn.classList.toggle('is-ready', ready);
+  }
+  document.querySelectorAll('#signupForm input, #signupForm select').forEach(el => el.addEventListener('input', validateForm));
+
+  // 가입 완료 (Step 3 → 환영 카드로 단일 페이지 내 전환)
+  document.getElementById('submitSignup')?.addEventListener('click', () => {
+    const btn = document.getElementById('submitSignup');
+    if (btn.disabled) return;
+    const data = {
+      bizNo: bizDigits(),
+      id: document.getElementById('fId').value,
+      email: document.getElementById('fEmail').value,
+      sido: document.getElementById('fSido')?.value || '',
+      carNo: document.getElementById('fCarNo')?.value || '',
+      notify: {
+        email: document.getElementById('notifyEmail').checked,
+        sms:   document.getElementById('notifySms').checked,
+        kakao: document.getElementById('notifyKakao').checked
+      },
+      completedAt: Date.now()
+    };
+    try {
+      sessionStorage.setItem('signup_step2', JSON.stringify(data));
+      sessionStorage.setItem('mp_user', JSON.stringify({
+        name: document.getElementById('fName').value || '홍길동',
+        id: data.id,
+        justSignedUp: true
+      }));
+    } catch(e){}
+
+    // 화면 전환: 입력 폼 → 환영 카드
+    document.getElementById('formStage').hidden = true;
+    document.getElementById('completeStage').hidden = false;
+
+    // 요약 채우기
+    document.getElementById('sumId').textContent = data.id;
+    document.getElementById('sumEmail').textContent = data.email;
+    document.getElementById('welcomeName').textContent = document.getElementById('fName').value || '홍길동';
+
+    // 추천 카드 렌더 (가입 직후 자주 이용하는 서비스)
+    const recs = [
+      { href: 'subsidy-region.html', ico: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6', title: '보조금 신청하기', desc: '거주 지자체 잔여 예산 확인 후 신청', cta: '신청 페이지 →', cls: 'scheme-green' },
+      { href: 'charging-find.html', ico: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z', title: '충전소 찾기', desc: '전기·수소 통합 지도에서 가까운 충전소', cta: '지도 열기 →', cls: 'scheme-blue' },
+      { href: 'mypage.html',        ico: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2', title: '마이페이지 둘러보기', desc: '충전 카드·즐겨찾기·알림 설정 관리', cta: '마이페이지 →', cls: 'scheme-orange' }
+    ];
+    document.getElementById('nextGrid').innerHTML = recs.map(r => `
+      <a href="${r.href}" class="signup-next-card ${r.cls}">
+        <div class="snc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${r.ico}"/></svg></div>
+        <h4>${r.title}</h4><p>${r.desc}</p>
+        <span class="snc-cta">${r.cta}</span>
+      </a>
+    `).join('');
+
+    document.getElementById('nextSubtitle').textContent = '가입 직후 자주 이용하시는 서비스 3가지입니다.';
+
+    // 자동 이동 카운트다운
+    let seconds = 10;
+    const cdEl = document.getElementById('countdown');
+    const cancelBtn = document.getElementById('cancelAuto');
+    const timerId = setInterval(() => {
+      seconds--;
+      if (cdEl) cdEl.textContent = seconds;
+      if (seconds <= 0) { clearInterval(timerId); location.href = 'mypage.html'; }
+    }, 1000);
+    cancelBtn?.addEventListener('click', () => {
+      clearInterval(timerId);
+      document.querySelector('.sca-countdown').innerHTML = '<span style="color:var(--color-gray-500);">자동 이동이 취소되었습니다. 원하실 때 아래 버튼을 클릭하세요.</span>';
+    });
+
+    // 환영 카드로 스크롤 (KRDS 키보드 접근성: 첫 액션 자동 포커스)
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('goMypage')?.focus({ preventScroll: true });
+    }, 300);
+
+    if (window.__toast) window.__toast('회원가입을 완료하였습니다!', 'success');
+  });
+
+  validateForm();
+})();
+</script>
+</body>
+</html>

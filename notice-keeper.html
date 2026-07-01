@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전기차 충전소 지킴이 활동 | 알림·공지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/notice.css">
+<style>
+/* =========================================================
+   notice-keeper.html — 사이트 디자인 시스템 정합 v2
+   - 토큰 사용: --color-primary, --gradient-primary-soft,
+     --radius-*, --shadow-*, --space-*, --fw-*
+   - 컴포넌트 정합: .card, .btn, .chip, .faq-item 패턴
+   ========================================================= */
+
+/* Hero 메인 CTA 영역 — light compact hero에 맞춘 컬러 */
+.kp-hero-cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);   /* 24 → 16 */
+}
+.kp-hero-cta .btn {
+  font-size: 16px;
+  padding: 14px 26px;
+}
+.kp-hero-cta-hint {
+  font-size: 13px;
+  color: var(--color-gray-500);
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.kp-hero-cta-hint::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--color-gray-400);
+  flex-shrink: 0;
+}
+
+/* Hero 내 빠른 이동 칩 — light hero용 톤 */
+.kp-quicknav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-3);    /* 20 → 12 */
+  padding-top: var(--space-3);   /* 20 → 12 */
+  border-top: 1px solid var(--border-light);
+}
+.kp-quicknav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fff;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast), transform var(--t-fast);
+}
+.kp-quicknav-chip:hover {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-300);
+  color: var(--color-primary-700);
+  transform: translateY(-1px);
+}
+.kp-quicknav-chip:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+.kp-quicknav-chip svg {
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+  transition: color var(--t-fast);
+}
+.kp-quicknav-chip:hover svg { color: var(--color-primary-600); }
+
+@media (max-width: 640px) {
+  .kp-quicknav { gap: 5px; }
+  .kp-quicknav-chip { padding: 5px 10px; font-size: 12px; }
+  .kp-quicknav-chip svg { width: 12px; height: 12px; }
+  .kp-hero-cta .btn { font-size: 15px; padding: 12px 22px; }
+}
+
+/* 페이지 본문 — hero 바로 아래 첫 섹션 상단 여백 축소 */
+main > .section-sm {
+  padding-top: var(--space-8);    /* 48 → 32 */
+}
+
+/* 인트로 하이라이트 (브랜드 소프트 그라데이션 카드) */
+.kp-intro {
+  background: var(--gradient-primary-soft);
+  border: 1px solid rgba(26,173,108,0.18);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-10);
+  margin-bottom: var(--space-10);   /* 48 → 40 */
+  box-shadow: var(--shadow-sm);
+}
+.kp-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+}
+.kp-intro-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.kp-intro-card + .kp-intro-card {
+  padding-left: var(--space-8);
+  border-left: 1px solid rgba(26,173,108,0.20);
+}
+.kpi-head {
+  display: flex; align-items: center; gap: var(--space-3);
+}
+.kpi-ico {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: var(--shadow-glow-green);
+}
+.kpi-ico.kpi-target { background: linear-gradient(135deg, #2C7BE5, #163F8A); box-shadow: var(--shadow-glow-blue); }
+.kp-intro-card h3 {
+  font-size: 19px;
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.kp-intro-card p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* 공통 섹션 헤드 — 사이트 표준 정렬 */
+.kp-section { margin: var(--space-12) 0; }
+.kp-section-head {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+.kp-section-head-center { align-items: center; text-align: center; }
+.kp-eyebrow {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  color: var(--color-primary-700);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.kp-eyebrow::before {
+  content: '';
+  width: 22px; height: 2px;
+  background: var(--color-primary-500);
+  border-radius: var(--radius-xs);
+}
+.kp-section-title {
+  font-size: 28px;
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  margin: 0;
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+.kp-section-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* 6 활동 카드 그리드 — .card 패턴 정합 */
+.kp-act-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+.kp-act-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+}
+.kp-act-card:hover {
+  border-color: var(--color-primary-300);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.kpa-ico {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-md);
+  display: grid; place-items: center;
+  margin-bottom: var(--space-4);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+/* 활동별 컬러 — 사이트 시멘틱 컬러 토큰 사용 */
+.kpa-ico.scheme-blue   { background: var(--color-secondary-50); color: var(--color-secondary-700); }
+.kpa-ico.scheme-orange { background: #FFF3E0; color: var(--color-accent-600); }
+.kpa-ico.scheme-danger { background: #FEF2F2; color: var(--color-danger); }
+.kpa-ico.scheme-purple { background: #EEF2FF; color: #4F46E5; }
+.kpa-ico.scheme-green  { background: var(--color-primary-50); color: var(--color-primary-700); }
+.kpa-ico.scheme-teal   { background: #ECFEFF; color: #0E7490; }
+.kp-act-card h3 {
+  font-size: 17px;
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+  margin: 0 0 var(--space-2);
+}
+.kp-act-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* 5단계 스테퍼 */
+.kp-stepper {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; align-items: stretch;
+  gap: var(--space-2);
+}
+.kp-step {
+  flex: 1;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+.kp-step:hover {
+  border-color: var(--color-primary-300);
+  box-shadow: var(--shadow-sm);
+}
+.kps-num {
+  display: inline-grid; place-items: center;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-3);
+  box-shadow: var(--shadow-glow-green);
+}
+.kps-title {
+  font-size: 15.5px;
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0 0 var(--space-2);
+}
+.kps-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+.kp-arrow {
+  align-self: center;
+  flex-shrink: 0;
+  font-size: 22px;
+  color: var(--color-primary-400);
+  font-weight: var(--fw-bold);
+}
+/* 보상 — 브랜드 소프트 그라데이션 박스 */
+.kp-rewards {
+  background: var(--gradient-primary-soft);
+  border: 1px solid rgba(26,173,108,0.18);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-12) var(--space-14);
+  margin: var(--space-12) 0;
+}
+.kp-reward-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+.kp-reward-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--t-base), box-shadow var(--t-base);
+}
+.kp-reward-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.kpr-ico {
+  width: 64px; height: 64px;
+  border-radius: var(--radius-pill);
+  display: grid; place-items: center;
+  margin: 0 auto var(--space-4);
+  color: #fff;
+}
+.kpr-ico-medal  { background: linear-gradient(135deg, #FBBF24, #F59E0B); box-shadow: 0 8px 20px rgba(245,158,11,0.25); }
+.kpr-ico-credit { background: linear-gradient(135deg, #2C7BE5, #163F8A); box-shadow: var(--shadow-glow-blue); }
+.kpr-ico-shield { background: var(--gradient-primary); box-shadow: var(--shadow-glow-green); }
+.kp-reward-card h3 {
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+  margin: 0 0 var(--space-2);
+}
+.kp-reward-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  margin: 0;
+  word-break: keep-all;
+}
+.kpr-tag {
+  display: inline-block;
+  margin-top: var(--space-4);
+  padding: 4px 12px;
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+}
+
+/* FAQ 아코디언 — 사이트 표준 톤 */
+.kp-faq-list {
+  display: flex; flex-direction: column;
+  gap: var(--space-2);
+}
+.kp-faq-item {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.kp-faq-item:hover { border-color: var(--color-primary-300); }
+.kp-faq-item[open] {
+  border-color: var(--color-primary-400);
+  box-shadow: var(--shadow-sm);
+}
+.kp-faq-item summary {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  cursor: pointer;
+  list-style: none;
+  font-size: 15.5px;
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+.kp-faq-item summary::-webkit-details-marker { display: none; }
+.kpf-q {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  display: grid; place-items: center;
+}
+.kpf-question { flex: 1; }
+.kpf-arrow {
+  color: var(--color-gray-400);
+  font-size: 14px;
+  transition: transform var(--t-base), color var(--t-fast);
+}
+.kp-faq-item[open] .kpf-arrow {
+  transform: rotate(180deg);
+  color: var(--color-primary-700);
+}
+.kpf-answer {
+  padding: 0 var(--space-6) var(--space-5) calc(var(--space-6) + 28px + var(--space-3));
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+.kpf-answer p { margin: 0; }
+
+/* 반응형 */
+@media (max-width: 1080px) {
+  .kp-act-grid { grid-template-columns: repeat(2, 1fr); }
+  .kp-reward-grid { grid-template-columns: 1fr; }
+  .kp-stepper { flex-wrap: wrap; }
+  .kp-arrow { display: none; }
+  .kp-step { flex: 1 1 calc(50% - var(--space-2)); min-width: 140px; }
+  .kp-intro-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+  .kp-intro-card + .kp-intro-card { padding-left: 0; border-left: none; padding-top: var(--space-6); border-top: 1px solid rgba(26,173,108,0.20); }
+  .kp-rewards { padding: var(--space-8) var(--space-6); }
+}
+@media (max-width: 640px) {
+  .kp-act-grid { grid-template-columns: 1fr; }
+  .kp-step { flex: 1 1 100%; }
+  .kp-section-title { font-size: 22px; }
+  .kp-intro { padding: var(--space-6); }
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+
+  <!-- 사이트 표준 page-hero (브랜드 그라데이션) -->
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="notice.bc.home">홈</a><span class="sep">›</span>
+        <a href="notice.html" data-i18n="notice.keeper.bc.community">소통·지원</a><span class="sep">›</span>
+        <a href="notice.html" data-i18n="notice.keeper.bc.notice">알림·공지</a><span class="sep">›</span>
+        <span class="current" data-i18n="notice.keeper.bc.current">전기차 충전소 지킴이 활동</span>
+      </nav>
+      <h1 data-i18n="notice.keeper.h1">전기차 충전소 지킴이 활동</h1>
+      <p class="hero-lead" data-i18n="notice.keeper.lead">시민이 직접 전기차 충전 인프라를 지킵니다. 충전소 점검·방해행위 신고·고장 제보로 쾌적한 충전 환경을 함께 만들어 주세요.</p>
+
+      <!-- 메인 CTA — 페이지 내 단일 강조 액션 -->
+      <div class="kp-hero-cta">
+        <a href="#" class="btn btn-primary btn-lg" data-action="notify" data-action-label="지킴이 신청 양식이 곧 오픈됩니다.">
+<span data-i18n="notice.keeper.cta.btn">          지킴이 신청서 작성하기</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <span class="kp-hero-cta-hint" data-i18n="notice.keeper.cta.hint">신청 자격: 만 18세 이상 대한민국 국민 (전기차 보유 여부 무관)</span>
+      </div>
+
+      <!-- 페이지 내 빠른 이동 — 칩 스타일 앵커 링크 -->
+      <nav class="kp-quicknav" data-i18n-aria="notice.keeper.quicknav.aria" aria-label="페이지 빠른 이동">
+        <a href="#kpIntroTitle" class="kp-quicknav-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+<span data-i18n="notice.keeper.qn.intro">          지킴이란?</span>
+        </a>
+        <a href="#kpActTitle" class="kp-quicknav-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+<span data-i18n="notice.keeper.qn.act">          주요 활동</span>
+        </a>
+        <a href="#kpStepTitle" class="kp-quicknav-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+<span data-i18n="notice.keeper.qn.step">          참여 절차</span>
+        </a>
+        <a href="#kpRewardTitle" class="kp-quicknav-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+<span data-i18n="notice.keeper.qn.reward">          보상 혜택</span>
+        </a>
+        <a href="#kpFaqTitle" class="kp-quicknav-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          FAQ
+        </a>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 인트로 하이라이트 (브랜드 소프트 그라데이션) -->
+      <section class="kp-intro" aria-labelledby="kpIntroTitle">
+        <div class="kp-intro-grid">
+          <div class="kp-intro-card">
+            <div class="kpi-head">
+              <span class="kpi-ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </span>
+              <h3 id="kpIntroTitle" data-i18n="notice.keeper.intro.title">전기차 충전소 지킴이란?</h3>
+            </div>
+            <p data-i18n="notice.keeper.intro.desc">전국 충전소 공동주택을 점검하고, 충전 방해행위와 고장을 신고하며 충전 문화를 시민과 함께 만드는 자원봉사 시민 참여 활동입니다.</p>
+          </div>
+          <div class="kp-intro-card">
+            <div class="kpi-head">
+              <span class="kpi-ico kpi-target">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              </span>
+              <h3 data-i18n="notice.keeper.why.title">왜 지킴이가 필요한가?</h3>
+            </div>
+            <p data-i18n="notice.keeper.why.desc">전기차 보급 확대에 따라 내연기관 차량의 충전구역 불법 주차, 충전기 고장 방치, 장비 훼손 등 다양한 문제가 발생합니다. 시민 지킴이의 현장 활동이 효율적인 충전 환경을 만듭니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 지킴이 주요 활동 안내 (3×2 그리드) -->
+      <section class="kp-section" aria-labelledby="kpActTitle">
+        <div class="kp-section-head">
+          <span class="kp-eyebrow" data-i18n="notice.keeper.eyebrow.act">주요 활동</span>
+          <h2 id="kpActTitle" class="kp-section-title" data-i18n="notice.keeper.act.title">지킴이 주요 활동 안내</h2>
+          <p class="kp-section-desc" data-i18n="notice.keeper.act.desc">담당 충전소를 정기적으로 방문하여 다음과 같은 활동을 수행합니다.</p>
+        </div>
+        <div class="kp-act-grid">
+          <article class="kp-act-card">
+            <div class="kpa-ico scheme-blue">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.a1.t">충전 현장 점검</h3>
+            <p data-i18n="notice.keeper.a1.d">담당 충전소를 주 1회 방문하여 충전기 외관, 안내판, 출입 시설 상태를 점검합니다.</p>
+          </article>
+          <article class="kp-act-card">
+            <div class="kpa-ico scheme-orange">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.a2.t">충전 방해행위 신고</h3>
+            <p data-i18n="notice.keeper.a2.d">내연기관 차량의 충전구역 불법 주차, 장시간 점유 등 위반 사례를 사진과 함께 신고합니다.</p>
+          </article>
+          <article class="kp-act-card">
+            <div class="kpa-ico scheme-danger">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.a3.t">고장·훼손 신고</h3>
+            <p data-i18n="notice.keeper.a3.d">충전기 고장, 케이블 훼손, 충전 부스 시설물 손상 등을 발견 즉시 사진을 첨부하여 제보합니다.</p>
+          </article>
+          <article class="kp-act-card">
+            <div class="kpa-ico scheme-purple">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.a4.t">활동 보고서 제출</h3>
+            <p data-i18n="notice.keeper.a4.d">월별 점검 결과를 양식에 맞춰 작성하여 온라인으로 간편하게 제출합니다.</p>
+          </article>
+          <article class="kp-act-card">
+            <div class="kpa-ico scheme-green">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.a5.t">충전 문화 홍보</h3>
+            <p data-i18n="notice.keeper.a5.d">주변 동료·이웃에게 올바른 충전 매너와 무공해차 정책 정보를 자연스럽게 알립니다.</p>
+          </article>
+          <article class="kp-act-card">
+            <div class="kpa-ico scheme-teal">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.a6.t">지킴이 네트워크 참여</h3>
+            <p data-i18n="notice.keeper.a6.d">발대식 및 간담회에 참여하고, 현장 의견을 제도 개선에 반영할 수 있는 기회를 갖습니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 지킴이 활동 참여 방법 (5단계 스테퍼) -->
+      <section class="kp-section" id="how" aria-labelledby="kpStepTitle">
+        <div class="kp-section-head">
+          <span class="kp-eyebrow" data-i18n="notice.keeper.eyebrow.step">참여 절차</span>
+          <h2 id="kpStepTitle" class="kp-section-title" data-i18n="notice.keeper.step.title">지킴이 활동 참여 방법</h2>
+          <p class="kp-section-desc" data-i18n="notice.keeper.step.desc">신청부터 활동 시작까지 5단계로 진행됩니다.</p>
+        </div>
+        <ol class="kp-stepper" data-i18n-aria="notice.keeper.step.aria" aria-label="지킴이 활동 5단계">
+          <li class="kp-step">
+            <span class="kps-num">01</span>
+            <h4 class="kps-title" data-i18n="notice.keeper.s1.t">온라인 신청</h4>
+            <p class="kps-desc" data-i18n-html="notice.keeper.s1.d">누리집 가입 후<br>신청서 작성</p>
+          </li>
+          <li class="kp-arrow" aria-hidden="true">›</li>
+          <li class="kp-step">
+            <span class="kps-num">02</span>
+            <h4 class="kps-title" data-i18n="notice.keeper.s2.t">서류 검토</h4>
+            <p class="kps-desc" data-i18n-html="notice.keeper.s2.d">담당자 검토<br>(2~3 영업일)</p>
+          </li>
+          <li class="kp-arrow" aria-hidden="true">›</li>
+          <li class="kp-step">
+            <span class="kps-num">03</span>
+            <h4 class="kps-title" data-i18n="notice.keeper.s3.t">선정 통보</h4>
+            <p class="kps-desc" data-i18n-html="notice.keeper.s3.d">SMS·이메일<br>결과 안내</p>
+          </li>
+          <li class="kp-arrow" aria-hidden="true">›</li>
+          <li class="kp-step">
+            <span class="kps-num">04</span>
+            <h4 class="kps-title" data-i18n="notice.keeper.s4.t">임명·교육</h4>
+            <p class="kps-desc" data-i18n-html="notice.keeper.s4.d">지킴이 임명<br>활동방법 교육</p>
+          </li>
+          <li class="kp-arrow" aria-hidden="true">›</li>
+          <li class="kp-step">
+            <span class="kps-num">05</span>
+            <h4 class="kps-title" data-i18n="notice.keeper.s5.t">활동 시작</h4>
+            <p class="kps-desc" data-i18n-html="notice.keeper.s5.d">담당 충전소<br>현장 활동 개시</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 보상 및 혜택 (브랜드 소프트 박스) -->
+      <section class="kp-rewards" aria-labelledby="kpRewardTitle">
+        <div class="kp-section-head kp-section-head-center">
+          <span class="kp-eyebrow" data-i18n="notice.keeper.eyebrow.rwd">보상 혜택</span>
+          <h2 id="kpRewardTitle" class="kp-section-title" data-i18n="notice.keeper.rwd.title">참여해 주신 활동에 감사의 마음을 전합니다</h2>
+          <p class="kp-section-desc" data-i18n="notice.keeper.rwd.desc">활동 내용에 따라 매년 연 1회 표창 및 다양한 혜택이 제공될 수 있습니다.</p>
+        </div>
+        <div class="kp-reward-grid">
+          <div class="kp-reward-card">
+            <div class="kpr-ico kpr-ico-medal">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="14" r="6"/><path d="M9 8L4 2h16L15 8M9 8l3 6 3-6"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.r1.t">우수 지킴이 표창</h3>
+            <p data-i18n="notice.keeper.r1.d">연 1회 환경부 장관 또는 기관장 명의의 표창장 수여</p>
+            <span class="kpr-tag" data-i18n="notice.keeper.r1.tag">연 1회</span>
+          </div>
+          <div class="kp-reward-card">
+            <div class="kpr-ico kpr-ico-credit">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="11" x2="22" y2="11"/><line x1="6" y1="15" x2="9" y2="15"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.r2.t">충전 크레딧 지급</h3>
+            <p data-i18n="notice.keeper.r2.d">월간 우수 활동자에게 무공해차 통합카드 충전 크레딧 적립</p>
+            <span class="kpr-tag" data-i18n="notice.keeper.r2.tag">월간</span>
+          </div>
+          <div class="kp-reward-card">
+            <div class="kpr-ico kpr-ico-shield">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 data-i18n="notice.keeper.r3.t">활동용품 지급</h3>
+            <p data-i18n="notice.keeper.r3.d">지킴이 선발 후 점검활동 3회 이상 수행 시 모자·조끼·신분증 지급</p>
+            <span class="kpr-tag" data-i18n="notice.keeper.r3.tag">수시</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 지킴이 활동 FAQ -->
+      <section class="kp-section" aria-labelledby="kpFaqTitle">
+        <div class="kp-section-head">
+          <span class="kp-eyebrow" data-i18n="notice.keeper.eyebrow.faq">자주 묻는 질문</span>
+          <h2 id="kpFaqTitle" class="kp-section-title" data-i18n="notice.keeper.faq.title">지킴이 활동 FAQ</h2>
+        </div>
+        <div class="kp-faq-list">
+          <details class="kp-faq-item">
+            <summary>
+              <span class="kpf-q">Q</span>
+              <span class="kpf-question" data-i18n="notice.keeper.q1">전기차가 없어도 지킴이 활동을 할 수 있나요?</span>
+              <span class="kpf-arrow" aria-hidden="true">▾</span>
+            </summary>
+            <div class="kpf-answer">
+              <p data-i18n="notice.keeper.a1">네, 가능합니다. 전기차 보유 여부와 관계없이 만 18세 이상 대한민국 국민이라면 누구나 지킴이로 활동할 수 있습니다. 전기차에 대한 관심과 충전 인프라 개선에 대한 의지가 가장 중요합니다.</p>
+            </div>
+          </details>
+          <details class="kp-faq-item">
+            <summary>
+              <span class="kpf-q">Q</span>
+              <span class="kpf-question" data-i18n="notice.keeper.q2">활동 횟수나 시간 제한이 있나요?</span>
+              <span class="kpf-arrow" aria-hidden="true">▾</span>
+            </summary>
+            <div class="kpf-answer">
+              <p data-i18n="notice.keeper.a2">월 최소 1회 담당 충전소 점검을 권장하며, 활동 시간은 자율입니다. 보고서 제출은 매월 말일까지 온라인으로 간단히 처리하시면 됩니다. 우수 지킴이 표창 대상은 월 4회 이상 활동자 중 선정합니다.</p>
+            </div>
+          </details>
+          <details class="kp-faq-item">
+            <summary>
+              <span class="kpf-q">Q</span>
+              <span class="kpf-question" data-i18n="notice.keeper.q3">활동 중 위험 상황이 발생하면 어떻게 하나요?</span>
+              <span class="kpf-arrow" aria-hidden="true">▾</span>
+            </summary>
+            <div class="kpf-answer">
+              <p data-i18n="notice.keeper.a3">본인의 안전이 최우선입니다. 폭언·폭행 위협 시 즉시 활동을 중단하고 112(경찰), 119(소방), 또는 통합 콜센터 1661-0970로 신고해 주세요. 모든 지킴이는 활동 중 사고에 대비한 단체 상해보험에 자동 가입됩니다.</p>
+            </div>
+          </details>
+          <details class="kp-faq-item">
+            <summary>
+              <span class="kpf-q">Q</span>
+              <span class="kpf-question" data-i18n="notice.keeper.q4">신고한 위반 사례는 어떻게 처리되나요?</span>
+              <span class="kpf-arrow" aria-hidden="true">▾</span>
+            </summary>
+            <div class="kpf-answer">
+              <p data-i18n="notice.keeper.a4">접수된 신고는 관할 지자체 또는 충전 사업자에게 즉시 전달되며, 처리 결과는 SMS·앱 알림으로 안내됩니다. 「환경친화적 자동차의 개발 및 보급 촉진에 관한 법률」에 따라 충전구역 불법 주차는 10만원 이하의 과태료가 부과될 수 있습니다.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-notice.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>규정·가이드라인 | 정보 자료실 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<link rel="stylesheet" href="css/info.css">
+<style>
+  /* 법령 게시판 — 제목 링크 · 받기 버튼 */
+  .law-board .board-link{color:var(--text-primary,#1f2937);font-weight:600;text-decoration:none}
+  .law-board .board-link:hover{color:var(--color-primary-700,#0f6e56);text-decoration:underline}
+  .law-board .form-download,.law-board .lib-dl-btn{padding:6px 14px;font-size:13px;border-radius:8px;border:1px solid var(--color-primary-300,#9fd3bb);background:#fff;color:var(--color-primary-700,#0f6e56);font-weight:700;cursor:pointer;white-space:nowrap}
+  .law-board .form-download:hover,.law-board .lib-dl-btn:hover{background:var(--color-primary-50,#eefaf4)}
+  .law-board td.cat{width:120px}
+  /* 구분(카테고리)별 배지 색상 — 법령/고시/가이드라인/인증 */
+  .law-board .law-cat{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap;background:#e6f4ea;color:#1b7a43}
+  .law-board .law-cat.ordinance{background:#e6f0fb;color:#1f5fa8}
+  .law-board .law-cat.guide{background:#fff3e0;color:#b45309}
+  .law-board .law-cat.standard{background:#f3eafe;color:#6b21a8}
+  .law-board .law-cat.decree{background:#fdeef3;color:#9d174d}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="info.bc.home">홈</a><span class="sep">›</span>
+        <a href="info.html" data-i18n="info.beginner.bc.lib">정보 자료실</a><span class="sep">›</span>
+        <span class="current" data-i18n="info.reg.bc.current">규정·가이드라인</span>
+      </nav>
+      <h1 data-i18n="info.reg.h1">규정·가이드라인</h1>
+      <p class="hero-lead" data-i18n="info.reg.lead">무공해차 보급·충전 인프라·인증 기준 관련 법령·지침·고시·가이드라인 원문을 제공합니다.</p>
+    </div>
+  </section>
+
+  <nav class="tab-nav">
+    <div class="container container-wide">
+      <div class="tabs-pill" data-tabs id="regTabs">
+        <button class="tab active" data-tab="law" type="button" data-i18n="info.reg.tab.law">법령·지침·규정·가이드라인</button>
+        <button class="tab" data-tab="cert" type="button" data-i18n="info.reg.tab.cert">인증 기준 안내</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <div class="tab-content active" data-tab-content="law">
+        <div class="board-toolbar">
+          <div class="board-toolbar-filters">
+            <div class="form-group">
+            <label class="form-label" data-i18n="info.reg.f.cat.aria">카테고리</label>
+            <select class="form-select" data-i18n-aria="info.reg.f.cat.aria" aria-label="카테고리">
+              <option value="all" data-i18n="info.reg.cat.all">전체 카테고리</option>
+              <option data-i18n="info.reg.cat.law">법령</option><option data-i18n="info.reg.cat.decree">시행령·시행규칙</option>
+              <option data-i18n="info.reg.cat.notice">환경부 고시</option><option data-i18n="info.reg.cat.guideline2">업무 지침</option>
+              <option data-i18n="info.reg.cat.guideline">가이드라인</option>
+            </select>
+          </div>
+            <div class="form-group">
+            <label class="form-label" data-i18n="info.reg.f.year.aria">연도</label>
+            <select class="form-select" data-i18n-aria="info.reg.f.year.aria" aria-label="연도">
+              <option data-i18n="info.reg.year.all">전체 연도</option><option>2026</option><option>2025</option><option>2024</option>
+            </select>
+          </div>
+            <div class="board-search">
+              <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" placeholder="법령·지침 제목 검색" data-i18n-attr="placeholder:info.reg.search.ph">
+              <button type="button" data-i18n="info.reg.search.btn">검색</button>
+            </div>
+            <button class="btn" type="button" id="regReset" aria-label="필터 초기화" data-i18n="info.reg.reset">초기화</button>
+          </div>
+        </div>
+
+        <div class="board-result-meta">
+          <div data-i18n-html="info.reg.count">전체 <strong>86</strong>건 (최신순)</div>
+        </div>
+
+        <table class="board-table law-board std-board">
+          <thead>
+            <tr>
+              <th class="num" data-i18n="info.reg.col.no">번호</th>
+              <th class="cat" data-i18n="info.reg.col.cat">구분</th>
+              <th data-i18n="info.reg.col.title">게시물명</th>
+              <th class="writer" data-i18n="info.reg.col.writer">작성자</th>
+              <th class="date" data-i18n="info.reg.col.date">등록일</th>
+              <th class="date size" data-i18n="info.reg.col.size">용량</th>
+              <th class="attach" data-i18n="info.reg.col.dl">첨부파일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">86</td><td class="cat"><span class="law-cat" data-i18n="info.reg.tag.law">법령</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l1">대기환경보전법 시행규칙 (2026.03.20 개정)</a></div></td>
+              <td class="writer">환경부</td><td class="date">2026.03.20</td><td class="date size">4.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="대기환경보전법 시행규칙 (2026.03.20 개정)" data-files='[{"name": "대기환경보전법 시행규칙.pdf", "size": "PDF · 4.2MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">85</td><td class="cat"><span class="law-cat ordinance" data-i18n="info.reg.tag.notice">고시</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l2">전기자동차 보급사업 업무처리 지침 개정 (환경부 고시 제2026-42호)</a></div></td>
+              <td class="writer">환경부</td><td class="date">2026.03.15</td><td class="date size">2.8MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="전기자동차 보급사업 업무처리 지침 개정" data-files='[{"name": "전기자동차 보급사업 업무처리 지침.hwp", "size": "HWP · 2.8MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">84</td><td class="cat"><span class="law-cat ordinance" data-i18n="info.reg.tag.notice">고시</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l3">수소전기자동차 보급 및 보급사업 업무처리 지침</a></div></td>
+              <td class="writer">환경부</td><td class="date">2026.02.28</td><td class="date size">2.1MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="수소전기자동차 보급 및 보급사업 업무처리 지침" data-files='[{"name": "수소전기자동차 보급 업무처리 지침.hwp", "size": "HWP · 2.1MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">83</td><td class="cat"><span class="law-cat guide" data-i18n="info.reg.tag.guide">가이드라인</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l4">공용 완속충전기 설치·운영 가이드라인 (2026년판)</a></div></td>
+              <td class="writer">한국환경공단</td><td class="date">2026.02.12</td><td class="date size">6.4MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="공용 완속충전기 설치·운영 가이드라인 (2026년판)" data-files='[{"name": "공용 완속충전기 가이드라인.pdf", "size": "PDF · 6.4MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">82</td><td class="cat"><span class="law-cat ordinance" data-i18n="info.reg.tag.notice">환경부 고시</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l5">전기자동차 충전기 인증 기준 고시</a></div></td>
+              <td class="writer">환경부</td><td class="date">2026.01.30</td><td class="date size">1.8MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="전기자동차 충전기 인증 기준 고시" data-files='[{"name": "전기자동차 충전기 인증 기준 고시.pdf", "size": "PDF · 1.8MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">81</td><td class="cat"><span class="law-cat" data-i18n="info.reg.tag.law">법령</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l6">친환경자동차법 시행령 일부개정</a></div></td>
+              <td class="writer">산업통상자원부</td><td class="date">2026.01.15</td><td class="date size">1.2MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="친환경자동차법 시행령 일부개정" data-files='[{"name": "친환경자동차법 시행령.pdf", "size": "PDF · 1.2MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">80</td><td class="cat"><span class="law-cat guide" data-i18n="info.reg.tag.guide">가이드라인</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l7">K-EV100 참여기업 운영 가이드라인 v2.0</a></div></td>
+              <td class="writer">한국자동차환경협회</td><td class="date">2026.01.10</td><td class="date size">3.6MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="K-EV100 참여기업 운영 가이드라인 v2.0" data-files='[{"name": "K-EV100 참여기업 운영 가이드라인.pdf", "size": "PDF · 3.6MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">79</td><td class="cat"><span class="law-cat ordinance" data-i18n="info.reg.tag.notice">고시</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l8">전기이륜자동차 보급사업 운영 요령</a></div></td>
+              <td class="writer">환경부</td><td class="date">2025.12.28</td><td class="date size">1.4MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="전기이륜자동차 보급사업 운영 요령" data-files='[{"name": "전기이륜자동차 보급사업 운영 요령.hwp", "size": "HWP · 1.4MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+            <tr>
+              <td class="num">78</td><td class="cat"><span class="law-cat decree" data-i18n="info.reg.tag.decree">시행령·시행규칙</span></td>
+              <td><div class="title-cell"><a class="board-link" href="#" data-i18n="info.reg.l9">수소충전소 안전관리 기준</a></div></td>
+              <td class="writer">한국가스안전공사</td><td class="date">2025.12.20</td><td class="date size">5.1MB</td>
+              <td class="attach"><button type="button" class="lib-dl-btn" data-doc="수소충전소 안전관리 기준" data-files='[{"name": "수소충전소 안전관리 기준.pdf", "size": "PDF · 5.1MB"}]' aria-haspopup="dialog">다운로드</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" data-total="10" data-current="1" style="margin-top: 28px;"></div>
+      </div>
+
+      <div class="tab-content" data-tab-content="cert">
+        <div class="cert-intro">
+          <h3 data-i18n="info.reg.cert.h3">무공해차 및 충전기 인증 기준</h3>
+          <p data-i18n="info.reg.cert.intro">환경부 「대기환경보전법」과 한국환경공단 인증 제도에 따라 무공해차·충전기는 성능·안전·환경 기준을 충족해야 합니다. 인증 대상과 기준을 카테고리별로 안내합니다.</p>
+        </div>
+
+        <div class="cert-grid">
+          <div class="cert-card">
+            <h4><span data-i18n="info.reg.cert.ev.title">전기자동차 인증</span> <span class="cert-tag">EV</span></h4>
+            <dl>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ev.dt1">주행거리</dt><dd data-i18n="info.reg.cert.ev.dd1">1회 충전 150km 이상 (환경부 인증 기준)</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ev.dt2">에너지소비효율</dt><dd data-i18n="info.reg.cert.ev.dd2">5등급 체계 (1~5등급, 높을수록 우수)</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ev.dt3">안전 기준</dt><dd data-i18n="info.reg.cert.ev.dd3">자동차관리법 안전기준 + 배터리 안전성 시험</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ev.dt4">인증 기관</dt><dd data-i18n="info.reg.cert.ev.dd4">국립환경과학원, 한국환경공단</dd></div>
+            </dl>
+          </div>
+
+          <div class="cert-card">
+            <h4><span data-i18n="info.reg.cert.ebus.title">전기승합차 인증</span> <span class="cert-tag" style="background:#E1F5EE;color:#0F6E56;">E-Bus</span></h4>
+            <dl>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ebus.dt1">차종 구분</dt><dd data-i18n="info.reg.cert.ebus.dd1">시내·시외·고속버스 등 승합 전기차</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ebus.dt2">주행거리</dt><dd data-i18n="info.reg.cert.ebus.dd2">1회 충전 시내버스 기준 거리 이상 충족</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ebus.dt3">안전 기준</dt><dd data-i18n="info.reg.cert.ebus.dd3">자동차관리법 + 대용량 배터리 안전성 시험</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ebus.dt4">인증 기관</dt><dd data-i18n="info.reg.cert.ebus.dd4">국립환경과학원, 한국환경공단</dd></div>
+            </dl>
+          </div>
+
+          <div class="cert-card">
+            <h4><span data-i18n="info.reg.cert.emoto.title">전기이륜차 인증</span> <span class="cert-tag" style="background:#EAF3DE;color:#3B6D11;">E-2W</span></h4>
+            <dl>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.emoto.dt1">차종 구분</dt><dd data-i18n="info.reg.cert.emoto.dd1">경형·소형·중형·대형 전기이륜차</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.emoto.dt2">성능 기준</dt><dd data-i18n="info.reg.cert.emoto.dd2">정격출력·1회 충전 주행거리 최소 요건</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.emoto.dt3">안전 기준</dt><dd data-i18n="info.reg.cert.emoto.dd3">이륜자동차 안전기준 + 배터리 안전성</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.emoto.dt4">인증 기관</dt><dd data-i18n="info.reg.cert.emoto.dd4">국립환경과학원, 교통안전공단</dd></div>
+            </dl>
+          </div>
+
+          <div class="cert-card">
+            <h4><span data-i18n="info.reg.cert.fcev.title">수소전기자동차 인증</span> <span class="cert-tag" style="background:#E8F4FB;color:var(--color-secondary-700);">FCEV</span></h4>
+            <dl>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.fcev.dt1">연료전지 효율</dt><dd data-i18n="info.reg.cert.fcev.dd1">95km/kg 이상 (승용 기준)</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.fcev.dt2">수소 탱크</dt><dd data-i18n="info.reg.cert.fcev.dd2">고압가스안전관리법 검사 필수</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.fcev.dt3">배출가스</dt><dd data-i18n="info.reg.cert.fcev.dd3">수증기 외 유해물질 배출 제로</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.fcev.dt4">인증 기관</dt><dd data-i18n="info.reg.cert.fcev.dd4">가스안전공사, 국립환경과학원</dd></div>
+            </dl>
+          </div>
+
+          <div class="cert-card">
+            <h4><span data-i18n="info.reg.cert.ce.title">무공해 건설기계</span> <span class="cert-tag" style="background:#EEF2FF;color:#4F46E5;">무공해 CE</span></h4>
+            <dl>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ce.dt1">대상 기종</dt><dd data-i18n="info.reg.cert.ce.dd1">굴착기·지게차·로더·덤프트럭 (전기·수소)</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ce.dt2">성능 기준</dt><dd data-i18n="info.reg.cert.ce.dd2">기종별 작업 시간·배터리 용량 최소 요건</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ce.dt3">안전 기준</dt><dd data-i18n="info.reg.cert.ce.dd3">건설기계관리법 + 고전압 배터리 안전</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.ce.dt4">인증 기관</dt><dd data-i18n="info.reg.cert.ce.dd4">건설기계검사원, 환경공단</dd></div>
+            </dl>
+          </div>
+
+          <div class="cert-card">
+            <h4><span data-i18n="info.reg.cert.chg.title">충전기 인증</span> <span class="cert-tag" style="background:#FFF3E0;color:#E8760A;">Charger</span></h4>
+            <dl>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.chg.dt1">전기적 안전</dt><dd data-i18n="info.reg.cert.chg.dd1">전기용품안전관리법 KC 인증</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.chg.dt2">통신 프로토콜</dt><dd data-i18n="info.reg.cert.chg.dd2">OCPP 1.6/2.0 준수</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.chg.dt3">과금형 기준</dt><dd data-i18n="info.reg.cert.chg.dd3">계량에 관한 법률 검정 필수</dd></div>
+              <div class="cert-row"><dt data-i18n="info.reg.cert.chg.dt4">인증 기관</dt><dd data-i18n="info.reg.cert.chg.dd4">환경부 (보조금 지원 시 환경부 인증 필수)</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-8">
+          <div class="alert-icon"></div>
+          <div class="alert-body">
+            <strong data-i18n="info.reg.cert.alert.title">인증 기준 변경 알림</strong>
+<span data-i18n="info.reg.cert.alert.body">            인증 기준은 「대기환경보전법 시행규칙」 및 환경부 고시에 따라 정기적으로 개정됩니다. 신규 차종·충전기의 인증 일정·결과는 환경공단 인증 DB에서 조회하시거나 통합 콜센터 1661-0970로 문의해 주시기 바랍니다.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- 첨부파일 다운로드 팝업 (일반자료실과 동일 컴포넌트) -->
+<div class="modal-backdrop" data-for="libDownloadModal"></div>
+<div class="modal" id="libDownloadModal" role="dialog" aria-modal="true" aria-labelledby="libDlTitle" aria-hidden="true">
+  <div class="modal-header">
+    <h3 id="libDlTitle">첨부파일 다운로드</h3>
+    <button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p id="libDlDocName"></p>
+    <div class="lib-dl-selectall">
+      <label><input type="checkbox" id="libDlAll"> 전체 선택</label>
+      <span id="libDlCount" aria-live="polite">0개 선택</span>
+    </div>
+    <ul class="lib-file-list" id="libFileList" role="group" aria-label="첨부파일 목록"></ul>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" type="button" data-modal-close>닫기</button>
+    <button class="btn btn-primary" type="button" id="libDlSelected">선택 다운로드</button>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-info.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/board-standard.js"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 법령 게시판 — 필터 초기화 */
+(function(){
+  var btn = document.getElementById('regReset'); if(!btn) return;
+  btn.addEventListener('click', function(){
+    var box = btn.closest('.board-toolbar-filters'); if(!box) return;
+    box.querySelectorAll('select').forEach(function(s){ s.selectedIndex = 0; });
+    box.querySelectorAll('input[type=text]').forEach(function(i){ i.value = ''; });
+    if (window.__toast) window.__toast('필터가 초기화되었습니다.', 'info');
+  });
+})();
+</script>
+<script>
+/* 법령 게시판 첨부파일 다중선택 다운로드 팝업 (일반자료실과 동일 로직) */
+(function(){
+  var modal=document.getElementById('libDownloadModal'); if(!modal) return;
+  var listEl=document.getElementById('libFileList');
+  var allCb=document.getElementById('libDlAll');
+  var countEl=document.getElementById('libDlCount');
+  var docNameEl=document.getElementById('libDlDocName');
+  var dlBtn=document.getElementById('libDlSelected');
+  var lastFocus=null;
+  function boxes(){ return listEl.querySelectorAll('input[type=checkbox]'); }
+  function update(){
+    var items=boxes(), checked=0; items.forEach(function(c){ if(c.checked) checked++; });
+    countEl.textContent=checked+'개 선택';
+    dlBtn.disabled = checked===0;
+    allCb.checked = checked>0 && checked===items.length;
+    allCb.indeterminate = checked>0 && checked<items.length;
+  }
+  function openPopup(btn){
+    lastFocus=btn;
+    var files=[]; try{ files=JSON.parse(btn.getAttribute('data-files')||'[]'); }catch(e){}
+    docNameEl.textContent=btn.getAttribute('data-doc')||'';
+    listEl.innerHTML='';
+    files.forEach(function(f,i){
+      var id='libf_'+i;
+      var li=document.createElement('li'); li.className='lib-file-item';
+      var lab=document.createElement('label'); lab.setAttribute('for',id);
+      lab.innerHTML='<input type="checkbox" id="'+id+'"><span class="lib-file-name"></span><span class="lib-file-size"></span>';
+      lab.querySelector('.lib-file-name').textContent=f.name;
+      lab.querySelector('.lib-file-size').textContent=f.size||'';
+      lab.querySelector('input').value=f.name;
+      li.appendChild(lab); listEl.appendChild(li);
+    });
+    boxes().forEach(function(c){ c.addEventListener('change', update); });
+    allCb.checked=false; allCb.indeterminate=false; update();
+    if(window.__openModal) window.__openModal('libDownloadModal');
+    var first=listEl.querySelector('input[type=checkbox]')||modal.querySelector('.modal-close');
+    if(first) setTimeout(function(){ first.focus(); }, 40);
+  }
+  document.addEventListener('click', function(e){
+    var b=e.target.closest('.lib-dl-btn'); if(b){ e.preventDefault(); openPopup(b); }
+  });
+  allCb.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked=allCb.checked; }); update(); });
+  dlBtn.addEventListener('click', function(){
+    var names=[]; boxes().forEach(function(c){ if(c.checked) names.push(c.value); });
+    if(!names.length) return;
+    var msg = names.length===1 ? ('"'+names[0]+'" 다운로드가 시작됩니다.') : (names.length+'개 파일 다운로드가 시작됩니다.');
+    if(window.__toast) window.__toast(msg,'success');
+    if(window.__closeModal) window.__closeModal(modal);
+  });
+  modal.addEventListener('transitionend', function(){
+    if(modal.getAttribute('aria-hidden')==='true' && lastFocus){ var t=lastFocus; lastFocus=null; t.focus(); }
+  });
+})();
+</script>
+</body>
+</html>

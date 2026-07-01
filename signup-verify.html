@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>본인 인증 | 회원가입 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = '';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="auth-hero-v2">
+    <div class="container container-wide">
+      <span class="auth-hero-eyebrow">SIGN UP · STEP 02</span>
+      <h1 class="auth-hero-title" data-i18n="signup.v.hero.title">본인 인증을 진행해 주세요</h1>
+      <p class="auth-hero-lead" data-i18n="signup.v.hero.lead">「전자서명법」에 따라 본인 명의 휴대폰 또는 공동·금융 인증서로 안전하게 처리됩니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 3단계 스테퍼 -->
+      <div class="signup-stepper-wrap" data-reveal>
+        <ol class="signup-stepper-v2 signup-stepper-3" data-i18n-aria="signup.stepper.aria" aria-label="회원가입 단계">
+          <li class="ssv-step done" data-step="1">
+            <span class="ssv-num"><span class="ssv-num-inner">1</span></span>
+            <div class="ssv-text"><span class="ssv-label" data-i18n="signup.v.step1.label">유형 선택 · 약관 동의</span><span class="ssv-desc" data-i18n="signup.v.step1.desc">완료</span></div>
+          </li>
+          <li class="ssv-line" aria-hidden="true"><span class="ssv-line-fill fill"></span></li>
+          <li class="ssv-step active" data-step="2">
+            <span class="ssv-num"><span class="ssv-num-inner">2</span></span>
+            <div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.verify.label">본인 인증</span><span class="ssv-desc" data-i18n="auth.step.verify.desc">휴대폰 또는 공동·금융 인증서</span></div>
+          </li>
+          <li class="ssv-line" aria-hidden="true"><span class="ssv-line-fill"></span></li>
+          <li class="ssv-step" data-step="3">
+            <span class="ssv-num"><span class="ssv-num-inner">3</span></span>
+            <div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.info.label">정보 입력 · 가입 완료</span><span class="ssv-desc" data-i18n="auth.step.info.desc">유형별 정보 입력 후 즉시 시작</span></div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="signup-wrap-v2">
+        <article class="signup-main">
+          <header class="signup-main-head">
+            <span class="signup-step-pill"><span>STEP</span>02<span class="of">/03</span></span>
+            <h2 data-i18n="signup.v.h2">본인 인증</h2>
+            <p id="verifyDescByType" data-i18n="signup.v.intro">아래 인증 방식 중 하나를 선택하여 본인 확인을 완료해 주세요.</p>
+          </header>
+
+          <!-- 본인인증 방식 — ASIS 무공해차 통합누리집 기준 (휴대폰 인증 + 공동·금융 인증서) -->
+          <div class="verify-method-grid verify-method-grid-2" id="verifyGrid">
+            <button type="button" class="verify-card" data-method="phone" data-name="휴대폰 본인인증" data-i18n-attr="data-name:signup.v.phone.name">
+              <span class="vc-ico vc-ico-phone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+              <div class="vc-body">
+                <div class="vc-title" data-i18n="signup.v.phone.name">휴대폰 본인인증</div>
+                <div class="vc-desc" data-i18n="signup.v.phone.desc">통신 3사 본인 명의 휴대폰으로 인증</div>
+              </div>
+              <span class="vc-tag recommend" data-i18n="signup.v.tag.recommend">권장</span>
+            </button>
+            <button type="button" class="verify-card" data-method="cert" data-name="공동·금융 인증서" data-i18n-attr="data-name:signup.v.cert.name">
+              <span class="vc-ico vc-ico-cert"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/></svg></span>
+              <div class="vc-body">
+                <div class="vc-title" data-i18n="signup.v.cert.name">공동·금융 인증서</div>
+                <div class="vc-desc" data-i18n="signup.v.cert.desc">은행 발급 인증서 또는 기존 공인인증서</div>
+              </div>
+            </button>
+          </div>
+
+          <!-- 휴대폰 인증 폼 (선택 시 노출) -->
+          <div class="verify-phone-form" id="phoneForm" hidden>
+            <h3 class="vpf-title" data-i18n="signup.v.sms.title">휴대폰 SMS 인증</h3>
+            <div class="form-group">
+              <label class="form-label" for="vName"><span data-i18n="signup.v.lbl.name">이름</span> <span class="required">*</span></label>
+              <input type="text" class="form-input" id="vName" placeholder="홍길동" autocomplete="name" data-i18n-attr="placeholder:signup.v.ph.name">
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="vBirth"><span data-i18n="signup.v.lbl.birth">생년월일 (YYYYMMDD)</span> <span class="required">*</span></label>
+                <input type="text" class="form-input" id="vBirth" placeholder="19900101" maxlength="8" inputmode="numeric">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="vGender"><span data-i18n="signup.v.lbl.gender">성별</span> <span class="required">*</span></label>
+                <select class="form-select" id="vGender">
+                  <option value="" data-i18n="signup.v.gender.select">선택하세요</option>
+                  <option value="male" data-i18n="signup.v.gender.male">남성</option>
+                  <option value="female" data-i18n="signup.v.gender.female">여성</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="vCarrier"><span data-i18n="signup.v.lbl.carrier">통신사</span> <span class="required">*</span></label>
+              <div class="vpf-carriers">
+                <label class="vpf-carrier"><input type="radio" name="carrier" value="SKT"><span>SKT</span></label>
+                <label class="vpf-carrier"><input type="radio" name="carrier" value="KT"><span>KT</span></label>
+                <label class="vpf-carrier"><input type="radio" name="carrier" value="LG"><span>LG U+</span></label>
+                <label class="vpf-carrier"><input type="radio" name="carrier" value="MVNO"><span data-i18n="signup.v.carrier.mvno">알뜰폰</span></label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="vPhone"><span data-i18n="signup.v.lbl.phone">휴대폰 번호</span> <span class="required">*</span></label>
+              <div class="form-row-inline">
+                <input type="tel" class="form-input" id="vPhone" placeholder="010-0000-0000" autocomplete="tel">
+                <button type="button" class="btn btn-secondary" id="sendCodeBtn" data-i18n="signup.v.btn.sendcode">인증번호 받기</button>
+              </div>
+            </div>
+            <div class="form-group" id="codeGroup" hidden>
+              <label class="form-label" for="vCode"><span data-i18n="signup.v.lbl.code">인증번호 6자리</span> <span class="required">*</span></label>
+              <div class="form-row-inline">
+                <input type="text" class="form-input vpf-code" id="vCode" placeholder="000000" maxlength="6" inputmode="numeric">
+                <span class="vpf-timer" id="vTimer">03:00</span>
+              </div>
+              <div class="form-help" id="codeHelp" data-i18n="signup.v.code.help">인증번호를 SMS로 발송하였습니다. 3분 안에 입력해 주세요.</div>
+            </div>
+          </div>
+
+          <!-- 액션 영역 -->
+          <div class="signup-actions-v2">
+            <a href="signup.html" class="btn btn-ghost" data-i18n="signup.v.btn.prev">← 이전 단계</a>
+            <button type="button" class="btn btn-primary btn-lg" id="verifyBtn" disabled>
+<span data-i18n="signup.v.btn.confirm">              인증 확인</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <aside class="signup-side" data-i18n-aria="signup.v.side.aria" aria-label="인증 안내">
+          <div class="signup-side-hero">
+            <div class="ssh-illust" aria-hidden="true">
+              <svg viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="36" fill="url(#vshg)"/>
+                <path d="M40 24v18l12 6" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="40" cy="40" r="22" stroke="#fff" stroke-width="3" fill="none" opacity="0.5"/>
+                <defs><linearGradient id="vshg" x1="0" x2="80" y1="0" y2="80"><stop stop-color="#1AAD6C"/><stop offset="1" stop-color="#4CA2E2"/></linearGradient></defs>
+              </svg>
+            </div>
+            <h3 data-i18n="signup.v.safe.title">안전한 본인 확인</h3>
+            <p data-i18n="signup.v.safe.desc">주민등록번호를 수집하지 않으며, 인증 정보는 인증 즉시 자동 파기됩니다.</p>
+          </div>
+
+          <div class="signup-side-help">
+            <div class="ssh-help-head">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+<span data-i18n="signup.v.help.title">              인증이 안 되시나요?</span>
+            </div>
+            <p data-i18n-html="signup.v.help.body">본인 명의가 아닌 경우 가족 명의로는 인증할 수 없습니다.<br>통합 콜센터 <strong>1661-0970</strong> 또는 <a href="inquiry-faq.html">FAQ</a>를 확인하세요.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-auth.js?v=20260630c"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  // 본인 인증 안내 — ASIS 톤
+  const desc = document.getElementById('verifyDescByType');
+  if (desc) {
+    desc.textContent = '본인 명의 휴대폰 또는 공동·금융 인증서로 본인 확인을 완료해 주세요.';
+  }
+
+  const grid = document.getElementById('verifyGrid');
+  const phoneForm = document.getElementById('phoneForm');
+  const verifyBtn = document.getElementById('verifyBtn');
+  let selectedMethod = null;
+  let codeSent = false, codeVerified = false, timerInterval = null, secondsLeft = 0;
+
+  // 인증 방식 선택
+  grid.querySelectorAll('.verify-card').forEach(card => {
+    card.addEventListener('click', () => {
+      grid.querySelectorAll('.verify-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedMethod = card.dataset.method;
+      const isPhone = selectedMethod === 'phone';
+      phoneForm.hidden = !isPhone;
+      verifyBtn.disabled = isPhone ? !codeVerified : false;
+      verifyBtn.classList.toggle('is-ready', isPhone ? codeVerified : true);
+      if (!isPhone && window.__toast) {
+        window.__toast(`${card.dataset.name} 창이 열립니다.`, 'success');
+      }
+    });
+  });
+
+  // 인증번호 발송 + 카운트다운
+  document.getElementById('sendCodeBtn')?.addEventListener('click', () => {
+    const phone = document.getElementById('vPhone').value.trim();
+    if (!phone || phone.length < 10) {
+      if (window.__toast) window.__toast('휴대폰 번호를 입력해 주세요.', 'warning');
+      return;
+    }
+    document.getElementById('codeGroup').hidden = false;
+    codeSent = true;
+    secondsLeft = 180;
+    if (timerInterval) clearInterval(timerInterval);
+    const timerEl = document.getElementById('vTimer');
+    function tick() {
+      const m = Math.floor(secondsLeft / 60), s = secondsLeft % 60;
+      timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (secondsLeft <= 0) {
+        clearInterval(timerInterval);
+        timerEl.textContent = '시간 초과';
+        document.getElementById('codeHelp').textContent = '인증 시간이 만료되었습니다. 다시 발송해 주세요.';
+      }
+      secondsLeft--;
+    }
+    tick();
+    timerInterval = setInterval(tick, 1000);
+    if (window.__toast) window.__toast('인증번호를 SMS로 발송하였습니다. (데모: 123456)', 'success');
+  });
+
+  // 인증번호 입력 자동 검증
+  document.getElementById('vCode')?.addEventListener('input', e => {
+    if (e.target.value.length === 6) {
+      // 데모: 어떤 6자리든 통과
+      codeVerified = true;
+      verifyBtn.disabled = false;
+      verifyBtn.classList.add('is-ready');
+      document.getElementById('codeHelp').innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">✓ 인증이 완료되었습니다.</span>';
+      if (timerInterval) clearInterval(timerInterval);
+    }
+  });
+
+  // 인증 확인 → Step 3로 이동
+  verifyBtn?.addEventListener('click', () => {
+    if (verifyBtn.disabled) return;
+    try {
+      sessionStorage.setItem('signup_step2', JSON.stringify({
+        method: selectedMethod || 'easy',
+        verifiedAt: Date.now(),
+        name: document.getElementById('vName')?.value || '홍길동',
+        phone: document.getElementById('vPhone')?.value || '010-1234-5678'
+      }));
+    } catch(e){}
+    if (window.__toast) window.__toast('본인 인증 완료. 회원 정보 입력 단계로 이동합니다.', 'success');
+    setTimeout(() => { location.href = 'signup-form.html'; }, 800);
+  });
+})();
+</script>
+</body>
+</html>

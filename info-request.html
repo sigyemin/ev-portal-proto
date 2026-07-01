@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="0; url=info-library.html?tab=request">
+<title>요청자료 | 정보 자료실 | 무공해차 통합누리집</title>
+<script>location.replace('info-library.html?tab=request');</script>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/notice.css">
+<style>
+  .req-status{display:inline-block;padding:3px 10px;border-radius:14px;font-size:12px;font-weight:700;white-space:nowrap}
+  .req-status.done{background:#dff5e8;color:#19a76d}
+  .req-status.ing{background:#e6f0fb;color:#1f5fa8}
+  .req-status.approve{background:#e1f5ee;color:#0f6e56}
+  .req-status.reject{background:#fcebeb;color:#a32d2d}
+  .req-note{color:var(--text-secondary,#5a6675);font-size:13.5px;margin:0 0 18px}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="#">정보 자료실</a><span class="sep">›</span>
+        <a href="info-library.html">자료실</a><span class="sep">›</span>
+        <span class="current">요청자료</span>
+      </nav>
+      <h1>요청자료</h1>
+      <p class="hero-lead">지자체·공공기관이 요청한 자료의 처리 현황을 확인하고, 회신자료를 받아보실 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <p class="req-note">* 업무 절차는 승인/반려, 처리중, 처리완료이며 회신자료는 게시물에서 받아보실 수 있습니다.</p>
+
+      <div class="board-toolbar">
+        <div class="board-toolbar-filters">
+          <div class="form-group">
+            <label class="form-label">처리 상태</label>
+            <select class="form-select" id="rqStatus" aria-label="처리 상태">
+              <option value="all">전체 상태</option>
+              <option value="approve">승인</option>
+              <option value="reject">반려</option>
+              <option value="ing">처리중</option>
+              <option value="done">처리완료</option>
+            </select>
+          </div>
+          <div class="board-search">
+            <select class="form-select" id="rqField" aria-label="검색 항목" style="border:0;border-bottom:1px solid #111;width:120px;">
+              <option value="title">제목/내용</option>
+              <option value="writer">작성자</option>
+            </select>
+            <input type="text" id="rqSearch" placeholder="검색어를 입력하세요." aria-label="검색어 입력">
+            <button type="button" id="rqSearchBtn">검색</button>
+          </div>
+          <button class="btn" type="button" id="rqReset" aria-label="필터 초기화">초기화</button>
+        </div>
+        <div class="board-toolbar-actions">
+          <button class="btn btn-primary" type="button" id="rqWrite">등록</button>
+        </div>
+      </div>
+
+      <div class="board-result-meta">
+        <div>전체 <strong id="rqCount">0</strong>건</div>
+      </div>
+
+      <table class="board-table" id="rqTable">
+        <thead>
+          <tr>
+            <th class="num">번호</th>
+            <th class="cat">상태</th>
+            <th>제목</th>
+            <th class="date">작성자</th>
+            <th class="date">등록일</th>
+            <th class="attach">회신</th>
+          </tr>
+        </thead>
+        <tbody id="rqBody"></tbody>
+      </table>
+
+      <div class="pagination" data-total="1" data-current="1" style="margin-top:20px;"></div>
+
+      <div id="rqEmpty" class="board-empty" style="display:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <h4>조회된 내용이 없습니다.</h4>
+        <p>다른 검색 조건으로 다시 시도해 주세요.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function () {
+  var ATTACH = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>';
+  var STATUS = { approve:['승인','approve'], reject:['반려','reject'], ing:['처리중','ing'], done:['처리완료','done'] };
+  // 데모용 요청자료 목록 (지자체 요청 → 처리 현황/회신)
+  var ITEMS = [
+    { no:128, status:'done',    title:'2026년 1분기 지자체별 보조금 집행 실적 자료 요청',   writer:'경기도청',     date:'2026.04.18', reply:true },
+    { no:127, status:'ing',     title:'관내 공용 충전기 가동률 원자료(raw) 제공 요청',       writer:'서울특별시',   date:'2026.04.15', reply:false },
+    { no:126, status:'approve', title:'전기버스 보급 현황 통계 자료 요청(차종·연도별)',      writer:'부산광역시',   date:'2026.04.10', reply:false },
+    { no:125, status:'done',    title:'무공해차 등록 대수 지역별 추이 데이터 요청',          writer:'대전광역시',   date:'2026.04.02', reply:true },
+    { no:124, status:'reject',  title:'개인 충전 이용내역 상세 자료 요청',                   writer:'인천광역시',   date:'2026.03.28', reply:false },
+    { no:123, status:'done',    title:'지자체 보조금 잔여 예산 현황 자료 요청',              writer:'강원특별자치도', date:'2026.03.20', reply:true }
+  ];
+
+  var body = document.getElementById('rqBody');
+  var count = document.getElementById('rqCount');
+  var empty = document.getElementById('rqEmpty');
+  var statusSel = document.getElementById('rqStatus'), fieldSel = document.getElementById('rqField'),
+      search = document.getElementById('rqSearch'), searchBtn = document.getElementById('rqSearchBtn'),
+      reset = document.getElementById('rqReset'), writeBtn = document.getElementById('rqWrite');
+
+  function render() {
+    var kw = (search.value || '').trim().toLowerCase();
+    var st = statusSel.value, field = fieldSel.value;
+    var list = ITEMS.filter(function (it) {
+      var okSt = st === 'all' || it.status === st;
+      var hay = (field === 'writer' ? it.writer : (it.title + it.writer)).toLowerCase();
+      var okKw = !kw || hay.indexOf(kw) >= 0;
+      return okSt && okKw;
+    });
+    body.innerHTML = list.map(function (it) {
+      var s = STATUS[it.status];
+      return '<tr>' +
+        '<td class="num">' + it.no + '</td>' +
+        '<td class="cat"><span class="req-status ' + s[1] + '">' + s[0] + '</span></td>' +
+        '<td><div class="title-cell">' + it.title + '</div></td>' +
+        '<td class="date">' + it.writer + '</td>' +
+        '<td class="date">' + it.date + '</td>' +
+        '<td class="attach">' + (it.reply ? ATTACH : '-') + '</td>' +
+        '</tr>';
+    }).join('');
+    count.textContent = list.length;
+    empty.style.display = list.length ? 'none' : 'block';
+  }
+  [statusSel, fieldSel].forEach(function (el) { el.addEventListener('change', render); });
+  search.addEventListener('input', render);
+  searchBtn.addEventListener('click', render);
+  reset.addEventListener('click', function () { statusSel.value = 'all'; fieldSel.value = 'title'; search.value = ''; render(); });
+  writeBtn.addEventListener('click', function () {
+    location.href = 'request-write.html';
+  });
+  render();
+})();
+</script>
+</body>
+</html>

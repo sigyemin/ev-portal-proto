@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>회원 정보 조회·수정 | 마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true; window.__activeMp = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="mypage.html" data-i18n="crumb.mypage">마이페이지</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="mpi.title">회원 정보 조회·수정</span>
+      </nav>
+      <h1 data-i18n="mpi.title">회원 정보 조회·수정</h1>
+      <p class="hero-lead" data-i18n="mpi.lead">기본 인적 사항과 연락처 정보를 확인하고 수정합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="mp-shell">
+        <div id="mp-side-slot"></div>
+
+        <div class="mp-content">
+
+          <div class="mp-content-head">
+            <div>
+              <h2 data-i18n="mpi.content.h2">회원 정보</h2>
+              <p class="mp-content-desc" data-i18n="mpi.content.desc">개인정보보호법에 따라 본인이 직접 수정한 정보만 저장됩니다.</p>
+            </div>
+            <div class="mp-content-actions">
+              <button type="button" class="btn btn-secondary btn-sm" data-i18n="mpi.btn.history">최근 변경 이력</button>
+            </div>
+          </div>
+
+          <form class="mp-form-card" id="mpiProfileForm">
+
+            <h3 class="mp-form-card-title" data-i18n="mpi.basic.title">기본 인적 사항</h3>
+            <p class="mp-form-card-desc" data-i18n="mpi.basic.desc">아이디·이름·생년월일은 본인 확인을 통해 변경할 수 있습니다.</p>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-id" data-i18n="mpi.field.id">아이디</label>
+              <div class="mp-form-control">
+                <input type="text" id="mi-id" value="hjshin1234" readonly>
+                <div class="mp-form-help" data-i18n="mpi.field.id.help">아이디는 변경할 수 없습니다.</div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-name"><span data-i18n="mpi.field.name">이름</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <input type="text" id="mi-name" value="홍길동" readonly data-i18n-attr="value:mpi.field.name.value">
+                <div class="mp-form-help"><span data-i18n="mpi.field.name.help">이름 변경은 본인 확인(공동·간편 인증) 후 가능합니다.</span>
+                  <a href="mypage-accounts.html" style="margin-left:8px;" data-i18n="mpi.field.name.verify">본인 확인 →</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-birth" data-i18n="mpi.field.birth">생년월일</label>
+              <div class="mp-form-control">
+                <input type="text" id="mi-birth" value="1985-08-12" readonly>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" data-i18n="mpi.field.type">회원 유형</label>
+              <div class="mp-form-control">
+                <span class="mp-meta-chip green" style="background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--color-primary-700);" data-i18n="mpi.chip.personal">일반 회원</span>
+                <span class="mp-meta-chip" style="background:var(--color-gray-100);border-color:var(--color-gray-200);color:var(--text-secondary);" data-i18n="mpi.chip.joined">가입일 2022.03.15</span>
+              </div>
+            </div>
+
+          </form>
+
+          <form class="mp-form-card" id="mpiContactForm">
+
+            <h3 class="mp-form-card-title" data-i18n="mpi.contact.title">연락처 정보</h3>
+            <p class="mp-form-card-desc" data-i18n="mpi.contact.desc">보조금 진행, 충전 알림 등 안내가 발송되는 연락처입니다.</p>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-email"><span data-i18n="mpi.field.email">이메일</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <div class="mp-form-inline">
+                  <input type="email" id="mi-email" value="hjshin@example.com">
+                  <button type="button" class="btn btn-secondary btn-sm" data-i18n="mpi.field.email.send">인증메일 발송</button>
+                </div>
+                <div class="mp-form-help" data-i18n="mpi.field.email.help">이메일 변경 후에는 인증을 완료해야 알림이 정상 발송됩니다.</div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-phone"><span data-i18n="mpi.field.phone">휴대전화</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <div class="mp-form-inline">
+                  <input type="tel" id="mi-phone" value="010-1234-5678">
+                  <button type="button" class="btn btn-secondary btn-sm" data-i18n="mpi.field.phone.send">인증번호</button>
+                </div>
+                <div class="mp-form-help" data-i18n="mpi.field.phone.help">SMS 알림 수신 시 사용됩니다.</div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-zip" data-i18n="mpi.field.addr">주소</label>
+              <div class="mp-form-control">
+                <div class="mp-form-inline">
+                  <input type="text" id="mi-zip" value="04524" data-i18n-attr="placeholder:mpi.field.zip.ph" placeholder="우편번호" style="max-width:140px;flex:0 0 140px;">
+                  <button type="button" class="btn btn-secondary btn-sm" data-i18n="mpi.field.zip.search">우편번호 검색</button>
+                </div>
+                <input type="text" value="서울특별시 중구 세종대로 110" style="margin-top:8px;" aria-label="기본 주소" data-i18n-attr="value:mpi.address.basic.value,aria-label:mpi.address.basic.aria">
+                <input type="text" data-i18n-attr="placeholder:mpi.field.addr.detail" placeholder="상세 주소를 입력하세요" style="margin-top:8px;" aria-label="상세 주소">
+                <div class="mp-form-help" data-i18n="mpi.field.addr.help">서식 발송 등 우편 안내가 필요한 경우에 사용합니다.</div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" data-i18n="mpi.field.interest">관심 차종</label>
+              <div class="mp-form-control">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <label class="auth-chip"><input type="checkbox" checked> <span data-i18n="mpi.interest.passenger">전기 승용</span></label>
+                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.commercial">전기 화물·승합</span></label>
+                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.h2">수소차</span></label>
+                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.moto">전기 이륜차</span></label>
+                  <label class="auth-chip"><input type="checkbox"> <span data-i18n="mpi.interest.const">전기 건설기계</span></label>
+                </div>
+                <div class="mp-form-help" data-i18n="mpi.field.interest.help">관심 차종에 맞춘 보조금·공모 알림을 우선 안내합니다.</div>
+              </div>
+            </div>
+
+            <div class="mp-form-foot">
+              <button type="reset" class="btn btn-secondary" data-i18n="mpi.btn.cancel">취소</button>
+              <button type="submit" class="btn btn-primary" data-i18n="mpi.btn.save">변경 사항 저장</button>
+            </div>
+
+          </form>
+
+          <div class="mp-policy">
+            <strong data-i18n="mpi.policy.title">개인정보 처리 안내</strong>
+            <span data-i18n="mpi.policy.body">수집한 개인정보는 「개인정보 보호법」 제15조·제17조에 따라 회원관리, 보조금 신청·심사, 민원 처리 목적에 한하여 활용됩니다.</span>
+            <ul>
+              <li data-i18n="mpi.policy.li1">보유 기간: 회원 탈퇴 시까지 (관계 법령에 따라 일부 항목은 5년간 보관)</li>
+              <li data-i18n="mpi.policy.li2">제3자 제공: 보조금 지자체 협력 기관 (필요 시 사전 동의 후 제공)</li>
+              <li data-i18n-html="mpi.policy.li3">자세한 내용은 <a href="info-privacy.html">개인정보처리방침</a>을 참고해 주세요.</li>
+            </ul>
+          </div>
+
+          <script>
+          // V3.2: 인라인 onsubmit 외부화 + i18n 적용
+          (function(){
+            function _t(key, fallback) {
+              return (window.__i18n && window.__i18n.t) ? window.__i18n.t(key) : fallback;
+            }
+            var f1 = document.getElementById('mpiProfileForm');
+            var f2 = document.getElementById('mpiContactForm');
+            if (f1) f1.addEventListener('submit', function(e){
+              e.preventDefault();
+              alert(_t('mpi.msg.saved.profile', '회원 정보가 저장되었습니다.'));
+            });
+            if (f2) f2.addEventListener('submit', function(e){
+              e.preventDefault();
+              alert(_t('mpi.msg.saved.contact', '연락처 정보가 저장되었습니다.'));
+            });
+          })();
+          </script>
+
+        </div><!-- /.mp-content -->
+      </div><!-- /.mp-shell -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-mypage.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+/* subsidy-calc.css — 보조금 계산기 공용 스타일
+   메인페이지(보조금 계산 영역)와 보조금 안내·계산기(subsidy-info.html)에서 공유 */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.calc-card{background:#fff;border:1px solid #e4e9ef;border-radius:16px;padding:24px}
+.calc-card-head{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:800;color:#14233a;margin:0 0 18px}
+.calc-field{margin-bottom:18px}
+.calc-field > label{display:block;font-size:13px;font-weight:700;color:#3a4654;margin-bottom:8px}
+.chip-group{display:flex;gap:8px;flex-wrap:wrap}
+.chip-opt{flex:1 1 0;min-width:84px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border:1px solid #dbe2ea;border-radius:12px;background:#fff;cursor:pointer;font-size:13px;font-weight:700;color:#566;transition:.15s}
+.chip-opt:hover{border-color:#34b06f}
+.chip-opt.active{border-color:#34b06f;background:#eaf7f0;color:#0f6e56}
+.chip-opt .ic{font-size:20px}
+.calc-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-select{width:100%;height:42px;border:1px solid #dbe2ea;border-radius:10px;background:#fff;padding:0 12px;font-size:14px;color:#333}
+.calc-run{width:100%;height:50px;border:0;border-radius:12px;background:#23a06a;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:4px}
+.calc-run:hover{background:#1c8a5b}
+.calc-result{margin-top:18px;border-top:1px dashed #dbe2ea;padding-top:16px;display:none}
+.calc-result.show{display:block}
+.calc-res-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.calc-res-total b{font-size:28px;color:#23a06a}
+.calc-res-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;color:#3a4654}
+.guide-tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid #e4e9ef;margin-bottom:18px}
+.guide-tab{padding:10px 14px;border:0;background:none;font-size:14px;font-weight:700;color:#8a93a0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.guide-tab.active{color:#23a06a;border-color:#23a06a}
+.guide-panel{display:none;font-size:14px;line-height:1.75;color:#3a4654}
+.guide-panel.active{display:block}
+.guide-panel h4{font-size:15px;color:#14233a;margin:16px 0 8px}
+.guide-panel h4:first-child{margin-top:0}
+.guide-panel ul{margin:0 0 8px;padding-left:18px}
+@media(max-width:880px){.calc-grid{grid-template-columns:1fr}}
+
+/* 전체 폭 계산기(메인페이지) — 넓은 공간을 2열로 활용 */
+@media(min-width:880px){
+  .calc-card-full{display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:0;align-content:start}
+  .calc-card-full .calc-card-head,
+  .calc-card-full .calc-run,
+  .calc-card-full .calc-result,
+  .calc-card-full > a{grid-column:1 / -1}
+}

@@ -1,0 +1,103 @@
+/* subsidy-status.css — 보조금 신청현황(개인·법인 공통 아코디언 카드)
+   ── subsidy-status.html / subsidy-status-corp.html 공유. 인라인 <style> 이전. */
+
+/* ── 인증 게이트 (subsidy-auth.js 공유) ── */
+.sa-gate{max-width:640px;margin:10px auto 0;text-align:center;background:#fff;border:1px solid var(--border-light);border-radius:18px;padding:40px 32px;box-shadow:0 8px 24px rgba(15,23,42,.05);}
+.sa-gate .sa-ico{font-size:40px;line-height:1;margin-bottom:14px;}
+.sa-title{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;color:var(--text-primary);}
+.sa-desc{font-size:14px;line-height:1.7;color:var(--text-secondary);margin:0 0 22px;}
+.sa-desc .sa-hint{color:var(--text-tertiary);font-size:12.5px;}
+.sa-types{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px;}
+@media(max-width:600px){.sa-types{grid-template-columns:1fr;}}
+.sa-type{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 14px;border:1.5px solid var(--border-light);border-radius:14px;background:#fff;cursor:pointer;transition:.15s;font-family:inherit;}
+.sa-type:hover,.sa-type:focus-visible{border-color:var(--color-primary-500);background:var(--color-primary-50);box-shadow:0 6px 16px rgba(15,23,42,.06);outline:none;}
+.sa-type-ico{font-size:28px;line-height:1;}
+.sa-type-title{font-size:15.5px;font-weight:800;color:var(--text-primary);}
+.sa-type-sub{font-size:12px;font-weight:600;color:var(--text-tertiary);}
+.sa-back{margin-top:4px;}
+.sa-auth{padding:10px 0 22px;}
+.sa-spinner{width:38px;height:38px;margin:0 auto 16px;border:4px solid var(--color-primary-100,#e6f3ec);border-top-color:var(--color-primary-500);border-radius:50%;animation:sa-spin .8s linear infinite;}
+@keyframes sa-spin{to{transform:rotate(360deg);}}
+.sa-actions{display:flex;flex-direction:column;gap:10px;align-items:center;}
+.sa-actions .btn{min-width:220px;}
+.sa-gate.sa-error .sa-ico{color:var(--color-danger,#e11d48);}
+
+/* 인사 + 요약 */
+.ssp-greet{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px;margin:0 0 18px;}
+.ssp-greet h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0;}
+.ssp-greet h2 b{color:var(--color-primary-700);}
+.ssp-sum{display:flex;gap:10px;flex-wrap:wrap;}
+.ssp-sum .s-pill{border:1px solid var(--border-light);border-radius:999px;padding:7px 15px;font-size:13px;font-weight:700;background:#fff;}
+.ssp-sum .s-pill b{font-size:15px;margin-left:5px;}
+.ssp-sum .s-prog b{color:var(--color-secondary-700,#1559c2);}
+.ssp-sum .s-done b{color:var(--color-primary-700);}
+.ssp-sum .s-supp{border-color:#f1c27a;background:#fff8ee;} .ssp-sum .s-supp b{color:#9a5b00;}
+.ssp-sum .s-cancel b{color:var(--text-tertiary);}
+
+/* 단계 배지 */
+.stt{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.6;white-space:nowrap;}
+.stt-received{background:#eef2f6;color:#54616e;}
+.stt-progress{background:#e7f0fe;color:#1559c2;}
+.stt-done{background:#e6f6ee;color:#0f7a44;}
+.stt-supp{background:#fdeede;color:#9a5b00;border:1px solid #f1c27a;}
+.stt-cancel{background:#eef0f2;color:#8a94a3;}
+
+/* 카드 */
+.ssp-list{display:flex;flex-direction:column;gap:16px;}
+.ssp-card{border:1px solid var(--border-light);border-radius:16px;background:#fff;overflow:hidden;transition:box-shadow .15s,border-color .15s;}
+.ssp-card:hover{box-shadow:0 8px 22px rgba(15,23,42,.07);}
+.ssp-card.is-supp{border-color:#f1c27a;box-shadow:0 0 0 1px #f1c27a inset;}
+.ssp-card.is-cancel{opacity:.92;}
+.ssp-head{display:block;width:100%;text-align:left;background:none;border:0;cursor:pointer;padding:20px 22px;font-family:inherit;}
+.ssp-titlerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.ssp-titlerow .cartype{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;background:#e7f6ef;color:#0f7a44;}
+.ssp-titlerow h3{font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0;}
+.ssp-chev{margin-left:auto;color:var(--text-tertiary);transition:transform .2s;flex:0 0 auto;}
+.ssp-card.open .ssp-chev{transform:rotate(180deg);}
+.ssp-meta{font-size:13px;color:var(--text-secondary);margin:8px 0 16px;}
+.ssp-meta .amt{font-weight:700;color:var(--text-primary);}
+.ssp-meta .sep{color:var(--border-medium);margin:0 8px;}
+
+/* 가로 진행바 */
+.ms-hsteps{display:flex;align-items:flex-start;margin:4px 0;}
+.ms-hstep{flex:1;text-align:center;position:relative;min-width:0;}
+.ms-hstep::before{content:'';position:absolute;top:15px;left:-50%;width:100%;height:3px;background:var(--border-light);z-index:0;}
+.ms-hstep:first-child::before{display:none;}
+.ms-hstep.done::before,.ms-hstep.active::before{background:var(--color-primary-500);}
+.ms-hstep .dot{position:relative;z-index:1;width:32px;height:32px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12.5px;background:#fff;border:2px solid var(--border-medium);color:var(--text-tertiary);}
+.ms-hstep.done .dot,.ms-hstep.active .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;}
+.ms-hstep.active .dot{box-shadow:0 0 0 5px var(--color-primary-100,#e6f3ec);}
+.ms-hstep .lbl{font-size:12px;font-weight:700;color:var(--text-secondary);}
+.ms-hstep.done .lbl,.ms-hstep.active .lbl{color:var(--text-primary);}
+.ms-hstep .dt{font-size:10.5px;color:var(--text-tertiary);margin-top:3px;}
+.ssp-stepper.is-cancel{opacity:.5;}
+
+/* 상세 펼침 */
+.ssp-detail{border-top:1px solid var(--border-light);padding:18px 22px 22px;background:var(--color-gray-50);}
+.ssp-detail h4{font-size:14px;font-weight:800;margin:18px 0 10px;} .ssp-detail h4:first-child{margin-top:2px;}
+.ssp-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;}
+@media(max-width:560px){.ssp-summary{grid-template-columns:1fr;}}
+.ssp-summary dl{display:flex;justify-content:space-between;gap:12px;margin:0;padding:8px 0;border-bottom:1px solid var(--border-light);}
+.ssp-summary dt{color:var(--text-secondary);font-size:13px;} .ssp-summary dd{margin:0;font-weight:700;font-size:13.5px;text-align:right;}
+.ssp-summary dd.mono{font-family:var(--font-mono,monospace);}
+
+/* 내가 할 일 */
+.ssp-action{display:flex;gap:9px;align-items:flex-start;padding:12px 15px;background:#eef5ff;border:1px solid #cfe0f7;border-radius:10px;font-size:13.5px;color:var(--color-secondary-800,#16407e);line-height:1.6;margin-top:2px;}
+.ssp-action .ic{flex:0 0 auto;}
+
+/* 적용 보조금 선차감 안내 */
+.ssp-prepay{margin-top:6px;font-size:12.5px;color:var(--text-tertiary);line-height:1.6;}
+
+/* 보완요청 / 종료 박스 */
+.cs-note{padding:14px 16px;background:#fff6e8;border:1px solid #f1c27a;border-radius:10px;}
+.cs-note .cn-h{font-weight:800;color:#9a5b00;font-size:13.5px;margin-bottom:6px;}
+.cs-note ul{margin:6px 0 10px;padding-left:18px;} .cs-note li{font-size:13px;line-height:1.7;color:var(--text-secondary);}
+.ssp-supp-btn{display:inline-flex;align-items:center;gap:6px;margin-top:4px;}
+.cs-cancel-note{padding:14px 16px;background:#fff;border:1px solid var(--border-light);border-radius:10px;color:var(--text-secondary);font-size:13.5px;}
+
+/* 빈상태 */
+.ssp-empty{text-align:center;padding:44px 20px;border:1px dashed var(--border-light);border-radius:16px;color:var(--text-tertiary);}
+.ssp-empty p{margin:0 0 14px;font-size:15px;}
+
+/* fallback 안내 */
+.ssp-fallback{margin-top:22px;}

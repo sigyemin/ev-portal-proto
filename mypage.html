@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>마이페이지 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/auth.css">
+<style>
+  /* 보조금 카드 — 마이데이터 연계 버튼 + 툴팁 */
+  .mp-mydata-wrap{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--color-gray-200);}
+  .mp-mydata-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:none;border-radius:8px;background:var(--color-primary-600);color:#fff;font-size:.86rem;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:none;transition:background var(--t-fast);}
+  .mp-mydata-btn:hover{background:var(--color-primary-700);}
+  .mp-mydata-btn svg{flex:none;}
+  .info-tip-wrap{position:relative;display:inline-flex;align-items:center;}
+  .info-tip-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--color-gray-400);background:#fff;color:var(--color-gray-600);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:all var(--t-fast);}
+  .info-tip-btn:hover,.info-tip-btn:focus-visible{border-color:var(--color-primary-500);color:var(--color-primary-700);background:var(--color-primary-50);}
+  .info-tip-btn:focus-visible{outline:2px solid var(--color-primary-500);outline-offset:2px;}
+  .info-tip{position:absolute;bottom:calc(100% + 10px);left:0;width:260px;background:#1f2937;color:#fff;padding:10px 12px;border-radius:8px;font-size:.8rem;line-height:1.55;font-weight:400;opacity:0;visibility:hidden;transform:translateY(6px);transition:all var(--t-fast);z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.18);pointer-events:none;}
+  .info-tip-wrap:hover .info-tip,.info-tip-wrap:focus-within .info-tip{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
+  /* 마이데이터 연계 — 연계 후(인증완료) 상태 */
+  .mp-mydata-before{display:inline-flex;align-items:center;gap:8px;}
+  .mp-mydata-after{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .mp-mydata-done{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:.84rem;font-weight:700;}
+  .mp-mydata-date{font-size:.82rem;color:var(--color-gray-600);}
+  .mp-mydata-date strong{color:var(--color-gray-800);font-weight:700;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = ''; window.__loggedIn = true; window.__activeMp = 'home';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="crumb.mypage">마이페이지</span>
+      </nav>
+      <h1 data-i18n="mp.page.title">마이페이지</h1>
+      <p class="hero-lead" data-i18n="mp.page.lead">내 정보·충전 이용·민원·신청 현황을 한 화면에서 관리합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <div class="mp-shell">
+        <div class="mp-content">
+
+      <!-- 상단 사용자 요약 카드 (디자인 시스템 일관) -->
+      <div class="mp-hero">
+        <div class="mp-hero-grid">
+          <div class="mp-hero-user">
+            <span class="mp-hero-avatar" aria-hidden="true" data-i18n="mp.hero.avatar">홍</span>
+            <div class="mp-hero-text">
+              <h2 class="mp-name" style="margin:0;">홍길동<span class="mp-name-suffix" data-i18n="mp.hero.name.suffix">회원님</span></h2>
+            </div>
+          </div>
+          <div class="mp-stats">
+            <div class="mp-stat-card accent-green">
+              <div class="mp-stat-val">3,420<span class="mp-stat-unit" data-i18n="mp.stat.point.unit">P</span></div>
+              <div class="mp-stat-label" data-i18n="mp.stat.point.label">충전 포인트</div>
+            </div>
+            <div class="mp-stat-card accent-blue">
+              <div class="mp-stat-val">17,432<span class="mp-stat-unit" data-i18n="mp.stat.amount.unit">원</span></div>
+              <div class="mp-stat-label" data-i18n="mp.stat.amount.label">이번 달 이용금액</div>
+            </div>
+            <div class="mp-stat-card accent-orange">
+              <div class="mp-stat-val">2<span class="mp-stat-unit" data-i18n="mp.stat.fav.unit">곳</span></div>
+              <div class="mp-stat-label" data-i18n="mp.stat.fav.label">즐겨찾기 충전소</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 내 정보 관리 -->
+      <section class="mp-section">
+        <div class="mp-section-head">
+          <h2 class="mp-section-title">
+            <span class="mp-st-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <span data-i18n="mp.sec.info.title">내 정보 관리</span>
+          </h2>
+        </div>
+        <div class="mp-card-grid">
+          <div class="mp-card scheme-blue">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.basic.tag">기본 정보</span>
+            </div>
+            <h3 data-i18n="mp.card.basic.title">기본 정보</h3>
+            <p data-i18n="mp.card.basic.desc">회원 정보 확인 및 알림 설정을 관리하세요</p>
+            <ul class="mp-card-actions">
+              <li><a href="mypage-info.html" data-i18n="mp.card.basic.a1">회원 정보 조회·수정</a></li>
+              <li><a href="mypage-password.html" data-i18n="mp.card.basic.a2">비밀번호 변경</a></li>
+              <li><a href="mypage-notifications.html" data-i18n="mp.card.basic.a3">알림 설정 (이메일/SMS)</a></li>
+            </ul>
+          </div>
+
+          <div class="mp-card scheme-green">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.account.tag">계정 연결</span>
+            </div>
+            <h3 data-i18n="mp.card.account.title">계정 연결</h3>
+            <p data-i18n="mp.card.account.desc">소셜 계정 연동 및 간편 인증을 설정하세요</p>
+            <ul class="mp-card-actions">
+              <li><a href="mypage-accounts.html" data-i18n="mp.card.account.a1">네이버 계정 연결</a></li>
+              <li><a href="mypage-accounts.html" data-i18n="mp.card.account.a2">카카오 계정 연결</a></li>
+              <li><a href="mypage-accounts.html" data-i18n="mp.card.account.a3">간편 인증 관리</a></li>
+            </ul>
+          </div>
+
+          <div class="mp-card scheme-danger">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.withdraw.tag">회원 탈퇴</span>
+            </div>
+            <h3 data-i18n="mp.card.withdraw.title">회원 탈퇴</h3>
+            <p data-i18n="mp.card.withdraw.desc">서비스 탈퇴를 원하시면 아래에서 신청해주세요</p>
+            <ul class="mp-card-actions">
+              <li><a href="mypage-withdraw.html" data-i18n="mp.card.withdraw.a1">회원 탈퇴 신청</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 나의 충전 -->
+      <section class="mp-section">
+        <div class="mp-section-head">
+          <h2 class="mp-section-title scheme-green">
+            <span class="mp-st-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </span>
+            <span data-i18n="mp.sec.charging.title">나의 충전</span>
+          </h2>
+        </div>
+        <div class="mp-card-grid">
+          <div class="mp-card scheme-orange">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="11" x2="22" y2="11"/><line x1="6" y1="15" x2="9" y2="15"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.card.tag">충전 카드</span>
+            </div>
+            <h3 data-i18n="mp.card.card.title">충전 카드 관리</h3>
+            <p data-i18n="mp.card.card.desc">등록한 카드 확인, 수정, 분실 신고를 처리하세요</p>
+            <ul class="mp-card-actions">
+              <li><a href="charging-card.html?tab=check" data-i18n="mp.card.card.a1">회원카드 발급조회</a></li>
+              <li><a href="charging-card-edit.html" data-i18n="mp.card.card.a2">카드 정보 수정</a></li>
+              <li><a href="charging-card-edit.html?act=lost" data-i18n="mp.card.card.a3">카드 분실 신고·재발급</a></li>
+            </ul>
+          </div>
+
+          <div class="mp-card scheme-purple">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.use.tag">이용 내역</span>
+            </div>
+            <h3 data-i18n="mp.card.use.title">충전 이용 내역</h3>
+            <p data-i18n="mp.card.use.desc">요금 조회, 이용 내역 및 포인트 현황을 확인하세요</p>
+            <ul class="mp-card-actions">
+              <li><a href="charging-card.html?tab=history" data-i18n="mp.card.use.a1">이용요금 조회</a></li>
+              <li><a href="charging-card.html?tab=history" data-i18n="mp.card.use.a2">충전 명세서 조회</a></li>
+              <li><a href="charging-card.html?tab=point" data-i18n="mp.card.use.a3">충전 포인트 현황</a></li>
+            </ul>
+          </div>
+
+          <div class="mp-card scheme-danger">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.fav.tag">나의 충전소</span>
+            </div>
+            <h3 data-i18n="mp.card.fav.title">나의 충전소</h3>
+            <p data-i18n="mp.card.fav.desc">즐겨찾는 충전소를 관리하고 이용 통계를 확인하세요</p>
+            <ul class="mp-card-actions">
+              <li><a href="mypage-favorites.html" data-i18n="mp.card.fav.a1">자주 쓰는 충전소 즐겨찾기</a></li>
+              <li><a href="charging-card.html?tab=history" data-i18n="mp.card.fav.a2">충전 이력 통계</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 나의 신청·민원 -->
+      <section class="mp-section">
+        <div class="mp-section-head">
+          <h2 class="mp-section-title scheme-blue">
+            <span class="mp-st-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </span>
+            <span data-i18n="mp.sec.apps.title">나의 신청·민원</span>
+          </h2>
+        </div>
+        <div class="mp-card-grid">
+          <div class="mp-card scheme-green">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.subsidy.tag">보조금</span>
+            </div>
+            <h3 data-i18n="mp.card.subsidy.title">보조금 신청 현황</h3>
+            <p data-i18n="mp.card.subsidy.desc">접수 · 심사 · 지급 단계를 실시간으로 확인합니다</p>
+            <div class="mp-system-meta">
+              <span><span data-i18n="mp.card.subsidy.inprog">진행 중</span> <strong>1</strong></span>
+              <span data-i18n="mp.card.subsidy.recent">최근 신청 2026.04.18</span>
+            </div>
+            <ul class="mp-card-actions">
+              <li id="mpPersonalSubsidy"><a href="subsidy-status.html" data-i18n="mp.card.subsidy.a1">신청 내역 전체보기</a></li>
+              <li id="mpCorpSubsidy" hidden><a href="subsidy-status-corp.html">법인 보조금 신청현황 <span class="mp-card-tag" style="margin-left:4px;">법인</span></a></li>
+            </ul>
+            <div class="mp-mydata-wrap">
+              <!-- 연계 전 -->
+              <span id="mydataBefore" class="mp-mydata-before">
+                <button type="button" id="mydataLink" class="mp-mydata-btn" data-i18n="mp.card.subsidy.mydata" aria-haspopup="dialog" aria-controls="mydataPanel">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  마이데이터 연계 하기
+                </button>
+                <span class="info-tip-wrap">
+                  <button type="button" class="info-tip-btn" aria-label="마이데이터 연계 안내" aria-describedby="mydataTip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <span class="info-tip" id="mydataTip" role="tooltip" data-i18n="mp.card.subsidy.mydata.tip">마이데이터를 연계하면 소득·차량·주소 등 신청에 필요한 정보를 자동으로 불러와 입력을 줄이고 자격 확인이 빨라집니다. 동의 후 진행되며 언제든 해지할 수 있습니다.</span>
+                </span>
+              </span>
+              <!-- 연계 후 (인증완료 + 인증일시) -->
+              <span id="mydataAfter" class="mp-mydata-after" hidden>
+                <span class="mp-mydata-done">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span data-i18n="mp.card.subsidy.mydata.done">마이데이터 연계 완료</span>
+                </span>
+                <span class="mp-mydata-date"><span data-i18n="mp.card.subsidy.mydata.datelabel">인증일시</span> <strong>2026.05.10 14:23</strong></span>
+              </span>
+            </div>
+          </div>
+
+          <div class="mp-card scheme-blue">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.inquiry.tag">민원</span>
+            </div>
+            <h3 data-i18n="mp.card.inquiry.title">민원 처리 현황</h3>
+            <p data-i18n="mp.card.inquiry.desc">접수한 민원의 진행 단계를 타임라인으로 확인합니다</p>
+            <div class="mp-system-meta">
+              <span><span data-i18n="mp.card.inquiry.inprog">진행 중</span> <strong>2</strong></span>
+              <span><span data-i18n="mp.card.inquiry.done">완료</span> 9</span>
+            </div>
+            <ul class="mp-card-actions">
+              <li><a href="inquiry-status.html" data-i18n="mp.card.inquiry.a1">민원 처리 현황 조회</a></li>
+              <li><a href="inquiry-qna.html" data-i18n="mp.card.inquiry.a2">내 질문·답변 이력</a></li>
+            </ul>
+          </div>
+
+          <div class="mp-card scheme-teal">
+            <div class="mp-card-top">
+              <div class="mp-card-ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <span class="mp-card-tag" data-i18n="mp.card.public.tag">공모</span>
+            </div>
+            <h3 data-i18n="mp.card.public.title">공모 신청</h3>
+            <p data-i18n="mp.card.public.desc">전기승합·건설기계·충전시설 공모 진행 현황</p>
+            <div class="mp-system-meta">
+              <span><span data-i18n="mp.card.public.inprog">진행 중</span> <strong>1</strong></span>
+              <span data-i18n="mp.card.public.stage">심사 단계</span>
+            </div>
+            <ul class="mp-card-actions">
+              <li><a href="mypage-contests.html" data-i18n="mp.card.public.a1">공모 신청 내역</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 업무지원시스템 이용신청 -->
+      <section class="mp-section" id="mp-business" style="scroll-margin-top:120px;">
+        <div class="mp-section-head">
+          <h2 class="mp-section-title scheme-orange">
+            <span class="mp-st-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            </span>
+            <span data-i18n="mp.sec.business.title">업무지원시스템 이용신청</span>
+          </h2>
+        </div>
+        <div class="alert alert-info alert-inline mb-4">
+          <div class="alert-icon"></div>
+          <div class="alert-body" style="line-height:1.6;">
+<span><strong>업무지원시스템 이용 안내 ·</strong> 각 항목의 <strong>[이용신청]</strong>을 클릭하면 승인 후 사용할 수 있습니다. 승인된 시스템은 <strong>[바로가기]</strong>로 이동합니다.</span>
+          </div>
+        </div>
+        <div class="mp-system-grid">
+          <a href="business-apply-roaming.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">로밍사업자<br>이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+          <a href="business-status-subsidy.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">무공해차 보조금<br>지원시스템 이용신청</div>
+            </div>
+            <span class="mp-system-tag approved">승인완료</span>
+          </a>
+          <a href="business-apply-mandatory.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">의무구매임차제<br>지원시스템 이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+          <a href="business-status-slow-subsidy.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2L4 14h6L9 22l10-12h-6z"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">완속충전기 설치보조금<br>지원시스템 이용신청</div>
+            </div>
+            <span class="mp-system-tag approved">승인완료</span>
+          </a>
+          <a href="business-apply-fast-station.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">급속 충전시설<br>지점관리 이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+          <a href="business-apply-slow-station.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">완속 충전시설<br>지점관리 이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+          <a href="business-status-brand.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">브랜드사업 설치보조금<br>지원시스템 이용신청</div>
+            </div>
+            <span class="mp-system-tag approved">승인완료</span>
+          </a>
+          <a href="business-status-target.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><polyline points="7 14 11 10 15 14 21 8"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">보급목표제<br>이용신청</div>
+            </div>
+            <span class="mp-system-tag approved">승인완료</span>
+          </a>
+          <a href="business-status-h2.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l-5 9h10z"/><circle cx="12" cy="15" r="5"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">수소차 충전인프라<br>이용신청</div>
+            </div>
+            <span class="mp-system-tag approved">승인완료</span>
+          </a>
+          <a href="business-apply-label.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">표지발급<br>이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+          <a href="business-apply-platform.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">플랫폼사업자 운영자<br>이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+          <a href="business-apply-ncms.html" class="mp-system-card">
+            <div class="mp-system-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </div>
+            <div class="mp-system-body">
+              <div class="mp-system-title">충전기 관리시스템<br>이용신청</div>
+            </div>
+            <span class="mp-system-tag apply">이용신청</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- 보안 정보 푸터 -->
+      <div class="mp-security-footer">
+        <div class="mp-security-info">
+          <span><strong data-i18n="mp.sec.ip.current">현재 IP</strong>14.35.255.226</span>
+          <span><strong data-i18n="mp.sec.lastlogin">마지막 로그인</strong>2026-04-27 09:07:34</span>
+        </div>
+        <div class="mp-security-help" data-i18n-html="mp.sec.help">
+<span data-i18n-html="mp.contact.note">문의 사항이 있으신가요? <a href="inquiry.html">고객센터</a>로 연락해 주세요.</span>
+        </div>
+      </div>
+
+        </div><!-- /.mp-content -->
+      </div><!-- /.mp-shell -->
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-mypage.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 회원유형별 보조금 신청현황 진입 메뉴 — 법인은 리스트형, 그 외(개인·개인사업자)는 카드형 */
+(function(){
+  var u = null; try { u = JSON.parse(sessionStorage.getItem('mp_user') || 'null'); } catch(e){}
+  var type = u && (u.memberType || u.kind);
+  var corpLi = document.getElementById('mpCorpSubsidy');
+  var personalLi = document.getElementById('mpPersonalSubsidy');
+  if (type === 'corp') { if (corpLi) corpLi.hidden = false; if (personalLi) personalLi.hidden = true; }
+})();
+
+/* 마이데이터 연계 — 전/후 상태 (예시: ?mydata=linked 또는 mp_user.mydataLinked) */
+(function(){
+  var before = document.getElementById('mydataBefore');
+  var after  = document.getElementById('mydataAfter');
+  if (!before || !after) return;
+  var linked = false;
+  try { var p = new URLSearchParams(location.search); if (p.get('mydata') === 'linked') linked = true; } catch(e){}
+  try { var u = JSON.parse(sessionStorage.getItem('mp_user') || 'null'); if (u && u.mydataLinked) linked = true; } catch(e){}
+  before.hidden = linked;
+  after.hidden  = !linked;
+})();
+
+/* 마이데이터 연계 — 클릭 시 토스트(우측 상단) 후 동의 URL 로 이동 */
+(function(){
+  var openBtn = document.getElementById('mydataLink');
+  if (!openBtn) return;
+  var MYDATA_CONSENT_URL = ''; // TODO: 실제 마이데이터 연계 동의 URL 로 교체
+  openBtn.addEventListener('click', function(){
+    if (window.__toast) window.__toast('마이데이터 연계 동의 페이지로 이동합니다.', 'success');
+    if (MYDATA_CONSENT_URL) setTimeout(function(){ window.location.href = MYDATA_CONSENT_URL; }, 600);
+  });
+})();
+</script>
+</body>
+</html>

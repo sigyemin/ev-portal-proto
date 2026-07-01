@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>서식 다운로드 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/screens-v2.css">
+<style>
+  /* 서식 분류 배지 — info-library 서식 탭과 동일 (cat-c-*) */
+  .cat-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11.5px;font-weight:700;white-space:nowrap;margin-left:6px}
+  .cat-badge.cat-c-subsidy{background:#e6f0fb;color:#1f5fa8}
+  .cat-badge.cat-c-install{background:#e1f5ee;color:#0f7a52}
+  .cat-badge.cat-c-contest{background:#eef2ff;color:#4338ca}
+  .cat-badge.cat-c-kev{background:#fff3e0;color:#b45309}
+  .cat-badge.cat-c-card{background:#fdeef3;color:#9d174d}
+  .cat-badge.cat-c-minwon{background:#fef3e2;color:#b45309}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="info.bc.home">홈</a><span class="sep">›</span>
+        <a href="info.html" data-i18n="info.beginner.bc.lib">정보 자료실</a><span class="sep">›</span>
+        <a href="info-library.html" data-i18n="info.man.bc.lib">자료실</a><span class="sep">›</span>
+        <span class="current" data-i18n="info.forms.bc.current">서식 다운로드</span>
+      </nav>
+      <h1 data-i18n="info.forms.h1">서식 다운로드</h1>
+      <p class="hero-lead" data-i18n-html="info.forms.lead">보조금 신청·공모 신청·민원 접수 등 <strong>각종 신청 서식</strong>을 일괄 다운로드합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <div class="filter-bar filter-bar--stacked">
+        <div class="filter-grp">
+          <label data-i18n="info.forms.f.cat">분류</label>
+          <!-- 서식다운로드 신설 분류 6종 (info-library 서식 탭과 통일) -->
+          <select id="catFilter">
+            <option value="" data-i18n="info.forms.cat.all">전체</option>
+            <option value="subsidy" data-i18n="info.forms.cat.subsidy">보조금 신청</option>
+            <option value="contest" data-i18n="info.forms.cat.contest">공모 신청</option>
+            <option value="install" data-i18n="info.forms.cat.install">충전기 설치</option>
+            <option value="minwon" data-i18n="info.forms.cat.complaint">민원·신고</option>
+            <option value="card" data-i18n="info.forms.cat.member">회원·카드</option>
+            <option value="kev" data-i18n="info.forms.cat.kev100">K-EV100</option>
+          </select>
+        </div>
+        <div class="filter-grp">
+          <label data-i18n="info.forms.f.kw">키워드</label>
+          <input type="text" placeholder="서식명 검색" data-i18n-attr="placeholder:info.forms.kw.ph">
+        </div>
+        <button class="btn btn-primary" data-i18n="info.forms.btn.search">검색</button>
+      </div>
+
+      <p class="text-muted mt-4" data-i18n-html="info.forms.count">전체 <strong id="formsCount">12</strong>종 서식 · 정렬: 최신 등록순</p>
+
+      <div class="file-list mt-3">
+
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f1">무공해차 구매보조금 신청서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">보조금</span></div>
+            <div class="f-meta">HWP / DOCX / PDF · 380KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.04.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f2">보조금 지급 청구서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">보조금</span></div>
+            <div class="f-meta">HWP / DOCX · 220KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.04.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f3">양도양수 신고서 (보조금)</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">보조금</span></div>
+            <div class="f-meta">HWP · 180KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.03.15</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f4">전기승합차 공모 신청서 (5단계)</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">공모</span></div>
+            <div class="f-meta">HWP / DOCX · 720KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.04.30</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f5">무공해 건설기계 공모 신청서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">공모</span></div>
+            <div class="f-meta">HWP / DOCX · 540KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.04.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f6">공용 완속충전기 직접신청서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">충전기</span></div>
+            <div class="f-meta">HWP · 320KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.04.10</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f7">입주자대표회의 동의서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">충전기</span></div>
+            <div class="f-meta">HWP / DOCX · 140KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.03.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f8">충전기 보조금 지급 청구서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">충전기</span></div>
+            <div class="f-meta">HWP · 240KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.03.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f9">불편 민원 신고서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">민원</span></div>
+            <div class="f-meta">HWP / DOCX · 180KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.02.10</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f10">보조금 부적정집행 신고서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">민원</span></div>
+            <div class="f-meta">HWP · 220KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.02.10</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f11">회원카드 정보변경 신청서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">회원</span></div>
+            <div class="f-meta">PDF · 120KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.01.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+        <div class="file-item">
+          <div class="f-icon">📄</div>
+          <div>
+            <div><strong data-i18n="info.forms.f12">회원카드 분실·재발급 신청서</strong> <span class="badge" style="display:inline-block;padding:2px 8px;border-radius:12px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:11px;font-weight:600;margin-left:6px;">회원</span></div>
+            <div class="f-meta">PDF · 120KB</div>
+          </div>
+          <div style="text-align:right;font-size:12px;color:var(--color-gray-600);">2026.01.20</div>
+          <a href="#" class="btn btn-secondary" data-i18n="info.forms.btn.download">다운로드</a>
+        </div>
+      </div>
+
+      <div class="action-foot mt-5">
+        <button class="btn btn-secondary" data-i18n="info.forms.btn.zip">전체 서식 ZIP 다운로드 (4.2MB)</button>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-info.js?v=20260630e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 서식 분류 배지 정규화(cat-c-*) + 분류·키워드 필터 */
+(function(){
+  var MAP = {
+    '보조금':{c:'subsidy', t:'보조금 신청'}, '공모':{c:'contest', t:'공모 신청'},
+    '충전기':{c:'install', t:'충전기 설치'}, '충전':{c:'install', t:'충전기 설치'},
+    '민원':{c:'minwon', t:'민원·신고'}, '회원':{c:'card', t:'회원·카드'},
+    'K-EV100':{c:'kev', t:'K-EV100'}
+  };
+  var items = document.querySelectorAll('.file-item');
+  items.forEach(function(it){
+    var b = it.querySelector('.badge, .cat-badge');
+    if (!b) return;
+    var m = MAP[(b.textContent||'').trim()];
+    if (m){ b.className = 'cat-badge cat-c-' + m.c; b.removeAttribute('style'); b.textContent = m.t; it.dataset.cat = m.c; }
+  });
+  var sel = document.getElementById('catFilter');
+  var kw = document.querySelector('.filter-grp input[type="text"]');
+  function apply(){
+    var c = sel ? sel.value : '', q = (kw && kw.value || '').trim().toLowerCase(), vis = 0;
+    items.forEach(function(it){
+      var okC = !c || it.dataset.cat === c;
+      var title = (it.querySelector('strong')||{}).textContent || '';
+      var okQ = !q || title.toLowerCase().indexOf(q) >= 0;
+      var ok = okC && okQ; it.style.display = ok ? '' : 'none'; if (ok) vis++;
+    });
+    var countEl = document.getElementById('formsCount'); // applyLang가 노드를 교체할 수 있어 매번 조회
+    if (countEl) countEl.textContent = vis;
+  }
+  if (sel) sel.addEventListener('change', apply);
+  if (kw) kw.addEventListener('input', apply);
+  apply();
+  setTimeout(apply, 0); // i18n applyLang 이후 카운트 재반영
+})();
+</script>
+</body>
+</html>

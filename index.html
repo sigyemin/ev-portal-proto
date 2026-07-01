@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무공해차 통합누리집</title>
+<meta name="description" content="전기차·수소차 구매보조금, 충전소·요금, 차량 비교, 데이터·통계까지 한 곳에서 제공합니다.">
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/home-v2.css?v=20260608">
+<link rel="stylesheet" href="css/home-main02.css?v=20260605">
+<link rel="stylesheet" href="css/ai-helpdesk-v2.css?v=20260609">
+<link rel="stylesheet" href="css/persona-cards.css?v=20260613">
+<link rel="stylesheet" href="css/subsidy-calc.css?v=20260613">
+</head>
+<body class="m02-home">
+<a href="#main" class="skip-link" data-i18n="hm.skip">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main" class="m02">
+
+  <!-- ===== 1. HERO ===== -->
+  <section class="m02-hero" aria-label="메인 안내">
+    <!-- Quick 버튼 -->
+    <div class="m02-quick" id="m02Quick">
+      <button type="button" class="m02-quick-toggle" aria-haspopup="true" aria-expanded="false" data-i18n-aria="hm.quick.aria" aria-label="퀵 메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Quick</span>
+      </button>
+      <div class="m02-quick-menu" role="menu">
+        <button type="button" class="m02-quick-item ai" data-quick="ai" role="menuitem">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M5 8h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg></span>
+          <span data-i18n="hm.quick.ai">AI 헬프데스크</span>
+        </button>
+        <a href="charging-card.html?tab=apply" class="m02-quick-item" role="menuitem">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg></span>
+          <span data-i18n="hm.quick.card">회원카드 추가</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="m02-hero-inner">
+      <div class="m02-hero-copy">
+        <p class="m02-hero-kicker" data-i18n="hm.hero.kicker">더 깨끗한 내일로의 이동,<br>지속 가능한 모빌리티 라이프</p>
+        <h1 data-i18n-html="hm.hero.title">나에게 맞는 <b>서비스</b>를 선택하세요.</h1>
+        <p data-i18n="hm.hero.sub">사용자 유형을 선택하면 맞춤 서비스와 콘텐츠를 바로 확인할 수 있습니다.</p>
+      </div>
+      <div class="m02-hero-art" aria-hidden="true">
+        <span class="m02-hero-bolt b1">⚡</span><span class="m02-hero-bolt b2">⚡</span>
+        <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="250" cy="250" rx="190" ry="22" fill="#8fd9a6" opacity=".45"/>
+          <!-- charger -->
+          <rect x="372" y="120" width="48" height="120" rx="10" fill="#34b06f"/>
+          <rect x="382" y="135" width="28" height="34" rx="5" fill="#0c7a48"/>
+          <path d="M392 150 l-6 10 h6 l-4 9" stroke="#bdf0cf" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- car body -->
+          <path d="M70 200 q6-58 60-66 h120 q40 0 64 34 l34 8 q22 6 22 24 v6 q0 8-10 8 H64 q-10 0-10-10 v-22 q0-12 16-14z" fill="#5aa9f0"/>
+          <path d="M150 138 h96 q30 0 50 28 H120 q10-28 30-28z" fill="#bfe0fb"/>
+          <rect x="158" y="146" width="60" height="20" rx="4" fill="#7fc0f7"/>
+          <!-- driver -->
+          <circle cx="196" cy="150" r="11" fill="#f0c089"/>
+          <path d="M183 168 q13-14 26 0z" fill="#e8554d"/>
+          <!-- wheels -->
+          <circle cx="128" cy="216" r="22" fill="#1f2a37"/><circle cx="128" cy="216" r="9" fill="#cfd8e2"/>
+          <circle cx="300" cy="216" r="22" fill="#1f2a37"/><circle cx="300" cy="216" r="9" fill="#cfd8e2"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 페르소나(후보2): 클릭 시 하단 서비스 카드 영역 교체 -->
+    <nav class="m02-persona" aria-label="사용자 유형 선택" role="tablist">
+      <button type="button" class="m02-persona-btn is-active" data-persona="buyer" role="tab" aria-selected="true" aria-controls="m02EvsvcTrack"><span class="ic">🛒</span><span>무공해차 구매 예정자</span></button>
+      <button type="button" class="m02-persona-btn" data-persona="driver" role="tab" aria-selected="false" aria-controls="m02EvsvcTrack"><span class="ic">🚗</span><span>무공해차 운전자</span></button>
+      <button type="button" class="m02-persona-btn" data-persona="cpo" role="tab" aria-selected="false" aria-controls="m02EvsvcTrack"><span class="ic">🔌</span><span>사업자·제조사</span></button>
+      <button type="button" class="m02-persona-btn" data-persona="gov" role="tab" aria-selected="false" aria-controls="m02EvsvcTrack"><span class="ic">🏢</span><span>지자체·공공기관</span></button>
+      <a class="m02-persona-ai" href="index.html?ai=personal#aiSectionAnchor"><span class="ic ai">AI</span><span data-i18n="hm.persona.ai">AI 헬프데스크</span></a>
+    </nav>
+  </section>
+
+  <!-- ===== 2. 페르소나별 서비스 카드(후보2) — 상단 페르소나 클릭 시 JS로 교체 ===== -->
+  <section class="m02-evsvc" aria-labelledby="m02-evsvc-title">
+    <div class="main03-container">
+      <div class="m02-sec-head"><h2 id="m02-evsvc-title"><span class="ev-dot">e</span> <span id="m02EvsvcTitle">무공해차 구매 예정자를 위한 서비스</span></h2></div>
+      <div class="m02-evsvc-wrap">
+        <button type="button" class="m02-evsvc-nav prev" data-i18n-aria="hm.nav.prev" aria-label="이전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="m02-evsvc-viewport">
+          <!-- 카드는 js/persona-cards.js 가 선택된 페르소나에 맞춰 렌더링 -->
+          <div class="m02-evsvc-track" id="m02EvsvcTrack"></div>
+        </div>
+        <button type="button" class="m02-evsvc-nav next" data-i18n-aria="hm.nav.next" aria-label="다음"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. AI 헬프 데스크 (인라인 · 검색형 상담 패널 — ev-portal-0522 시안 이식) ===== -->
+  <section class="section-ai-help" id="aiSectionAnchor" aria-labelledby="ai-help-title">
+    <div class="ai-bg-shapes" aria-hidden="true">
+      <span class="ai-shape s1"></span>
+      <span class="ai-shape s2"></span>
+      <span class="ai-shape s3"></span>
+    </div>
+
+    <!-- 플로팅 말풍선 (데코) -->
+    <aside class="ai-float ai-float-left" aria-hidden="true">
+      <strong data-i18n="home.ai.float.1.strong">자연어 질의</strong>
+      <span data-i18n="home.ai.float.1.span">일상 언어로 편하게 질문하세요</span>
+    </aside>
+    <aside class="ai-float ai-float-right-top" aria-hidden="true">
+      <strong data-i18n="home.ai.float.2.strong">보조금·충전 분석</strong>
+      <span data-i18n="home.ai.float.2.span">내 차종·지역에 맞는 보조금과 충전 정보를 분석해 드립니다</span>
+    </aside>
+    <aside class="ai-float ai-float-right-bot" aria-hidden="true">
+      <strong data-i18n="home.ai.float.3.strong">즉시 맞춤 안내</strong>
+      <span data-i18n="home.ai.float.3.span">충전소·요금·보조금 답변을 페이지 이동 없이 바로 확인</span>
+    </aside>
+
+    <!-- 우측 로봇 캐릭터 -->
+    <div class="ai-robot" aria-hidden="true">
+      <div class="ai-robot-antenna"></div>
+      <div class="ai-robot-head">
+        <div class="ai-robot-face">
+          <span class="eye"></span><span class="eye"></span>
+        </div>
+        <span class="ai-robot-wing left"></span>
+        <span class="ai-robot-wing right"></span>
+      </div>
+    </div>
+
+    <div class="ai-inner">
+
+      <!-- 타이틀 -->
+      <div class="ai-hero-head">
+        <h2 id="ai-help-title">
+          <svg class="ai-spark left" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 L13.5 10.5 L21 12 L13.5 13.5 L12 21 L10.5 13.5 L3 12 L10.5 10.5 Z"/></svg>
+          <span data-i18n="home.ai.title">AI 헬프 데스크</span>
+        </h2>
+        <p data-i18n-html="home.ai.sub">복잡한 정보 검색도 AI와 대화하듯 간편하게.<br>궁금한 내용을 자연어로 물어보시면 바로 답변해드립니다.</p>
+      </div>
+
+      <!-- 3 진입 버튼 (기본: 보조금 큐레이터) -->
+      <div class="ai-flows" role="tablist" data-i18n-aria="home.ai.flow.aria" aria-label="상담 유형 선택">
+        <button type="button" class="ai-flow-btn" data-flow="personal" role="tab" aria-selected="false">
+          <span class="ai-flow-ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+          </span>
+          <span class="ai-flow-name" data-i18n="home.ai.flow.personal">AI 맞춤 상담</span>
+        </button>
+        <button type="button" class="ai-flow-btn active" data-flow="subsidy" role="tab" aria-selected="true">
+          <span class="ai-flow-ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+          </span>
+          <span class="ai-flow-name" data-i18n="home.ai.flow.subsidy">보조금 큐레이터</span>
+        </button>
+        <button type="button" class="ai-flow-btn" data-flow="charge" role="tab" aria-selected="false">
+          <span class="ai-flow-ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+          </span>
+          <span class="ai-flow-name" data-i18n="home.ai.flow.charge">장애 대응 안내</span>
+        </button>
+      </div>
+
+      <!-- 검색 입력 바 -->
+      <form class="ai-search-bar" id="aiSearchForm" autocomplete="off">
+        <svg class="ai-search-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="aiSearchInput" type="text" placeholder="예: 저공해, 보조금 얼마?, 충전소 위치" data-i18n-attr="placeholder:home.ai.search.placeholder,aria-label:home.ai.search.aria" aria-label="AI에게 질문 입력">
+        <button type="submit" class="ai-search-submit" data-i18n="home.ai.search.submit">검색</button>
+      </form>
+
+      <!-- 해시태그 퀵 칩 + 홈 버튼 (v0.12 [34] 홈 버튼을 칩 행 우측 끝으로 이동·확대) -->
+      <div class="ai-hashrow">
+      <div class="ai-hashchips" id="aiHashChips"></div>
+      <div class="ai-home-row">
+        <button type="button" class="ai-home-btn" id="aiHomeBtn" data-i18n-aria="hm.ai.home" aria-label="홈으로">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span data-i18n="hm.ai.home">홈으로</span>
+        </button>
+      </div>
+      </div><!-- /.ai-hashrow -->
+
+
+      <!-- ============ AI 상담 패널 (검색 후 하단 슬라이드업) ============ -->
+      <div class="ai-answer" id="aiAnswer" hidden>
+        <!-- 상단: 현재 플로우 + 액션 도구 -->
+        <header class="ai-answer-topbar">
+          <div class="ai-topbar-flow">
+            <span class="ai-topbar-dot"></span>
+            <span id="aiTopbarFlow" data-i18n="home.ai.flow.subsidy">보조금 큐레이터</span>
+            <span class="ai-topbar-turn" id="aiTurnBadge" data-i18n="home.ai.turn.unit">1회 대화</span>
+          </div>
+          <div class="ai-topbar-tools">
+            <button type="button" class="ai-tool-btn" id="aiReset" title="대화 초기화" data-i18n-aria="home.ai.btn.reset.aria" aria-label="대화 초기화">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+<span data-i18n="home.ai.btn.reset">              초기화</span>
+            </button>
+            <button type="button" class="ai-tool-btn" id="aiSaveChat" title="대화 저장" data-i18n-aria="home.ai.btn.save.aria" aria-label="대화 저장" data-action="notify" data-action-label="로그인 후 내 대화 이력을 저장할 수 있습니다.">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+<span data-i18n="home.ai.btn.save">              저장</span>
+            </button>
+            <button type="button" class="ai-answer-close" id="aiAnswerClose" data-i18n-aria="home.ai.btn.close.aria" aria-label="닫기">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+<span data-i18n="home.ai.btn.close">              닫기</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="ai-answer-body-wrap">
+          <!-- 대화 메시지 히스토리 (사용자 질문 + AI 답변 + 액션 + 관련 메뉴) -->
+          <div class="ai-messages" id="aiMessages" role="log" aria-live="polite"></div>
+
+          <!-- 타이핑 인디케이터 (동적 표출) -->
+
+          <!-- 후속 질문 제안 -->
+          <div class="ai-suggest" id="aiSuggest" hidden>
+            <span class="ai-suggest-label" data-i18n="home.ai.suggest.label">이런 질문도 많이 해요</span>
+            <div class="ai-suggest-chips" id="aiSuggestChips"></div>
+          </div>
+
+          <!-- 후속 대화 입력 -->
+          <form class="ai-followup" id="aiFollowupForm" autocomplete="off">
+            <svg class="ai-followup-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <input type="text" id="aiFollowupInput" placeholder="이 주제로 더 궁금한 점을 자유롭게 물어보세요" aria-label="추가 질문 입력" data-i18n-attr="placeholder:home.ai.followup.ph,aria-label:home.ai.followup.aria">
+            <button type="submit" class="ai-followup-submit" data-i18n-aria="home.ai.send.aria" aria-label="전송">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+
+          <!-- 하단 고정 액션 (FAQ 바로가기) -->
+          <footer class="ai-answer-foot">
+            <a href="inquiry-faq.html" class="ai-foot-btn ai-foot-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<span data-i18n="home.ai.btn.faq">              FAQ 바로가기</span>
+            </a>
+          </footer>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== 4. 구매 보조금 계산기 ===== -->
+  <section class="m02-calc" aria-labelledby="m02-calc-title">
+    <div class="main03-container">
+      <div class="m02-sec-head"><h2 id="m02-calc-title"><span class="ev-dot">e</span> <span data-i18n="hm.calc.title">구매 보조금 계산기</span></h2></div>
+      <!-- 보조금 계산기 (공용 위젯 js/subsidy-calc.js?v=20260626c · 보조금 안내·계산기 페이지와 동일) · 전체 폭 -->
+      <div class="calc-card subsidy-calc calc-card-full" data-subsidy-calc>
+          <h2 class="calc-card-head">📝 보조금 계산기</h2>
+          <div class="calc-field">
+            <label>구매 차종</label>
+            <div class="chip-group" data-calc-type>
+              <button type="button" class="chip-opt active" data-type="ev_car"><span class="ic">🚗</span>전기승용</button>
+              <button type="button" class="chip-opt" data-type="ev_truck"><span class="ic">🚚</span>전기화물</button>
+              <button type="button" class="chip-opt" data-type="ev_bus"><span class="ic">🚌</span>전기승합</button>
+              <button type="button" class="chip-opt" data-type="ev_moto"><span class="ic">🛵</span>전기이륜</button>
+              <button type="button" class="chip-opt" data-type="fcev"><span class="ic">💧</span>수소자동차</button>
+              <button type="button" class="chip-opt" data-type="const_eq"><span class="ic">🚜</span>건설기계</button>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>구매자 유형</label>
+            <div class="chip-group" data-calc-buyer>
+              <button type="button" class="chip-opt active" data-buyer="personal"><span class="ic">🧑</span>개인</button>
+              <button type="button" class="chip-opt" data-buyer="biz"><span class="ic">🪪</span>개인사업자</button>
+              <button type="button" class="chip-opt" data-buyer="org"><span class="ic">🏢</span>단체</button>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>구매 지역</label>
+            <div class="calc-two">
+              <select class="calc-select" data-calc-region1><option value="">지자체 대분류 선택</option></select>
+              <select class="calc-select" data-calc-region2><option value="">지자체 소분류</option></select>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>제조사 / 모델</label>
+            <div class="calc-two">
+              <select class="calc-select" data-calc-maker><option value="">제조사 선택</option></select>
+              <select class="calc-select" data-calc-model><option value="">제조사 먼저 선택</option></select>
+            </div>
+          </div>
+          <!-- 차종별 조건부 입력 항목 (subsidy-calc.js가 동적 렌더링) -->
+          <div data-calc-conditions></div>
+          <button type="button" class="calc-run" data-calc-run>📊 계산하기</button>
+          <div class="calc-result" data-calc-result>
+            <div class="calc-res-total"><span style="font-weight:800;">총 예상 보조금</span><span><b data-res-total>0</b> 만원</span></div>
+            <div class="calc-res-row"><span>국고 보조금</span><span data-res-nat>0만원</span></div>
+            <div class="calc-res-row"><span>지방 보조금</span><span data-res-local>0만원</span></div>
+            <div class="calc-res-row"><span>추가지원 합계 (국비+지방비)</span><span data-res-extra>0만원</span></div>
+            <p style="font-size:12px;color:#8a93a0;margin-top:10px;">※ 데모용 추정치입니다. 실제 보조금은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</p>
+          </div>
+          <a href="subsidy-info.html" class="btn btn-primary" style="display:block;width:100%;text-align:center;margin-top:14px;">자세한 보조금 안내·계산기 →</a>
+        </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. 보조금 · 차량 정보 ===== -->
+  <section class="m02-subsidy" aria-labelledby="m02-subsidy-title">
+    <div class="main03-container">
+      <div class="m02-sec-head"><h2 id="m02-subsidy-title"><span class="ev-dot">e</span> <span data-i18n="hm.sub.title">보조금 · 차량 정보</span></h2></div>
+      <div class="m02-stat-bar">
+        <div class="m02-stat"><div class="t" data-i18n="hm.stat.budget.t">2026년 예산</div><div class="n" data-i18n="hm.stat.budget.n">1조 2,400억원</div></div>
+        <div class="m02-stat"><div class="t" data-i18n="hm.stat.ev.t">전기차 최대</div><div class="n" data-i18n="hm.stat.ev.n">900만원</div></div>
+        <div class="m02-stat"><div class="t" data-i18n="hm.stat.h2.t">수소차 최대</div><div class="n" data-i18n="hm.stat.h2.n">3,750만원</div></div>
+        <div class="m02-stat"><div class="t" data-i18n="hm.stat.period.t">신청기간</div><div class="n" data-i18n="hm.stat.period.n">연중 상시</div></div>
+      </div>
+      <div class="m02-veh-grid">
+        <div class="m02-veh-card" tabindex="0" role="link" aria-label="아이오닉 6 상세 비교">
+          <div class="m02-veh-head"><div><div class="m02-veh-maker" data-i18n="hm.maker.hyundai">현대</div><div class="m02-veh-name">아이오닉 6</div></div><span class="m02-veh-badge" data-i18n="hm.badge.100">100% 지원</span></div>
+          <div class="m02-veh-img"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="아이오닉 6"></div>
+          <div class="m02-veh-specs">
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.price">차량가격</span><span class="v" data-i18n="hm.veh.price.5200">5,200만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.sub">보조금</span><span class="v green" data-i18n="hm.veh.sub.max680">최대 680만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.range">주행거리(1회 충전시)</span><span class="v">434~368km</span></div>
+          </div>
+          <div class="m02-veh-cta"><span><span data-i18n="hm.veh.cta">상세 비교</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        </div>
+        <div class="m02-veh-card" tabindex="0" role="link" aria-label="EV6 상세 비교">
+          <div class="m02-veh-head"><div><div class="m02-veh-maker" data-i18n="hm.maker.kia">기아</div><div class="m02-veh-name">EV6</div></div><span class="m02-veh-badge" data-i18n="hm.badge.100">100% 지원</span></div>
+          <div class="m02-veh-img"><img src="assets/cars/ev-crossover-ev6.svg" alt="EV6"></div>
+          <div class="m02-veh-specs">
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.price">차량가격</span><span class="v" data-i18n="hm.veh.price.4900">4,900만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.sub">보조금</span><span class="v green" data-i18n="hm.veh.sub.max680">최대 680만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.range">주행거리(1회 충전시)</span><span class="v">475km</span></div>
+          </div>
+          <div class="m02-veh-cta"><span><span data-i18n="hm.veh.cta">상세 비교</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        </div>
+        <div class="m02-veh-card" tabindex="0" role="link" aria-label="Model 3 상세 비교">
+          <div class="m02-veh-head"><div><div class="m02-veh-maker" data-i18n="hm.maker.tesla">테슬라</div><div class="m02-veh-name">Model 3</div></div><span class="m02-veh-badge" data-i18n="hm.badge.50">50% 지원</span></div>
+          <div class="m02-veh-img"><img src="assets/cars/ev-sedan-model3.svg" alt="Model 3"></div>
+          <div class="m02-veh-specs">
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.price">차량가격</span><span class="v" data-i18n="hm.veh.price.5699">5,699만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.sub">보조금</span><span class="v green" data-i18n="hm.veh.sub.max680">최대 680만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.range">주행거리(1회 충전시)</span><span class="v">528km</span></div>
+          </div>
+          <div class="m02-veh-cta"><span><span data-i18n="hm.veh.cta">상세 비교</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        </div>
+        <div class="m02-veh-card" tabindex="0" role="link" aria-label="아이오닉 6 상세 비교">
+          <div class="m02-veh-head"><div><div class="m02-veh-maker" data-i18n="hm.maker.hyundai">현대</div><div class="m02-veh-name">아이오닉 6</div></div><span class="m02-veh-badge" data-i18n="hm.badge.100">100% 지원</span></div>
+          <div class="m02-veh-img"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="아이오닉 6"></div>
+          <div class="m02-veh-specs">
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.price">차량가격</span><span class="v" data-i18n="hm.veh.price.5200">5,200만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.sub">보조금</span><span class="v green" data-i18n="hm.veh.sub.max680">최대 680만원</span></div>
+            <div class="m02-veh-spec"><span class="k" data-i18n="hm.veh.k.range">주행거리(1회 충전시)</span><span class="v">524km</span></div>
+          </div>
+          <div class="m02-veh-cta"><span><span data-i18n="hm.veh.cta">상세 비교</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7. 충전 요금 비교 (home-v2.css .m03-fee-* 재사용) ===== -->
+  <section class="m03-fee-section" aria-labelledby="m02-fee-title">
+    <div class="main03-container">
+      <div class="m03-fee-head">
+        <div class="m03-tabs" role="tablist">
+          <h2 id="m02-fee-title"><span class="ev-dot" style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--color-primary-500);color:#fff;font-size:12px;font-weight:900;">e</span> <span data-i18n="hm.fee.title">충전 요금 비교</span></h2>
+          <button type="button" class="active" data-main03-tab="card" data-i18n="hm.fee.tab.card">카드비교</button>
+          <button type="button" data-main03-tab="detail" data-i18n="hm.fee.tab.detail">상세보기</button>
+          <a class="m03-fee-more" href="charging-fee.html?tab=ev" style="margin-left:auto;" data-i18n-html="hm.fee.more">충전요금 비교 전체 보기 <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="m03-fee-filters">
+          <div class="m03-op-dropdown" id="m03OpDropdown">
+            <button type="button" class="m03-op-toggle" id="m03OpToggle" aria-haspopup="true" aria-expanded="false" aria-controls="m03OpPanel">
+              <span id="m03OpLabel">충전 사업자</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="m03-op-panel" id="m03OpPanel" role="group" aria-label="충전 사업자 선택" hidden></div>
+          </div>
+          <select id="m03FeeType" data-i18n-aria="hm.fee.f.typearia" aria-label="충전유형 선택"><option value="fast" data-i18n="hm.fee.f.fast">급속 (50km)</option><option value="ultra" data-i18n="hm.fee.f.ultra">초급속 (100km+)</option><option value="slow" data-i18n="hm.fee.f.slow">완속 (7km)</option></select>
+          <select id="m03FeeBasis" data-i18n-aria="hm.fee.f.basisaria" aria-label="요금기준 선택"><option value="member" data-i18n="hm.fee.member">회원가</option><option value="guest" data-i18n="hm.fee.nonmember">비회원가</option><option value="roaming" data-i18n="hm.fee.roaming">로밍가</option></select>
+        </div>
+      </div>
+      <!-- 로밍가 선택 시에만 노출: 보유 카드 선택 (충전요금 비교와 카드 사이 행) -->
+      <div class="m03-card-row" id="m03CardRow" hidden>
+        <span class="m03-card-row-label">로밍가 기준 — 보유 카드를 선택하세요</span>
+        <select id="m03CardSel" aria-label="보유 카드 선택"></select>
+      </div>
+      <!-- 카드비교: 선택한 충전 사업자 기준으로 js/fee-compare.js 가 렌더링 (최저가 좌측 정렬 + 무한 캐러셀) -->
+      <div class="m03-fee-cards">
+        <button type="button" class="m03-fee-nav prev" id="m03FeePrev" aria-label="이전 사업자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="m03-fee-viewport"><div class="m03-fee-track" id="m03FeeTrack"></div></div>
+        <button type="button" class="m03-fee-nav next" id="m03FeeNext" aria-label="다음 사업자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+      <!-- 상세비교: 좌측 사업자 카드 2×2 그리드(선택) + 우측 상세 패널 · js/fee-compare.js 가 렌더링 -->
+      <div class="m03-fee-detail" hidden>
+        <div class="m03-detail-left">
+          <div class="m03-detail-grid" id="m03DetailGrid"></div>
+          <div class="m03-detail-pager" id="m03DetailPager" hidden>
+            <button type="button" class="m03-fee-nav prev" id="m03DetailPrev" aria-label="이전 사업자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="m03-detail-page" id="m03DetailPageLabel">1 / 1</span>
+            <button type="button" class="m03-fee-nav next" id="m03DetailNext" aria-label="다음 사업자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          </div>
+        </div>
+        <article class="m03-detail-panel" id="m03DetailPanel"></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6. 새소식 ===== -->
+  <section class="m02-news" aria-labelledby="m02-news-title">
+    <div class="main03-container">
+      <div class="m02-sec-head">
+        <h2 id="m02-news-title"><span class="ev-dot">e</span> <span data-i18n="hm.news.title">새소식</span></h2>
+        <div class="m02-tablinks" id="m02NewsTabs" role="tablist">
+          <button type="button" class="active" data-news-tab="all" role="tab" aria-selected="true" data-i18n="hm.news.tab.all">전체</button>
+          <button type="button" data-news-tab="notice" role="tab" aria-selected="false" data-i18n="hm.news.tab.notice">공지사항</button>
+          <button type="button" data-news-tab="press" role="tab" aria-selected="false" data-i18n="hm.news.tab.press">보도자료</button>
+          <button type="button" data-news-tab="promo" role="tab" aria-selected="false" data-i18n="hm.news.tab.promo">홍보자료</button>
+        </div>
+        <a class="m02-sec-more" href="notice-list.html" data-i18n-aria="hm.news.morearia" aria-label="새소식 더보기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+      </div>
+      <!-- 탭 클릭 시 페이지 이동 없이 해당 카테고리 카드만 표시(최신순 좌측) — js/home-news.js -->
+      <div class="m02-news-grid" id="m02NewsGrid"></div>
+    </div>
+  </section>
+
+
+  <!-- ===== 8. 오늘의 충전요금 (충전 요금 비교와 한 영역처럼 연결 · 인기검색어 제거) ===== -->
+  <section class="m02-ticker-sec" data-i18n-aria="hm.ticker.aria" aria-label="오늘의 충전요금">
+    <div class="main03-container">
+      <div class="m02-ticker m02-ticker-single">
+        <div class="m02-ticker-box"><span class="ttl" data-i18n="hm.ticker.today">오늘의 충전요금</span><span class="tag" data-i18n="hm.ticker.fast">급속</span><span class="body" data-i18n="hm.ticker.moe">환경부</span><span class="price">313.1 원/kwh</span><span class="down">▼ 5.2</span><span class="ctrls"><button type="button" data-i18n-aria="hm.nav.prev" aria-label="이전">‹</button><button type="button" data-i18n-aria="hm.nav.pause" aria-label="일시정지">❚❚</button><button type="button" data-i18n-aria="hm.nav.next" aria-label="다음">›</button></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 9. 자주 묻는 질문 ===== -->
+  <section class="m02-faq" aria-labelledby="m02-faq-title">
+    <div class="main03-container">
+      <div class="m02-sec-head">
+        <h2 id="m02-faq-title"><span class="ev-dot">e</span> <span data-i18n="hm.faq.title">자주 묻는 질문</span></h2>
+        <a class="m02-sec-more" href="inquiry-faq.html" data-i18n-aria="hm.faq.morearia" aria-label="자주 묻는 질문 더보기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+      </div>
+      <div class="m02-faq-list">
+        <details class="m02-faq-item">
+          <summary class="m02-faq-q"><span class="qmark">Q</span><span class="q" data-i18n="hm.faq.q1">전기차 보조금 신청은 어떻게 하나요?</span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></summary>
+          <div class="m02-faq-a"><span class="amark">A</span><div class="a-body"><span data-i18n="hm.faq.a1">차량 구매계약 후 관할 지자체에 보조금 지원 신청서를 접수하고, 차량 출고·등록을 거치면 제조·수입사가 보조금을 신청·지급받는 순서로 진행됩니다. 지원 대상·금액·세부 절차는 아래에서 확인하세요.</span><a class="a-more" href="subsidy-target.html" data-i18n="hm.faq.a1.more">보조금 지원 대상·신청절차 보기 →</a></div></div>
+        </details>
+        <details class="m02-faq-item">
+          <summary class="m02-faq-q"><span class="qmark">Q</span><span class="q" data-i18n="hm.faq.q2">민간 사업자 충전기 지킴이 활동은 어떻게 참여할 수 있나요?</span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></summary>
+          <div class="m02-faq-a"><span class="amark">A</span><div class="a-body"><span data-i18n="hm.faq.a2">누리집에서 지킴이 활동을 신청한 뒤 충전기 점검·신고 등 활동 내역을 등록하면 포상금을 받을 수 있습니다. 참여 조건과 신청 방법은 FAQ 지킴이 항목에서 안내합니다.</span><a class="a-more" href="inquiry-faq.html?cat=keeper" data-i18n="hm.faq.a2.more">지킴이 안내 보기 →</a></div></div>
+        </details>
+        <details class="m02-faq-item">
+          <summary class="m02-faq-q"><span class="qmark">Q</span><span class="q" data-i18n="hm.faq.q3">수소차 충전소는 전국에 몇 개인가요?</span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></summary>
+          <div class="m02-faq-a"><span class="amark">A</span><div class="a-body"><span data-i18n="hm.faq.a3">운영 중인 수소충전소의 위치와 실시간 운영 현황은 '충전소 찾기'의 통합 지도에서 지역별로 확인할 수 있습니다. (충전소 수는 운영 상황에 따라 수시로 변동됩니다.)</span><a class="a-more" href="charging-find.html?tab=map" data-i18n="hm.faq.a3.more">충전소 찾기 보기 →</a></div></div>
+        </details>
+        <details class="m02-faq-item">
+          <summary class="m02-faq-q"><span class="qmark">Q</span><span class="q" data-i18n="hm.faq.q4">충전카드는 어디서 발급받을 수 있나요?</span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></summary>
+          <div class="m02-faq-a"><span class="amark">A</span><div class="a-body"><span data-i18n="hm.faq.a4">누리집 '회원카드 발급'에서 온라인으로 신청하거나, 한국자동차환경협회(1661-9408)로 문의해 발급받을 수 있습니다.</span><a class="a-more" href="charging-card.html?tab=apply" data-i18n="hm.faq.a4.more">회원카드 발급 보기 →</a></div></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 10. 하단 CTA 배너 ===== -->
+  <section class="m02-cta" data-i18n-aria="hm.cta.aria" aria-label="주요 서비스 바로가기">
+    <div class="main03-container">
+      <div class="m02-cta-grid">
+        <a class="m02-cta-banner blue" href="charging-install-slow.html">
+          <h3 data-i18n="hm.cta.1.t">공용 완속충전시설 직접신청</h3>
+          <p data-i18n="hm.cta.bodyshared">공동주택·사업자, 대규모 주차장 등의 소유자 및 운영자시라면 전기차 공용 완속충전시설 설치를 신청할 수 있습니다.</p>
+          <span class="m02-cta-go" data-i18n="hm.cta.1.go">신청하기 →</span>
+          <span class="m02-cta-illust">🚚</span>
+        </a>
+        <a class="m02-cta-banner green" href="charging-find.html?tab=map">
+          <h3 data-i18n="hm.cta.2.t">전기차 충전소 모바일 조회 서비스</h3>
+          <p data-i18n="hm.cta.bodyshared">공동주택·사업자, 대규모 주차장 등의 소유자 및 운영자시라면 전기차 공용 완속충전시설 설치를 신청할 수 있습니다.</p>
+          <span class="m02-cta-qr" style="position:absolute;right:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <img id="ctaMapQr" src="" alt="통합지도(전기+수소) 모바일 페이지 QR 코드" width="120" height="120"
+                 style="display:block;width:120px;height:120px;background:#fff;border-radius:12px;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12);">
+            <span class="m02-cta-qr-cap" style="display:block;margin-top:8px;font-size:12.5px;font-weight:800;color:#0f5132;letter-spacing:-0.01em;">QR 스캔 → 통합지도</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <!-- ============ 상세 보조금 계산기 모달 ============ -->
+  <div class="detail-calc-modal" id="detailCalcModal" hidden aria-hidden="true" aria-labelledby="detailCalcTitle">
+    <div class="dcm-backdrop" data-dcm-close></div>
+    <div class="dcm-dialog" role="dialog">
+      <header class="dcm-head">
+        <h3 id="detailCalcTitle" data-i18n="home.dcm.title">상세 보조금 계산기</h3>
+        <button type="button" class="dcm-close" data-dcm-close data-i18n-aria="home.dcm.close.aria" aria-label="닫기">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </header>
+      <form class="dcm-body" id="detailCalcForm" autocomplete="off">
+        <div class="dcm-grid">
+          <div class="dcm-field">
+            <label data-i18n="home.dcm.lbl.type">차량 구분</label>
+            <select id="dcmVehicle">
+              <option value="passenger" data-i18n="home.dcm.opt.passenger">전기 승용차</option>
+              <option value="van" data-i18n="home.dcm.opt.van">전기 승합차</option>
+              <option value="truck" data-i18n="home.dcm.opt.truck">전기 화물차</option>
+              <option value="motorcycle" data-i18n="home.dcm.opt.motorcycle">전기 이륜차</option>
+              <option value="h2" data-i18n="home.dcm.opt.h2">수소 승용차</option>
+            </select>
+          </div>
+          <div class="dcm-field">
+            <label data-i18n="home.dcm.lbl.region">거주 지역</label>
+            <select id="dcmRegion">
+              <option value="seoul" data-i18n="subsidy.region.sido.seoul">서울특별시</option>
+              <option value="busan" data-i18n="subsidy.region.sido.busan">부산광역시</option>
+              <option value="daegu" data-i18n="subsidy.region.sido.daegu">대구광역시</option>
+              <option value="incheon" data-i18n="subsidy.region.sido.incheon">인천광역시</option>
+              <option value="gwangju" data-i18n="subsidy.region.sido.gwangju">광주광역시</option>
+              <option value="daejeon" data-i18n="subsidy.region.sido.daejeon">대전광역시</option>
+              <option value="ulsan" data-i18n="subsidy.region.sido.ulsan">울산광역시</option>
+              <option value="sejong" data-i18n="subsidy.region.sido.sejong">세종특별자치시</option>
+              <option value="gyeonggi" data-i18n="subsidy.region.sido.gyeonggi">경기도</option>
+              <option value="gangwon" data-i18n="subsidy.region.sido.gangwon">강원특별자치도</option>
+              <option value="chungbuk" data-i18n="subsidy.region.sido.chungbuk">충청북도</option>
+              <option value="chungnam" data-i18n="subsidy.region.sido.chungnam">충청남도</option>
+              <option value="jeonbuk" data-i18n="subsidy.region.sido.jeonbuk">전북특별자치도</option>
+              <option value="jeonnam" data-i18n="subsidy.region.sido.jeonnam">전라남도</option>
+              <option value="gyeongbuk" data-i18n="subsidy.region.sido.gyeongbuk">경상북도</option>
+              <option value="gyeongnam" data-i18n="subsidy.region.sido.gyeongnam">경상남도</option>
+              <option value="jeju" data-i18n="subsidy.region.sido.jeju">제주특별자치도</option>
+            </select>
+          </div>
+          <div class="dcm-field">
+            <label data-i18n="home.dcm.lbl.model">차종 선택</label>
+            <select id="dcmModel">
+              <option value="ioniq6" data-i18n="home.dcm.opt.ioniq6">현대 아이오닉 6</option>
+              <option value="ioniq5" data-i18n="home.dcm.opt.ioniq5">현대 아이오닉 5</option>
+              <option value="ev6" data-i18n="home.dcm.opt.ev6">기아 EV6</option>
+              <option value="ev9" data-i18n="home.dcm.opt.ev9">기아 EV9</option>
+              <option value="kona" data-i18n="home.dcm.opt.kona">현대 코나 EV</option>
+              <option value="niroev" data-i18n="home.dcm.opt.niroev">기아 니로 EV</option>
+              <option value="model3" data-i18n="home.dcm.opt.model3">테슬라 모델 3</option>
+              <option value="modely" data-i18n="home.dcm.opt.modely">테슬라 모델 Y</option>
+              <option value="nexo" data-i18n="home.dcm.opt.nexo">현대 넥쏘 (수소)</option>
+            </select>
+          </div>
+          <div class="dcm-field">
+            <label data-i18n="home.dcm.lbl.price">차량 가격 (만원)</label>
+            <input id="dcmPrice" type="number" value="5200" min="1000" max="15000" step="100">
+          </div>
+        </div>
+        <button type="submit" class="dcm-calc-btn" data-i18n="home.dcm.btn.calc">보조금 계산하기</button>
+      </form>
+
+      <div class="dcm-result" id="detailCalcResult" hidden>
+        <div class="dcm-total">
+          <span class="dcm-total-label" data-i18n="home.dcm.total.label">총 예상 보조금</span>
+          <span class="dcm-total-value" id="dcmTotalVal" data-i18n="home.dcm.total.val">900만원</span>
+        </div>
+        <div class="dcm-breakdown">
+          <div class="dcm-cell"><span class="k" data-i18n="home.dcm.gov.label">국고 보조금</span><b id="dcmGovVal" data-i18n="home.dcm.gov.val">450만원</b></div>
+          <div class="dcm-cell plus">+</div>
+          <div class="dcm-cell"><span class="k" data-i18n="home.dcm.local.label">지방비 보조금</span><b id="dcmLocalVal" data-i18n="home.dcm.local.val">350만원</b></div>
+          <div class="dcm-cell plus">+</div>
+          <div class="dcm-cell"><span class="k" data-i18n="home.dcm.bonus.label">추가 인센티브</span><b id="dcmBonusVal" data-i18n="home.dcm.bonus.val">100만원</b></div>
+        </div>
+        <p class="dcm-note" data-i18n="home.dcm.note">※ 위 결과는 참고용이며, 실제 보조금은 지자체별 예산 현황, 차량 에너지 효율 등급에 따라 달라질 수 있습니다. 정확한 금액은 관할 지자체에 문의하세요.</p>
+      </div>
+    </div>
+  </div>
+
+<div id="footer-slot"></div>
+
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-home.js?v=20260608"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/home-v2.js?v=20260608"></script>
+<script src="js/home-main02.js?v=20260625t9"></script>
+<script src="js/persona-cards.js?v=20260630a"></script>
+<script src="js/fee-compare.js?v=20260613"></script>
+<script src="js/news-data.js?v=20260613"></script>
+<script src="js/home-news.js?v=20260613"></script>
+<script src="js/subsidy-calc.js?v=20260626c"></script>
+<script src="js/ai-helpdesk-v2.js?v=20260609"></script>
+
+<script>
+/* [요청 반영] 메인페이지 진입 시 AI 헬프데스크 영역이 바로 보이도록 초기 스크롤 위치를 조정합니다. */
+(function () {
+  if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual';
+  }
+
+  function scrollToAiHelpdesk() {
+    var target = document.getElementById('aiSectionAnchor');
+    if (!target) return;
+
+    // 다른 앵커로 직접 진입한 경우에는 기존 앵커 이동을 방해하지 않음
+    if (window.location.hash && window.location.hash !== '#aiSectionAnchor') return;
+
+    var header = document.querySelector('.site-header');
+    var headerHeight = header ? header.getBoundingClientRect().height : 0;
+    var top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({ top: Math.max(0, Math.round(top)), left: 0, behavior: 'auto' });
+  }
+
+  window.addEventListener('load', function () {
+    requestAnimationFrame(function () {
+      scrollToAiHelpdesk();
+      // 헤더/팝업/언어팩 렌더 후 레이아웃 보정용 1회 재실행
+      window.setTimeout(scrollToAiHelpdesk, 80);
+    });
+  });
+})();
+</script>
+
+<script>
+/* [요청 반영] 하단 CTA 배너 QR 코드 — 스캔 시 통합지도(전기+수소) 페이지로 이동.
+   배포 환경의 절대 URL을 인코딩하여 실제 스캔 가능한 QR을 생성합니다. */
+(function () {
+  var qr = document.getElementById('ctaMapQr');
+  if (!qr) return;
+  var target = new URL('charging-find.html?tab=map', location.href).href;
+  qr.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=' + encodeURIComponent(target);
+})();
+</script>
+
+
+<!-- ===== Index 인트로 팝업 (ev.or.kr 정합 · 슬라이더) ===== -->
+<div class="ix-pop-wrap" id="ixPopupWrap">
+  <div class="ix-pop-dim" id="ixPopupDim"></div>
+  <button class="ix-pop-arrow ix-pop-prev" id="ixPopupPrev" type="button" aria-label="이전 배너">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="ix-pop-arrow ix-pop-next" id="ixPopupNext" type="button" aria-label="다음 배너">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="ix-pop-card" role="dialog" aria-label="ev.or.kr 캠페인·정책 안내 슬라이더">
+    <div class="ix-pop-track" id="ixPopupTrack"></div>
+    <div class="ix-pop-counter" aria-live="polite">
+      <span id="ixPopupCurr">1</span><span class="ix-pop-counter-sep" aria-hidden="true">/</span><span id="ixPopupTotal">12</span>
+    </div>
+  </div>
+  <div class="ix-pop-indicators" id="ixPopupIndicators" role="tablist" aria-label="배너 인디케이터"></div>
+  <div class="ix-pop-foot">
+    <button type="button" class="ix-pop-btn ix-pop-btn-count" id="ixPopupPause" aria-label="자동재생 토글">
+      <svg class="ix-pop-icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+      <svg class="ix-pop-icon-play" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" hidden aria-hidden="true"><polygon points="7 5 19 12 7 19 7 5"/></svg>
+      <span class="ix-pop-pause-label">정지</span>
+    </button>
+    <button type="button" class="ix-pop-btn ix-pop-btn-default" data-action="close">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <span>닫기</span>
+    </button>
+    <button type="button" class="ix-pop-btn ix-pop-btn-default" data-action="hide-today">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <span>오늘하루 열지않기</span>
+    </button>
+  </div>
+</div>
+
+<style>
+.ix-pop-wrap { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.ix-pop-wrap[hidden] { display: none; }
+.ix-pop-dim { position: absolute; inset: 0; background: rgba(0,0,0,.8); animation: ix-pop-dim-in 240ms ease-out; }
+@keyframes ix-pop-dim-in { from { opacity: 0; } to { opacity: 1; } }
+.ix-pop-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); color: #fff; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; transition: all 160ms ease; backdrop-filter: blur(4px); }
+.ix-pop-arrow:hover { background: rgba(255,255,255,.28); transform: translateY(-50%) scale(1.06); }
+.ix-pop-prev { left: max(24px, calc(50% - 520px)); }
+.ix-pop-next { right: max(24px, calc(50% - 520px)); }
+.ix-pop-card { position: relative; width: 880px; max-width: calc(100vw - 48px); background: #1f2a47; border-radius: 24px; box-shadow: 0 30px 80px rgba(0,0,0,.40); animation: ix-pop-card-in 360ms cubic-bezier(.16,1,.3,1); overflow: hidden; aspect-ratio: 880 / 460; }
+@keyframes ix-pop-card-in { from { opacity: 0; transform: scale(.94) translateY(12px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.ix-pop-track { position: relative; display: flex; width: 100%; height: 100%; transition: transform 480ms cubic-bezier(.22,1,.36,1); will-change: transform; }
+.ix-pop-slide { flex: 0 0 100%; width: 100%; height: 100%; position: relative; background: #1f2a47; }
+.ix-pop-slide img { width: 100%; height: 100%; display: block; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+.ix-pop-counter { position: absolute; top: 16px; right: 16px; z-index: 4; display: inline-flex; align-items: center; gap: 2px; padding: 6px 14px; background: rgba(15,23,42,.55); color: #fff; border-radius: 999px; font-size: 13px; font-weight: 700; backdrop-filter: blur(6px); }
+.ix-pop-counter-sep { opacity: .5; margin: 0 2px; }
+.ix-pop-counter > span:last-child { font-weight: 500; opacity: .78; }
+.ix-pop-wrap .ix-pop-indicators { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 8px 14px; background: rgba(255,255,255,.10); border-radius: 999px; backdrop-filter: blur(4px); line-height: 0; font-size: 0; }
+.ix-pop-wrap .ix-pop-indicators .ix-pop-dot { width: 9px !important; height: 9px !important; padding: 0 !important; margin: 0; border: 0 !important; border-radius: 50%; background: rgba(255,255,255,.45); box-sizing: border-box; flex: 0 0 auto; cursor: pointer; transition: width 280ms cubic-bezier(.22,1,.36,1), background-color 200ms ease; }
+.ix-pop-wrap .ix-pop-indicators .ix-pop-dot.active { width: 28px !important; height: 9px !important; background: #fff; border-radius: 999px; }
+.ix-pop-foot { position: relative; z-index: 2; display: flex; gap: 12px; margin-top: 16px; }
+.ix-pop-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 22px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Pretendard','Noto Sans KR',sans-serif; transition: filter 160ms ease, transform 160ms ease; }
+.ix-pop-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.ix-pop-btn-count { background: #00A889; color: #fff; min-width: 100px; justify-content: center; }
+.ix-pop-btn-default { background: #E5E7EE; color: #111; }
+@media (max-width: 960px) { .ix-pop-prev { left: 16px; } .ix-pop-next { right: 16px; } .ix-pop-arrow { width: 44px; height: 44px; } }
+@media (max-width: 720px) { .ix-pop-card { border-radius: 18px; aspect-ratio: 16 / 11; } .ix-pop-arrow { display: none; } .ix-pop-foot { flex-wrap: wrap; justify-content: center; } }
+</style>
+
+<script>
+(function () {
+  var wrap = document.getElementById('ixPopupWrap');
+  if (!wrap) return;
+  var SLIDES = [
+    { src: 'images/popup/banner-01.png', alt: 'ev.or.kr 메인 배너 1' },
+    { src: 'images/popup/banner-02.png', alt: 'ev.or.kr 메인 배너 2' },
+    { src: 'images/popup/banner-03.png', alt: 'ev.or.kr 메인 배너 3' },
+    { src: 'images/popup/banner-04.png', alt: 'ev.or.kr 메인 배너 4' },
+    { src: 'images/popup/banner-06.png', alt: 'ev.or.kr 메인 배너 6' },
+    { src: 'images/popup/banner-07.png', alt: 'ev.or.kr 메인 배너 7' },
+    { src: 'images/popup/banner-08.png', alt: 'ev.or.kr 메인 배너 8' },
+    { src: 'images/popup/banner-09.png', alt: 'ev.or.kr 메인 배너 9' },
+    { src: 'images/popup/banner-10.png', alt: 'ev.or.kr 메인 배너 10' },
+    { src: 'images/popup/banner-11.png', alt: 'ev.or.kr 메인 배너 11' },
+    { src: 'images/popup/banner-12.png', alt: 'ev.or.kr 메인 배너 12' },
+    { src: 'images/popup/banner-13.png', alt: 'ev.or.kr 메인 배너 13' }
+  ];
+  var track = document.getElementById('ixPopupTrack');
+  var indicators = document.getElementById('ixPopupIndicators');
+  var prevBtn = document.getElementById('ixPopupPrev');
+  var nextBtn = document.getElementById('ixPopupNext');
+  var pauseBtn = document.getElementById('ixPopupPause');
+  var pauseLabel = pauseBtn ? pauseBtn.querySelector('.ix-pop-pause-label') : null;
+  var iconPause = pauseBtn ? pauseBtn.querySelector('.ix-pop-icon-pause') : null;
+  var iconPlay = pauseBtn ? pauseBtn.querySelector('.ix-pop-icon-play') : null;
+  var currEl = document.getElementById('ixPopupCurr');
+  var totalEl = document.getElementById('ixPopupTotal');
+  var card = wrap.querySelector('.ix-pop-card');
+  var dim = document.getElementById('ixPopupDim');
+  var current = 0, total = SLIDES.length, auto = null, INTERVAL = 3500;
+  function build() {
+    track.innerHTML = SLIDES.map(function (s, i) {
+      return '<div class="ix-pop-slide" role="group" aria-label="' + (i + 1) + ' / ' + total + '"><img src="' + s.src + '" alt="' + s.alt + '" loading="' + (i === 0 ? 'eager' : 'lazy') + '"></div>';
+    }).join('');
+    indicators.innerHTML = SLIDES.map(function (_, i) {
+      return '<button class="ix-pop-dot" type="button" role="tab" aria-label="배너 ' + (i + 1) + '번으로 이동" data-idx="' + i + '"></button>';
+    }).join('');
+    if (totalEl) totalEl.textContent = total;
+    update();
+  }
+  function update() {
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    if (currEl) currEl.textContent = current + 1;
+    Array.prototype.forEach.call(indicators.children, function (d, i) { d.classList.toggle('active', i === current); });
+  }
+  function go(idx) { current = (idx + total) % total; update(); restartAuto(); }
+  function next() { go(current + 1); }
+  function prev() { go(current - 1); }
+  function startAuto() { stopAuto(); auto = setInterval(next, INTERVAL); }
+  function stopAuto() { if (auto) { clearInterval(auto); auto = null; } }
+  function restartAuto() { if (pauseBtn && pauseBtn.dataset.state !== 'paused') startAuto(); }
+  function togglePause() {
+    if (!pauseBtn) return;
+    if (pauseBtn.dataset.state === 'paused') { pauseBtn.dataset.state = 'playing'; if (iconPause) iconPause.hidden = false; if (iconPlay) iconPlay.hidden = true; if (pauseLabel) pauseLabel.textContent = '정지'; startAuto(); }
+    else { pauseBtn.dataset.state = 'paused'; if (iconPause) iconPause.hidden = true; if (iconPlay) iconPlay.hidden = false; if (pauseLabel) pauseLabel.textContent = '재생'; stopAuto(); }
+  }
+  function openPopup() { wrap.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; if (pauseBtn) pauseBtn.dataset.state = 'playing'; startAuto(); }
+  function closePopup() { wrap.setAttribute('hidden', ''); document.body.style.overflow = ''; stopAuto(); }
+  var IX_HIDE_KEY = 'ixPopupHideSession';
+  // [프로토타입] 숨김을 세션 한정(sessionStorage)으로 — 새 창/새로고침 첫 진입 시 항상 노출
+  function isHiddenToday() { try { return sessionStorage.getItem(IX_HIDE_KEY) === '1'; } catch (e) { return false; } }
+  function setHideToday() { try { sessionStorage.setItem(IX_HIDE_KEY, '1'); } catch (e) {} }
+  function hideToday() { setHideToday(); closePopup(); }
+  build();
+  if (isHiddenToday()) { wrap.setAttribute('hidden', ''); }
+  else { document.body.style.overflow = 'hidden'; startAuto(); }
+  if (prevBtn) prevBtn.addEventListener('click', prev);
+  if (nextBtn) nextBtn.addEventListener('click', next);
+  if (pauseBtn) pauseBtn.addEventListener('click', togglePause);
+  indicators.addEventListener('click', function (e) { var b = e.target.closest('.ix-pop-dot'); if (b) go(parseInt(b.dataset.idx, 10)); });
+  card.addEventListener('mouseenter', stopAuto);
+  card.addEventListener('mouseleave', restartAuto);
+  wrap.querySelectorAll('[data-action]').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.action === 'hide-today') hideToday(); else closePopup(); }); });
+  if (dim) dim.addEventListener('click', closePopup);
+  document.addEventListener('keydown', function (e) { if (wrap.hasAttribute('hidden')) return; if (e.key === 'Escape') closePopup(); else if (e.key === 'ArrowLeft') prev(); else if (e.key === 'ArrowRight') next(); });
+  window.IndexPopup = { open: openPopup, close: closePopup };
+  document.addEventListener('click', function (e) { var b = e.target.closest('[data-util-popup]'); if (b) { e.preventDefault(); openPopup(); } });
+})();
+</script>
+
+</body>
+</html>

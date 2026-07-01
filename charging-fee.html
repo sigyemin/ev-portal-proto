@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전기차 충전요금 안내 | 충전소·요금 정보 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/charging.css">
+<style>
+  /* ────── 전기차 충전요금 페이지 전용 스타일 ────── */
+  /* TOU 컨트롤 셀렉트 — 폰트/사이즈 업 */
+  #tou-capacity{
+    -webkit-appearance:none; appearance:none;
+    height:42px;
+    padding:0 36px 0 16px;
+    border:1px solid var(--border-light);
+    border-radius:10px;
+    font-size:15px;
+    font-weight:var(--fw-medium);
+    color:var(--text-primary);
+    background:#fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 12px center;
+    cursor:pointer;
+    transition:border-color var(--t-fast);
+  }
+  #tou-capacity:hover{border-color:var(--color-gray-400);}
+  #tou-capacity:focus{outline:2px solid var(--color-primary-500); outline-offset:2px;}
+
+  /* ────────── 컨트롤 탭 통일 (TOU·매트릭스·로밍) ──────────
+     모든 .tab 버튼이 사이트 표준 --fs-sm(15px) + 일관된 패딩·라디우스 */
+  #tou-season-tabs .tab,
+  #tou-day-tabs .tab,
+  #matrix-type-tabs .tab,
+  #matrix-mem-tabs .tab,
+  #roaming-tier-tabs .tab{
+    font-size: var(--fs-sm) !important;       /* 14 → 15 (--fs-sm) */
+    font-weight: var(--fw-semibold);          /* medium → semibold */
+    padding: 10px 20px !important;            /* 9/18 → 10/20 */
+    border-radius: var(--radius-md);
+    letter-spacing: -0.01em;
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+  #roaming-tier-tabs .tab { padding: 9px 18px !important; }    /* 한 단계 작게 */
+
+  /* 탭 그룹 컨테이너 — 회색 배경의 pill 그룹 */
+  #matrix-type-tabs,
+  #matrix-mem-tabs,
+  #roaming-tier-tabs,
+  #tou-season-tabs,
+  #tou-day-tabs {
+    background: var(--color-gray-50);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    gap: 2px !important;
+  }
+  /* 그룹 사이 시각적 분리 (matrix 영역) */
+  #matrix-type-tabs + #matrix-mem-tabs::before {
+    content: ''; width: 1px; height: 20px;
+    background: var(--border-light);
+    margin-right: 8px;
+    align-self: center;
+  }
+
+  /* TOU 요약 카드 */
+  .tou-summary-card{
+    background:#fff;
+    border:1px solid var(--color-gray-200);
+    border-radius:12px;
+    padding:14px 22px;
+    min-width:160px;
+    transition:transform var(--t-fast), box-shadow var(--t-fast);
+  }
+  .tou-summary-card:hover{transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+  .tou-summary-card .ts-label{
+    font-size:13px;
+    color:var(--color-gray-500);
+    font-weight:var(--fw-medium);
+    margin-bottom:6px;
+    letter-spacing:-0.005em;
+  }
+  .tou-summary-card .ts-value{
+    font-size:22px;
+    font-weight:var(--fw-bold);
+    letter-spacing:-0.025em;
+    line-height:1.15;
+    font-feature-settings:"tnum";
+  }
+
+  /* TOU 범례 */
+  .tou-legend .lg-item{font-size:14px !important; color:var(--text-secondary);}
+  .tou-axis{font-size:12px !important; color:var(--color-gray-600);}
+
+  /* 매트릭스 카운터 — 일관된 칩 스타일 */
+  #matrix-count {
+    font-size: var(--fs-sm) !important;    /* 13.5 → 15 */
+    color: var(--color-gray-700) !important;
+    font-weight: var(--fw-semibold);
+    background: var(--color-gray-50);
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    letter-spacing: -0.005em;
+    margin-left: auto;                       /* 우측 정렬로 시각 분리 */
+  }
+  /* 매트릭스 영역 컨트롤 행 정렬 보강 */
+  #matrix-type-tabs,
+  #matrix-mem-tabs {
+    flex-shrink: 0;
+  }
+  /* 매트릭스 섹션 타이틀의 단위 라벨 */
+  #section-matrix > span,
+  #section-roaming > span {
+    font-size: var(--fs-sm) !important;       /* 12 → 15 */
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-gray-500) !important;
+    margin-left: 8px !important;
+  }
+
+  /* 주석/안내 텍스트 */
+  .tou-chart-wrap > div:last-child{font-size:13px !important; line-height:1.7 !important;}
+  .charge-fine-note{font-size:13px; color:var(--color-gray-500); line-height:1.7;}
+  /* 매트릭스/로밍 sticky 보장 */
+  #matrix-wrap .data-table,
+  #roaming-wrap .data-table{overflow:visible !important;}
+  #matrix-wrap{overflow-x:auto;overflow-y:auto;max-height:520px;border-radius:14px;border:1px solid var(--border-light);background:#fff;}
+  #roaming-wrap{overflow-x:auto;overflow-y:auto;max-height:460px;border-radius:14px;border:1px solid var(--border-light);background:#fff;}
+  /* 시뮬레이터 (투명성지수 호환) */
+  .sim-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:start;}
+  @media(max-width:880px){.sim-grid{grid-template-columns:1fr;}}
+  .sim-result-wrap{display:flex;flex-direction:column;}
+  .sim-result-lbl{display:block;font-size:11.5px;color:#6b7280;margin:4px 0 3px;font-weight:600;}
+  .sim-inputs label{display:block;font-size:11.5px;color:#6b7280;margin:4px 0 3px;}
+  .sim-inputs select,.sim-inputs input[type=range]{width:100%;padding:6px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:12.5px;font-family:inherit;background:#fff;margin-bottom:4px;}
+  .sim-inputs input[type=range]{padding:0;height:28px;}
+  .sim-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .sim-result-mini{background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;justify-content:center;border:1px solid #bae6fd;}
+  .sim-result-mini .big{font-size:38px;font-weight:800;color:#0d57b0;margin:0 0 8px;font-feature-settings:"tnum";line-height:1.1;}
+  .sim-result-mini .name{font-size:13px;color:#1e293b;font-weight:600;}
+  .sim-result-mini .sub{font-size:11.5px;color:#475569;margin-top:6px;line-height:1.5;}
+  /* ════════════════════════════════════════════════════════════════
+     사업자 요금 상세 모달 v3 — 와이드 + 모던 그레이 톤 (Slate 시스템)
+     - 사이즈: 960px (와이드 모달 트렌드)
+     - 헤더: 다크 슬레이트 그라데이션 + 액센트 점
+     - 카드/타이포: 시각적 호흡 강화 (--space-5/6/8 활용)
+     - 톤: 그레이 베이스 + 컬러 액센트 (브랜드 색상 최소 사용)
+     ════════════════════════════════════════════════════════════════ */
+  #op-modal-overlay{
+    display:none; position:fixed; inset:0;
+    background:rgba(15,23,42,0.6);
+    backdrop-filter:blur(6px);
+    z-index:1000;
+    align-items:center; justify-content:center;
+    padding:var(--space-5);
+  }
+  #op-modal-overlay.open{display:flex;}
+  #op-modal{
+    background:#fff;
+    border-radius:var(--radius-2xl);
+    width:min(960px, 100%);
+    max-height:90vh;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    box-shadow:0 32px 80px rgba(15,23,42,0.20), 0 12px 32px rgba(15,23,42,0.10);
+    animation:opModalIn .35s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes opModalIn{
+    from{transform:translateY(-16px) scale(0.97);opacity:0;}
+    to{transform:translateY(0) scale(1);opacity:1;}
+  }
+
+  /* ── 헤더: 모던 다크 슬레이트 (디자인시스템 토큰 정합) ── */
+  #op-modal-hdr{
+    padding:var(--space-8) var(--space-10);
+    background:linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    color:#fff;
+    display:flex; align-items:center; gap:var(--space-5);
+    position:relative;
+    overflow:hidden;
+  }
+  #op-modal-hdr::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 88% 30%, rgba(26,173,108,0.12), transparent 45%),
+      radial-gradient(circle at 92% 90%, rgba(44,123,229,0.10), transparent 45%);
+    pointer-events:none;
+  }
+  #op-modal-hdr > *{position:relative; z-index:1;}
+  #op-modal-hdr .op-meta{flex:1; min-width:0;}
+  #op-modal-hdr .op-name{
+    font-size:var(--fs-xl);   /* 26px = --fs-xl */
+    font-weight:var(--fw-bold);
+    letter-spacing:-0.03em;
+    line-height:1.25;
+    margin:0;
+    color:#fff;
+    display:flex; align-items:center; gap:var(--space-3);
+  }
+  #op-modal-hdr .op-name::before{
+    content:'';
+    width:6px; height:26px;
+    background:linear-gradient(180deg, #1AAD6C, #2C7BE5);
+    border-radius:var(--radius-xs);
+    flex-shrink:0;
+  }
+  #op-modal-hdr .op-bid{
+    font-size:var(--fs-sm);   /* 13 → 15px (--fs-sm) */
+    color:rgba(255,255,255,0.72);
+    margin-top:var(--space-2);
+    font-weight:var(--fw-medium);
+    letter-spacing:0.01em;
+    padding-left:18px;
+  }
+  #op-modal-hdr .op-chip{
+    align-self:center;
+    font-size:var(--fs-xs);   /* 12 → 13px (--fs-xs 최소 토큰) */
+    font-weight:var(--fw-bold);
+    padding:7px 16px;
+    border-radius:var(--radius-pill);
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.22);
+    color:#fff;
+    letter-spacing:0.04em;
+    backdrop-filter:blur(8px);
+  }
+  #op-modal-close{
+    width:40px; height:40px;
+    border-radius:var(--radius-md);
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.14);
+    color:#fff;
+    display:grid; place-items:center;
+    cursor:pointer;
+    transition:background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+    flex-shrink:0;
+  }
+  #op-modal-close:hover{background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.30); transform:rotate(90deg);}
+  #op-modal-close:focus-visible{outline:2px solid rgba(255,255,255,0.6); outline-offset:2px;}
+
+  /* ── 바디: 넉넉한 호흡 ── */
+  #op-modal-body{
+    overflow-y:auto;
+    padding:var(--space-10);
+    display:flex; flex-direction:column; gap:var(--space-10);
+    background:#FAFBFC;
+  }
+  #op-modal-body::-webkit-scrollbar{width:8px;}
+  #op-modal-body::-webkit-scrollbar-thumb{background:var(--color-gray-300); border-radius:var(--radius-pill);}
+  #op-modal-body::-webkit-scrollbar-track{background:transparent;}
+
+  /* ── 섹션 타이틀: 모던 슬레이트 톤 ── */
+  .op-section-title{
+    font-size:var(--fs-sm);   /* 13 → 15px (--fs-sm) */
+    font-weight:var(--fw-bold);
+    color:var(--color-gray-700);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:var(--space-5);
+    display:flex; align-items:center; gap:var(--space-3);
+  }
+  .op-section-title::before{
+    content:'';
+    width:28px; height:3px;
+    background:linear-gradient(90deg, #1AAD6C, #2C7BE5);
+    border-radius:var(--radius-pill);
+  }
+
+  /* ── 요금 그리드: 모던 클린 카드 (굵은 라인 없음) ── */
+  .op-rate-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:var(--space-3);
+  }
+  .op-rate-cell{
+    background:#fff;
+    border:1px solid var(--color-gray-200);
+    border-radius:var(--radius-lg);
+    padding:var(--space-6) var(--space-4);
+    text-align:center;
+    transition:transform var(--t-fast), box-shadow var(--t-fast), border-color var(--t-fast);
+  }
+  .op-rate-cell:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-md);
+    border-color:var(--color-gray-300);
+  }
+  .op-rate-cell .cap-label{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:var(--fs-sm);   /* 12.5 → 15px (--fs-sm) */
+    color:var(--color-gray-600);
+    margin-bottom:var(--space-3);
+    font-weight:var(--fw-semibold);
+    letter-spacing:-0.01em;
+  }
+  /* 모던 디테일 — 라벨 앞 7px 컬러 도트로 그룹 식별 */
+  .op-rate-cell .cap-label::before{
+    content:'';
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--accent-color, var(--color-gray-400));
+    flex-shrink:0;
+  }
+  .op-rate-cell .cap-value{
+    font-size:28px;          /* 26 → 28: 카드 라벨 키운 만큼 보정 */
+    font-weight:var(--fw-bold);
+    color:var(--color-gray-900);
+    letter-spacing:-0.03em;
+    font-feature-settings:"tnum";
+    line-height:1.1;
+  }
+  .op-rate-cell .cap-value .unit{
+    font-size:var(--fs-xs);   /* 12 → 13px (--fs-xs 최소 토큰) */
+    font-weight:var(--fw-medium);
+    color:var(--color-gray-500);
+    margin-left:4px;
+    letter-spacing:0;
+  }
+  .op-rate-cell .cap-value.null-val{
+    color:var(--color-gray-300);
+    font-size:var(--fs-md);   /* 18 → 19px (--fs-md) */
+    font-weight:var(--fw-regular);
+  }
+  /* 그룹별 액센트 — 도트 컬러로만 표현 */
+  .op-rate-cell.group-slow  { --accent-color: #0EA5E9; }
+  .op-rate-cell.group-mid   { --accent-color: #F59E0B; }
+  .op-rate-cell.group-fast  { --accent-color: #EC4899; }
+  .op-rate-cell.group-ultra { --accent-color: #8B5CF6; }
+
+  /* ── 비회원 요금 카드 ── */
+  .op-nmr-card{
+    display:flex; align-items:center; gap:var(--space-5);
+    background:linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    border:1px solid #FDE68A;
+    border-radius:var(--radius-lg);
+    padding:var(--space-6) var(--space-8);
+  }
+  .op-nmr-card .nmr-ico{
+    width:60px; height:60px;
+    border-radius:var(--radius-md);
+    background:linear-gradient(135deg, #F59E0B, #D97706);
+    color:#fff;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    box-shadow:0 6px 16px rgba(245,158,11,0.25);
+  }
+  .op-nmr-card .nmr-meta{flex:1;}
+  .op-nmr-card .nmr-label{
+    font-size:var(--fs-xs);   /* 11.5 → 13px (--fs-xs) */
+    color:#92400E;
+    font-weight:var(--fw-bold);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:var(--space-2);
+  }
+  .op-nmr-card .nmr-value{
+    font-size:32px;          /* 30 → 32 */
+    font-weight:var(--fw-bold);
+    color:#78350F;
+    letter-spacing:-0.03em;
+    line-height:1.1;
+    font-feature-settings:"tnum";
+  }
+  .op-nmr-card .nmr-value .unit{
+    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
+    font-weight:var(--fw-medium);
+    color:#92400E;
+    margin-left:4px;
+  }
+  .op-nmr-card .nmr-hint{
+    font-size:var(--fs-xs);   /* 12.5 → 13px (--fs-xs) */
+    color:#92400E;
+    margin-top:var(--space-2);
+    opacity:0.85;
+    line-height:1.5;
+  }
+  .op-nmr-empty{
+    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
+    color:var(--color-gray-500);
+    background:#fff;
+    border:1px dashed var(--color-gray-300);
+    border-radius:var(--radius-lg);
+    padding:var(--space-6);
+    text-align:center;
+    font-weight:var(--fw-medium);
+  }
+
+  /* ── 비고 박스 ── */
+  .op-note{
+    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
+    color:var(--color-gray-700);
+    background:#fff;
+    border:1px solid var(--color-gray-200);
+    border-radius:var(--radius-lg);
+    padding:var(--space-5) var(--space-6);
+    line-height:1.7;
+  }
+  .op-note strong{
+    color:var(--color-gray-900);
+    font-weight:var(--fw-semibold);
+  }
+
+  /* ── 지원·조건별 / 로밍 서브 카드 ── */
+  .op-sub-card{
+    border:1px solid var(--color-gray-200);
+    border-radius:var(--radius-lg);
+    padding:var(--space-5);
+    margin-top:var(--space-4);
+    background:#fff;
+  }
+  .op-sub-card-note{
+    font-size:var(--fs-xs);   /* 13px (--fs-xs 최소) */
+    color:var(--color-gray-500);
+    margin-top:var(--space-4);
+    padding-top:var(--space-4);
+    border-top:1px dashed var(--color-gray-200);
+    line-height:1.65;
+  }
+
+  /* ── 테이블 (계절시간제 / 로밍 파트너) ── */
+  .op-roaming-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
+  }
+  .op-roaming-table thead th{
+    background:#F8FAFC;
+    color:var(--color-gray-600);
+    font-weight:var(--fw-semibold);
+    padding:var(--space-4) var(--space-5);
+    text-align:left;
+    font-size:var(--fs-xs);   /* 12.5 → 13px (--fs-xs) */
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--color-gray-200);
+  }
+  .op-roaming-table tbody td{
+    padding:var(--space-4) var(--space-5);
+    border-bottom:1px solid #F1F5F9;
+    color:var(--color-gray-800);
+    font-feature-settings:"tnum";
+    font-weight:var(--fw-medium);
+  }
+  .op-roaming-table tbody tr:last-child td{border-bottom:none;}
+  .op-roaming-table tbody tr{transition:background var(--t-fast);}
+  .op-roaming-table tbody tr:hover{background:#F8FAFC;}
+  .op-roaming-table .num{text-align:right; font-variant-numeric:tabular-nums; font-weight:var(--fw-semibold);}
+
+  /* ── 푸터 ── */
+  #op-modal-foot{
+    padding:var(--space-5) var(--space-10);
+    border-top:1px solid var(--color-gray-200);
+    background:#fff;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:var(--space-3);
+  }
+  #op-modal-foot .foot-meta{
+    font-size:var(--fs-xs);   /* 12.5 → 13px (--fs-xs) */
+    color:var(--color-gray-500);
+    display:flex; align-items:center; gap:8px;
+    font-weight:var(--fw-medium);
+  }
+  #op-modal-foot .foot-meta::before{
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--color-primary-500);
+  }
+  #op-modal-foot .btn{
+    padding:11px 24px;
+    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
+  }
+
+  /* ── 전기충전소 요금 검색 (AS-IS 기능 유지) ── */
+  .ev-search-wrap {
+    background: var(--color-gray-50);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+  }
+  .ev-search-head {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5);
+  }
+  .ev-search-head h3 {
+    font-size: 19px; font-weight: var(--fw-bold);
+    color: var(--text-primary); letter-spacing: -0.025em; margin: 0;
+  }
+  .ev-search-head .ev-search-meta {
+    font-size: 13px; color: var(--color-gray-500); font-weight: var(--fw-medium);
+  }
+  .ev-search-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+    gap: var(--space-3); align-items: end;
+  }
+  .ev-search-field { display: flex; flex-direction: column; gap: 6px; }
+  .ev-search-field label {
+    font-size: 13px; font-weight: var(--fw-semibold);
+    color: var(--color-gray-700); letter-spacing: -0.005em;
+  }
+  .ev-search-field select,
+  .ev-search-field input {
+    height: 44px; padding: 0 14px;
+    border: 1px solid var(--border-light); border-radius: var(--radius-md);
+    font-size: 14.5px; background: #fff; color: var(--text-primary);
+    font-family: inherit; transition: border-color var(--t-fast);
+  }
+  .ev-search-field select:focus,
+  .ev-search-field input:focus {
+    outline: 2px solid var(--color-primary-500); outline-offset: 2px;
+    border-color: var(--color-primary-500);
+  }
+  .ev-search-field select {
+    -webkit-appearance: none; appearance: none;
+    background: #fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 12px center;
+    padding-right: 36px; cursor: pointer;
+  }
+  .ev-search-actions { display: flex; gap: var(--space-2); }
+  .ev-search-actions .btn { height: 44px; padding: 0 22px; font-size: 14.5px; white-space: nowrap; }
+
+  .ev-result-wrap {
+    margin-top: var(--space-6); background: #fff;
+    border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .ev-result-head {
+    padding: var(--space-4) var(--space-5); background: var(--color-gray-50);
+    border-bottom: 1px solid var(--border-light);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: var(--space-2);
+  }
+  .ev-result-count { font-size: 14px; color: var(--text-primary); font-weight: var(--fw-semibold); }
+  .ev-result-count strong { color: var(--color-primary-700); font-weight: var(--fw-bold); }
+  .ev-result-tools { display: flex; gap: var(--space-2); }
+  .ev-download-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; background: #fff;
+    border: 1px solid var(--border-light); border-radius: var(--radius-sm);
+    font-size: 13.5px; font-weight: var(--fw-semibold); color: var(--text-primary);
+    cursor: pointer; transition: all var(--t-fast);
+  }
+  .ev-download-btn:hover {
+    background: var(--color-primary-50); border-color: var(--color-primary-300); color: var(--color-primary-700);
+  }
+  .ev-download-btn .ext {
+    font-size: 11.5px; font-weight: var(--fw-bold);
+    padding: 1px 6px; border-radius: 3px;
+  }
+  .ev-download-btn.csv .ext { background: #DBEAFE; color: #1E40AF; }
+  .ev-download-btn.xlsx .ext { background: #DCFCE7; color: #166534; }
+
+  .ev-result-table { width: 100%; border-collapse: collapse; }
+  .ev-result-table thead th {
+    background: #fff; font-size: 13px; font-weight: var(--fw-semibold);
+    color: var(--color-gray-700); padding: 12px 14px; text-align: left;
+    border-bottom: 1px solid var(--border-light); letter-spacing: -0.005em;
+  }
+  .ev-result-table thead th.num { text-align: right; }
+  .ev-result-table tbody td {
+    padding: 14px; font-size: 14px; border-bottom: 1px solid #F1F5F9;
+    color: var(--text-primary); vertical-align: middle;
+  }
+  .ev-result-table tbody tr:last-child td { border-bottom: none; }
+  .ev-result-table tbody tr:hover { background: var(--color-gray-50); }
+  .ev-result-table tbody td.num { text-align: right; font-weight: var(--fw-semibold); font-feature-settings: "tnum"; }
+  .ev-result-table .station-name { font-weight: var(--fw-bold); color: var(--text-primary); }
+  .ev-result-table .station-addr { font-size: 12.5px; color: var(--color-gray-500); margin-top: 2px; font-weight: var(--fw-regular); }
+  /* v0.12 [37a] 출력(완속/급속/초급속) 칩 색 제거 — 일반 텍스트(검정) 통일 */
+  .ev-result-chip {
+    display: inline-block; padding: 0; border-radius: 0;
+    font-size: 13px; font-weight: var(--fw-semibold); color: var(--text-primary); background: transparent;
+  }
+  .ev-result-chip.slow,
+  .ev-result-chip.fast,
+  .ev-result-chip.ultra,
+  .ev-result-chip.mid { background: transparent; color: var(--text-primary); }
+  /* 다중선택 체크박스 드롭다운 (사업자·출력) */
+  .ms-dd { position: relative; }
+  .ms-btn { width: 100%; text-align: left; height: 42px; padding: 0 30px 0 12px; border: 1px solid var(--border-medium, #cbd5e1); border-radius: 8px; background: #fff; font-size: 14px; color: var(--text-primary); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ms-btn::after { content: ''; position: absolute; right: 13px; top: 50%; width: 7px; height: 7px; border-right: 2px solid #94a3b8; border-bottom: 2px solid #94a3b8; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+  .ms-btn:focus { outline: 2px solid var(--color-primary-300, #93c5fd); outline-offset: 1px; }
+  .ms-pop { position: absolute; z-index: 60; top: calc(100% + 4px); left: 0; min-width: 100%; max-height: 300px; overflow-y: auto; background: #fff; border: 1px solid var(--border-medium, #cbd5e1); border-radius: 10px; box-shadow: 0 10px 28px rgba(0,0,0,0.14); padding: 6px; }
+  .ms-pop[hidden] { display: none; }
+  .ms-opt { display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 13.5px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .ms-opt:hover { background: var(--color-gray-50, #f6f8fa); }
+  .ms-opt input { width: 16px; height: 16px; flex: 0 0 auto; cursor: pointer; }
+  .ms-all-opt { border-bottom: 1px solid var(--border-light, #eef2f6); margin-bottom: 4px; font-weight: 700; }
+  .ev-status-dot {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12.5px; font-weight: var(--fw-semibold);
+  }
+  .ev-status-dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+  .ev-status-dot.on::before { background: #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.5); }
+  .ev-status-dot.busy::before { background: #F59E0B; }
+  .ev-status-dot.maint::before { background: #EF4444; }
+  .ev-status-dot.on { color: #047857; }
+  .ev-status-dot.busy { color: #B45309; }
+  .ev-status-dot.maint { color: #B91C1C; }
+
+  .ev-result-pagination {
+    padding: var(--space-4); display: flex; justify-content: center;
+    gap: 4px; border-top: 1px solid var(--border-light);
+  }
+  .ev-page-btn {
+    width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #fff; border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm); font-size: 13px; font-weight: var(--fw-semibold);
+    color: var(--text-secondary); cursor: pointer; transition: all var(--t-fast);
+  }
+  .ev-page-btn:hover { border-color: var(--color-primary-300); color: var(--color-primary-700); }
+  .ev-page-btn.active {
+    background: var(--color-primary-500); color: #fff; border-color: var(--color-primary-500);
+  }
+
+  @media (max-width: 1080px) {
+    .ev-search-grid { grid-template-columns: repeat(3, 1fr); }
+    .ev-search-actions { grid-column: 1 / -1; justify-content: flex-end; }
+  }
+  @media (max-width: 640px) {
+    .ev-search-grid { grid-template-columns: 1fr; }
+    .ev-result-tools { width: 100%; flex-direction: column; align-items: stretch; }
+    .ev-download-btn { justify-content: center; }
+  }
+
+  /* ── 반응형 (디자인시스템 토큰 정합) ── */
+  @media (max-width: 960px){
+    #op-modal{width:100%; max-height:94vh;}
+    #op-modal-hdr{padding:var(--space-6) var(--space-6);}
+    #op-modal-hdr .op-name{font-size:var(--fs-lg);}   /* 22px */
+    #op-modal-body{padding:var(--space-6); gap:var(--space-8);}
+    #op-modal-foot{padding:var(--space-4) var(--space-6);}
+    .op-rate-grid{grid-template-columns:repeat(4,1fr);}
+    .op-rate-cell{padding:var(--space-5) var(--space-3);}
+    .op-rate-cell .cap-value{font-size:24px;}
+    .op-nmr-card{padding:var(--space-5);}
+    .op-nmr-card .nmr-value{font-size:var(--fs-xl);}  /* 26px */
+  }
+  @media (max-width: 640px){
+    #op-modal{border-radius:var(--radius-lg);}
+    #op-modal-overlay{padding:var(--space-3);}
+    #op-modal-hdr{padding:var(--space-5); gap:var(--space-3);}
+    #op-modal-hdr .op-name{font-size:var(--fs-md);}    /* 19px */
+    #op-modal-hdr .op-name::before{width:4px; height:20px;}
+    #op-modal-hdr .op-bid{font-size:var(--fs-xs); padding-left:14px;}  /* 13px */
+    #op-modal-body{padding:var(--space-5); gap:var(--space-6);}
+    #op-modal-foot{padding:var(--space-4) var(--space-5); flex-direction:column-reverse; align-items:stretch;}
+    #op-modal-foot .btn{width:100%;}
+    .op-rate-grid{grid-template-columns:repeat(2,1fr);}
+    .op-rate-cell .cap-value{font-size:22px;}
+    .op-nmr-card{flex-direction:column; align-items:flex-start; gap:var(--space-3);}
+    .op-nmr-card .nmr-value{font-size:26px;}
+  }
+  /* v0.12 [25] 로밍 안내 툴팁 */
+  .info-tip-wrap{position:relative;display:inline-flex;align-items:center;margin-left:8px;vertical-align:middle;}
+  .info-tip-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--color-gray-400);background:#fff;color:var(--color-gray-600);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:all var(--t-fast);}
+  .info-tip-btn:hover,.info-tip-btn[aria-expanded="true"]{border-color:var(--color-primary-500);color:var(--color-primary-700);background:var(--color-primary-50);}
+  .info-tip-btn:focus-visible{outline:2px solid var(--color-primary-500);outline-offset:2px;}
+  .info-tip{position:absolute;top:calc(100% + 8px);left:0;z-index:30;width:max-content;max-width:340px;background:#1F2937;color:#fff;font-size:13px;font-weight:500;line-height:1.6;letter-spacing:-0.01em;padding:12px 14px;border-radius:8px;box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity var(--t-fast),transform var(--t-fast),visibility var(--t-fast);pointer-events:none;white-space:normal;}
+  .info-tip::before{content:"";position:absolute;bottom:100%;left:14px;border:6px solid transparent;border-bottom-color:#1F2937;}
+  .info-tip-wrap:hover .info-tip,.info-tip-wrap:focus-within .info-tip,.info-tip.is-open{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
+  /* v0.17 내 카드 선택 — 네이티브 드롭다운(CPO 다수·모바일 접근성) + 선택칩 */
+  #roaming-card-select{display:block !important;}
+  .roam-card-dd{
+    -webkit-appearance:none; appearance:none;
+    min-width:260px; max-width:100%; height:46px;       /* 46px 터치타깃 */
+    padding:0 40px 0 16px;
+    border:1px solid var(--border-medium);
+    border-radius:10px;
+    font-size:15px; font-weight:var(--fw-semibold); color:var(--text-primary);
+    background:#fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 14px center;
+    cursor:pointer; font-family:inherit;
+  }
+  .roam-card-dd:hover{border-color:var(--color-primary-400);}
+  .roam-card-dd:focus-visible{outline:2px solid var(--color-primary-500); outline-offset:2px; border-color:var(--color-primary-500);}
+  .roam-card-tags{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px;}
+  .roam-card-tag{display:inline-flex; align-items:center; gap:6px; padding:6px 8px 6px 14px; background:var(--color-primary-50); border:1px solid var(--color-primary-200); border-radius:999px; font-size:13.5px; font-weight:600; color:var(--color-primary-700);}
+  .roam-card-tag-x{width:22px; height:22px; border:none; background:var(--color-primary-100); color:var(--color-primary-700); border-radius:50%; cursor:pointer; font-size:11px; line-height:1; display:inline-flex; align-items:center; justify-content:center; flex:none;}
+  .roam-card-tag-x:hover{background:var(--color-primary-200);}
+  .roam-card-tag-x:focus-visible{outline:2px solid var(--color-primary-500); outline-offset:1px;}
+  .roam-card-clear{padding:6px 12px; border:none; background:transparent; color:var(--color-gray-500); font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline;}
+  @media (max-width:640px){ .roam-card-dd{width:100%; min-width:0;} }
+  /* 체크박스형 멀티셀렉트 드롭다운 */
+  .roam-dd{position:relative; display:inline-block; max-width:100%;}
+  .roam-dd-btn{display:inline-flex; align-items:center; justify-content:flex-start; text-align:left;}
+  .roam-dd-panel{position:absolute; top:calc(100% + 6px); left:0; z-index:40; width:min(360px,92vw); background:#fff; border:1px solid var(--border-medium); border-radius:12px; box-shadow:var(--shadow-lg); padding:10px;}
+  .roam-dd-search input{width:100%; height:40px; border:1px solid var(--border-light); border-radius:8px; padding:0 12px; font-size:14px; font-family:inherit;}
+  .roam-dd-search input:focus-visible{outline:2px solid var(--color-primary-500); outline-offset:1px;}
+  .roam-dd-list{list-style:none; margin:8px 0; padding:0; max-height:248px; overflow-y:auto;}
+  .roam-dd-item{display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:8px; cursor:pointer; font-size:14px; color:var(--text-primary);}
+  .roam-dd-item:hover{background:var(--color-gray-50);}
+  .roam-dd-item input{width:18px; height:18px; accent-color:var(--color-primary-600); cursor:pointer; flex:none;}
+  .roam-dd-item small{color:var(--color-gray-400); font-weight:500; margin-left:4px;}
+  .roam-dd-foot{display:flex; justify-content:space-between; align-items:center; padding-top:8px; margin-top:2px; border-top:1px solid var(--border-light);}
+  .roam-dd-close{padding:7px 16px; border:1px solid var(--border-light); background:#fff; border-radius:8px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer;}
+  .roam-dd-close:hover{background:var(--color-gray-50);}
+  @media (max-width:640px){ .roam-dd, .roam-dd-btn{width:100%;} }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging.html" data-i18n="charging.crumb.parent">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="charging.fee.title">전기차 충전요금 안내</span>
+      </nav>
+      <h1 data-i18n="charging.fee.title">전기차 충전요금 안내</h1>
+      <p class="hero-lead" data-i18n-html="charging.fee.lead">사업자별·시간대별 전기차 충전요금을 <strong>매트릭스로 비교</strong>하고, 로밍 요금과 월 예상 충전비를 시뮬레이션합니다.</p>
+    </div>
+  </section>
+
+  <!-- 충전기 요금 구분 표 (출력 5밴드 기준) -->
+  <section class="section-sm" style="padding-top:0;">
+    <div class="container container-wide">
+      <div class="fee-band-card" style="border:1px solid var(--border-light);border-radius:14px;background:#fff;padding:18px 20px;margin-top:18px;">
+        <h2 style="font-size:17px;font-weight:800;margin:0 0 4px;color:var(--text-primary);" data-i18n="charging.fee.band.h2">충전기 요금 구분 (출력 5단계)</h2>
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 14px;" data-i18n="charging.fee.band.note">정부(기후에너지환경부) 공공충전 5단계 출력 기준이며, 민간 사업자는 자체 단가를 적용합니다.</p>
+        <div style="overflow-x:auto;">
+          <table class="data-table" style="min-width:520px;">
+            <thead><tr>
+              <th data-i18n="charging.fee.band.col.band">구분</th>
+              <th data-i18n="charging.fee.band.col.range">출력 범위</th>
+              <th class="num" data-i18n="charging.fee.band.col.gov">환경부 기준단가 (원/kWh, 참고)</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><strong>완속</strong></td><td>30kW 미만</td><td class="num">294.3</td></tr>
+              <tr><td><strong>중속</strong></td><td>30 ~ 50kW 미만</td><td class="num">306.0</td></tr>
+              <tr><td><strong>급속 100kW미만</strong></td><td>50 ~ 100kW 미만</td><td class="num">324.4</td></tr>
+              <tr><td><strong>급속 100kW이상</strong></td><td>100 ~ 200kW 미만</td><td class="num">347.2</td></tr>
+              <tr><td><strong>초급속</strong></td><td>200kW 이상</td><td class="num">391.9</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tab-nav" data-i18n-aria="charging.fee.aria.menu" aria-label="요금 메뉴">
+    <div class="container container-wide" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+      <div class="tabs-pill" data-tabs id="feeTabs">
+        <button class="tab active" data-tab="ev" type="button" data-i18n="charging.fee.tab.ev">전기차 충전요금</button>
+        <button class="tab" type="button" data-scroll-to="#section-matrix" data-i18n="charging.fee.tab.matrix">요금매트릭스</button>
+      </div>
+      <div style="display:inline-flex; gap:8px; align-items:center;">
+        <a href="charging-fee-simulator.html" id="simulatorBtn" class="btn btn-primary btn-sm" data-i18n-aria="charging.fee.tab.sim" aria-label="내 충전요금 시뮬레이터 페이지로 이동" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14v4"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg><span data-i18n="charging.fee.tab.sim">내 충전요금 시뮬레이터</span></a>
+        <button type="button" id="tariffBtn" class="btn btn-secondary btn-sm" data-i18n-aria="charging.fee.aria.tariff" aria-label="시간대별 충전요금 모달 열기" style="display:inline-flex; align-items:center; gap:8px; background:#fff; color:var(--color-primary-700); border:1.5px solid var(--color-primary-500);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span data-i18n="charging.fee.btn.tariff">시간대별 충전요금</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- ───────── 전기차 충전요금 ───────── -->
+      <div class="tab-content active" data-tab-content="ev">
+
+        <!-- 핵심 KPI 카드 4개 -->
+        <div class="grid grid-4 mb-6" style="gap:16px;">
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.fee.kpi.tindex.label">투명성지수 등재 사업자</div>
+            <div class="stat-value" style="font-size:24px;"><span>159</span><span class="unit" data-i18n="charging.fee.kpi.tindex.unit">개사</span></div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.tindex.note">우수 19 · 보통 109 · 개선필요 31</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.fee.kpi.total.label">전국 충전기 합계</div>
+            <div class="stat-value" style="font-size:24px;"><span>596,368</span><span class="unit" data-i18n="charging.fee.kpi.total.unit">기</span></div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.total.note">tindex/data_v3.json 2026-04 기준</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.fee.kpi.public.label">기후에너지환경부 공공 급속</div>
+            <div class="stat-value" style="font-size:24px;"><span>324.4</span><span class="unit" data-i18n="charging.fee.kpi.public.unit">원/kWh</span></div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.public.note">50kW 미만 · 100kW이상 347.2원</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.fee.kpi.private.label">민간 급속 평균</div>
+            <div class="stat-value" style="font-size:24px;"><span>355</span><span class="unit" data-i18n="charging.fee.kpi.public.unit">원/kWh</span></div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.private.note">투명성지수 등재 9개사 fast_m 평균</div>
+          </div>
+        </div>
+
+        <!-- ─── 전기충전소 요금 검색 (AS-IS 기능 유지) ─── -->
+        <section class="ev-search-wrap" aria-labelledby="ev-search-title">
+          <div class="ev-search-head">
+            <h3 id="ev-search-title" data-i18n="charging.fee.search.title">전기충전소 요금 검색</h3>
+            <span class="ev-search-meta" data-i18n="charging.fee.search.meta">전국 596,368기 · 투명성지수 갱신 5분 주기 · 22개 사업자 등재</span>
+          </div>
+          <form class="ev-search-grid" id="evSearchForm" autocomplete="off">
+            <div class="ev-search-field">
+              <label for="evSido" data-i18n="charging.fee.search.sido">시·도</label>
+              <select id="evSido" data-i18n-aria="charging.fee.aria.sido" aria-label="시도 선택">
+                <option value="" data-i18n="charging.fee.opt.all">전체</option>
+                <option value="서울" data-i18n="subsidy.region.sido.seoul">서울특별시</option>
+                <option value="부산" data-i18n="subsidy.region.sido.busan">부산광역시</option>
+                <option value="대구" data-i18n="subsidy.region.sido.daegu">대구광역시</option>
+                <option value="인천" data-i18n="subsidy.region.sido.incheon">인천광역시</option>
+                <option value="광주" data-i18n="subsidy.region.sido.gwangju">광주광역시</option>
+                <option value="대전" data-i18n="subsidy.region.sido.daejeon">대전광역시</option>
+                <option value="울산" data-i18n="subsidy.region.sido.ulsan">울산광역시</option>
+                <option value="세종" data-i18n="subsidy.region.sido.sejong">세종특별자치시</option>
+                <option value="경기" data-i18n="subsidy.region.sido.gyeonggi">경기도</option>
+                <option value="강원" data-i18n="subsidy.region.sido.gangwon">강원특별자치도</option>
+                <option value="충북" data-i18n="subsidy.region.sido.chungbuk">충청북도</option>
+                <option value="충남" data-i18n="subsidy.region.sido.chungnam">충청남도</option>
+                <option value="전북" data-i18n="subsidy.region.sido.jeonbuk">전북특별자치도</option>
+                <option value="전남" data-i18n="subsidy.region.sido.jeonnam">전라남도</option>
+                <option value="경북" data-i18n="subsidy.region.sido.gyeongbuk">경상북도</option>
+                <option value="경남" data-i18n="subsidy.region.sido.gyeongnam">경상남도</option>
+                <option value="제주" data-i18n="subsidy.region.sido.jeju">제주특별자치도</option>
+              </select>
+            </div>
+            <div class="ev-search-field">
+              <label data-i18n="charging.fee.search.operator">사업자</label>
+              <div class="ms-dd" id="evOperatorMs" data-all-label="전체 사업자">
+                <button type="button" class="ms-btn" aria-haspopup="listbox" aria-expanded="false">전체 사업자</button>
+                <div class="ms-pop" hidden role="listbox" aria-multiselectable="true" aria-label="사업자 다중 선택">
+                  <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all" checked> 전체</label>
+                  <div class="ms-list">
+                    <label class="ms-opt"><input type="checkbox" value="ME"> 기후부</label>
+                    <label class="ms-opt"><input type="checkbox" value="KP"> 한전 KEPCO</label>
+                    <label class="ms-opt"><input type="checkbox" value="HE"> 한국전기차충전서비스(해피차저)</label>
+                    <label class="ms-opt"><input type="checkbox" value="EV"> 에버온</label>
+                    <label class="ms-opt"><input type="checkbox" value="PI"> GS차지비</label>
+                    <label class="ms-opt"><input type="checkbox" value="ST"> SK일렉링크</label>
+                    <label class="ms-opt"><input type="checkbox" value="CV"> 채비</label>
+                    <label class="ms-opt"><input type="checkbox" value="HM"> 휴맥스이브이</label>
+                    <label class="ms-opt"><input type="checkbox" value="LU"> 볼트업(LG U+)</label>
+                    <label class="ms-opt"><input type="checkbox" value="NT"> 나이스차저</label>
+                    <label class="ms-opt"><input type="checkbox" value="EC"> 이지차저</label>
+                    <label class="ms-opt"><input type="checkbox" value="PC"> 아이파킹</label>
+                    <label class="ms-opt"><input type="checkbox" value="SF"> 스타코프</label>
+                    <label class="ms-opt"><input type="checkbox" value="PL"> 플러그링크</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ev-search-field">
+              <label data-i18n="charging.fee.search.speed">출력</label>
+              <div class="ms-dd" id="evSpeedMs" data-all-label="전체 출력">
+                <button type="button" class="ms-btn" aria-haspopup="listbox" aria-expanded="false">전체 출력</button>
+                <div class="ms-pop" hidden role="listbox" aria-multiselectable="true" aria-label="출력 다중 선택">
+                  <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all" checked> 전체</label>
+                  <div class="ms-list">
+                    <label class="ms-opt"><input type="checkbox" value="slow"> 완속 (30kW 미만)</label>
+                    <label class="ms-opt"><input type="checkbox" value="mid"> 중속 (30~50kW)</label>
+                    <label class="ms-opt"><input type="checkbox" value="fast50"> 급속 100kW미만 (50~100kW)</label>
+                    <label class="ms-opt"><input type="checkbox" value="fast100"> 급속 100kW이상 (100~200kW)</label>
+                    <label class="ms-opt"><input type="checkbox" value="ultra"> 초급속 (200kW 이상)</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ev-search-field">
+              <label for="evMember" data-i18n="charging.fee.search.member">회원 구분</label>
+              <select id="evMember" data-i18n-aria="charging.fee.aria.member" aria-label="회원 구분 선택">
+                <option value="all" data-i18n="charging.fee.opt.all">전체</option>
+                <option value="member" data-i18n="charging.fee.opt.member">회원</option>
+                <option value="nonmember" data-i18n="charging.fee.opt.nonmember">비회원</option>
+              </select>
+            </div>
+            <div class="ev-search-field">
+              <label for="evKeyword" data-i18n="charging.fee.search.keyword">충전소명·주소</label>
+              <input type="text" id="evKeyword" placeholder="충전소명 또는 주소 키워드" data-i18n-attr="placeholder:charging.fee.search.kw.ph,aria-label:charging.fee.aria.keyword" aria-label="충전소명 또는 주소 검색어 입력">
+            </div>
+            <div class="ev-search-actions">
+              <button type="submit" class="btn btn-primary" id="evSearchBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <span data-i18n="charging.fee.search.btn">검색</span>
+              </button>
+              <button type="button" class="btn btn-ghost" id="evResetBtn" data-i18n="charging.fee.search.reset">초기화</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ─── 검색 결과 테이블 + 다운로드 ─── -->
+        <div class="ev-result-wrap" id="evResultWrap">
+          <div class="ev-result-head">
+            <span class="ev-result-count"><span data-i18n="charging.fee.result.prefix">총</span> <strong id="evResultCount">20</strong><span data-i18n="charging.fee.result.suffix">건의 충전소 요금 결과</span></span>
+            <div class="ev-result-tools">
+              <button type="button" class="ev-download-btn xlsx" data-action="download" data-action-label="전기충전소 요금 검색결과.xlsx">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span class="ext">XLSX</span>
+                <span data-i18n="charging.fee.result.xlsx">Excel 다운로드</span>
+              </button>
+              <button type="button" class="ev-download-btn csv" data-action="download" data-action-label="전기충전소 요금 검색결과.csv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span class="ext">CSV</span>
+                <span data-i18n="charging.fee.result.csv">CSV 다운로드</span>
+              </button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="ev-result-table">
+              <caption class="sr-only" data-i18n="charging.fee.search.title">전기충전소 요금 검색</caption>
+              <thead>
+                <tr>
+                  <th scope="col" style="width:64px;text-align:center;" data-i18n="charging.fee.result.col.no">번호</th>
+                  <th scope="col" data-i18n="charging.fee.result.col.station">충전소명 / 주소</th>
+                  <th scope="col" data-i18n="charging.fee.result.col.operator">사업자</th>
+                  <th scope="col" style="width:120px;" data-i18n="charging.fee.result.col.output">출력</th>
+                  <th scope="col" class="num" data-i18n="charging.fee.result.col.memrate">회원 요금</th>
+                  <th scope="col" class="num" data-i18n="charging.fee.result.col.nonmemrate">비회원 요금</th>
+                  <th scope="col" style="width:96px;text-align:center;" data-i18n="charging.fee.result.col.status">상태</th>
+                </tr>
+              </thead>
+              <tbody id="evResultTbody"></tbody>
+            </table>
+          </div>
+          <div class="ev-result-pagination" data-i18n-aria="util.pagination.aria" aria-label="페이지 이동"></div>
+        </div>
+
+        <!-- 사업자별 충전 요금 매트릭스 -->
+        <h3 id="section-matrix" class="section-h mt-8" style="scroll-margin-top:96px;"><span data-i18n="charging.fee.matrix.title">사업자별 충전 요금 매트릭스</span> <span data-i18n="charging.fee.matrix.unit">(단위: 원/kWh)</span></h3>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0 14px;">
+          <div id="matrix-type-tabs" role="group" data-i18n-aria="charging.fee.matrix.aria.type" aria-label="요금 유형" style="display:flex;">
+            <button class="tab active" data-mtype="basic" type="button" data-i18n="charging.fee.matrix.type.basic">기본요금</button>
+            <button class="tab" data-mtype="special" type="button" data-i18n="charging.fee.matrix.type.special">지원·조건별</button>
+            <button class="tab" data-mtype="tou" type="button" data-i18n="charging.fee.matrix.type.tou">계절시간제</button>
+          </div>
+          <div id="matrix-mem-tabs" role="group" data-i18n-aria="charging.fee.matrix.aria.mem" aria-label="회원 구분" style="display:flex;">
+            <button class="tab active" data-mmem="member" type="button" data-i18n="charging.fee.matrix.mem.member">회원</button>
+            <button class="tab" data-mmem="nonmember" type="button" data-i18n="charging.fee.matrix.mem.nonmember">비회원</button>
+          </div>
+          <span id="matrix-count" data-i18n="charging.fee.matrix.count">22개 사업자</span>
+          <label class="cf-fav-only-toggle" style="display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:13px;color:var(--text-secondary);font-weight:600;cursor:pointer;padding:6px 14px;border:1px solid var(--border-medium);border-radius:999px;background:#fff;transition:background var(--t-fast),border-color var(--t-fast);">
+            <input type="checkbox" id="matrixFavOnly" style="accent-color:var(--color-accent-500);cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9A2E" stroke="#FF9A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg>
+            <span data-i18n="charging.fee.matrix.favonly">즐겨찾기만 보기</span>
+          </label>
+        </div>
+        <div id="matrix-wrap"></div>
+        <div class="charge-fine-note" style="margin-top:12px;" data-i18n-html="charging.fee.matrix.note">
+          ※ 계절시간제는 한전 KEPCO 아파트 충전기에만 적용 · 완속 기준<br>
+          ※ 비회원 단일요금 미공시 사업자는 — 표시
+        </div>
+
+        <!-- 로밍 요금 -->
+        <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;"><span data-i18n="charging.fee.roaming.title">로밍 요금 (타 사업자 카드 사용 시)</span><span class="info-tip-wrap"><button type="button" class="info-tip-btn" aria-label="로밍 안내" aria-expanded="false" aria-describedby="roamingTip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><span class="info-tip" id="roamingTip" role="tooltip" data-i18n="charging.fee.roaming.alert.body">내 회원카드로 다른 사업자 충전기를 이용하는 것. 로밍 요금이 기본 요금에 추가됩니다. 기후부 통합카드는 모든 사업자 충전기 사용 가능 (로밍 수수료 없음).</span></span></h3>
+        <!-- v0.12 [26] '로밍이란?' 파란 박스 삭제(25번 툴팁으로 대체). 원본 보존(주석)
+        <div class="alert alert-info mt-3">
+          <div class="alert-icon" aria-hidden="true"></div>
+          <div class="alert-body"><strong data-i18n="charging.fee.roaming.alert.title">로밍이란?</strong><span data-i18n="charging.fee.roaming.alert.body">내 회원카드로 다른 사업자 충전기를 이용하는 것. 로밍 요금이 기본 요금에 추가됩니다. 기후부 통합카드는 모든 사업자 충전기 사용 가능 (로밍 수수료 없음).</span></div>
+        </div>
+        -->
+        <!-- v0.12 [29] 내 카드 다중 선택 (더미데이터) -->
+        <div style="margin:18px 0 10px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">내 카드 선택 <span style="font-weight:500;color:var(--color-gray-500);">(복수 선택 시 보유 카드 행만 표시)</span></div>
+          <div id="roaming-card-select" role="group" aria-label="내 카드 선택" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"></div>
+        </div>
+        <!-- v0.12 [28] 8단 속도 탭 (선택 카드의 계약 속도 합집합으로 필터) -->
+        <div style="display:flex;gap:14px;margin:6px 0 14px;align-items:center;flex-wrap:wrap;">
+          <div id="roaming-tier-tabs" role="group" aria-label="충전 속도 선택" style="display:flex;flex-wrap:wrap;"></div>
+          <span style="font-size:var(--fs-sm);color:var(--color-gray-500);font-weight:var(--fw-medium);" data-i18n="charging.fee.roaming.unit">(단위: 원/kWh)</span>
+        </div>
+        <div id="roaming-wrap"></div>
+        <!-- v0.12 [32] 카드 행별 최저/최대 요금만 강조 -->
+        <div style="margin-top:14px;font-size:13px;color:var(--color-gray-600);line-height:2;display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
+          <span style="font-weight:var(--fw-medium);">※ 예시 더미데이터 · 카드 행별 최저/최대 요금만 강조:</span>
+          <span style="background:#F0FDF4;padding:3px 10px;border-radius:6px;color:#166534;font-weight:var(--fw-semibold);font-size:12.5px;">최저요금</span>
+          <span style="background:#FEF2F2;padding:3px 10px;border-radius:6px;color:#991B1B;font-weight:var(--fw-semibold);font-size:12.5px;">최대요금</span>
+          <span style="background:#f3f4f6;padding:3px 10px;border-radius:6px;color:var(--color-gray-500);font-weight:var(--fw-semibold);font-size:12.5px;">미공시</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── 사업자 요금 상세 모달 — 사이트 디자인 시스템 정합 ── -->
+<div id="op-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="op-modal-name" aria-hidden="true">
+  <div id="op-modal">
+    <header id="op-modal-hdr">
+      <div class="op-meta">
+        <h2 class="op-name" id="op-modal-name">—</h2>
+        <div class="op-bid" id="op-modal-bid">—</div>
+      </div>
+      <span class="op-chip" id="op-modal-type">—</span>
+      <button id="op-modal-close" type="button" data-i18n-aria="charging.fee.opmodal.close.aria" aria-label="모달 닫기">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div id="op-modal-body"></div>
+    <footer id="op-modal-foot">
+      <span class="foot-meta" data-i18n="charging.fee.opmodal.source">출처: 투명성지수 FEE_TABLE 2026-04-21</span>
+      <button type="button" class="btn btn-ghost btn-sm" id="op-modal-close-2" data-i18n="charging.fee.opmodal.close">닫기</button>
+    </footer>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/favorites.js"></script>
+<script src="js/charging-fee.js?v=20260625t10"></script>
+<script>
+  // 사업자 매트릭스 — 즐겨찾기만 보기 토글
+  (function () {
+    const toggle = document.getElementById('matrixFavOnly');
+    const label  = toggle && toggle.closest('.cf-fav-only-toggle');
+    if (!toggle) return;
+    function syncLabel() {
+      if (toggle.checked) { label.style.borderColor = 'var(--color-accent-500)'; label.style.background = '#FFF7ED'; label.style.color = '#9A3412'; }
+      else { label.style.borderColor = ''; label.style.background = ''; label.style.color = ''; }
+    }
+    toggle.addEventListener('change', () => {
+      // charging-fee.js 내부 변수 직접 접근 불가 → window 이벤트로 통신
+      window.__cfMatrixFavOnly = toggle.checked;
+      syncLabel();
+      document.dispatchEvent(new CustomEvent('cf:fav-only-changed', { detail: { on: toggle.checked } }));
+    });
+    document.addEventListener('favorites:changed', () => {
+      // 다른 탭에서 즐겨찾기 변경 시 매트릭스 갱신
+      document.dispatchEvent(new CustomEvent('cf:fav-only-changed', { detail: { on: toggle.checked } }));
+    });
+  })();
+
+  // 메인페이지 충전요금 비교 카드 → ?op=<사업자명> 으로 진입 시 매트릭스에서 해당 사업자 행을 찾아 스크롤+하이라이트
+  (function () {
+    var op = new URLSearchParams(location.search).get('op');
+    if (!op) return;
+    var tries = 0;
+    var timer = setInterval(function () {
+      var wrap = document.getElementById('matrix-wrap');
+      var row = wrap && Array.prototype.find.call(wrap.querySelectorAll('tbody tr'), function (tr) {
+        return tr.textContent.indexOf(op) >= 0;
+      });
+      if (row) {
+        clearInterval(timer);
+        row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        row.style.transition = 'background-color .4s';
+        row.style.background = '#FFF7C2';
+        setTimeout(function () { row.style.background = ''; }, 2200);
+      } else if (++tries > 20) { clearInterval(timer); }
+    }, 150);
+  })();
+</script>
+<style>
+  .cf-fav-btn:hover { background:#FFF7ED !important; border-color:#FED7AA !important; transform:scale(1.05); }
+  .cf-fav-btn[aria-pressed="true"] { background:#FFF7ED !important; border-color:#FED7AA !important; }
+  .cf-fav-only-toggle:hover { border-color:var(--color-accent-500) !important; }
+</style>
+
+
+<!-- ── [ev_prototype_0510 hyun 정합] 시간대별 충전요금 모달 ── -->
+<style>
+#tariff-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9100; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+#tariff-modal-overlay.open { display:flex; }
+#tariff-modal { background:#fff; border-radius:14px; width:min(1200px,96vw); max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden; animation:tariffIn 0.22s ease-out; }
+@keyframes tariffIn { from{transform:translateY(-12px) scale(0.98);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+#tariff-modal-hdr { padding:14px 20px; background:linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700)); color:#fff; display:flex; align-items:center; gap:12px; }
+#tariff-modal-hdr .ttl { font-size:16px; font-weight:700; flex:1; }
+#tariff-modal-close { background:rgba(255,255,255,0.2); border:none; color:#fff; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+#tariff-modal-close:hover { background:rgba(255,255,255,0.35); transform:rotate(90deg); }
+#tariff-modal-body { padding:24px; overflow-y:auto; flex:1; }
+#tariff-modal-body .tou-bars { display:grid; grid-template-columns:repeat(24,1fr); gap:2px; align-items:end; height:200px; padding:8px 4px; background:#fff; border:1px solid var(--border-light,#E2E8F0); border-radius:10px; }
+#tariff-modal-body .tou-bars .bar { background:#4A90D9; border-radius:3px 3px 0 0; min-height:5px; transition:filter 160ms ease; position:relative; cursor:pointer; }
+#tariff-modal-body .tou-bars .bar:hover { filter:brightness(1.1); }
+#tariff-modal-body .tou-bars .bar:hover::after { content:attr(data-label); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#1E293B; color:#fff; font-size:11px; padding:4px 8px; border-radius:6px; white-space:nowrap; pointer-events:none; z-index:10; }
+#tariff-modal-body .tou-axis { display:grid; grid-template-columns:repeat(24,1fr); gap:2px; padding:0 4px; margin-top:4px; font-size:11px; color:var(--text-tertiary,#94A3B8); text-align:center; }
+#tariff-modal-body .tou-legend { display:flex; gap:14px; flex-wrap:wrap; padding:10px 0 0; }
+#tariff-modal-body select { -webkit-appearance:none; appearance:none; height:36px; padding:0 30px 0 12px; border:1px solid var(--border-light,#E2E8F0); border-radius:8px; font-size:13px; background:#fff; cursor:pointer; min-width:180px; font-family:inherit; }
+#tariff-modal-body .tab { padding:6px 12px; border:1px solid var(--border-light,#E2E8F0); background:#fff; border-radius:8px; font-size:12.5px; font-weight:600; color:var(--text-secondary,#475569); cursor:pointer; font-family:inherit; transition:all 160ms ease; }
+#tariff-modal-body .tab.active { background:var(--color-primary-500); color:#fff; border-color:var(--color-primary-500); }
+#tariff-modal-body .tab:disabled { opacity:0.4; cursor:not-allowed; }
+</style>
+
+<div id="tariff-modal-overlay">
+  <div id="tariff-modal" role="dialog" aria-labelledby="tariffModalTitle">
+    <div id="tariff-modal-hdr">
+      <div class="ttl" id="tariffModalTitle" data-i18n="charging.fee.tariff.title">⏰ 시간대별 충전요금</div>
+      <button id="tariff-modal-close" type="button" data-i18n-aria="charging.fee.tariff.close.aria" aria-label="닫기">✕</button>
+    </div>
+    <div id="tariff-modal-body">
+      <div class="tou-chart-wrap">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+          <select id="tou-operator" aria-label="사업자 선택">
+            <optgroup label="공공 · 계절시간제">
+              <option value="ME" selected>기후부 (공공급속) · 계시</option>
+              <option value="KP">한전 KEPCO (아파트) · 계시</option>
+              <option value="HE">한국전기차충전서비스</option>
+            </optgroup>
+            <optgroup label="민간">
+              <option value="EV">에버온 · 계시</option>
+              <option value="CV">채비</option>
+              <option value="PI">GS차지비</option>
+              <option value="ST">SK일렉링크</option>
+              <option value="HM">휴맥스이브이</option>
+              <option value="PL">플러그링크</option>
+            </optgroup>
+          </select>
+          <select id="tou-capacity" aria-label="용량 구분 선택">
+            <option value="slow">완속</option>
+            <option value="mid">중속</option>
+            <option value="fast50" selected>급속 100kW미만</option>
+            <option value="fast100">급속 100kW이상</option>
+            <option value="ultra">초급속</option>
+          </select>
+          <div style="display:flex;gap:4px;" id="tou-member-tabs" role="group" aria-label="회원 구분">
+            <button class="tab active" data-mem="member" type="button">회원</button>
+            <button class="tab" data-mem="nonmember" type="button">비회원</button>
+          </div>
+          <div style="display:flex;gap:4px;" id="tou-season-tabs">
+            <button class="tab active" data-season="spring" type="button" data-i18n="charging.fee.tariff.season.spring">봄·가을</button>
+            <button class="tab" data-season="summer" type="button" data-i18n="charging.fee.tariff.season.summer">여름</button>
+            <button class="tab" data-season="winter" type="button" data-i18n="charging.fee.tariff.season.winter">겨울</button>
+          </div>
+          <div style="display:flex;gap:4px;" id="tou-day-tabs">
+            <button class="tab" data-day="weekday" type="button" data-i18n="charging.fee.tariff.day.weekday">평일</button>
+            <button class="tab active" data-day="saturday" type="button" data-i18n="charging.fee.tariff.day.saturday">토요일</button>
+            <button class="tab" data-day="sunday" type="button" data-i18n="charging.fee.tariff.day.sunday">일·공휴일</button>
+          </div>
+        </div>
+        <div id="tou-summary" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;"></div>
+        <div class="tou-bars" id="touBars"></div>
+        <div class="tou-axis" id="touAxis"></div>
+        <div class="tou-legend" id="touLegend" style="margin-top:10px;"></div>
+        <div style="margin-top:14px;font-size:12px;color:var(--text-tertiary,#94A3B8);line-height:1.6;background:#f9fafb;padding:12px 14px;border-radius:8px;">
+          ※ 용량(완속·중속·급속100kW미만·급속100kW이상·초급속)과 회원/비회원을 선택한 뒤 시즌·요일별 24시간 단가를 확인하세요. <b style="color:#1AA46A;">초록 막대</b>가 할인 적용 구간입니다.<br>
+          ※ 할인방식: 정액(원 차감)·정률(% 차감)·고정단가(단가 대체). 같은 (용량·시즌·요일·시간대) 구간에 규칙이 겹치면 나중 규칙이 앞 규칙을 덮어씁니다.<br>
+          ※ 계절·시간 할인규칙은 충전사업자가 관리자 화면에서 입력한 값으로, 본 차트는 예시 데이터입니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // v0.17 계절시간제: 용량 5종(완속/중속/급속100미만/급속100이상/초급속) × 회원/비회원
+  //  + 할인규칙(시즌·요일·시간대·대상·할인방식[정액/정률/고정])
+  var CAP_LABEL = { slow:'완속', mid:'중속', fast50:'급속 100kW미만', fast100:'급속 100kW이상', ultra:'초급속' };
+  // rate: { member:{cap:단가}, nonmember:{cap:단가} }  (null=미공시)
+  // rules: { season, days[], caps[|'all'], target('member'|'nonmember'|'common'), mode('amount'|'percent'|'fixed'), value, hours:[시작,종료) }
+  var TOU_OPERATORS = {
+    'ME': { name:'기후부 (공공급속)', type:'공공', tou:true,
+      member:    { slow:null, mid:null, fast50:324.4, fast100:347.2, ultra:347.2 },
+      nonmember: { slow:null, mid:null, fast50:347.2, fast100:347.2, ultra:347.2 },
+      rules:[
+        { season:'spring', days:['saturday'], caps:['all'], target:'common', mode:'amount', value:48.6, hours:[11,14] },
+        { season:'spring', days:['sunday'],   caps:['all'], target:'common', mode:'amount', value:42.7, hours:[11,14] }
+      ] },
+    'KP': { name:'한전 KEPCO (아파트)', type:'공공', tou:true,
+      member:    { slow:130, mid:160, fast50:324.4, fast100:347.2, ultra:347.2 },
+      nonmember: { slow:145, mid:175, fast50:347.2, fast100:347.2, ultra:347.2 },
+      rules:[
+        { season:'summer', days:['weekday'], caps:['slow','mid'], target:'common', mode:'percent', value:20, hours:[22,8] }
+      ] },
+    'EV': { name:'에버온', type:'민간', tou:true,
+      member:    { slow:295, mid:310, fast50:296, fast100:347.2, ultra:347.2 },
+      nonmember: { slow:320, mid:330, fast50:320, fast100:360, ultra:360 },
+      rules:[
+        { season:'summer', days:['saturday','sunday'], caps:['fast50'], target:'member', mode:'fixed', value:246, hours:[11,16] }
+      ] },
+    'HE': { name:'한국전기차충전서비스', type:'공공', tou:false, member:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2}, nonmember:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2}, rules:[] },
+    'CV': { name:'채비', type:'민간', tou:false, member:{slow:300,mid:330,fast50:410,fast100:430,ultra:430}, nonmember:{slow:330,mid:360,fast50:450,fast100:470,ultra:470}, rules:[] },
+    'PI': { name:'GS차지비', type:'민간', tou:false, member:{slow:290,mid:310,fast50:335,fast100:345,ultra:345}, nonmember:{slow:320,mid:340,fast50:360,fast100:370,ultra:370}, rules:[] },
+    'ST': { name:'SK일렉링크', type:'민간', tou:false, member:{slow:280,mid:300,fast50:410,fast100:320,ultra:340}, nonmember:{slow:310,mid:330,fast50:450,fast100:360,ultra:380}, rules:[] },
+    'HM': { name:'휴맥스이브이', type:'민간', tou:false, member:{slow:270,mid:290,fast50:320,fast100:340,ultra:340}, nonmember:{slow:300,mid:320,fast50:350,fast100:370,ultra:370}, rules:[] },
+    'PL': { name:'플러그링크', type:'민간', tou:false, member:{slow:260,mid:280,fast50:324.4,fast100:324.4,ultra:324.4}, nonmember:{slow:290,mid:310,fast50:350,fast100:350,ultra:350}, rules:[] }
+  };
+  function $(s,c){return (c||document).querySelector(s);}
+  function $$(s,c){return Array.from((c||document).querySelectorAll(s));}
+
+  function applyMode(base, mode, value){
+    if (mode==='percent') return Math.round(base*(1-value/100)*10)/10;
+    if (mode==='fixed')   return value;
+    return Math.round((base-value)*10)/10;  // amount
+  }
+  function hoursOf(rule){ // [시작,종료) · 자정 넘으면 분리
+    var s=rule.hours[0], e=rule.hours[1], arr=[];
+    if (s<e){ for(var h=s;h<e;h++) arr.push(h); }
+    else { for(var h=s;h<24;h++) arr.push(h); for(var h2=0;h2<e;h2++) arr.push(h2); }
+    return arr;
+  }
+  function ruleMatches(rule, season, day, cap, target){
+    if (rule.season!==season) return false;
+    if (rule.days.indexOf(day)<0) return false;
+    if (rule.caps.indexOf('all')<0 && rule.caps.indexOf(cap)<0) return false;
+    if (rule.target!=='common' && rule.target!==target) return false;
+    return true;
+  }
+  var MODE_LABEL = { amount:'정액(원 차감)', percent:'정률(% 차감)', fixed:'고정단가' };
+
+  function renderTOU(){
+    var opKey = ($('#tou-operator')||{}).value || 'ME';
+    var op = TOU_OPERATORS[opKey] || TOU_OPERATORS['ME'];
+    var cap = ($('#tou-capacity')||{}).value || 'fast50';
+    var mT = $('#tou-member-tabs .tab.active'), sT = $('#tou-season-tabs .tab.active'), dT = $('#tou-day-tabs .tab.active');
+    var target = mT ? mT.dataset.mem : 'member';
+    var season = sT ? sT.dataset.season : 'spring';
+    var day = dT ? dT.dataset.day : 'saturday';
+    var base = (op[target]||{})[cap];
+    var touBars=$('#touBars'), touAxis=$('#touAxis'), touLegend=$('#touLegend'), touSum=$('#tou-summary');
+    if (!touBars) return;
+    touBars.innerHTML=''; touAxis.innerHTML=''; touLegend.innerHTML=''; touSum.innerHTML='';
+    var __rl=document.getElementById('touRuleList'); if(__rl) __rl.remove();
+    // 계시 미적용 사업자는 시즌·요일 탭 비활성
+    $$('#tou-season-tabs .tab, #tou-day-tabs .tab').forEach(function(t){
+      if (op.tou){t.disabled=false; t.style.opacity=''; t.style.cursor='pointer';}
+      else {t.disabled=true; t.style.opacity='0.4'; t.style.cursor='not-allowed';}
+    });
+    if (base==null||isNaN(base)){
+      touBars.innerHTML='<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#64748b;padding:20px;text-align:center;width:100%;"><div style="font-size:32px;opacity:0.4;">📊</div><div style="font-size:14px;font-weight:600;color:#475569;">'+op.name+' · '+CAP_LABEL[cap]+' · '+(target==='member'?'회원':'비회원')+' 요금 정보가 없습니다.</div></div>';
+      touSum.insertAdjacentHTML('beforeend','<div class="tou-summary-card"><div class="ts-label">사업자</div><div class="ts-value" style="color:#475569;font-size:15px;">'+op.name+'</div></div>');
+      return;
+    }
+    // 적용 규칙(SEQ 순) — 시간대별 단가 계산
+    var rates=[]; for(var i=0;i<24;i++) rates.push(base);
+    var applied=[];  // {hours[], label, mode}
+    (op.tou ? op.rules : []).forEach(function(rule){
+      if (!ruleMatches(rule, season, day, cap, target)) return;
+      var hrs=hoursOf(rule), val=applyMode(base, rule.mode, rule.value);
+      hrs.forEach(function(h){ rates[h]=val; });
+      applied.push({hours:hrs, val:val, mode:rule.mode, value:rule.value, label:rule.hours[0]+'~'+rule.hours[1]+'시'});
+    });
+    var hasDisc = applied.length>0;
+    var SCALE_MAX = Math.max.apply(null, rates.concat([base])) * 1.15;
+    rates.forEach(function(r,i){
+      var isDisc = r!==base;
+      var color = isDisc ? '#1AA46A' : '#4A90D9';
+      var h = Math.max(5, r/SCALE_MAX*100).toFixed(1);
+      touBars.insertAdjacentHTML('beforeend','<div class="bar" style="height:'+h+'%;background:'+color+';" data-label="'+String(i).padStart(2,'0')+'시 · '+r+'원/kWh"></div>');
+      touAxis.insertAdjacentHTML('beforeend','<div>'+(i%3===0?i:'')+'</div>');
+    });
+    var sum=[{label:'사업자',value:op.name,color:'#475569'},
+             {label:'대상',value:(target==='member'?'회원':'비회원'),color:'#475569'},
+             {label:'기본 단가',value:base+'원/kWh',color:'#4A90D9'}];
+    if (hasDisc){ var a=applied[0]; sum.push({label:'할인 단가 ('+a.label+')',value:a.val+'원/kWh',color:'#1AA46A'},{label:'할인방식',value:MODE_LABEL[a.mode]+' '+a.value+(a.mode==='percent'?'%':a.mode==='fixed'?'원':'원'),color:'#E26B84'}); }
+    else if (!op.tou){ sum.push({label:'요금 체계',value:'시간대 무관(계시 미적용)',color:'#94a3b8'}); }
+    sum.forEach(function(it){
+      touSum.insertAdjacentHTML('beforeend','<div class="tou-summary-card"><div class="ts-label">'+it.label+'</div><div class="ts-value" style="color:'+it.color+';font-size:'+(it.label==='사업자'||it.label==='대상'?15:17)+'px;">'+it.value+'</div></div>');
+    });
+    var legend=[{color:'#4A90D9',label:'기본 요금 '+base+'원/kWh'}];
+    if (hasDisc) legend.push({color:'#1AA46A',label:'할인 적용 '+applied[0].label+' '+applied[0].val+'원/kWh'});
+    legend.forEach(function(it){
+      touLegend.insertAdjacentHTML('beforeend','<span class="lg-item" style="display:inline-flex;align-items:center;gap:8px;margin-right:20px;"><span style="width:14px;height:14px;border-radius:3px;background:'+it.color+';flex-shrink:0;"></span>'+it.label+'</span>');
+    });
+    // 규칙 목록(다른 시즌·요일 규칙 포함)
+    if (op.tou && op.rules.length){
+      var list = op.rules.map(function(r){
+        var seasonKo = {spring:'봄·가을',summer:'여름',winter:'겨울'}[r.season]||r.season;
+        var dayKo = r.days.map(function(d){return {weekday:'평일',saturday:'토',sunday:'일·공휴일'}[d]||d;}).join('·');
+        var tgtKo = {member:'회원',nonmember:'비회원',common:'공통'}[r.target];
+        var capKo = r.caps.indexOf('all')>=0?'전체':r.caps.map(function(c){return CAP_LABEL[c];}).join('·');
+        return '<li style="margin-bottom:3px;">'+seasonKo+' · '+dayKo+' · '+r.hours[0]+'~'+r.hours[1]+'시 · '+capKo+' · <b>'+tgtKo+'</b> · '+MODE_LABEL[r.mode]+' '+r.value+(r.mode==='percent'?'%':'원')+'</li>';
+      }).join('');
+      touLegend.insertAdjacentHTML('afterend','<div id="touRuleList" style="margin-top:12px;font-size:12.5px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;"><div style="font-weight:700;margin-bottom:6px;color:#334155;">계절·시간 할인규칙 ('+op.rules.length+'건)</div><ul style="margin:0;padding-left:18px;line-height:1.7;">'+list+'</ul></div>');
+    }
+  }
+  window.__renderTOU = renderTOU;
+
+  function tabGroup(sel){
+    $$(sel+' .tab').forEach(function(b){
+      b.addEventListener('click',function(){ if(b.disabled)return; $$(sel+' .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); cleanRuleList(); renderTOU(); });
+    });
+  }
+  function cleanRuleList(){ var el=document.getElementById('touRuleList'); if(el) el.remove(); }
+  function init(){
+    var mo = new Date().getMonth();
+    var auto = [2,3,4,8,9].indexOf(mo)>=0 ? 'spring' : [5,6,7].indexOf(mo)>=0 ? 'summer' : 'winter';
+    $$('#tou-season-tabs .tab').forEach(function(b){b.classList.toggle('active',b.dataset.season===auto);});
+    tabGroup('#tou-member-tabs'); tabGroup('#tou-season-tabs'); tabGroup('#tou-day-tabs');
+    var opSel=$('#tou-operator'), capSel=$('#tou-capacity');
+    if (opSel) opSel.addEventListener('change',function(){cleanRuleList();renderTOU();});
+    if (capSel) capSel.addEventListener('change',function(){cleanRuleList();renderTOU();});
+  }
+  var btn = $('#tariffBtn'), overlay=$('#tariff-modal-overlay'), closeBtn=$('#tariff-modal-close');
+  if (btn && overlay){
+    btn.addEventListener('click',function(){overlay.classList.add('open'); document.body.style.overflow='hidden'; setTimeout(renderTOU,30);});
+    closeBtn.addEventListener('click',function(){overlay.classList.remove('open'); document.body.style.overflow='';});
+    overlay.addEventListener('click',function(e){if(e.target===overlay){overlay.classList.remove('open'); document.body.style.overflow='';}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('open')){overlay.classList.remove('open'); document.body.style.overflow='';}});
+  }
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+
+<script>
+/* v0.12 [25] 로밍 안내 툴팁 토글 (클릭 토글 + 호버/포커스 + ESC/외부클릭 닫기) */
+(function(){
+  var btn=document.querySelector('.info-tip-btn[aria-describedby="roamingTip"]');
+  var tip=document.getElementById('roamingTip');
+  if(!btn||!tip) return;
+  function close(){ tip.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); var open=tip.classList.toggle('is-open'); btn.setAttribute('aria-expanded', open?'true':'false'); });
+  document.addEventListener('click', function(e){ if(!e.target.closest('.info-tip-wrap')) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+</body>
+</html>

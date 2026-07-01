@@ -1,0 +1,2299 @@
+﻿key,scope,ko,en
+brand.fullmenu.sub,common,전체 메뉴,Full Menu
+brand.home.aria,common,무공해차 통합누리집 홈,Zero-Emission Vehicle Portal Home
+brand.main,common,무공해차 통합누리집,Zero-Emission Vehicle Portal
+brand.sub,common,Zero Emission Vehicle Portal,Republic of Korea
+charging.card.agree,charging,개인정보 수집·이용 및 카드 발급을 위한 제3자 제공에 동의합니다.,I agree to the collection and use of personal information and to third-party provision for card issuance.
+charging.card.agree.all,charging,아래 약관에 모두 동의합니다,I agree to all of the terms below
+charging.card.agree.all.sub,charging,필수 약관 전체를 한 번에 동의 처리,Consent to all required terms at once
+charging.card.agree.fulltext,charging,전문 보기,View full text
+charging.card.agree.h,charging,약관 및 개인정보 동의,Terms & Privacy Consent
+charging.card.agree.priv.desc,charging,ev.or.kr에서 수집한 개인정보의 제3자 제공 및 취급(처리) 위탁 현황입니다.,Status of third-party provision and processing consignment of personal information collected via ev.or.kr.
+charging.card.agree.priv.title,charging,개인정보 제3자 제공 및 취급 위탁 동의,Consent to Third-party Provision & Processing Consignment of Personal Information
+charging.card.agree.req,charging,(필수),(Required)
+charging.card.agree.tag.req,charging,필수,Required
+charging.card.agree.tos.desc,charging,충전서비스 이용을 위한 회원과 한국자동차환경협회 간의 권리·의무를 정합니다.,Defines the rights and obligations between the member and KAEA for using the charging service.
+charging.card.agree.tos.title,charging,공공급속충전인프라 서비스 공급 및 이용약관 동의,Consent to the Public Rapid Charging Infrastructure Service Terms
+charging.card.apply.alert.body,charging,2026-05-08 신청 접수 → 2026-05-09 카드 제작 → 2026-05-10 등기우편 발송 (예정),2026-05-08 Application received → 2026-05-09 Card production → 2026-05-10 Registered mail dispatch (planned)
+charging.card.apply.alert.title,charging,발급 처리 중,Issuance In Progress
+charging.card.apply.bc.card,charging,충전 카드 관리,Charging Card
+charging.card.apply.bc.charging,charging,충전소·요금 정보,Charging & Rate Info
+charging.card.apply.bc.current,charging,회원카드 신청·발급조회,Apply / Check Card
+charging.card.apply.bc.home,charging,홈,Home
+charging.card.apply.benefits.b1,charging,전국 22개 사업자 충전소 로밍 수수료 0원,Zero roaming fees at 22 operators nationwide
+charging.card.apply.benefits.b2,charging,월별 이용내역 자동 통합 명세서,Automatic monthly integrated statement
+charging.card.apply.benefits.b3,charging,충전 포인트 1% 적립,1% point earning on charging
+charging.card.apply.benefits.b4,charging,모바일 앱 NFC 결제 지원,Mobile app NFC payment supported
+charging.card.apply.benefits.more,charging,혜택 자세히 보기,View Benefits Detail
+charging.card.apply.benefits.title,charging,통합카드 핵심 혜택,Integrated Card Key Benefits
+charging.card.apply.btn.check,charging,발급 상태 조회,Check Status
+charging.card.apply.cost.free,charging,무료,Free
+charging.card.apply.cost.note,charging,"단, 분실 재발급 시 5,000원 부과","Note: KRW 5,000 fee applies for lost-card reissuance"
+charging.card.apply.cost.title,charging,발급 비용,Issuance Cost
+charging.card.apply.desc,charging,전국 모든 공공·민간 충전소에서 사용 가능한 통합카드입니다. 로밍 수수료 없이 모든 사업자 충전기를 이용할 수 있습니다.,"Integrated card usable at all public and private chargers nationwide, with no roaming surcharge."
+charging.card.apply.h1,charging,회원카드 신청·발급조회,Apply / Check Card
+charging.card.apply.h3,charging,환경부 무공해차 통합카드 신청,MCEE EV Integrated Card Application
+charging.card.apply.lbl.name,charging,이름,Name
+charging.card.apply.lbl.phone,charging,휴대폰,Mobile
+charging.card.apply.lead,charging,환경부 무공해차 <strong>통합 회원카드</strong>를 신청하고 발급 진행 상태를 조회합니다.,Apply for the MCEE <strong>Integrated Membership Card</strong> and check issuance status.
+charging.card.apply.ph.name,charging,홍길동,Hong Gildong
+charging.card.apply.proc.s1,charging,<b>① 본인 인증</b> · 휴대폰 / PASS / 공동인증 중 선택,<b>① Identity Verification</b> · Mobile / PASS / Joint Certificate
+charging.card.apply.proc.s2,charging,<b>② 기본 정보 입력</b> · 성명·연락처·주소·이메일,"<b>② Basic Information</b> · Name, contact, address, email"
+charging.card.apply.proc.s3,charging,<b>③ 결제 수단 등록</b> · 카드/계좌 자동이체,<b>③ Payment Registration</b> · Card / Bank auto-transfer
+charging.card.apply.proc.s4,charging,<b>④ 약관 동의</b> · 회원약관·개인정보·결제 동의,"<b>④ Terms Agreement</b> · Member terms, privacy, payment consent"
+charging.card.apply.proc.s5,charging,<b>⑤ 신청 완료</b> · 발급 후 등기우편 배송 (영업일 5~7일),<b>⑤ Application Complete</b> · Delivered by registered mail (5–7 business days)
+charging.card.apply.proc.title,charging,신청 절차,Application Process
+charging.card.apply.status.title,charging,발급 진행 상태 조회,Check Issuance Status
+charging.card.benefit.desc,charging,전국 모든 공공·민간 충전소에서 로밍 수수료 없이 사용. 이용요금·포인트·명세서를 한 화면에서 관리합니다.,"Use at all public and private chargers nationwide without roaming surcharge. Manage fees, points, and statements in one place."
+charging.card.benefit.h3,charging,환경부 무공해차 통합카드 핵심 혜택,MCEE EV Integrated Card Key Benefits
+charging.card.benefit.lost.desc,charging,분실·도용 보호,Loss & Fraud Protection
+charging.card.benefit.lost.sub,charging,연중무휴 분실 신고 및 재발급 지원,Year-round loss reporting and reissue support
+charging.card.benefit.lost.unit,charging,시간,-hour
+charging.card.benefit.night.desc,charging,심야 충전 할인,Night Charging Discount
+charging.card.benefit.night.sub,charging,23:00~06:00 심야 시간 자동 적용,Auto-applied 23:00–06:00
+charging.card.benefit.night.unit,charging,%,%
+charging.card.benefit.point.desc,charging,공공 충전 포인트,Public Charging Points
+charging.card.benefit.point.sub,charging,환경부 공공 충전 시 자동 적립 (1P = 1원),Auto-accrue at MCEE public chargers (1P = 1 KRW)
+charging.card.benefit.point.unit,charging,%,%
+charging.card.benefit.roaming.desc,charging,로밍 수수료,Roaming Surcharge
+charging.card.benefit.roaming.rate,charging,0,0
+charging.card.benefit.roaming.sub,charging,모든 사업자 충전기에서 기본 요금으로 이용,Use any operator's charger at the base rate
+charging.card.benefit.roaming.unit,charging,원, KRW
+charging.card.btn.apply,charging,카드 신청하기,Apply for Card
+charging.card.check.btn,charging,조회하기,Check
+charging.card.check.h3,charging,발급 상태 조회,Check Issuance Status
+charging.card.check.label,charging,성명 또는 휴대전화,Name or Phone
+charging.card.check.ph,charging,신청 시 기재한 정보,Information entered when applying
+charging.card.edit.addr2.val,charging,서울특별시 종로구 세종대로 209,"209 Sejong-daero, Jongno-gu, Seoul"
+charging.card.edit.address,charging,수령 주소,Delivery Address
+charging.card.edit.address.val,charging,서울 강남구 테헤란로 152,"152 Teheran-ro, Gangnam-gu, Seoul"
+charging.card.edit.basic.title,charging,기본 정보,Basic Information
+charging.card.edit.bc.current,charging,카드 정보 수정,Edit Card Info
+charging.card.edit.btn.add,charging,+ 결제 수단 추가,+ Add Payment Method
+charging.card.edit.btn.cancel,charging,취소,Cancel
+charging.card.edit.btn.change,charging,변경,Change
+charging.card.edit.btn.reset,charging,초기화,Reset
+charging.card.edit.btn.save,charging,정보 저장,Save Changes
+charging.card.edit.btn.savechanges,charging,변경 사항 저장,Save Changes
+charging.card.edit.cardno,charging,회원카드 번호,Card Number
+charging.card.edit.email,charging,이메일,Email
+charging.card.edit.email.desc,charging,월 명세서 이메일 수신,Receive monthly statements via email
+charging.card.edit.email.notify,charging,이메일 알림,Email Notification
+charging.card.edit.h1,charging,카드 정보 수정,Edit Card Info
+charging.card.edit.lead,charging,발급된 회원카드의 <strong>연락처·주소·결제 수단</strong>을 수정합니다.,"Modify <strong>contact, address, payment</strong> of your issued card."
+charging.card.edit.name.val,charging,홍길동,Hong Gildong
+charging.card.edit.note.li,charging,이름·생년월일 변경은 본인인증 후 별도 신청,Name and date-of-birth changes require separate application after verification
+charging.card.edit.note.li2,charging,주소 변경 시 등기우편물 수령 주소 자동 갱신,Address changes automatically update the registered-mail delivery address
+charging.card.edit.note.li3,charging,결제 수단은 최대 3개까지 등록 가능,Up to 3 payment methods can be registered
+charging.card.edit.note.title,charging,안내 사항,Notice
+charging.card.edit.payment,charging,결제 방식,Payment Method
+charging.card.edit.payment.ba,charging,계좌 자동이체,Bank Auto-Transfer
+charging.card.edit.payment.cc,charging,신용카드 자동 결제,Credit Card Auto-Pay
+charging.card.edit.payment.cc.val,charging,<strong>신한카드 9012</strong> · 자동이체 등록,<strong>Shinhan Card 9012</strong> · Auto-transfer registered
+charging.card.edit.payment.date,charging,2026-03-15 등록,Registered 2026-03-15
+charging.card.edit.payment.prep,charging,선불 충전 (포인트),Prepaid (Points)
+charging.card.edit.payment.title,charging,결제 수단,Payment Method
+charging.card.edit.phone,charging,휴대전화,Mobile
+charging.card.edit.sms,charging,SMS 알림,SMS Notification
+charging.card.edit.sms.deny,charging,수신 거부,Decline
+charging.card.edit.sms.desc,charging,결제·이용 내역 SMS 수신,Receive payment/usage notifications via SMS
+charging.card.edit.sms.recv,charging,수신,Receive
+charging.card.edit.title,charging,카드 정보 수정,Edit Card Info
+charging.card.field.addr,charging,카드 수령 주소,Card Delivery Address
+charging.card.field.addr.ph,charging,기본주소,Base address
+charging.card.field.birth,charging,생년월일,Date of Birth
+charging.card.field.car,charging,차량 번호,Vehicle Plate
+charging.card.field.car.ph,charging,예) 12가 3456,"e.g., 12가 3456"
+charging.card.field.detail.ph,charging,상세주소,Detail address
+charging.card.field.email,charging,이메일,Email
+charging.card.field.name,charging,성명,Name
+charging.card.field.pay,charging,결제 방식,Payment Method
+charging.card.field.phone,charging,휴대전화,Mobile Phone
+charging.card.field.zip.btn,charging,주소 검색,Search Address
+charging.card.field.zip.ph,charging,우편번호,Postal code
+charging.card.hist.bc.current,charging,이용요금·명세서 조회,Usage & Statements
+charging.card.hist.btn.allpdf,charging,전체 명세서 PDF,All Statements (PDF)
+charging.card.hist.btn.excel,charging,Excel 다운로드,Download Excel
+charging.card.hist.btn.monthly,charging,월별 통합 명세서,Monthly Integrated Statement
+charging.card.hist.btn.reset,charging,초기화,Reset
+charging.card.hist.btn.search,charging,조회,Search
+charging.card.hist.h1,charging,이용요금·명세서 조회,Usage & Statements
+charging.card.hist.lbl.op,charging,사업자,Operator
+charging.card.hist.lbl.period,charging,조회 기간,Period
+charging.card.hist.lbl.type,charging,충전 유형,Charging Type
+charging.card.hist.lead,charging,월별 충전 이용 내역과 통합 명세서를 조회·다운로드합니다.,View and download monthly charging usage and integrated statements.
+charging.card.hist.op.gsconnect,charging,GS커넥트,GS Connect
+charging.card.hist.op.kepco,charging,한국전력,KEPCO
+charging.card.hist.op.skSignet,charging,SK시그넷,SK Signet
+charging.card.hist.period.3m,charging,최근 3개월,Last 3 months
+charging.card.hist.period.6m,charging,최근 6개월,Last 6 months
+charging.card.hist.period.y25,charging,2025년,2025
+charging.card.hist.period.y26,charging,2026년,2026
+charging.card.hist.row.r1,charging,"<td>2026-05-08 09:14</td><td>세종청사 공영주차장</td><td>한국전력</td><td>급속 100kW</td><td>32.5 kWh</td><td>11,375원</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>","<td>2026-05-08 09:14</td><td>Sejong Gov. Public Parking</td><td>KEPCO</td><td>100kW Fast</td><td>32.5 kWh</td><td>KRW 11,375</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>"
+charging.card.hist.row.r2,charging,"<td>2026-05-04 19:42</td><td>롯데마트 잠실점</td><td>SK시그넷</td><td>급속 50kW</td><td>24.1 kWh</td><td>9,158원</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>","<td>2026-05-04 19:42</td><td>Lotte Mart Jamsil</td><td>SK Signet</td><td>50kW Fast</td><td>24.1 kWh</td><td>KRW 9,158</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>"
+charging.card.hist.row.r3,charging,"<td>2026-05-01 22:08</td><td>아파트 지하주차장</td><td>GS커넥트</td><td>완속 7kW</td><td>18.3 kWh</td><td>4,118원</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>","<td>2026-05-01 22:08</td><td>Apartment Underground</td><td>GS Connect</td><td>7kW Slow</td><td>18.3 kWh</td><td>KRW 4,118</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>"
+charging.card.hist.row.r4,charging,"<td>2026-04-28 12:30</td><td>이마트 가양점</td><td>차지비</td><td>급속 100kW</td><td>28.7 kWh</td><td>10,045원</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>","<td>2026-04-28 12:30</td><td>E-Mart Gayang</td><td>ChargeBee</td><td>100kW Fast</td><td>28.7 kWh</td><td>KRW 10,045</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>"
+charging.card.hist.row.r5,charging,"<td>2026-04-22 08:15</td><td>현대백화점 무역센터</td><td>한국전력</td><td>완속 11kW</td><td>24.8 kWh</td><td>7,884원</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>","<td>2026-04-22 08:15</td><td>Hyundai Dept. Trade Center</td><td>KEPCO</td><td>11kW Slow</td><td>24.8 kWh</td><td>KRW 7,884</td><td><a href=""#"" class=""btn btn-text"">PDF</a></td>"
+charging.card.hist.sum.cnt,charging,이번 달 충전 횟수,This Month Count
+charging.card.hist.sum.cnt.unit,charging,회,
+charging.card.hist.sum.month,charging,이번 달 이용금액,This Month Cost
+charging.card.hist.sum.month.unit,charging,원,KRW
+charging.card.hist.sum.points,charging,적립 포인트,Earned Points
+charging.card.hist.sum.vol,charging,이번 달 충전량,This Month Volume
+charging.card.hist.tbl.amount,charging,금액,Amount
+charging.card.hist.tbl.dt,charging,일시,Date/Time
+charging.card.hist.tbl.op,charging,사업자,Operator
+charging.card.hist.tbl.station,charging,충전소,Station
+charging.card.hist.tbl.stmt,charging,명세서,Statement
+charging.card.hist.tbl.title,charging,이용 내역,Usage History
+charging.card.hist.tbl.type,charging,유형,Type
+charging.card.hist.tbl.vol,charging,충전량,Volume
+charging.card.hist.type.all,charging,전체,All
+charging.card.hist.type.fast,charging,급속,Fast
+charging.card.hist.type.slow,charging,완속,Slow
+charging.card.history.btn.download,charging,명세서 다운로드,Download Statement
+charging.card.history.period.1y,charging,최근 1년,Last 1 year
+charging.card.history.period.3m,charging,최근 3개월,Last 3 months
+charging.card.history.period.6m,charging,최근 6개월,Last 6 months
+charging.card.history.title,charging,최근 3개월 이용 내역,Last 3 Months Usage
+charging.card.kpi.amt.label,charging,이번 달 충전량,This Month Charging Volume
+charging.card.kpi.cnt.label,charging,이번 달 충전 횟수,This Month Charging Count
+charging.card.kpi.cnt.unit,charging,회,
+charging.card.kpi.fee.label,charging,이번 달 이용요금,This Month Charging Cost
+charging.card.kpi.fee.unit,charging,원,KRW
+charging.card.kpi.point.label,charging,적립 포인트,Earned Points
+charging.card.lead,charging,회원카드 <strong>신청·발급조회·정보수정·이용요금·명세서·포인트</strong>까지 한 화면에서 통합 관리합니다.,"Manage your membership card in one place: <strong>apply, check issuance, edit info, view fees, statements, and points</strong>."
+charging.card.lead2,charging,전국 모든 공공·민간 충전소에서 사용 가능한 통합카드입니다. 로밍 수수료 없이 모든 사업자 충전기를 이용할 수 있습니다.,An integrated card usable at all public and private charging stations nationwide. Access all operators with no roaming fees.
+charging.card.myinfo.brand,charging,ZERO EMISSION VEHICLE CARD,ZERO EMISSION VEHICLE CARD
+charging.card.myinfo.expiry,charging,유효기간,Valid Through
+charging.card.myinfo.h4,charging,내 카드 정보,My Card
+charging.card.myinfo.holder,charging,홀더,Holder
+charging.card.myinfo.lost,charging,분실 신고,Report Lost
+charging.card.myinfo.reissue,charging,재발급,Reissue
+charging.card.pay.bank,charging,계좌 자동이체,Auto Bank Transfer
+charging.card.pay.credit,charging,신용카드 자동 결제,Auto Credit Card Payment
+charging.card.pay.prepaid,charging,선불 충전 (포인트),Prepaid (Points)
+charging.card.point.alert.desc,charging,"공공 충전소 2%, 민간 제휴 충전소 1.5% 적립. 유효기간은 적립일로부터 2년. 충전 결제 시 자동 우선 차감됩니다.","2% for public stations, 1.5% for affiliated private stations. Valid for 2 years from earning date. Auto-deducted first on charging payments."
+charging.card.point.alert.title,charging,포인트 적립 안내,Point Earning Notice
+charging.card.point.avail.label,charging,사용 가능 포인트,Available Points
+charging.card.point.avail.note,charging,1P = 1원 (충전 시 자동 차감),1P = KRW 1 (auto-deducted on charging)
+charging.card.point.bc.current,charging,충전 포인트,Charging Points
+charging.card.point.cat.all,charging,전체,All
+charging.card.point.cat.earn,charging,적립,Earned
+charging.card.point.cat.use,charging,사용,Used
+charging.card.point.chip.earn,charging,적립,Earned
+charging.card.point.chip.event,charging,이벤트,Event
+charging.card.point.chip.use,charging,차감,Used
+charging.card.point.expire,charging,소멸 예정 (6개월),Expiring (6 months)
+charging.card.point.guide,charging,1P = 1원 · 충전 결제 시 사용 가능<br>최소 사용 단위 500P,1P = KRW 1 · Usable for charging payments<br>Minimum usage: 500P
+charging.card.point.guide.li1,charging,회원카드로 충전 결제 시 일정 금액이 포인트로 적립됩니다.,Points are earned on charging payments with the membership card.
+charging.card.point.guide.li2,charging,"적립된 포인트는 충전 결제 시 1P = 1원으로 사용할 수 있으며, 최소 사용 단위는 500P입니다.",Earned points can be used at 1P = KRW 1 for charging payments; minimum usage unit is 500P.
+charging.card.point.guide.li3,charging,적립 비율 및 사용 정책은 한국환경공단 운영 기준에 따릅니다.,Earning rates and usage policies follow the Korea Environment Corporation operational standards.
+charging.card.point.guide.li4,charging,유효 기간이 경과한 포인트는 자동으로 소멸됩니다.,Points expire automatically after the validity period.
+charging.card.point.guide.title,charging,포인트 안내,Point Guide
+charging.card.point.h1,charging,충전 포인트,Charging Points
+charging.card.point.have,charging,보유 포인트,Point Balance
+charging.card.point.have.note,charging,로그인 후 보유 포인트를 조회합니다.,Log in to view your balance.
+charging.card.point.history.title,charging,포인트 적립·사용 내역,Point Earning/Usage History
+charging.card.point.history.title2,charging,적립·사용 내역,Earning/Usage History
+charging.card.point.lbl.cat,charging,구분,Category
+charging.card.point.lead,charging,회원카드 이용 시 적립된 포인트 잔액과 적립·사용 내역을 조회합니다.,View your point balance and earning/usage history from card usage.
+charging.card.point.month.earn,charging,이번 달 적립,This Month Earned
+charging.card.point.month.use,charging,이번 달 사용,This Month Used
+charging.card.point.row.p1,charging,"<td>2026.04.22</td><td><span class=""chip chip-success"">적립</span></td><td>GS칼텍스 강남 충전</td><td class=""num"" style=""color:var(--color-primary-700);"">+170P</td>","<td>2026.04.22</td><td><span class=""chip chip-success"">Earned</span></td><td>GS Caltex Gangnam Charging</td><td class=""num"" style=""color:var(--color-primary-700);"">+170P</td>"
+charging.card.point.row.p2,charging,"<td>2026.04.19</td><td><span class=""chip chip-success"">적립</span></td><td>자택 심야 충전</td><td class=""num"" style=""color:var(--color-primary-700);"">+47P</td>","<td>2026.04.19</td><td><span class=""chip chip-success"">Earned</span></td><td>Home night charging</td><td class=""num"" style=""color:var(--color-primary-700);"">+47P</td>"
+charging.card.point.row.p3,charging,"<td>2026.04.17</td><td><span class=""chip chip-success"">적립</span></td><td>환경부 강남구청</td><td class=""num"" style=""color:var(--color-primary-700);"">+126P</td>","<td>2026.04.17</td><td><span class=""chip chip-success"">Earned</span></td><td>MCEE Gangnam-gu Office</td><td class=""num"" style=""color:var(--color-primary-700);"">+126P</td>"
+charging.card.point.row.p4,charging,"<td>2026.04.14</td><td><span class=""chip chip-success"">적립</span></td><td>SK시그넷 대치 초급속</td><td class=""num"" style=""color:var(--color-primary-700);"">+395P</td>","<td>2026.04.14</td><td><span class=""chip chip-success"">Earned</span></td><td>SK Signet Daechi Ultra-Fast</td><td class=""num"" style=""color:var(--color-primary-700);"">+395P</td>"
+charging.card.point.row.p5,charging,"<td>2026.03.28</td><td><span class=""chip chip-info"">차감</span></td><td>포인트 결제 (차지비)</td><td class=""num"" style=""color:var(--color-danger);"">-3,000P</td>","<td>2026.03.28</td><td><span class=""chip chip-info"">Used</span></td><td>Point payment (ChargeBee)</td><td class=""num"" style=""color:var(--color-danger);"">-3,000P</td>"
+charging.card.point.row.p6,charging,"<td>2026.03.15</td><td><span class=""chip chip-warning"">이벤트</span></td><td>신규가입 축하 포인트</td><td class=""num"" style=""color:var(--color-primary-700);"">+5,000P</td>","<td>2026.03.15</td><td><span class=""chip chip-warning"">Event</span></td><td>Sign-up bonus</td><td class=""num"" style=""color:var(--color-primary-700);"">+5,000P</td>"
+charging.card.point.tbl.balance,charging,잔액,Balance
+charging.card.point.tbl.category,charging,구분,Category
+charging.card.point.tbl.content,charging,내용,Description
+charging.card.point.tbl.content2,charging,내용,Description
+charging.card.point.tbl.empty,charging,조회 조건을 선택한 후 조회 버튼을 눌러주세요.,Select filter conditions and click Search.
+charging.card.point.total.earn,charging,누적 적립,Total Earned
+charging.card.row.h1,charging,"<td>2026.04.22 08:15</td><td>GS칼텍스 강남</td><td>급속 100kW</td><td class=""num"">24.5kWh</td><td class=""num"">347원</td><td class=""num"">8,502원</td><td class=""num"">+170P</td>","<td>2026.04.22 08:15</td><td>GS Caltex Gangnam</td><td>100kW Fast</td><td class=""num"">24.5 kWh</td><td class=""num"">KRW 347</td><td class=""num"">KRW 8,502</td><td class=""num"">+170P</td>"
+charging.card.row.h2,charging,"<td>2026.04.19 23:42</td><td>자택 (한전 심야)</td><td>완속 7kW</td><td class=""num"">32.8kWh</td><td class=""num"">72원</td><td class=""num"">2,362원</td><td class=""num"">+47P</td>","<td>2026.04.19 23:42</td><td>Home (KEPCO night)</td><td>7kW Slow</td><td class=""num"">32.8 kWh</td><td class=""num"">KRW 72</td><td class=""num"">KRW 2,362</td><td class=""num"">+47P</td>"
+charging.card.row.h3,charging,"<td>2026.04.17 14:08</td><td>환경부 강남구청</td><td>급속 50kW</td><td class=""num"">18.2kWh</td><td class=""num"">347원</td><td class=""num"">6,315원</td><td class=""num"">+126P</td>","<td>2026.04.17 14:08</td><td>MCEE Gangnam-gu Office</td><td>50kW Fast</td><td class=""num"">18.2 kWh</td><td class=""num"">KRW 347</td><td class=""num"">KRW 6,315</td><td class=""num"">+126P</td>"
+charging.card.row.h4,charging,"<td>2026.04.14 19:33</td><td>SK시그넷 대치</td><td>초급속 350kW</td><td class=""num"">45.6kWh</td><td class=""num"">433원</td><td class=""num"">19,744원</td><td class=""num"">+395P</td>","<td>2026.04.14 19:33</td><td>SK Signet Daechi</td><td>350kW Ultra-Fast</td><td class=""num"">45.6 kWh</td><td class=""num"">KRW 433</td><td class=""num"">KRW 19,744</td><td class=""num"">+395P</td>"
+charging.card.row.h5,charging,"<td>2026.04.11 07:50</td><td>차지비 서초</td><td>완속 7kW</td><td class=""num"">28.3kWh</td><td class=""num"">238원</td><td class=""num"">6,735원</td><td class=""num"">+135P</td>","<td>2026.04.11 07:50</td><td>ChargeBee Seocho</td><td>7kW Slow</td><td class=""num"">28.3 kWh</td><td class=""num"">KRW 238</td><td class=""num"">KRW 6,735</td><td class=""num"">+135P</td>"
+charging.card.row.h6,charging,"<td>2026.04.07 22:15</td><td>자택 (한전 심야)</td><td>완속 7kW</td><td class=""num"">30.2kWh</td><td class=""num"">72원</td><td class=""num"">2,174원</td><td class=""num"">+43P</td>","<td>2026.04.07 22:15</td><td>Home (KEPCO night)</td><td>7kW Slow</td><td class=""num"">30.2 kWh</td><td class=""num"">KRW 72</td><td class=""num"">KRW 2,174</td><td class=""num"">+43P</td>"
+charging.card.row.h7,charging,"<td>2026.04.03 16:40</td><td>롯데월드몰 파워큐브</td><td>급속 100kW</td><td class=""num"">22.8kWh</td><td class=""num"">385원</td><td class=""num"">8,778원</td><td class=""num"">+176P</td>","<td>2026.04.03 16:40</td><td>Lotte World Mall PowerCube</td><td>100kW Fast</td><td class=""num"">22.8 kWh</td><td class=""num"">KRW 385</td><td class=""num"">KRW 8,778</td><td class=""num"">+176P</td>"
+charging.card.tab.apply,charging,회원카드 신청·발급조회,Apply / Check Card
+charging.card.tab.edit,charging,카드 정보 수정,Edit Card Info
+charging.card.tab.history,charging,이용요금·명세서 조회,Usage & Statements
+charging.card.tab.point,charging,충전 포인트,Charging Points
+charging.card.tbl.amount,charging,충전량,Volume
+charging.card.tbl.cost,charging,금액,Amount
+charging.card.tbl.datetime,charging,일시,Date/Time
+charging.card.tbl.points,charging,포인트,Points
+charging.card.tbl.station,charging,충전소,Station
+charging.card.tbl.status,charging,상태,Status
+charging.card.tbl.type,charging,유형,Type
+charging.card.tbl.unitprice,charging,단가,Unit Price
+charging.card.title,charging,충전 카드 관리,Charging Card Management
+charging.card.user.name,charging,홍길동,Hong Gildong
+charging.crumb.parent,charging,충전소·요금 정보,Charging & Fees
+charging.fee.aria.keyword,charging,충전소명 또는 주소 검색어 입력,Enter station name or address keyword
+charging.fee.aria.member,charging,회원 구분 선택,Select membership type
+charging.fee.aria.menu,charging,요금 메뉴,Fee menu
+charging.fee.aria.operator,charging,사업자 선택,Select operator
+charging.fee.aria.sido,charging,시도 선택,Select province/city
+charging.fee.aria.speed,charging,충전 속도 선택,Select charging speed
+charging.fee.aria.tariff,charging,시간대별 충전요금 모달 열기,Open time-of-use fee modal
+charging.fee.aria.tindex,charging,사업자별 운영 현황 모달 열기,Open operator status modal
+charging.fee.btn.tariff,charging,시간대별 충전요금,Time-of-Use Fees
+charging.fee.btn.tindex,charging,사업자별 운영 현황,Operator Operation Status
+charging.fee.h2.aria.keyword,charging,충전소명 또는 주소 검색어 입력,Enter station name or address keyword
+charging.fee.h2.aria.operator,charging,사업자 선택,Select operator
+charging.fee.h2.aria.sido,charging,시도 선택,Select province/city
+charging.fee.h2.aria.sigungu,charging,시군구 선택,Select district
+charging.fee.h2.col.commercial,charging,상용 요금,Commercial Rate
+charging.fee.h2.col.hours,charging,운영 시간,Operating Hours
+charging.fee.h2.col.no,charging,번호,No.
+charging.fee.h2.col.operator,charging,사업자,Operator
+charging.fee.h2.col.passenger,charging,승용 요금,Passenger Rate
+charging.fee.h2.col.spec,charging,규격,Specification
+charging.fee.h2.col.station,charging,충전소명 / 주소,Station Name / Address
+charging.fee.h2.col.status,charging,상태,Status
+charging.fee.h2.compare.callout,charging,"<strong>수소차는 가솔린 대비 약 32% 연료비 절감</strong> 1회 충전으로 약 600km 주행, 충전 시간은 5분 이내로 내연기관과 유사한 사용 경험을 제공합니다. 단, 충전소 인프라가 제한적이므로 사전 위치 확인이 필요합니다.","<strong>Hydrogen vehicles save approximately 32% on fuel costs versus gasoline.</strong> A single charge provides ~600 km range, with charging completed in under 5 minutes — comparable to internal-combustion vehicles. Note that charging infrastructure is limited, so confirming station locations in advance is recommended."
+charging.fee.h2.compare.header,charging,"<th>구분</th><th>연비/효율</th><th class=""num"">월 에너지 소모</th><th class=""num"">단가</th><th class=""num"">월 연료비</th><th class=""num"">연간 연료비</th><th>vs 가솔린</th>","<th>Category</th><th>Efficiency</th><th class=""num"">Monthly Energy Use</th><th class=""num"">Unit Price</th><th class=""num"">Monthly Fuel Cost</th><th class=""num"">Annual Fuel Cost</th><th>vs Gasoline</th>"
+charging.fee.h2.compare.row.diesel,charging,"<td><strong>디젤 (싼타페)</strong></td><td>14km/L</td><td class=""num"">107L</td><td class=""num"">1,620원/L</td><td class=""num"">173,340원</td><td class=""num"">2,080,080원</td><td>-20% 절감</td>","<td><strong>Diesel (Santa Fe)</strong></td><td>14 km/L</td><td class=""num"">107 L</td><td class=""num"">1,620 KRW/L</td><td class=""num"">173,340 KRW</td><td class=""num"">2,080,080 KRW</td><td>-20% saved</td>"
+charging.fee.h2.compare.row.ev_home,charging,"<td><strong>전기차 (자택 완속·심야)</strong></td><td>5.5km/kWh</td><td class=""num"">273kWh</td><td class=""num"">72원/kWh</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">19,656원</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">235,872원</td><td style=""color:var(--color-primary-700);font-weight:700;"">-91% 절감</td>","<td><strong>EV (Home Slow / Night)</strong></td><td>5.5 km/kWh</td><td class=""num"">273 kWh</td><td class=""num"">72 KRW/kWh</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">19,656 KRW</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">235,872 KRW</td><td style=""color:var(--color-primary-700);font-weight:700;"">-91% saved</td>"
+charging.fee.h2.compare.row.ev_public,charging,"<td><strong>전기차 (공공 급속)</strong></td><td>5.5km/kWh</td><td class=""num"">273kWh</td><td class=""num"">324.4원/kWh</td><td class=""num"">88,561원</td><td class=""num"">1,062,732원</td><td>-59% 절감</td>","<td><strong>EV (Public Fast)</strong></td><td>5.5 km/kWh</td><td class=""num"">273 kWh</td><td class=""num"">324.4 KRW/kWh</td><td class=""num"">88,561 KRW</td><td class=""num"">1,062,732 KRW</td><td>-59% saved</td>"
+charging.fee.h2.compare.row.gasoline,charging,"<td><strong>가솔린 (쏘나타)</strong></td><td>12km/L</td><td class=""num"">125L</td><td class=""num"">1,740원/L</td><td class=""num"">217,500원</td><td class=""num"">2,610,000원</td><td>기준 (100%)</td>","<td><strong>Gasoline (Sonata)</strong></td><td>12 km/L</td><td class=""num"">125 L</td><td class=""num"">1,740 KRW/L</td><td class=""num"">217,500 KRW</td><td class=""num"">2,610,000 KRW</td><td>Baseline (100%)</td>"
+charging.fee.h2.compare.row.h2_nexo,charging,"<td><strong>수소차 (NEXO)</strong></td><td>96km/kg</td><td class=""num"">15.6kg</td><td class=""num"">9,500원/kg</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">148,200원</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">1,778,400원</td><td style=""color:var(--color-primary-700);font-weight:700;"">-32% 절감</td>","<td><strong>FCEV (NEXO)</strong></td><td>96 km/kg</td><td class=""num"">15.6 kg</td><td class=""num"">9,500 KRW/kg</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">148,200 KRW</td><td class=""num"" style=""color:var(--color-primary-700);font-weight:700;"">1,778,400 KRW</td><td style=""color:var(--color-primary-700);font-weight:700;"">-32% saved</td>"
+charging.fee.h2.compare.title,charging,"에너지원별 연료비 비교 (월 1,500km 기준)","Fuel Cost Comparison by Energy Source (Based on 1,500 km/month)"
+charging.fee.h2.kpi.avg.label,charging,2026년 평균,2026 Average
+charging.fee.h2.kpi.avg.unit,charging,원/kg,KRW/kg
+charging.fee.h2.kpi.bus.label,charging,버스 1회 충전,Bus 1 Charge
+charging.fee.h2.kpi.bus.trend,charging,40kg · 500km 주행,40 kg · 500 km range
+charging.fee.h2.kpi.nexo.label,charging,승용 NEXO 1회 충전,NEXO Passenger 1 Charge
+charging.fee.h2.kpi.nexo.trend,charging,6.33kg · 609km 주행,6.33 kg · 609 km range
+charging.fee.h2.kpi.nexo.unit,charging,원,KRW
+charging.fee.h2.kpi.perkm.label,charging,km당 충전비,Charging Cost per km
+charging.fee.h2.kpi.perkm.unit,charging,원/km,KRW/km
+charging.fee.h2.lead,charging,"전국 수소충전소의 사업자별 요금과 차량별 1회 충전비, 충전 방식별 특징을 안내합니다.","Operator-by-operator hydrogen station rates, per-vehicle single-fill cost, and charging method characteristics nationwide."
+charging.fee.h2.op.cohygen,charging,코하이젠,KOHYGEN
+charging.fee.h2.op.gscaltex,charging,GS칼텍스,GS Caltex
+charging.fee.h2.op.hynet,charging,하이넷,HyNet
+charging.fee.h2.op.hyosung,charging,효성,Hyosung
+charging.fee.h2.op.hyundaimobis,charging,현대모비스,Hyundai Mobis
+charging.fee.h2.op.skenergy,charging,SK에너지,SK Energy
+charging.fee.h2.opsum.col.commercial,charging,상용 요금,Commercial Rate
+charging.fee.h2.opsum.col.gov,charging,정부 지원,Gov. Support
+charging.fee.h2.opsum.col.note,charging,비고,Note
+charging.fee.h2.opsum.col.operator,charging,사업자,Operator
+charging.fee.h2.opsum.col.passenger,charging,승용 요금,Passenger Rate
+charging.fee.h2.opsum.col.stations,charging,운영 충전소,Operating Stations
+charging.fee.h2.opsum.header,charging,"<th>사업자</th><th>운영 충전소</th><th class=""num"">승용 요금</th><th class=""num"">상용 요금</th><th>정부 지원</th><th>비고</th>","<th>Operator</th><th>Operating Stations</th><th class=""num"">Passenger Rate</th><th class=""num"">Commercial Rate</th><th>Gov. Support</th><th>Note</th>"
+charging.fee.h2.opsum.row.cohygen,charging,"<td><strong>코하이젠</strong></td><td>전국 42개소</td><td class=""num"">9,800원/kg</td><td class=""num"">9,500원/kg</td><td>수소버스 보조</td><td>가장 많은 충전소</td>","<td><strong>KOHYGEN</strong></td><td>42 stations nationwide</td><td class=""num"">9,800 KRW/kg</td><td class=""num"">9,500 KRW/kg</td><td>Hydrogen bus subsidy</td><td>Most stations</td>"
+charging.fee.h2.opsum.row.gscaltex,charging,"<td><strong>GS칼텍스</strong></td><td>전국 18개소</td><td class=""num"">9,700원/kg</td><td class=""num"">-</td><td>-</td><td>고속도로 휴게소</td>","<td><strong>GS Caltex</strong></td><td>18 stations nationwide</td><td class=""num"">9,700 KRW/kg</td><td class=""num"">-</td><td>-</td><td>Highway rest stops</td>"
+charging.fee.h2.opsum.row.hynet,charging,"<td><strong>하이넷</strong></td><td>전국 38개소</td><td class=""num"">9,500원/kg</td><td class=""num"">9,200원/kg</td><td>공공 주도</td><td>수도권 집중</td>","<td><strong>HyNet</strong></td><td>38 stations nationwide</td><td class=""num"">9,500 KRW/kg</td><td class=""num"">9,200 KRW/kg</td><td>Public-led</td><td>Concentrated in capital region</td>"
+charging.fee.h2.opsum.row.hyosung,charging,"<td><strong>효성</strong></td><td>전국 28개소</td><td class=""num"">9,600원/kg</td><td class=""num"">9,400원/kg</td><td>민관협력</td><td>산업단지 인접</td>","<td><strong>Hyosung</strong></td><td>28 stations nationwide</td><td class=""num"">9,600 KRW/kg</td><td class=""num"">9,400 KRW/kg</td><td>Public-private partnership</td><td>Near industrial complexes</td>"
+charging.fee.h2.opsum.row.hyundaimobis,charging,"<td><strong>현대모비스</strong></td><td>전국 12개소</td><td class=""num"">9,500원/kg</td><td class=""num"">9,200원/kg</td><td>수소트럭 전용</td><td>물류단지 인근</td>","<td><strong>Hyundai Mobis</strong></td><td>12 stations nationwide</td><td class=""num"">9,500 KRW/kg</td><td class=""num"">9,200 KRW/kg</td><td>Hydrogen truck dedicated</td><td>Near logistics complexes</td>"
+charging.fee.h2.opsum.row.skenergy,charging,"<td><strong>SK에너지</strong></td><td>전국 22개소</td><td class=""num"">9,800원/kg</td><td class=""num"">-</td><td>-</td><td>주유소 병설</td>","<td><strong>SK Energy</strong></td><td>22 stations nationwide</td><td class=""num"">9,800 KRW/kg</td><td class=""num"">-</td><td>-</td><td>Co-located with gas stations</td>"
+charging.fee.h2.opsum.title,charging,사업자별 수소 충전 요금 (요약),Hydrogen Rates by Operator (Summary)
+charging.fee.h2.opt.all,charging,전체,All
+charging.fee.h2.opt.alloperators,charging,전체 사업자,All Operators
+charging.fee.h2.opt.sigungu.pre,charging,시·도를 먼저 선택,Select province/city first
+charging.fee.h2.page.next,charging,다음 페이지,Next page
+charging.fee.h2.page.prev,charging,이전 페이지,Previous page
+charging.fee.h2.result.count.prefix,charging,총,Total
+charging.fee.h2.result.count.suffix,charging,건의 수소충전소 요금 결과,hydrogen station rate results
+charging.fee.h2.result.csv,charging,CSV 다운로드,Download CSV
+charging.fee.h2.result.xlsx,charging,Excel 다운로드,Download Excel
+charging.fee.h2.search.btn,charging,검색,Search
+charging.fee.h2.search.keyword,charging,충전소명·주소,Station Name / Address
+charging.fee.h2.search.keyword.ph,charging,충전소명 또는 주소 키워드,Station name or address keyword
+charging.fee.h2.search.meta,charging,전국 162개소 · 2026.04.20 갱신 · 5분 주기 자동 동기화,162 stations nationwide · Updated 2026.04.20 · Auto-sync every 5 min
+charging.fee.h2.search.operator,charging,사업자,Operator
+charging.fee.h2.search.reset,charging,초기화,Reset
+charging.fee.h2.search.sido,charging,시·도,Province/City
+charging.fee.h2.search.sigungu,charging,시·군·구,District
+charging.fee.h2.search.title,charging,수소충전소 요금 검색,Hydrogen Station Rate Search
+charging.fee.h2.spec.350.desc,charging,"버스·트럭 등 상용차용 표준. 1회 충전 약 10~15분, 평균 25~40kg 충전. 수소 버스·트럭 전용 인프라.","Standard for commercial buses and trucks. ~10-15 min per charge, avg. 25-40 kg. Dedicated infrastructure for hydrogen buses/trucks."
+charging.fee.h2.spec.350.title,charging,350bar (상용),350 bar (Commercial)
+charging.fee.h2.spec.700.desc,charging,"승용·SUV 수소차용 표준. 1회 충전 약 5분 소요, 평균 5~6kg 충전. NEXO·Mirai 등 대부분 승용 수소차에 적용.","Standard for passenger/SUV FCEVs. ~5 min per charge, avg. 5-6 kg. Used by NEXO, Mirai, and most passenger FCEVs."
+charging.fee.h2.spec.700.title,charging,700bar (승용),700 bar (Passenger)
+charging.fee.h2.spec.both.desc,charging,승용·상용 모두 지원하는 통합 충전소. 양재IC·광주 등 주요 거점 배치.,Combined stations supporting both passenger and commercial. Deployed at key hubs such as Yangjae IC and Gwangju.
+charging.fee.h2.spec.both.title,charging,700bar + 350bar 겸용,700 bar + 350 bar Combined
+charging.fee.h2.spec.title,charging,수소 충전 방식별 특징,Hydrogen Charging Methods
+charging.fee.h2.title,charging,수소차 충전요금 안내,H2 Charging Fees
+charging.fee.kpi.private.label,charging,민간 급속 평균,Private Fast Charger Avg.
+charging.fee.kpi.private.note,charging,T-Index 등재 9개사 fast_m 평균,Average of 9 T-Index operators (fast_m)
+charging.fee.kpi.public.label,charging,기후에너지환경부 공공 급속,MCEE Public Fast Charger
+charging.fee.kpi.public.note,charging,50kW 미만 · 100kW이상 347.2원,Under 50kW · 100kW+ 347.2 KRW
+charging.fee.kpi.public.unit,charging,원/kWh, KRW/kWh
+charging.fee.kpi.tindex.label,charging,T-Index 등재 사업자,T-Index Operators
+charging.fee.kpi.tindex.note,charging,우수 19 · 보통 109 · 개선필요 31,Excellent 19 · Average 109 · Needs improvement 31
+charging.fee.kpi.tindex.unit,charging,개사, ops
+charging.fee.kpi.total.label,charging,전국 충전기 합계,Total Chargers Nationwide
+charging.fee.kpi.total.note,charging,tindex/data_v3.json 2026-04 기준,tindex/data_v3.json (as of Apr 2026)
+charging.fee.kpi.total.unit,charging,기,
+charging.fee.lead,charging,"사업자별·시간대별 전기차 충전요금을 <strong>매트릭스로 비교</strong>하고, 로밍 요금과 월 예상 충전비를 시뮬레이션합니다.","<strong>Compare EV charging fees</strong> by operator and time slot, with roaming rates and monthly cost simulation."
+charging.fee.matrix.aria.mem,charging,회원 구분,Membership type
+charging.fee.matrix.aria.type,charging,요금 유형,Fee type
+charging.fee.matrix.count,charging,22개 사업자,22 operators
+charging.fee.matrix.favonly,charging,즐겨찾기만 보기,Favorites Only
+charging.fee.matrix.mem.member,charging,회원,Member
+charging.fee.matrix.mem.nonmember,charging,비회원,Non-member
+charging.fee.matrix.note,charging,※ 출처: T-Index 투명성 지수 FEE_TABLE (2026-04-21 크롤링 검증) · 회원 요금 기준<br>※ 계절시간제는 한전 KEPCO 아파트 충전기에만 적용 · 완속 기준<br>※ 비회원 단일요금 미공시 사업자는 — 표시,※ Source: T-Index Transparency Index FEE_TABLE (verified 2026-04-21) · Member rate basis<br>※ Time-of-Use applies only to KEPCO apartment chargers · Slow basis<br>※ Operators not disclosing flat non-member rates shown as —
+charging.fee.matrix.title,charging,사업자별 충전 요금 매트릭스,Charging Fee Matrix by Operator
+charging.fee.matrix.type.basic,charging,기본요금,Standard
+charging.fee.matrix.type.special,charging,지원·조건별,Conditional / Subsidized
+charging.fee.matrix.type.tou,charging,계절시간제,Time-of-Use
+charging.fee.matrix.unit,charging,(단위: 원/kWh),(Unit: KRW/kWh)
+charging.fee.op.cv,charging,채비,Chargev
+charging.fee.op.ec,charging,이지차저,Easy Charger
+charging.fee.op.ep,charging,이카플러그,EcaPlug
+charging.fee.op.ev,charging,에버온,Everon
+charging.fee.op.he,charging,한국전기차충전서비스(해피차저),Happy Charger
+charging.fee.op.hm,charging,휴맥스이브이,Humax EV
+charging.fee.op.ja,charging,이브이시스,EV-Sys
+charging.fee.op.ke,charging,한국전기차인프라기술,Korea EV Infrastructure Tech
+charging.fee.op.kl,charging,클린일렉스,Clean Elex
+charging.fee.op.kp,charging,한전 KEPCO,KEPCO
+charging.fee.op.lu,charging,볼트업(LG U+),Voltup (LG U+)
+charging.fee.op.me,charging,기후부,MCEE
+charging.fee.op.nt,charging,나이스차저,Nice Charger
+charging.fee.op.pc,charging,아이파킹,iParking
+charging.fee.op.pi,charging,GS차지비,GS Charge Bee
+charging.fee.op.pl,charging,플러그링크,Plug Link
+charging.fee.op.sf,charging,스타코프,Starcoff
+charging.fee.op.st,charging,SK일렉링크,SK Elec Link
+charging.fee.opmodal.close,charging,닫기,Close
+charging.fee.opmodal.close.aria,charging,모달 닫기,Close modal
+charging.fee.opmodal.source,charging,출처: T-Index FEE_TABLE 2026-04-21,Source: T-Index FEE_TABLE 2026-04-21
+charging.fee.opt.all,charging,전체,All
+charging.fee.opt.alloperators,charging,전체 사업자,All operators
+charging.fee.opt.alloutput,charging,전체 출력,All outputs
+charging.fee.opt.fast,charging,급속 (50~100kW),Fast (50–100kW)
+charging.fee.opt.member,charging,회원,Member
+charging.fee.opt.nonmember,charging,비회원,Non-member
+charging.fee.opt.slow,charging,완속 (3.5~11kW),Slow (3.5–11kW)
+charging.fee.opt.ultra,charging,초급속 (200kW 이상),Ultra-fast (200kW+)
+charging.fee.result.col.memrate,charging,회원 요금,Member Rate
+charging.fee.result.col.no,charging,번호,No.
+charging.fee.result.col.nonmemrate,charging,비회원 요금,Non-member Rate
+charging.fee.result.col.operator,charging,사업자,Operator
+charging.fee.result.col.output,charging,출력,Output
+charging.fee.result.col.station,charging,충전소명 / 주소,Station Name / Address
+charging.fee.result.col.status,charging,상태,Status
+charging.fee.result.csv,charging,CSV 다운로드,CSV Download
+charging.fee.result.prefix,charging,총,Total
+charging.fee.result.suffix,charging,건의 충전소 요금 결과, station fee results
+charging.fee.result.xlsx,charging,Excel 다운로드,Excel Download
+charging.fee.roaming.alert.body,charging,내 회원카드로 다른 사업자 충전기를 이용하는 것. 로밍 요금이 기본 요금에 추가됩니다. 기후부 통합카드는 모든 사업자 충전기 사용 가능 (로밍 수수료 없음).,Using another operator's charger with your membership card. Roaming fees are added to the base rate. MCEE integrated card has no roaming surcharge across all operators.
+charging.fee.roaming.alert.title,charging,로밍이란?,What is roaming?
+charging.fee.roaming.aria.tier,charging,용량 선택,Select capacity
+charging.fee.roaming.legend.lead,charging,※ T-Index FEE_TABLE 공시 기준 (2026-04-21) · 할증 수준:,※ Per T-Index FEE_TABLE disclosure (2026-04-21) · Surcharge tier:
+charging.fee.roaming.legend.na,charging,미공시,Not disclosed
+charging.fee.roaming.legend.own,charging,자사 요금 (기본),Same operator (base)
+charging.fee.roaming.legend.t1,charging,+1~50원,+1–50 KRW
+charging.fee.roaming.legend.t2,charging,+51~100원,+51–100 KRW
+charging.fee.roaming.legend.t3,charging,+100원 초과,+100 KRW more
+charging.fee.roaming.tier.fast,charging,급속 50kW,Fast 50kW
+charging.fee.roaming.tier.slow,charging,완속 7kW,Slow 7kW
+charging.fee.roaming.tier.ultra,charging,초급속 100kW+,Ultra-fast 100kW+
+charging.fee.roaming.title,charging,로밍 요금 (타 사업자 카드 사용 시),Roaming Fee (Using Other Operator Card)
+charging.fee.roaming.unit,charging,(단위: 원/kWh),(Unit: KRW/kWh)
+charging.fee.search.btn,charging,검색,Search
+charging.fee.search.keyword,charging,충전소명·주소,Station Name / Address
+charging.fee.search.kw.ph,charging,충전소명 또는 주소 키워드,Search by station name or address
+charging.fee.search.member,charging,회원 구분,Membership
+charging.fee.search.meta,charging,"전국 596,368기 · T-Index 갱신 5분 주기 · 22개 사업자 등재","596,368 stations nationwide · T-Index refresh every 5 minutes · 22 operators listed"
+charging.fee.search.operator,charging,사업자,Operator
+charging.fee.search.reset,charging,초기화,Reset
+charging.fee.search.sido,charging,시·도,Province / City
+charging.fee.search.speed,charging,충전 속도,Charging Speed
+charging.fee.search.title,charging,전기충전소 요금 검색,EV Station Fee Search
+charging.fee.sim.alert.calc,charging,"<strong>요금 산정 방식</strong> · 사업자별로 회원·비회원·로밍 요금이 다르며, 일부 사업자는 계절·시간대별(계시별) 요금제를 적용합니다. T-Index FEE_TABLE 2026.04.21 공시 기준이며 실제 결제 금액과 차이가 있을 수 있습니다.","<strong>Rate calculation method</strong> · Member/non-member/roaming rates vary by operator, and some operators apply seasonal/time-of-use (TOU) rate plans. Based on T-Index FEE_TABLE published 2026.04.21; actual charges may differ."
+charging.fee.sim.battery.note,charging,※ 모델 선택 시 충전량은 배터리의 95%로 자동 세팅됩니다,"* When you select a model, the charge amount is automatically set to 95% of the battery capacity"
+charging.fee.sim.battery.prefix,charging,배터리,Battery
+charging.fee.sim.bc.charging,charging,충전소·요금 정보,Charging & Rate Info
+charging.fee.sim.bc.current,charging,내 충전요금 시뮬레이터,My Charging Cost Simulator
+charging.fee.sim.bc.fee,charging,충전요금 안내,Charging Rates
+charging.fee.sim.bc.home,charging,홈,Home
+charging.fee.sim.card.desc,charging,제조사 → 차량 모델 → 결제 카드 → 충전기 → 회원유형 → 출력 → 충전량 순으로 선택하시면 단가와 예상 비용이 즉시 계산됩니다.,Select in order: Manufacturer → Vehicle Model → Payment Card → Charger → Member Type → Power Output → Charge Amount. The unit price and estimated cost will be calculated instantly.
+charging.fee.sim.card.title,charging,충전요금 계산,Charging Cost Calculation
+charging.fee.sim.cta.btn,charging,시뮬레이터 열기,Open Simulator
+charging.fee.sim.cta.desc,charging,국산 EV 10여 종 + 22개 사업자 + 회원/로밍/비회원 시나리오를 모두 지원하는 별도 시뮬레이터 페이지로 이동합니다.,"Opens a dedicated simulator page supporting 10+ Korean EVs, 22 operators, and member/roaming/non-member scenarios."
+charging.fee.sim.cta.title,charging,차량·카드·충전기로 즉시 계산하기,"Calculate instantly by vehicle, card, and charger"
+charging.fee.sim.faq.a1,charging,"<strong>회원</strong>은 카드사 자체 요금, <strong>로밍</strong>은 다른 사업자 충전기 이용 시 협약 요금, <strong>비회원</strong>은 카드 등록 없이 단발성 결제 시 적용되는 가장 비싼 단가입니다.","<strong>Member</strong> uses the card issuer's own rate, <strong>Roaming</strong> uses the agreed rate when using another operator's charger, and <strong>Non-member</strong> is the highest rate applied to one-time payment without card registration."
+charging.fee.sim.faq.a2,charging,한전 KEPCO 등 일부 사업자는 시간대(경부하·중간·최대) + 계절(봄·여름·겨울)로 단가가 달라집니다. 심야·주말 충전이 가장 저렴합니다.,Some operators such as KEPCO apply different unit prices by time period (off-peak / mid / peak) and season (spring / summer / winter). Late-night and weekend charging is cheapest.
+charging.fee.sim.faq.a3,charging,기후부 통합카드는 모든 사업자 충전기를 자체 요금으로 이용 가능하며 로밍 수수료가 발생하지 않아 가장 경제적입니다 (정부 협약).,"The MCEE Integrated Card allows you to use chargers from all operators at the issuer's own rate with no roaming fees, making it the most economical option (government agreement)."
+charging.fee.sim.faq.q1,charging,회원 vs 로밍 vs 비회원,Member vs Roaming vs Non-member
+charging.fee.sim.faq.q2,charging,계절시간제 (계시별),Seasonal Time-of-Use (TOU)
+charging.fee.sim.faq.q3,charging,기후부 통합카드 추천,MCEE Integrated Card Recommendation
+charging.fee.sim.hero.lead,charging,차량 모델 · 결제 카드 · 충전기 조합으로 <strong>내 충전 1회 비용</strong>을 즉시 계산하세요. 회원·로밍·비회원 시나리오를 모두 지원합니다.,"Calculate your <strong>cost per charge</strong> instantly based on vehicle model, payment card, and charger combination. Supports member, roaming, and non-member scenarios."
+charging.fee.sim.hero.title,charging,내 충전요금 시뮬레이터,My Charging Cost Simulator
+charging.fee.sim.kwh.aria,charging,충전량 (kWh),Charge amount (kWh)
+charging.fee.sim.lbl.brand,charging,제조사,Manufacturer
+charging.fee.sim.lbl.card,charging,내 카드 (사업자),My Card (Operator)
+charging.fee.sim.lbl.charger,charging,타사 충전기,Other Operator's Charger
+charging.fee.sim.lbl.condition,charging,조건 (선택),Condition (Optional)
+charging.fee.sim.lbl.kwh,charging,충전량,Charge Amount
+charging.fee.sim.lbl.member,charging,회원유형,Member Type
+charging.fee.sim.lbl.model,charging,차량 모델,Vehicle Model
+charging.fee.sim.lbl.season,charging,계절 · 시간대,Season · Time of Use
+charging.fee.sim.lbl.speed,charging,출력,Power Output
+charging.fee.sim.lead,charging,주행거리·충전 패턴을 입력하면 월 예상 충전비와 사업자별 최적 요금제를 계산합니다.,Enter your driving distance and charging pattern to estimate monthly cost and find the best operator rate plan.
+charging.fee.sim.opt.brand_first,charging,제조사 먼저 선택,Select manufacturer first
+charging.fee.sim.opt.choose,charging,선택,Select
+charging.fee.sim.opt.default,charging,기본 (조건 없음),Default (No condition)
+charging.fee.sim.opt.member,charging,회원,Member
+charging.fee.sim.opt.mid,charging,중간부하,Mid-peak
+charging.fee.sim.opt.nonmember,charging,비회원,Non-member
+charging.fee.sim.opt.off,charging,경부하,Off-peak
+charging.fee.sim.opt.on,charging,최대부하,Peak
+charging.fee.sim.opt.roaming,charging,로밍,Roaming
+charging.fee.sim.opt.spring_fall,charging,봄·가을,Spring/Fall
+charging.fee.sim.opt.summer,charging,여름,Summer
+charging.fee.sim.opt.winter,charging,겨울,Winter
+charging.fee.sim.result.card,charging,결제 카드,Payment Card
+charging.fee.sim.result.charger,charging,이용 충전기,Charger Used
+charging.fee.sim.result.lbl,charging,예상 충전요금 (회원),Estimated Charging Cost (Member)
+charging.fee.sim.result.note,charging,제조사·차량 모델·카드·충전기를 선택해 주세요.,"Please select manufacturer, vehicle model, card, and charger."
+charging.fee.sim.result.rateline,charging,단가 — 원/kWh,Unit price — KRW/kWh
+charging.fee.sim.title,charging,내 충전요금 시뮬레이터,My Charging Fee Simulator
+charging.fee.tab.ev,charging,전기차 충전요금,EV Charging Fees
+charging.fee.tab.matrix,charging,요금매트릭스,Fee Matrix
+charging.fee.tab.sim,charging,내 충전요금 시뮬레이터,My Fee Simulator
+charging.fee.tariff.cap.fast100,charging,급속 100kW이상,Fast (100 kW and above)
+charging.fee.tariff.cap.fast50,charging,급속 100kW미만,Fast (under 100 kW)
+charging.fee.tariff.close.aria,charging,닫기,Close
+charging.fee.tariff.day.saturday,charging,토요일,Saturday
+charging.fee.tariff.day.sunday,charging,일·공휴일,Sunday/Holiday
+charging.fee.tariff.day.weekday,charging,평일,Weekday
+charging.fee.tariff.note,charging,"※ 봄·가을(3~5월, 9~10월) 주말·공휴일 11~14시 전력량요금 50% 할인 적용 (2026.4.18~)<br>※ 로밍 요금은 충전사업자와 협의 후 추후 적용 예정","* Spring/Fall (Mar-May, Sep-Oct) weekends/holidays 11:00-14:00: 50% off energy charge (from 2026.4.18)<br>* Roaming rates to be applied after consultation with charging operators"
+charging.fee.tariff.optgroup.private,charging,민간,Private
+charging.fee.tariff.optgroup.public,charging,공공,Public
+charging.fee.tariff.season.spring,charging,봄·가을,Spring/Fall
+charging.fee.tariff.season.summer,charging,여름,Summer
+charging.fee.tariff.season.winter,charging,겨울,Winter
+charging.fee.tariff.title,charging,⏰ 시간대별 충전요금,⏰ Time-of-Use Charging Rates
+charging.fee.tindex.close.aria,charging,모달 닫기,Close modal
+charging.fee.tindex.eyebrow,charging,충전인프라 투명성 지수 (T-INDEX) v3,Charging Infrastructure Transparency Index (T-INDEX) v3
+charging.fee.tindex.role.admin,charging,담당자,Administrator
+charging.fee.tindex.role.aria,charging,역할 선택,Select role
+charging.fee.tindex.role.cpo,charging,사업자,Operator
+charging.fee.tindex.role.public,charging,사용자,User
+charging.fee.tindex.title,charging,사업자별 운영 현황 대시보드,Operator Status Dashboard
+charging.fee.title,charging,전기차 충전요금 안내,EV Charging Fees
+charging.find.ai.desc,charging,실시간 충전기 가동률·요금·편의시설·휴게소 위치를 종합 분석해 최단 시간 또는 최저 요금 경로를 제안합니다. 주행 중 가동률이 변동되면 자동으로 대체 충전소를 재추천합니다.,"Comprehensively analyzes real-time charger utilization, rates, amenities, and rest areas to suggest the shortest-time or lowest-cost route. If utilization changes mid-trip, alternative stations are automatically recommended."
+charging.find.ai.title,charging,AI 경로 최적화,AI Route Optimization
+charging.find.btn.csv.title,charging,CSV 다운로드,CSV Download
+charging.find.btn.search,charging,검색,Search
+charging.find.btn.xlsx.title,charging,Excel 다운로드,Excel Download
+charging.find.fav.btn,charging,즐겨찾기 관리,Manage Favorites
+charging.find.fav.desc,charging,자주 사용하는 충전소를 즐겨찾기하면 빠르게 접근할 수 있습니다.,Bookmark your frequent stations for quick access.
+charging.find.fav.title,charging,내 즐겨찾기,My Favorites
+charging.find.filter.connector,charging,커넥터,Connector
+charging.find.filter.search,charging,검색,Search
+charging.find.filter.search.ph,charging,지역명·충전소명·주소,"Region, station name, or address"
+charging.find.filter.speed,charging,충전 속도,Charging Speed
+charging.find.filter.vehicle,charging,차종,Vehicle Type
+charging.find.kbd.availonly,charging,이용 가능한 충전기만 표시,Show available chargers only
+charging.find.kbd.btn,charging,현재 위치로 검색,Search by Current Location
+charging.find.kbd.connector,charging,커넥터 (내 차량),Connector (My Vehicle)
+charging.find.kbd.desc,charging,현재 위치에서 반경을 선택하면 가장 가까운 충전소부터 안내합니다.,Choose a radius from your current location to see the nearest stations first.
+charging.find.kbd.opt.all,charging,전체,All
+charging.find.kbd.opt.conn.ac3,charging,AC 3상,AC 3-phase
+charging.find.kbd.opt.conn.auto,charging,자동 감지,Auto-detect
+charging.find.kbd.opt.conn.chademo,charging,DC 차데모,DC CHAdeMO
+charging.find.kbd.opt.conn.combo,charging,DC 콤보,DC Combo
+charging.find.kbd.opt.conn.nacs,charging,NACS (테슬라),NACS (Tesla)
+charging.find.kbd.opt.ev.fast,charging,전기차 (급속),EV (Fast)
+charging.find.kbd.opt.ev.slow,charging,전기차 (완속),EV (Slow)
+charging.find.kbd.opt.h2,charging,수소차,H2 (Hydrogen)
+charging.find.kbd.radius,charging,검색 반경,Search Radius
+charging.find.kbd.title,charging,내 위치 기반 검색,Location-Based Search
+charging.find.kbd.type,charging,충전기 유형,Charger Type
+charging.find.lead,charging,"전기·수소 충전소를 하나의 지도에서 <strong>통합 검색</strong>하고, <strong>GPS 반경 1·5·10km</strong>·<strong>경로 기반 검색</strong>으로 최적의 충전소를 찾습니다.","<strong>Search EV and hydrogen chargers</strong> on a single map, find optimal stations by <strong>GPS radius (1·5·10 km)</strong> or <strong>route-based search</strong>."
+charging.find.legend.busy,charging,사용중,In Use
+charging.find.legend.ev,charging,전기 (이용가능),EV (Available)
+charging.find.legend.h2,charging,수소,H2
+charging.find.map.api.desc,charging,공공데이터포털 충전소 API + 지도 SDK 실시간 연동,Public Data Portal Charging Station API + Map SDK real-time integration
+charging.find.map.api.title,charging,네이버지도 / 카카오맵 API 연동 영역,Naver Map / Kakao Map API Integration Area
+charging.find.map.mylocation,charging,현재 위치,My Location
+charging.find.map.zoomin,charging,확대,Zoom In
+charging.find.map.zoomout,charging,축소,Zoom Out
+charging.find.opt.ac3,charging,AC 3상,AC 3-phase
+charging.find.opt.acslow,charging,AC 완속,AC Slow
+charging.find.opt.all,charging,전체,All
+charging.find.opt.chademo,charging,DC 차데모,DC CHAdeMO
+charging.find.opt.combo,charging,DC 콤보,DC Combo
+charging.find.opt.ev,charging,전기차,EV
+charging.find.opt.fast,charging,급속 (50~100kW),Fast (50–100kW)
+charging.find.opt.h2,charging,수소차,Hydrogen
+charging.find.opt.nacs,charging,NACS,NACS
+charging.find.opt.slow,charging,완속 (7kW),Slow (7kW)
+charging.find.opt.ultra,charging,초급속 (350kW+),Ultra-fast (350kW+)
+charging.find.quick.24h,charging,24시간 운영,24-hour Operation
+charging.find.quick.all,charging,전체,All
+charging.find.quick.amenity,charging,편의시설,Amenities
+charging.find.quick.avail,charging,이용 가능,Available
+charging.find.quick.bush2,charging,버스 수소,H2 Bus
+charging.find.quick.freepark,charging,무료 주차,Free Parking
+charging.find.quick.highway,charging,고속도로 휴게소,Highway Rest Area
+charging.find.quick.label,charging,빠른 필터,Quick Filters
+charging.find.quick.open,charging,개방형,Open Access
+charging.find.quick.ultra,charging,초급속 350kW+,Ultra-fast 350kW+
+charging.find.result.prefix,charging,검색 결과,Results
+charging.find.result.suffix,charging,건,
+charging.find.route.btn.add,charging,추가,Add
+charging.find.route.btn.addrsearch,charging,주소검색,Address Search
+charging.find.route.btn.mylocation,charging,내 위치,My Location
+charging.find.route.btn.search,charging,경로 검색,Search Route
+charging.find.route.desc,charging,출발지·도착지를 입력하면 경로 상 최적의 충전 포인트를 자동 추천합니다.,Enter origin and destination; we recommend optimal charging stops on the route.
+charging.find.route.dot.end,charging,도,C
+charging.find.route.dot.start,charging,출,A
+charging.find.route.dot.via,charging,경,B
+charging.find.route.end.val,charging,부산광역시 해운대구 센텀동로 17,"17 Centum-dong-ro, Haeundae-gu, Busan"
+charging.find.route.kpi.cost,charging,예상 충전비,Est. Charging Cost
+charging.find.route.kpi.cost.v,charging,"18,400원","KRW 18,400"
+charging.find.route.kpi.count,charging,충전 횟수,Charging Stops
+charging.find.route.kpi.count.v,charging,1회,1
+charging.find.route.kpi.distance,charging,총 거리,Total Distance
+charging.find.route.kpi.distance.v,charging,396 km,396 km
+charging.find.route.kpi.time,charging,예상 시간,Estimated Time
+charging.find.route.kpi.time.v,charging,4시간 22분,4 hr 22 min
+charging.find.route.lbl.battery,charging,현재 배터리 (%),Current Battery (%)
+charging.find.route.lbl.pref,charging,선호 충전 속도,Preferred Charging Speed
+charging.find.route.lbl.range,charging,완충 주행거리 (km),Full Charge Range (km)
+charging.find.route.ph.end,charging,도착지,Destination
+charging.find.route.ph.start,charging,출발지,Origin
+charging.find.route.ph.via,charging,경유지 (선택),Waypoint (optional)
+charging.find.route.pref.cheap,charging,최저 요금,Lowest Cost
+charging.find.route.pref.fast,charging,최단 시간,Shortest Time
+charging.find.route.pref.stable,charging,안정성,Reliability
+charging.find.route.reco.eta.unit,charging,예상 충전 시간,Est. Charging Time
+charging.find.route.reco.remain,charging,잔여 주행,Remaining Range
+charging.find.route.reco.title,charging,추천 경로 상 충전소,Stations Along Route
+charging.find.route.reco1.addr,charging,경기 안성시 서운면 경부고속도로 상행,"Seoun-myeon, Anseong, Gyeonggi · Gyeongbu Expwy. NB"
+charging.find.route.reco1.chip,charging,추천 1,Recommended 1
+charging.find.route.reco1.eta,charging,18분,18 min
+charging.find.route.reco1.meta,charging,출발 후 약 1시간 52분 (178km 지점),~1 hr 52 min after departure (at 178 km)
+charging.find.route.reco1.name,charging,안성휴게소 초급속 충전소,Anseong Rest Area Ultra-Fast Charger
+charging.find.route.reco1.s1,charging,이용가능 6 / 8기,Available 6 / 8 units
+charging.find.route.reco1.s2,charging,350kW 초급속,350 kW Ultra-Fast
+charging.find.route.reco1.s3,charging,편의점·화장실,CVS · Restroom
+charging.find.route.reco2.addr,charging,충북 옥천군 이원면 경부고속도로 상행,"Iwon-myeon, Okcheon, Chungbuk · Gyeongbu Expwy. NB"
+charging.find.route.reco2.chip,charging,대체 1,Alternative 1
+charging.find.route.reco2.eta,charging,28분,28 min
+charging.find.route.reco2.meta,charging,출발 후 약 2시간 10분 (220km 지점),~2 hr 10 min after departure (at 220 km)
+charging.find.route.reco2.name,charging,옥천휴게소 급속 충전소,Okcheon Rest Area Fast Charger
+charging.find.route.reco2.s1,charging,이용가능 4 / 6기,Available 4 / 6 units
+charging.find.route.reco2.s2,charging,100kW 급속,100 kW Fast
+charging.find.route.reco2.s3,charging,식당·편의시설,Restaurant · Amenities
+charging.find.route.reco3.addr,charging,부산 해운대구 센텀중앙로 79,"79 Centum-jungang-ro, Haeundae-gu, Busan"
+charging.find.route.reco3.chip,charging,여유,Flexible
+charging.find.route.reco3.meta,charging,도착지 근처 (도착 후 충전),Near destination (charge after arrival)
+charging.find.route.reco3.name,charging,해운대 센텀 GS칼텍스,Haeundae Centum GS Caltex
+charging.find.route.reco3.s1,charging,이용가능 3 / 4기,Available 3 / 4 units
+charging.find.route.reco3.s2,charging,100kW 급속,100 kW Fast
+charging.find.route.reco3.s3,charging,24시간,24 hours
+charging.find.route.start.val,charging,서울 강남구 테헤란로 152,"152 Teheran-ro, Gangnam-gu, Seoul"
+charging.find.route.title,charging,경로 기반 충전소 검색,Route-Based Station Search
+charging.find.sd.addr,charging,서울 강남구 테헤란로 152 · 1층 주차장,"152 Teheran-ro, Gangnam-gu, Seoul · Level 1 Parking"
+charging.find.sd.alert.desc,charging,충전 시작 후 3분 이상 응답이 없거나 고장이 발생하면 즉시 고객센터(1577-7121)로 연락 주세요. 수소충전소는 장애 신고를 통해 신속 처리됩니다.,"If there is no response for 3+ minutes after charging starts, or a fault occurs, contact the customer center (1577-7121) immediately. H2 station issues are processed quickly via incident reports."
+charging.find.sd.alert.title,charging,충전 중 안내,During Charging
+charging.find.sd.brand,charging,GS칼텍스,GS Caltex
+charging.find.sd.btn.fav,charging,즐겨찾기,Favorite
+charging.find.sd.btn.reserve,charging,예약,Reserve
+charging.find.sd.btn.route,charging,길찾기,Directions
+charging.find.sd.chg.meta.chademo,charging,50kW · 차데모,50 kW · CHAdeMO
+charging.find.sd.chg.meta.combo,charging,50kW · 콤보,50 kW · Combo
+charging.find.sd.chg.meta.fastcombo,charging,100kW · DC콤보,100 kW · DC Combo
+charging.find.sd.chg.meta.fastnacs,charging,100kW · NACS,100 kW · NACS
+charging.find.sd.chg.meta.slowcombo,charging,50kW · DC콤보,50 kW · DC Combo
+charging.find.sd.chg.state.avail,charging,이용가능,Available
+charging.find.sd.chg.state.busy1,charging,사용중 08분,In use 08 min
+charging.find.sd.chg.state.busy2,charging,사용중 22분,In use 22 min
+charging.find.sd.chg.title,charging,충전기 현황 (6기),Charger Status (6 units)
+charging.find.sd.close.aria,charging,닫기,Close
+charging.find.sd.fac.amenity,charging,편의시설,Amenities
+charging.find.sd.fac.amenity.v,charging,편의점 · 화장실 · 휴게 공간,CVS · Restroom · Lounge
+charging.find.sd.fac.hours,charging,운영 시간,Operating Hours
+charging.find.sd.fac.hours.v,charging,24시간,24 hours
+charging.find.sd.fac.operator,charging,운영사,Operator
+charging.find.sd.fac.parking,charging,주차 요금,Parking Fee
+charging.find.sd.fac.parking.v,charging,무료 (충전 중),Free (while charging)
+charging.find.sd.fac.tel,charging,연락처,Contact
+charging.find.sd.fac.tel.v,charging,02-0000-0000,02-0000-0000
+charging.find.sd.fac.title,charging,시설 정보,Facility Info
+charging.find.sd.fee.fast100,charging,급속 (100kW),Fast (100 kW)
+charging.find.sd.fee.fast50,charging,급속 (50kW),Fast (50 kW)
+charging.find.sd.fee.member,charging,회원 할인,Member Discount
+charging.find.sd.fee.member.v,charging,통합카드 10% 할인,Integrated card 10% off
+charging.find.sd.fee.night,charging,심야 할인,Late-Night Discount
+charging.find.sd.fee.night.v,charging,22:00~06:00 20% 할인,22:00–06:00 20% off
+charging.find.sd.fee.roaming,charging,로밍 수수료,Roaming Fee
+charging.find.sd.fee.roaming.v,charging,없음 (통합카드),None (integrated card)
+charging.find.sd.fee.title,charging,충전 요금,Charging Rates
+charging.find.sd.kpi.avail,charging,이용가능,Available
+charging.find.sd.kpi.busy,charging,사용중,In Use
+charging.find.sd.kpi.fault,charging,고장,Fault
+charging.find.sd.tile.avail.sub,charging,대기 없음,No wait
+charging.find.sd.tile.busy.sub,charging,평균 18분,Avg. 18 min
+charging.find.sd.tile.fault.sub,charging,정상 운영,Normal operation
+charging.find.sd.title,charging,GS칼텍스 강남 직영,GS Caltex Gangnam Direct
+charging.find.sort.aria,charging,정렬,Sort
+charging.find.sort.avail,charging,이용 가능한순,Most Available
+charging.find.sort.cheap,charging,요금 저렴한순,Lowest Price
+charging.find.sort.count,charging,14개 충전소 검색됨,14 stations found
+charging.find.sort.distance,charging,거리순,Nearest First
+charging.find.sort.s1.status,charging,"<span class=""s-item avail"">이용가능 4 / 6기</span><span class=""s-item"">100kW 급속</span><span class=""s-item"">347원/kWh</span>","<span class=""s-item avail"">Available 4 / 6</span><span class=""s-item"">100 kW Fast</span><span class=""s-item"">KRW 347/kWh</span>"
+charging.find.sort.s2.status,charging,"<span class=""s-item avail"">이용가능 2</span><span class=""s-item"">700bar</span><span class=""s-item"">9,800원/kg</span>","<span class=""s-item avail"">Available 2</span><span class=""s-item"">700 bar</span><span class=""s-item"">KRW 9,800/kg</span>"
+charging.find.sort.s3.status,charging,"<span class=""s-item avail"">이용가능 6 / 12기</span><span class=""s-item"">50kW 급속</span><span class=""s-item"">313원/kWh</span>","<span class=""s-item avail"">Available 6 / 12</span><span class=""s-item"">50 kW Fast</span><span class=""s-item"">KRW 313/kWh</span>"
+charging.find.sort.s4.status,charging,"<span class=""s-item avail"">이용가능 2 / 4기</span><span class=""s-item"">350kW 초급속</span><span class=""s-item"">433원/kWh</span>","<span class=""s-item avail"">Available 2 / 4</span><span class=""s-item"">350 kW Ultra-Fast</span><span class=""s-item"">KRW 433/kWh</span>"
+charging.find.sort.s5.status,charging,"<span class=""s-item busy"">대기 3</span><span class=""s-item"">700bar</span><span class=""s-item"">9,500원/kg</span>","<span class=""s-item busy"">Wait 3</span><span class=""s-item"">700 bar</span><span class=""s-item"">KRW 9,500/kg</span>"
+charging.find.sort.s6.status,charging,"<span class=""s-item avail"">이용가능 18 / 24기</span><span class=""s-item"">완속 7kW</span><span class=""s-item"">225원/kWh (심야)</span>","<span class=""s-item avail"">Available 18 / 24</span><span class=""s-item"">Slow 7 kW</span><span class=""s-item"">KRW 225/kWh (night)</span>"
+charging.find.sort.title,charging,가까운 순 정렬 (현재 위치 기준 5km),Sorted by distance (within 5 km of current location)
+charging.find.sort.uptime,charging,가동률 높은순,Highest Uptime
+charging.find.source.desc,charging,"공공데이터포털 ""한국환경공단 전기자동차 충전소 정보"" API + H2KOREA 수소충전소 API 실시간 연동. 충전기 상태·가동률·고장 정보는 5분 주기로 갱신됩니다.","Real-time integration of public data API (Korea Environment Corporation EV station info) and H2KOREA hydrogen station API. Charger status, utilization, and fault info update every 5 minutes."
+charging.find.source.title,charging,데이터 출처·갱신,Data Source & Updates
+charging.find.st.s1.addr,charging,서울 강남구 테헤란로 152 · 1층 주차장,"152 Teheran-ro, Gangnam-gu, Seoul · Level 1 Parking"
+charging.find.st.s1.addr.short,charging,서울 강남구 테헤란로 152,"152 Teheran-ro, Gangnam-gu, Seoul"
+charging.find.st.s1.meta,charging,100kW 급속 · DC콤보,100 kW Fast · DC Combo
+charging.find.st.s1.name,charging,GS칼텍스 강남 직영,GS Caltex Gangnam Direct
+charging.find.st.s1.status,charging,"<span class=""s-item avail"">이용가능 4</span><span class=""s-item busy"">사용중 2</span><span class=""s-item"">총 6기</span>","<span class=""s-item avail"">Available 4</span><span class=""s-item busy"">In use 2</span><span class=""s-item"">Total 6</span>"
+charging.find.st.s2.addr,charging,서울 강남구 선릉로 428 · 지상 2층,"428 Seolleung-ro, Gangnam-gu, Seoul · 2F"
+charging.find.st.s2.addr.short,charging,서울 강남구 선릉로 428,"428 Seolleung-ro, Gangnam-gu, Seoul"
+charging.find.st.s2.meta,charging,700bar · 승용/상용 겸용,700 bar · Passenger/Commercial
+charging.find.st.s2.name,charging,스타광장 수소충전소,Star Plaza H2 Station
+charging.find.st.s2.status,charging,"<span class=""s-item avail"">이용가능 2</span><span class=""s-item"">대기 1</span>","<span class=""s-item avail"">Available 2</span><span class=""s-item"">Wait 1</span>"
+charging.find.st.s3.addr,charging,서울 강남구 학동로 426 · 공영주차장 B1,"426 Hakdong-ro, Gangnam-gu, Seoul · Public Parking B1"
+charging.find.st.s3.addr.short,charging,서울 강남구 학동로 426,"426 Hakdong-ro, Gangnam-gu, Seoul"
+charging.find.st.s3.meta,charging,50kW 급속 + 완속 10기,50 kW Fast + 10 Slow units
+charging.find.st.s3.name,charging,환경부 강남구청 공공,MCEE Gangnam-gu Office (Public)
+charging.find.st.s3.status,charging,"<span class=""s-item avail"">이용가능 6</span><span class=""s-item busy"">사용중 4</span><span class=""s-item"">총 12기</span>","<span class=""s-item avail"">Available 6</span><span class=""s-item busy"">In use 4</span><span class=""s-item"">Total 12</span>"
+charging.find.st.s4.addr,charging,서울 강남구 삼성로 427 · 대치역 2번 출구,"427 Samseong-ro, Gangnam-gu, Seoul · Daechi Stn. Exit 2"
+charging.find.st.s4.addr.short,charging,서울 강남구 삼성로 427,"427 Samseong-ro, Gangnam-gu, Seoul"
+charging.find.st.s4.meta,charging,350kW 초급속 · NACS 포함,350 kW Ultra-Fast · NACS supported
+charging.find.st.s4.name,charging,대치역 SK시그넷 초급속,Daechi Stn. SK Signet Ultra-Fast
+charging.find.st.s4.status,charging,"<span class=""s-item avail"">이용가능 2</span><span class=""s-item fault"">고장 1</span><span class=""s-item"">총 4기</span>","<span class=""s-item avail"">Available 2</span><span class=""s-item fault"">Fault 1</span><span class=""s-item"">Total 4</span>"
+charging.find.st.s5.addr,charging,서울 서초구 남부순환로 2688,"2688 Nambusunhwan-ro, Seocho-gu, Seoul"
+charging.find.st.s5.meta,charging,700bar + 350bar · 상용 전용 포함,700 bar + 350 bar · Commercial included
+charging.find.st.s5.name,charging,양재IC 현대 수소충전소,Yangjae IC Hyundai H2 Station
+charging.find.st.s5.status,charging,"<span class=""s-item busy"">운영중 (대기 3)</span><span class=""s-item"">버스 가능</span>","<span class=""s-item busy"">Operating (Wait 3)</span><span class=""s-item"">Bus OK</span>"
+charging.find.st.s6.addr,charging,서울 서초구 서초대로 396 · 지하주차장,"396 Seocho-daero, Seocho-gu, Seoul · Underground Parking"
+charging.find.st.s6.addr.short,charging,서울 서초구 서초대로 396,"396 Seocho-daero, Seocho-gu, Seoul"
+charging.find.st.s6.meta,charging,완속 7kW · 24시간 개방,Slow 7 kW · 24 hours
+charging.find.st.s6.name,charging,서초동 EV Infra 완속,Seocho-dong EV Infra Slow
+charging.find.st.s6.status,charging,"<span class=""s-item avail"">이용가능 18</span><span class=""s-item busy"">사용중 6</span><span class=""s-item"">총 24기</span>","<span class=""s-item avail"">Available 18</span><span class=""s-item busy"">In use 6</span><span class=""s-item"">Total 24</span>"
+charging.find.st.s7.addr,charging,서울 송파구 올림픽로 300 · 지하 3층,"300 Olympic-ro, Songpa-gu, Seoul · B3"
+charging.find.st.s7.meta,charging,100kW 급속 · 편의시설 완비,100 kW Fast · Full amenities
+charging.find.st.s7.name,charging,롯데월드몰 파워큐브,Lotte World Mall PowerCube
+charging.find.st.s7.status,charging,"<span class=""s-item avail"">이용가능 8</span><span class=""s-item busy"">사용중 4</span><span class=""s-item fault"">고장 2</span>","<span class=""s-item avail"">Available 8</span><span class=""s-item busy"">In use 4</span><span class=""s-item fault"">Fault 2</span>"
+charging.find.st.s8.addr,charging,서울 송파구 올림픽로 35길 124,"124 Olympic-ro 35-gil, Songpa-gu, Seoul"
+charging.find.st.s8.meta,charging,700bar · 승용 전용,700 bar · Passenger only
+charging.find.st.s8.name,charging,잠실 코하이젠 수소충전소,Jamsil KOHYGEN H2 Station
+charging.find.st.s8.status,charging,"<span class=""s-item avail"">이용가능 1</span><span class=""s-item"">대기 0</span>","<span class=""s-item avail"">Available 1</span><span class=""s-item"">Wait 0</span>"
+charging.find.st.type.ev,charging,전기,EV
+charging.find.st.type.h2,charging,수소,H2
+charging.find.status.avail,charging,이용가능,Available
+charging.find.status.busy,charging,사용중,In Use
+charging.find.status.fault,charging,고장,Fault
+charging.find.status.faultreport,charging,고장 신고,Fault Report
+charging.find.status.operating,charging,운영중,Operating
+charging.find.status.total,charging,총,Total
+charging.find.status.wait,charging,대기,Wait
+charging.find.tab.aria,charging,검색 방식,Search method
+charging.find.tab.map,charging,통합 지도 (전기+수소),Integrated Map (EV + H2)
+charging.find.tab.near,charging,내 주변 충전소,Nearby Stations
+charging.find.tab.route,charging,경로 검색,Route Search
+charging.find.title,charging,충전소 찾기,Find Charging Stations
+charging.find.type.ev,charging,전기,EV
+charging.find.type.h2,charging,수소,H2
+charging.help.btn.register,charging,등록,Submit
+charging.help.field.addr,charging,주소 :,Address:
+charging.help.field.applicant,charging,신청기관(자),Applicant
+charging.help.field.content,charging,신청내용,Content
+charging.help.field.detail,charging,상세 :,Detail:
+charging.help.field.email,charging,이메일,Email
+charging.help.field.name,charging,이름,Name
+charging.help.field.phone,charging,연락처,Phone
+charging.help.field.site,charging,대상부지,Site
+charging.help.field.target,charging,문의대상,Inquiry Subject
+charging.help.field.zip.btn,charging,우편번호,Postal Code
+charging.help.file.label,charging,첨부파일<br>(토지대장),Attachment<br>(Land Register)
+charging.help.file.none,charging,선택된 파일 없음,No file selected
+charging.help.file.select,charging,파일선택,Select File
+charging.help.h2,charging,수소충전소 Help Desk,H2 Station Help Desk
+charging.help.note1,charging,※ 파일첨부시 첨부가능한 용량은 최대 3M 입니다.,* Max attachment size is 3 MB.
+charging.help.note2,charging,※ 문의 시 지번 주소별 진행·처리됨으로 한 건씩 요청 바랍니다.(지번건=요청건),* Inquiries are processed per lot address; please submit one inquiry per lot (one lot = one request).
+charging.help.note3,charging,"※ 접수부터 완료까지 통상 처리기간은 5~15일 정도 소요되며, 신청 대상 내용에 따라 조정될 수 있습니다.",* Processing typically takes 5–15 days from receipt to completion; may vary based on the request.
+charging.help.opt.changesite,charging,기존 설치 부지 변경 문의,Existing Site Change Inquiry
+charging.help.opt.etc,charging,기타 문의,Other Inquiries
+charging.help.opt.individual,charging,개인,Individual
+charging.help.opt.local,charging,지방자치단체,Local Government
+charging.help.opt.newstation,charging,수소충전소 신규 설치 검토,New H2 Station Installation Review
+charging.help.opt.permit,charging,운영 인허가 관련 문의,Operation Permit Inquiry
+charging.help.opt.private,charging,민간사업자,Private Operator
+charging.help.opt.public,charging,공공기관,Public Agency
+charging.help.opt.select,charging,선택,Select
+charging.help.placeholder.name,charging,홍길동,Name
+charging.help.section.required,charging, 는 필수 항목입니다., indicates required fields.
+charging.help.section.title,charging,문의내용 접수,Inquiry Submission
+charging.help.step.1,charging,01. 개인정보 제공동의,01. Privacy Consent
+charging.help.step.2,charging,02. 본인인증,02. Identity Verification
+charging.help.step.3,charging,03. 정보입력,03. Enter Information
+charging.help.step.4,charging,04. 입력완료,04. Submission Complete
+charging.help.stepper.aria,charging,신청 단계,Application Steps
+charging.help.tab.report,charging,수소충전소 장애 신고,Report H2 Station Issue
+charging.help.tab.status,charging,운영 현황 안내,Operation Status
+charging.help.textarea.ph,charging,"※ 내용은 최대 3,000Byte까지 입력 가능합니다.","* Up to 3,000 bytes"
+charging.help.title,charging,수소충전소 Help Desk,H2 Station Help Desk
+charging.install.bc.install,charging,충전시설 설치,Install Chargers
+charging.install.contest.alert.body,charging,연도별 공모 규모·대당 보조금 단가·평가 항목은 매년 환경부 「전기자동차 충전인프라 보조금 업무처리지침」 및 공고문에 따라 결정됩니다. 세부 사항은 무공해차 통합누리집 자료실에서 「업무처리지침」 및 「공고문」을 다운로드하여 확인해 주십시오.,"Annual procurement size, per-unit subsidy, and evaluation criteria are determined by MCEE Electric Vehicle Charging Infrastructure Subsidy Operations Guideline and annual notices. Please download the Guideline and Notice from the Library on the Zero-Emission Vehicle Portal for details."
+charging.install.contest.alert.title,charging,공고 일정·단가·평가 기준 안내,"Schedule, Rates, and Evaluation Criteria"
+charging.install.contest.badge.open,charging,접수 중,Open
+charging.install.contest.badge.soon,charging,예정,Upcoming
+charging.install.contest.bc.current,charging,완속/급속 공모 신청,Slow/Fast Procurement Application
+charging.install.contest.btn,charging,공모 안내 보기,View Procurement Info
+charging.install.contest.btn.apply,charging,공모 신청,Apply
+charging.install.contest.btn.apply2,charging,공모 신청,Apply
+charging.install.contest.c1.li1,charging,"지원 규모: 1만 5,000기","Size: 15,000 units"
+charging.install.contest.c1.li2,charging,접수 기간: 2026-04-15 ~ 2026-06-30,Period: 2026-04-15 to 2026-06-30
+charging.install.contest.c1.li3,charging,대상: 사업자 (구축 50기 이상),Target: Operators (50+ units)
+charging.install.contest.c1.li4,charging,지원 단가: 140 ~ 180만원/기,Rate: KRW 1.4M – 1.8M/unit
+charging.install.contest.c1.title,charging,2026년 상반기 공용 완속충전기 공모,2026 H1 Public Slow Charger Procurement
+charging.install.contest.c2.li1,charging,"지원 규모: 3,000기 (50/100/200kW)","Size: 3,000 units (50/100/200 kW)"
+charging.install.contest.c2.li2,charging,접수 기간: 2026-05-01 ~ 2026-07-31,Period: 2026-05-01 to 2026-07-31
+charging.install.contest.c2.li3,charging,대상: 사업자 (구축 20기 이상),Target: Operators (20+ units)
+charging.install.contest.c2.li4,charging,"지원 단가: 1,500 ~ 4,500만원/기",Rate: KRW 15M – 45M/unit
+charging.install.contest.c2.title,charging,2026년 급속충전기 거점 구축 공모,2026 Fast Charger Hub Procurement
+charging.install.contest.cur.title,charging,진행 중 공모,Active Procurements
+charging.install.contest.eval.col1,charging,구분,No.
+charging.install.contest.eval.col2,charging,평가 항목,Evaluation Item
+charging.install.contest.eval.col3,charging,배점,Points
+charging.install.contest.eval.col4,charging,주요 검토 사항,Review Items
+charging.install.contest.eval.r1,charging,<td>1</td><td>사업 수행 능력</td><td>30점</td><td>구축 실적·재무 안정성</td>,"<td>1</td><td>Project Capability</td><td>30 pts</td><td>Track record, financial stability</td>"
+charging.install.contest.eval.r2,charging,<td>2</td><td>입지·접근성</td><td>25점</td><td>교통량·이용 수요·경쟁성</td>,"<td>2</td><td>Location/Access</td><td>25 pts</td><td>Traffic volume, demand, competitiveness</td>"
+charging.install.contest.eval.r3,charging,<td>3</td><td>가격 경쟁력</td><td>20점</td><td>kWh당 요금·할인 정책</td>,"<td>3</td><td>Price Competitiveness</td><td>20 pts</td><td>kWh rate, discount policy</td>"
+charging.install.contest.eval.r4,charging,<td>4</td><td>운영 계획</td><td>15점</td><td>유지보수·장애 대응 체계</td>,"<td>4</td><td>Operation Plan</td><td>15 pts</td><td>Maintenance, incident response</td>"
+charging.install.contest.eval.r5,charging,<td>5</td><td>지역 균형</td><td>10점</td><td>충전 사각지대 해소 기여도</td>,<td>5</td><td>Regional Balance</td><td>10 pts</td><td>Closing charging gaps</td>
+charging.install.contest.eval.title,charging,평가 항목 및 배점,Evaluation Criteria & Scoring
+charging.install.contest.fast.h4,charging,급속 충전기 구축 공모,Fast Charger Procurement
+charging.install.contest.fast.spec,charging,대상 규격: 50kW 이상 급속 충전기,Spec: 50kW+ fast charger
+charging.install.contest.fast.support,charging,지원 내용: 환경부 보조금 업무처리지침에 따른 대당 보조,Support: per-unit subsidy under MCEE Subsidy Operations Guideline
+charging.install.contest.fast.target,charging,"대상 사업자: 충전 사업자, 고속도로 휴게소·대형 거점","Eligible: charging operators, highway rest areas, major hubs"
+charging.install.contest.h1,charging,완속/급속 공모 신청,Slow/Fast Procurement Application
+charging.install.contest.h3,charging,완속·급속 충전기 구축 공모,Slow/Fast Charger Procurement
+charging.install.contest.lead,charging,대형 사업자 대상 <strong>충전소 구축 공모</strong>를 통해 다수 부지 일괄 설치 보조금을 지원합니다.,"For large operators, the <strong>station deployment procurement</strong> provides subsidies for bulk multi-site installations."
+charging.install.contest.past.col1,charging,공모명,Procurement
+charging.install.contest.past.col2,charging,접수,Received
+charging.install.contest.past.col3,charging,선정,Selected
+charging.install.contest.past.col4,charging,경쟁률,Competition
+charging.install.contest.past.col5,charging,발표일,Announce Date
+charging.install.contest.past.r1,charging,<td>2025 상반기 완속</td><td>168건</td><td>52건</td><td>3.2:1</td><td>2025-07-15</td>,<td>2025 H1 Slow</td><td>168</td><td>52</td><td>3.2:1</td><td>2025-07-15</td>
+charging.install.contest.past.r2,charging,<td>2025 하반기 완속</td><td>142건</td><td>48건</td><td>2.95:1</td><td>2026-01-20</td>,<td>2025 H2 Slow</td><td>142</td><td>48</td><td>2.95:1</td><td>2026-01-20</td>
+charging.install.contest.past.r3,charging,<td>2025 급속거점</td><td>89건</td><td>22건</td><td>4.05:1</td><td>2025-09-30</td>,<td>2025 Fast Hub</td><td>89</td><td>22</td><td>4.05:1</td><td>2025-09-30</td>
+charging.install.contest.past.title,charging,최근 공모 결과,Recent Procurement Results
+charging.install.contest.slow.h4,charging,완속 충전기 구축 공모,Slow Charger Procurement
+charging.install.contest.slow.spec,charging,대상 규격: 7kW · 11kW 완속 충전기,Spec: 7kW · 11kW slow charger
+charging.install.contest.slow.support,charging,지원 내용: 환경부 보조금 업무처리지침에 따른 대당 보조,Support: per-unit subsidy under MCEE Subsidy Operations Guideline
+charging.install.contest.slow.target,charging,"대상 사업자: 충전 사업자, 대형 건물주·공공기관","Eligible: charging operators, large property owners, public agencies"
+charging.install.lead,charging,"공용 완속충전기 <strong>직접 설치 신청</strong>, 완속·급속·전기이륜차 <strong>공모 신청</strong>, 인증 완속충전기 <strong>제품 안내</strong>까지 한 곳에서 제공합니다.","<strong>Direct installation</strong> of public slow chargers, <strong>procurement</strong> for slow / fast / e-motorbike chargers, and <strong>certified product</strong> information — all in one place."
+charging.install.moto.alert.body,charging,연도별 공모 규모·대당 보조금 단가·접수 기간은 매년 환경부 공고에 따라 결정됩니다. 자세한 내용은 「전기이륜차 충전시설 공모 공고」 및 「업무처리지침」을 확인해 주십시오.,"Annual procurement size, per-unit subsidy, and application period are determined by annual MCEE notices. Refer to the E-Motorbike Charger Procurement Notice and Operations Guideline for details."
+charging.install.moto.alert.title,charging,공고 일정·단가 안내,Notice Schedule & Rates
+charging.install.moto.alert2.body,charging,"접수 기간: 2026-05-15 ~ 2026-07-15 / 지원 규모: 1,200기 (배터리 교환식 800 + 완속 400)","Period: 2026-05-15 to 2026-07-15 / Size: 1,200 units (battery-swap 800 + slow 400)"
+charging.install.moto.alert2.title,charging,2026년 전기이륜차 충전시설 공모 안내,2026 E-Motorbike Charger Procurement Notice
+charging.install.moto.bc.current,charging,전기이륜차 충전시설 공모,E-Motorbike Charger Procurement
+charging.install.moto.bonus,charging,우대 사항 (예시),Preferences (Examples)
+charging.install.moto.bonus.note,charging,※ 우대 사항·배점·세부 가산 기준은 매년 공고문에 명시됩니다.,"* Preferences, scoring, and detailed bonus criteria are specified in the annual notice."
+charging.install.moto.bonus1,charging,배달 플랫폼 협약 업소,Delivery platform partner businesses
+charging.install.moto.bonus2,charging,소상공인 확인서 보유 사업자,Small business certificate holders
+charging.install.moto.bonus3,charging,24시간 개방 가능 공간,24-hour accessible spaces
+charging.install.moto.bonus4,charging,배터리 교체형 인프라 겸용,Battery-swap compatible infrastructure
+charging.install.moto.bonus5,charging,농어촌·도서 지역,Rural/island regions
+charging.install.moto.btn.info,charging,공모 안내 보기,View Procurement Info
+charging.install.moto.dd1,charging,전기이륜차 전용 충전기,E-motorbike dedicated chargers
+charging.install.moto.dd2,charging,"배달 플랫폼, 편의점·식당, 소상공인 연합체, 지방자치단체","Delivery platforms, convenience stores/restaurants, small business associations, local governments"
+charging.install.moto.dd3,charging,전기이륜차 전용 주차공간 확보 필수,Dedicated parking space for e-motorbikes required
+charging.install.moto.dd4,charging,매년 환경부·한국환경공단 공고에 따름,Per annual MCEE/Korea Environment Corp. notice
+charging.install.moto.dt1,charging,대상 규격,Target Spec
+charging.install.moto.dt2,charging,지원 대상,Eligibility
+charging.install.moto.dt3,charging,설치 조건,Installation Condition
+charging.install.moto.dt4,charging,공고 일정,Notice Schedule
+charging.install.moto.eval.col1,charging,구분,No.
+charging.install.moto.eval.col2,charging,평가 항목,Evaluation Item
+charging.install.moto.eval.col3,charging,배점,Points
+charging.install.moto.eval.r1,charging,<td>1</td><td>입지 적합성 (이용 수요)</td><td>30점</td>,<td>1</td><td>Location suitability (demand)</td><td>30 pts</td>
+charging.install.moto.eval.r2,charging,<td>2</td><td>운영 노하우 (서비스 안정성)</td><td>25점</td>,<td>2</td><td>Operational expertise (service stability)</td><td>25 pts</td>
+charging.install.moto.eval.r3,charging,<td>3</td><td>제조사 인증 (배터리 표준)</td><td>20점</td>,<td>3</td><td>Manufacturer cert (battery std)</td><td>20 pts</td>
+charging.install.moto.eval.r4,charging,<td>4</td><td>요금 경쟁력</td><td>15점</td>,<td>4</td><td>Rate competitiveness</td><td>15 pts</td>
+charging.install.moto.eval.r5,charging,<td>5</td><td>지역 균형</td><td>10점</td>,<td>5</td><td>Regional balance</td><td>10 pts</td>
+charging.install.moto.eval.title,charging,선정 기준,Selection Criteria
+charging.install.moto.h1,charging,전기이륜차 충전시설 공모,E-Motorbike Charger Procurement
+charging.install.moto.k1.l,charging,총 지원 규모,Total Size
+charging.install.moto.k1.u,charging,기,units
+charging.install.moto.k2.l,charging,예산 총액,Total Budget
+charging.install.moto.k2.u,charging,억원,00M KRW
+charging.install.moto.k3.l,charging,단가 (교환식),Rate (Swap)
+charging.install.moto.k3.u,charging,만원/기,0K KRW/unit
+charging.install.moto.k4.l,charging,단가 (완속),Rate (Slow)
+charging.install.moto.lead,charging,배달 플랫폼·소상공인 중심으로 운행이 증가하는 전기이륜차 이용자를 위한 공용 충전 인프라 구축 공모입니다.,"A procurement for public charging infrastructure for e-motorbike users, primarily delivery platforms and small businesses."
+charging.install.moto.lead2,charging,배달·택배 전기이륜차용 <strong>배터리 교환식·완속 충전기</strong> 구축을 위한 공모 사업입니다.,A procurement for <strong>battery-swap and slow chargers</strong> for delivery/courier e-motorbikes.
+charging.install.moto.loc.li1,charging,배달 플랫폼 거점 (배달의민족·쿠팡이츠 라이더 라운지 인근),Delivery platform hubs (near Baemin/Coupang Eats rider lounges)
+charging.install.moto.loc.li2,charging,택배 분류 센터 / 우체국 / 새벽배송 거점,Parcel sorting centers / post offices / dawn delivery hubs
+charging.install.moto.loc.li3,charging,지하철 환승 주차장 / 공원 주차장 / 시민이용시설,Subway transit parking / park parking / public facilities
+charging.install.moto.loc.li4,charging,편의점 GS25·CU·세븐일레븐 점포 외부 (가맹 협력),Outside GS25/CU/7-Eleven convenience stores (partnership)
+charging.install.moto.loc.title,charging,설치 권장 입지,Recommended Locations
+charging.install.moto.outline,charging,공모 개요,Procurement Overview
+charging.install.moto.outline2,charging,사업 개요,Project Overview
+charging.install.moto.title,charging,전기이륜차 충전시설 공모,E-Motorbike Charger Procurement
+charging.install.note.consult,charging,"※ 사전 상담은 한국환경공단의 사전 전문 진단(컨설팅) 절차로, 적정 수량·설치 위치 안내를 받으실 수 있습니다.",* Pre-consultation is a Korea Environment Corporation professional diagnostic (consulting) process to provide guidance on appropriate quantity and installation locations.
+charging.install.products.alert.desc,charging,인증 완속충전기 전체 제품 목록·제조사·규격·인증 정보는 무공해차 통합누리집 「완속충전기 제품안내」 페이지에서 확인하실 수 있습니다.,"The full list of certified slow chargers (manufacturer, specs, certification) is available on the ""Slow Charger Products"" page of the Zero-Emission Vehicle Portal."
+charging.install.products.alert2.body,charging,제품별 보조금 단가는 매년 환경부 「전기자동차 충전인프라 보조금 업무처리지침」에 따라 결정됩니다. 세부 사양·가격은 제조사 또는 무공해차 통합누리집 「완속충전기 제품안내」 페이지에서 확인해 주십시오.,"Per-product subsidy rates are determined annually by the MCEE EV Charging Infrastructure Subsidy Guidelines. For specifications and prices, contact the manufacturer or visit the ""Slow Charger Products"" page."
+charging.install.products.alert2.title,charging,제품별 보조금 단가 안내,Subsidy Rates by Product
+charging.install.products.bc.current,charging,완속충전기 제품 안내,Slow Charger Products
+charging.install.products.btn.detail,charging,상세 보기,View Details
+charging.install.products.btn.detail2,charging,상세 보기,View Details
+charging.install.products.btn.list,charging,제품 목록 보기,View Product List
+charging.install.products.btn.search,charging,검색,Search
+charging.install.products.cert.li1,charging,환경부 「전기자동차 충전기 인증 기준」 고시 충족,Compliance with MCEE EV Charger Certification Standards
+charging.install.products.cert.li2,charging,과금형 충전기: 「계량에 관한 법률」에 따른 검정 필수,Billing chargers: required verification under the Measurement Act
+charging.install.products.cert.li3,charging,화재 안전 기준 및 전기 안전 기준 충족,Compliance with fire safety and electrical safety standards
+charging.install.products.cert.line,charging,인증: KC·KS·환경부,"Certification: KC, KS, MCEE"
+charging.install.products.cert.std,charging,인증 기준,Certification Standards
+charging.install.products.cert.title,charging,인증 제품 목록 조회,View Certified Products
+charging.install.products.demo.note,charging,⚠ 시연용 예시 데이터 — 실제 인증 제품 목록은 환경공단 인증 DB 연동 후 제공됩니다.,⚠ Demo example data — actual certified product list will be provided after Korea Environment Corp. DB integration.
+charging.install.products.h1,charging,완속충전기 제품 안내,Slow Charger Products
+charging.install.products.lbl.maker,charging,제조사,Manufacturer
+charging.install.products.lbl.power,charging,출력,Power Output
+charging.install.products.lbl.type,charging,유형,Type
+charging.install.products.lead,charging,환경부·한국환경공단 인증을 받은 완속충전기 제품 중 보조금 지원이 가능한 제품에 대한 안내입니다.,Information on MCEE/Korea Environment Corporation-certified slow chargers eligible for subsidies.
+charging.install.products.lead2,charging,환경부 보조금 지원 대상 <strong>인증 완속충전기 제품</strong> 목록과 사양 정보입니다.,List and specifications of <strong>certified slow charger products</strong> eligible for MCEE subsidies.
+charging.install.products.maker.cj,charging,중앙제어,Joongang Control
+charging.install.products.maker.dycb,charging,대영채비,Daeyoung Chaevi
+charging.install.products.maker.gsc,charging,GS커넥트,GS Connect
+charging.install.products.maker.pcube,charging,파워큐브,PowerCube
+charging.install.products.maker.pl,charging,피라인모터스,Pyline Motors
+charging.install.products.maker.sks,charging,SK시그넷,SK Signet
+charging.install.products.p1.power,charging,출력: 7kW (단상),Power: 7 kW (single phase)
+charging.install.products.p2.power,charging,출력: 11kW (3상),Power: 11 kW (3-phase)
+charging.install.products.p3.power,charging,출력: 7kW (벽부형),Power: 7 kW (wall-mounted)
+charging.install.products.p4.power,charging,출력: 11kW,Power: 11 kW
+charging.install.products.p5.power,charging,출력: 3kW (가정용),Power: 3 kW (home)
+charging.install.products.p6.power,charging,출력: 11kW (스탠드),Power: 11 kW (stand)
+charging.install.products.ph.maker,charging,제조사 검색,Search manufacturer
+charging.install.products.rate.140,charging,지원 단가: 140만원,Subsidy: KRW 1.4M
+charging.install.products.rate.180,charging,지원 단가: 180만원,Subsidy: KRW 1.8M
+charging.install.products.rate.60,charging,지원 단가: 60만원,Subsidy: KRW 0.6M
+charging.install.products.spec.cert,charging,인증:,Certification:
+charging.install.products.spec.power,charging,출력:,Power:
+charging.install.products.spec.rate,charging,지원 단가:,Subsidy:
+charging.install.products.type.all,charging,전체,All
+charging.install.products.type.home,charging,가정용,Home
+charging.install.products.type.stand,charging,스탠드형,Stand-type
+charging.install.products.type.wall,charging,벽부형,Wall-mounted
+charging.install.slow.alert.body,charging,"50세대 이상 공동주택, 연면적 1,000㎡ 이상 업무시설·판매시설, 공공기관·지자체 주차장","Apartments with 50+ households, offices/retail with 1,000+ sqm, public agencies and municipal parking lots."
+charging.install.slow.alert.title,charging,지원 대상,Eligibility
+charging.install.slow.aside.btn1,charging,사전 상담 신청,Request Pre-consultation
+charging.install.slow.aside.btn2,charging,설치 매뉴얼 다운로드,Download Installation Manual
+charging.install.slow.aside.btn3,charging,신청서 양식 받기,Download Application Form
+charging.install.slow.aside.h4,charging,신청 바로가기,Apply Now
+charging.install.slow.aside.note,charging,"※ 사전 상담은 한국환경공단의 사전 전문 진단(컨설팅) 절차로, 적정 수량·설치 위치 안내를 받으실 수 있습니다.",※ Pre-consultation is a KECO expert advisory step that provides guidance on optimal quantity and location.
+charging.install.slow.bc.current,charging,공용 완속충전 직접신청,Public Slow Charger Application
+charging.install.slow.btn.apply,charging,온라인 신청 시작,Start Online Application
+charging.install.slow.btn.form,charging,서류 양식 다운로드,Download Forms
+charging.install.slow.btn.localcontact,charging,지자체 담당자 검색,Find Regional Officer
+charging.install.slow.col.national,charging,국비,National
+charging.install.slow.col.regional,charging,지방비,Regional
+charging.install.slow.col.spec,charging,규격,Specification
+charging.install.slow.col.total,charging,총 지원금,Total Subsidy
+charging.install.slow.col.type,charging,구분,Type
+charging.install.slow.contact.body,charging,한국환경공단 충전인프라처<br><strong>1661-0970</strong> (평일 09~18시),Korea Environment Corp. Charging Infrastructure Dept.<br><strong>1661-0970</strong> (Weekdays 09–18)
+charging.install.slow.contact.title,charging,문의처,Contact
+charging.install.slow.docs.col1,charging,구분,No.
+charging.install.slow.docs.col2,charging,서류명,Document
+charging.install.slow.docs.col3,charging,비고,Note
+charging.install.slow.docs.h4,charging,제출 서류,Required Documents
+charging.install.slow.docs.li1,charging,설치 신청서 (별지 제1호 서식),Installation Application Form (Form No. 1)
+charging.install.slow.docs.li2,charging,건축물 관리주체 동의서 또는 사업자등록증,Building manager consent or business registration
+charging.install.slow.docs.li3,charging,설치 예정지 도면 및 전기 설비 용량 확인서,Site plan and electrical capacity confirmation
+charging.install.slow.docs.li4,charging,충전기 제조사 견적서 (인증 제품),Manufacturer quote (certified product)
+charging.install.slow.docs.li5,charging,입주자·거주자 대표 동의서 (공동주택 시),Resident representative consent (apartments only)
+charging.install.slow.docs.r1,charging,<td>1</td><td>설치 신청서</td><td>양식 다운로드</td>,<td>1</td><td>Installation Application</td><td>Download form</td>
+charging.install.slow.docs.r2,charging,<td>2</td><td>입주자대표회의 동의서</td><td>공동주택만 해당</td>,<td>2</td><td>Residents' Council Consent</td><td>Apartments only</td>
+charging.install.slow.docs.r3,charging,<td>3</td><td>건축물대장</td><td>최근 3개월 이내</td>,<td>3</td><td>Building Register</td><td>Within last 3 months</td>
+charging.install.slow.docs.r4,charging,<td>4</td><td>주차면 도면</td><td>설치 위치 표시</td>,<td>4</td><td>Parking Floor Plan</td><td>Indicate installation location</td>
+charging.install.slow.docs.r5,charging,<td>5</td><td>제조사 견적서</td><td>2개 이상</td>,<td>5</td><td>Manufacturer Quotes</td><td>2 or more</td>
+charging.install.slow.docs.r6,charging,<td>6</td><td>사업자 등록증</td><td>법인·개인사업자</td>,<td>6</td><td>Business License</td><td>Corp./sole proprietor</td>
+charging.install.slow.docs.title,charging,필요 서류,Required Documents
+charging.install.slow.h1,charging,공용 완속충전 직접신청,Public Slow Charger Application
+charging.install.slow.h3,charging,공용 완속충전기 직접 설치 신청,Public Slow Charger Direct Installation
+charging.install.slow.kpi1.l,charging,설치 보조금,Installation Subsidy
+charging.install.slow.kpi1.u,charging,만원/기,0K KRW/unit
+charging.install.slow.kpi1.v,charging,최대 200,Up to 200
+charging.install.slow.kpi2.l,charging,대상,Target
+charging.install.slow.kpi2.v,charging,공용 공간,Public Space
+charging.install.slow.kpi3.l,charging,신청 기간,Application Period
+charging.install.slow.kpi3.v,charging,상시,Year-round
+charging.install.slow.kpi4.l,charging,처리 기간,Processing Time
+charging.install.slow.kpi4.u,charging,영업일,business days
+charging.install.slow.kpi4.v,charging,30,30
+charging.install.slow.lead,charging,공동주택·업무시설·근린생활시설 사업주가 <strong>완속충전기 설치 보조금</strong>을 직접 신청합니다.,"Owners of apartments, offices, and neighborhood facilities apply directly for <strong>slow charger installation subsidies</strong>."
+charging.install.slow.outline,charging,사업 개요,Project Overview
+charging.install.slow.proc.h4,charging,신청 절차,Application Process
+charging.install.slow.proc.s1,charging,<b>① 자격 확인</b> · 입주자대표회의 또는 관리주체 동의서 제출,<b>① Eligibility Check</b> · Submit residents' council or management consent
+charging.install.slow.proc.s2,charging,<b>② 견적 입수</b> · 인증 제조사 2개 이상 견적 (제품 안내 참조),<b>② Get Quotes</b> · 2+ certified manufacturer quotes (see Product Info)
+charging.install.slow.proc.s3,charging,<b>③ 온라인 신청</b> · 사업자 정보·설치 위치·서류 업로드,"<b>③ Online Application</b> · Submit business info, installation site, documents"
+charging.install.slow.proc.s4,charging,<b>④ 현장 실사</b> · 환경공단 위탁사 실사 (10영업일),<b>④ Site Inspection</b> · Korea Environment Corp. contractor inspection (10 business days)
+charging.install.slow.proc.s5,charging,<b>⑤ 보조금 교부</b> · 설치 후 정산 / 분기 단위 교부,<b>⑤ Subsidy Disbursement</b> · Post-installation settlement / quarterly disbursement
+charging.install.slow.proc.title2,charging,신청 절차,Application Process
+charging.install.slow.qual.li1,charging,공동주택 (아파트·오피스텔·다가구주택) 입주자대표회의 또는 관리주체,"Apartment complexes (apartments, officetels, multi-family) residents' representative council or management body"
+charging.install.slow.qual.li2,charging,업무시설·근린생활시설·숙박시설 등 공용 공간 소유주,"Owners of public spaces such as offices, neighborhood facilities, and accommodations"
+charging.install.slow.qual.li3,charging,주차면 5면 이상 또는 입주 세대 30세대 이상 공간,Spaces with 5+ parking spots or 30+ households
+charging.install.slow.qual.li4,charging,최근 3년간 동일 사업 보조금 수령 이력 없는 곳,No same-project subsidy received in the past 3 years
+charging.install.slow.qual.title,charging,신청 자격,Eligibility
+charging.install.slow.rate.h4,charging,지원 단가,Subsidy Rates
+charging.install.slow.rate.li1,charging,완속 7kW · 140만원/기,Slow 7 kW · KRW 1.4M/unit
+charging.install.slow.rate.li2,charging,완속 11kW · 180만원/기,Slow 11 kW · KRW 1.8M/unit
+charging.install.slow.rate.li3,charging,구축 부대공사 · 50만원 추가,Auxiliary work · KRW 0.5M added
+charging.install.slow.rate.title,charging,지원 단가,Subsidy Rates
+charging.install.slow.total.prefix,charging,최대,Up to
+charging.install.slow.type.mobile,charging,이동형,Mobile
+charging.install.slow.type.slow,charging,완속 충전기,Slow Charger
+charging.install.tab.contest,charging,완속/급속 공모 신청,Slow/Fast Charger Procurement
+charging.install.tab.moto,charging,전기이륜차 충전시설 공모,E-Motorbike Charger Procurement
+charging.install.tab.products,charging,완속충전기 제품 안내,Slow Charger Products
+charging.install.tab.slow,charging,공용 완속충전 시설 신청,Public Slow Charger Application
+charging.install.title,charging,충전시설 설치,Charger Installation
+charging.main.ai.badge,charging,NEW · AI 서비스,NEW · AI Service
+charging.main.ai.btn.compare,charging,요금 직접 비교,Compare Rates Directly
+charging.main.ai.btn.start,charging,챗봇 시작하기,Start Chatbot
+charging.main.ai.desc,charging,오늘 밤 자택 심야 충전 vs. 내일 아침 급속 충전—어떤 선택이 더 경제적일까요? 자연어로 질문하면 요금·동선·가용성을 분석해 최적의 충전 동선을 제안합니다.,"Tonight's home overnight charge vs. tomorrow morning's fast charge — which is more economical? Ask in natural language; we analyze rates, routes, and availability to suggest the optimal charging plan."
+charging.main.ai.title,charging,AI 충전 컨시어지,AI Charging Concierge
+charging.main.card1.desc,charging,"전기·수소 충전소를 하나의 통합 지도에서 검색하고, 경로·GPS 반경·즐겨찾기로 최적의 충전소를 찾습니다.","Search EV/H2 stations on one integrated map; find optimal stations via route, GPS radius, and favorites."
+charging.main.card1.link1,charging,통합 지도 (전기+수소),Integrated Map (EV + H2)
+charging.main.card1.link2,charging,내 주변 충전소,Nearby Stations
+charging.main.card1.link3,charging,경로 검색 (신규),Route Search (New)
+charging.main.card1.title,charging,충전소 찾기,Find Stations
+charging.main.card2.desc,charging,"사업자별·시간대별 요금 매트릭스, 로밍 요금 비교, 월 예상 충전비 시뮬레이터를 제공합니다.","Rate matrix by operator and time-of-use, roaming comparison, and monthly cost simulator."
+charging.main.card2.link1,charging,전기차 충전요금,EV Charging Fees
+charging.main.card2.link2,charging,수소차 충전요금,H2 Charging Fees
+charging.main.card2.link3,charging,요금 시뮬레이터,Fee Simulator
+charging.main.card2.title,charging,충전 요금 안내,Charging Fees
+charging.main.card3.desc,charging,전국 모든 공공·민간 충전소에서 로밍 수수료 없이 사용하는 통합카드—신청·이용내역·포인트를 통합 관리합니다.,"One card for all public/private stations with no roaming fees — manage applications, usage, and points."
+charging.main.card3.link1,charging,카드 신청·발급조회,Apply / Check Card
+charging.main.card3.link2,charging,이용요금·명세서,Usage & Statements
+charging.main.card3.link3,charging,충전 포인트,Charging Points
+charging.main.card3.title,charging,충전 카드 관리,Charging Card
+charging.main.card4.desc,charging,"공용 완속충전기 직접 신청, 완속·급속·초급속·전기이륜차 공모, 인증 제품 안내—설치 사업자를 위한 원스톱.","Direct slow charger applications, procurements for slow/fast/ultra-fast/e-motorbike, certified product info — a one-stop for installers."
+charging.main.card4.link1,charging,공용 완속충전 신청,Apply for Public Slow
+charging.main.card4.link2,charging,완속/급속 공모,Slow/Fast Procurement
+charging.main.card4.link3,charging,인증 제품 안내,Certified Products
+charging.main.card4.title,charging,충전시설 설치,Install Chargers
+charging.main.card5.badge,charging,전용,Dedicated
+charging.main.card5.desc,charging,"수소충전소 장애·고장 신고, 전국 247개소 실시간 운영 현황, 정비 일정 안내 및 대체 충전소 자동 추천.","Hydrogen station incident/failure reports, real-time status of 247 stations nationwide, maintenance schedules, and alternative station recommendations."
+charging.main.card5.link1,charging,장애·고장 신고,Report Incident
+charging.main.card5.link2,charging,운영 현황 안내 (신규),Operation Status (New)
+charging.main.card5.link3,charging,신고 처리 이력,Report History
+charging.main.card5.title,charging,수소충전소 Help Desk,H2 Station Help Desk
+charging.main.card6.desc,charging,주행거리·차종·주 이용 충전기를 입력하면 월 예상 충전요금과 최적 요금제를 AI가 추천합니다.,"Enter your mileage, vehicle type, and main charger; AI recommends the expected monthly cost and optimal rate plan."
+charging.main.card6.link1,charging,시뮬레이션 시작,Start Simulation
+charging.main.card6.title,charging,월 충전요금 시뮬레이터,Monthly Fee Simulator
+charging.main.cs.btn.inquiry,charging,1:1 문의,1:1 Inquiry
+charging.main.cs.btn.report,charging,장애 신고,Report Incident
+charging.main.cs.center,charging,고객센터,Customer Center
+charging.main.cs.desc,charging,충전 카드·이용요금·시설 설치·장애 신고 등 모든 충전 관련 문의는 고객센터로 연락 주세요.,"Contact our customer center for all charging-related inquiries, including cards, fees, installation, and incident reports."
+charging.main.cs.direct.title,charging,운영사별 직통,Direct Lines by Operator
+charging.main.cs.hours,charging,평일 09:00~18:00 (연중무휴 상담),Weekdays 09:00–18:00 (Year-round consultation)
+charging.main.cs.title,charging,충전 관련 문의,Charging Inquiries
+charging.main.hero.btn.card,charging,통합카드 신청,Apply for Integrated Card
+charging.main.hero.btn.find,charging,지금 가까운 충전소 찾기,Find Nearby Stations
+charging.main.hero.btn.sim,charging,월 충전요금 계산,Monthly Fee Calculator
+charging.main.hero.eyebrow,charging,전국 충전 인프라 실시간 현황,Real-time National Charging Infrastructure
+charging.main.hero.lead,charging,"전기·수소 <strong>통합 지도 검색</strong>, <strong>사업자별 요금 비교</strong>, <strong>통합카드 관리</strong>, <strong>설치 공모</strong>부터 <strong>수소충전소 장애 대응</strong>까지—","From <strong>integrated EV & H2 map search</strong>, <strong>rate comparison by operator</strong>, <strong>integrated card management</strong>, and <strong>installation procurement</strong>, to <strong>hydrogen station incident response</strong>—"
+charging.main.hero.title,charging,"충전, 한 곳에서 전부.",All Your Charging Needs in One Place.
+charging.main.notice.all,charging,전체 보기 →,View All →
+charging.main.notice.contest,charging,공모,Procurement
+charging.main.notice.desc,charging,요금 개정·정비 일정·신규 구축 등 중요 공지 사항,"Important notices on rate revisions, maintenance schedules, and new installations"
+charging.main.notice.item1.meta,charging,2026.04.23 · 대체 충전소: 양재IC · 수서,2026.04.23 · Alternative stations: Yangjae IC · Suseo
+charging.main.notice.item1.title,charging,서울 강남역 수소충전소 정비 안내 (2026.04.25~27),Seoul Gangnam H2 Station Maintenance (2026.04.25–27)
+charging.main.notice.item2.meta,charging,2026.04.01 · 347원/kWh → 354원/kWh,2026.04.01 · KRW 347/kWh → KRW 354/kWh
+charging.main.notice.item2.title,charging,환경부 공공 급속 충전 요금 개정 (2026년 2분기),MCEE Public Fast Charging Rate Revision (Q2 2026)
+charging.main.notice.item3.meta,charging,2026.03.28 · 고속도로 휴게소 우선 설치,2026.03.28 · Priority installation at highway rest stops
+charging.main.notice.item3.title,charging,초급속 충전기(350kW+) 전국 80개소 추가 구축,Ultra-fast Chargers (350 kW+): 80 New Stations Nationwide
+charging.main.notice.item4.meta,charging,"2026.04.15 · 배달 플랫폼·소상공인 대상 3,500기","2026.04.15 · 3,500 chargers for delivery platforms and small business"
+charging.main.notice.item4.title,charging,2026 전기이륜차 충전시설 구축 공모 접수 중 (~06.30),2026 E-Motorbike Charger Procurement Open (~06.30)
+charging.main.notice.new,charging,신규,New
+charging.main.notice.title,charging,충전 인프라 공지,Charging Infrastructure Notices
+charging.main.notice.update,charging,업데이트,Update
+charging.main.notice.urgent,charging,긴급,Urgent
+charging.main.rh.busan,charging,부산,Busan
+charging.main.rh.daegu,charging,대구,Daegu
+charging.main.rh.gyeonggi,charging,경기,Gyeonggi
+charging.main.rh.jeju,charging,제주,Jeju
+charging.main.rh.seoul,charging,서울,Seoul
+charging.main.rh.title,charging,지역별 급속충전기 가동률 (TOP 5),Fast Charger Utilization by Region (TOP 5)
+charging.main.sc.avail.label,charging,현재 이용 가능,Currently Available
+charging.main.sc.avail.sub,charging,전국 평균 가동률,National avg. utilization
+charging.main.sc.card.label,charging,카드 발급 누계,Total Cards Issued
+charging.main.sc.card.sub,charging,"이번 달 +12,800","This month +12,800"
+charging.main.sc.ev.label,charging,전기 충전소,EV Stations
+charging.main.sc.ev.sub,charging,"급속 32,140 · 완속 92,440","Fast 32,140 · Slow 92,440"
+charging.main.sc.h2.label,charging,수소 충전소,H2 Stations
+charging.main.sc.h2.sub,charging,승용 182 · 상용 65,Passenger 182 · Commercial 65
+charging.main.sc.title,charging,실시간 가동 현황,Real-time Operation Status
+charging.main.sc.update,charging,5분 전 갱신 · 2026.04.23 08:15,Updated 5 min ago · 2026.04.23 08:15
+charging.main.sec.desc,charging,"IA Lv2 기준, 충전 생애주기 전 과정을 커버합니다.",Covers the entire charging lifecycle (per IA Lv2).
+charging.main.sec.fullmenu,charging,전체 메뉴 보기 →,View Full Menu →
+charging.main.sec.title,charging,5개 핵심 서비스,5 Core Services
+crumb.home,mypage,홈,Home
+crumb.mypage,mypage,마이페이지,My Page
+extra.bc.home,common,홈,Home
+fontsize.default,common,글자 크기가 기본으로 돌아왔습니다,Font size reset to default
+fontsize.larger,common,글자 크기가 커졌습니다,Font size enlarged
+footer.address,common,(22689) 인천광역시 서구 환경로 42(오류동 종합환경연구단지),"42 Hwangyeong-ro, Seo-gu, Incheon, 22689, Republic of Korea"
+footer.callcenter,common,대표전화 : (누리집콜센터) 1661-0970,Call Center: 1661-0970
+footer.cardcenter,common,급속충전시설 이용관련문의 및 회원카드 발급문의 한국자동차환경협회 : 1661-9408,Fast Charger & Card Inquiries (KAEA): 1661-9408
+footer.copy,common,Copyright 2026. KECO All rights reserved.,Copyright 2026. KECO All rights reserved.
+footer.partner.kaea,common,한국자동차환경협회,KAEA
+footer.partner.keco,common,한국환경공단,KECO
+footer.partner.me,common,기후에너지환경부,MCEE
+footer.partner.newwindow,common, (새 창), (new window)
+footer.partner.wa,common,WA 웹접근성,WA Web Accessibility
+footer.partners.aria,common,관련 기관 바로가기,Related organizations
+footer.policy.aria,common,약관·정책 바로가기,Policies
+footer.policy.cctv,common,영상정보처리기기 운영관리지침,CCTV Operation Guideline
+footer.policy.complaint,common,불편민원신고센터,Complaint Center
+footer.policy.nospam,common,이메일 무단수집거부,No Email Collection
+footer.policy.privacy,common,개인정보처리방침,Privacy Policy
+header.fullmenu.aria,common,전체 메뉴,Full menu
+header.fullmenu.close.aria,common,전체 메뉴 닫기,Close full menu
+header.fullmenu.open.aria,common,전체 메뉴 열기,Open full menu
+hm.ai.chip1,home,#차량번호 변경,#Change plate number
+hm.ai.chip2,home,#카드분실/재발급,#Lost/reissue card
+hm.ai.chip3,home,#자동차 스티커,#Vehicle sticker
+hm.ai.chip4,home,#전기차 지원금,#EV subsidy
+hm.ai.chip5,home,#모인인증 사용,#Use Moin auth
+hm.ai.chipsaria,home,추천 질문,Suggested questions
+hm.ai.desc,home,"복잡한 정보 검색도 AI와 대화하듯 간편하게 궁금한 내용을 물어보시면, 바로 답변해드립니다.",Skip complex searches—just ask in plain language and get instant answers from our AI.
+hm.ai.feat1.d,home,질문 안에서 원하는 것을 찾아내요.,Finds what you need within your question.
+hm.ai.feat1.t,home,자연어 필터,Natural-language filter
+hm.ai.feat2.d,home,AI가 맥락을 이해하고 분석해요.,AI understands and analyzes context.
+hm.ai.feat2.t,home,인공지능 분석,AI analysis
+hm.ai.feat3.d,home,빠른 답변을 바로 확인해요.,Get fast answers right away.
+hm.ai.feat3.t,home,즉각 결과 노출,Instant results
+hm.ai.inputaria,home,AI 검색어 입력,Enter AI search query
+hm.ai.ph,home,예: 현대 아이오닉6 보조금 얼마인가요?,"e.g., How much subsidy for the Hyundai Ioniq 6?"
+hm.ai.searcharia,home,검색,Search
+hm.ai.tab1,home,AI 맞춤 상담,AI Custom Consult
+hm.ai.tab2,home,보조금 큐레이터,Subsidy Curator
+hm.ai.tab3,home,장애 대응 안내,Fault Response Guide
+hm.ai.title,home,AI 헬프 데스크,AI Help Desk
+hm.badge.100,home,100% 지원,100% Supported
+hm.badge.50,home,50% 지원,50% Supported
+hm.calc.h3,home,보조금 계산,Subsidy Calculation
+hm.calc.k.local,home,지방 보조금,Local Subsidy
+hm.calc.k.nat,home,국고 보조금,National Subsidy
+hm.calc.k.price,home,차량가격,Vehicle Price
+hm.calc.k.real,home,실질 구매 가격,Net Purchase Price
+hm.calc.lbl.model,home,차종 선택,Select Model
+hm.calc.lbl.price,home,차량 가격(만원),Vehicle Price (×10k KRW)
+hm.calc.lbl.region,home,거주 지역,Region
+hm.calc.lbl.type,home,차량 유형,Vehicle Type
+hm.calc.note,home,"※ 위 결과는 참고용이며, 실제 보조금은 지자체별 예산 현황·차량 에너지 효율 등급에 따라 달라질 수 있습니다. 정확한 금액은 관할 지자체에 문의하세요. (데모용 더미 데이터)",* Results are for reference only. Actual subsidies vary by local budget and vehicle energy-efficiency grade. Contact your local government for exact amounts. (Demo dummy data)
+hm.calc.p,home,차종과 지역을 선택하면 예상 보조금을 바로 확인할 수 있습니다. 아래 정보를 입력하고 계산 버튼을 누르세요.,Select a model and region to see your estimated subsidy. Enter the details below and press Calculate.
+hm.calc.price.unit,home,만원,×10k KRW
+hm.calc.resh,home,예상 보조금 결과,Estimated Subsidy Result
+hm.calc.run,home,보조금 계산하기,Calculate Subsidy
+hm.calc.title,home,구매 보조금 계산기,Purchase Subsidy Calculator
+hm.calc.total,home,총 예상 보조금,Total Estimated Subsidy
+hm.calc.total.unit,home,만원,M KRW
+hm.calc.type.fcev,home,수소 전기차,Hydrogen EV
+hm.calc.type.sedan,home,전기 승용(세단),Electric Passenger (Sedan)
+hm.calc.type.suv,home,전기 승용(SUV),Electric Passenger (SUV)
+hm.calc.type.truck,home,전기 화물(트럭),Electric Cargo (Truck)
+hm.cta.1.go,home,신청하기 →,Apply →
+hm.cta.1.t,home,공용 완속충전시설 직접신청,Apply for Public Slow Chargers
+hm.cta.2.go,home,앱 다운로드 →,Download App →
+hm.cta.2.t,home,전기차 충전소 모바일 조회 서비스,EV Charger Mobile Lookup
+hm.cta.aria,home,주요 서비스 바로가기,Key service shortcuts
+hm.cta.bodyshared,home,"공동주택·사업자, 대규모 주차장 등의 소유자 및 운영자시라면 전기차 공용 완속충전시설 설치를 신청할 수 있습니다.","Owners and operators of apartments, businesses, or large parking lots can apply to install public slow EV chargers."
+hm.evsvc.1.d,home,충전 회원카드를 온라인으로 신청하고 발급 현황을 확인하세요.,Apply for a charging member card online and track its status.
+hm.evsvc.1.t,home,회원카드 발급,Issue Member Card
+hm.evsvc.2.d,home,내 차량의 국비·지방비 보조금을 확인하고 신청하세요.,Check national and local subsidies for your vehicle and apply.
+hm.evsvc.2.t,home,구매 보조금 조회,Check Purchase Subsidy
+hm.evsvc.3.d,home,차종과 지역을 선택하면 예상 보조금을 바로 계산해 드립니다.,Select a model and region to instantly estimate your subsidy.
+hm.evsvc.3.t,home,보조금 계산기,Subsidy Calculator
+hm.evsvc.4.d,home,내 주변 충전소를 실시간으로 찾고 이용 현황을 확인하세요.,Find nearby stations in real time and check availability.
+hm.evsvc.4.t,home,충전소 검색,Find Charging Stations
+hm.evsvc.5.d,home,"전기차 모델별 가격, 주행거리, 보조금을 한눈에 비교하세요.","Compare EV models by price, range, and subsidy at a glance."
+hm.evsvc.5.t,home,차량 비교,Compare Vehicles
+hm.evsvc.6.d,home,사업자별 충전 요금을 비교하고 가장 저렴한 곳을 찾으세요.,Compare fees across operators and find the cheapest option.
+hm.evsvc.6.t,home,충전 요금 비교,Compare Charging Fees
+hm.faq.a1,home,"차량 구매계약 후 관할 지자체에 보조금 지원 신청서를 접수하고, 차량 출고·등록을 거치면 제조·수입사가 보조금을 신청·지급받는 순서로 진행됩니다. 지원 대상·금액·세부 절차는 아래에서 확인하세요.","After signing the purchase contract, file a subsidy application with your local government. Once the vehicle is delivered and registered, the manufacturer/importer applies for and receives the subsidy. Check eligibility, amounts, and detailed steps below."
+hm.faq.a1.more,home,보조금 지원 대상·신청절차 보기 →,View eligibility & application steps →
+hm.faq.a2,home,누리집에서 지킴이 활동을 신청한 뒤 충전기 점검·신고 등 활동 내역을 등록하면 포상금을 받을 수 있습니다. 참여 조건과 신청 방법은 FAQ 지킴이 항목에서 안내합니다.,"Apply for the guardian program on the portal, then log activities such as charger inspections and reports to earn rewards. See the guardian FAQ for eligibility and how to apply."
+hm.faq.a2.more,home,지킴이 안내 보기 →,View guardian guide →
+hm.faq.a3,home,운영 중인 수소충전소의 위치와 실시간 운영 현황은 '충전소 찾기'의 통합 지도에서 지역별로 확인할 수 있습니다. (충전소 수는 운영 상황에 따라 수시로 변동됩니다.),"You can view the locations and live status of operating hydrogen stations by region on the integrated map under ""Find Stations."" (Station counts change frequently based on operations.)"
+hm.faq.a3.more,home,충전소 찾기 보기 →,View Find Stations →
+hm.faq.a4,home,"누리집 '회원카드 발급'에서 온라인으로 신청하거나, 한국자동차환경협회(1661-9408)로 문의해 발급받을 수 있습니다.","Apply online via ""Issue Member Card"" on the portal, or contact the Korea Automobile Environmental Association (1661-9408)."
+hm.faq.a4.more,home,회원카드 발급 보기 →,View Issue Member Card →
+hm.faq.morearia,home,자주 묻는 질문 더보기,More FAQs
+hm.faq.q1,home,전기차 보조금 신청은 어떻게 하나요?,How do I apply for an EV subsidy?
+hm.faq.q2,home,민간 사업자 충전기 지킴이 활동은 어떻게 참여할 수 있나요?,How can private operators join the charger guardian program?
+hm.faq.q3,home,수소차 충전소는 전국에 몇 개인가요?,How many hydrogen stations are there nationwide?
+hm.faq.q4,home,충전카드는 어디서 발급받을 수 있나요?,Where can I get a charging card?
+hm.faq.title,home,자주 묻는 질문,FAQ
+hm.fee.benefit.head,home,할인 혜택 및 특장점,Discounts & Highlights
+hm.fee.bft.cashback,home,앱 첫 충전 캐시백,First-charge app cashback
+hm.fee.bft.emart,home,이마트 충전소 15% 할인,15% off at E-mart stations
+hm.fee.bft.family,home,가족 계정 10% 할인,10% family-account discount
+hm.fee.bft.night,home,심야 할인 10%,10% late-night discount
+hm.fee.bft.parking,home,주차비 면제,Free parking
+hm.fee.bft.point2,home,급속 포인트 2배 적립,2× fast-charge points
+hm.fee.bft.ultra20,home,초급속 전용 kWh당 20원 할인,−20 KRW/kWh for ultra-fast
+hm.fee.bft.unlimited,home,월정액 무제한 요금제,Unlimited monthly plan
+hm.fee.chip.fast,home,급속특화,Fast focus
+hm.fee.chip.lowest,home,최저가,Lowest
+hm.fee.chip.ultra,home,초고속 강점,Ultra-fast edge
+hm.fee.d.chajevi,home,할인 다양,Various discounts
+hm.fee.d.everon,home,환경부 인증,MoE certified
+hm.fee.d.power,home,초고속 전문,Ultra-fast specialist
+hm.fee.d.soft,home,급속 특화,Fast-charge focus
+hm.fee.desc.chajevi,home,"할인 다양 · 전국 7,150기","Various discounts · 7,150 nationwide"
+hm.fee.desc.everon,home,"환경부 인증 · 전국 12,340기","MoE certified · 12,340 nationwide"
+hm.fee.desc.power,home,"초고속 전문 · 전국 5,640기","Ultra-fast specialist · 5,640 nationwide"
+hm.fee.desc.soft,home,"급속 특화 · 전국 8,720기","Fast-charge focus · 8,720 nationwide"
+hm.fee.everon.b1d,home,23:00~09:00 충전 시 kWh당 10% 자동 할인 적용,Automatic 10% per-kWh discount when charging 23:00–09:00
+hm.fee.everon.b1t,home,심야할인 10%,10% late-night discount
+hm.fee.everon.b2d,home,"에버온 앱 최초 충전 시 3,000원 즉시 지급","3,000 KRW instantly on your first charge via the Everon app"
+hm.fee.everon.b2t,home,앱 첫 충전 캐시백,First-charge app cashback
+hm.fee.f.basis,home,요금기준,Price basis
+hm.fee.f.basisaria,home,요금기준 선택,Select price basis
+hm.fee.f.fast,home,급속 (50km),Fast (50km)
+hm.fee.f.slow,home,완속 (7km),Slow (7km)
+hm.fee.f.type,home,충전유형,Charge type
+hm.fee.f.typearia,home,충전유형 선택,Select charge type
+hm.fee.f.ultra,home,초급속 (100km+),Ultra-fast (100km+)
+hm.fee.findcta,home,충전소 찾기,Find Stations
+hm.fee.lowest,home,최저가,Lowest
+hm.fee.member,home,회원가,Member
+hm.fee.member.s,home,회원,Member
+hm.fee.more,home,"충전요금 비교 전체 보기 <span aria-hidden=""true"">→</span>","View all charging fees <span aria-hidden=""true"">→</span>"
+hm.fee.nonmember,home,비회원가,Non-member
+hm.fee.nonmember.s,home,비회원,Non-member
+hm.fee.perkwh,home,회원가 기준 kWh당,per kWh (member)
+hm.fee.roaming,home,로밍가,Roaming
+hm.fee.roaming.s,home,로밍,Roaming
+hm.fee.tab.card,home,카드비교,Card View
+hm.fee.tab.detail,home,상세비교,Detail View
+hm.fee.th.member,home,회원가,Member
+hm.fee.th.nonmember,home,비회원가,Non-member
+hm.fee.th.roaming,home,로밍가,Roaming
+hm.fee.th.save,home,절감,Savings
+hm.fee.th.type,home,충전유형,Charge type
+hm.fee.title,home,충전 요금 비교,Compare Charging Fees
+hm.fee.unit,home,(단위: 원),(unit: KRW)
+hm.fee.vs108,home,최저대비 +10.8%,+10.8% vs lowest
+hm.fee.vs58,home,최저대비 +5.8%,+5.8% vs lowest
+hm.fee.vs93,home,최저대비 +9.3%,+9.3% vs lowest
+hm.fee.won,home,원,KRW
+hm.hero.kicker,home,무공해차 통합 플랫폼,Zero-Emission Vehicle Platform
+hm.hero.sub,home,사용자 유형을 선택하면 맞춤 서비스와 콘텐츠를 바로 확인할 수 있습니다.,Select your user type to instantly see tailored services and content.
+hm.hero.title,home,어떤 도움이 필요하신가요?<br>나에게 맞는 <b>서비스</b>를 선택하세요.,How can we help you?<br>Choose the <b>service</b> that's right for you.
+hm.maker.hyundai,home,현대,Hyundai
+hm.maker.kia,home,기아,Kia
+hm.maker.tesla,home,테슬라,Tesla
+hm.nav.next,home,다음,Next
+hm.nav.pause,home,일시정지,Pause
+hm.nav.prev,home,이전,Previous
+hm.news.1.d,home,2026년 법인·개인사업자 전기승합차 보급사업 참여 업체 선정 결과를 안내드립니다.,Announcing the selected participants for the 2026 corporate/sole-proprietor electric bus deployment program.
+hm.news.1.t,home,2026년 전기자동차 보급사업 참여 업체 선정 결과 안내 공고(민간부분·법인·개인사업자),"Notice: 2026 EV deployment program participant selection results (private sector, corporate, sole proprietors)"
+hm.news.2.d,home,환경공단 통합누리집 운영 관리에 알려드립니다. 2026.3.5(목)일은 한국환경공단 창립기념일로 휴무임을 알려드립니다.,"Portal operations notice: the portal will be closed on Thu, Mar 5, 2026 for the Korea Environment Corporation founding anniversary."
+hm.news.2.t,home,한국환경공단 창립기념일 휴무일 안내,Korea Environment Corporation founding-anniversary holiday notice
+hm.news.3.d,home,무공해차 통합누리집 시스템에 안내드립니다. 한국환경공단 통합환경정보센터 노후 전산 장비 교체에 따른 ...,Zero-emission vehicle portal system notice regarding legacy equipment replacement at the Integrated Environmental Information Center ...
+hm.news.3.t,home,통합환경정보센터 노후 전산 장비 교체에 따른 정보시스템 일시 중단 안내 ('26.2.22),"Temporary system outage for legacy equipment replacement at the Integrated Environmental Information Center (Feb 22, 2026)"
+hm.news.morearia,home,새소식 더보기,More news
+hm.news.tab.all,home,전체,All
+hm.news.tab.notice,home,공지사항,Notice
+hm.news.tab.press,home,보도자료,Press
+hm.news.tab.promo,home,홍보자료,Promotions
+hm.news.tag,home,공지사항,Notice
+hm.news.title,home,새소식,News
+hm.persona.ai,home,AI 헬프데스크,AI Help Desk
+hm.persona.aria,home,사용자 유형 바로가기,User type shortcuts
+hm.persona.cpo,home,충전기 사업자,Charger Operators
+hm.persona.ev,home,전기차 이용자,EV Drivers
+hm.persona.first,home,처음 방문자,First-time Visitors
+hm.persona.h2,home,수소차 이용자,Hydrogen Drivers
+hm.persona.org,home,법인·기관,Corporations & Institutions
+hm.quick.ai,home,AI 헬프데스크,AI Help Desk
+hm.quick.aria,home,퀵 메뉴 열기,Open quick menu
+hm.quick.card,home,회원카드 추가,Add Member Card
+hm.region.busan,home,부산광역시,Busan
+hm.region.daegu,home,대구광역시,Daegu
+hm.region.gangwon,home,강원특별자치도,Gangwon
+hm.region.gyeonggi,home,경기도,Gyeonggi-do
+hm.region.incheon,home,인천광역시,Incheon
+hm.region.jeju,home,제주특별자치도,Jeju
+hm.region.jeonnam,home,전라남도,Jeollanam-do
+hm.region.seoul,home,서울특별시,Seoul
+hm.sec.evsvc,home,전기차 이용자를 위한 서비스,Services for EV Drivers
+hm.skip,home,본문 바로가기,Skip to content
+hm.stat.budget.n,home,"1조 2,400억원",KRW 1.24T
+hm.stat.budget.t,home,2026년 예산,2026 Budget
+hm.stat.ev.n,home,900만원,KRW 9M
+hm.stat.ev.t,home,전기차 최대,EV Max
+hm.stat.h2.n,home,"3,750만원",KRW 37.5M
+hm.stat.h2.t,home,수소차 최대,FCEV Max
+hm.stat.period.n,home,연중 상시,Year-round
+hm.stat.period.t,home,신청기간,Application Period
+hm.sub.title,home,보조금 · 차량 정보,Subsidy & Vehicle Info
+hm.ticker.aria,home,실시간 요금·검색어,Live fees & searches
+hm.ticker.fast,home,급속,Fast
+hm.ticker.kw1,home,2026 전기차 보조금,2026 EV subsidy
+hm.ticker.moe,home,환경부,MoE
+hm.ticker.today,home,오늘의 충전요금,Today's Charging Fee
+hm.ticker.trend,home,실시간 인기검색어,Trending Searches
+hm.veh.cta,home,상세 비교,Compare
+hm.veh.k.price,home,차량가격,Price
+hm.veh.k.range,home,주행거리(1회 충전시),Range (per charge)
+hm.veh.k.sub,home,보조금,Subsidy
+hm.veh.price.4900,home,"4,900만원",KRW 49M
+hm.veh.price.5200,home,"5,200만원",KRW 52M
+hm.veh.price.5699,home,"5,699만원",KRW 57M
+hm.veh.sub.max680,home,최대 680만원,Up to KRW 6.8M
+home.ai.btn.close,home,닫기,Close
+home.ai.btn.close.aria,home,닫기,Close
+home.ai.btn.faq,home,FAQ 바로가기,Go to FAQ
+home.ai.btn.reset,home,초기화,Reset
+home.ai.btn.reset.aria,home,대화 초기화,Reset chat
+home.ai.btn.save,home,저장,Save
+home.ai.btn.save.aria,home,대화 저장,Save chat
+home.ai.float.1.span,home,일상 언어로 편하게 질문하세요,Ask in everyday language
+home.ai.float.1.strong,home,자연어 질의,Natural Language
+home.ai.float.2.span,home,AI가 맥락을 이해하고 분석합니다,AI understands context and analyzes
+home.ai.float.2.strong,home,인공지능 분석,AI Analysis
+home.ai.float.3.span,home,페이지 이동 없이 바로 확인,See results without leaving the page
+home.ai.float.3.strong,home,즉각 결과 노출,Instant Results
+home.ai.flow.aria,home,상담 유형 선택,Select consultation type
+home.ai.flow.charge,home,장애 대응 안내,Issue Response
+home.ai.flow.personal,home,AI 맞춤 상담,AI Personalized
+home.ai.flow.subsidy,home,보조금 큐레이터,Subsidy Curator
+home.ai.followup.aria,home,추가 질문 입력,Follow-up question
+home.ai.followup.ph,home,이 주제로 더 궁금한 점을 자유롭게 물어보세요,Ask anything more on this topic
+home.ai.search.aria,home,AI에게 질문 입력,Ask the AI
+home.ai.search.placeholder,home,"예: 저공해, 보조금 얼마?, 충전소 위치","e.g., low-emission, how much subsidy?, charger location"
+home.ai.search.submit,home,검색,Search
+home.ai.send.aria,home,전송,Send
+home.ai.sub,home,복잡한 정보 검색도 AI와 대화하듯 간편하게.<br>궁금한 내용을 자연어로 물어보시면 바로 답변해드립니다.,Find information by chatting with the AI.<br>Ask in natural language and get instant answers.
+home.ai.suggest.label,home,이런 질문도 많이 해요,Frequently asked
+home.ai.title,home,AI 헬프 데스크,AI Help Desk
+home.ai.turn.unit,home,1회 대화,1 turn
+home.card.ai.1.desc,home,사용자 상황 기반 종합 추천 + 카드 문의,Comprehensive recommendations based on your situation
+home.card.ai.1.title,home,AI 맞춤 상담,AI Personalized
+home.card.ai.2.desc,home,자격·금액·신청 조건을 즉시 확인,"Instantly check eligibility, amounts, and conditions"
+home.card.ai.2.title,home,보조금 큐레이터,Subsidy Curator
+home.card.ai.3.desc,home,충전기 고장·시스템 오류 즉시 대응,Immediate response to charger faults and system errors
+home.card.ai.3.title,home,장애 대응 안내,Issue Response
+home.card.ai.4.desc,home,구글 검색처럼 자유롭게 질문하기,"Ask freely, like a search engine"
+home.card.ai.4.title,home,풀스크린 검색 모드,Full-screen Search
+home.card.business.1.desc,home,공용 완속 충전기 직접설치 및 공모 신청,Public slow charger installation or procurement
+home.card.business.1.title,home,충전시설 설치 신청,Charger Installation
+home.card.business.2.desc,home,민간기업 무공해차 전환 100 프로그램 참여,Corporate ZEV transition program (K-EV100) enrollment
+home.card.business.2.title,home,K-EV100 참여 신청,Join K-EV100
+home.card.business.3.desc,home,전기승합차·건설기계 보조금 공모 접수,Procurement for electric buses and ZEV construction equipment
+home.card.business.3.title,home,전기승합차 공모 신청,Electric Bus Procurement
+home.card.business.4.desc,home,무공해차 및 충전기 인증 기준 정보,ZEV and charger certification standards
+home.card.business.4.title,home,인증 기준 안내,Certification Standards
+home.card.buyer.1.desc,home,3단계 선택으로 예상 보조금 즉시 확인,Estimate your subsidy in three quick steps
+home.card.buyer.1.title,home,보조금 계산기(견적),Subsidy Calculator
+home.card.buyer.2.desc,home,지자체별 차종별 보조금 현황 조회,Subsidy status by region and vehicle model
+home.card.buyer.2.title,home,지자체별 보조금 현황,Subsidies by Region
+home.card.buyer.3.desc,home,가격·주행거리·충전시간 조건별 차종 비교,"Compare vehicles by price, range, and charging time"
+home.card.buyer.3.title,home,차종 비교 도구,Vehicle Comparison Tool
+home.card.buyer.4.desc,home,취득세·개소세·교육세 등 세금 혜택 총합,"All tax benefits: acquisition, excise, education, and more"
+home.card.buyer.4.title,home,세제 정보 통합 안내,Tax Benefits Overview
+home.card.owner.1.desc,home,GPS 기반 반경 1/5/10km 충전소 검색,GPS-based search within 1/5/10 km radius
+home.card.owner.1.title,home,내 주변 충전소,Nearby Chargers
+home.card.owner.2.desc,home,충전 사업자별 요금 비교 기능,Compare fees across charging operators
+home.card.owner.2.title,home,충전 요금 비교,Compare Charging Fees
+home.card.owner.3.desc,home,차량번호 입력으로 저공해 등급 확인,Check your emission grade by license plate
+home.card.owner.3.title,home,내 차 저공해 등급 확인,Vehicle Emission Grade
+home.card.owner.4.desc,home,출발~도착 경로상 최적 충전소 추천,Optimal chargers along your route
+home.card.owner.4.title,home,경로 기반 충전 계획,Route Charging Planner
+home.card.owner.5.desc,home,"조건별(가격, 주행거리, 충전시간) 차종 비교","Compare by price, range, and charging time"
+home.card.owner.5.title,home,차종 비교,Vehicle Comparison
+home.card.owner.6.desc,home,충전소별 수소차 충전 요금 비교,Compare H2 charging fees by station
+home.card.owner.6.title,home,수소차 충전요금 안내,H2 Charging Fees
+home.card.owner.7.desc,home,지킴이 활동하고 충전 포인트와 포상금 받으세요!,Help maintain stations and earn points and rewards
+home.card.owner.7.title,home,전기차 충전소 지킴이,Charging Station Steward
+home.card.owner.8.desc,home,차량번호 입력으로 저공해 등급 확인,Check your emission grade by license plate
+home.card.owner.8.title,home,내 차 저공해 등급 확인,Vehicle Emission Grade
+home.cta.apply,home,신청하기,Apply
+home.cta.lookup,home,조회하기,Look up
+home.cta.mobile,home,전기차 충전소 모바일 조회 서비스,Mobile Charging Station Lookup
+home.cta.mobile.desc,home,스마트폰에서도 쉽고 간편하게 전기차·수소차 충전소를 조회하실 수 있습니다.,Easily find EV and hydrogen charging stations on your smartphone.
+home.cta.slow,home,공용 완속충전시설 직접신청,Apply for Public Slow Charger Installation
+home.cta.slow.desc,home,공동주택·사업자·대규모 주차장 등의 소유자 및 운영자시리면<br>전기차 공용 완속충전시설 설치를 신청할 수 있습니다.,"Owners and operators of apartments, businesses, and large parking lots<br>can apply for public slow charger installation."
+home.dcm.bonus.label,home,추가 인센티브,Additional Incentive
+home.dcm.bonus.val,home,100만원,KRW 1M
+home.dcm.btn.calc,home,보조금 계산하기,Calculate Subsidy
+home.dcm.close.aria,home,닫기,Close
+home.dcm.gov.label,home,국고 보조금,National Subsidy
+home.dcm.gov.val,home,450만원,KRW 4.5M
+home.dcm.lbl.model,home,차종 선택,Vehicle Model
+home.dcm.lbl.price,home,차량 가격 (만원),Vehicle Price (10K KRW)
+home.dcm.lbl.region,home,거주 지역,Residence
+home.dcm.lbl.type,home,차량 구분,Vehicle Type
+home.dcm.local.label,home,지방비 보조금,Regional Subsidy
+home.dcm.local.val,home,350만원,KRW 3.5M
+home.dcm.note,home,"※ 위 결과는 참고용이며, 실제 보조금은 지자체별 예산 현황, 차량 에너지 효율 등급에 따라 달라질 수 있습니다. 정확한 금액은 관할 지자체에 문의하세요.",* Result is for reference. Actual subsidy may vary by regional budget and vehicle energy efficiency grade. Contact your local government for the precise amount.
+home.dcm.opt.ev6,home,기아 EV6,Kia EV6
+home.dcm.opt.ev9,home,기아 EV9,Kia EV9
+home.dcm.opt.h2,home,수소 승용차,FCEV Passenger
+home.dcm.opt.ioniq5,home,현대 아이오닉 5,Hyundai IONIQ 5
+home.dcm.opt.ioniq6,home,현대 아이오닉 6,Hyundai IONIQ 6
+home.dcm.opt.kona,home,현대 코나 EV,Hyundai Kona EV
+home.dcm.opt.model3,home,테슬라 모델 3,Tesla Model 3
+home.dcm.opt.modely,home,테슬라 모델 Y,Tesla Model Y
+home.dcm.opt.motorcycle,home,전기 이륜차,E-Motorbike
+home.dcm.opt.nexo,home,현대 넥쏘 (수소),Hyundai NEXO (H2)
+home.dcm.opt.niroev,home,기아 니로 EV,Kia Niro EV
+home.dcm.opt.passenger,home,전기 승용차,EV Passenger Car
+home.dcm.opt.truck,home,전기 화물차,EV Truck
+home.dcm.opt.van,home,전기 승합차,EV Bus
+home.dcm.title,home,상세 보조금 계산기,Detailed Subsidy Calculator
+home.dcm.total.label,home,총 예상 보조금,Estimated Total Subsidy
+home.dcm.total.val,home,900만원,KRW 9M
+home.fab.aria,home,보조금 신청 바로가기,Apply for Subsidy
+home.hero.headline_sm,home,"더 깨끗한 내일로의 이동,<br>지속 가능한 모빌리티 라이프","A cleaner journey forward,<br>Sustainable mobility for life"
+home.hero.sub,home,사용자 유형을 선택하면 맞춤 서비스와 콘텐츠를 바로 확인할 수 있습니다.,Select a user type to instantly see services and content tailored for you.
+home.hero.title,home,"<span class=""hp-hl"">나에게 맞는 서비스</span>를 선택하세요.","Choose <span class=""hp-hl"">the right service for you</span>."
+home.meta.desc,home,"전기차·수소차 구매보조금, 세제 정보, 차량 비교, 공모·신청, K-EV100 기업전환까지 한 곳에서 제공합니다.","EV/H2 vehicle subsidies, tax info, vehicle comparison, procurements, and K-EV100 corporate transition — all in one place."
+home.mig.faq,home,자주 묻는 질문,FAQ
+home.mig.faq.q1,home,전기차 보조금 신청은 어떻게 하나요?,How do I apply for the EV purchase subsidy?
+home.mig.faq.q2,home,민간 사업자 충전기 지킴이 활동은 어떻게 참여할 수 있나요?,How do I join the private operator Charging Station Steward program?
+home.mig.faq.q3,home,수소차 충전소는 전국에 몇 개인가요?,How many hydrogen charging stations are there nationwide?
+home.mig.faq.sub,home,가장 많이 문의되는 질문을 빠르게 확인하세요.,Quickly check the most frequently asked questions.
+home.mig.keeper,home,전기차 지킴이 활동,EV Steward Activity
+home.mig.keeper.aria,home,지킴이 활동 자세히 보기,See steward activity details
+home.mig.keeper.banner.aria,home,전기차 충전소 지킴이 활동 페이지로 이동,Go to the EV Charging Station Steward page
+home.mig.keeper.cta,home,참여하기,Join
+home.mig.keeper.desc,home,"시민과 함께 가꾸는 쾌적한 충전 환경<br><span class=""mkb-desc-em"">활동마다 포인트가 적립됩니다.</span>","A pleasant charging environment, kept by citizens.<br><span class=""mkb-desc-em"">Earn points for every activity.</span>"
+home.mig.keeper.lead,home,함께 지키는<br>깨끗한 충전 환경,Caring together for<br>a cleaner charging environment
+home.mig.recent,home,최근 관심 정보,Recent Interests
+home.mig.trend.1,home,2026 전기차 보조금,2026 EV Subsidy
+home.mig.trend.2,home,아이오닉 5 보조금 얼마,Ioniq 5 Subsidy Amount
+home.mig.trend.3,home,내 주변 급속 충전소,Nearby Fast Chargers
+home.mig.trend.4,home,수소차 넥쏘 보조금,Nexo H2 Subsidy
+home.news.sub,home,무공해차 통합누리집의 다양한 소식을 알려드립니다.,Stay up to date with news from the Zero-Emission Vehicle Portal.
+home.news.tab.all,home,전체,All
+home.news.tab.notice,home,공지사항,Notices
+home.news.tab.press,home,보도자료,Press
+home.news.tabs.aria,home,소식 분류,News categories
+home.news.title,home,새소식,Latest News
+home.persona.ai.badge,home,OPEN,OPEN
+home.persona.ai.desc,home,"자연어로 질문하면 AI가 맞춤 답변을 제공합니다. 카드를 클릭해 풀스크린 모드로 전환하거나, 아래 콘텐츠에서 상담 유형을 선택하세요.",Ask in natural language and the AI returns tailored answers. Click a card for full-screen mode or pick a flow below.
+home.persona.ai.sub,home,AI 상담 큐레이터,AI Curator
+home.persona.ai.title,home,AI 헬프데스크,AI Help Desk
+home.persona.business.desc,home,"충전기 설치 지원, 사업자 등록, K-EV100 참여 신청 등 사업자 전용 서비스를 제공합니다.","Dedicated services for businesses: charger installation, operator registration, and K-EV100 enrollment."
+home.persona.business.sub,home,설치신청·공모·현황조회,Install · Procurement · Status
+home.persona.business.title,home,충전 사업자·제조사,Charger Operators & Manufacturers
+home.persona.buyer.desc,home,"보조금 조회부터 차량 비교, 구매 절차까지 무공해차 구매에 필요한 정보를 단계별로 안내합니다.",Step-by-step guidance from subsidy lookup and vehicle comparison to EV purchase procedures.
+home.persona.buyer.sub,home,무공해차 알아보기,Learn about EVs
+home.persona.buyer.title,home,무공해차 구매 예정자,Prospective EV Buyer
+home.persona.hp,home,나에게 맞는 서비스,services tailored to you
+home.persona.owner.desc,home,"내 주변 충전소 찾기, 충전요금비교, 충전카드 관리 등 차량 운행에 필요한 서비스를 제공합니다.","Find nearby chargers, compare charging fees, manage cards — services for daily EV driving."
+home.persona.owner.sub,home,보조금·충전요금·혜택,Subsidy · Fees · Benefits
+home.persona.owner.title,home,무공해차 운전자,EV Driver
+home.persona.tablist,home,사용자 유형,User type
+home.policy.aria,home,정책 링크,Policy links
+home.policy.complaint,home,불편민원신고센터,Complaint Center
+home.policy.email,home,이메일 무단수집거부,No Unauthorized Email Collection
+home.policy.privacy,home,개인정보처리방침,Privacy Policy
+home.policy.video,home,영상정보처리기기 운영관리지침,CCTV Operation Guidelines
+home.popup.autoplay.aria,home,자동재생 토글,Toggle autoplay
+home.popup.close,home,닫기,Close
+home.popup.dialog.aria,home,ev.or.kr 캠페인·정책 안내 슬라이더,ev.or.kr campaign and policy slider
+home.popup.hidetoday,home,오늘하루 열지않기,Don't show today
+home.popup.indicators.aria,home,배너 인디케이터,Banner indicators
+home.popup.next.aria,home,다음 배너,Next banner
+home.popup.pause,home,정지,Pause
+home.popup.prev.aria,home,이전 배너,Previous banner
+home.quick.contact.desc,home,담당자 연락처·민원 안내,Contacts and inquiry guidance
+home.quick.contact.title,home,지자체 문의처,Regional Contact
+home.quick.eyebrow,home,QUICK ACCESS,QUICK ACCESS
+home.quick.grade.desc,home,차량번호로 내 차 등급 조회,Check by license plate
+home.quick.grade.title,home,저공해 등급 확인,Emission Grade
+home.quick.kev.desc,home,기업전환 프로그램 가입,Corporate transition program
+home.quick.kev.title,home,K-EV100 참여 신청,Join K-EV100
+home.quick.region.desc,home,지자체별 보조금 현황 조회,Check subsidies by region
+home.quick.region.title,home,우리 지역 보조금,Regional Subsidy
+home.quick.title,home,자주 찾는 서비스,Frequently Used Services
+home.s7.basis.member,home,회원가,Member
+home.s7.basis.nonmember,home,비회원가,Non-member
+home.s7.basis.roaming,home,로밍가,Roaming
+home.s7.filter.basis,home,요금기준:,Rate Basis:
+home.s7.filter.speed,home,충전유형:,Charger Type:
+home.s7.speed.fast,home,급속,Fast
+home.s7.speed.slow,home,완속,Slow
+home.s7.speed.ultra,home,초급속,Ultra-fast
+home.s7.sub,home,주요 충전사업자의 회원가<strong>·</strong>로밍가·비회원가를 한눈에 비교하세요.,"Compare member, roaming, and non-member rates of major charging operators at a glance."
+home.s7.tab.card,home,카드비교,Card View
+home.s7.tab.detail,home,상세비교,Detail View
+home.s7.title,home,충전 요금 비교,Charging Fee Comparison
+home.s7.viewall,home,충전요금 비교 전체 보기,View Full Comparison
+info.bc.home,common,홈,Home
+lang.label.en,common,English,English
+lang.label.ko,common,한국어,한국어
+lang.menu.aria,common,언어 선택,Select language
+lang.name.en,common,영어,English
+lang.name.ko,common,한국어,Korean
+lang.switched.en,common,영어로 전환되었습니다,Switched to English
+lang.switched.ko,common,한국어로 전환되었습니다,Switched to Korean
+mega.charging.card,common,충전 카드 관리,Charging Card
+mega.charging.card.apply,common,회원카드 신청·발급조회,Apply / Check Card
+mega.charging.card.edit,common,카드 정보 수정,Edit Card Info
+mega.charging.card.history,common,이용요금·명세서 조회,Usage & Statements
+mega.charging.card.point,common,충전 포인트,Charging Points
+mega.charging.fee,common,충전 요금 안내,Charging Fees
+mega.charging.fee.ev,common,전기차 충전요금 안내,EV Charging Fees
+mega.charging.fee.h2,common,수소차 충전요금 안내,H2 Charging Fees
+mega.charging.fee.sim,common,내 충전요금 시뮬레이터,Fee Simulator
+mega.charging.find,common,충전소 찾기,Find Stations
+mega.charging.find.map,common,통합 지도 (전기+수소),Integrated Map (EV + H2)
+mega.charging.find.near,common,내 주변 충전소,Nearby Stations
+mega.charging.find.route,common,경로 검색,Route Search
+mega.charging.h2,common,수소충전소 Help Desk,H2 Station Help Desk
+mega.charging.h2.report,common,수소충전소 장애 신고,Report H2 Station Issue
+mega.charging.h2.status,common,운영 현황 안내,Operation Status
+mega.charging.install,common,충전시설 설치,Install Chargers
+mega.charging.install.contest,common,완속/급속 공모 신청,Slow/Fast Charger Procurement
+mega.charging.install.moto,common,전기이륜차 충전시설 공모,E-Motorbike Charger Procurement
+mega.charging.install.products,common,완속충전기 제품 안내,Slow Charger Products
+mega.charging.install.slow,common,공용 완속충전 시설 신청,Public Slow Charger Application
+mega.community.ai,common,AI 헬프데스크,AI Help Desk
+mega.community.ai.charge,common,장애 대응 안내,Issue Response
+mega.community.ai.personal,common,AI 맞춤 상담,AI Personalized
+mega.community.ai.subsidy,common,보조금 큐레이터,Subsidy Curator
+mega.community.inquiry,common,민원·문의,Inquiries
+mega.community.inquiry.complaint,common,불편 민원 신고,Complaints
+mega.community.inquiry.faq,common,FAQ (자주 묻는 질문),FAQ
+mega.community.inquiry.qna,common,질의응답(건의사항),Q&A / Suggestions
+mega.community.inquiry.report,common,보조금 부적정집행 신고,Subsidy Misuse Report
+mega.community.inquiry.status,common,민원 처리 현황 조회,Complaint Status
+mega.community.notice,common,알림·공지,Notices
+mega.community.notice.data,common,공개자료,Public Materials
+mega.community.notice.keeper,common,전기차 충전소 지킴이 활동,Charging Station Stewards
+mega.community.notice.list,common,공지사항,Notices
+mega.community.notice.press,common,보도자료,Press Releases
+mega.community.notice.promo,common,홍보자료,Promotional Materials
+mega.data.dashboard,common,통계 대시보드,Statistics Dashboard
+mega.data.infra,common,충전 인프라 현황,Charging Infrastructure
+mega.data.k100,common,K-EV100 전환 현황,K-EV100 Transition
+mega.data.open,common,공개 데이터,Open Data
+mega.data.open.download,common,데이터 다운로드,Data Download
+mega.data.open.list,common,공개 데이터 목록,Open Data List
+mega.data.subsidy,common,보조금 집행 현황,Subsidy Disbursement
+mega.data.supply,common,무공해차 보급 현황,ZEV Adoption Status
+mega.data.tindex,common,충전 사업자 T-INDEX,Operator T-INDEX
+mega.data.trend,common,시장·정책 동향,Market & Policy Trends
+mega.data.trend.market,common,무공해차 시장 동향,ZEV Market Trends
+mega.data.trend.policy,common,정책 추진 현황,Policy Progress
+mega.data.trend.region,common,지역별 보급 현황,Regional Adoption
+mega.info.enc.battery,common,배터리 정보,Battery Info
+mega.info.enc.beginner,common,초보자 가이드,Beginner Guide
+mega.info.enc.ev,common,전기차 소개,About EVs
+mega.info.enc.glossary,common,용어사전,Glossary
+mega.info.enc.h2,common,수소차 소개,About FCEVs
+mega.info.encyclopedia,common,무공해차 백과,EV Encyclopedia
+mega.info.library,common,자료실,Library
+mega.info.library.form,common,서식 다운로드,Forms Download
+mega.info.library.general,common,일반 자료실,General Library
+mega.info.library.manual,common,사용자 매뉴얼,User Manuals
+mega.info.regulation,common,규정·가이드라인,Regulations & Guidelines
+mega.info.regulation.cert,common,인증 기준 안내,Certification Standards
+mega.info.regulation.law,common,법령·지침·규정·가이드라인,Laws & Guidelines
+mega.info.site,common,사이트 안내,Site Info
+mega.info.site.privacy,common,개인정보처리방침,Privacy Policy
+mega.info.site.sitemap,common,사이트맵,Sitemap
+mega.info.site.terms,common,이용약관,Terms of Service
+mega.purchase.compare,common,차량 비교,Vehicle Comparison
+mega.purchase.compare.tco,common,총소유비용(TCO) 계산,TCO Calculator
+mega.purchase.compare.tool,common,차종 비교 도구,Vehicle Comparison Tool
+mega.purchase.kev100,common,K-EV100 (기업전환),K-EV100 (Corporate)
+mega.purchase.kev100.about,common,K-EV100 소개,About K-EV100
+mega.purchase.kev100.benefits,common,참여 혜택·지원,Benefits & Support
+mega.purchase.kev100.companies,common,참여기업 현황,Participating Companies
+mega.purchase.kev100.process,common,참여 방법·절차,Participation Process
+mega.purchase.public,common,공모·신청,Public Procurement
+mega.purchase.public.bus,common,전기승합차 공모 신청,Electric Bus Procurement
+mega.purchase.public.const,common,무공해 건설기계 공모,ZEV Construction Equipment
+mega.purchase.public.contact,common,지자체 문의처 안내,Regional Contacts
+mega.purchase.subsidy,common,무공해차 구매보조금 안내,EV Purchase Subsidy
+mega.purchase.subsidy.region,common,지자체별 보조금 현황,Subsidies by Region
+mega.purchase.subsidy.target,common,보조금 지원 대상·신청절차,Eligibility & Application
+mega.purchase.subsidy.vehicles,common,보조금 지급대상 차종,Eligible Vehicles
+mega.purchase.tax,common,세제·정보 안내,Tax Benefits
+mega.purchase.tax.grade,common,내 차 저공해 등급 확인,Vehicle Emission Grade
+mega.purchase.tax.integrated,common,세제 정보 통합 안내,Tax Information
+mega.purchase.tax.region,common,지역별 추가 혜택,Regional Benefits
+mp.business.alert,mypage,<strong>업무지원시스템 이용 안내 ·</strong> 각 항목의 <strong>[이용신청]</strong>을 클릭하면 승인 후 사용할 수 있습니다.,<strong>Workspace Access Guide ·</strong> Click <strong>[Request Access]</strong> on each item; available after approval.
+mp.business.t1,mypage,의무 구매·임차제<br>이용신청,Mandatory Purchase/Lease<br>Access
+mp.business.t10,mypage,표지발급<br>이용신청,Label Issuance<br>Access
+mp.business.t2,mypage,급속 충전시설<br>지점관리 이용신청,Fast Charger<br>Site Management
+mp.business.t3,mypage,완속 충전시설<br>지점관리 이용신청,Slow Charger<br>Site Management
+mp.business.t4,mypage,통합관리시스템<br>이용신청,Integrated System<br>Access
+mp.business.t5,mypage,무공해차 보조금<br>지원시스템 이용신청,ZEV Subsidy System<br>Access
+mp.business.t6,mypage,완속충전기 설치보조금<br>지원시스템 이용신청,Slow Charger Subsidy System<br>Access
+mp.business.t7,mypage,브랜드사업 설치보조금<br>지원 이용신청,Brand Business Subsidy<br>Access
+mp.business.t8,mypage,보급목표제<br>이용신청,Adoption Target<br>Access
+mp.business.t9,mypage,수소차 충전인프라,Hydrogen Infrastructure
+mp.business.tag.apply,mypage,이용신청,Request Access
+mp.business.tag.approved,mypage,승인완료,Approved
+mp.card.account.a1,mypage,네이버 계정 연결,Link Naver Account
+mp.card.account.a2,mypage,카카오 계정 연결,Link Kakao Account
+mp.card.account.a3,mypage,간편 인증 관리,Simple Auth Management
+mp.card.account.desc,mypage,소셜 계정 연동 및 간편 인증을 설정하세요,Link social accounts and configure simple authentication
+mp.card.account.tag,mypage,계정 연결,Linked Accounts
+mp.card.account.title,mypage,계정 연결,Linked Accounts
+mp.card.basic.a1,mypage,회원 정보 조회·수정,View / Edit Profile
+mp.card.basic.a2,mypage,비밀번호 변경,Change Password
+mp.card.basic.a3,mypage,알림 설정 (이메일/SMS),Notification Settings (Email/SMS)
+mp.card.basic.desc,mypage,회원 정보 확인 및 알림 설정을 관리하세요,Manage your profile and notification settings
+mp.card.basic.tag,mypage,기본 정보,Basic Info
+mp.card.basic.title,mypage,기본 정보,Basic Info
+mp.card.card.a1,mypage,회원카드 정보 조회,View Card Info
+mp.card.card.a2,mypage,카드 정보 수정,Edit Card Info
+mp.card.card.a3,mypage,카드 분실 신고·재발급,Report Lost / Reissue Card
+mp.card.card.desc,mypage,"등록한 카드 확인, 수정, 분실 신고를 처리하세요","View, edit, or report lost charging cards"
+mp.card.card.tag,mypage,충전 카드,Charging Card
+mp.card.card.title,mypage,충전 카드 관리,Charging Card Management
+mp.card.fav.a1,mypage,자주 쓰는 충전소 즐겨찾기,Favorite Stations
+mp.card.fav.a2,mypage,충전 이력 통계,Charging History Stats
+mp.card.fav.desc,mypage,즐겨찾는 충전소를 관리하고 이용 통계를 확인하세요,Manage favorite stations and view usage statistics
+mp.card.fav.tag,mypage,나의 충전소,My Stations
+mp.card.fav.title,mypage,나의 충전소,My Charging Stations
+mp.card.inquiry.a1,mypage,민원 처리 현황 조회,View Inquiry Status
+mp.card.inquiry.a2,mypage,내 질문·답변 이력,My Q&A History
+mp.card.inquiry.desc,mypage,접수한 민원의 진행 단계를 타임라인으로 확인합니다,Check the progress of submitted inquiries on a timeline
+mp.card.inquiry.done,mypage,완료,Completed
+mp.card.inquiry.inprog,mypage,진행 중,In progress
+mp.card.inquiry.tag,mypage,민원,Inquiry
+mp.card.inquiry.title,mypage,민원 처리 현황,Inquiry Status
+mp.card.public.a1,mypage,공모 신청 내역,Procurement Applications
+mp.card.public.desc,mypage,전기승합·건설기계·충전시설 공모 진행 현황,"Status for bus, construction equipment, and charger procurement"
+mp.card.public.inprog,mypage,진행 중,In progress
+mp.card.public.stage,mypage,심사 단계,Review Stage
+mp.card.public.tag,mypage,공모,Procurement
+mp.card.public.title,mypage,공모 신청,Procurement Application
+mp.card.subsidy.a1,mypage,신청 내역 전체보기,View All Applications
+mp.card.subsidy.desc,mypage,접수 · 심사 · 지급 단계를 실시간으로 확인합니다,"Track submission, review, and disbursement stages in real time"
+mp.card.subsidy.inprog,mypage,진행 중,In progress
+mp.card.subsidy.recent,mypage,최근 신청 2026.04.18,Latest: 2026.04.18
+mp.card.subsidy.tag,mypage,보조금,Subsidy
+mp.card.subsidy.title,mypage,보조금 신청 현황,Subsidy Application Status
+mp.card.use.a1,mypage,이용요금 조회,View Usage Fees
+mp.card.use.a2,mypage,충전 명세서 조회,View Charging Statements
+mp.card.use.a3,mypage,충전 포인트 현황,Charging Point Status
+mp.card.use.desc,mypage,"요금 조회, 이용 내역 및 포인트 현황을 확인하세요","Check fees, usage history, and point status"
+mp.card.use.tag,mypage,이용 내역,Usage History
+mp.card.use.title,mypage,충전 이용 내역,Charging Usage History
+mp.card.withdraw.a1,mypage,회원 탈퇴 신청,Submit Withdrawal Request
+mp.card.withdraw.desc,mypage,서비스 탈퇴를 원하시면 아래에서 신청해주세요,Submit a withdrawal request below to leave the service
+mp.card.withdraw.tag,mypage,회원 탈퇴,Withdraw
+mp.card.withdraw.title,mypage,회원 탈퇴,Withdraw Membership
+mp.contact.note,mypage,"문의 사항이 있으신가요? <a href=""inquiry.html"">고객센터</a>로 연락해 주세요.","Have a question? Please contact our <a href=""inquiry.html"">Customer Center</a>."
+mp.hero.avatar,mypage,홍,H
+mp.hero.chip.joined,mypage,가입일 2022.03.15,Joined 2022.03.15
+mp.hero.chip.lastlogin,mypage,최근 접속 2026.05.10,Last login 2026.05.10
+mp.hero.chip.personal,mypage,일반 회원,Personal Member
+mp.hero.greeting,mypage,반갑습니다,Welcome
+mp.hero.name.suffix,mypage,회원님,
+mp.page.lead,mypage,내 정보·충전 이용·민원·신청 현황을 한 화면에서 관리합니다.,"Manage your profile, charging, inquiries, and applications in one place."
+mp.page.title,mypage,마이페이지,My Page
+mp.sec.apps.aux,mypage,진행 중 4건 · 완료 12건,In progress 4 · Completed 12
+mp.sec.apps.title,mypage,나의 신청·민원,My Applications & Inquiries
+mp.sec.business.aux,mypage,이용 중 2건 / 전체 10건,In use 2 / Total 10
+mp.sec.business.title,mypage,업무지원시스템 이용신청,Workspace Access Request
+mp.sec.charging.aux,mypage,충전 카드 내역과 충전소 관리,Charging card history and station management
+mp.sec.charging.title,mypage,나의 충전,My Charging
+mp.sec.help,mypage,"문의 사항이 있으신가요? <a href=""inquiry.html"">고객센터</a>로 연락해 주세요.","Have questions? Please contact <a href=""inquiry.html"">customer support</a>."
+mp.sec.info.aux,mypage,개인 정보 및 계정 설정,Personal info and account settings
+mp.sec.info.title,mypage,내 정보 관리,Account Management
+mp.sec.ip.current,mypage,현재 IP,Current IP
+mp.sec.ip.external,mypage,외부 IP,External IP
+mp.sec.lastlogin,mypage,마지막 로그인,Last Login
+mp.side.aria,common,마이페이지 메뉴,My Page menu
+mp.side.group.charging,common,나의 충전,My Charging
+mp.side.group.info,common,내 정보 관리,Account
+mp.side.group.subsidy,common,보조금·민원,Subsidy & Inquiries
+mp.side.item.accounts,common,계정 연결·간편인증,Linked Accounts
+mp.side.item.card,common,충전 카드 관리,Charging Card
+mp.side.item.fav,common,자주 쓰는 충전소,Favorite Stations
+mp.side.item.home,common,마이페이지 홈,My Page Home
+mp.side.item.info,common,회원 정보 조회·수정,View / Edit Profile
+mp.side.item.inquiry,common,민원 처리 현황,Inquiry Status
+mp.side.item.notifications,common,알림 설정,Notification Settings
+mp.side.item.password,common,비밀번호 변경,Change Password
+mp.side.item.public,common,공모 신청 현황,Procurement Status
+mp.side.item.subsidy,common,보조금 신청 현황,Subsidy Status
+mp.side.item.withdraw,common,회원 탈퇴,Withdraw Membership
+mp.side.role.business,common,사업자 회원,Business Member
+mp.side.role.personal,common,일반 회원,Personal Member
+mp.stat.amount.label,mypage,이번 달 이용금액,This Month Usage
+mp.stat.amount.unit,mypage,원,KRW
+mp.stat.fav.label,mypage,즐겨찾기 충전소,Favorite Stations
+mp.stat.fav.unit,mypage,곳,
+mp.stat.point.label,mypage,충전 포인트,Charging Points
+mp.stat.point.unit,mypage,P,P
+mp.workspace.notice,mypage,<strong>업무지원시스템 이용 안내 ·</strong> 각 항목의 <strong>[이용신청]</strong>을 클릭하면 승인 후 사용할 수 있습니다.,<strong>Workspace System Notice ·</strong> Click <strong>[Apply]</strong> for each item; access is granted after approval.
+mpa.btn.register,mypage,등록하기,Register
+mpa.btn.renew,mypage,갱신,Renew
+mpa.btn.unlink,mypage,연결 해제,Unlink
+mpa.coint.desc,mypage,"구 공인인증서 · 개인·법인·사업자 인증, 보조금 신청 시 사용","Formerly the public certificate · personal/corporate/business verification, used for subsidy applications."
+mpa.coint.label,mypage,공동,Joint
+mpa.coint.title,mypage,공동인증서,Joint Certificate
+mpa.col.method,mypage,방식,Method
+mpa.col.purpose,mypage,목적,Purpose
+mpa.col.result,mypage,결과,Result
+mpa.col.time,mypage,일시,Date
+mpa.content.desc,mypage,"무공해차 통합누리집에서 사용하는 본인확인 방법을 관리합니다. 소셜 1건, 인증서 1건이 등록되어 있습니다.",Manage identity verification methods used on the Zero-Emission Vehicle Portal. 1 social account and 1 certificate are registered.
+mpa.content.h2,mypage,계정 연결·간편인증,Linked Accounts & Simple Auth
+mpa.fin.desc,mypage,"금융결제원 발급 · 클라우드 보관, 비밀번호로 사용","Issued by KFTC · stored in the cloud, used with a password."
+mpa.fin.label,mypage,금융,Finance
+mpa.fin.title,mypage,금융인증서,Financial Certificate
+mpa.gpki.desc,mypage,행정기관 발급 전자서명 · 공공 행정서비스 본인확인 시 사용,Government-issued digital signature · used for identity verification in public administrative services.
+mpa.gpki.label,mypage,행정,GPKI
+mpa.gpki.title,mypage,행정전자서명(GPKI),Government PKI (GPKI)
+mpa.history.desc,mypage,최근 30일 내의 본인 확인 이력입니다. 본인이 한 활동이 아니라면 즉시 비밀번호를 변경해 주세요.,"Verification history from the last 30 days. If you did not perform an activity, change your password immediately."
+mpa.history.title,mypage,최근 본인 확인 활동,Recent Verification Activity
+mpa.kakao,mypage,카카오,Kakao
+mpa.kakao.meta,mypage,hjshin***@kakao.com · 연결일 2024-08-12,hjshin***@kakao.com · Linked 2024-08-12
+mpa.lead,mypage,소셜 계정과 간편 인증을 등록하여 본인 확인을 간소화합니다.,Register social accounts and simple authentication to streamline identity verification.
+mpa.method.mobile,mypage,휴대폰 본인확인,Mobile Verification
+mpa.method.naver,mypage,네이버,Naver
+mpa.mobile.desc,mypage,SKT·KT·LG U+ 통신 3사 본인 명의 휴대폰 SMS 인증,"SMS verification via SKT, KT, or LG U+ phone in your own name."
+mpa.mobile.label,mypage,휴대폰,Mobile
+mpa.mobile.title,mypage,휴대폰 본인확인,Mobile Phone Verification
+mpa.msg.coint.register,mypage,공동인증서 등록 창으로 이동합니다.,Opening the joint certificate registration window.
+mpa.msg.confirm.unlink,mypage,연결을 해제하시겠습니까? 해당 계정의 알림 수신도 함께 중단됩니다., will be unlinked. Notification delivery for this account will also stop. Continue?
+mpa.msg.fin.register,mypage,금융인증서 등록 창으로 이동합니다.,Opening the financial certificate registration window.
+mpa.msg.gpki.register,mypage,행정전자서명(GPKI) 등록 창으로 이동합니다.,Opening the Government PKI (GPKI) registration window.
+mpa.msg.mobile.renew,mypage,휴대폰 본인확인 정보를 갱신합니다.,Renewing mobile phone verification information.
+mpa.msg.unlinked,mypage, 연결이 해제되었습니다., has been unlinked.
+mpa.naver,mypage,네이버,Naver
+mpa.naver.meta,mypage,hjshin***@naver.com · 연결일 2024-08-12,hjshin***@naver.com · Linked 2024-08-12
+mpa.policy.li1,mypage,최소 1개 이상의 간편 인증 등록을 권장합니다.,We recommend registering at least one simple authentication method.
+mpa.policy.li2,mypage,"소셜 계정 연결 해제 시, 기존에 연결된 알림 채널도 함께 해제됩니다.",Unlinking a social account also disconnects its associated notification channels.
+mpa.policy.li3,mypage,본인이 한 활동이 아닌 인증 이력이 보이면 즉시 비밀번호를 변경하고 고객센터로 문의해 주세요.,"If you see unrecognized verification activity, change your password immediately and contact customer support."
+mpa.policy.title,mypage,안전한 계정 사용을 위한 권장 사항,Recommendations for Safe Account Use
+mpa.purpose.login,mypage,로그인 본인확인,Login Verification
+mpa.purpose.social,mypage,소셜 로그인,Social Login
+mpa.purpose.subsidy,mypage,보조금 신청 본인확인,Subsidy Application Verification
+mpa.result.success,mypage,성공,Success
+mpa.social.desc,mypage,네이버 계정으로 빠르게 로그인할 수 있습니다.,Quickly log in with your Naver account.
+mpa.social.title,mypage,계정연결,Account Linking
+mpa.status.linked,mypage,연결됨,Linked
+mpa.status.registered,mypage,등록됨,Registered
+mpa.status.unlinked,mypage,미등록,Not Registered
+mpa.title,mypage,계정 연결·간편인증,Linked Accounts & Simple Auth
+mpa.verify.desc,mypage,회원가입·보조금 신청·민원 처리 등 본인 확인이 필요할 때 사용합니다. 「전자서명법」에 따라 안전하게 처리됩니다.,"Used when identity verification is required (signup, subsidy applications, inquiries). Handled securely per the Digital Signature Act."
+mpa.verify.title,mypage,본인 확인 수단,Identity Verification
+mpf.btn.clearall,mypage,전체 해제,Clear All
+mpf.btn.find,mypage,충전소 찾기,Find Stations
+mpf.card.added,mypage,등록,Added
+mpf.card.detail,mypage,상세 보기,Details
+mpf.card.remove.aria,mypage,즐겨찾기 해제,Remove from favorites
+mpf.card.route,mypage,길찾기,Directions
+mpf.content.desc,mypage,충전소 찾기 화면에서 ★ 버튼을 눌러 즐겨찾기에 추가할 수 있습니다.,Add favorites by clicking the ★ button on the Find Stations page.
+mpf.content.h2,mypage,자주 쓰는 충전소,Favorite Charging Stations
+mpf.count.prefix,mypage,즐겨찾기,Favorites
+mpf.count.suffix,mypage,곳,
+mpf.empty.btn,mypage,충전소 찾기로 이동 →,Go to Find Stations →
+mpf.empty.desc,mypage,충전소 찾기 화면에서 카드 우측 상단의 ★ 버튼을 눌러 자주 이용하는 충전소를 즐겨찾기에 추가해 보세요.,Add favorites by clicking the ★ button on a station card in Find Stations.
+mpf.empty.filter.desc,mypage,다른 필터를 선택해 보세요.,Try a different filter.
+mpf.empty.filter.title,mypage,해당 유형의 즐겨찾기가 없습니다,No favorites for this filter
+mpf.empty.title,mypage,아직 등록된 즐겨찾기 충전소가 없습니다,No favorite charging stations yet
+mpf.filter.aria,mypage,유형 필터,Type filter
+mpf.lead,mypage,즐겨찾기에 등록한 충전소를 한눈에 확인하고 빠르게 이동합니다.,See your favorite charging stations at a glance and jump to them quickly.
+mpf.msg.confirm.clearall,mypage,모든 즐겨찾기를 해제하시겠습니까?,Clear all favorites?
+mpf.msg.confirm.remove,mypage,즐겨찾기에서 해제하시겠습니까?,Remove this from favorites?
+mpf.msg.empty,mypage,등록된 즐겨찾기가 없습니다.,No favorites registered.
+mpf.sort.aria,mypage,정렬,Sort
+mpf.sort.name,mypage,이름순 (가나다),Name (A–Z)
+mpf.sort.recent,mypage,최근 등록순,Recently Added
+mpf.sort.type,mypage,유형별,By Type
+mpf.summary.ev,mypage,전기 충전소,EV Stations
+mpf.summary.h2,mypage,수소 충전소,H2 Stations
+mpf.summary.total,mypage,총 즐겨찾기,Total Favorites
+mpf.summary.unit,mypage,곳,
+mpf.tab.all,mypage,전체,All
+mpf.tab.ev,mypage,전기,EV
+mpf.tab.h2,mypage,수소,H2
+mpf.title,mypage,자주 쓰는 충전소,Favorite Charging Stations
+mpf.type.ev,mypage,전기,EV
+mpf.type.h2,mypage,수소,H2
+mpi.address.basic.aria,mypage,기본 주소,Default address
+mpi.address.basic.value,mypage,서울특별시 중구 세종대로 110,"110 Sejong-daero, Jung-gu, Seoul"
+mpi.basic.desc,mypage,아이디·이름·생년월일은 본인 확인을 통해 변경할 수 있습니다.,"ID, name, and date of birth can be changed after identity verification."
+mpi.basic.title,mypage,기본 인적 사항,Basic Personal Info
+mpi.btn.cancel,mypage,취소,Cancel
+mpi.btn.history,mypage,최근 변경 이력,Recent Changes
+mpi.btn.save,mypage,변경 사항 저장,Save Changes
+mpi.chip.joined,mypage,가입일 2022.03.15,Joined 2022.03.15
+mpi.chip.personal,mypage,일반 회원,Personal Member
+mpi.contact.desc,mypage,"보조금 진행, 충전 알림 등 안내가 발송되는 연락처입니다.","Contact details used to send subsidy progress, charging notifications, and other alerts."
+mpi.contact.title,mypage,연락처 정보,Contact Information
+mpi.content.desc,mypage,개인정보보호법에 따라 본인이 직접 수정한 정보만 저장됩니다.,"Per the Personal Information Protection Act, only the information you personally edit is saved."
+mpi.content.h2,mypage,회원 정보,Member Information
+mpi.field.addr,mypage,주소,Address
+mpi.field.addr.detail,mypage,상세 주소를 입력하세요,Enter detailed address
+mpi.field.addr.help,mypage,서식 발송 등 우편 안내가 필요한 경우에 사용합니다.,"Used when postal correspondence (forms, etc.) is required."
+mpi.field.birth,mypage,생년월일,Date of Birth
+mpi.field.email,mypage,이메일,Email
+mpi.field.email.help,mypage,이메일 변경 후에는 인증을 완료해야 알림이 정상 발송됩니다.,"After changing your email, you must complete verification to receive notifications."
+mpi.field.email.send,mypage,인증메일 발송,Send Verification Email
+mpi.field.id,mypage,아이디,User ID
+mpi.field.id.help,mypage,아이디는 변경할 수 없습니다.,User ID cannot be changed.
+mpi.field.interest,mypage,관심 차종,Vehicle Interests
+mpi.field.interest.help,mypage,관심 차종에 맞춘 보조금·공모 알림을 우선 안내합니다.,Subsidy and procurement notifications matching your interests will be prioritized.
+mpi.field.name,mypage,이름,Name
+mpi.field.name.help,mypage,이름 변경은 본인 확인(공동·간편 인증) 후 가능합니다.,Name change requires identity verification (joint or simple authentication).
+mpi.field.name.value,mypage,홍길동,Hong Gildong
+mpi.field.name.verify,mypage,본인 확인 →,Verify Identity →
+mpi.field.phone,mypage,휴대전화,Mobile Phone
+mpi.field.phone.help,mypage,SMS 알림 수신 시 사용됩니다.,Used for SMS notifications.
+mpi.field.phone.send,mypage,인증번호,Send Code
+mpi.field.type,mypage,회원 유형,Member Type
+mpi.field.zip.ph,mypage,우편번호,Postal code
+mpi.field.zip.search,mypage,우편번호 검색,Search Postal Code
+mpi.interest.commercial,mypage,전기 화물·승합,EV Truck/Bus
+mpi.interest.const,mypage,전기 건설기계,EV Construction
+mpi.interest.h2,mypage,수소차,Hydrogen
+mpi.interest.moto,mypage,전기 이륜차,E-Motorbike
+mpi.interest.passenger,mypage,전기 승용,EV Passenger
+mpi.lead,mypage,기본 인적 사항과 연락처 정보를 확인하고 수정합니다.,View and update your basic personal information and contact details.
+mpi.msg.saved.contact,mypage,연락처 정보가 저장되었습니다.,Contact information has been saved.
+mpi.msg.saved.profile,mypage,회원 정보가 저장되었습니다.,Profile information has been saved.
+mpi.policy.body,mypage,"수집한 개인정보는 「개인정보 보호법」 제15조·제17조에 따라 회원관리, 보조금 신청·심사, 민원 처리 목적에 한하여 활용됩니다.","Collected personal information is used solely for membership management, subsidy application/review, and inquiry handling under Articles 15 and 17 of the Personal Information Protection Act."
+mpi.policy.li1,mypage,보유 기간: 회원 탈퇴 시까지 (관계 법령에 따라 일부 항목은 5년간 보관),Retention: until withdrawal (some items retained for 5 years per applicable laws).
+mpi.policy.li2,mypage,제3자 제공: 보조금 지자체 협력 기관 (필요 시 사전 동의 후 제공),Third-party sharing: regional subsidy partner agencies (with prior consent when required).
+mpi.policy.li3,mypage,"자세한 내용은 <a href=""info-privacy.html"">개인정보처리방침</a>을 참고해 주세요.","For details, see the <a href=""info-privacy.html"">Privacy Policy</a>."
+mpi.policy.title,mypage,개인정보 처리 안내,Privacy Notice
+mpi.title,mypage,회원 정보 조회·수정,View / Edit Profile
+mpn.btn.alloff,mypage,전체 끄기,Turn All Off
+mpn.btn.cancel,mypage,취소,Cancel
+mpn.btn.save,mypage,저장하기,Save
+mpn.cat.card.desc,mypage,"카드 발급·만료, 포인트 적립·사용","Card issuance/expiry, point accrual and use."
+mpn.cat.card.title,mypage,회원카드·포인트,Membership Card & Points
+mpn.cat.charge.desc,mypage,"충전 완료 알림, 월별 이용 요약, 명세서 발행","Charging completion alerts, monthly summaries, and statements."
+mpn.cat.charge.title,mypage,충전 완료·이용 안내,Charging Completion & Usage
+mpn.cat.desc,mypage,받고 싶은 알림 유형을 채널별로 선택해 주세요.,Select which notification types to receive per channel.
+mpn.cat.inquiry.desc,mypage,접수·배정·처리·완료 단계 안내,"Receipt, assignment, processing, and completion stages."
+mpn.cat.inquiry.title,mypage,민원 처리 단계,Inquiry Progress
+mpn.cat.mkt.desc,mypage,이벤트·캠페인·프로모션 정보 (선택),"Events, campaigns, promotions (optional)."
+mpn.cat.mkt.title,mypage,마케팅·홍보,Marketing & Promotions
+mpn.cat.notice.desc,mypage,"주요 공지, 보도자료, 정책 변경 안내","Key notices, press releases, and policy updates."
+mpn.cat.notice.title,mypage,공지·새소식,Notices & News
+mpn.cat.public.desc,mypage,"전기승합·건설기계 등 공모 모집 공고, 참여 이벤트","Procurement announcements (buses, construction equipment) and participation events."
+mpn.cat.public.title,mypage,공모·이벤트,Procurement & Events
+mpn.cat.subsidy.desc,mypage,"접수 완료, 심사 단계 변경, 지급 완료 등 단계별 안내","Stage-by-stage updates: receipt, review changes, payment completion."
+mpn.cat.subsidy.title,mypage,보조금 신청·심사 진행,Subsidy Application & Review
+mpn.cat.title,mypage,카테고리별 알림,Per-Category Notifications
+mpn.channel.desc,mypage,알림이 전송될 기본 채널을 먼저 설정해 주세요.,Set up the default channels through which notifications will be sent.
+mpn.channel.email,mypage,이메일 알림,Email Notifications
+mpn.channel.email.note,mypage,"변경은 <a href=""mypage-info.html"">회원 정보</a>에서 가능합니다.","Change in <a href=""mypage-info.html"">Member Information</a>."
+mpn.channel.kakao,mypage,카카오 알림톡,Kakao AlimTalk
+mpn.channel.kakao.link,mypage,계정 연결로 이동 →,Go to Linked Accounts →
+mpn.channel.kakao.note,mypage,카카오 계정 연결 후 사용 가능합니다.,Available after linking your Kakao account.
+mpn.channel.sms,mypage,SMS 알림,SMS Notifications
+mpn.channel.sms.note,mypage,긴급 공지·본인확인 SMS는 항상 발송됩니다.,Emergency notices and identity verification SMS are always sent.
+mpn.channel.title,mypage,수신 채널,Channels
+mpn.col.email,mypage,이메일,Email
+mpn.col.sms,mypage,SMS,SMS
+mpn.col.type,mypage,알림 유형,Type
+mpn.content.desc,mypage,이메일·SMS 채널과 카테고리별 수신 여부를 관리합니다.,Manage email/SMS channels and per-category preferences.
+mpn.content.h2,mypage,알림 설정,Notification Settings
+mpn.lead,mypage,"보조금 진행, 충전 완료, 공지사항 등 알림 채널과 카테고리를 설정합니다.","Configure notification channels and categories such as subsidy progress, charging completion, and notices."
+mpn.msg.cancel,mypage,변경 사항이 취소되었습니다.,Changes have been cancelled.
+mpn.msg.confirm.alloff,mypage,모든 알림을 끄시겠습니까? 보안 알림은 계속 발송됩니다.,Turn off all notifications? Security alerts will still be sent.
+mpn.msg.saved,mypage,알림 설정이 저장되었습니다.,Notification settings saved.
+mpn.policy.li1,mypage,"본인 확인·보안 관련 알림(예: 비밀번호 변경, 의심 접속 차단 등)은 항상 발송됩니다.","Identity and security alerts (e.g., password changes, suspicious access) are always sent."
+mpn.policy.li2,mypage,"SMS 알림은 통신사 사정에 따라 지연될 수 있으며, 별도 비용이 발생하지 않습니다.",SMS may be delayed due to carrier conditions; no extra charges apply.
+mpn.policy.li3,mypage,「정보통신망법」 제50조에 따라 마케팅·홍보 알림은 별도 동의 후에만 발송됩니다.,"Per Article 50 of the Network Act, marketing notifications are sent only with separate consent."
+mpn.policy.title,mypage,알림 발송 안내,Notification Delivery Notice
+mpn.title,mypage,알림 설정,Notification Settings
+mpn.toggle.card.email,mypage,회원카드 이메일 알림,Membership card email notifications
+mpn.toggle.card.sms,mypage,회원카드 SMS 알림,Membership card SMS notifications
+mpn.toggle.charging.email,mypage,충전 이메일 알림,Charging email notifications
+mpn.toggle.charging.sms,mypage,충전 SMS 알림,Charging SMS notifications
+mpn.toggle.inquiry.email,mypage,민원 이메일 알림,Inquiry email notifications
+mpn.toggle.inquiry.sms,mypage,민원 SMS 알림,Inquiry SMS notifications
+mpn.toggle.mkt.email,mypage,마케팅 이메일 알림,Marketing email notifications
+mpn.toggle.mkt.sms,mypage,마케팅 SMS 알림,Marketing SMS notifications
+mpn.toggle.notice.email,mypage,공지 이메일 알림,Notice email notifications
+mpn.toggle.notice.sms,mypage,공지 SMS 알림,Notice SMS notifications
+mpn.toggle.public.email,mypage,공모 이메일 알림,Procurement email notifications
+mpn.toggle.public.sms,mypage,공모 SMS 알림,Procurement SMS notifications
+mpn.toggle.subsidy.email,mypage,보조금 이메일 알림,Subsidy email notifications
+mpn.toggle.subsidy.sms,mypage,보조금 SMS 알림,Subsidy SMS notifications
+mpw.btn.cancel,mypage,취소,Cancel
+mpw.btn.submit,mypage,비밀번호 변경,Change Password
+mpw.card.desc,mypage,현재 비밀번호 확인 후 새로운 비밀번호로 변경합니다.,"Verify your current password, then set a new one."
+mpw.card.title,mypage,비밀번호 입력,Password Entry
+mpw.chip.recommend,mypage,변경 권장,Change Recommended
+mpw.content.desc,mypage,마지막 변경: 2025-11-20 · 권장 주기 90일이 경과했습니다.,Last change: 2025-11-20 · Recommended 90-day interval has passed.
+mpw.content.h2,mypage,비밀번호 변경,Change Password
+mpw.field.confirm,mypage,새 비밀번호 확인,Confirm New Password
+mpw.field.confirm.ph,mypage,새 비밀번호 재입력,Re-enter new password
+mpw.field.current,mypage,현재 비밀번호,Current Password
+mpw.field.current.ph,mypage,현재 사용 중인 비밀번호,Your current password
+mpw.field.new,mypage,새 비밀번호,New Password
+mpw.field.new.help,mypage,"영문 대/소문자, 숫자, 특수문자를 조합하여 9자 이상으로 설정해 주세요.","Use a combination of upper/lowercase letters, numbers, and special characters; 9+ characters."
+mpw.field.new.ph,mypage,새 비밀번호,New password
+mpw.lead,mypage,계정 보안을 위해 정기적으로 비밀번호를 변경하시기 바랍니다.,Please change your password regularly to keep your account secure.
+mpw.match.fail,mypage,× 비밀번호가 일치하지 않습니다.,× Passwords do not match.
+mpw.match.ok,mypage,✓ 새 비밀번호가 일치합니다.,✓ Passwords match.
+mpw.msg.changed,mypage,비밀번호가 변경되었습니다. 보안을 위해 다시 로그인해 주세요.,Password changed. Please log in again for security.
+mpw.policy.li1,mypage,"최소 9자 이상, 영문 대·소문자·숫자·특수문자 중 3종류 이상 조합","At least 9 characters with 3 or more types: upper/lowercase letters, numbers, special characters"
+mpw.policy.li2,mypage,아이디 또는 생년월일과 동일하거나 유사한 문자열 사용 금지,Must not be the same as or similar to your User ID or date of birth
+mpw.policy.li3,mypage,이전에 사용한 3개의 비밀번호는 재사용할 수 없습니다.,You cannot reuse the last 3 passwords.
+mpw.policy.li4,mypage,90일마다 비밀번호 변경을 권장합니다.,Password change is recommended every 90 days.
+mpw.policy.li5,mypage,3회 연속 잘못 입력 시 5분간 로그인이 제한됩니다.,Login is restricted for 5 minutes after 3 consecutive failed attempts.
+mpw.policy.title,mypage,비밀번호 설정 정책 (KISA 권고 기준),Password Policy (per KISA recommendations)
+mpw.strength.1,mypage,매우 약함,Very weak
+mpw.strength.2,mypage,약함,Weak
+mpw.strength.3,mypage,보통,Fair
+mpw.strength.4,mypage,강함,Strong
+mpw.title,mypage,비밀번호 변경,Change Password
+mpwd.agree.label,mypage,확인 동의,Confirmation
+mpwd.agree.text,mypage,"탈퇴 시 잔여 포인트와 신청 내역이 즉시 소멸되며, 30일 내 재가입이 제한된다는 사실을 확인하였습니다.","I acknowledge that remaining points and applications will be voided immediately upon withdrawal, and re-registration is blocked for 30 days."
+mpwd.box.apps.label,mypage,진행 중 신청,IN-PROGRESS
+mpwd.box.apps.note,mypage,진행 중 신청은 탈퇴 후 자동 취소됩니다.,In-progress applications will be canceled automatically upon withdrawal.
+mpwd.box.apps.val,mypage,보조금 1건 · 공모 1건,1 Subsidy · 1 Procurement
+mpwd.box.card.label,mypage,충전 카드,CHARGING CARD
+mpwd.box.card.note,mypage,발급된 카드는 탈퇴 시 즉시 정지됩니다.,Issued cards will be suspended immediately upon withdrawal.
+mpwd.box.card.val,mypage,활성 1매,1 Active
+mpwd.box.data.label,mypage,보유 데이터,STORED DATA
+mpwd.box.data.note,mypage,"조회 권한이 사라지므로, 필요 시 사전에 다운로드해 주세요.",Access will be revoked; please download in advance if needed.
+mpwd.box.data.val,mypage,민원 9건 · 명세서 26건,9 Inquiries · 26 Statements
+mpwd.box.point.label,mypage,충전 포인트,CHARGING POINTS
+mpwd.box.point.note,mypage,탈퇴 시 잔여 포인트는 자동 소멸됩니다.,Remaining points will be voided upon withdrawal.
+mpwd.box.point.val,mypage,"3,420 P","3,420 P"
+mpwd.btn.cancel,mypage,취소하고 마이페이지로,Cancel and Back to My Page
+mpwd.btn.submit,mypage,회원 탈퇴 신청,Submit Withdrawal Request
+mpwd.check.desc,mypage,아래 항목을 반드시 확인해 주세요.,Please review the items below.
+mpwd.check.title,mypage,탈퇴 전 확인 사항,Before You Withdraw
+mpwd.content.desc,mypage,탈퇴 처리 후에는 동일 아이디로 30일간 재가입이 제한됩니다.,"After withdrawal, re-registration with the same ID is blocked for 30 days."
+mpwd.content.h2,mypage,회원 탈퇴 신청,Withdrawal Request
+mpwd.danger.desc,mypage,한 번 탈퇴 처리되면 같은 정보로 복구할 수 없습니다. 신중하게 결정해 주세요.,"Once processed, your account cannot be restored with the same information. Please decide carefully."
+mpwd.danger.title,mypage,⚠ 회원 탈퇴 처리,⚠ Account Withdrawal
+mpwd.field.pw,mypage,비밀번호,Password
+mpwd.field.pw.ph,mypage,현재 비밀번호,Current password
+mpwd.lead,mypage,탈퇴 시 보유한 정보와 이용 내역이 어떻게 처리되는지 먼저 확인해 주세요.,Please review how your data and usage history will be handled before withdrawing.
+mpwd.list.intro,mypage,탈퇴 시 다음 내용이 즉시 처리됩니다.,The following will be processed immediately upon withdrawal.
+mpwd.modal.cancel,mypage,"아니오, 취소","No, Cancel"
+mpwd.modal.confirm,mypage,"예, 탈퇴합니다","Yes, Withdraw"
+mpwd.modal.lead,mypage,탈퇴 시 다음 내용이 즉시 처리됩니다.,The following will be processed immediately upon withdrawal.
+mpwd.modal.li1,mypage,"충전 포인트 3,420P 소멸","Charging points (3,420 P) voided"
+mpwd.modal.li2,mypage,활성 충전 카드 정지,Active charging card suspended
+mpwd.modal.li3,mypage,진행 중 보조금·공모 신청 자동 취소,In-progress subsidy and procurement applications canceled
+mpwd.modal.li4,mypage,30일간 재가입 제한,Re-registration blocked for 30 days
+mpwd.modal.title,mypage,정말 탈퇴하시겠습니까?,Really withdraw?
+mpwd.msg.agree,mypage,확인 동의 항목을 체크해 주세요.,Please check the confirmation box.
+mpwd.msg.done,mypage,회원 탈퇴가 완료되었습니다. 그동안 이용해 주셔서 감사합니다.,Withdrawal complete. Thank you for using our service.
+mpwd.msg.pw,mypage,비밀번호를 입력해 주세요.,Please enter your password.
+mpwd.policy.li1,mypage,전자상거래법: 결제·이용 내역 5년 보관,E-Commerce Act: payment and usage records retained for 5 years
+mpwd.policy.li2,mypage,국세기본법: 세금 관련 자료 5년 보관,Framework Act on National Taxes: tax-related records retained for 5 years
+mpwd.policy.li3,mypage,통신비밀보호법: 접속 로그 3개월 보관,Communications Privacy Act: access logs retained for 3 months
+mpwd.policy.li4,mypage,"위 자료는 법정 기간 종료 후 즉시 파기되며, 다른 목적으로는 사용되지 않습니다.",These records are deleted immediately after the legal retention period and are not used for other purposes.
+mpwd.policy.title,mypage,법령에 따른 정보 보관,Retention per Applicable Laws
+mpwd.reason.desc,mypage,"서비스 개선에 활용되며, 사유 입력 없이도 탈퇴할 수 있습니다.",Used to improve the service; you can withdraw without entering a reason.
+mpwd.reason.etc,mypage,기타,Other
+mpwd.reason.hard,mypage,이용이 어렵거나 복잡함,Difficult or complex to use
+mpwd.reason.lack,mypage,원하는 정보가 부족함,Lacks the information I want
+mpwd.reason.notuse,mypage,서비스를 더 이상 이용하지 않음,No longer use the service
+mpwd.reason.other,mypage,유사 서비스를 더 잘 이용함,Use a similar service more often
+mpwd.reason.ph,mypage,더 자세한 의견을 남겨 주시면 서비스 개선에 큰 도움이 됩니다.,Detailed feedback helps us improve the service.
+mpwd.reason.privacy,mypage,개인정보 보호가 우려됨,Privacy concerns
+mpwd.reason.title,mypage,탈퇴 사유 (선택),Reason for Leaving (Optional)
+mpwd.title,mypage,회원 탈퇴,Withdraw Membership
+mpwd.verify.desc,mypage,계정 탈퇴는 비밀번호 입력 후 진행됩니다.,Account withdrawal requires password verification.
+mpwd.verify.title,mypage,본인 확인,Identity Verification
+msg.logout.done,common,로그아웃되었습니다.,Logged out.
+msg.workspace.coming,common,업무지원시스템은 추후 연동 예정입니다.,Workspace integration coming soon.
+nav.anchor.aria,common,섹션 이동,Section navigation
+nav.aria,common,주 메뉴,Main menu
+nav.breadcrumb.aria,charging,경로,Breadcrumb
+nav.charging,common,충전소·요금 정보,Charging & Fees
+nav.community,common,소통·지원,Support
+nav.data,common,데이터·통계,Data & Stats
+nav.external,common,업무지원시스템,Workspace
+nav.external.aria,common,업무지원시스템 (추후 연동 예정),Workspace (Coming soon)
+nav.external.note,common,추후 연동 예정,Coming soon
+nav.info,common,정보 자료실,Resources
+nav.purchase,common,구매·보조금,EV Subsidies
+skip.tocontent,common,본문 바로가기,Skip to main content
+subsidy.crumb.info,subsidy,무공해차 구매보조금 안내,EV Purchase Subsidy
+subsidy.crumb.parent,subsidy,구매·보조금,EV Subsidies
+subsidy.info.anchor.region,subsidy,지자체별 보조금 현황,Subsidies by Region
+subsidy.info.anchor.target,subsidy,보조금 지원 대상·신청절차,Eligibility & Application
+subsidy.info.anchor.vehicles,subsidy,보조금 지급대상 차종,Eligible Vehicles
+subsidy.info.badge,subsidy,2026년 보조금 접수 중,2026 Subsidy Applications Open
+subsidy.info.callout.li1,subsidy,전기승용차 국비 보조금 기준 단가 <strong>680만원 → 650만원</strong> 조정,EV passenger car national subsidy base reduced <strong>KRW 6.80M → 6.50M</strong>
+subsidy.info.callout.li2,subsidy,취약계층·소상공인·청년 가구 <strong>추가 지원 30% 확대</strong>,"Additional support for vulnerable, small-business, and youth households expanded by <strong>30%</strong>"
+subsidy.info.callout.li3,subsidy,"국내 조립차량 우대 기준 신설, V2L(Vehicle to Load) 기능 탑재 차량 가점",New preferences for domestically-assembled vehicles; bonus points for V2L (Vehicle to Load) capability
+subsidy.info.callout.li4,subsidy,"수소승용차 보조금 지원 대상 확대, 지자체별 1,500만원 상한 유지",Hydrogen passenger car subsidy eligibility expanded; regional cap of KRW 15M maintained
+subsidy.info.callout.title,subsidy,2026년 보조금 제도 핵심 변경사항,Key Changes to the 2026 Subsidy Program
+subsidy.info.card.region.desc,subsidy,전국 243개 지자체의 차종별 보조금과 예산 소진 현황을 조회합니다.,Subsidies and budget status by vehicle model across 243 municipalities.
+subsidy.info.card.region.link,subsidy,현황 조회,View Status
+subsidy.info.card.region.title,subsidy,지자체별 보조금 현황,Subsidies by Region
+subsidy.info.card.target.desc,subsidy,"지원 대상, 지원금액, 신청 자격, 단계별 절차를 안내합니다.","Eligibility, amounts, qualifications, and step-by-step procedures."
+subsidy.info.card.target.link,subsidy,자세히 보기,View Details
+subsidy.info.card.target.title,subsidy,보조금 지원 대상·신청절차,Eligibility & Application
+subsidy.info.card.vehicles.desc,subsidy,승용·승합·화물·이륜 등 보조금 지원이 가능한 전기·수소차 목록입니다.,"List of subsidy-eligible electric and hydrogen vehicles: passenger, bus, truck, motorcycle, and more."
+subsidy.info.card.vehicles.link,subsidy,차종 검색,Search Vehicles
+subsidy.info.card.vehicles.title,subsidy,보조금 지급대상 차종,Eligible Vehicles
+subsidy.info.lead,subsidy,"보조금 지원 대상·금액·조건, 지자체별 예산 현황, 지급대상 차종까지 <strong style=""color:#fff;"">한 곳에서 확인</strong>할 수 있습니다.","Check eligibility, amounts, and conditions for the subsidy, regional budget status, and eligible vehicles — <strong style=""color:#fff;"">all in one place</strong>."
+subsidy.info.title,subsidy,무공해차 구매보조금 안내,EV Purchase Subsidy
+subsidy.region.btn.excel,subsidy,엑셀 다운로드,Excel Export
+subsidy.region.btn.favonly,subsidy,즐겨찾기만 보기,Favorites Only
+subsidy.region.btn.print,subsidy,인쇄,Print
+subsidy.region.col.acceptable,subsidy,접수 가능 대수,Acceptable
+subsidy.region.col.acceptable.sub,subsidy,(공고-접수),(Announced - Received)
+subsidy.region.col.announce,subsidy,공고대수,Announced
+subsidy.region.col.delivered,subsidy,출고대수,Delivered
+subsidy.region.col.detail,subsidy,상세보기,Details
+subsidy.region.col.method,subsidy,접수방법,Method
+subsidy.region.col.received,subsidy,접수대수,Received
+subsidy.region.col.region,subsidy,지역구분,Region
+subsidy.region.col.remaining,subsidy,출고잔여,Remaining
+subsidy.region.col.sido,subsidy,시도,Province / City
+subsidy.region.col.total,subsidy,(전체),(Total)
+subsidy.region.col.vehicle,subsidy,차종구분,Vehicle Type
+subsidy.region.crumb,subsidy,지자체별 보조금 현황,Subsidies by Region
+subsidy.region.empty.desc,subsidy,필터 조건을 변경하거나 초기화해 주세요.,Please change the filter conditions or reset them.
+subsidy.region.empty.title,subsidy,조회 결과가 없습니다,No results found
+subsidy.region.field.method,subsidy,접수방법,Application Method
+subsidy.region.field.sido,subsidy,시도,Province / City
+subsidy.region.field.sigungu,subsidy,시군구,District
+subsidy.region.field.status,subsidy,접수상태,Status
+subsidy.region.field.sub,subsidy,세부 차종,Subtype
+subsidy.region.field.vehicle,subsidy,차종,Vehicle Type
+subsidy.region.field.year,subsidy,기준년도,Year
+subsidy.region.filter.apply,subsidy,필터 적용,Apply Filter
+subsidy.region.filter.reset,subsidy,조건 초기화,Reset
+subsidy.region.filter.title,subsidy,상세 조회 필터,Detailed Filter
+subsidy.region.lead,subsidy,"전국 17개 시·도, 243개 시·군·구의 차종별 <strong>공고대수·접수대수·출고대수·잔여대수</strong>를 실시간으로 확인합니다.","Real-time view of <strong>announced, received, delivered, and remaining</strong> vehicle counts across 17 metropolitan areas and 243 municipalities."
+subsidy.region.opt.all,subsidy,전체,All
+subsidy.region.opt.bid,subsidy,공모,Procurement
+subsidy.region.opt.bus,subsidy,전기승합,EV Bus
+subsidy.region.opt.cargo,subsidy,전기화물,EV Cargo
+subsidy.region.opt.closed,subsidy,마감,Closed
+subsidy.region.opt.ev,subsidy,전기승용,EV Passenger
+subsidy.region.opt.expanded,subsidy,신규확대,Newly Expanded
+subsidy.region.opt.fcfs,subsidy,선착순,"First-come, First-served"
+subsidy.region.opt.h2,subsidy,수소승용,H2 Passenger
+subsidy.region.opt.h2bus,subsidy,수소버스,H2 Bus
+subsidy.region.opt.h2truck,subsidy,수소트럭,H2 Truck
+subsidy.region.opt.lottery,subsidy,추첨,Lottery
+subsidy.region.opt.lowstock,subsidy,소진임박,Almost Exhausted
+subsidy.region.opt.moto,subsidy,전기이륜,E-Motorcycle
+subsidy.region.opt.open,subsidy,접수중,Open
+subsidy.region.opt.wait,subsidy,대기,Waiting
+subsidy.region.opt.year2023,subsidy,2023년,2023
+subsidy.region.opt.year2024,subsidy,2024년,2024
+subsidy.region.opt.year2025,subsidy,2025년,2025
+subsidy.region.opt.year2026,subsidy,2026년,2026
+subsidy.region.quick.all,subsidy,전체 보기,All
+subsidy.region.quick.label,subsidy,자주 찾는 지역,Quick Regions
+subsidy.region.result.count.prefix,subsidy,조회 결과,Results
+subsidy.region.result.count.suffix,subsidy,건,
+subsidy.region.result.summary.all,subsidy,전체 조회,All Records
+subsidy.region.sido.busan,subsidy,부산광역시,Busan
+subsidy.region.sido.chungbuk,subsidy,충청북도,Chungcheongbuk-do
+subsidy.region.sido.chungnam,subsidy,충청남도,Chungcheongnam-do
+subsidy.region.sido.daegu,subsidy,대구광역시,Daegu
+subsidy.region.sido.daejeon,subsidy,대전광역시,Daejeon
+subsidy.region.sido.gangwon,subsidy,강원특별자치도,Gangwon-do
+subsidy.region.sido.gwangju,subsidy,광주광역시,Gwangju
+subsidy.region.sido.gyeongbuk,subsidy,경상북도,Gyeongsangbuk-do
+subsidy.region.sido.gyeonggi,subsidy,경기도,Gyeonggi-do
+subsidy.region.sido.gyeongnam,subsidy,경상남도,Gyeongsangnam-do
+subsidy.region.sido.incheon,subsidy,인천광역시,Incheon
+subsidy.region.sido.jeju,subsidy,제주특별자치도,Jeju
+subsidy.region.sido.jeonbuk,subsidy,전북특별자치도,Jeonbuk
+subsidy.region.sido.jeonnam,subsidy,전라남도,Jeollanam-do
+subsidy.region.sido.sejong,subsidy,세종특별자치시,Sejong
+subsidy.region.sido.seoul,subsidy,서울특별시,Seoul
+subsidy.region.sido.ulsan,subsidy,울산광역시,Ulsan
+subsidy.region.source.line1,subsidy,환경부 보조금관리시스템(한국환경공단) 실시간 연동. 매 영업일 09시·14시 집계 반영.,Real-time integration with the MCEE Subsidy Management System (Korea Environment Corporation). Aggregated at 09:00 and 14:00 on business days.
+subsidy.region.source.line2,subsidy,접수대수는 지자체 자체 예산 및 추경 배정 결과에 따라 변동될 수 있습니다.,Receipt counts may vary based on each municipality's budget and supplementary appropriations.
+subsidy.region.source.title,subsidy,데이터 출처·갱신,Data Source & Updates
+subsidy.region.stat.announce,subsidy,총 공고대수,Total Announced
+subsidy.region.stat.delivered,subsidy,누적 출고대수,Total Delivered
+subsidy.region.stat.received,subsidy,누적 접수대수,Total Received
+subsidy.region.stat.remaining,subsidy,출고 잔여대수,Remaining
+subsidy.region.stat.unit,subsidy,대,
+subsidy.region.title,subsidy,지자체별 보조금 현황,Subsidies by Region
+subsidy.region.view.card,subsidy,카드형,Cards
+subsidy.region.view.table,subsidy,표형,Table
+subsidy.target.btn.download,subsidy,신청서 다운로드,Download Application Form
+subsidy.target.bus.contest,subsidy,"연 2회 공모를 통해 선정<br>운행계획, 충전 인프라 확보 평가",Selected through procurement twice a year<br>Evaluation of operation plan and charging infrastructure
+subsidy.target.bus.docs,subsidy,・사업자등록증<br>・운행계획서<br>・충전 인프라 계획서,· Business license<br>· Operation plan<br>· Charging infrastructure plan
+subsidy.target.bus.link,subsidy,"<a href=""public-bus.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">공모 안내 보기</a>","<a href=""public-bus.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">View Procurement Info</a>"
+subsidy.target.bus.support,subsidy,"・대형(11m↑) 7,000만원<br>・중형 5,000만원<br>・소형 2,000만원",· Large (11m+): KRW 70M<br>· Medium: KRW 50M<br>· Small: KRW 20M
+subsidy.target.col.detail,subsidy,상세,Details
+subsidy.target.col.national,subsidy,국비 (최대),National (Max)
+subsidy.target.col.period,subsidy,접수 기간,Application Period
+subsidy.target.col.regional,subsidy,지방비 (최대),Regional (Max)
+subsidy.target.col.target,subsidy,지원 대상,Eligibility
+subsidy.target.col.type,subsidy,차종,Vehicle Type
+subsidy.target.crumb,subsidy,보조금 지원 대상·신청절차,Eligibility & Application
+subsidy.target.cta.btn1,subsidy,지자체별 예산 확인,Check Regional Budgets
+subsidy.target.cta.btn2,subsidy,신청서 다운로드,Download Application
+subsidy.target.cta.h2,subsidy,지금 바로 신청해보세요,Apply Now
+subsidy.target.cta.lead,subsidy,지자체별 예산 소진 시 마감될 수 있습니다.,Applications may close once regional budgets are exhausted.
+subsidy.target.docs.alert.body,subsidy,"전자 제출이 가능하며, 원본 대조 필요 시 지자체에서 개별 통지합니다.",Electronic submission is supported; municipalities will notify you individually if originals are needed.
+subsidy.target.docs.alert.title,subsidy,서류 사본 안내,Document Submission Notice
+subsidy.target.docs.h3,subsidy,제출 서류 안내,Required Documents
+subsidy.target.docs.h4,subsidy,공통 서류,Common Documents
+subsidy.target.docs.li1,subsidy,차량 구매계약서 사본,Copy of vehicle purchase contract
+subsidy.target.docs.li2,subsidy,주민등록등본 또는 사업자등록증,Resident registration or business license
+subsidy.target.docs.li3,subsidy,신청서(지자체 양식),Application form (municipal template)
+subsidy.target.docs.li4,subsidy,차량 출고 증빙(후속 제출 가능),Proof of vehicle delivery (can be submitted later)
+subsidy.target.expand.aria,subsidy,펼치기,Expand
+subsidy.target.fcev.bonus,subsidy,・택시·대중교통 사업자 우대<br>・수소 충전 인프라 인접 지역 우선,· Priority for taxi and public transit operators<br>· Priority for areas near hydrogen infrastructure
+subsidy.target.fcev.docs,subsidy,・구매계약서<br>・주민등록등본<br>・수소차 운행계획서,· Purchase contract<br>· Resident registration certificate<br>· FCEV operation plan
+subsidy.target.fcev.link,subsidy,"<a href=""subsidy-vehicles.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">지원 차종 확인</a>","<a href=""subsidy-vehicles.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">Check Eligible Vehicles</a>"
+subsidy.target.fcev.support,subsidy,・수소연료전지차(FCEV) 신차 구매<br>・거주지 지자체 예산 내 선착순,"· New FCEV purchase only<br>· First-come, first-served within regional budget"
+subsidy.target.h5.bonus,subsidy,가산 혜택,Bonus Benefits
+subsidy.target.h5.contest,subsidy,공모 안내,Procurement Info
+subsidy.target.h5.docs,subsidy,필요 서류,Required Documents
+subsidy.target.h5.grade,subsidy,등급별 금액,Amount by Grade
+subsidy.target.h5.link,subsidy,바로가기,Quick Link
+subsidy.target.h5.support,subsidy,지원 요건,Eligibility
+subsidy.target.lead,subsidy,"2026년 기준 무공해차 구매보조금의 지원 대상, 지원금액, 신청 방법을 단계별로 안내합니다.","A step-by-step guide to the 2026 EV purchase subsidy eligibility, amounts, and application method."
+subsidy.target.moto.docs,subsidy,・구매계약서<br>・주민등록등본<br>・사업자등록증(사업용),· Purchase contract<br>· Resident registration certificate<br>· Business license (commercial use)
+subsidy.target.moto.grade,subsidy,・경형 150만원<br>・소형 230만원<br>・중형 330만원,· Light: KRW 1.5M<br>· Small: KRW 2.3M<br>· Medium: KRW 3.3M
+subsidy.target.moto.link,subsidy,"<a href=""subsidy-vehicles.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">이륜차 모델 검색</a>","<a href=""subsidy-vehicles.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">Search Motorbike Models</a>"
+subsidy.target.moto.support,subsidy,・배기량 50cc 이하 상당<br>・1인 1대 지원 원칙,· Equivalent to 50cc displacement or less<br>· One vehicle per person
+subsidy.target.passenger.bonus,subsidy,・취약계층/차상위: +20%<br>・청년·생애최초: +10%<br>・다자녀(3인 이상): +10%<br>・국내 조립차량: +50만원,· Vulnerable groups / near-poverty: +20%<br>· Youth / first-time buyer: +10%<br>· Multi-child families (3+): +10%<br>· Domestically assembled vehicles: +KRW 500K
+subsidy.target.passenger.docs,subsidy,・구매계약서 사본<br>・주민등록등본<br>・사업자등록증(법인)<br>・차량 인수증,· Purchase contract copy<br>· Resident registration certificate<br>· Business license (for corporations)<br>· Vehicle delivery receipt
+subsidy.target.passenger.link,subsidy,"<a href=""subsidy-region.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">지자체 예산 확인</a>","<a href=""subsidy-region.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">Check Regional Budget</a>"
+subsidy.target.passenger.support,subsidy,"・차량 가격 5,500만원 이하 (5,500~8,500만원 구간은 50% 지급)<br>・국내 거주 만 18세 이상 개인 또는 법인<br>・2년 의무운행 준수",· Vehicle price under KRW 55M (50% subsidy for KRW 55M-85M range)<br>· Domestic residents aged 18+ (individuals or corporations)<br>· Minimum 2-year operation
+subsidy.target.qual.1.desc,subsidy,대한민국에 거주하는 만 18세 이상 개인 또는 국내 소재 법인·단체,"Individuals aged 18+ residing in Korea, or domestic corporations/organizations."
+subsidy.target.qual.1.h4,subsidy,국내 거주 요건,Residency Requirement
+subsidy.target.qual.2.desc,subsidy,보조금 지급일부터 2년간 등록·운행 의무 (양도·폐차 시 보조금 환수),Registration and operation required for 2 years from payment (subsidy clawback upon transfer or scrapping).
+subsidy.target.qual.2.h4,subsidy,2년 의무운행,2-Year Mandatory Operation
+subsidy.target.qual.3.desc,subsidy,"취약계층(+20%), 청년·생애최초(+10%), 다자녀 가구(+10%), 소상공인(+100만원)","Vulnerable groups (+20%), youth/first-time buyers (+10%), families with 3+ children (+10%), small-business (+KRW 1M)."
+subsidy.target.qual.3.h4,subsidy,가산 지원 대상,Bonus Recipients
+subsidy.target.qual.h3,subsidy,지원 자격 요건,Eligibility Requirements
+subsidy.target.row.bus.td1,subsidy,운수사업자,Transportation Operators
+subsidy.target.row.bus.td2,subsidy,"7,000만원",KRW 70M
+subsidy.target.row.bus.td3,subsidy,공모 선정,Procurement Selection
+subsidy.target.row.bus.td4,subsidy,공모 별도 공고,Separate Procurement Notice
+subsidy.target.row.fcev.td1,subsidy,개인·법인,Individuals/Corporations
+subsidy.target.row.fcev.td2,subsidy,"2,250만원",KRW 22.5M
+subsidy.target.row.fcev.td3,subsidy,"1,000만원",KRW 10M
+subsidy.target.row.moto.td1,subsidy,개인·사업자,Individuals/Business Owners
+subsidy.target.row.moto.td2,subsidy,150~330만원,KRW 1.5M – 3.3M
+subsidy.target.row.moto.td3,subsidy,지자체별 상이,Varies by region
+subsidy.target.row.passenger.td1,subsidy,"개인·법인, 5,500만원 이하","Individuals/Corporations, under KRW 55M"
+subsidy.target.row.passenger.td2,subsidy,650만원,KRW 6.5M
+subsidy.target.row.passenger.td3,subsidy,300~630만원,KRW 3M – 6.3M
+subsidy.target.row.truck.td1,subsidy,"개인·법인, 소상공인 우대","Individuals/Corporations, priority for small business"
+subsidy.target.row.truck.td2,subsidy,"1,100만원",KRW 11M
+subsidy.target.row.truck.td3,subsidy,400~600만원,KRW 4M – 6M
+subsidy.target.stat.cargo.label,subsidy,전기화물차 최대 지원,Max EV Cargo Subsidy
+subsidy.target.stat.cargo.trend,subsidy,소상공인 가산 포함,Includes small-business bonus
+subsidy.target.stat.ev.label,subsidy,전기승용차 최대 지원,Max EV Passenger Subsidy
+subsidy.target.stat.ev.trend,subsidy,국비 + 지방비,National + Regional
+subsidy.target.stat.ev.unit,subsidy,만원, M KRW
+subsidy.target.stat.h2.label,subsidy,수소승용차 최대 지원,Max H2 Passenger Subsidy
+subsidy.target.stat.h2.trend,subsidy,"국비 2,250 + 지방비","National 2,250 + Regional"
+subsidy.target.stat.vuln.label,subsidy,취약계층 가산 혜택,Vulnerable Group Bonus
+subsidy.target.stat.vuln.trend,subsidy,추가 우선 지원,Priority additional support
+subsidy.target.stat.vuln.unit,subsidy,%,%
+subsidy.target.stepper.desc,subsidy,차량 구매 계약 후 2개월 이내에 접수해야 합니다.,Applications must be submitted within 2 months of the vehicle purchase contract.
+subsidy.target.stepper.eyebrow,subsidy,신청 절차,Application Process
+subsidy.target.stepper.h2,subsidy,4단계 간편 신청,Quick 4-Step Application
+subsidy.target.stepper.s1,subsidy,차량 구매 계약,Vehicle Purchase Contract
+subsidy.target.stepper.s2,subsidy,자격 확인 및 서류 준비,Eligibility Check & Document Prep
+subsidy.target.stepper.s3,subsidy,지자체 신청 접수,Submit to Municipality
+subsidy.target.stepper.s4,subsidy,출고 및 보조금 지급,Delivery & Subsidy Payment
+subsidy.target.table.eyebrow,subsidy,지원 대상,Eligibility
+subsidy.target.table.h2,subsidy,차종별 지원 대상 및 금액,Eligibility and Amounts by Vehicle Type
+subsidy.target.table.note,subsidy,행을 클릭하면 상세 내역이 펼쳐집니다.,Click a row to expand details.
+subsidy.target.title,subsidy,보조금 지원 대상 및 신청절차,Subsidy Eligibility & Application Process
+subsidy.target.truck.bonus,subsidy,・소상공인: +100만원<br>・전기택시 전환: +200만원<br>・영업용(번호판 노란색): +200만원,· Small business: +KRW 1M<br>· Conversion to electric taxi: +KRW 2M<br>· Commercial (yellow plate): +KRW 2M
+subsidy.target.truck.docs,subsidy,・구매계약서<br>・사업자등록증<br>・소상공인 확인서(해당 시),· Purchase contract<br>· Business license<br>· Small business certificate (if applicable)
+subsidy.target.truck.link,subsidy,"<a href=""public-contact.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">지자체 담당자 문의</a>","<a href=""public-contact.html"" class=""btn btn-sm btn-primary"" style=""margin-top: 8px;"">Contact Regional Office</a>"
+subsidy.target.truck.support,subsidy,・1톤 이하 전기화물차<br>・개인사업자/소상공인 우선 지원,· Electric trucks 1 ton or less<br>· Priority for sole proprietors and small businesses
+subsidy.target.type.bus,subsidy,전기승합차 (버스),EV Bus
+subsidy.target.type.cargo,subsidy,전기화물차 (소형),EV Cargo (Light)
+subsidy.target.type.ev,subsidy,전기승용차,EV Passenger
+subsidy.target.type.h2,subsidy,수소승용차,H2 Passenger
+subsidy.target.type.moto,subsidy,전기이륜차,E-Motorcycle
+subsidy.vehicles.amount.bus.label,subsidy,공모 평가,Procurement Review
+subsidy.vehicles.amount.bus.salestype,subsidy,공모 진행,In Procurement
+subsidy.vehicles.amount.eleccity,subsidy,"7,000만원",KRW 70M
+subsidy.vehicles.amount.ev6,subsidy,"1,150만원",KRW 11.5M
+subsidy.vehicles.amount.ioniq6,subsidy,"1,180만원",KRW 11.8M
+subsidy.vehicles.amount.model3,subsidy,680만원,KRW 6.8M
+subsidy.vehicles.amount.nexo,subsidy,"3,250만원",KRW 32.5M
+subsidy.vehicles.amount.porter,subsidy,"1,600만원",KRW 16M
+subsidy.vehicles.amount.toresevx,subsidy,"1,130만원",KRW 11.3M
+subsidy.vehicles.btn.bid,subsidy,공모 안내,Procurement Info
+subsidy.vehicles.btn.compare,subsidy,상세 비교,Detailed Comparison
+subsidy.vehicles.btn.contest.guide,subsidy,공모 안내,Procurement Info
+subsidy.vehicles.btn.search,subsidy,조회,Search
+subsidy.vehicles.car.eleccity,subsidy,일렉시티,Elec City
+subsidy.vehicles.car.ev6,subsidy,EV6,EV6
+subsidy.vehicles.car.ioniq6,subsidy,아이오닉 6,IONIQ 6
+subsidy.vehicles.car.model3,subsidy,Model 3,Model 3
+subsidy.vehicles.car.nexo,subsidy,NEXO,NEXO
+subsidy.vehicles.car.porter,subsidy,포터 II 일렉트릭,Porter II Electric
+subsidy.vehicles.car.toresevx,subsidy,토레스 EVX,Torres EVX
+subsidy.vehicles.chip.400km,subsidy,400km 이상,400+ km Range
+subsidy.vehicles.chip.cargo,subsidy,소형 화물,Light Cargo
+subsidy.vehicles.chip.evbus,subsidy,전기승합,Electric Bus
+subsidy.vehicles.chip.evcargo,subsidy,전기화물,EV Cargo
+subsidy.vehicles.chip.evpass,subsidy,전기승용,EV Passenger
+subsidy.vehicles.chip.evpassenger,subsidy,전기승용,Electric Passenger
+subsidy.vehicles.chip.evtruck,subsidy,전기화물,Electric Truck
+subsidy.vehicles.chip.fcevpassenger,subsidy,수소승용,FCEV Passenger
+subsidy.vehicles.chip.h2pass,subsidy,수소승용,H2 Passenger
+subsidy.vehicles.chip.korean,subsidy,✓ 국내 조립,✓ Korean-assembled
+subsidy.vehicles.chip.small,subsidy,소상공인,Small-business
+subsidy.vehicles.chip.smallbiz,subsidy,소상공인,Small Business
+subsidy.vehicles.chip.under50m,subsidy,5천만원 이하,Under KRW 50M
+subsidy.vehicles.chip.v2l,subsidy,V2L 지원,V2L Support
+subsidy.vehicles.chip.v2l.short,subsidy,V2L,V2L
+subsidy.vehicles.crumb,subsidy,보조금 지급대상 차종,Eligible Vehicles
+subsidy.vehicles.det.ev6.award,subsidy,・EuroNCAP 5성<br>・2022 유럽 올해의 차,· Euro NCAP 5 stars<br>· 2022 European Car of the Year
+subsidy.vehicles.det.ev6.battery,subsidy,・용량: 77.4kWh<br>・급속(80%): 18분<br>・V2L: 지원,· Capacity: 77.4 kWh<br>· Fast (80%): 18 min<br>· V2L: Supported
+subsidy.vehicles.det.ev6.link,subsidy,"<a href=""compare-tool.html"" class=""btn btn-sm btn-primary"">비교</a>","<a href=""compare-tool.html"" class=""btn btn-sm btn-primary"">Compare</a>"
+subsidy.vehicles.det.ev6.subsidy,subsidy,・국비 650 + 지방비 430<br>・국내 조립 +50<br>・V2L 가산 +50,· National 6.5M + Regional 4.3M<br>· Domestic assembly +0.5M<br>· V2L +0.5M
+subsidy.vehicles.det.ioniq6.battery,subsidy,・용량: 77.4kWh<br>・급속(80%): 18분<br>・완속(10~100%): 7시간 30분<br>・V2L: 지원(3.6kW),· Capacity: 77.4 kWh<br>· Fast (80%): 18 min<br>· Slow (10-100%): 7 hr 30 min<br>· V2L: Supported (3.6 kW)
+subsidy.vehicles.det.ioniq6.feature,subsidy,・5단계 회생제동<br>・적응형 크루즈<br>・OTA 무선 업데이트<br>・HDA 2 주행보조,· 5-stage regenerative braking<br>· Adaptive cruise<br>· OTA updates<br>· HDA 2 driving assistance
+subsidy.vehicles.det.ioniq6.link,subsidy,"<a href=""compare-tool.html"" class=""btn btn-sm btn-primary"">비교하기</a> <a href=""compare-tco.html"" class=""btn btn-sm btn-ghost"">TCO 계산</a>","<a href=""compare-tool.html"" class=""btn btn-sm btn-primary"">Compare</a> <a href=""compare-tco.html"" class=""btn btn-sm btn-ghost"">TCO Calculator</a>"
+subsidy.vehicles.det.ioniq6.subsidy,subsidy,・국비: 650만원<br>・지방비(평균): 430만원<br>・국내 조립 가산: 50만원<br>・V2L 가산: 50만원,· National: KRW 6.5M<br>· Regional (avg): KRW 4.3M<br>· Domestic assembly bonus: KRW 0.5M<br>· V2L bonus: KRW 0.5M
+subsidy.vehicles.det.nexo.h2fuel,subsidy,・용량: 6.33kg<br>・충전: 5분<br>・주행: 609km,· Capacity: 6.33 kg<br>· Charging: 5 min<br>· Range: 609 km
+subsidy.vehicles.det.nexo.infra,subsidy,전국 수소충전소 160개 위치 확인 가능,Check locations of 160 hydrogen stations nationwide
+subsidy.vehicles.det.nexo.link,subsidy,"<a href=""#"" class=""btn btn-sm btn-primary"">수소 충전소 찾기</a>","<a href=""#"" class=""btn btn-sm btn-primary"">Find H2 Stations</a>"
+subsidy.vehicles.det.nexo.subsidy,subsidy,"・국비: 2,250만원<br>・지방비: 1,000만원",· National: KRW 22.5M<br>· Regional: KRW 10M
+subsidy.vehicles.det.porter.cargo,subsidy,・적재량: 1톤<br>・전장: 5.13m<br>・출력: 135kW,· Payload: 1 ton<br>· Length: 5.13 m<br>· Power: 135 kW
+subsidy.vehicles.det.porter.link,subsidy,"<a href=""tax-integrated.html"" class=""btn btn-sm btn-primary"">세제 정보 보기</a>","<a href=""tax-integrated.html"" class=""btn btn-sm btn-primary"">View Tax Info</a>"
+subsidy.vehicles.det.porter.subsidy,subsidy,"・국비 1,100 + 지방비 400<br>・소상공인 +100<br>・택시 전환 +200",· National 11M + Regional 4M<br>· Small business +1M<br>· Taxi conversion +2M
+subsidy.vehicles.det.porter.tax,subsidy,・개소세 면제<br>・취득세 감면 140만원,· Individual consumption tax: Exempt<br>· Acquisition tax reduction: KRW 1.4M
+subsidy.vehicles.det.toresevx.battery,subsidy,73.4kWh / 급속 35분,73.4 kWh / Fast 35 min
+subsidy.vehicles.det.toresevx.link,subsidy,"<a href=""compare-tool.html"" class=""btn btn-sm btn-primary"">비교</a>","<a href=""compare-tool.html"" class=""btn btn-sm btn-primary"">Compare</a>"
+subsidy.vehicles.det.toresevx.spec,subsidy,・LFP 배터리 탑재<br>・국내 조립 우대,· LFP battery<br>· Domestic assembly bonus
+subsidy.vehicles.det.toresevx.subsidy,subsidy,국비 650 + 지방비 430 + 국내조립 50,National 6.5M + Regional 4.3M + Domestic assembly 0.5M
+subsidy.vehicles.field.maker,subsidy,제조사,Manufacturer
+subsidy.vehicles.field.search,subsidy,차종 검색,Search Vehicles
+subsidy.vehicles.field.search.ph,subsidy,"제조사, 모델명 검색",Search by manufacturer or model
+subsidy.vehicles.field.sort,subsidy,정렬,Sort
+subsidy.vehicles.field.type,subsidy,차종 유형,Vehicle Type
+subsidy.vehicles.h5.award,subsidy,수상·인증,Awards & Certifications
+subsidy.vehicles.h5.battery,subsidy,배터리·충전,Battery & Charging
+subsidy.vehicles.h5.cargo,subsidy,화물 정보,Cargo Info
+subsidy.vehicles.h5.charginginfra,subsidy,충전 인프라,Charging Infrastructure
+subsidy.vehicles.h5.feature,subsidy,편의 사양,Convenience Features
+subsidy.vehicles.h5.h2fuel,subsidy,수소 연료,Hydrogen Fuel
+subsidy.vehicles.h5.link,subsidy,바로가기,Quick Links
+subsidy.vehicles.h5.spec,subsidy,특징,Features
+subsidy.vehicles.h5.subsidy,subsidy,보조금 구성,Subsidy Breakdown
+subsidy.vehicles.h5.subsidyshort,subsidy,보조금,Subsidy
+subsidy.vehicles.h5.tax,subsidy,세제 정보,Tax Info
+subsidy.vehicles.label.bidsubsidy,subsidy,공모 최대 지원금,Procurement Max
+subsidy.vehicles.label.contestsupport,subsidy,공모 최대 지원금,Max. Procurement Subsidy
+subsidy.vehicles.label.maxsubsidy,subsidy,최대 지원금,Max Subsidy
+subsidy.vehicles.label.maxsupport,subsidy,국비 지원금,National Subsidy
+subsidy.vehicles.lead,subsidy,2026년 기준 보조금 지원이 가능한 전기·수소차 128종의 목록을 검색·조회합니다.,Search and browse the list of 128 electric and hydrogen vehicle models eligible for the 2026 subsidy.
+subsidy.vehicles.maker.benz,subsidy,벤츠,Mercedes-Benz
+subsidy.vehicles.maker.bmw,subsidy,BMW,BMW
+subsidy.vehicles.maker.hyundai,subsidy,현대자동차,Hyundai Motor
+subsidy.vehicles.maker.kg,subsidy,KG모빌리티,KG Mobility
+subsidy.vehicles.maker.kgm,subsidy,KG모빌리티,KG Mobility
+subsidy.vehicles.maker.kia,subsidy,기아,Kia
+subsidy.vehicles.maker.tesla,subsidy,테슬라,Tesla
+subsidy.vehicles.model.makerline.hd2026,subsidy,현대자동차 · 2026년형,Hyundai Motor · 2026 Model
+subsidy.vehicles.model.makerline.hdbus,subsidy,현대자동차 · 대형버스,Hyundai Motor · Large Bus
+subsidy.vehicles.model.makerline.kia2026,subsidy,기아 · 2026년형,Kia · 2026 Model
+subsidy.vehicles.model.makerline.tesla2026,subsidy,테슬라 · 2026년형,Tesla · 2026 Model
+subsidy.vehicles.note.bidongo,subsidy,공모 진행,In Procurement
+subsidy.vehicles.note.bidproc,subsidy,공모 평가,Procurement Review
+subsidy.vehicles.opt.all,subsidy,전체,All
+subsidy.vehicles.opt.bus,subsidy,전기승합,EV Bus
+subsidy.vehicles.opt.cargo,subsidy,전기화물,EV Cargo
+subsidy.vehicles.opt.ev,subsidy,전기승용,EV Passenger
+subsidy.vehicles.opt.h2,subsidy,수소승용,H2 Passenger
+subsidy.vehicles.opt.moto,subsidy,전기이륜,E-Motorcycle
+subsidy.vehicles.price.ev6,subsidy,"4,995만원~",from KRW 49.95M
+subsidy.vehicles.price.ioniq6,subsidy,"5,200만원~",from KRW 52M
+subsidy.vehicles.price.model3,subsidy,"5,199만원~",from KRW 51.99M
+subsidy.vehicles.price.nexo,subsidy,"6,765만원~",from KRW 67.65M
+subsidy.vehicles.price.porter,subsidy,"4,395만원~",from KRW 43.95M
+subsidy.vehicles.sort.price,subsidy,가격 낮은순,Lowest Price
+subsidy.vehicles.sort.range,subsidy,주행거리 긴순,Longest Range
+subsidy.vehicles.sort.recent,subsidy,최근 등록순,Recently Added
+subsidy.vehicles.sort.subsidy,subsidy,보조금 높은순,Highest Subsidy
+subsidy.vehicles.spec.battery,subsidy,배터리,Battery
+subsidy.vehicles.spec.fast,subsidy,급속,Fast
+subsidy.vehicles.spec.fast80,subsidy,급속(80%),Fast (80%)
+subsidy.vehicles.spec.fastcharge,subsidy,급속(80%),Fast (80%)
+subsidy.vehicles.spec.h2cap,subsidy,수소 용량,H2 Capacity
+subsidy.vehicles.spec.h2charge,subsidy,수소 충전,H2 Charging
+subsidy.vehicles.spec.price,subsidy,판매가,Starting Price
+subsidy.vehicles.spec.range,subsidy,1회 충전,Range
+subsidy.vehicles.spec.range1,subsidy,1회 충전,Single Charge
+subsidy.vehicles.spec.salestype,subsidy,판매 방식,Sales Method
+subsidy.vehicles.spec.saletype,subsidy,판매 방식,Sales Type
+subsidy.vehicles.tab.all,subsidy,전체 (128),All (128)
+subsidy.vehicles.tab.bus,subsidy,전기승합 (18),EV Bus (18)
+subsidy.vehicles.tab.ev,subsidy,전기승용 (64),EV Passenger (64)
+subsidy.vehicles.tab.fcev,subsidy,수소승용 (5),H2 Passenger (5)
+subsidy.vehicles.tab.moto,subsidy,전기이륜 (19),E-Motorcycle (19)
+subsidy.vehicles.tab.van,subsidy,전기화물 (22),EV Cargo (22)
+subsidy.vehicles.tbl.head.detail,subsidy,상세,Details
+subsidy.vehicles.tbl.head.maker,subsidy,제조사,Manufacturer
+subsidy.vehicles.tbl.head.maxsub,subsidy,최대 보조금,Max. Subsidy
+subsidy.vehicles.tbl.head.model,subsidy,모델명,Model
+subsidy.vehicles.tbl.head.price,subsidy,판매가,Price
+subsidy.vehicles.tbl.head.range,subsidy,주행거리,Range
+subsidy.vehicles.tbl.head.type,subsidy,차종,Vehicle Type
+subsidy.vehicles.tbl.hint,subsidy,행을 클릭하면 상세 정보 확장,Click a row to expand details
+subsidy.vehicles.tbl.price.ev6,subsidy,"4,995만원",KRW 49.95M
+subsidy.vehicles.tbl.price.ioniq6,subsidy,"5,200만원",KRW 52M
+subsidy.vehicles.tbl.price.nexo,subsidy,"6,765만원",KRW 67.65M
+subsidy.vehicles.tbl.price.porter,subsidy,"4,395만원",KRW 43.95M
+subsidy.vehicles.tbl.price.toresevx,subsidy,"4,857만원",KRW 48.57M
+subsidy.vehicles.tbl.sub.ev6,subsidy,"1,150만원",KRW 11.5M
+subsidy.vehicles.tbl.sub.ioniq6,subsidy,"1,180만원",KRW 11.8M
+subsidy.vehicles.tbl.sub.nexo,subsidy,"3,250만원",KRW 32.5M
+subsidy.vehicles.tbl.sub.porter,subsidy,"1,600만원",KRW 16M
+subsidy.vehicles.tbl.sub.toresevx,subsidy,"1,130만원",KRW 11.3M
+subsidy.vehicles.tbl.title,subsidy,전체 목록 (표 보기),Full List (Table View)
+subsidy.vehicles.title,subsidy,보조금 지급대상 차종,Eligible Vehicles
+util.fontsize.down.aria,common,글자 줄이기,Decrease font size
+util.fontsize.label,common,글자크기,Font Size
+util.fontsize.up.aria,common,글자 키우기,Increase font size
+util.lang.toggle,common,ENG,KOR
+util.lang.toggle.aria,common,영어로 전환,Switch to Korean
+util.login,common,로그인,Login
+util.mypage,common,마이페이지,My Page
+util.mypage.aria,common,마이페이지 (프로토타입 자동 로그인),My Page (Prototype auto-login)
+util.pagination.aria,charging,페이지 이동,Pagination
+util.popup,common,POPUP,POPUP
+util.popup.aria,common,인덱스 팝업 다시 보기,Show popup again
+util.signup,common,회원가입,Sign Up
+util.user.aria,common,사용자 메뉴 열기,Open user menu
+util.user.menu.business,common,업무지원시스템 이용신청,Workspace Access Request
+util.user.menu.card,common,충전 카드 관리,Charging Card
+util.user.menu.home,common,마이페이지 홈,My Page Home
+util.user.menu.info,common,내 정보 관리,Account Info
+util.user.menu.inquiry,common,나의 신청·민원,My Applications
+util.user.menu.logout,common,로그아웃,Log out
+util.user.suffix,common,님,

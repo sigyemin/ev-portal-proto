@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충전요금 할인 미적용 신고 | 민원·문의 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/inquiry.css">
+<style>
+  [hidden] { display:none !important; }
+  .cf-steps { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin:8px 0 30px; }
+  .cf-step { min-width:210px; text-align:center; padding:14px 18px; border:1px solid var(--border-light); border-radius:14px; font-weight:700; font-size:15px; color:var(--text-tertiary); background:#fff; }
+  .cf-step.done { color:var(--text-secondary); border-color:var(--border-medium); }
+  .cf-step.active { color:var(--color-secondary-700); border-color:var(--color-secondary-300); background:var(--color-secondary-50); box-shadow:0 2px 10px rgba(93,135,255,.12); }
+  .cf-arrow { color:var(--border-medium); flex:none; }
+  .cf-foot { display:flex; justify-content:center; gap:12px; margin-top:28px; }
+  .cf-foot .btn { min-width:200px; }
+  .cf-required-note { text-align:right; font-size:13px; color:var(--text-secondary); margin:0 0 8px; }
+  .cf-required-note b { color:var(--color-secondary-700); }
+  .cf-notice { display:flex; align-items:center; gap:26px; border:1px solid var(--border-light); border-radius:16px; padding:34px 40px; }
+  .cf-notice-ico { width:120px; height:120px; flex:none; border-radius:50%; background:var(--color-gray-100); display:grid; place-items:center; color:var(--color-secondary-700); }
+  .cf-notice p { margin:0; font-size:16px; line-height:1.9; color:var(--text-secondary); }
+  .cf-consent { display:flex; align-items:center; gap:8px; justify-content:center; margin-top:22px; font-size:15px; font-weight:600; }
+  .cf-consent .req { color:var(--color-secondary-600); }
+  .cf-auth-lead { text-align:center; font-size:15.5px; color:var(--text-secondary); margin:0 0 22px; }
+  .cf-auth-card { max-width:480px; margin:0 auto; border:1px solid var(--border-light); border-radius:16px; padding:40px; text-align:center; }
+  .cf-auth-ico { color:var(--color-secondary-600); margin-bottom:24px; }
+  .cf-auth-btn { display:inline-flex; align-items:center; gap:10px; background:var(--text-primary); color:#fff; border:none; border-radius:999px; padding:16px 36px; font-size:16px; font-weight:700; cursor:pointer; }
+  .cf-auth-btn:hover { background:#000; }
+  .cf-sec-h { font-size:20px; font-weight:800; margin:0 0 6px; }
+  .cf-card { border-top:2px solid var(--text-primary); }
+  .cf-row { display:grid; grid-template-columns:200px 1fr; gap:18px; align-items:center; padding:16px 4px; border-bottom:1px solid var(--border-light); }
+  .cf-lab { font-weight:700; font-size:14.5px; }
+  .cf-lab em { color:var(--color-secondary-700); font-style:normal; }
+  .cf-field { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .cf-field .form-input, .cf-field .form-select, .cf-field .form-textarea { flex:1; min-width:0; }
+  .cf-field input[readonly] { background:var(--color-gray-100); color:var(--text-secondary); }
+  .cf-two { display:flex; gap:10px; }
+  .cf-two .form-input { width:170px; }
+  .cf-search-btn { white-space:nowrap; padding:11px 18px; background:var(--color-gray-700); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+  .cf-search-btn:hover { background:var(--color-gray-800); }
+  /* 충전일시 */
+  .cf-datetime { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .cf-datetime input[type=date] { width:200px; }
+  .cf-datetime select { width:90px; }
+  .cf-datetime .seg-min { width:70px; text-align:center; }
+  .cf-datetime .unit { font-size:14px; color:var(--text-secondary); }
+  /* 사용 카드 라디오 */
+  .cf-radio { display:flex; gap:24px; }
+  .cf-radio label { display:inline-flex; align-items:center; gap:7px; font-size:14.5px; cursor:pointer; }
+  /* 카드번호 */
+  .cf-card-no { display:flex; align-items:center; gap:8px; }
+  .cf-card-no input { width:80px; text-align:center; }
+  .cf-card-no .dash { color:var(--text-tertiary); }
+  .cf-done { max-width:560px; margin:0 auto; text-align:center; }
+  .cf-done-ico { width:84px; height:84px; border-radius:50%; background:var(--color-primary-50); display:grid; place-items:center; margin:0 auto 16px; color:var(--color-primary-600); }
+  .cf-done h2 { font-size:26px; letter-spacing:-0.02em; margin:0 0 10px; }
+  .cf-done .desc { color:var(--text-secondary); font-size:14.5px; line-height:1.75; margin:0 0 22px; }
+  .cf-receipt { border:1px solid var(--border-light); border-radius:14px; padding:22px 24px; text-align:left; }
+  .cf-receipt .rc-no { text-align:center; padding-bottom:16px; margin-bottom:16px; border-bottom:1px dashed var(--border-light); }
+  .cf-receipt .rc-no span { display:block; font-size:12px; color:var(--color-primary-700); font-weight:700; letter-spacing:0.06em; }
+  .cf-receipt .rc-no strong { font-size:24px; font-weight:800; color:var(--color-primary-700); }
+  .cf-receipt dl { display:grid; grid-template-columns:120px 1fr; gap:10px 14px; margin:0; font-size:14px; }
+  .cf-receipt dt { color:var(--text-tertiary); font-weight:600; }
+  .cf-receipt dd { margin:0; color:var(--text-primary); font-weight:600; }
+  @media (max-width:680px){ .cf-row{ grid-template-columns:1fr; gap:8px; } .cf-step{ min-width:140px; font-size:13px; } .cf-notice{ flex-direction:column; text-align:center; padding:28px 22px; } }
+  /* 충전소 검색 팝업 */
+  .cs-modal { position:fixed; inset:0; background:rgba(15,23,42,.45); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .cs-modal.open { display:flex; }
+  .cs-box { background:#fff; width:min(620px,94vw); max-height:88vh; overflow-y:auto; border-radius:14px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .cs-box-head { display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--text-primary); padding-bottom:14px; margin-bottom:16px; }
+  .cs-box-head h3 { font-size:20px; margin:0; }
+  .cs-close { background:none; border:none; cursor:pointer; color:var(--text-secondary); }
+  .cs-search { display:flex; gap:8px; margin-bottom:14px; }
+  .cs-search select { width:130px; }
+  .cs-search .cs-input-wrap { flex:1; position:relative; }
+  .cs-search .cs-input-wrap input { width:100%; padding-right:38px; }
+  .cs-search .cs-go { position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-secondary); }
+  .cs-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .cs-table th { background:var(--color-gray-100); color:var(--text-secondary); font-weight:700; padding:10px; border-bottom:1px solid var(--border-light); }
+  .cs-table td { padding:11px 10px; border-bottom:1px solid var(--border-light); text-align:center; }
+  .cs-table td:nth-child(1), .cs-table td:nth-child(2) { text-align:left; }
+  .cs-pick { padding:5px 14px; border:1px solid var(--color-secondary-500); color:var(--color-secondary-600); background:#fff; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+  .cs-pick:hover { background:var(--color-secondary-50); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="#">참여마당</a><span class="sep">›</span>
+        <span class="current">충전요금 할인 미적용 신고</span>
+      </nav>
+      <h1>충전요금 할인 미적용 신고</h1>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+
+      <div class="cf-steps">
+        <div class="cf-step active" data-step="1">01. 개인정보 제공동의 및 본인인증</div>
+        <span class="cf-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span>
+        <div class="cf-step" data-step="3">02. 할인미적용 신고</div>
+        <span class="cf-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span>
+        <div class="cf-step" data-step="4">03. 신고완료</div>
+      </div>
+
+      <!-- Step 1 -->
+      <div data-panel="1">
+        <div class="cf-notice">
+          <div class="cf-notice-ico"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg></div>
+          <p>회원 할인·로밍 협약요금·심야 할인 등 <strong>적용되어야 할 충전요금 할인이 반영되지 않은 경우</strong> 신고하실 수 있습니다.<br>
+             충전 일시·결제 카드 정보를 입력해 주시면, 사업자 확인을 거쳐 <strong>차액 환급 또는 요금 정정</strong> 결과를 안내드립니다.</p>
+        </div>
+        <label class="cf-consent"><input type="checkbox" id="agree"> 개인정보이용 제공 동의 <span class="req">[필수]</span></label>
+
+        <!-- 본인인증 (동일 페이지에서 진행) -->
+        <p class="cf-auth-lead" style="margin-top:22px;">개인정보 제공에 동의하신 뒤, 휴대전화 인증으로 본인확인을 완료해 주세요.</p>
+        <div class="cf-auth-card">
+          <div class="cf-auth-ico"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg></div>
+          <button type="button" class="cf-auth-btn" id="doAuth">휴대전화 인증하기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+        </div>
+
+        <div class="cf-foot">
+          <button type="button" class="btn btn-primary btn-lg" id="toStep2">신고접수</button>
+          <a href="inquiry-status.html" class="btn btn-secondary btn-lg">나의 신고 조회하기</a>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div data-panel="3" hidden>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px;">
+          <h3 class="cf-sec-h">신고 접수</h3>
+          <p class="cf-required-note" style="margin:0;"><b>*</b> 는 필수 항목입니다.</p>
+        </div>
+        <form id="discForm" class="card cf-card" style="padding:8px 24px;">
+          <div class="cf-row"><label class="cf-lab">이름 <em>*</em></label><div class="cf-field"><input class="form-input" type="text" value="홍길동" readonly></div></div>
+          <div class="cf-row"><label class="cf-lab">휴대전화번호 <em>*</em></label><div class="cf-field"><input class="form-input" type="text" value="010-1234-5678" readonly></div></div>
+          <div class="cf-row">
+            <label class="cf-lab">충전소명(충전소ID) <em>*</em></label>
+            <div class="cf-field">
+              <span class="cf-two"><input class="form-input" id="stName" type="text" placeholder="충전소명" readonly><input class="form-input" id="stId" type="text" placeholder="충전소ID" readonly></span>
+              <button type="button" class="cf-search-btn" id="btnStationSearch">충전소 검색</button>
+            </div>
+          </div>
+          <div class="cf-row"><label class="cf-lab">충전기ID</label><div class="cf-field"><input class="form-input" type="text" placeholder="충전기ID 입력"></div></div>
+          <div class="cf-row"><label class="cf-lab">충전소 주소 <em>*</em></label><div class="cf-field"><input class="form-input" id="stAddr" type="text" placeholder="충전소 검색 시 자동 입력 (직접 수정 가능)"></div></div>
+          <div class="cf-row">
+            <label class="cf-lab">충전일시(시작시간) <em>*</em></label>
+            <div class="cf-field"><span class="cf-datetime">
+              <input class="form-input" id="chDate" type="date">
+              <select class="form-select" id="chHour"><option value="">-선택-</option></select><span class="unit">시</span>
+              <input class="form-input num-only seg-min" id="chMin" type="text" maxlength="2" placeholder="00"><span class="unit">분</span>
+            </span></div>
+          </div>
+          <div class="cf-row">
+            <label class="cf-lab">사용 카드 <em>*</em></label>
+            <div class="cf-field"><span class="cf-radio">
+              <label><input type="radio" name="cardKind" value="climate" checked> 기후부카드</label>
+              <label><input type="radio" name="cardKind" value="credit"> 신용카드</label>
+            </span></div>
+          </div>
+          <div class="cf-row">
+            <label class="cf-lab">카드번호 <em>*</em></label>
+            <div class="cf-field"><span class="cf-card-no">
+              <input class="form-input num-only card-seg" type="text" maxlength="4">
+              <span class="dash">-</span>
+              <input class="form-input num-only card-seg" type="text" maxlength="4">
+              <span class="dash">-</span>
+              <input class="form-input num-only card-seg" type="text" maxlength="4">
+              <span class="dash">-</span>
+              <input class="form-input num-only card-seg" type="text" maxlength="4">
+            </span></div>
+          </div>
+        </form>
+        <div class="cf-foot">
+          <button type="button" class="btn btn-secondary btn-lg" data-prev="1">이전</button>
+          <button type="button" class="btn btn-primary btn-lg" id="btnSubmit">등록</button>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div data-panel="4" hidden>
+        <div class="cf-done">
+          <div class="cf-done-ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2>할인 미적용 신고가 접수되었습니다</h2>
+          <p class="desc">접수 번호가 부여되었으며, 충전사업자 확인 후 차액 환급·요금 정정 결과를 안내드립니다.<br>회원은 로그인 후, 비회원은 휴대폰 인증 후 <a href="inquiry-status.html">내 민원</a>에서 처리 상태를 확인할 수 있습니다. <span style="color:var(--text-tertiary);">접수 번호는 식별·문의용입니다.</span></p>
+          <div class="cf-receipt">
+            <div class="rc-no"><span>접수 번호</span><strong id="doneNo">DC-2026-001245</strong></div>
+            <dl>
+              <dt>충전소</dt><dd id="doneStation">-</dd>
+              <dt>충전 일시</dt><dd id="doneAt2">-</dd>
+              <dt>접수 일시</dt><dd id="doneAt">-</dd>
+              <dt>처리 예정</dt><dd>영업일 기준 7일 이내 안내</dd>
+            </dl>
+          </div>
+          <div class="cf-foot">
+            <a href="inquiry-status.html" class="btn btn-primary btn-lg">나의 신고 조회하기</a>
+            <a href="index.html" class="btn btn-secondary btn-lg">홈으로</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- 충전소 검색 팝업 -->
+<div class="cs-modal" id="stationModal" role="dialog" aria-modal="true" aria-labelledby="csTitle">
+  <div class="cs-box">
+    <div class="cs-box-head">
+      <h3 id="csTitle">충전소 검색</h3>
+      <button type="button" class="cs-close" id="csClose" aria-label="닫기"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="cs-search">
+      <select class="form-select" id="csType"><option>충전소명</option><option>지역명</option></select>
+      <span class="cs-input-wrap">
+        <input class="form-input" id="csKeyword" type="text" placeholder="검색어 입력">
+        <button type="button" class="cs-go" id="csGo" aria-label="검색"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      </span>
+    </div>
+    <table class="cs-table">
+      <thead><tr><th>충전소명</th><th>위치</th><th style="width:80px;">선택</th></tr></thead>
+      <tbody id="csResults"></tbody>
+    </table>
+    <div class="pagination" data-total="1" data-current="1" style="margin-top:16px; justify-content:center;"></div>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  function toast(m,t){ if(window.__toast) window.__toast(m,t||'info'); else alert(m); }
+  function goStep(n){
+    document.querySelectorAll('[data-panel]').forEach(function(p){ p.hidden = (parseInt(p.dataset.panel,10) !== n); });
+    document.querySelectorAll('.cf-step').forEach(function(s){ var sn=parseInt(s.dataset.step,10); s.classList.toggle('active', sn===n); s.classList.toggle('done', sn<n); });
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  document.querySelectorAll('[data-prev]').forEach(function(b){ b.addEventListener('click', function(){ goStep(parseInt(this.dataset.prev,10)); }); });
+  var authDone = false;
+  $('doAuth').addEventListener('click', function(){ authDone = true; this.textContent = '✓ 본인인증 완료'; this.classList.add('done'); this.disabled = true; toast('본인인증이 완료되었습니다. (데모)','info'); });
+  $('toStep2').addEventListener('click', function(){
+    if(!$('agree').checked){ toast('개인정보이용 제공 동의에 체크해 주세요.','warning'); return; }
+    if(!authDone){ toast('휴대전화 본인인증을 완료해 주세요.','warning'); return; }
+    goStep(3);
+  });
+
+  // 시(0~23) 옵션
+  var hourSel = $('chHour');
+  for (var h=0; h<24; h++){ var o=document.createElement('option'); o.textContent=String(h).padStart(2,'0'); hourSel.appendChild(o); }
+
+  // 숫자만 입력 + 카드번호 자동 이동
+  document.querySelectorAll('.num-only').forEach(function(el){ el.addEventListener('input', function(){ this.value=this.value.replace(/[^0-9]/g,''); }); });
+  var segs = Array.prototype.slice.call(document.querySelectorAll('.card-seg'));
+  segs.forEach(function(seg, i){ seg.addEventListener('input', function(){ if(this.value.length>=4 && segs[i+1]) segs[i+1].focus(); }); });
+
+  // 충전소 검색 팝업
+  var stationModal = $('stationModal');
+  var STATIONS = [
+    ['구일우성아파트', '서울특별시 구로구 구일로2길 60', 'ME001234'],
+    ['구일우성아파트(지하)', '서울특별시 구로구 구일로2길 60', 'ME001235']
+  ];
+  function renderStations(){
+    $('csResults').innerHTML = STATIONS.map(function(s, i){
+      return '<tr><td>'+s[0]+'</td><td>'+s[1]+'</td><td><button type="button" class="cs-pick" data-i="'+i+'">선택</button></td></tr>';
+    }).join('');
+  }
+  $('btnStationSearch').addEventListener('click', function(){ renderStations(); $('csKeyword').value=''; stationModal.classList.add('open'); });
+  $('csClose').addEventListener('click', function(){ stationModal.classList.remove('open'); });
+  stationModal.addEventListener('click', function(e){ if(e.target===stationModal) stationModal.classList.remove('open'); });
+  $('csGo').addEventListener('click', function(){ toast('조회되었습니다.','info'); });
+  $('csResults').addEventListener('click', function(e){
+    var b = e.target.closest('.cs-pick'); if(!b) return;
+    var s = STATIONS[parseInt(b.getAttribute('data-i'),10)];
+    $('stName').value = s[0]; $('stId').value = s[2]; $('stAddr').value = s[1];
+    stationModal.classList.remove('open');
+  });
+
+  // 등록 → Step4
+  $('btnSubmit').addEventListener('click', function(){
+    if(!$('stName').value){ toast('충전소를 검색하여 선택해 주세요.','warning'); return; }
+    if(!$('chDate').value || hourSel.value===''){ toast('충전 일시(시작시간)를 입력해 주세요.','warning'); return; }
+    if(segs.some(function(s){ return s.value.length<4; })){ toast('카드번호를 정확히 입력해 주세요.','warning'); return; }
+    var now=new Date(), pad=function(n){return String(n).padStart(2,'0');};
+    $('doneNo').textContent = 'DC-2026-00' + Math.floor(Math.random()*9000+1000);
+    $('doneStation').textContent = $('stName').value + ' (' + $('stId').value + ')';
+    $('doneAt2').textContent = $('chDate').value + ' ' + hourSel.value + ':' + ($('chMin').value || '00').padStart(2,'0');
+    $('doneAt').textContent = now.getFullYear()+'.'+pad(now.getMonth()+1)+'.'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+    goStep(4);
+  });
+})();
+</script>
+</body>
+</html>

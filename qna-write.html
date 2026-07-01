@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>질문·건의사항 등록 | 질의응답 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/inquiry.css">
+<style>
+  /* 글 작성 시 유의사항 (개인정보 경고) */
+  .qw-caution{display:flex;gap:8px;align-items:flex-start;padding:11px 14px;margin:0 0 10px;
+    background:#fdecec;border:1px solid #f3b9b9;border-radius:9px;font-size:13px;line-height:1.6;color:var(--text-secondary);}
+  .qw-caution .ic{color:var(--color-danger,#e11d48);flex:0 0 auto;font-weight:800;}
+  .qw-caution strong{color:var(--color-danger,#e11d48);}
+  .qw-writer{display:flex;align-items:center;gap:16px;height:44px;}
+  .qw-writer .nm{font-weight:800;font-size:15px;color:var(--text-primary);}
+  .qw-writer label{margin:0;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>
+  window.__activeNav = 'community';
+  window.__loggedIn = true; // 로그인 필수 페이지 (프로토타입: 로그인 상태로 간주)
+</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="#">소통·지원</a><span class="sep" aria-hidden="true">›</span>
+        <a href="inquiry.html">민원·문의</a><span class="sep" aria-hidden="true">›</span>
+        <a href="inquiry-qna.html">질의응답(건의사항)</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current">질문·건의사항 등록</span>
+      </nav>
+      <h1>질문·건의사항 등록</h1>
+      <p class="hero-lead">등록 후 담당 부서가 영업일 기준 3일 이내 답변합니다. 유사 질문이 FAQ에 있는 경우 FAQ 답변이 함께 제공됩니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container" style="max-width:880px;">
+      <div class="card">
+        <form data-validate id="qnaWriteForm">
+          <div class="grid grid-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">질문 구분 <span class="required">*</span></label>
+              <select class="form-select" id="qwCat" required>
+                <option value="">선택</option>
+                <!-- QNAGBN 코드그룹 실값 (3종) -->
+                <option value="op">충전기운영/회원카드및결제</option>
+                <option value="slow">완속충전기설치/보조금</option>
+                <option value="fast">급속충전기설치</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">작성자</label>
+              <div class="qw-writer">
+                <span class="nm" id="qwWriter">모비젠</span>
+                <label class="flex items-center gap-2"><input type="checkbox" id="qwSecret"> <span>비공개</span></label>
+              </div>
+              <p class="form-help">비공개 글은 작성자와 담당자만 열람할 수 있습니다.</p>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">제목 <span class="required">*</span></label>
+              <input class="form-input" type="text" id="qwTitle" required placeholder="질문의 핵심 내용을 한 문장으로 작성해 주세요 (최대 80자)" maxlength="80">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">내용 <span class="required">*</span></label>
+              <div class="qw-caution"><span class="ic">!</span><span>글 작성 시 개인정보 유출 방지를 위해 <strong>불필요한 개인정보(전화번호, 이메일, 주소 등) 입력을 금하며</strong>, 개인정보 포함 시 사전 통지 없이 삭제될 수 있습니다.</span></div>
+              <textarea class="form-textarea" id="qwBody" rows="9" required placeholder="질문의 배경과 구체적 내용을 기재해 주세요. 관련 상황·기간·서류 등을 자세히 적으시면 정확한 답변을 받으실 수 있습니다."></textarea>
+            </div>
+          </div>
+
+          <p class="form-help" style="margin-top:12px;">※ 답변 알림(SMS·이메일 등)은 <a href="mypage-notifications.html">알림 설정</a>에서 계정 단위로 관리됩니다.</p>
+
+          <label class="check-row" style="margin-top:10px;">
+            <input type="checkbox" required>
+            <span>개인정보 수집·이용에 동의합니다. <strong style="color:var(--color-danger);">(필수)</strong></span>
+          </label>
+
+          <div class="flex gap-2 mt-4">
+            <a href="inquiry-qna.html" class="btn btn-ghost btn-lg">이전</a>
+            <button type="submit" class="btn btn-primary btn-lg" style="flex:1;">등록하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  // ── 로그인 필수 게이트 (프로토타입) ──
+  var loggedIn = false;
+  try { loggedIn = !!(window.__loggedIn || JSON.parse(sessionStorage.getItem('mp_user')||'null')); } catch(e){}
+  if (!loggedIn) { alert('로그인 후 이용할 수 있습니다.'); location.replace('login.html?redirect=qna-write.html'); return; }
+
+  // 로그인 계정명 표시(작성자)
+  var writer = '모비젠';
+  try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.name) writer = u.name; } catch(e){}
+  var wEl = document.getElementById('qwWriter'); if (wEl) wEl.textContent = writer;
+
+  // 진입 파라미터 프리필(카테고리·제목)
+  var p = new URLSearchParams(location.search);
+  var cat = p.get('cat'); if (cat) { var cs = document.getElementById('qwCat'); if (cs) { for (var i=0;i<cs.options.length;i++){ if (cs.options[i].text===cat){ cs.selectedIndex=i; break; } } } }
+  var subject = p.get('subject'); if (subject) { var t = document.getElementById('qwTitle'); if (t) t.value = subject; }
+
+  document.getElementById('qnaWriteForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var secret = document.getElementById('qwSecret').checked;
+    var msg = '질문이 등록되었습니다' + (secret ? ' (비공개)' : '') + '. 담당 부서가 영업일 기준 3일 이내 답변하며, 진행 상황은 내 질문에서 확인하실 수 있습니다.';
+    if (window.__toast) window.__toast(msg, 'success'); else alert(msg);
+    setTimeout(function(){ location.href = 'inquiry-qna.html?tab=mine'; }, 1400);
+  });
+})();
+</script>
+</body>
+</html>

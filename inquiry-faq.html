@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ (자주 묻는 질문) | 민원·문의 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/inquiry.css">
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'community';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로" data-i18n-aria="aria.bc.path">
+        <a href="index.html" data-i18n="extra.bc.home">홈</a><span class="sep">›</span>
+        <a href="#" data-i18n="inq.bc.community">소통·지원</a><span class="sep">›</span>
+        <a href="inquiry.html" data-i18n="inq.bc.current">민원·문의</a><span class="sep">›</span>
+        <span class="current" data-i18n="faq.bc.current">FAQ</span>
+      </nav>
+      <h1 data-i18n="faq.h1">FAQ (자주 묻는 질문)</h1>
+      <p class="hero-lead" data-i18n-html="faq.lead.html">무공해차·충전·보조금·세제·정책 등 자주 묻는 질문에 대한 답변을 제공합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- AI 검색 상단 바 -->
+      <div class="faq-topbar" style="grid-template-columns: 1fr;">
+        <div>
+          <div style="font-size:12.5px;color:var(--color-primary-700);font-weight:700;letter-spacing:0.04em;margin-bottom:8px;" data-i18n="faq.topbar.eyebrow">AI-POWERED SEARCH</div>
+          <h2 style="font-size:22px;letter-spacing:-0.025em;margin-bottom:14px;" data-i18n="faq.topbar.h2">궁금한 것을 자연어로 질문해 보세요</h2>
+
+          <div class="faq-search-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-400);"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input id="faqSearch" type="text" placeholder="예: 전기차 보조금은 어떻게 신청하나요? 충전 카드는 어디서 받아요?" data-i18n-attr="placeholder:faq.search.ph">
+            <button class="btn btn-primary" type="button" id="faqSearchBtn" data-i18n="faq.search.btn">검색</button>
+          </div>
+
+          <div class="faq-suggest">
+            <span data-i18n="faq.sg.lbl">관련 정보</span>
+            <a href="#" data-q="보조금 신청 방법" data-i18n="faq.sg.s1">보조금 신청 방법</a>
+            <a href="#" data-q="충전카드 발급" data-i18n="faq.sg.s2">충전카드 발급</a>
+            <a href="#" data-q="취득세 감면" data-i18n="faq.sg.s3">취득세 감면</a>
+            <a href="#" data-q="공모 신청 기간" data-i18n="faq.sg.s4">공모 신청 기간</a>
+            <a href="#" data-q="K-EV100 참여" data-i18n="faq.sg.s5">K-EV100 참여</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 카테고리 — SMLCLS10 코드그룹 기준 4종 + 전체 (지킴이만 신규 추가분) -->
+      <!-- TODO(DB): faq-item별 data-cat은 SMLCLS10 실제 매핑값으로 재배정 필요.
+           현재 샘플 문항(보조금·세제·정책·공모·K-EV100·계정)은 SMLCLS10 범위 밖이라 '충전소이용'으로 임시 배정함. -->
+      <div class="faq-categories" data-faq-cats>
+        <div class="faq-cat active" data-cat="all">
+          <svg class="fc-ico" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <div class="fc-name" data-i18n="faq.cat.all">전체</div>
+          <div class="fc-count" data-cat-count="all">0</div>
+        </div>
+        <div class="faq-cat" data-cat="use">
+          <svg class="fc-ico" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <div class="fc-name" data-i18n="faq.cat.use">충전소이용</div>
+          <div class="fc-count" data-cat-count="use">0</div>
+        </div>
+        <div class="faq-cat" data-cat="slow">
+          <svg class="fc-ico" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <div class="fc-name" data-i18n="faq.cat.slow">완속충전기 설치지원 사업</div>
+          <div class="fc-count" data-cat-count="slow">0</div>
+        </div>
+        <div class="faq-cat" data-cat="h2">
+          <svg class="fc-ico" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <div class="fc-name" data-i18n="faq.cat.h2">수소충전기 인프라 사업</div>
+          <div class="fc-count" data-cat-count="h2">0</div>
+        </div>
+        <!-- 지킴이 — 신규 추가분 -->
+        <div class="faq-cat" data-cat="keeper">
+          <svg class="fc-ico" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          <div class="fc-name" data-i18n="faq.cat.keeper">지킴이</div>
+          <div class="fc-count" data-cat-count="keeper">0</div>
+        </div>
+      </div>
+
+      <!-- FAQ 목록 -->
+      <div class="faq-list" id="faqList">
+        <details class="faq-item" id="faq-01" data-cat="subsidy">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.subsidy">보조금</div>
+            <div class="faq-q-text" data-i18n="faq.q1.t">2026년 전기차 구매 보조금의 국비 지원 한도와 지자체별 지방비는 어떻게 되나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q1.html">
+              2026년 전기차 개인 구매 기준 <strong>국비 최대 650만원 + 지자체별 지방비 평균 350~700만원</strong>이 지원됩니다. 총 지원금은 차량 가격 및 지자체에 따라 <strong>최대 1,350만원 수준</strong>입니다.
+              <ul>
+                <li>국비: 환경부 무공해차 보급 사업 예산</li>
+                <li>지방비: 지자체별 추가 예산 (서울 300만, 경기 500만, 제주 700만 등)</li>
+                <li>지급 시점: 차량 출고 후 지자체 접수 → 평균 2~3주 내 입금</li>
+              </ul>
+              자세한 내용은 <a href="subsidy-region.html" style="color:var(--color-secondary-700);font-weight:600;">지자체별 보조금 현황 →</a>에서 확인하세요.
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q1.date">최종 업데이트: 2026.04.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q1.up">도움됨 <strong>(248)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q1.down">아니오 <strong>(12)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-02" data-cat="charge">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.charge">충전</div>
+            <div class="faq-q-text" data-i18n="faq.q2.t">환경부 무공해차 통합카드를 분실했을 때 재발급 절차는 어떻게 되나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q2.html">
+              통합카드 분실 시 <strong>즉시 고객센터(1661-0970) 또는 홈페이지 '카드 정보 수정' 메뉴에서 분실 신고</strong>해 주세요.
+              <ul>
+                <li>분실 신고 후 즉시 카드 정지</li>
+                <li>재발급 수수료: 2,000원 (택배 배송)</li>
+                <li>영업일 기준 5~7일 내 수령</li>
+                <li>선불 포인트 잔액은 신규 카드로 자동 이관</li>
+              </ul>
+              재발급 신청은 <a href="charging-card.html?tab=apply" style="color:var(--color-secondary-700);font-weight:600;">카드 관리 →</a>에서 가능합니다.
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q2.date">최종 업데이트: 2026.03.18</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q2.up">도움됨 <strong>(184)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q2.down">아니오 <strong>(6)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-03" data-cat="policy">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.rfp">공모</div>
+            <div class="faq-q-text" data-i18n="faq.q3.t">전기승합차(버스) 공모 신청 자격은 어떻게 되며, 제출 서류는 무엇인가요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q3.html">
+              전기승합차 공모는 <strong>여객자동차 운수사업법에 따른 여객운수사업자 또는 지자체</strong>가 신청 가능합니다.
+              <ul>
+                <li>신청 자격: 일반·시내·마을·시외·고속 운수사업자</li>
+                <li>제출 서류: 사업자등록증, 운수사업면허증, 보유 차량 현황, 운행 계획서, 자금조달 계획서</li>
+                <li>평가 기준: 운행 계획(30점) + 전환 규모(25점) + 재무 건전성(20점) + 지역 기여(15점) + 서비스 품질(10점)</li>
+              </ul>
+              상세 절차는 <a href="public-bus.html" style="color:var(--color-secondary-700);font-weight:600;">전기승합차 공모 →</a>를 참고하세요.
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q3.date">최종 업데이트: 2026.02.20</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q3.up">도움됨 <strong>(92)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q3.down">아니오 <strong>(3)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-04" data-cat="subsidy">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.subsidy">보조금</div>
+            <div class="faq-q-text" data-i18n="faq.q4.t">보조금 환수 대상이 되는 사유와 환수 금액을 알고 싶습니다.</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q4.html">
+              <strong>의무운행기간(2년) 내 차량 양도·반납·폐차 시 보조금 환수 대상</strong>이 됩니다.
+              <ul>
+                <li>의무운행기간: 구매일로부터 <strong>2년</strong></li>
+                <li>환수 방법: 운행 기간에 비례하여 일할 계산</li>
+                <li>환수 예외: 결혼·이사·사망·불가항력(자연재해) 등 (증빙 필요)</li>
+                <li>허위 신청·중복 수령 시 <strong>전액 환수 + 3년 이내 재신청 제한</strong></li>
+              </ul>
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q4.date">최종 업데이트: 2026.01.15</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q4.up">도움됨 <strong>(68)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q4.down">아니오 <strong>(4)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-05" data-cat="tax">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.tax">세제</div>
+            <div class="faq-q-text" data-i18n="faq.q5.t">전기차 취득세·개별소비세 감면 한도는 어떻게 되며, 2026년 변경사항이 있나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q5.html">
+              2026년 기준 감면 한도는 <strong>취득세 140만원 + 개별소비세 300만원 + 교육세 90만원 = 최대 530만원</strong>입니다.
+              <ul>
+                <li>취득세: 차량 가액의 5% → 최대 140만원 면제 (잔여분 과세)</li>
+                <li>개별소비세: 최대 300만원 + 교육세 최대 90만원 면제</li>
+                <li>공채 매입 면제: 최대 250만원 상당</li>
+                <li>유효 기간: 2026년 12월 31일까지</li>
+              </ul>
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q5.date">최종 업데이트: 2026.01.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q5.up">도움됨 <strong>(156)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q5.down">아니오 <strong>(8)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="charge">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.charge">충전</div>
+            <div class="faq-q-text" data-i18n="faq.q6.t">공용 완속 충전기를 아파트·사업장에 직접 설치하고 싶습니다. 지원 단가는 얼마인가요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q6.html">
+              공용 완속 충전기 설치 시 <strong>국비 + 지방비로 최대 250만원</strong>까지 지원됩니다.
+              <ul>
+                <li>7kW 단독형: 최대 200만원</li>
+                <li>7kW 벽부형: 최대 150만원</li>
+                <li>11kW 3상: 최대 250만원</li>
+                <li>신청 대상: 50세대 이상 공동주택, 연면적 1,000㎡ 이상 업무·판매시설</li>
+              </ul>
+              신청은 <a href="charging-install-slow.html" style="color:var(--color-secondary-700);font-weight:600;">공용 완속충전 신청 →</a>에서 진행합니다.
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q6.date">최종 업데이트: 2026.03.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q6.up">도움됨 <strong>(112)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q6.down">아니오 <strong>(5)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="policy">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.kev">K-EV100</div>
+            <div class="faq-q-text" data-i18n="faq.q7.t">K-EV100에 참여 선언한 후 실제 이행 평가는 어떻게 이루어지나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q7.html">
+              K-EV100 참여 기업은 <strong>매년 전환 실적과 목표 연도(2030·2035·2040)를 K-EV100 사무국에 보고</strong>해야 합니다.
+              <ul>
+                <li>보고 주기: 연 1회 (매년 3월)</li>
+                <li>평가 항목: 무공해차 전환율, 충전 인프라 구축, 임직원 인식 제고 등</li>
+                <li>미이행 시: 참여 자격 유예 → 탈퇴</li>
+                <li>우수 기업: 정부 조달·ESG 평가 가점 제공</li>
+              </ul>
+              참여 프로세스는 <a href="kev100-process.html" style="color:var(--color-secondary-700);font-weight:600;">K-EV100 참여 절차 →</a>를 참고하세요.
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q7.date">최종 업데이트: 2026.04.10</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q7.up">도움됨 <strong>(74)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q7.down">아니오 <strong>(2)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="account">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat" data-i18n="faq.cat.account2">계정</div>
+            <div class="faq-q-text" data-i18n="faq.q8.t">통합누리집 회원가입 시 본인인증이 실패합니다. 해결 방법이 있나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body" data-i18n-html="faq.q8.html">
+              통신사 본인인증 또는 공동인증서(구 공인인증서)를 사용할 수 있습니다. 인증 실패 시 다음을 확인해 주세요.
+              <ul>
+                <li>통신사 명의와 입력 정보 일치 여부</li>
+                <li>공동인증서 유효기간</li>
+                <li>브라우저 팝업 차단 해제</li>
+                <li>기업회원은 사업자등록증 추가 확인 필요</li>
+              </ul>
+              지속 실패 시 고객센터 1661-0970로 문의 바랍니다.
+              <div class="faq-a-foot">
+                <span data-i18n="faq.q8.date">최종 업데이트: 2026.02.14</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up" data-i18n-html="faq.q8.up">도움됨 <strong>(52)</strong></button>
+                  <button type="button" data-vote="down" data-i18n-html="faq.q8.down">아니오 <strong>(18)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- [추가 작업6] 전기차 충전소 지킴이 활동 Q&A (notice-keeper.html 내용 기반, data-cat="keeper") -->
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">전기차 충전소 지킴이란 무엇인가요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              전국 충전소와 공동주택을 점검하고, <strong>충전 방해행위와 고장을 신고</strong>하며 건전한 충전 문화를 시민과 함께 만들어 가는 <strong>자원봉사 시민 참여 활동</strong>입니다.
+              내연기관 차량의 충전구역 불법 주차, 충전기 고장 방치, 장비 훼손 등 다양한 문제에 시민 지킴이가 직접 대응하여 쾌적한 충전 환경을 조성합니다.
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">지킴이는 구체적으로 어떤 활동을 하나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              담당 충전소를 정기적으로 방문하여 다음과 같은 활동을 수행합니다.
+              <ul>
+                <li>충전 현장 점검 (충전기 상태·청결·주변 환경 확인)</li>
+                <li>충전 방해행위 신고 (불법 주차·장시간 점유 등을 사진과 함께 신고)</li>
+                <li>고장·훼손 신고</li>
+                <li>활동 보고서 제출</li>
+                <li>충전 문화 홍보</li>
+                <li>지킴이 네트워크(발대식·간담회) 참여</li>
+              </ul>
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">지킴이 활동에는 어떻게 참여하나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              신청부터 활동 시작까지 <strong>5단계</strong>로 진행됩니다.
+              <ul>
+                <li>1단계: 온라인 신청</li>
+                <li>2단계: 서류 검토</li>
+                <li>3단계: 선정 통보</li>
+                <li>4단계: 임명·활동방법 교육</li>
+                <li>5단계: 담당 충전소 현장 활동 개시</li>
+              </ul>
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">전기차가 없어도 지킴이 활동을 할 수 있나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              네, 가능합니다. 전기차 보유 여부와 관계없이 <strong>만 18세 이상 대한민국 국민</strong>이라면 누구나 지킴이로 활동할 수 있습니다. 전기차에 대한 관심과 충전 인프라 개선에 대한 의지가 가장 중요합니다.
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">활동 횟수나 시간 제한이 있나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              월 최소 <strong>1회</strong> 담당 충전소 점검을 권장하며 활동 시간은 자율입니다. 보고서 제출은 매월 말일까지 온라인으로 간단히 처리하시면 됩니다. 우수 지킴이 표창 대상은 <strong>월 4회 이상</strong> 활동자 중에서 선정합니다.
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">지킴이 활동에는 어떤 보상·혜택이 있나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              활동 내용에 따라 매년 연 1회 표창 및 다양한 혜택이 제공될 수 있습니다.
+              <ul>
+                <li>우수 지킴이 표창</li>
+                <li>충전 크레딧 지급 (월간 우수 활동자에게 무공해차 통합카드 충전 크레딧 적립)</li>
+                <li>활동용품 지급 (선발 후 점검활동 3회 이상 수행 시 모자·조끼·신분증)</li>
+              </ul>
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faq-item" data-cat="keeper">
+          <summary>
+            <div class="faq-q-icon">Q</div>
+            <div class="faq-q-cat">지킴이</div>
+            <div class="faq-q-text">활동 중 위험 상황이 발생하거나, 신고한 위반 사례는 어떻게 처리되나요?</div>
+            <div class="faq-chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-icon">A</div>
+            <div class="faq-a-body">
+              <strong>본인의 안전이 최우선</strong>입니다. 폭언·폭행 위협 시 즉시 활동을 중단하고 112(경찰)·119(소방) 또는 통합 콜센터 1661-0970로 신고해 주세요. 모든 지킴이는 활동 중 사고에 대비한 <strong>단체 상해보험에 자동 가입</strong>됩니다.
+              <ul>
+                <li>접수된 신고는 관할 지자체 또는 충전 사업자에게 즉시 전달</li>
+                <li>처리 결과는 SMS·앱 알림으로 안내</li>
+                <li>충전구역 불법 주차는 「환경친화적 자동차의 개발 및 보급 촉진에 관한 법률」에 따라 10만원 이하의 과태료 부과 가능</li>
+              </ul>
+              <div class="faq-a-foot">
+                <span>최종 업데이트: 2026.05.01</span>
+                <div class="helpful">
+                  <button type="button" data-vote="up">도움됨 <strong>(0)</strong></button>
+                  <button type="button" data-vote="down">아니오 <strong>(0)</strong></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 빈 결과 -->
+      <div id="faqEmpty" class="board-empty" style="display:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <h4 data-i18n="faq.empty.h4">검색 결과가 없습니다</h4>
+        <p data-i18n="faq.empty.p">다른 키워드를 입력하시거나 AI 맞춤 상담을 이용해 보세요.</p>
+        <a href="inquiry-qna.html" class="btn btn-primary btn-sm mt-4" data-i18n="faq.empty.btn">질의응답 등록</a>
+      </div>
+
+      <!-- 페이지네이션 (AS-IS 기능 보강) -->
+      <nav class="faq-pagination" id="faqPagination" aria-label="페이지 이동" data-i18n-aria="faq.aria.pgnav" style="margin-top:32px; padding:16px 0; display:flex; justify-content:center; gap:6px; border-top:1px solid var(--border-light);">
+        <!-- JS 동적 렌더링 -->
+      </nav>
+
+    </div>
+  </section>
+</main>
+
+<style>
+.faq-pagination button {
+  min-width: 38px; height: 38px; padding: 0 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px; font-weight: var(--fw-semibold);
+  color: var(--text-secondary); cursor: pointer;
+  transition: all var(--t-fast); font-family: inherit;
+}
+.faq-pagination button:hover { border-color: var(--color-primary-300); color: var(--color-primary-700); }
+.faq-pagination button.active {
+  background: var(--color-primary-500); color: #fff; border-color: var(--color-primary-500);
+}
+.faq-pagination button[disabled] { opacity: 0.4; cursor: not-allowed; }
+</style>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-inquiry.js?v=20260630d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  const cats = document.querySelectorAll('.faq-cat');
+  const items = document.querySelectorAll('.faq-item');
+  const search = document.getElementById('faqSearch');
+  const searchBtn = document.getElementById('faqSearchBtn');
+  const empty = document.getElementById('faqEmpty');
+
+  // ── SMLCLS10 분류 정규화 (레거시 data-cat → 신 분류) + 라벨/카운트 ──
+  // TODO(DB): 보조금·세제·정책·계정 등 SMLCLS10 범위 밖 샘플 문항은 '충전소이용'으로 임시 배정. 실 매핑값으로 교체 요.
+  const CAT_MAP = { subsidy:'use', charge:'use', tax:'use', policy:'use', account:'use', keeper:'keeper', use:'use', slow:'slow', h2:'h2' };
+  const CAT_KEY = { use:'faq.cat.use', slow:'faq.cat.slow', h2:'faq.cat.h2', keeper:'faq.cat.keeper' };
+  const CAT_LABEL = { use:'충전소이용', slow:'완속충전기 설치지원 사업', h2:'수소충전기 인프라 사업', keeper:'지킴이' };
+  document.querySelectorAll('.faq-item').forEach(it => {
+    let nc = CAT_MAP[it.dataset.cat] || 'use';
+    const t = (it.querySelector('.faq-q-text')?.textContent || '');
+    if (/완속/.test(t) && /설치/.test(t)) nc = 'slow';
+    else if (/수소/.test(t) && /충전/.test(t)) nc = 'h2';
+    it.dataset.cat = nc;
+    const lbl = it.querySelector('.faq-q-cat');
+    if (lbl) { lbl.setAttribute('data-i18n', CAT_KEY[nc]); lbl.textContent = CAT_LABEL[nc]; }
+  });
+  (function(){
+    const counts = { all: document.querySelectorAll('.faq-item').length, use:0, slow:0, h2:0, keeper:0 };
+    document.querySelectorAll('.faq-item').forEach(it => { counts[it.dataset.cat] = (counts[it.dataset.cat]||0)+1; });
+    document.querySelectorAll('[data-cat-count]').forEach(el => { el.textContent = counts[el.getAttribute('data-cat-count')] || 0; });
+  })();
+
+  let currentCat = 'all';
+
+  // ── 페이징 (4개씩 한 페이지) ──
+  const PAGE_SIZE = 4;
+  let currentPage = 1;
+  const pagination = document.getElementById('faqPagination');
+
+  function renderPagination(filteredItems) {
+    const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+    if (filteredItems.length === 0) { pagination.innerHTML = ''; return; }
+    const buttons = [`<button type="button" aria-label="이전" ${currentPage===1?'disabled':''}>‹</button>`];
+    for (let i = 1; i <= totalPages; i++) {
+      buttons.push(`<button type="button" class="${i===currentPage?'active':''}" ${i===currentPage?'aria-current="page"':''}>${i}</button>`);
+    }
+    buttons.push(`<button type="button" aria-label="다음" ${currentPage===totalPages?'disabled':''}>›</button>`);
+    pagination.innerHTML = buttons.join('');
+    pagination.querySelectorAll('button').forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        if (idx === 0) currentPage = Math.max(1, currentPage - 1);
+        else if (idx === pagination.children.length - 1) currentPage = Math.min(totalPages, currentPage + 1);
+        else currentPage = parseInt(btn.textContent);
+        applyFilter();
+        document.getElementById('faqList')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  function applyFilter() {
+    const kw = (search?.value || '').trim().toLowerCase();
+    const filteredItems = [];
+    items.forEach(it => {
+      const cat = it.dataset.cat;
+      const text = it.querySelector('.faq-q-text').textContent.toLowerCase()
+                 + ' ' + it.querySelector('.faq-a-body').textContent.toLowerCase();
+      const catOk = currentCat === 'all' || cat === currentCat;
+      const kwOk = !kw || text.includes(kw);
+      if (catOk && kwOk) filteredItems.push(it);
+    });
+
+    // 페이징 슬라이스
+    const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = 1;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+
+    items.forEach(it => { it.style.display = 'none'; it.open = false; });
+    filteredItems.slice(start, end).forEach(it => it.style.display = '');
+    empty.style.display = filteredItems.length === 0 ? 'block' : 'none';
+
+    renderPagination(filteredItems);
+  }
+
+  cats.forEach(c => c.addEventListener('click', () => {
+    cats.forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    currentCat = c.dataset.cat;
+    currentPage = 1;
+    applyFilter();
+  }));
+
+  search?.addEventListener('input', () => { currentPage = 1; applyFilter(); });
+  searchBtn?.addEventListener('click', () => {
+    currentPage = 1;
+    applyFilter();
+    if (window.__toast) window.__toast('검색이 완료되었습니다.', 'info');
+  });
+
+  // 초기 렌더링
+  applyFilter();
+
+  // [추가 작업7] URL 파라미터(?cat=) 또는 해시(#cat)로 카테고리 자동 선택
+  (function selectCatFromURL(){
+    const params = new URLSearchParams(location.search);
+    const wanted = params.get('cat') || (location.hash ? location.hash.slice(1) : '');
+    if (!wanted) return;
+    const target = Array.from(cats).find(c => c.dataset.cat === wanted);
+    if (target) target.click();
+  })();
+
+  document.querySelectorAll('.faq-suggest a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      search.value = a.dataset.q || a.textContent;
+      applyFilter();
+    });
+  });
+
+  document.querySelectorAll('[data-jump]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.dataset.jump;
+      const target = document.getElementById(id);
+      if (target) {
+        target.open = true;
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+
+  // open/close 스타일 반영
+  items.forEach(it => {
+    it.addEventListener('toggle', () => {
+      if (it.open) it.classList.add('open');
+      else it.classList.remove('open');
+    });
+  });
+
+  // 도움됨/아니오 투표
+  document.querySelectorAll('[data-vote]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const strong = b.querySelector('strong');
+      const m = strong.textContent.match(/\d+/);
+      const n = m ? parseInt(m[0], 10) + 1 : 1;
+      strong.textContent = '(' + n.toLocaleString('ko-KR') + ')';
+      if (window.__toast) window.__toast('소중한 피드백 감사합니다.', 'success');
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사이트맵 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <span class="current">사이트맵</span>
+      </nav>
+      <h1>사이트맵</h1>
+      <p class="hero-lead">무공해차 통합누리집의 <strong>전체 메뉴 구조</strong>를 한눈에 확인합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container" id="sitemap-container">
+      <!-- JS로 채워짐 (partials.js의 sitemapSections 데이터 재활용) -->
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script>
+  // partials.js 실행 직후 (같은 이벤트 루프 내) — 풀메뉴 오버레이의 sitemap-row 구조를 본문에 복사
+  (function() {
+    var overlayBody = document.querySelector('#fullmenuOverlay .fullmenu-body');
+    var container = document.getElementById('sitemap-container');
+    if (overlayBody && container) container.innerHTML = overlayBody.innerHTML;
+  })();
+</script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+</body>
+</html>

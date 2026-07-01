@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>회원카드 관리 | 충전소·요금 정보 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/charging.css">
+<link rel="stylesheet" href="css/auth.css?v=20260520">
+<link rel="stylesheet" href="css/board.css">
+<style>
+  /* 탭별 필터바 (표준 board-toolbar 내부 정렬) */
+  .cf-flt{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
+  .cf-flt .fld{display:flex;flex-direction:column;gap:5px;}
+  .cf-flt .fld.grow{flex:1;min-width:200px;}
+  .cf-flt label{font-size:12px;font-weight:700;color:var(--text-secondary);}
+  .cf-flt select,.cf-flt input{height:42px;padding:0 12px;border:1px solid var(--border-medium);border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;}
+  .cf-flt input{width:100%;}
+  /* 결제구분 배지 (PAY_KIND) */
+  .pay-chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 9px;white-space:nowrap;}
+  .pk-pre{background:#e7f0fe;color:#1559c2;} .pk-post{background:#fef0e0;color:#a25b00;}
+  .pk-easy{background:#e6f6ee;color:#0f7a44;} .pk-point{background:#f1ecfb;color:#6b3fb0;} .pk-field{background:#eef2f6;color:#54616e;}
+  #histBody tr,#pointBody tr{cursor:pointer;}
+  /* 명세서 영수증(상세) */
+  .rcpt-kv{display:grid;grid-template-columns:132px 1fr;gap:8px 12px;font-size:13.5px;margin-top:4px;}
+  .rcpt-kv dt{color:var(--text-tertiary);font-weight:600;} .rcpt-kv dd{margin:0;color:var(--text-primary);font-weight:600;}
+  .rcpt-total{margin-top:16px;padding-top:14px;border-top:1px dashed var(--border-light);display:flex;justify-content:space-between;align-items:baseline;}
+  .rcpt-total b{font-size:22px;color:var(--color-primary-700);}
+  /* ── 회원카드 허브 (리스트 중심) ── */
+  .cch-bar{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:0 0 14px;}
+  .cch-bar h3{margin:0;}
+  .cch-list{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .cch-list th{background:var(--color-gray-100);border-top:2px solid var(--color-gray-700);border-bottom:1px solid var(--border-light);padding:13px 10px;font-weight:700;color:var(--text-primary);text-align:center;white-space:nowrap;}
+  .cch-list td{border-bottom:1px solid var(--border-light);padding:14px 10px;text-align:center;color:var(--text-secondary);vertical-align:middle;}
+  .cch-list .cardno{font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;}
+  .cch-list .carno{font-weight:600;color:var(--text-primary);}
+  .cch-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+  .cch-acts .btn{white-space:nowrap;}
+  .cch-empty{padding:48px 20px;text-align:center;border:1px dashed var(--border-medium);border-radius:14px;background:var(--color-gray-50);}
+  .cch-empty .ico{font-size:40px;}
+  .cch-empty h4{margin:12px 0 6px;font-size:18px;color:var(--text-primary);}
+  .cch-empty p{color:var(--text-tertiary);font-size:14px;margin:0 0 18px;}
+  .st-chip{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.6;}
+  .st-normal{background:#e6f6ee;color:#0f7a44;} .st-ship{background:#e7f0fe;color:#1559c2;}
+  .st-temp{background:#fff4e0;color:#a25b00;} .st-suspend{background:#fde7e7;color:#b5341f;}
+  .st-lost{background:#fbe2e2;color:#a01b1b;} .st-cancel{background:#eef0f3;color:#8a93a0;}
+  @media (max-width:880px){ .cch-wrap{overflow-x:auto;} .cch-list{min-width:860px;} }
+
+  /* 모달 */
+  .cc-modal-bd{position:fixed;inset:0;background:rgba(15,23,32,.46);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+  .cc-modal-bd.open{display:flex;}
+  .cc-modal{background:#fff;border-radius:16px;max-width:600px;width:100%;max-height:88vh;overflow:auto;padding:26px 26px 22px;box-shadow:0 18px 50px rgba(0,0,0,.25);}
+  .cc-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;}
+  .cc-modal-head h3{margin:0;font-size:20px;}
+  .cc-modal-sub{color:var(--text-tertiary);font-size:13.5px;margin:2px 0 18px;}
+  .cc-modal-x{border:0;background:none;font-size:22px;line-height:1;color:#9aa3af;cursor:pointer;padding:2px 6px;}
+  .cc-modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap;}
+
+  /* 발급조회 스텝퍼 */
+  .cc-steps{display:flex;align-items:flex-start;margin:6px 0 4px;}
+  .cc-step{flex:1;text-align:center;position:relative;min-width:0;}
+  .cc-step::before{content:'';position:absolute;top:18px;left:-50%;width:100%;height:3px;background:var(--border-light);z-index:0;}
+  .cc-step:first-child::before{display:none;}
+  .cc-step.done::before,.cc-step.active::before{background:var(--color-primary-500);}
+  .cc-step .dot{position:relative;z-index:1;width:38px;height:38px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:#fff;border:2px solid var(--border-medium);color:var(--text-tertiary);}
+  .cc-step.done .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;}
+  .cc-step.active .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;box-shadow:0 0 0 5px var(--color-primary-100,#e6f3ec);}
+  .cc-step .slabel{font-size:13px;font-weight:700;color:var(--text-secondary);}
+  .cc-step.done .slabel,.cc-step.active .slabel{color:var(--text-primary);}
+  .cc-step .sdate{font-size:11.5px;color:var(--text-tertiary);margin-top:3px;}
+  .cc-kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13.5px;margin-top:18px;}
+  .cc-kv dt{color:var(--text-tertiary);font-weight:600;} .cc-kv dd{margin:0;color:var(--text-primary);font-weight:600;}
+  /* 분실신고 2단계 */
+  .cc-lost-step{border:1px solid var(--border-light);border-radius:12px;padding:16px 18px;margin-top:12px;}
+  .cc-lost-step.muted{opacity:.5;}
+  .cc-lost-step .n{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--color-primary-600);color:#fff;font-weight:800;font-size:13px;align-items:center;justify-content:center;margin-right:8px;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging.html" data-i18n="charging.crumb.parent">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="charging.card.title">회원카드 관리</span>
+      </nav>
+      <h1 data-i18n="charging.card.title">회원카드 관리</h1>
+      <p class="hero-lead" data-i18n-html="charging.card.lead">내 보유 카드를 한 곳에서 — <strong>발급조회·정보수정·분실신고·재발급</strong>을 카드별로 처리합니다.</p>
+    </div>
+  </section>
+
+  <nav class="tab-nav">
+    <div class="container container-wide">
+      <div class="tabs-pill" data-tabs id="cardTabs">
+        <button class="tab active" data-tab="mycard" type="button">내 회원카드</button>
+        <button class="tab" data-tab="history" type="button" data-i18n="charging.card.tab.history">이용요금·명세서</button>
+        <button class="tab" data-tab="point" type="button" data-i18n="charging.card.tab.point">충전 포인트</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 통합카드 혜택 안내 (공통 섹션) -->
+      <div id="benefits" style="margin-bottom: 28px;">
+        <h3 class="section-h" style="margin-bottom: 8px;" data-i18n="charging.card.benefit.h3">환경부 무공해차 통합카드 핵심 혜택</h3>
+        <p style="color:var(--text-secondary);font-size:13.5px;" data-i18n="charging.card.benefit.desc">전국 모든 공공·민간 충전소에서 로밍 수수료 없이 사용. 이용요금·포인트·명세서를 한 화면에서 관리합니다.</p>
+        <div class="card-benefit-grid">
+          <div class="card-benefit-tile">
+            <div class="cb-rate">0<span class="unit" data-i18n="charging.card.benefit.roaming.unit">원</span></div>
+            <div class="cb-desc" data-i18n="charging.card.benefit.roaming.desc">로밍 수수료</div>
+            <div class="cb-sub" data-i18n="charging.card.benefit.roaming.sub">모든 사업자 충전기에서 기본 요금으로 이용</div>
+          </div>
+          <div class="card-benefit-tile">
+            <div class="cb-rate">2<span class="unit" data-i18n="charging.card.benefit.point.unit">%</span></div>
+            <div class="cb-desc" data-i18n="charging.card.benefit.point.desc">공공 충전 포인트</div>
+            <div class="cb-sub" data-i18n="charging.card.benefit.point.sub">환경부 공공 충전 시 자동 적립 (1P = 1원)</div>
+          </div>
+          <div class="card-benefit-tile">
+            <div class="cb-rate">10<span class="unit" data-i18n="charging.card.benefit.night.unit">%</span></div>
+            <div class="cb-desc" data-i18n="charging.card.benefit.night.desc">심야 충전 할인</div>
+            <div class="cb-sub" data-i18n="charging.card.benefit.night.sub">23:00~06:00 심야 시간 자동 적용</div>
+          </div>
+          <div class="card-benefit-tile">
+            <div class="cb-rate">24<span class="unit" data-i18n="charging.card.benefit.lost.unit">시간</span></div>
+            <div class="cb-desc" data-i18n="charging.card.benefit.lost.desc">분실·도용 보호</div>
+            <div class="cb-sub" data-i18n="charging.card.benefit.lost.sub">연중무휴 분실 신고 및 재발급 지원</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 내 회원카드 (리스트 허브) ===== -->
+      <div class="tab-content active" data-tab-content="mycard">
+        <div class="cch-bar">
+          <div>
+            <h3 class="section-h">내 회원카드</h3>
+            <p style="color:var(--text-secondary);font-size:13.5px;margin:4px 0 0;">로그인한 회원정보 기준으로 보유 카드를 표시합니다. 카드별로 발급조회·정보수정·분실신고·재발급을 처리하세요.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="btn btn-ghost btn-sm" id="ccDemoToggle" title="데모: 빈 상태/보유 상태 전환">빈 상태 미리보기</button>
+            <button type="button" class="btn btn-secondary" id="ccBatchBtn">결제카드 일괄등록</button>
+            <a href="charging-card-apply.html" class="btn btn-primary">＋ 회원카드 신청</a>
+          </div>
+        </div>
+
+        <!-- 필터바 (표준) -->
+        <div class="board-toolbar">
+          <div class="cf-flt">
+            <div class="fld"><label for="mcType">카드유형</label>
+              <select id="mcType"><option value="">전체</option><option>실물카드</option><option>모바일카드</option><option>실물카드(EV등록)</option></select></div>
+            <div class="fld"><label for="mcStat">카드상태</label>
+              <select id="mcStat"><option value="">전체</option><option value="normal">정상</option><option value="ship">발급중</option><option value="suspend">일시정지</option><option value="lost">분실(정지)</option><option value="cancel">해지</option></select></div>
+            <div class="fld"><label for="mcPay">결제카드</label>
+              <select id="mcPay"><option value="">전체</option><option value="y">등록</option><option value="n">미등록</option></select></div>
+            <div class="fld grow"><label for="mcSearch">검색</label>
+              <input id="mcSearch" type="text" placeholder="카드번호·차량번호 검색"></div>
+            <button type="button" class="btn" id="mcReset">초기화</button>
+          </div>
+        </div>
+        <div class="board-result-meta"><div>전체 <strong id="mcCount">0</strong>건</div></div>
+
+        <!-- 리스트 (JS 렌더) — 2번째 이미지(회원카드 정보) 컬럼 반영 -->
+        <div class="cch-wrap" id="ccListWrap">
+          <table class="cch-list">
+            <thead>
+              <tr>
+                <th>NO</th><th>회원카드번호</th><th>카드유형</th><th>차량번호</th><th>결제카드</th><th>포인트결제</th><th>카드상태</th><th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="ccListBody"><!-- rendered --></tbody>
+          </table>
+        </div>
+
+        <ul style="font-size:12.5px;color:var(--text-tertiary);line-height:1.8;margin:12px 0 0;padding-left:16px;list-style:disc;">
+          <li>차량번호가 중복일 경우 전기차 헬프데스크 1661-9408로 문의 바랍니다.</li>
+          <li>'실물카드(EV등록)' 회원과 '결제실패 내역이 있는 카드'는 결제카드 일괄등록이 되지 않습니다.</li>
+        </ul>
+
+        <!-- 빈 상태 -->
+        <div class="cch-empty" id="ccEmpty" style="display:none;">
+          <div class="ico" aria-hidden="true">💳</div>
+          <h4>보유한 회원카드가 없습니다</h4>
+          <p>환경부 무공해차 통합 회원카드를 신청하면 전국 모든 충전소를 로밍 수수료 없이 이용할 수 있습니다.</p>
+          <a href="charging-card-apply.html" class="btn btn-primary btn-lg">회원카드 신청하기</a>
+        </div>
+
+        <div class="alert alert-info mt-6">
+          <div class="alert-icon"></div>
+          <div class="alert-body"><strong>차량번호 중복 안내</strong> 이미 다른 회원에게 발급된 차량번호로는 신규 발급이 제한됩니다(차량 1대당 1카드). 중복 시 발급이 불가하며, 자세한 사항은 한국자동차환경협회(1661-9408)로 문의해 주세요. <span style="color:var(--text-tertiary);">※ 예외차량(중복확인 면제)은 기관 관리 영역으로 본 화면에서 등록·노출되지 않습니다.</span></div>
+        </div>
+      </div>
+
+      <!-- ===== 이용요금·명세서 ===== -->
+      <div class="tab-content" data-tab-content="history">
+        <div class="grid grid-4 mb-6" style="gap: 14px;">
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.card.kpi.cnt.label">이번 달 충전 횟수</div>
+            <div class="stat-value"><span data-counter="14">0</span><span class="unit" data-i18n="charging.card.kpi.cnt.unit">회</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.card.kpi.amt.label">이번 달 충전량</div>
+            <div class="stat-value"><span data-counter="287">0</span><span class="unit">kWh</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.card.kpi.fee.label">이번 달 이용요금</div>
+            <div class="stat-value"><span data-counter="93589">0</span><span class="unit" data-i18n="charging.card.kpi.fee.unit">원</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="charging.card.kpi.point.label">적립 포인트</div>
+            <div class="stat-value" style="color: var(--color-accent-600);"><span data-counter="1870">0</span><span class="unit">P</span></div>
+          </div>
+        </div>
+
+        <!-- 필터바 (표준) — 선금/후불 통합: 결제구분 필터 -->
+        <div class="board-toolbar">
+          <div class="cf-flt">
+            <div class="fld"><label for="hCard">카드번호</label>
+              <select id="hCard"><option value="">전체</option><option>…4567 (12가 3456)</option><option>…7788 (34나 5678)</option></select></div>
+            <div class="fld"><label for="hSettle">정산구분</label>
+              <select id="hSettle"><option value="">전체</option><option>선불</option><option>후불</option></select></div>
+            <div class="fld"><label for="hMethod">결제수단</label>
+              <select id="hMethod"><option value="">전체</option><option>신용카드</option><option>간편결제</option><option>포인트</option><option>현장결제</option><option>선불충전권</option></select></div>
+            <div class="fld"><label for="hBusi">충전사업자</label>
+              <select id="hBusi"><option value="">전체</option><option>환경부(KECO)</option><option>한전(KEPCO)</option><option>GS차지비</option><option>SK일렉링크</option></select></div>
+            <div class="fld"><label for="hPeriod">기간</label>
+              <select id="hPeriod"><option value="m">당월</option><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option><option value="1y">최근 1년</option></select></div>
+            <div class="fld grow"><label for="hSearch">검색</label>
+              <input id="hSearch" type="text" placeholder="충전소명 검색"></div>
+            <button type="button" class="btn" id="hReset">초기화</button>
+          </div>
+        </div>
+
+        <div class="board-result-meta">
+          <div>2026년 06월 · 전체 <strong id="hCount">0</strong>건</div>
+          <div class="meta-aux"><button class="btn btn-secondary btn-sm" id="hExcel">엑셀 다운로드 (상세 포함)</button></div>
+        </div>
+
+        <div class="table-wrap" style="overflow-x:auto;">
+          <table class="data-table" id="hTable" style="min-width:920px;">
+            <thead>
+              <tr>
+                <th>일시</th><th>충전소명</th><th>카드(차량)</th><th>정산구분</th><th>결제수단</th><th>소요시간</th>
+                <th class="num">충전량(kWh)</th><th class="num">충전금액(원)</th><th class="num">결제금액(원)</th><th class="num">잔여(원)</th>
+              </tr>
+            </thead>
+            <tbody id="histBody"></tbody>
+            <tfoot id="histFoot"></tfoot>
+          </table>
+        </div>
+        <p class="cc-notes" style="margin-top:10px;">※ 행을 클릭하면 상세 명세서(영수증)를 확인할 수 있습니다. 엑셀 다운로드 시 상세 항목(충전기ID·시작/종료·적용단가·결제수단)까지 포함됩니다.</p>
+        <div class="pagination" data-total="8" data-current="1" style="margin-top: 20px;"></div>
+      </div>
+
+      <!-- ===== 충전 포인트 ===== -->
+      <div class="tab-content" data-tab-content="point">
+        <div class="grid mb-6" style="grid-template-columns: repeat(3, 1fr); gap: 14px;">
+          <div class="stat-card"><div class="stat-label">전체 포인트</div><div class="stat-value"><span data-counter="15480">0</span><span class="unit">P</span></div></div>
+          <div class="stat-card"><div class="stat-label">사용 포인트</div><div class="stat-value" style="color: var(--color-danger);"><span data-counter="3000">0</span><span class="unit">P</span></div></div>
+          <div class="stat-card"><div class="stat-label">잔여 포인트</div><div class="stat-value" style="color: var(--color-accent-600);"><span data-counter="12480">0</span><span class="unit">P</span></div></div>
+        </div>
+
+        <!-- 필터바 (표준) -->
+        <div class="board-toolbar">
+          <div class="cf-flt">
+            <div class="fld"><label for="pType">구분</label>
+              <select id="pType"><option value="">전체</option><option>적립</option><option>사용</option><option>이벤트</option></select></div>
+            <div class="fld"><label for="pPeriod">기간</label>
+              <select id="pPeriod"><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option><option value="1y">최근 1년</option></select></div>
+            <div class="fld grow"><label for="pSearch">검색</label>
+              <input id="pSearch" type="text" placeholder="충전소·내역 검색"></div>
+            <button type="button" class="btn" id="pReset">초기화</button>
+          </div>
+        </div>
+
+        <div class="board-result-meta">
+          <div>전체 <strong id="pCount">0</strong>건</div>
+          <div class="meta-aux"><button class="btn btn-secondary btn-sm" id="pExcel">엑셀저장</button></div>
+        </div>
+
+        <div class="table-wrap" style="overflow-x:auto;">
+          <table class="data-table" id="pTable" style="min-width:680px;">
+            <thead><tr><th>구분</th><th class="num">포인트</th><th>일시</th><th>유효기간</th><th>충전소·내역</th><th>충전시간</th></tr></thead>
+            <tbody id="pointBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" data-total="6" data-current="1" style="margin-top: 20px;"></div>
+
+        <div class="alert alert-info mt-6">
+          <div class="alert-icon"></div>
+          <div class="alert-body">
+            <strong data-i18n="charging.card.point.alert.title">포인트 적립 안내</strong>
+<span data-i18n="charging.card.point.alert.desc">            공공 충전소 2%, 민간 제휴 충전소 1.5% 적립. 유효기간은 적립일로부터 2년. 충전 결제 시 자동 우선 차감됩니다.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ===== 모달: 발급조회 / 분실신고 / 정보수정 ===== -->
+<div class="cc-modal-bd" id="ccModal" role="dialog" aria-modal="true" aria-labelledby="ccModalTitle">
+  <div class="cc-modal">
+    <div class="cc-modal-head">
+      <h3 id="ccModalTitle">제목</h3>
+      <button type="button" class="cc-modal-x" data-cc-close aria-label="닫기">✕</button>
+    </div>
+    <p class="cc-modal-sub" id="ccModalSub"></p>
+    <div id="ccModalBody"></div>
+    <div class="cc-modal-foot" id="ccModalFoot"></div>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* ===== 회원카드 허브 — 리스트 + 카드별 액션 + 결제카드 일괄등록 (소스 기반) =====
+   소스(nevro app/card·payment) 코드 매핑:
+   · CARD_TYPE: C 실물카드 / M 모바일카드 / T 실물카드(EV등록)  (※소스 T=가상T-money → 사용자 정의 라벨)
+   · 카드상태(LOSS_YN/STOP_YN, cardStCd 00발급·01정상·90일시정지·99해지): 정상/발급중/일시정지/분실/해지
+   · 발급상태(CARD_ISSUE_STAT, EVCS_CODE_DETAIL, 신규기본 0001): 0001 신청접수→0002 카드제작→0003 발송→0004 수령완료, 0009 반려
+   · 발급사유(ISSUE_REASON, 0005=기타): 신규(신차)/신규(중고)/분실/파손/기타
+   · 결제카드 일괄등록: 결제수단(신용·체크)을 보유 회원카드에 일괄 등록(updateCardPayMethod).
+     단 '실물카드(EV등록=한전등록회원)'·'결제실패 내역 카드'는 제외(2번째 이미지 규칙). */
+(function () {
+  'use strict';
+  function toast(m, t){ if (window.__toast) window.__toast(m, t||'info'); }
+
+  // 카드상태 → {label, chip class}
+  var CARD_STAT = {
+    normal:  { label:'정상',       cls:'st-normal' },
+    ship:    { label:'발급중',     cls:'st-ship' },
+    suspend: { label:'일시정지',   cls:'st-suspend' },
+    lost:    { label:'분실(정지)', cls:'st-lost' },
+    cancel:  { label:'해지',       cls:'st-cancel' },
+    temp:    { label:'임시번호',   cls:'st-temp' }
+  };
+  // 발급상태(CARD_ISSUE_STAT) → {label, step(1~4·반려0)}
+  var ISSUE_STAT = {
+    '0001': { label:'신청접수', step:1 },
+    '0002': { label:'카드제작', step:2 },
+    '0003': { label:'발송(등기)', step:3 },
+    '0004': { label:'수령완료', step:4 },
+    '0009': { label:'반려',     step:0 }
+  };
+  var STEP_LABELS = ['신청접수','카드제작','발송','수령완료'];
+
+  // 보유 카드(mock) — payCard/cardCorp/pointPay/kepco/payFail 추가, cardStat·issueStat 분리
+  var CARDS = [
+    { cardNo:'EVCD-2024-0123-4567', cardType:'실물카드', carNo:'12가 3456', carNm:'아이오닉6',
+      applyDate:'2024-03-05', issueDate:'2024-03-12', carNoApply:'12가 3456',
+      reason:'신규(신차)', issueMethod:'등기배송', shipZip:'03175', shipAddr:'서울특별시 종로구 세종대로 209', reqName:'홍길동',
+      cardStat:'normal', issueStat:'0004', payCard:'****-****-****-1234', cardCorp:'신한카드', pointPay:true, kepco:false, payFail:false,
+      stepDates:['2024-03-05','2024-03-08','2024-03-10','2024-03-12'] },
+    { cardNo:'EVCD-2026-0456-7788', cardType:'실물카드', carNo:'34나 5678', carNm:'EV6',
+      applyDate:'2026-06-16', issueDate:'—', carNoApply:'34나 5678',
+      reason:'신규(중고)', issueMethod:'등기배송', shipZip:'06236', shipAddr:'서울특별시 강남구 테헤란로 152', reqName:'홍길동',
+      cardStat:'ship', issueStat:'0003', payCard:'', cardCorp:'', pointPay:false, kepco:false, payFail:false,
+      stepDates:['2026-06-16','2026-06-18','2026-06-20','—'] },
+    { cardNo:'EVCD-2025-0789-0011', cardType:'모바일카드', carNo:'78라 9012', carNm:'레이 EV',
+      applyDate:'2025-09-01', issueDate:'2025-09-01', carNoApply:'78라 9012',
+      reason:'신규(신차)', issueMethod:'모바일 즉시발급', shipZip:'—', shipAddr:'모바일 EV이음앱(NFC)', reqName:'홍길동',
+      cardStat:'normal', issueStat:'0004', payCard:'****-****-****-9012', cardCorp:'국민카드', pointPay:true, kepco:false, payFail:true,
+      stepDates:['2025-09-01','2025-09-01','2025-09-01','2025-09-01'] },
+    { cardNo:'EVCD-2023-0555-3322', cardType:'실물카드(EV등록)', carNo:'90마 1357', carNm:'코나 일렉트릭',
+      applyDate:'2023-05-10', issueDate:'2023-05-18', carNoApply:'90마 1357',
+      reason:'기타', issueMethod:'등기배송', shipZip:'13529', shipAddr:'경기도 성남시 분당구 판교로 242', reqName:'홍길동',
+      cardStat:'normal', issueStat:'0004', payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', pointPay:false, kepco:true, payFail:false,
+      stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] }
+  ];
+
+  var body = document.getElementById('ccListBody');
+  var wrap = document.getElementById('ccListWrap');
+  var empty = document.getElementById('ccEmpty');
+
+  function mcVal(id){ var el=document.getElementById(id); return el ? el.value : ''; }
+  function filteredCards() {
+    var ty=mcVal('mcType'), st=mcVal('mcStat'), pay=mcVal('mcPay'), q=(mcVal('mcSearch')||'').trim().toLowerCase();
+    return CARDS.filter(function(c){
+      if (ty && c.cardType!==ty) return false;
+      if (st && c.cardStat!==st) return false;
+      if (pay==='y' && !c.payCard) return false;
+      if (pay==='n' && c.payCard) return false;
+      if (q && (c.cardNo+' '+c.carNo+' '+c.carNm).toLowerCase().indexOf(q)<0) return false;
+      return true;
+    });
+  }
+  function render() {
+    var rows = filteredCards();
+    var cnt = document.getElementById('mcCount'); if (cnt) cnt.textContent = rows.length;
+    if (!CARDS.length) { wrap.style.display='none'; empty.style.display='block'; return; }
+    wrap.style.display=''; empty.style.display='none';
+    if (!rows.length) { body.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 회원카드가 없습니다.</td></tr>'; return; }
+    body.innerHTML = rows.map(function (c, di) {
+      var i = CARDS.indexOf(c);
+      var s = CARD_STAT[c.cardStat] || { label:c.cardStat, cls:'st-cancel' };
+      var acts = [];
+      acts.push('<button class="btn btn-ghost btn-sm" data-act="check" data-i="'+i+'">발급조회</button>');
+      if (c.cardStat==='normal' || c.cardStat==='ship') acts.push('<button class="btn btn-ghost btn-sm" data-act="lost" data-i="'+i+'">분실신고</button>');
+      if (c.cardStat!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');
+      if (c.cardStat==='suspend' || c.cardStat==='lost') acts.push('<a class="btn btn-primary btn-sm" href="charging-card-apply.html?reason=lost">재발급</a>');
+      if (c.cardStat!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="cancel" data-i="'+i+'" style="color:var(--color-danger,#b5341f);">해지</button>');
+      var payHtml = c.payCard
+        ? '<strong style="color:var(--text-primary);">'+c.cardCorp+'</strong><br><small style="color:var(--text-tertiary);">'+c.payCard+'</small>'
+        : '<span style="color:var(--color-danger,#b5341f);">미등록</span>';
+      return '<tr>'
+        + '<td>'+(di+1)+'</td>'
+        + '<td class="cardno">'+c.cardNo+'</td>'
+        + '<td>'+c.cardType+'</td>'
+        + '<td><span class="carno">'+c.carNo+'</span><br><small style="color:var(--text-tertiary);">'+c.carNm+'</small></td>'
+        + '<td>'+payHtml+'</td>'
+        + '<td>'+(c.pointPay ? '<span class="st-chip st-normal">사용</span>' : '<span style="color:var(--text-tertiary);">미사용</span>')+'</td>'
+        + '<td><span class="st-chip '+s.cls+'">'+s.label+'</span></td>'
+        + '<td><div class="cch-acts">'+acts.join('')+'</div></td>'
+        + '</tr>';
+    }).join('');
+  }
+  // mycard 필터 바인딩
+  ['mcType','mcStat','mcPay'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('change', render); });
+  (function(){ var s=document.getElementById('mcSearch'); if(s) s.addEventListener('input', render);
+    var r=document.getElementById('mcReset'); if(r) r.addEventListener('click', function(){ ['mcType','mcStat','mcPay'].forEach(function(id){var e=document.getElementById(id); if(e)e.value='';}); var ss=document.getElementById('mcSearch'); if(ss)ss.value=''; render(); }); })();
+
+  /* ── 모달 헬퍼 ── */
+  var modal = document.getElementById('ccModal');
+  var mTitle = document.getElementById('ccModalTitle');
+  var mSub = document.getElementById('ccModalSub');
+  var mBody = document.getElementById('ccModalBody');
+  var mFoot = document.getElementById('ccModalFoot');
+  function openModal(title, sub, bodyHtml, footHtml) {
+    mTitle.textContent = title; mSub.textContent = sub || '';
+    mSub.style.display = sub ? '' : 'none';
+    mBody.innerHTML = bodyHtml; mFoot.innerHTML = footHtml || '';
+    modal.classList.add('open');
+  }
+  function closeModal(){ modal.classList.remove('open'); }
+  modal.addEventListener('click', function(e){ if (e.target===modal || e.target.hasAttribute('data-cc-close')) closeModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key==='Escape') closeModal(); });
+
+  /* ── 발급조회: 발급상태(CARD_ISSUE_STAT) 스텝퍼 + 발급조회 항목(1번째 이미지) ── */
+  function actCheck(c) {
+    var info = ISSUE_STAT[c.issueStat] || { label:c.issueStat, step:0 };
+    var cur = info.step;
+    var rejected = (c.issueStat === '0009');
+    var steps = STEP_LABELS.map(function (lb, idx) {
+      var n = idx+1;
+      var cls = (cur > 0 && n < cur) ? 'done' : (n === cur ? 'active' : 'todo');
+      var d = (c.stepDates && c.stepDates[idx]) ? c.stepDates[idx] : '';
+      return '<div class="cc-step '+cls+'"><div class="dot">'+((cur>0&&n<cur)?'✓':n)+'</div><div class="slabel">'+lb+'</div><div class="sdate">'+d+'</div></div>';
+    }).join('');
+    var stepperHtml = rejected
+      ? '<div class="alert" style="background:#fff6e8;border:1px solid #f1c27a;border-radius:10px;padding:14px 16px;"><strong style="color:#9a5b00;">반려</strong> — 신청 내용 확인이 필요해 반려되었습니다. 사유 확인 후 재신청해 주세요.</div>'
+      : '<div class="cc-steps">'+steps+'</div>';
+    var body = stepperHtml
+      + '<dl class="cc-kv" style="grid-template-columns:130px 1fr;">'
+      + '<dt>신청일자</dt><dd>'+c.applyDate+'</dd>'
+      + '<dt>카드번호</dt><dd>'+c.cardNo+'</dd>'
+      + '<dt>차량번호(유효)</dt><dd>'+c.carNo+'</dd>'
+      + '<dt>차량번호(신청시)</dt><dd>'+(c.carNoApply||c.carNo)+'</dd>'
+      + '<dt>발급방법</dt><dd>'+c.issueMethod+'</dd>'
+      + '<dt>발급상태</dt><dd>'+info.label+' <small style="color:var(--text-tertiary);font-weight:500;">(CARD_ISSUE_STAT '+c.issueStat+')</small></dd>'
+      + '<dt>발급요청사유</dt><dd>'+c.reason+'</dd>'
+      + '<dt>배송지</dt><dd>'+(c.shipZip && c.shipZip!=='—' ? '('+c.shipZip+') ' : '')+c.shipAddr+'</dd>'
+      + '<dt>회원카드</dt><dd>'+c.cardType+'</dd>'
+      + '</dl>';
+    openModal('회원카드/번호 발급조회', c.cardNo + ' · ' + c.carNo,
+      body, '<button class="btn btn-secondary" data-cc-close>닫기</button>');
+  }
+
+  /* ── 분실신고: ① 즉시 정지 → ② 재발급 ── */
+  function actLost(c, idx) {
+    function bodyFor(stopped) {
+      return '<div class="cc-lost-step'+(stopped?' muted':'')+'">'
+        + '<div><span class="n">1</span><strong>카드 즉시 정지</strong></div>'
+        + '<p style="margin:8px 0 0;color:var(--text-secondary);font-size:13.5px;">분실 카드를 즉시 정지하여 부정사용을 차단합니다. 정지 후에는 충전에 사용할 수 없습니다.</p>'
+        + (stopped ? '<p style="margin:8px 0 0;color:var(--color-primary-700);font-weight:700;">✔ 카드가 정지되었습니다.</p>' : '')
+        + '</div>'
+        + '<div class="cc-lost-step'+(stopped?'':' muted')+'" style="margin-top:10px;">'
+        + '<div><span class="n">2</span><strong>재발급 신청</strong></div>'
+        + '<p style="margin:8px 0 0;color:var(--text-secondary);font-size:13.5px;">발급요청사유 \'분실\'로 새 카드를 신청합니다. 배송지를 확인한 뒤 신청하면 발급조회에서 진행 상태를 추적할 수 있습니다.</p>'
+        + '</div>';
+    }
+    function footFor(stopped) {
+      return stopped
+        ? '<button class="btn btn-secondary" data-cc-close>나중에</button><a class="btn btn-primary" href="charging-card-apply.html?reason=lost">재발급 신청</a>'
+        : '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccLostStop">카드 정지하기</button>';
+    }
+    openModal('분실신고', c.cardNo + ' · ' + c.carNo, bodyFor(false), footFor(false));
+    var stopBtn = document.getElementById('ccLostStop');
+    if (stopBtn) stopBtn.addEventListener('click', function () {
+      c.cardStat = 'lost'; // 분실신고(정지)
+      render();
+      mBody.innerHTML = bodyFor(true); mFoot.innerHTML = footFor(true);
+      toast('카드가 정지되었습니다. 이어서 재발급을 신청할 수 있습니다.', 'success');
+    });
+  }
+
+  /* ── 정보수정: 배송지 + 연결 차량 ── */
+  function actEdit(c, idx) {
+    var body = '<div style="display:flex;flex-direction:column;gap:14px;">'
+      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">연결 차량번호</label>'
+      + '<input id="ccEditCar" class="form-input" type="text" value="'+c.carNo+'" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
+      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">배송지 우편번호</label>'
+      + '<input id="ccEditZip" class="form-input" type="text" value="'+c.shipZip+'" style="width:160px;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
+      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">배송지 주소</label>'
+      + '<input id="ccEditAddr" class="form-input" type="text" value="'+c.shipAddr+'" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
+      + '</div>';
+    openModal('카드 정보수정', c.cardNo,
+      body, '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccEditSave">저장</button>');
+    var saveBtn = document.getElementById('ccEditSave');
+    if (saveBtn) saveBtn.addEventListener('click', function () {
+      c.carNo = (document.getElementById('ccEditCar').value || c.carNo).trim();
+      c.shipZip = (document.getElementById('ccEditZip').value || c.shipZip).trim();
+      c.shipAddr = (document.getElementById('ccEditAddr').value || c.shipAddr).trim();
+      render(); closeModal();
+      toast('카드 정보가 수정되었습니다.', 'success');
+    });
+  }
+
+  /* ── 해지 ── */
+  function actCancel(c) {
+    openModal('회원카드 해지', c.cardNo,
+      '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">해당 회원카드를 해지하시겠습니까? 해지 후에는 충전에 사용할 수 없으며, 다시 사용하려면 신규 신청이 필요합니다.</p>',
+      '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccCancelOk" style="background:var(--color-danger,#b5341f);border-color:var(--color-danger,#b5341f);">해지하기</button>');
+    var ok = document.getElementById('ccCancelOk');
+    if (ok) ok.addEventListener('click', function () {
+      c.cardStat = 'cancel'; render(); closeModal();
+      toast('회원카드가 해지되었습니다.', 'info');
+    });
+  }
+
+  // 액션 위임
+  body.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act]'); if (!btn) return;
+    var c = CARDS[parseInt(btn.getAttribute('data-i'), 10)]; if (!c) return;
+    var act = btn.getAttribute('data-act');
+    if (act==='check') actCheck(c);
+    else if (act==='lost') actLost(c, btn.getAttribute('data-i'));
+    else if (act==='edit') actEdit(c, btn.getAttribute('data-i'));
+    else if (act==='cancel') actCancel(c);
+  });
+
+  /* ── 결제카드 일괄등록 (소스: 결제수단을 보유 회원카드에 일괄 등록) ── */
+  function eligibleForBatch(c){ return (c.cardStat==='normal' || c.cardStat==='ship') && !c.kepco && !c.payFail; }
+  function actBatch() {
+    var eligible = CARDS.filter(eligibleForBatch);
+    var excluded = CARDS.filter(function(c){ return !eligibleForBatch(c) && c.cardStat!=='cancel'; });
+    if (!eligible.length) { toast('일괄등록 가능한 회원카드가 없습니다.', 'warning'); return; }
+    var exNote = excluded.length
+      ? '<p style="margin:10px 0 0;font-size:12.5px;color:var(--color-danger,#b5341f);">※ 제외 '+excluded.length+'건 — 실물카드(EV등록=한전등록회원)·결제실패 내역 카드는 일괄등록되지 않습니다.</p>'
+      : '';
+    var body = '<p style="font-size:13.5px;color:var(--text-secondary);line-height:1.7;margin:0 0 14px;">보유 회원카드 중 <strong style="color:var(--text-primary);">'+eligible.length+'건</strong>에 동일한 결제카드(간편결제)를 한 번에 등록합니다.</p>'
+      + '<div style="display:flex;flex-direction:column;gap:12px;">'
+      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">카드사</label>'
+      + '<select id="ccBatchCorp" class="form-input" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"><option value="">선택</option><option>신한카드</option><option>국민카드</option><option>삼성카드</option><option>현대카드</option><option>롯데카드</option><option>BC카드</option><option>NH농협카드</option><option>하나카드</option></select></div>'
+      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">카드번호 (16자리, -제외)</label>'
+      + '<input id="ccBatchNo" class="form-input" type="text" inputmode="numeric" maxlength="16" placeholder="0000000000000000" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
+      + '<div style="display:flex;gap:10px;"><div style="flex:1;"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">유효기간 (MM/YY)</label>'
+      + '<input id="ccBatchExp" class="form-input" type="text" maxlength="5" placeholder="MM/YY" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div></div>'
+      + '</div>' + exNote;
+    openModal('결제카드 일괄등록', null, body,
+      '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccBatchOk">'+eligible.length+'건 등록</button>');
+    var ok = document.getElementById('ccBatchOk');
+    if (ok) ok.addEventListener('click', function () {
+      var corp = (document.getElementById('ccBatchCorp').value || '').trim();
+      var noVal = (document.getElementById('ccBatchNo').value || '').replace(/[^0-9]/g,'');
+      if (!corp) { toast('카드사를 선택해 주세요.', 'warning'); return; }
+      if (noVal.length < 15) { toast('카드번호를 정확히 입력해 주세요.', 'warning'); return; }
+      var masked = '****-****-****-' + noVal.slice(-4);
+      eligible.forEach(function(c){ c.payCard = masked; c.cardCorp = corp; });
+      render(); closeModal();
+      toast(eligible.length + '건에 결제카드가 일괄 등록되었습니다.' + (excluded.length ? ' (제외 ' + excluded.length + '건)' : ''), 'success');
+    });
+  }
+  var batchBtn = document.getElementById('ccBatchBtn');
+  if (batchBtn) batchBtn.addEventListener('click', actBatch);
+
+  // 데모: 빈 상태 토글
+  var demoOn = false, backup = null;
+  var demoBtn = document.getElementById('ccDemoToggle');
+  if (demoBtn) demoBtn.addEventListener('click', function () {
+    demoOn = !demoOn;
+    if (demoOn) { backup = CARDS.slice(); CARDS.length = 0; demoBtn.textContent = '보유 상태로 보기'; }
+    else { Array.prototype.push.apply(CARDS, backup); demoBtn.textContent = '빈 상태 미리보기'; }
+    render();
+  });
+
+  render();
+})();
+</script>
+<script>
+/* ===== 이용요금·명세서(history) + 충전 포인트(point) — 필터 + 상세(영수증) + 엑셀(상세 포함) =====
+   소스: 결제구분 PAY_KIND(1선불·2후불·3현장·4간편·5포인트) → 선금/후불 통합, 결제구분 필터. */
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function toast(m,t){ if(window.__toast) window.__toast(m, t||'info'); }
+  function won(n){ return Number(n).toLocaleString('ko-KR'); }
+  // 공용 모달(허브 #ccModal 재사용 — 닫기/백드롭/ESC는 허브 IIFE가 처리)
+  function openModal(title, sub, bodyHtml, footHtml){
+    $('ccModalTitle').textContent = title;
+    var subEl=$('ccModalSub'); subEl.textContent = sub||''; subEl.style.display = sub?'':'none';
+    $('ccModalBody').innerHTML = bodyHtml; $('ccModalFoot').innerHTML = footHtml||'';
+    $('ccModal').classList.add('open');
+  }
+  // 정산구분(선불/후불) · 결제수단(신용카드/간편결제/포인트/현장결제/선불충전권) — 별개 차원
+  function settleChip(s){ return '<span class="pay-chip '+(s==='선불'?'pk-pre':'pk-post')+'">'+s+'</span>'; }
+  var MC={ '신용카드':'pk-post','간편결제':'pk-easy','포인트':'pk-point','현장결제':'pk-field','선불충전권':'pk-pre' };
+  function mthdChip(m){ return '<span class="pay-chip '+(MC[m]||'pk-field')+'">'+m+'</span>'; }
+
+  /* ── 명세서 데이터(mock, 상세 포함) — settle(정산구분) + mthd(결제수단) 분리
+        소스 PAY_KIND(1선불/2후불/3현장/4간편/5포인트)를 정산시점·결제수단 2축으로 재구성 ── */
+  var HIST=[
+    {dt:'2026.06.22 08:15',end:'08:57',station:'환경부 강남구청',chargerId:'ME-0451',card:'…4567',car:'12가 3456',busi:'환경부(KECO)',dur:'0:42:31',kwh:24.5,unit:347.0,charge:8502,settle:'후불',mthd:'신용카드',method:'신한카드 ****-1234',payAmt:8502,bal:45390},
+    {dt:'2026.06.19 23:42',end:'04:00',station:'자택 (한전 심야)',chargerId:'KP-2210',card:'…4567',car:'12가 3456',busi:'한전(KEPCO)',dur:'4:18:05',kwh:32.8,unit:72.0,charge:2362,settle:'후불',mthd:'신용카드',method:'신한카드 ****-1234',payAmt:2362,bal:53892},
+    {dt:'2026.06.17 14:08',end:'14:30',station:'GS차지비 강남',chargerId:'PI-1188',card:'…4567',car:'12가 3456',busi:'GS차지비',dur:'0:21:47',kwh:18.2,unit:347.0,charge:6315,settle:'후불',mthd:'간편결제',method:'카카오페이',payAmt:6315,bal:56254},
+    {dt:'2026.06.14 19:33',end:'19:47',station:'SK시그넷 대치',chargerId:'ST-0922',card:'…4567',car:'12가 3456',busi:'SK일렉링크',dur:'0:13:52',kwh:45.6,unit:392.0,charge:19744,settle:'후불',mthd:'신용카드',method:'신한카드 ****-1234',payAmt:19744,bal:62569},
+    {dt:'2026.06.11 07:50',end:'11:42',station:'차지비 서초',chargerId:'PI-0345',card:'…4567',car:'12가 3456',busi:'GS차지비',dur:'3:52:10',kwh:28.3,unit:240.0,charge:6735,settle:'선불',mthd:'포인트',method:'포인트 6,735P 차감',payAmt:0,bal:82313},
+    {dt:'2026.06.07 13:20',end:'13:39',station:'환경부 양재',chargerId:'ME-0210',card:'…7788',car:'34나 5678',busi:'환경부(KECO)',dur:'0:19:10',kwh:15.1,unit:347.0,charge:5240,settle:'후불',mthd:'현장결제',method:'현장 신용카드',payAmt:5240,bal:0},
+    {dt:'2026.06.03 09:05',end:'09:25',station:'환경부 선릉',chargerId:'ME-0777',card:'…7788',car:'34나 5678',busi:'환경부(KECO)',dur:'0:19:44',kwh:20.0,unit:347.0,charge:6940,settle:'선불',mthd:'선불충전권',method:'선불 충전권 차감',payAmt:6940,bal:13060}
+  ];
+
+  function hVal(id){ var e=$(id); return e?e.value:''; }
+  function histRows(){
+    var card=hVal('hCard').split(' ')[0], settle=hVal('hSettle'), mthd=hVal('hMethod'), busi=hVal('hBusi'), q=(hVal('hSearch')||'').trim().toLowerCase();
+    return HIST.filter(function(r){
+      if(card && r.card!==card) return false;
+      if(settle && r.settle!==settle) return false;
+      if(mthd && r.mthd!==mthd) return false;
+      if(busi && r.busi!==busi) return false;
+      if(q && r.station.toLowerCase().indexOf(q)<0) return false;
+      return true;
+    });
+  }
+  function renderHist(){
+    if(!$('histBody')) return;
+    var rows=histRows();
+    $('hCount').textContent=rows.length;
+    $('histBody').innerHTML = rows.length ? rows.map(function(r){
+      return '<tr data-h="'+HIST.indexOf(r)+'">'
+        +'<td>'+r.dt+'</td><td>'+r.station+'</td><td>'+r.card+' ('+r.car+')</td>'
+        +'<td>'+settleChip(r.settle)+'</td><td>'+mthdChip(r.mthd)+'</td><td>'+r.dur+'</td>'
+        +'<td class="num">'+r.kwh.toFixed(1)+'</td><td class="num">'+won(r.charge)+'</td>'
+        +'<td class="num">'+won(r.payAmt)+'</td><td class="num">'+won(r.bal)+'</td></tr>';
+    }).join('') : '<tr><td colspan="10" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 내역이 없습니다.</td></tr>';
+    var sk=rows.reduce(function(a,r){return a+r.kwh;},0), sc=rows.reduce(function(a,r){return a+r.charge;},0), sp=rows.reduce(function(a,r){return a+r.payAmt;},0);
+    $('histFoot').innerHTML = rows.length ? '<tr style="background:var(--color-gray-50);font-weight:700;"><td colspan="6" style="text-align:center;">합 계</td><td class="num">'+sk.toFixed(1)+'</td><td class="num">'+won(sc)+'</td><td class="num">'+won(sp)+'</td><td></td></tr>' : '';
+  }
+  function openRcpt(r){
+    var body='<dl class="rcpt-kv">'
+      +'<dt>충전 일시</dt><dd>'+r.dt+' ~ '+r.end+'</dd>'
+      +'<dt>충전소</dt><dd>'+r.station+' <small style="color:var(--text-tertiary);">('+r.busi+')</small></dd>'
+      +'<dt>충전기 ID</dt><dd>'+r.chargerId+'</dd>'
+      +'<dt>카드(차량)</dt><dd>'+r.card+' ('+r.car+')</dd>'
+      +'<dt>소요시간</dt><dd>'+r.dur+'</dd>'
+      +'<dt>충전량</dt><dd>'+r.kwh.toFixed(1)+' kWh</dd>'
+      +'<dt>적용 단가</dt><dd>'+r.unit.toFixed(1)+' 원/kWh</dd>'
+      +'<dt>정산구분</dt><dd>'+settleChip(r.settle)+'</dd>'
+      +'<dt>결제수단</dt><dd>'+mthdChip(r.mthd)+' <small style="color:var(--text-tertiary);font-weight:500;">'+r.method+'</small></dd>'
+      +'</dl>'
+      +'<div class="rcpt-total"><span>충전금액</span><span>'+won(r.charge)+'원</span></div>'
+      +'<div class="rcpt-total" style="border-top:0;padding-top:2px;margin-top:2px;"><span style="font-weight:800;">결제금액</span><b>'+won(r.payAmt)+'원</b></div>';
+    openModal('상세 명세서 (영수증)', r.dt+' · '+r.station, body,
+      '<button class="btn btn-secondary" data-cc-close>닫기</button><button class="btn btn-primary" id="rcptDl">영수증 다운로드</button>');
+    var dl=$('rcptDl'); if(dl) dl.addEventListener('click',function(){ toast('영수증(PDF)을 다운로드합니다.','success'); });
+  }
+  if($('histBody')){
+    $('histBody').addEventListener('click',function(e){ var tr=e.target.closest('tr[data-h]'); if(tr) openRcpt(HIST[+tr.dataset.h]); });
+    ['hCard','hSettle','hMethod','hBusi','hPeriod'].forEach(function(id){ var e=$(id); if(e) e.addEventListener('change',renderHist); });
+    var hs=$('hSearch'); if(hs) hs.addEventListener('input',renderHist);
+    var hr=$('hReset'); if(hr) hr.addEventListener('click',function(){ ['hCard','hSettle','hMethod','hBusi'].forEach(function(id){var e=$(id);if(e)e.value='';}); $('hPeriod').value='m'; $('hSearch').value=''; renderHist(); });
+    var hx=$('hExcel'); if(hx) hx.addEventListener('click',function(){ toast(histRows().length+'건을 상세 항목(충전기ID·시작/종료·적용단가·결제수단) 포함하여 Excel로 저장합니다.','success'); });
+    renderHist();
+  }
+
+  /* ── 충전 포인트 ── */
+  var POINT=[
+    {type:'적립',amt:170,date:'2026.06.22',exp:'~2028.06.21',station:'환경부 강남구청',time:'08:15'},
+    {type:'적립',amt:47,date:'2026.06.19',exp:'~2028.06.18',station:'자택 (한전 심야)',time:'23:42'},
+    {type:'적립',amt:126,date:'2026.06.17',exp:'~2028.06.16',station:'GS차지비 강남',time:'14:08'},
+    {type:'적립',amt:395,date:'2026.06.14',exp:'~2028.06.13',station:'SK시그넷 대치',time:'19:33'},
+    {type:'사용',amt:-3000,date:'2026.05.28',exp:'-',station:'차지비 서초 (포인트 결제)',time:'16:40'},
+    {type:'이벤트',amt:5000,date:'2026.05.15',exp:'~2028.05.14',station:'신규가입 축하',time:'-'}
+  ];
+  var PCHIP={ '적립':'chip-success','사용':'chip-info','이벤트':'chip-warning' };
+  function pVal(id){ var e=$(id); return e?e.value:''; }
+  function pointRows(){
+    var ty=pVal('pType'), q=(pVal('pSearch')||'').trim().toLowerCase();
+    return POINT.filter(function(r){ if(ty&&r.type!==ty)return false; if(q&&r.station.toLowerCase().indexOf(q)<0)return false; return true; });
+  }
+  function renderPoint(){
+    if(!$('pointBody')) return;
+    var rows=pointRows();
+    $('pCount').textContent=rows.length;
+    $('pointBody').innerHTML = rows.length ? rows.map(function(r){
+      var amtC = r.amt<0 ? 'var(--color-danger)' : 'var(--color-primary-700)';
+      var amtT = (r.amt>0?'+':'') + won(r.amt) + 'P';
+      return '<tr><td><span class="chip '+(PCHIP[r.type]||'chip-info')+'">'+r.type+'</span></td>'
+        +'<td class="num" style="color:'+amtC+';">'+amtT+'</td><td>'+r.date+'</td><td>'+r.exp+'</td><td>'+r.station+'</td><td>'+r.time+'</td></tr>';
+    }).join('') : '<tr><td colspan="6" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 내역이 없습니다.</td></tr>';
+  }
+  if($('pointBody')){
+    ['pType','pPeriod'].forEach(function(id){ var e=$(id); if(e) e.addEventListener('change',renderPoint); });
+    var ps=$('pSearch'); if(ps) ps.addEventListener('input',renderPoint);
+    var pr=$('pReset'); if(pr) pr.addEventListener('click',function(){ $('pType').value=''; $('pPeriod').value='3m'; $('pSearch').value=''; renderPoint(); });
+    var px=$('pExcel'); if(px) px.addEventListener('click',function(){ toast(pointRows().length+'건을 Excel로 저장합니다.','success'); });
+    renderPoint();
+  }
+})();
+</script>
+<script>
+/* 탭 라우팅 (?tab=) — 구버전 apply/check 진입은 허브(mycard)로 흡수 */
+(function(){
+  var tab = new URL(location.href).searchParams.get('tab');
+  var map = { apply:'mycard', check:'mycard', mycard:'mycard', history:'history', point:'point' };
+  var target = map[tab];
+  if (target) { var btn = document.querySelector('#cardTabs .tab[data-tab="'+target+'"]'); if (btn) btn.click(); }
+})();
+</script>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>표지발급 이용신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/business-apply.css">
+<style>
+  .bf-radio-line { display:flex; gap:14px 28px; align-items:center; flex-wrap:wrap; }
+  .bf-radio-line label { display:inline-flex; gap:7px; align-items:center; white-space:nowrap; font-size:14px; margin:0; cursor:pointer; }
+  .bf-contact { display:flex; align-items:center; gap:18px; border:1px solid var(--border-light); border-radius:12px; padding:18px 24px; margin-top:14px; }
+  .bf-contact-ico { color:var(--color-secondary-600,#1f5fa8); flex:none; }
+  .bf-contact-body { font-size:14.5px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .bf-contact-body strong { font-size:16px; color:var(--text-primary); }
+  .bf-contact-item { color:var(--text-secondary); }
+  .bf-contact-item::before { content:'· '; color:var(--color-secondary-600,#1f5fa8); font-weight:700; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'mypage';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="mypage.html">마이페이지</a><span class="sep">›</span>
+        <a href="mypage.html#mp-business">업무지원시스템 이용신청</a><span class="sep">›</span>
+        <span class="current">표지발급 이용신청</span>
+      </nav>
+      <h1>표지발급 이용신청</h1>
+      <p class="hero-lead">표지발급 시스템 이용을 위한 <strong style="color:#fff;">회원구분·지역</strong> 정보를 등록하여 신청합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-narrow">
+      <!-- 개발자 확인용 신청 전/후 전환 (실서비스에서는 로그인 계정 상태로 분기) -->
+      <div class="bf-statetoggle-wrap">
+        <div class="bf-statetoggle" role="group" aria-label="개발자 확인용 전/후 전환">
+          <a href="business-apply-label.html" aria-current="page">신청 전</a>
+          <a href="business-status-label.html">신청 후</a>
+        </div>
+        <span class="bf-statetoggle-lab">개발자 확인용 (실서비스: 계정 상태로 분기)</span>
+      </div>
+
+      <form class="bf-card" onsubmit="alert('이용신청이 접수되었습니다. 승인 후 사용하실 수 있습니다.');location.href='mypage.html#mp-business';return false;">
+
+        <div style="padding-bottom:16px; border-bottom:1px solid var(--border-light); margin-bottom:18px; font-size:13.5px; line-height:1.8; color:var(--text-secondary);">
+          * 기관관리자 신청 후 소속기관 담당자는 대표기관 담당자, 대표기관 담당자는 공단에 승인 요청이 필요합니다.
+        </div>
+
+        <div class="bf-block">
+          <h3 class="bf-h">신청 정보</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">이름</span><input type="text" value="모비젠" readonly></label>
+            <label class="bf-row"><span class="bf-lab">아이디</span><input type="text" value="mobigen4" readonly></label>
+            <div class="bf-row bf-row-full"><span class="bf-lab">회원구분 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-radio-line">
+                <label><input type="radio" name="user_type" value="local" checked> 지자체</label>
+                <label><input type="radio" name="user_type" value="agent"> 상담원</label>
+                <label><input type="radio" name="user_type" value="admin"> 관리자</label>
+              </span>
+            </div>
+            <div class="bf-row bf-row-full" id="row_region"><span class="bf-lab">지역 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-inline" style="gap:10px;">
+                <select id="sidoSel" style="flex:1; min-width:200px;"><option>선택</option><option>서울특별시</option><option>부산광역시</option><option>대구광역시</option><option>인천광역시</option><option>광주광역시</option><option>대전광역시</option><option>울산광역시</option><option>세종특별자치시</option><option>제주특별자치도</option><option>경기도</option><option>강원도</option><option>충청북도</option><option>충청남도</option><option>전라북도</option><option>전라남도</option><option>경상북도</option><option>경상남도</option></select>
+                <select id="sigunguSel" style="flex:1; min-width:200px;"><option>선택</option></select>
+              </span>
+            </div>
+            <label class="bf-row"><span class="bf-lab">승인여부</span><input type="text" value="" readonly></label>
+            <label class="bf-row"><span class="bf-lab">신청일자</span><input type="text" value="" readonly></label>
+          </div>
+        </div>
+
+        <div class="bf-foot">
+          <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
+          <button type="submit" class="btn btn-primary">신청</button>
+        </div>
+      </form>
+
+      <div class="alert alert-info alert-inline" style="margin-top:24px;">
+        <div class="alert-icon"></div>
+        <div class="alert-body">신청 후 관리자 승인을 받아야 이용이 가능합니다.</div>
+      </div>
+      <div class="bf-contact">
+        <div class="bf-contact-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 1 3-3c0 1.6-1.2 2.2-1.2 3.4 0 .9 .5 1.6 1.2 1.6"/><rect x="4.5" y="17" width="15" height="3.2" rx="1.2"/></svg></div>
+        <div class="bf-contact-body"><strong>승인 요청</strong><span class="bf-contact-item">누리집콜센터 | 1661-0970</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function show(id, on){ var e=document.getElementById(id); if(e) e.style.display = on ? '' : 'none'; }
+  // 시도 → 시군구 (데모 매핑)
+  var SGG = {
+    '서울특별시':['종로구','중구','강남구','서초구','송파구','마포구'],
+    '부산광역시':['중구','해운대구','부산진구','금정구'],
+    '인천광역시':['중구','연수구','남동구','서구'],
+    '경기도':['수원시','성남시','고양시','용인시','부천시'],
+    '경상남도':['창원시','김해시','진주시','양산시'],
+    '제주특별자치도':['제주시','서귀포시']
+  };
+  function fillSgg(){
+    var s=document.getElementById('sidoSel').value, t=document.getElementById('sigunguSel');
+    var list=SGG[s]||[];
+    t.innerHTML='<option>선택</option>'+list.map(function(x){return '<option>'+x+'</option>';}).join('');
+  }
+  function update(){
+    var r=document.querySelector('input[name=user_type]:checked'); var v=r?r.value:'';
+    // 지자체만 지역(시도·시군구) 선택 / 상담원·관리자는 지역 행 없음
+    show('row_region', v==='local');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=user_type]'), function(r){ r.addEventListener('change', update); });
+  document.getElementById('sidoSel').addEventListener('change', fillSgg);
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무공해차 백과 | 정보 자료실 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/info.css">
+<style>
+  /* 백과 허브 — 탭별 하위 페이지를 iframe 으로 지연 로드(활성 탭 최초 진입 시에만 로드) */
+  .enc-frame { width: 100%; border: 0; display: block; min-height: 640px; background: #fff; }
+  .enc-loading { padding: 80px 0; text-align: center; color: var(--text-secondary, #6b7785); font-size: 14px; }
+  .tab-content[data-tab-content] { min-height: 200px; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'info';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html" data-i18n="info.bc.home">홈</a><span class="sep">›</span>
+        <a href="info.html" data-i18n="info.beginner.bc.lib">정보 자료실</a><span class="sep">›</span>
+        <span class="current" data-i18n="info.enc.bc.current">무공해차 백과</span>
+      </nav>
+      <h1 data-i18n="info.enc.h1">무공해차 백과</h1>
+      <p class="hero-lead" data-i18n-html="info.enc.lead">무공해차의 원리·종류·충전 방식부터 용어·초보자 가이드까지 <strong>한 곳에서 배우는 친환경 모빌리티 백과사전</strong>입니다.</p>
+    </div>
+  </section>
+
+  <nav class="tab-nav">
+    <div class="container container-wide">
+      <div class="tabs-pill" data-tabs id="encTabs">
+        <button class="tab active" data-tab="beginner" type="button" data-i18n="info.enc.tab.beginner">초보자 가이드</button>
+        <button class="tab" data-tab="ev" type="button" data-i18n="info.enc.tab.ev">전기차 소개</button>
+        <button class="tab" data-tab="h2" type="button" data-i18n="info.enc.tab.h2">수소차 소개</button>
+        <button class="tab" data-tab="battery" type="button" data-i18n="info.enc.tab.battery">배터리 정보</button>
+        <button class="tab" data-tab="glossary" type="button" data-i18n="info.enc.tab.glossary">용어사전</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+      <div class="tab-content active" data-tab-content="beginner">
+        <iframe class="enc-frame" title="초보자 가이드" data-src="info-beginner.html?embed=1" loading="lazy"></iframe>
+      </div>
+      <div class="tab-content" data-tab-content="ev">
+        <iframe class="enc-frame" title="전기차 소개" data-src="info-ev.html?embed=1" loading="lazy"></iframe>
+      </div>
+      <div class="tab-content" data-tab-content="h2">
+        <iframe class="enc-frame" title="수소차 소개" data-src="info-h2.html?embed=1" loading="lazy"></iframe>
+      </div>
+      <div class="tab-content" data-tab-content="battery">
+        <iframe class="enc-frame" title="배터리 정보" data-src="info-battery.html?embed=1" loading="lazy"></iframe>
+      </div>
+      <div class="tab-content" data-tab-content="glossary">
+        <iframe class="enc-frame" title="용어사전" data-src="info-glossary.html?embed=1" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-info.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+/* 백과 허브 — 탭 지연 로드 + iframe 자동 높이 */
+(function () {
+  function loadFrame(name) {
+    var c = document.querySelector('[data-tab-content="' + name + '"]');
+    if (!c) return;
+    var f = c.querySelector('iframe.enc-frame');
+    if (f && !f.getAttribute('src') && f.dataset.src) f.setAttribute('src', f.dataset.src);
+  }
+  // 현재 활성 탭(헤더 딥링크 ?tab= 반영 이후) 프레임을 최초 로드
+  var active = document.querySelector('#encTabs .tab.active');
+  loadFrame(active ? active.getAttribute('data-tab') : 'beginner');
+  // 탭 전환 시 해당 탭 프레임 지연 로드
+  document.querySelectorAll('#encTabs .tab').forEach(function (t) {
+    t.addEventListener('click', function () { loadFrame(t.getAttribute('data-tab')); });
+  });
+  // 자식(iframe, embed) 높이 수신 → 자동 리사이즈
+  window.addEventListener('message', function (e) {
+    if (!e.data || typeof e.data.encHeight !== 'number') return;
+    document.querySelectorAll('iframe.enc-frame').forEach(function (f) {
+      if (f.contentWindow === e.source) f.style.height = (e.data.encHeight + 2) + 'px';
+    });
+  });
+  // 자식 페이지 목차(앵커) 클릭 수신 → 부모 창을 해당 섹션으로 스크롤
+  window.addEventListener('message', function (e) {
+    if (!e.data || typeof e.data.encScrollTo !== 'number') return;
+    var frames = document.querySelectorAll('iframe.enc-frame');
+    for (var i = 0; i < frames.length; i++) {
+      if (frames[i].contentWindow === e.source) {
+        var base = frames[i].getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0);
+        var y = base + e.data.encScrollTo - 90; // 상단 헤더 여백 보정
+        window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
+        break;
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>

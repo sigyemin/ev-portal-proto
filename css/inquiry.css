@@ -1,0 +1,348 @@
+/* =======================================================
+   inquiry.css — 소통·지원 > 민원·문의 섹션 전용
+   ======================================================= */
+
+/* ===== Hub 5개 메뉴 카드 ===== */
+.inq-menus {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 18px; margin-top: 24px;
+}
+.inq-menu {
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: 16px; padding: 22px;
+  text-decoration: none; color: inherit;
+  transition: all var(--t-fast);
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative; overflow: hidden;
+}
+.inq-menu:hover { transform: translateY(-3px); border-color: var(--color-primary-400); box-shadow: 0 12px 28px rgba(15,23,42,0.08); }
+.inq-menu .im-top { display: flex; justify-content: space-between; align-items: start; }
+.inq-menu .im-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.inq-menu.scheme-blue .im-icon { background: var(--color-secondary-50); color: var(--color-secondary-700); }
+.inq-menu.scheme-orange .im-icon { background: #FFF3E0; color: #E8760A; }
+.inq-menu.scheme-red .im-icon { background: #FEF0F0; color: #DC2626; }
+.inq-menu.scheme-purple .im-icon { background: #EEF2FF; color: #4F46E5; }
+.inq-menu .im-badge {
+  font-size: 11px; font-weight: 700; padding: 3px 9px;
+  border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary-800);
+}
+.inq-menu h3 { font-size: 18px; margin-top: 6px; letter-spacing: -0.02em; }
+.inq-menu p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; flex-grow: 1; }
+.inq-menu .im-metric {
+  margin-top: 8px; padding-top: 12px;
+  border-top: 1px dashed var(--border-light);
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: var(--color-gray-600); font-weight: 600;
+}
+.inq-menu .im-metric strong { color: var(--color-primary-700); font-weight: 700; }
+
+/* ===== FAQ ===== */
+.faq-topbar {
+  background: linear-gradient(135deg, rgba(26,173,108,0.05), rgba(44,123,229,0.05));
+  border-radius: 16px; padding: 28px;
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: center;
+}
+.faq-search-lg {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; padding: 4px 4px 4px 18px;
+  border: 1px solid var(--border-light); border-radius: 999px;
+}
+.faq-search-lg input {
+  flex: 1; border: none; font-size: 14px; padding: 10px 0;
+  background: transparent; outline: none;
+}
+.faq-search-lg .btn { padding: 9px 22px; border-radius: 999px; }
+.faq-suggest {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+}
+.faq-suggest span { font-size: 11.5px; color: var(--color-gray-500); font-weight: 600; margin-right: 4px; align-self: center; }
+.faq-suggest a {
+  padding: 4px 11px; font-size: 12px; font-weight: 600;
+  background: #fff; border: 1px solid var(--border-light);
+  color: var(--color-gray-700); border-radius: 999px;
+  text-decoration: none; transition: all var(--t-fast);
+}
+.faq-suggest a:hover { border-color: var(--color-primary-400); color: var(--color-primary-700); }
+
+.faq-categories {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+  margin-top: 28px;
+}
+.faq-cat {
+  padding: 16px 10px; text-align: center;
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: 12px; cursor: pointer;
+  transition: all var(--t-fast);
+}
+.faq-cat:hover, .faq-cat.active {
+  border-color: var(--color-primary-500);
+  background: var(--color-primary-50);
+}
+.faq-cat.active { box-shadow: 0 0 0 3px rgba(26,173,108,0.1); }
+.faq-cat .fc-ico { color: var(--color-primary-600); margin: 0 auto 6px; display: block; }
+.faq-cat .fc-name { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+.faq-cat .fc-count { font-size: 11px; color: var(--color-gray-500); margin-top: 2px; }
+
+.faq-list {
+  display: flex; flex-direction: column; gap: 8px; margin-top: 22px;
+}
+.faq-item {
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color var(--t-fast);
+}
+.faq-item.open { border-color: var(--color-primary-400); box-shadow: 0 4px 16px rgba(15,23,42,0.06); }
+.faq-item summary {
+  list-style: none; cursor: pointer;
+  padding: 16px 20px;
+  display: grid; grid-template-columns: 42px 72px 1fr auto;
+  gap: 12px; align-items: center;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-q-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--color-primary-500); color: #fff;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 15px; letter-spacing: -0.03em;
+}
+.faq-q-cat {
+  font-size: 12px; font-weight: 700; color: var(--color-gray-600);
+  padding: 4px 9px; background: var(--color-gray-100);
+  border-radius: 6px; text-align: center; letter-spacing: -0.01em;
+}
+.faq-q-text {
+  font-size: 15px; font-weight: 600; letter-spacing: -0.015em;
+  color: var(--text-primary); line-height: 1.55;
+}
+.faq-chev {
+  width: 24px; height: 24px;
+  border-radius: 50%; background: var(--color-gray-50);
+  display: grid; place-items: center;
+  color: var(--color-gray-500);
+  transition: transform var(--t-fast);
+}
+.faq-item.open .faq-chev { transform: rotate(180deg); color: var(--color-primary-700); background: var(--color-primary-50); }
+.faq-answer {
+  padding: 0 20px 20px 20px;
+  display: grid; grid-template-columns: 42px 1fr;
+  gap: 12px; align-items: start;
+}
+.faq-a-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--color-accent-500); color: #fff;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 15px;
+}
+.faq-a-body {
+  padding: 16px 18px; background: var(--color-gray-50);
+  border-radius: 10px;
+  font-size: 14.5px; line-height: 1.8; color: var(--text-secondary);
+}
+.faq-a-body strong { color: var(--text-primary); }
+.faq-a-body ul { margin: 6px 0 6px 18px; padding: 0; }
+.faq-a-body ul li { margin-bottom: 3px; }
+.faq-a-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px; padding-top: 10px;
+  border-top: 1px dashed var(--border-light);
+  font-size: 12px;
+}
+.faq-a-foot .helpful {
+  display: flex; gap: 6px;
+}
+.faq-a-foot .helpful button {
+  padding: 4px 10px; font-size: 11.5px; font-weight: 600;
+  background: #fff; border: 1px solid var(--border-light);
+  color: var(--color-gray-700); border-radius: 999px; cursor: pointer;
+}
+.faq-a-foot .helpful button:hover { border-color: var(--color-primary-400); color: var(--color-primary-700); }
+
+/* ===== 질의응답 게시판 ===== */
+/* 툴바는 board.css의 .board-toolbar를 사용 */
+.qna-item {
+  display: grid; grid-template-columns: 72px 1fr 110px 110px 120px 90px;
+  gap: 10px; align-items: center;
+  padding: 14px 18px;
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: 10px;
+  cursor: pointer; transition: all var(--t-fast);
+}
+.qna-item:hover { border-color: var(--color-primary-300); transform: translateX(2px); }
+.qna-item .qi-num { font-size: 12.5px; color: var(--color-gray-500); font-weight: 600; text-align: center; }
+.qna-item .qi-title {
+  font-size: 14.5px; font-weight: 600; letter-spacing: -0.015em;
+  display: flex; align-items: center; gap: 8px;
+  line-height: 1.55;
+}
+.qna-item .qi-title strong { color: var(--text-primary); }
+.qna-item .qi-cat { font-size: 13px; color: var(--color-gray-600); font-weight: 600; }
+.qna-item .qi-author { font-size: 13px; color: var(--color-gray-600); }
+.qna-item .qi-date { font-size: 12.5px; color: var(--color-gray-500); }
+.qna-item .qi-state {
+  font-size: 12px; padding: 4px 11px; border-radius: 999px;
+  font-weight: 700; text-align: center;
+}
+.qna-item .qi-state.done { background: var(--color-primary-50); color: var(--color-primary-700); }
+.qna-item .qi-state.pending { background: #FFF7E8; color: var(--color-accent-600); }
+.qna-item .qi-state.closed { background: var(--color-gray-100); color: var(--color-gray-700); }
+.reply-tag {
+  font-size: 11px; font-weight: 700; padding: 2px 7px;
+  background: var(--color-secondary-50); color: var(--color-secondary-700);
+  border-radius: 4px;
+}
+
+/* ===== 민원 상세 카드 ===== */
+.complaint-form-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px;
+}
+.severity-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.severity-card {
+  padding: 14px 16px; border: 1px solid var(--border-light);
+  border-radius: 10px; cursor: pointer;
+  transition: all var(--t-fast);
+  background: #fff;
+}
+.severity-card:hover { border-color: var(--color-primary-400); }
+.severity-card.selected {
+  border-color: var(--color-primary-500);
+  background: var(--color-primary-50);
+  box-shadow: 0 0 0 3px rgba(26,173,108,0.1);
+}
+.severity-card input { display: none; }
+.severity-card .sev-label { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+.severity-card .sev-desc { font-size: 11px; color: var(--color-gray-500); margin-top: 3px; }
+
+/* ===== 처리 현황 타임라인 ===== */
+.status-timeline {
+  position: relative;
+  padding-left: 24px;
+  margin-top: 16px;
+}
+.status-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 6px; bottom: 6px;
+  width: 2px; background: var(--border-light);
+}
+.status-step {
+  position: relative;
+  padding: 10px 14px 16px 14px;
+  margin-bottom: 6px;
+}
+.status-step::before {
+  content: '';
+  position: absolute;
+  left: -24px; top: 14px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--color-gray-300);
+}
+.status-step.done::before {
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 4px rgba(26,173,108,0.15);
+}
+.status-step.current::before {
+  background: var(--color-accent-500);
+  border-color: var(--color-accent-500);
+  box-shadow: 0 0 0 4px rgba(255,154,46,0.18);
+  animation: tl-pulse 1.8s ease-in-out infinite;
+}
+@keyframes tl-pulse {
+  0%,100% { box-shadow: 0 0 0 4px rgba(255,154,46,0.18); }
+  50% { box-shadow: 0 0 0 8px rgba(255,154,46,0.08); }
+}
+.status-step .st-time { font-size: 11.5px; color: var(--color-gray-500); font-weight: 600; }
+.status-step .st-title { font-size: 14px; font-weight: 700; margin-top: 2px; letter-spacing: -0.01em; }
+.status-step.current .st-title { color: var(--color-accent-600); }
+.status-step .st-desc { font-size: 12.5px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+.status-step .st-meta {
+  display: inline-block;
+  margin-top: 6px; font-size: 11.5px;
+  color: var(--color-gray-600); font-weight: 600;
+  padding: 3px 8px; background: var(--color-gray-100);
+  border-radius: 6px;
+}
+
+/* ===== 부적정집행 신고 - 방패/보호 강조 ===== */
+.report-hero {
+  background: linear-gradient(135deg, #FEF0F0 0%, #FFF 100%);
+  border: 1px solid rgba(239,68,68,0.15);
+  border-radius: 16px;
+  padding: 28px;
+  display: grid; grid-template-columns: 1fr auto; gap: 20px;
+  align-items: center;
+}
+.report-hero .rh-ico {
+  width: 72px; height: 72px; border-radius: 16px;
+  background: #fff;
+  display: grid; place-items: center;
+  color: var(--color-danger);
+  box-shadow: 0 4px 16px rgba(239,68,68,0.15);
+}
+.report-hero h3 { font-size: 22px; letter-spacing: -0.02em; color: var(--color-danger); }
+.report-hero p { font-size: 13.5px; line-height: 1.7; color: var(--text-secondary); margin-top: 6px; max-width: 640px; }
+
+.report-types {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-top: 20px;
+}
+.report-type {
+  padding: 14px; background: #fff;
+  border: 1px solid var(--border-light); border-radius: 10px;
+}
+.report-type h4 { font-size: 13.5px; font-weight: 700; }
+.report-type p { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; line-height: 1.55; }
+
+/* ===== 민원 현황 조회 ===== */
+.status-search-card {
+  background: linear-gradient(135deg, var(--color-primary-50), #fff);
+  border: 1px solid rgba(26,173,108,0.15);
+  border-radius: 16px; padding: 24px;
+}
+.status-result-card {
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: 12px; padding: 20px;
+}
+.status-summary {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px;
+  margin-bottom: 20px;
+}
+.status-summary .ss-tile {
+  padding: 12px; border-radius: 10px;
+  text-align: center;
+}
+.status-summary .ss-tile.received { background: var(--color-gray-50); }
+.status-summary .ss-tile.progress { background: #FFF7E8; }
+.status-summary .ss-tile.done { background: var(--color-primary-50); }
+.status-summary .ss-tile.overdue { background: #FEF0F0; }
+.status-summary .ss-num { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+.status-summary .ss-label { font-size: 11.5px; color: var(--color-gray-600); font-weight: 700; margin-top: 2px; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1080px) {
+  .inq-menus { grid-template-columns: repeat(2, 1fr); }
+  .faq-topbar { grid-template-columns: 1fr; }
+  .faq-categories { grid-template-columns: repeat(3, 1fr); }
+  .complaint-form-grid { grid-template-columns: 1fr; }
+  .report-types { grid-template-columns: repeat(2, 1fr); }
+  .qna-item { grid-template-columns: 1fr auto; }
+  .qna-item .qi-num, .qna-item .qi-cat, .qna-item .qi-author, .qna-item .qi-date { display: none; }
+  .report-hero { grid-template-columns: 1fr; text-align: left; }
+  .status-summary { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .inq-menus { grid-template-columns: 1fr; }
+  .faq-categories { grid-template-columns: repeat(2, 1fr); }
+  .severity-row { grid-template-columns: 1fr; }
+  .faq-item summary { grid-template-columns: 32px 1fr auto; }
+  .faq-q-cat { display: none; }
+}

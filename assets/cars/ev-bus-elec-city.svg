@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg-bus" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EBF5FF"/>
+      <stop offset="1" stop-color="#D1E7FF"/>
+    </linearGradient>
+    <linearGradient id="body-bus" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E3F2FD"/>
+      <stop offset="1" stop-color="#90CAF9"/>
+    </linearGradient>
+    <linearGradient id="glass-bus" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#BBDEFB" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#64B5F6" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="180" fill="url(#bg-bus)"/>
+  <ellipse cx="160" cy="148" rx="120" ry="6" fill="#000" opacity="0.08"/>
+  <!-- 대형 저상버스 (일렉시티) 실루엣 -->
+  <path d="M30,144 L30,78 Q30,64 46,64 L262,64 Q290,66 296,86 L302,120 L302,140 Q302,144 296,144 L264,144 L264,142 A20 20 0 0 0 224,142 L224,144 L100,144 L100,142 A20 20 0 0 0 60,142 L60,144 Z"
+        fill="url(#body-bus)" stroke="#1976D2" stroke-width="0.6"/>
+  <!-- 운전석 유리 -->
+  <path d="M274,84 L296,92 L296,108 L274,108 Z" fill="url(#glass-bus)"/>
+  <!-- 측면 창 (6개) -->
+  <g fill="url(#glass-bus)" stroke="#1976D2" stroke-width="0.4">
+    <rect x="42" y="78" width="34" height="26" rx="2"/>
+    <rect x="80" y="78" width="34" height="26" rx="2"/>
+    <rect x="118" y="78" width="34" height="26" rx="2"/>
+    <rect x="156" y="78" width="34" height="26" rx="2"/>
+    <rect x="194" y="78" width="34" height="26" rx="2"/>
+    <rect x="232" y="78" width="34" height="26" rx="2"/>
+  </g>
+  <!-- 중문 (Middle door) -->
+  <rect x="118" y="106" width="34" height="36" fill="#1976D2" opacity="0.3"/>
+  <rect x="118" y="106" width="34" height="36" fill="none" stroke="#1976D2" stroke-width="0.6"/>
+  <line x1="135" y1="108" x2="135" y2="140" stroke="#1976D2" stroke-width="0.5"/>
+  <!-- 전조등 -->
+  <rect x="292" y="118" width="8" height="6" rx="1" fill="#FFE58A"/>
+  <!-- 후미등 -->
+  <rect x="32" y="118" width="6" height="6" rx="1" fill="#FF5A5A"/>
+  <!-- 바퀴 -->
+  <circle cx="80" cy="144" r="16" fill="#1E293B"/>
+  <circle cx="80" cy="144" r="9" fill="#334155"/>
+  <circle cx="80" cy="144" r="3" fill="#CBD5E1"/>
+  <circle cx="244" cy="144" r="16" fill="#1E293B"/>
+  <circle cx="244" cy="144" r="9" fill="#334155"/>
+  <circle cx="244" cy="144" r="3" fill="#CBD5E1"/>
+  <!-- EV 노선 뱃지 -->
+  <rect x="46" y="108" width="64" height="10" rx="2" fill="#1AAD6C"/>
+  <text x="78" y="116" text-anchor="middle" font-family="Pretendard, Arial" font-size="7" font-weight="700" fill="#fff">EV 전기버스</text>
+  <!-- 상부 루프 라인 -->
+  <path d="M30,74 L296,74" stroke="#1976D2" stroke-width="0.8" opacity="0.5"/>
+</svg>

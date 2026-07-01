@@ -1,0 +1,264 @@
+/* =======================================================
+   board.css — 소통·지원 섹션 공통 게시판 레이아웃
+   (알림·공지 · 민원·문의 전체 페이지 공통 적용)
+   ======================================================= */
+
+/* ===== 상단 툴바 — 필터 + 검색 + 주요 액션 ===== */
+.board-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.board-toolbar-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;  /* 데스크톱에서는 한 줄 유지 */
+  flex: 1;
+  min-width: 0;  /* 내부 flex 아이템 축소 허용 */
+}
+
+.board-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;  /* 액션 버튼 영역 축소 금지 */
+}
+
+/* 툴바 내 공통 폼 컨트롤 — 동일한 높이 (42px) · 가독성 업 */
+.board-toolbar .form-select,
+.board-toolbar .board-search input {
+  height: 42px;
+  font-size: 15px;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 40px;
+}
+
+.board-toolbar .form-select {
+  width: auto;          /* 자연 너비 */
+  min-width: 140px;     /* 너무 좁지 않게 */
+  max-width: 180px;     /* 너무 넓지 않게 */
+  padding: 0 32px 0 12px;
+  border-radius: 8px;
+  flex-shrink: 0;       /* Select는 축소하지 않음 */
+}
+
+/* 검색 박스 — 남는 공간을 차지하되 상한선 유지 */
+.board-search {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 200px;
+  max-width: 340px;
+  height: 42px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0 4px 0 12px;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.board-search:focus-within {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 3px rgba(26,173,108,0.08);
+}
+.board-search .search-ico {
+  width: 16px; height: 16px;
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+.board-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  color: var(--text-primary);
+  min-width: 0;
+}
+.board-search input::placeholder { color: var(--color-gray-400); }
+.board-search button {
+  border: none;
+  background: var(--color-primary-500);
+  color: #fff;
+  border-radius: 6px;
+  padding: 0 18px;
+  height: 34px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--t-fast);
+}
+.board-search button:hover { background: var(--color-primary-600); }
+
+/* 툴바 액션 버튼 — 모두 동일한 42px 높이 */
+.board-toolbar-actions .btn {
+  height: 42px;
+  padding: 0 20px;
+  font-size: 15px;
+  border-radius: 8px;
+}
+.board-toolbar-actions .btn-primary { padding: 0 22px; }
+
+/* ===== 결과 메타 (전체 N건 + 우측 보조 문구) ===== */
+.board-result-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 4px 14px;
+  font-size: 15.5px;
+  color: var(--text-secondary);
+}
+.board-result-meta strong { color: var(--color-primary-700); font-weight: 700; }
+.board-result-meta .meta-aux {
+  font-size: 14px;
+  color: var(--color-gray-500);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.board-result-meta .view-toggle {
+  display: inline-flex;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.board-result-meta .view-toggle button {
+  height: 30px;
+  width: 34px;
+  border: none;
+  background: #fff;
+  color: var(--color-gray-500);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid var(--border-light);
+  transition: all var(--t-fast);
+}
+.board-result-meta .view-toggle button:last-child { border-right: none; }
+.board-result-meta .view-toggle button.active {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+.board-result-meta .view-toggle button:hover:not(.active) {
+  background: var(--color-gray-50);
+  color: var(--color-gray-700);
+}
+
+/* ===== 빈 결과 ===== */
+.board-empty {
+  padding: 60px 24px;
+  text-align: center;
+  background: var(--color-gray-50);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+.board-empty svg { color: var(--color-gray-400); margin-bottom: 12px; }
+.board-empty h4 { font-size: 18px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.015em; }
+.board-empty p { font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
+
+/* ===== 페이지네이션 — 항상 중앙 정렬, 넓은 간격 ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 28px;
+  padding: 16px 0;
+}
+.pagination button {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  background: #fff;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14.5px;
+  transition: all var(--t-fast);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pagination button:hover:not(:disabled):not(.active) {
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+}
+.pagination button.active {
+  background: var(--color-primary-500);
+  color: #fff;
+  border-color: var(--color-primary-500);
+}
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+/* first/prev/next/last 구분 */
+.pagination button[data-p="first"],
+.pagination button[data-p="last"] {
+  margin: 0 2px;
+}
+.pagination button[data-p="prev"] { margin-right: 6px; }
+.pagination button[data-p="next"] { margin-left: 6px; }
+
+/* ===== 반응형 ===== */
+@media (max-width: 1100px) {
+  /* 좁아질 때 필터만 wrap 허용 */
+  .board-toolbar-filters { flex-wrap: wrap; }
+  .board-search { max-width: none; min-width: 240px; }
+}
+@media (max-width: 960px) {
+  .board-toolbar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+  .board-toolbar-actions { width: 100%; justify-content: stretch; }
+  .board-toolbar-actions .btn { flex: 1; }
+  .board-search { width: 100%; max-width: none; }
+  .board-toolbar-filters .form-select { flex: 1 1 auto; min-width: 120px; max-width: none; }
+  .board-result-meta { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+@media (max-width: 640px) {
+  .board-toolbar-filters .form-select { flex: 1 1 calc(50% - 4px); }
+  .pagination button { min-width: 32px; height: 32px; font-size: 12px; padding: 0 6px; }
+  .pagination button[data-p="first"], .pagination button[data-p="last"] { display: none; }
+}
+
+/* v0.12 [10] 필터 라벨 상단 표준화 (subsidy-region 상세조회필터 패턴과 통일) */
+.board-toolbar-filters { align-items: flex-end; }
+.board-toolbar-filters .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; min-width: 0; }
+.board-toolbar-filters .form-group .form-label { margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+
+/* 표준 게시판 — 머리글 클릭 정렬 (기본 → 내림 → 올림 순환) */
+.board-table th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+.board-table th.sortable::after { content: ' ↕'; color: #9aa3af; font-size: 12px; font-weight: 400; }
+.board-table th.sort-desc::after { content: ' ↓'; color: var(--color-primary-600); }
+.board-table th.sort-asc::after { content: ' ↑'; color: var(--color-primary-600); }
+.board-table th.sortable:hover { color: var(--color-primary-700); }
+/* 표준 게시판 — 하단 글쓰기/등록 버튼 영역 */
+.board-actions-bottom { display: flex; justify-content: flex-end; margin-top: 16px; }
+/* 표준 게시판 — 다운로드 버튼(일반자료실 버튼) 전 게시판 통일 */
+.board-table .lib-dl-btn {
+  padding: 6px 14px; font-size: 13px; line-height: 1.2; border-radius: 8px;
+  border: 1px solid var(--color-primary-300, #9fd3bb); background: #fff;
+  color: var(--color-primary-700, #0f6e56); font-weight: 700; cursor: pointer;
+  white-space: nowrap; font-family: inherit;
+}
+.board-table .lib-dl-btn:hover { background: var(--color-primary-50, #eefaf4); border-color: var(--color-primary-500, #15a86b); }
+/* 표준 게시판 — 작성자 열 */
+.board-table th.writer { width: 132px; text-align: center; white-space: nowrap; }
+.board-table td.writer { width: 132px; text-align: center; white-space: normal; word-break: keep-all; color: var(--text-secondary, #5a6675); font-size: 14px; }

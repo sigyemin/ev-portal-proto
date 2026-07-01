@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>회원카드 신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/screens-v2.css">
+<link rel="stylesheet" href="css/board.css">
+<style>
+  /* 안내 카드 3종 (상단 통합) */
+  .cc-info-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .cc-info-cards .info-side-card { margin:0; }
+  @media (max-width:760px){ .cc-info-cards { grid-template-columns:1fr; } }
+  /* 발급조회 필터 */
+  .cc-check-filter { display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; padding:18px; background:var(--color-gray-50,#f7f8fa); border:1px solid var(--border-light); border-radius:12px; margin:14px 0; }
+  .cc-check-filter label { font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:5px; }
+  .cc-check-filter select { height:42px; min-width:180px; padding:0 12px; border:1px solid var(--border-medium); border-radius:8px; font-size:13.5px; font-family:inherit; background:#fff; }
+  .cc-tabs { display:flex; gap:0; border-bottom:2px solid var(--border-light); margin-bottom:20px; }
+  .cc-tab { padding:12px 22px; border:none; background:none; font-size:15.5px; font-weight:700; color:var(--text-tertiary); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; }
+  .cc-tab.active { color:var(--color-primary-700); border-bottom-color:var(--color-primary-600); }
+  .cc-req-note { text-align:right; font-size:13px; color:var(--text-secondary); margin:0 0 8px; }
+  .cc-req-note b { color:var(--color-secondary-700); }
+  .cc-inline { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .cc-inline .form-input, .cc-inline .form-select { flex:1; min-width:0; }
+  .cc-mini-btn { white-space:nowrap; padding:10px 16px; background:var(--color-gray-700); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+  .cc-mini-btn:hover { background:var(--color-gray-800); }
+  .cc-check { display:inline-flex; align-items:center; gap:7px; font-size:13.5px; color:var(--text-secondary); white-space:nowrap; }
+  .cc-notes { font-size:12.5px; color:var(--text-tertiary); line-height:1.75; margin:6px 0 0; }
+  .cc-notes li { margin:0; }
+  .cc-fixed { display:inline-flex; align-items:center; height:44px; padding:0 14px; background:var(--color-gray-100); border:1px solid var(--border-light); border-radius:8px; font-size:14.5px; color:var(--text-secondary); font-weight:600; }
+  .cc-field { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
+  .cc-field > label { font-size:14px; font-weight:700; }
+  .cc-field .req { color:var(--color-secondary-600); }
+  .cc-field .form-input, .cc-field .form-select { height:44px; padding:0 14px; border:1px solid var(--border-light); border-radius:8px; font-size:14.5px; background:#fff; font-family:inherit; width:100%; }
+  .cc-field .form-input[readonly] { background:var(--color-gray-100); color:var(--text-secondary); }
+  .cc-field .form-input:focus, .cc-field .form-select:focus { outline:2px solid var(--color-primary-500); outline-offset:1px; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb">
+        <a href="index.html">홈</a><span class="sep">›</span>
+        <a href="#">회원카드</a><span class="sep">›</span>
+        <a href="#">회원카드 신청</a><span class="sep">›</span>
+        <span class="current">회원카드 신청</span>
+      </nav>
+      <h1>회원카드 신청</h1>
+      <p class="hero-lead">환경부 무공해차 <strong style="color:#fff;">통합 회원카드</strong>를 신청하고 발급 상태를 조회합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <div style="max-width:980px;">
+          <!-- 탭 -->
+          <div class="cc-tabs" role="tablist">
+            <button type="button" class="cc-tab active" data-cctab="apply" role="tab" aria-selected="true">회원카드/번호 신청서</button>
+            <button type="button" class="cc-tab" data-cctab="check" role="tab" aria-selected="false">회원카드/번호 발급조회</button>
+          </div>
+
+          <!-- ===== 신청서 ===== -->
+          <div data-ccpanel="apply">
+            <div class="alert alert-info" style="margin-bottom:18px;">
+              <div class="alert-icon"></div>
+              <div class="alert-body"><strong>활용 TIP</strong> 모바일 EV이음앱을 통한 모바일 카드 발급 시, 결제카드 등록 후 기후에너지환경부 충전기는 바로 사용 가능합니다. (안드로이드만 가능)</div>
+            </div>
+
+            <h3 class="section-h">신청자 기본정보</h3>
+            <div class="form-card mt-3">
+              <div class="cc-field"><label>회원구분</label><input class="form-input" type="text" value="개인" readonly></div>
+              <div class="cc-field" style="margin-bottom:0;"><label>이름</label><input class="form-input" type="text" value="홍길동" readonly></div>
+              <p class="cc-notes" style="margin-top:10px;">로그인한 회원정보로 자동 입력됩니다. 별도 본인인증 없이 신청할 수 있습니다.</p>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin:22px 0 6px;">
+              <h3 class="section-h" style="margin:0;">추가 정보 입력</h3>
+              <p class="cc-req-note" style="margin:0;"><b>*</b> 는 필수 항목입니다.</p>
+            </div>
+            <form class="form-card mt-3" id="cardApplyForm">
+              <div class="cc-field">
+                <label>차량종류 <span class="req">*</span></label>
+                <select class="form-select" required>
+                  <option value="">선택</option>
+                  <option>승용차</option><option>경차</option><option>버스</option><option>SUV</option><option>준중형차</option><option>기타</option>
+                </select>
+              </div>
+
+              <div class="cc-field">
+                <label>차량모델 <span class="req">*</span></label>
+                <select class="form-select" required>
+                  <option value="">선택</option>
+                  <optgroup label="현대">
+                    <option>현대 : 아이오닉5</option><option>현대 : 아이오닉6</option><option>현대 : 아이오닉9</option><option>현대 : 코나</option><option>현대 : 캐스퍼</option><option>현대 : GV60</option><option>현대 : GV70</option><option>현대 : ST1</option><option>현대 : 포터</option><option>현대 : 카운티 일렉트릭</option><option>현대 : 일렉시티</option>
+                  </optgroup>
+                  <optgroup label="기아">
+                    <option>기아 : EV3</option><option>기아 : EV6</option><option>기아 : EV9</option><option>기아 : 니로</option><option>기아 : 레이</option><option>기아 : 봉고</option><option>기아 : PV5 롱레인지</option>
+                  </optgroup>
+                  <optgroup label="테슬라">
+                    <option>테슬라 : 모델3</option><option>테슬라 : 모델Y</option><option>테슬라 : 모델S</option><option>테슬라 : 모델X</option>
+                  </optgroup>
+                  <optgroup label="케이지모빌리티">
+                    <option>케이지모빌리티 : 토레스</option><option>케이지모빌리티 : 코란도</option><option>케이지모빌리티 : 무쏘EV</option>
+                  </optgroup>
+                  <optgroup label="BMW">
+                    <option>BMW : i4</option><option>BMW : iX</option><option>BMW : iX1</option><option>BMW : i5</option>
+                  </optgroup>
+                  <optgroup label="벤츠">
+                    <option>벤츠 : EQA</option><option>벤츠 : EQB</option><option>벤츠 : EQE</option><option>벤츠 : EQS</option>
+                  </optgroup>
+                  <optgroup label="기타 제조사">
+                    <option>한국GM : 볼트 EV</option><option>볼보 : EX30</option><option>볼보 : XC40</option><option>폭스바겐 : ID.4</option><option>아우디 : Q6 e-트론</option><option>포르쉐 : 타이칸</option><option>BYD : 아토3</option><option>BYD : 돌핀</option><option>르노 : 세닉</option><option>디피코 : 포트로-탑</option><option>우진산전 : 아폴로 900</option>
+                  </optgroup>
+                  <option>기타 : 기타</option>
+                </select>
+                <p class="cc-notes">* 공공급속충전인프라 회원인증용으로, 급속충전이 가능한 기후에너지환경부 보급대상 차종에 한하여 발급이 가능합니다.</p>
+              </div>
+
+              <div class="cc-field">
+                <label>차량번호 <span class="req">*</span></label>
+                <div class="cc-inline">
+                  <input class="form-input" type="text" placeholder="예: 12가 3456">
+                  <button type="button" class="cc-mini-btn" onclick="if(window.__toast)window.__toast('등록 가능한 차량번호입니다.','info');">중복확인</button>
+                  <label class="cc-check"><input type="checkbox" id="tempNoChk"> 임시번호 발급신청</label>
+                </div>
+                <ul class="cc-notes" style="padding-left:16px; list-style:disc;">
+                  <li>신규 차량 출고 전 카드 발급 시 '임시번호 발급신청'을 체크해 주세요.</li>
+                  <li>차량 1대당 1개의 회원카드 등록이 가능합니다.</li>
+                  <li>차량등록증 발급 당일은 등록 불가, 익일 저공해차량으로 조회되어 차량번호 등록이 가능합니다.</li>
+                  <li>임시번호로 회원카드 신청 시 정지(분실)로 발급되어 사용 전 차량번호 등록이 필요합니다.</li>
+                </ul>
+              </div>
+
+              <div class="cc-field">
+                <label>발급요청사유 <span class="req">*</span></label>
+                <select class="form-select" required>
+                  <option value="">선택</option>
+                  <option>신규(신차)</option><option>신규(중고)</option><option>분실</option><option>파손</option><option>기타</option>
+                </select>
+              </div>
+
+              <div class="cc-field">
+                <label>발급방법 <span class="req">*</span></label>
+                <span class="cc-fixed">등기배송 (무료배송)</span>
+              </div>
+
+              <div class="cc-field" style="margin-bottom:0;">
+                <label>배송지 주소 <span class="req">*</span></label>
+                <div class="cc-inline">
+                  <input class="form-input" type="text" id="ccZip" placeholder="우편번호" readonly style="flex:0 0 140px;">
+                  <button type="button" class="cc-mini-btn" onclick="if(window.__toast)window.__toast('우편번호 찾기 창을 호출합니다.','info');document.getElementById('ccZip').value='22689';document.getElementById('ccAddr').value='인천광역시 서구 환경로 42';">우편번호찾기</button>
+                </div>
+                <input class="form-input" type="text" id="ccAddr" placeholder="기본주소" readonly style="margin-top:8px;">
+                <input class="form-input" type="text" placeholder="상세주소 입력" style="margin-top:8px;">
+              </div>
+
+              <div class="cc-field" style="margin:6px 0 0;">
+                <label class="cc-check"><input type="checkbox" id="ccAgree"> <span><b style="color:var(--color-danger,#e11d48);">[필수]</b> 회원카드 발급을 위한 개인정보 수집·이용에 동의합니다.</span></label>
+                <a href="info-privacy.html" target="_blank" rel="noopener" class="cc-notes" style="margin-left:6px;">전문보기</a>
+              </div>
+              <div class="mt-4" style="text-align:center;">
+                <button type="submit" class="btn btn-primary btn-lg" style="min-width:220px;">완료</button>
+              </div>
+            </form>
+
+            <div id="applyDone" class="alert alert-success mt-3" style="display:none;">
+              <div class="alert-icon"></div>
+              <div class="alert-body"><strong>회원카드 신청이 접수되었습니다.</strong><br>발급 후 등기우편으로 배송됩니다(영업일 5~7일). 진행 상태는 '회원카드/번호 발급조회'에서 확인하세요.</div>
+            </div>
+          </div>
+
+          <!-- ===== 발급조회 (소스: 회원카드/번호 발급조회) ===== -->
+          <div data-ccpanel="check" hidden>
+            <h3 class="section-h">회원카드/번호 발급조회</h3>
+            <!-- 필터: 발급요청사유 · 발급상태 (소스 ISSUE_REASON / CARD_ISSUE_STAT) -->
+            <div class="cc-check-filter">
+              <div>
+                <label for="chkReason">발급요청사유</label>
+                <select id="chkReason"><option value="">전체</option><option>신규(신차)</option><option>신규(중고)</option><option>분실</option><option>파손</option><option>기타</option></select>
+              </div>
+              <div>
+                <label for="chkStat">발급상태</label>
+                <select id="chkStat"><option value="">전체</option><option>신청접수</option><option>카드제작</option><option>발송(등기)</option><option>수령완료</option><option>반려</option></select>
+              </div>
+              <button type="button" class="btn btn-primary" id="chkBtn">조회</button>
+            </div>
+            <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;"><b id="chkCount" style="color:var(--color-primary-700);">1</b>건 조회</p>
+            <div class="table-wrap" style="overflow-x:auto;">
+              <table class="board-table std-board" style="font-size:13px;min-width:920px;">
+                <thead>
+                  <tr><th>신청일자</th><th>카드번호</th><th>차량번호<br>(유효)</th><th>차량번호<br>(신청시)</th><th>발급방법</th><th>발급상태</th><th>발급요청사유</th><th>배송지</th><th>회원카드</th></tr>
+                </thead>
+                <tbody id="chkBody">
+                  <tr>
+                    <td>2026-06-16</td>
+                    <td>EVCD-2026-0456-7788</td>
+                    <td>34나 5678</td>
+                    <td>34나 5678</td>
+                    <td>등기배송</td>
+                    <td><span class="cat-chip charge">발송(등기)</span></td>
+                    <td>신규(중고)</td>
+                    <td>서울특별시 강남구 테헤란로 152</td>
+                    <td>실물카드</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="cc-notes" style="margin-top:10px;">※ 발급 안내문자 수신 후 우체국 등기 영업일 기준 10일 이내 수령 가능합니다. (신청량·연휴 등에 따라 변경될 수 있음)</p>
+          </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  // 탭 전환
+  document.querySelectorAll('.cc-tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.cc-tab').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
+      this.classList.add('active'); this.setAttribute('aria-selected','true');
+      var v = this.dataset.cctab;
+      document.querySelectorAll('[data-ccpanel]').forEach(function(p){ p.hidden = (p.dataset.ccpanel !== v); });
+    });
+  });
+  // 발급조회 (소스: getCardIssueList) — 발급요청사유·발급상태 필터 조회
+  var chkBtn = document.getElementById('chkBtn');
+  if (chkBtn) chkBtn.addEventListener('click', function(){
+    if (window.__toast) window.__toast('발급조회를 실행했습니다.', 'info');
+  });
+
+  // 임시번호 체크 시 차량번호 안내
+  var temp = document.getElementById('tempNoChk');
+  if (temp) temp.addEventListener('change', function(){
+    if (this.checked && window.__toast) window.__toast('임시번호로 신청 시 정지(분실) 상태로 발급되며, 사용 전 차량번호 등록이 필요합니다.', 'info');
+  });
+
+  // === 개인정보 동의 검증 (로그인만으로 진입 — 별도 본인인증 게이트 없음) ===
+  function ccToast(m,t){ if(window.__toast) window.__toast(m, t||'info'); }
+
+  // 재발급 진입 시 발급요청사유 prefill (?reason=lost|broken)  ※허브 분실신고/재발급에서 연계
+  var reason = new URL(location.href).searchParams.get('reason');
+  var reasonMap = { lost: '분실', broken: '파손', renew: '분실' };
+  var reasonSel = document.querySelector('#cardApplyForm select.form-select[required]');
+  // 발급요청사유 select 는 옵션에 '분실'/'파손' 포함된 select 를 탐색
+  if (reason) {
+    document.querySelectorAll('#cardApplyForm select').forEach(function(sel){
+      if (sel.querySelector('option') && /분실|파손/.test(sel.textContent)) {
+        var want = reasonMap[reason] || '';
+        Array.from(sel.options).forEach(function(o){ if (o.value === want || o.text === want) sel.value = o.value || o.text; });
+      }
+    });
+    if (reasonMap[reason]) ccToast('재발급 신청입니다. 발급요청사유가 "' + reasonMap[reason] + '"(으)로 선택되었습니다.', 'info');
+  }
+
+  var ccForm=document.getElementById('cardApplyForm');
+  if(ccForm) ccForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!document.getElementById('ccAgree').checked){ ccToast('개인정보 수집·이용에 동의해 주세요.','warning'); return; }
+    document.getElementById('applyDone').style.display='block';
+    ccForm.style.display='none';
+    ccToast('회원카드 신청이 접수되었습니다.','success');
+  });
+})();
+</script>
+</body>
+</html>

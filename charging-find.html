@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충전소 찾기 | 충전소·요금 정보 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/charging.css">
+<style>
+/* 충전소 찾기 전용 로컬 스타일 */
+[hidden] { display: none !important; }
+.finder-layout { display: grid; grid-template-columns: 400px 1fr; gap: 20px; }
+.finder-side { display: flex; flex-direction: column; gap: 14px; }
+.finder-map {
+  height: 720px;
+  background: var(--color-gray-50);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.map-placeholder {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background:
+    linear-gradient(45deg, rgba(15,23,42,0.02) 25%, transparent 25%, transparent 75%, rgba(15,23,42,0.02) 75%),
+    linear-gradient(45deg, rgba(15,23,42,0.02) 25%, transparent 25%, transparent 75%, rgba(15,23,42,0.02) 75%),
+    radial-gradient(circle at 30% 40%, rgba(26,173,108,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(44,123,229,0.08) 0%, transparent 40%),
+    linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+  background-size: 24px 24px, 24px 24px, auto, auto, auto;
+  background-position: 0 0, 12px 12px, 0 0, 0 0, 0 0;
+}
+.map-pin {
+  position: absolute;
+  min-width: 34px; height: 34px; padding: 0 8px;
+  background: var(--color-primary-500);
+  border: 3px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(26,173,108,0.3);
+  display: grid; place-items: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  transition: transform var(--t-fast);
+}
+.map-pin:hover { transform: translate(-50%, -100%) scale(1.15); z-index: 5; }
+.map-pin.h2 { background: var(--color-secondary-500); box-shadow: 0 4px 12px rgba(44,123,229,0.35); }
+.map-pin.busy { background: var(--color-accent-500); box-shadow: 0 4px 12px rgba(255,154,46,0.35); }
+.map-pin.fault { background: var(--color-danger); box-shadow: 0 4px 12px rgba(239,68,68,0.35); }
+.map-pin::after {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid currentColor;
+  color: inherit;
+}
+.map-pin.active { z-index: 10; transform: translate(-50%, -100%) scale(1.25); }
+
+.map-controls {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(15,23,42,0.1);
+  overflow: hidden;
+  z-index: 10;
+}
+.map-controls button {
+  display: grid; place-items: center;
+  width: 36px; height: 36px;
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  color: var(--color-gray-700);
+}
+.map-controls button:last-child { border-bottom: none; }
+.map-controls button:hover { background: var(--color-primary-50); color: var(--color-primary-700); }
+
+.map-legend {
+  position: absolute;
+  bottom: 16px; left: 16px; right: 16px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(6px);
+  border-radius: 10px;
+  padding: 10px 16px;
+  box-shadow: 0 4px 16px rgba(15,23,42,0.08);
+  display: flex;
+  gap: 12px 18px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  z-index: 10;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.map-legend .lg-sep { width: 1px; height: 16px; background: var(--border-light); }
+.map-legend .bolt { color: var(--color-primary-500); vertical-align: -2px; margin-right: 4px; }
+.map-mode-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border-light); background: #fff; box-shadow: 0 4px 16px rgba(15,23,42,.1); font-size: 13px; font-weight: 700; cursor: pointer; color: var(--color-gray-500); }
+.map-mode-btn.active[data-mode="ev"] { background: var(--color-primary-500); color: #fff; border-color: var(--color-primary-500); }
+.map-mode-btn.active[data-mode="h2"] { background: var(--color-secondary-500); color: #fff; border-color: var(--color-secondary-500); }
+.near-mode.active[data-nearmode="ev"] { background: var(--color-primary-500); color: #fff; border-color: var(--color-primary-500); }
+.near-mode.active[data-nearmode="h2"] { background: var(--color-secondary-500); color: #fff; border-color: var(--color-secondary-500); }
+.map-legend .dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+
+.station-card {
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.station-card:hover { border-color: var(--color-primary-300); transform: translateX(2px); }
+.station-card.selected { border-color: var(--color-primary-500); background: var(--color-primary-50); box-shadow: 0 0 0 3px rgba(26,173,108,0.1); }
+.station-card h4 {
+  font-size: 14.5px;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 6px;
+  letter-spacing: -0.02em;
+}
+.station-card .st-type {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.station-card .st-type.ev { background: var(--color-primary-50); color: var(--color-primary-700); }
+.station-card .st-type.h2 { background: var(--color-secondary-50); color: var(--color-secondary-700); }
+.station-card .st-address { font-size: 12px; color: var(--color-gray-500); margin-bottom: 8px; }
+.station-card .st-status { display: flex; gap: 6px; font-size: 11.5px; flex-wrap: wrap; }
+.st-status .s-item { padding: 2px 8px; border-radius: 4px; background: var(--color-gray-100); color: var(--color-gray-700); font-weight: 600; }
+.st-status .s-item.avail { background: var(--color-primary-50); color: var(--color-primary-700); }
+.st-status .s-item.busy { background: #FFF7E8; color: var(--color-accent-600); }
+.st-status .s-item.fault { background: #FEF0F0; color: var(--color-danger); }
+.station-card .st-meta {
+  display: flex; justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px; color: var(--color-gray-500);
+}
+/* 목록 카드 — DB 상시정보(실시간 값은 상세 드로어에서) */
+.station-card .st-spec {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px;
+  margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--border-light);
+  font-size: 12px; color: var(--color-gray-700);
+}
+.station-card .st-spec .sp { display: flex; gap: 5px; align-items: baseline; min-width: 0; }
+.station-card .st-spec .sp b { flex: none; color: var(--color-gray-500); font-weight: 600; font-size: 11px; }
+.station-card .st-spec .sp span { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.station-card .st-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.station-card .st-tags .tag { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; background: var(--color-gray-100); color: var(--color-gray-600); font-weight: 600; }
+.station-card .st-tags .tag.cat { background: var(--color-secondary-50); color: var(--color-secondary-700); }
+/* 목록 구분 탭 */
+.list-tabs { display: flex; border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden; }
+.list-tab { flex: 1; padding: 10px 12px; border: none; background: #fff; font-size: 13.5px; font-weight: 700; color: var(--color-gray-500); cursor: pointer; transition: all var(--t-fast); }
+.list-tab + .list-tab { border-left: 1px solid var(--border-light); }
+.list-tab.active { background: var(--color-primary-500); color: #fff; }
+.list-tab:not(.active):hover { background: var(--color-primary-50); color: var(--color-primary-700); }
+/* 수소 영업상태 배지 */
+.st-open, .st-closed { font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; }
+.st-open::before, .st-closed::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+.st-open { background: #e9f7ef; color: #1a7d3c; }
+.st-open::before { background: var(--color-primary-500); }
+.st-closed { background: var(--color-gray-100); color: var(--color-gray-500); }
+.st-closed::before { background: var(--color-gray-400, #9aa6b2); }
+/* 상세 드로어 — 충전기 구분/고장/제한/비고 */
+.cs-type { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; background: var(--color-gray-100); color: var(--color-gray-600); margin-bottom: 3px; }
+.cs-type.slow { background: #eef7f0; color: #1a7d3c; }
+.cs-type.fast { background: #e9f2ff; color: #1f5fa8; }
+.cs-type.ultra { background: #fdeede; color: #c2703d; }
+.chg-slot.fault { background: #FEF0F0; border-color: #f5c2c2 !important; }
+.chg-slot.fault .cs-state { color: var(--color-danger); font-weight: 700; }
+.sc-tile.h2 { border-color: var(--color-secondary-300, #9ec0ef); }
+.sc-tile.h2 .sc-val { color: var(--color-secondary-700); }
+.sd-restrict { display: flex; flex-wrap: wrap; gap: 6px; }
+.sd-restrict .rt { font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #FFF7E8; color: var(--color-accent-600, #c2703d); }
+.sd-note { font-size: 13px; line-height: 1.7; color: var(--color-gray-700); background: var(--color-gray-50, #f6f8fa); border-radius: 8px; padding: 11px 13px; }
+
+.filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-chips button {
+  padding: 5px 12px; font-size: 12.5px; font-weight: 600;
+  border: 1px solid var(--border-light); background: #fff;
+  color: var(--color-gray-700); border-radius: 999px;
+  cursor: pointer; transition: all var(--t-fast);
+}
+.filter-chips button:hover { border-color: var(--color-primary-400); }
+.filter-chips button.active { background: var(--color-primary-500); border-color: var(--color-primary-500); color: #fff; }
+
+@media (max-width: 960px) {
+  .finder-layout { grid-template-columns: 1fr; }
+  .finder-map { height: 480px; }
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="crumb.home">홈</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging.html" data-i18n="charging.crumb.parent">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" data-i18n="charging.find.title">충전소 찾기</span>
+      </nav>
+      <h1 data-i18n="charging.find.title">충전소 찾기</h1>
+      <p class="hero-lead" data-i18n-html="charging.find.lead">전기·수소 충전소를 하나의 지도에서 <strong>통합 검색</strong>하고, <strong>GPS 반경 1·5·10km</strong>·<strong>경로 기반 검색</strong>으로 최적의 충전소를 찾습니다.</p>
+    </div>
+  </section>
+
+  <nav class="tab-nav" data-i18n-aria="charging.find.tab.aria" aria-label="검색 방식">
+    <div class="container container-wide">
+      <div class="tabs-pill" data-tabs id="findTabs">
+        <button class="tab active" data-tab="map" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <span data-i18n="charging.find.tab.map">통합 지도 (전기+수소)</span>
+        </button>
+        <button class="tab" data-tab="near" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="charging.find.tab.near">내 주변 충전소</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- ================= 통합 지도 ================= -->
+      <div class="tab-content active" data-tab-content="map">
+
+        <!-- 필터 바 (전기차/수소 모드별 전환) -->
+        <div class="card mb-6" style="padding: 18px 20px;">
+          <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:end;">
+            <div class="form-group" style="margin:0; flex:1 1 130px;">
+              <label class="form-label" for="cf-sido">시/도</label>
+              <select class="form-select" id="cf-sido">
+                <option value="">전체</option>
+                <option>서울특별시</option><option>부산광역시</option><option>대구광역시</option><option>인천광역시</option><option>광주광역시</option><option>대전광역시</option><option>울산광역시</option><option>세종특별자치시</option><option>경기도</option><option>강원특별자치도</option><option>충청북도</option><option>충청남도</option><option>전북특별자치도</option><option>전라남도</option><option>경상북도</option><option>경상남도</option><option>제주특별자치도</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0; flex:1 1 130px;">
+              <label class="form-label" for="cf-sigungu">시/군·구</label>
+              <select class="form-select" id="cf-sigungu"><option value="">전체</option></select>
+            </div>
+
+            <!-- 전기차 전용 -->
+            <div class="form-group ev-only" style="margin:0; flex:1 1 150px;">
+              <label class="form-label" for="cf-category">충전소 분류</label>
+              <select class="form-select" id="cf-category">
+                <option>전체</option><option>공공시설</option><option>주차시설</option><option>휴게시설</option><option>관광시설</option><option>상업시설</option><option>차량정비시설</option><option>공동주택시설</option><option>근린생활시설</option><option>교육문화시설</option><option>기타시설</option>
+              </select>
+            </div>
+            <div class="form-group ev-only" style="margin:0; flex:1 1 150px;">
+              <label class="form-label" for="cf-connector">충전기 타입</label>
+              <select class="form-select" id="cf-connector">
+                <option>전체</option><option>DC콤보</option><option>DC차데모</option><option>AC3상</option><option>완속</option><option>DC콤보(완속)</option><option>NACS</option>
+              </select>
+            </div>
+
+            <!-- 수소 전용 -->
+            <div class="form-group h2-only" style="margin:0; flex:1 1 150px; display:none;">
+              <label class="form-label" for="cf-h2status">영업 상태</label>
+              <select class="form-select" id="cf-h2status">
+                <option>전체</option><option>영업중</option><option>영업마감</option>
+              </select>
+            </div>
+            <!-- ※ DB 확인 필요: 충전 압력·충전 대상은 현행 ev.or.kr에 없어 DB 보유 여부 미확정 -->
+            <div class="form-group h2-only" style="margin:0; flex:1 1 150px; display:none;">
+              <label class="form-label" for="cf-pressure">충전 압력 <span style="font-size:10px;color:var(--color-accent-600,#c2703d);font-weight:700;">※DB확인</span></label>
+              <select class="form-select" id="cf-pressure">
+                <option>전체</option><option>700bar (승용)</option><option>350bar (상용·버스)</option>
+              </select>
+            </div>
+            <div class="form-group h2-only" style="margin:0; flex:1 1 150px; display:none;">
+              <label class="form-label" for="cf-target">충전 대상 <span style="font-size:10px;color:var(--color-accent-600,#c2703d);font-weight:700;">※DB확인</span></label>
+              <select class="form-select" id="cf-target">
+                <option>전체</option><option>승용</option><option>상용 (버스·트럭)</option><option>겸용</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin:0; flex:2 1 200px;">
+              <label class="form-label" for="cf-search">검색</label>
+              <div class="search-field">
+                <input class="form-input" id="cf-search" type="text" placeholder="충전소명·주소 검색">
+              </div>
+            </div>
+            <button class="btn btn-primary" type="button">검색</button>
+          </div>
+
+          <!-- 옵션 체크 + 운영기관 -->
+          <div class="mt-4" style="display:flex; flex-wrap:wrap; gap:12px 24px; align-items:center;">
+            <div style="display:flex; gap:16px; align-items:center;">
+              <!-- 전기차 옵션 -->
+              <label class="check-row ev-only" style="margin:0;"><input type="checkbox"> <span>24시간 이용</span></label>
+              <label class="check-row ev-only" style="margin:0;"><input type="checkbox"> <span>스마트충전기</span></label>
+              <!-- 수소 옵션 -->
+              <label class="check-row h2-only" style="margin:0; display:none;"><input type="checkbox"> <span>24시간 이용</span></label>
+              <label class="check-row h2-only" style="margin:0; display:none;"><input type="checkbox"> <span>버스충전 가능</span></label>
+              <label class="check-row h2-only" style="margin:0; display:none;"><input type="checkbox"> <span>액화수소</span></label>
+            </div>
+            <span style="display:inline-block;width:1px;height:18px;background:var(--border-light);"></span>
+            <div style="display:flex; gap:14px; align-items:center;">
+              <span style="font-size:12px;color:var(--color-gray-500);font-weight:700;">운영기관</span>
+              <!-- 전기차 운영기관 -->
+              <select class="form-select ev-only" id="cf-operator" style="width:auto;min-width:170px;padding:7px 30px 7px 10px;font-size:12.5px;">
+                <option value="">운영기관 전체</option>
+                <option value="me">기후에너지환경부</option>
+                <option value="e1">E1</option>
+                <option value="chajevi">GS차지비</option>
+                <option value="gscaltex">GS칼텍스</option>
+                <option value="khenergy">KH에너지</option>
+                <option value="kt">KT</option>
+                <option value="everon">에버온</option>
+                <option value="chaevi">대영채비</option>
+                <option value="kepco">한국전력</option>
+                <option value="elink">SK일렉링크</option>
+                <option value="powercube">파워큐브</option>
+                <option value="humax">휴맥스이브이</option>
+              </select>
+              <!-- 수소 운영기관 -->
+              <select class="form-select h2-only" id="cf-operator-h2" style="width:auto;min-width:170px;padding:7px 30px 7px 10px;font-size:12.5px; display:none;">
+                <option value="">운영기관 전체</option>
+                <option>하이넷(HyNet)</option>
+                <option>코하이젠</option>
+                <option>현대모비스</option>
+                <option>에어리퀴드코리아</option>
+                <option>SK플러그하이버스</option>
+                <option>효성하이드로젠</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 지도 + 목록 -->
+        <div class="finder-layout">
+          <aside class="finder-side">
+            <!-- 목록 구분 탭 -->
+            <div class="list-tabs">
+              <button type="button" class="list-tab active" data-listtab="all">충전소 전체</button>
+              <button type="button" class="list-tab" data-listtab="fav">자주 쓰는 충전소</button>
+            </div>
+
+            <div data-listpanel="all" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="flex justify-between items-center" style="flex-wrap:wrap; gap:8px;">
+              <div style="font-size: 14px;"><span data-i18n="charging.find.result.prefix">검색 결과</span> <strong id="station-count" style="color: var(--color-primary-700);">8</strong><span data-i18n="charging.find.result.suffix">건</span></div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <select class="form-select" style="width:140px;padding:6px 30px 6px 10px;font-size:12px;" data-i18n-aria="charging.find.sort.aria" aria-label="정렬">
+                  <option data-i18n="charging.find.sort.distance">거리순</option><option data-i18n="charging.find.sort.avail">이용 가능한순</option><option data-i18n="charging.find.sort.uptime">가동률 높은순</option><option data-i18n="charging.find.sort.cheap">요금 저렴한순</option>
+                </select>
+                <button type="button" class="btn btn-ghost btn-sm" style="padding:6px 10px;font-size:12px;" data-action="download" data-action-label="검색결과 충전소.xlsx" data-i18n-attr="title:charging.find.btn.xlsx.title" title="Excel 다운로드">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  XLSX
+                </button>
+                <button type="button" class="btn btn-ghost btn-sm" style="padding:6px 10px;font-size:12px;" data-action="download" data-action-label="검색결과 충전소.csv" data-i18n-attr="title:charging.find.btn.csv.title" title="CSV 다운로드">
+                  CSV
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2" id="stationList" style="max-height: 660px; overflow-y: auto;">
+              <div class="station-card selected" data-station="s1">
+                <h4><span data-i18n="charging.find.st.s1.name">GS칼텍스 강남 직영</span> <span class="st-type ev" data-i18n="charging.find.type.ev">전기</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s1.addr">서울 강남구 테헤란로 152 · 1층 주차장</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>GS칼텍스</span></span>
+                  <span class="sp"><b>충전기</b><span>총 6기 · 급속4·완속2</span></span>
+                  <span class="sp"><b>최대출력</b><span>100kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·차데모</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">상업시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+              </div>
+              <div class="station-card" data-station="s2">
+                <h4><span data-i18n="charging.find.st.s2.name">스타광장 수소충전소</span> <span class="st-type h2" data-i18n="charging.find.type.h2">수소</span> <span class="st-open">영업중</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s2.addr">서울 강남구 선릉로 428 · 지상 2층</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>하이넷</span></span>
+                  <span class="sp"><b>디스펜서</b><span>2기</span></span>
+                  <span class="sp"><b>충전압력</b><span>700bar</span></span>
+                  <span class="sp"><b>차종</b><span>승용/상용 겸용</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">상업시설</span></div>
+              </div>
+              <div class="station-card" data-station="s3">
+                <h4><span data-i18n="charging.find.st.s3.name">환경부 강남구청 공공</span> <span class="st-type ev" data-i18n="charging.find.type.ev">전기</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s3.addr">서울 강남구 학동로 426 · 공영주차장 B1</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>환경부</span></span>
+                  <span class="sp"><b>충전기</b><span>총 12기 · 급속2·완속10</span></span>
+                  <span class="sp"><b>최대출력</b><span>50kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·차데모·AC3상</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">공공시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+              </div>
+              <div class="station-card" data-station="s4">
+                <h4><span data-i18n="charging.find.st.s4.name">대치역 SK시그넷 초급속</span> <span class="st-type ev" data-i18n="charging.find.type.ev">전기</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s4.addr">서울 강남구 삼성로 427 · 대치역 2번 출구</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>SK일렉링크</span></span>
+                  <span class="sp"><b>충전기</b><span>총 4기 · 급속4</span></span>
+                  <span class="sp"><b>최대출력</b><span>350kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·NACS</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">근린생활시설</span><span class="tag">24시간</span></div>
+              </div>
+              <div class="station-card" data-station="s5">
+                <h4><span data-i18n="charging.find.st.s5.name">양재IC 현대 수소충전소</span> <span class="st-type h2" data-i18n="charging.find.type.h2">수소</span> <span class="st-open">영업중</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s5.addr">서울 서초구 남부순환로 2688</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>현대모비스</span></span>
+                  <span class="sp"><b>디스펜서</b><span>2기</span></span>
+                  <span class="sp"><b>충전압력</b><span>700bar·350bar</span></span>
+                  <span class="sp"><b>차종</b><span>승용·상용(버스)</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">휴게시설</span><span class="tag">버스 가능</span></div>
+              </div>
+              <div class="station-card" data-station="s6">
+                <h4><span data-i18n="charging.find.st.s6.name">서초동 EV Infra 완속</span> <span class="st-type ev" data-i18n="charging.find.type.ev">전기</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s6.addr">서울 서초구 서초대로 396 · 지하주차장</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>에버온</span></span>
+                  <span class="sp"><b>충전기</b><span>총 24기 · 완속24</span></span>
+                  <span class="sp"><b>최대출력</b><span>7kW</span></span>
+                  <span class="sp"><b>타입</b><span>AC완속</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">공동주택시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+              </div>
+              <div class="station-card" data-station="s7">
+                <h4><span data-i18n="charging.find.st.s7.name">롯데월드몰 파워큐브</span> <span class="st-type ev" data-i18n="charging.find.type.ev">전기</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s7.addr">서울 송파구 올림픽로 300 · 지하 3층</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>파워큐브</span></span>
+                  <span class="sp"><b>충전기</b><span>총 14기 · 급속8·완속6</span></span>
+                  <span class="sp"><b>최대출력</b><span>100kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·차데모</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">상업시설</span><span class="tag">편의시설</span></div>
+              </div>
+              <div class="station-card" data-station="s8">
+                <h4><span data-i18n="charging.find.st.s8.name">잠실 코하이젠 수소충전소</span> <span class="st-type h2" data-i18n="charging.find.type.h2">수소</span> <span class="st-closed">영업마감</span></h4>
+                <div class="st-address" data-i18n="charging.find.st.s8.addr">서울 송파구 올림픽로 35길 124</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>코하이젠</span></span>
+                  <span class="sp"><b>디스펜서</b><span>1기</span></span>
+                  <span class="sp"><b>충전압력</b><span>700bar</span></span>
+                  <span class="sp"><b>차종</b><span>승용 전용</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">상업시설</span></div>
+              </div>
+            </div>
+            </div><!-- /listpanel all -->
+
+            <div data-listpanel="fav" hidden style="padding:48px 16px; text-align:center; color:var(--text-tertiary);">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <p style="font-size:14px; font-weight:600; margin-top:12px; color:var(--color-gray-600);">자주 쓰는 충전소가 없습니다</p>
+              <p style="font-size:12.5px; margin-top:6px;">로그인 후 충전소를 즐겨찾기하면<br>여기에 모아 빠르게 찾을 수 있습니다.</p>
+            </div>
+          </aside>
+
+          <div class="finder-map">
+            <!-- 차종 토글 (전기차/수소차) -->
+            <div style="position:absolute; top:16px; left:16px; z-index:10; display:flex; gap:8px;">
+              <button type="button" class="map-mode-btn active" data-mode="ev">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>전기차충전소
+              </button>
+              <button type="button" class="map-mode-btn" data-mode="h2">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7C7 8 5 11 5 14a7 7 0 0 0 14 0c0-3-2-6-7-11.3z"/></svg>수소충전소
+              </button>
+            </div>
+            <!-- 일반/위성 토글 -->
+            <div style="position:absolute; top:16px; right:64px; z-index:10; display:flex; background:#fff; border-radius:8px; box-shadow:0 4px 16px rgba(15,23,42,.1); overflow:hidden; border:1px solid var(--border-light);">
+              <button type="button" style="padding:7px 14px; border:none; background:var(--color-primary-500); color:#fff; font-size:13px; font-weight:700; cursor:pointer;">일반</button>
+              <button type="button" style="padding:7px 14px; border:none; background:#fff; color:var(--color-gray-700); font-size:13px; font-weight:600; cursor:pointer;">위성</button>
+            </div>
+            <div class="map-placeholder">
+              <div style="text-align:center;">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <p style="margin-top:12px;font-weight:700;color:var(--color-primary-700);font-size:14px;" data-i18n="charging.find.map.api.title">네이버지도 / 카카오맵 API 연동 영역</p>
+                <p style="font-size:12px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.find.map.api.desc">공공데이터포털 충전소 API + 지도 SDK 실시간 연동</p>
+              </div>
+            </div>
+
+            <div class="map-pin" style="top: 30%; left: 25%;" data-station="s1" title="GS칼텍스 강남" data-i18n-attr="title:charging.find.st.s1.name">4</div>
+            <div class="map-pin h2" style="top: 35%; left: 40%;" data-station="s2" title="스타광장 수소" data-i18n-attr="title:charging.find.st.s2.name">2</div>
+            <div class="map-pin" style="top: 45%; left: 32%;" data-station="s3" title="강남구청 공공" data-i18n-attr="title:charging.find.st.s3.name">6</div>
+            <div class="map-pin busy" style="top: 50%; left: 45%;" data-station="s4" title="대치역 초급속" data-i18n-attr="title:charging.find.st.s4.name">2</div>
+            <div class="map-pin h2" style="top: 58%; left: 55%;" data-station="s5" title="양재IC 수소" data-i18n-attr="title:charging.find.st.s5.name" data-i18n="charging.find.status.wait">대기</div>
+            <div class="map-pin" style="top: 42%; left: 58%;" data-station="s6" title="서초동 완속" data-i18n-attr="title:charging.find.st.s6.name">18</div>
+            <div class="map-pin busy" style="top: 55%; left: 65%;" data-station="s7" title="롯데월드몰" data-i18n-attr="title:charging.find.st.s7.name">8</div>
+            <div class="map-pin h2" style="top: 60%; left: 72%;" data-station="s8" title="잠실 수소" data-i18n-attr="title:charging.find.st.s8.name">1</div>
+            <div class="map-pin fault" style="top: 48%; left: 52%;" title="고장 신고" data-i18n-attr="title:charging.find.status.faultreport">!</div>
+
+            <div class="map-controls">
+              <button data-i18n-attr="title:charging.find.map.zoomin,aria-label:charging.find.map.zoomin" title="확대" aria-label="확대"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+              <button data-i18n-attr="title:charging.find.map.zoomout,aria-label:charging.find.map.zoomout" title="축소" aria-label="축소"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+              <button data-i18n-attr="title:charging.find.map.mylocation,aria-label:charging.find.map.mylocation" title="현재 위치" aria-label="현재 위치"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg></button>
+            </div>
+
+            <!-- 전기차 범례 -->
+            <div class="map-legend" data-legend="ev">
+              <span><span class="dot" style="background:#2c7be5;" aria-hidden="true"></span>사용가능</span>
+              <span><span class="dot" style="background:var(--color-primary-500);" aria-hidden="true"></span>사용중</span>
+              <span><span class="dot" style="background:#1f2937;" aria-hidden="true"></span>사용불가</span>
+              <span><span class="dot" style="background:#c2703d;" aria-hidden="true"></span>상태미확인</span>
+              <span><span class="dot" style="background:#14b8a6;" aria-hidden="true"></span>이용자제한</span>
+              <span class="lg-sep" aria-hidden="true"></span>
+              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#9aa6b2;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>50kW·완속</span>
+              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#5fb878;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>100kW</span>
+              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#2aa45a;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>200kW</span>
+              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#1a7d3c;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>350kW</span>
+            </div>
+            <!-- 수소 범례 -->
+            <div class="map-legend" data-legend="h2" hidden>
+              <span><span class="dot" style="background:var(--color-primary-500);" aria-hidden="true"></span>영업중</span>
+              <span><span class="dot" style="background:var(--color-gray-400,#9aa6b2);" aria-hidden="true"></span>영업마감</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 내 주변 충전소 ================= -->
+      <div class="tab-content" data-tab-content="near">
+        <div class="grid" style="grid-template-columns: 380px 1fr; gap: 24px;">
+          <div class="card-hero">
+            <h3 style="font-size:20px;margin-bottom:12px;letter-spacing:-0.02em;" data-i18n="charging.find.kbd.title">내 위치 기반 검색</h3>
+            <!-- 내 차 종류 (전기/수소 택1) -->
+            <div style="display:flex; gap:8px; margin-bottom:16px;">
+              <button type="button" class="map-mode-btn near-mode active" data-nearmode="ev" style="flex:1; justify-content:center; box-shadow:none;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>전기차
+              </button>
+              <button type="button" class="map-mode-btn near-mode" data-nearmode="h2" style="flex:1; justify-content:center; box-shadow:none;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7C7 8 5 11 5 14a7 7 0 0 0 14 0c0-3-2-6-7-11.3z"/></svg>수소차
+              </button>
+            </div>
+            <button class="btn btn-primary btn-lg" type="button" style="width:100%;" data-action="notify" data-action-label="브라우저 위치 정보 접근 권한을 허용하면 현재 위치 기반 검색이 가능합니다.">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+<span data-i18n="charging.find.kbd.btn">              현재 위치로 검색</span>
+            </button>
+
+            <div class="form-group mt-6">
+              <label class="form-label" data-i18n="charging.find.kbd.radius">검색 반경</label>
+              <div class="btn-group" style="width:100%;" data-period-group>
+                <button class="btn" type="button">1km</button>
+                <button class="btn active" type="button">5km</button>
+                <button class="btn" type="button">10km</button>
+                <button class="btn" type="button">20km</button>
+              </div>
+            </div>
+            <!-- 전기차 필터 -->
+            <div class="form-group near-ev-only">
+              <label class="form-label">충전소 분류</label>
+              <select class="form-select">
+                <option>전체</option><option>공공시설</option><option>주차시설</option><option>휴게시설</option><option>관광시설</option><option>상업시설</option><option>차량정비시설</option><option>공동주택시설</option><option>근린생활시설</option><option>교육문화시설</option><option>기타시설</option>
+              </select>
+            </div>
+            <div class="form-group near-ev-only">
+              <label class="form-label">충전기 타입</label>
+              <select class="form-select">
+                <option>전체</option><option>DC콤보</option><option>DC차데모</option><option>AC3상</option><option>완속</option><option>DC콤보(완속)</option><option>NACS</option>
+              </select>
+            </div>
+            <div class="form-group near-ev-only">
+              <label class="form-label">운영기관</label>
+              <select class="form-select">
+                <option>운영기관 전체</option><option>기후에너지환경부</option><option>E1</option><option>GS차지비</option><option>GS칼텍스</option><option>KH에너지</option><option>KT</option><option>에버온</option><option>대영채비</option><option>한국전력</option><option>SK일렉링크</option><option>파워큐브</option><option>휴맥스이브이</option>
+              </select>
+            </div>
+            <div class="near-ev-only near-checkrow" style="display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:6px;">
+              <label class="check-row" style="margin:0;"><input type="checkbox"> <span>24시간 이용</span></label>
+              <label class="check-row" style="margin:0;"><input type="checkbox"> <span>스마트충전기</span></label>
+            </div>
+
+            <!-- 수소차 필터 -->
+            <div class="form-group near-h2-only" style="display:none;">
+              <label class="form-label">영업 상태</label>
+              <select class="form-select"><option>전체</option><option>영업중</option><option>영업마감</option></select>
+            </div>
+            <div class="form-group near-h2-only" style="display:none;">
+              <label class="form-label">충전 압력 <span style="font-size:10px;color:var(--color-accent-600,#c2703d);font-weight:700;">※DB확인</span></label>
+              <select class="form-select"><option>전체</option><option>700bar (승용)</option><option>350bar (상용·버스)</option></select>
+            </div>
+            <div class="form-group near-h2-only" style="display:none;">
+              <label class="form-label">충전 대상 <span style="font-size:10px;color:var(--color-accent-600,#c2703d);font-weight:700;">※DB확인</span></label>
+              <select class="form-select"><option>전체</option><option>승용</option><option>상용 (버스·트럭)</option><option>겸용</option></select>
+            </div>
+            <div class="form-group near-h2-only" style="display:none;">
+              <label class="form-label">운영기관</label>
+              <select class="form-select"><option>운영기관 전체</option><option>하이넷(HyNet)</option><option>코하이젠</option><option>현대모비스</option><option>에어리퀴드코리아</option><option>SK플러그하이버스</option><option>효성하이드로젠</option></select>
+            </div>
+            <div class="near-h2-only near-checkrow" style="display:none; flex-wrap:wrap; gap:8px 16px; margin-top:6px;">
+              <label class="check-row" style="margin:0;"><input type="checkbox"> <span>24시간 이용</span></label>
+              <label class="check-row" style="margin:0;"><input type="checkbox"> <span>버스충전 가능</span></label>
+            </div>
+
+            <label class="check-row" style="margin-top:14px;">
+              <input type="checkbox" checked>
+              <span data-i18n="charging.find.kbd.availonly">이용 가능한 충전소만 표시</span>
+            </label>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <h3 style="font-size:18px;letter-spacing:-0.02em;" data-i18n="charging.find.sort.title">가까운 순 정렬 (현재 위치 기준 5km)</h3>
+              <span style="font-size:12.5px;color:var(--color-gray-500);"><strong id="near-count">4</strong>개 충전소 검색됨</span>
+            </div>
+
+            <div class="flex flex-col gap-2" id="nearList">
+              <div class="station-card" data-station="s3">
+                <div class="flex justify-between"><h4>환경부 강남구청 공공 <span class="st-type ev">전기</span></h4><span style="font-size:13px;font-weight:700;color:var(--color-primary-700);">0.3km</span></div>
+                <div class="st-address">서울 강남구 학동로 426</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>환경부</span></span>
+                  <span class="sp"><b>충전기</b><span>총 12기 · 급속2·완속10</span></span>
+                  <span class="sp"><b>최대출력</b><span>50kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·차데모·AC3상</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">공공시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+              </div>
+              <div class="station-card" data-station="s1">
+                <div class="flex justify-between"><h4>GS칼텍스 강남 직영 <span class="st-type ev">전기</span></h4><span style="font-size:13px;font-weight:700;color:var(--color-primary-700);">0.8km</span></div>
+                <div class="st-address">서울 강남구 테헤란로 152</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>GS칼텍스</span></span>
+                  <span class="sp"><b>충전기</b><span>총 6기 · 급속4·완속2</span></span>
+                  <span class="sp"><b>최대출력</b><span>100kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·차데모</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">상업시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+              </div>
+              <div class="station-card" data-station="s2">
+                <div class="flex justify-between"><h4>스타광장 수소충전소 <span class="st-type h2">수소</span> <span class="st-open">영업중</span></h4><span style="font-size:13px;font-weight:700;color:var(--color-primary-700);">1.2km</span></div>
+                <div class="st-address">서울 강남구 선릉로 428</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>하이넷</span></span>
+                  <span class="sp"><b>디스펜서</b><span>2기</span></span>
+                  <span class="sp"><b>충전압력</b><span>700bar</span></span>
+                  <span class="sp"><b>차종</b><span>승용/상용 겸용</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">상업시설</span></div>
+              </div>
+              <div class="station-card" data-station="s4">
+                <div class="flex justify-between"><h4>대치역 SK시그넷 초급속 <span class="st-type ev">전기</span></h4><span style="font-size:13px;font-weight:700;color:var(--color-primary-700);">1.8km</span></div>
+                <div class="st-address">서울 강남구 삼성로 427</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>SK일렉링크</span></span>
+                  <span class="sp"><b>충전기</b><span>총 4기 · 급속4</span></span>
+                  <span class="sp"><b>최대출력</b><span>350kW</span></span>
+                  <span class="sp"><b>타입</b><span>DC콤보·NACS</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">근린생활시설</span><span class="tag">24시간</span></div>
+              </div>
+              <div class="station-card" data-station="s6">
+                <div class="flex justify-between"><h4>서초동 EV Infra 완속 <span class="st-type ev">전기</span></h4><span style="font-size:13px;font-weight:700;color:var(--color-primary-700);">2.4km</span></div>
+                <div class="st-address">서울 서초구 서초대로 396</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>에버온</span></span>
+                  <span class="sp"><b>충전기</b><span>총 24기 · 완속24</span></span>
+                  <span class="sp"><b>최대출력</b><span>7kW</span></span>
+                  <span class="sp"><b>타입</b><span>AC완속</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">공동주택시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+              </div>
+              <div class="station-card" data-station="s5">
+                <div class="flex justify-between"><h4>양재IC 현대 수소충전소 <span class="st-type h2">수소</span> <span class="st-open">영업중</span></h4><span style="font-size:13px;font-weight:700;color:var(--color-primary-700);">3.1km</span></div>
+                <div class="st-address">서울 서초구 남부순환로 2688</div>
+                <div class="st-spec">
+                  <span class="sp"><b>운영기관</b><span>현대모비스</span></span>
+                  <span class="sp"><b>디스펜서</b><span>2기</span></span>
+                  <span class="sp"><b>충전압력</b><span>700bar·350bar</span></span>
+                  <span class="sp"><b>차종</b><span>승용·상용(버스)</span></span>
+                </div>
+                <div class="st-tags"><span class="tag cat">휴게시설</span><span class="tag">버스 가능</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 데이터 출처 -->
+      <div class="alert alert-info mt-8">
+        <div class="alert-icon"></div>
+        <div class="alert-body">
+          <strong data-i18n="charging.find.source.title">데이터 출처·갱신</strong>
+<span data-i18n="charging.find.source.desc">          공공데이터포털 "한국환경공단 전기자동차 충전소 정보" API + H2KOREA 수소충전소 API 실시간 연동. 충전기 상태·가동률·고장 정보는 5분 주기로 갱신됩니다.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 충전소 상세 드로어 ============ -->
+<div class="sd-backdrop" id="sdBackdrop"></div>
+<aside class="station-drawer" id="stationDrawer" aria-hidden="true" aria-labelledby="sdTitle">
+  <div class="sd-head">
+    <div>
+      <div class="flex items-center gap-2"><span id="sdType" class="st-type ev" data-i18n="charging.find.type.ev">전기</span><span id="sdBrand" style="font-size:11px;color:var(--color-gray-500);font-weight:600;" data-i18n="charging.find.sd.brand">GS칼텍스</span></div>
+      <h3 id="sdTitle" style="margin-top:4px;" data-i18n="charging.find.sd.title">GS칼텍스 강남 직영</h3>
+      <div id="sdAddr" class="sd-addr" data-i18n="charging.find.sd.addr">서울 강남구 테헤란로 152 · 1층 주차장</div>
+    </div>
+    <button class="sd-close" id="sdClose" data-i18n-aria="charging.find.sd.close.aria" aria-label="닫기">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- ===== 전기차 상세 ===== -->
+  <div class="sd-body" id="sdBodyEv">
+    <!-- 실시간 상태 요약 -->
+    <div class="sc-grid" style="grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div class="sc-tile ev"><div class="sc-label">이용가능</div><div class="sc-val" id="sdAvail">4</div><div class="sc-sub">대기 없음</div></div>
+      <div class="sc-tile"><div class="sc-label">사용중</div><div class="sc-val">1</div><div class="sc-sub">평균 18분</div></div>
+      <div class="sc-tile"><div class="sc-label">고장</div><div class="sc-val" style="color:var(--color-danger);">1</div><div class="sc-sub">점검 요청됨</div></div>
+    </div>
+
+    <!-- 충전기 현황 (구분: 완속/급속/초급속 + 고장 예시) -->
+    <div class="sd-section">
+      <h4>충전기 현황 (6기)</h4>
+      <div class="chg-slots">
+        <div class="chg-slot avail"><div class="cs-id">#01</div><div class="cs-type slow">완속</div><div class="cs-state">이용가능</div><div class="cs-meta">7kW · AC완속</div></div>
+        <div class="chg-slot avail"><div class="cs-id">#02</div><div class="cs-type fast">급속</div><div class="cs-state">이용가능</div><div class="cs-meta">100kW · DC콤보</div></div>
+        <div class="chg-slot busy"><div class="cs-id">#03</div><div class="cs-type fast">급속</div><div class="cs-state">사용중 08분</div><div class="cs-meta">100kW · NACS</div></div>
+        <div class="chg-slot avail"><div class="cs-id">#04</div><div class="cs-type ultra">초급속</div><div class="cs-state">이용가능</div><div class="cs-meta">200kW · DC콤보</div></div>
+        <div class="chg-slot avail"><div class="cs-id">#05</div><div class="cs-type fast">급속</div><div class="cs-state">이용가능</div><div class="cs-meta">50kW · 차데모</div></div>
+        <div class="chg-slot fault"><div class="cs-id">#06</div><div class="cs-type fast">급속</div><div class="cs-state">고장 · 점검중</div><div class="cs-meta">50kW · DC콤보</div></div>
+      </div>
+      <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">구분: <b>완속</b> 7~11kW · <b>급속</b> 50~100kW · <b>초급속</b> 200kW↑ · <span style="color:var(--color-danger);">고장</span> 충전기는 이용 불가</p>
+    </div>
+
+    <!-- 충전 요금 -->
+    <div class="sd-section">
+      <h4>충전 요금</h4>
+      <dl class="sd-kv">
+        <dt>완속 (7kW)</dt><dd>292원/kWh</dd>
+        <dt>급속 (50~100kW)</dt><dd>347원/kWh</dd>
+        <dt>초급속 (200kW↑)</dt><dd>433원/kWh</dd>
+        <dt>회원 할인</dt><dd style="color:var(--color-primary-700);">통합카드 10% 할인</dd>
+        <dt>심야 할인</dt><dd>22:00~06:00 20% 할인</dd>
+      </dl>
+    </div>
+
+    <!-- 이용자 제한 -->
+    <div class="sd-section">
+      <h4>이용자 제한</h4>
+      <div class="sd-restrict"><span class="rt">개방형 (누구나 이용 가능)</span></div>
+      <p style="font-size:12px;color:var(--color-gray-500);margin-top:7px;">※ 비개방형(입주민·관계자 전용) 충전소는 외부 이용이 제한될 수 있습니다.</p>
+    </div>
+
+    <!-- 참고사항(비고) -->
+    <div class="sd-section">
+      <h4>참고사항 (비고)</h4>
+      <div class="sd-note">지하 1층 주차장 진입 후 좌측 충전 구역. 충전 중 주차요금 무료. 대형 화물차 진입 불가.</div>
+    </div>
+
+    <!-- 시설 정보 -->
+    <div class="sd-section">
+      <h4>시설 정보</h4>
+      <dl class="sd-kv">
+        <dt>운영 시간</dt><dd>24시간</dd>
+        <dt>주차 요금</dt><dd>무료 (충전 중)</dd>
+        <dt>편의시설</dt><dd>편의점 · 화장실 · 휴게 공간</dd>
+        <dt>연락처</dt><dd>02-0000-0000</dd>
+        <dt>운영사</dt><dd id="sdOperEv">GS칼텍스</dd>
+      </dl>
+    </div>
+
+    <div class="sd-action-row">
+      <button class="btn btn-primary" type="button" data-action="notify" data-action-label="네이버지도에서 길찾기 열기">길찾기</button>
+      <button class="btn btn-secondary" type="button" data-action="notify" data-action-label="즐겨찾기에 추가되었습니다.">즐겨찾기</button>
+    </div>
+  </div>
+
+  <!-- ===== 수소 상세 ===== -->
+  <div class="sd-body" id="sdBodyH2" hidden>
+    <!-- 실시간 요약 (API 제공 시) -->
+    <div class="sc-grid" style="grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div class="sc-tile h2"><div class="sc-label">충전 잔량</div><div class="sc-val">820<span style="font-size:13px;font-weight:600;">bar</span></div><div class="sc-sub">충전 가능</div></div>
+      <div class="sc-tile"><div class="sc-label">대기 차량</div><div class="sc-val">2</div><div class="sc-sub">예상 12분</div></div>
+      <div class="sc-tile"><div class="sc-label">영업 상태</div><div class="sc-val" style="font-size:17px;">영업중</div><div class="sc-sub">~ 22:00</div></div>
+    </div>
+    <p style="font-size:11.5px;color:var(--color-accent-600,#c2703d);margin:8px 0 0;">※ 충전 잔량·대기 차량은 실시간 API 연동 시 표시(현행 미확정 — '하이' 앱 유사 서비스 참고).</p>
+
+    <!-- 충전 요금 (압력 + 금액) -->
+    <div class="sd-section">
+      <h4>충전 요금</h4>
+      <dl class="sd-kv">
+        <dt>700bar (승용)</dt><dd>9,800원/kg</dd>
+        <dt>350bar (상용·버스)</dt><dd>9,500원/kg</dd>
+      </dl>
+    </div>
+
+    <!-- 참고사항(비고) -->
+    <div class="sd-section">
+      <h4>참고사항 (비고)</h4>
+      <div class="sd-note">충전 전 방문 예약 권장. 상용(버스) 충전은 별도 디스펜서 이용. 충전소 사정에 따라 운영시간이 변동될 수 있습니다.</div>
+    </div>
+
+    <!-- 시설 정보 (전기차와 동일 구성) -->
+    <div class="sd-section">
+      <h4>시설 정보</h4>
+      <dl class="sd-kv">
+        <dt>운영 시간</dt><dd>08:00 ~ 22:00</dd>
+        <dt>디스펜서</dt><dd>2기 (700bar · 350bar)</dd>
+        <dt>편의시설</dt><dd>화장실 · 대기 공간</dd>
+        <dt>연락처</dt><dd>02-0000-0000</dd>
+        <dt>운영사</dt><dd id="sdOperH2">하이넷</dd>
+      </dl>
+    </div>
+
+    <div class="sd-action-row">
+      <button class="btn btn-primary" type="button" data-action="notify" data-action-label="네이버지도에서 길찾기 열기">길찾기</button>
+      <button class="btn btn-secondary" type="button" data-action="notify" data-action-label="즐겨찾기에 추가되었습니다.">즐겨찾기</button>
+    </div>
+  </div>
+</aside>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script>
+// URL 해시 기반 초기 탭
+(function(){
+  const url = new URL(location.href);
+  const tab = url.searchParams.get('tab');
+  if (tab) {
+    const btn = document.querySelector(`#findTabs .tab[data-tab="${tab}"]`);
+    if (btn) btn.click();
+  }
+
+  // 메인 충전요금 비교 → 충전소 찾기 진입 시 충전기사업자 필터 사전 선택
+  const op = url.searchParams.get('operator');
+  if (op) {
+    const opSel = document.getElementById('cf-operator');
+    if (opSel && Array.prototype.some.call(opSel.options, o => o.value === op)) {
+      opSel.value = op;
+      opSel.dispatchEvent(new Event('change', { bubbles: true }));
+      opSel.closest('.form-group').style.outline = '2px solid var(--color-primary-400)';
+      opSel.closest('.form-group').style.outlineOffset = '3px';
+      opSel.closest('.form-group').style.borderRadius = '8px';
+      setTimeout(() => { const g = opSel.closest('.form-group'); if (g) g.style.outline = ''; }, 2400);
+    }
+  }
+
+  // 충전소 상세 드로어
+  const drawer = document.getElementById('stationDrawer');
+  const backdrop = document.getElementById('sdBackdrop');
+  const closeBtn = document.getElementById('sdClose');
+
+  const STATIONS = {
+    s1: { name: 'GS칼텍스 강남 직영', addr: '서울 강남구 테헤란로 152 · 1층 주차장', brand: 'GS칼텍스', type: 'ev', avail: 4 },
+    s2: { name: '스타광장 수소충전소', addr: '서울 강남구 선릉로 428 · 지상 2층', brand: '하이넷', type: 'h2', avail: 2 },
+    s3: { name: '환경부 강남구청 공공', addr: '서울 강남구 학동로 426 · 공영주차장 B1', brand: '환경부', type: 'ev', avail: 6 },
+    s4: { name: '대치역 SK시그넷 초급속', addr: '서울 강남구 삼성로 427 · 대치역 2번 출구', brand: 'SK시그넷', type: 'ev', avail: 2 },
+    s5: { name: '양재IC 현대 수소충전소', addr: '서울 서초구 남부순환로 2688', brand: '현대모비스', type: 'h2', avail: 0 },
+    s6: { name: '서초동 EV Infra 완속', addr: '서울 서초구 서초대로 396 · 지하주차장', brand: 'EV Infra', type: 'ev', avail: 18 },
+    s7: { name: '롯데월드몰 파워큐브', addr: '서울 송파구 올림픽로 300 · 지하 3층', brand: '파워큐브', type: 'ev', avail: 8 },
+    s8: { name: '잠실 코하이젠 수소충전소', addr: '서울 송파구 올림픽로 35길 124', brand: '코하이젠', type: 'h2', avail: 1 }
+  };
+
+  function openDrawer(stationId) {
+    const data = STATIONS[stationId];
+    if (!data) return;
+    document.getElementById('sdTitle').textContent = data.name;
+    document.getElementById('sdAddr').textContent = data.addr;
+    document.getElementById('sdBrand').textContent = data.brand;
+    const typeEl = document.getElementById('sdType');
+    typeEl.className = 'st-type ' + data.type;
+    typeEl.textContent = data.type === 'ev' ? '전기' : '수소';
+    // 차종별 본문 전환 (전기 ↔ 수소)
+    const isEv = data.type === 'ev';
+    document.getElementById('sdBodyEv').hidden = !isEv;
+    document.getElementById('sdBodyH2').hidden = isEv;
+    if (isEv) {
+      document.getElementById('sdAvail').textContent = data.avail;
+      var oe = document.getElementById('sdOperEv'); if (oe) oe.textContent = data.brand;
+    } else {
+      var oh = document.getElementById('sdOperH2'); if (oh) oh.textContent = data.brand;
+    }
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+  }
+
+  document.querySelectorAll('.station-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.station-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const id = card.dataset.station;
+      if (id) openDrawer(id);
+    });
+  });
+
+  document.querySelectorAll('.map-pin[data-station]').forEach(pin => {
+    pin.addEventListener('click', () => {
+      document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+      pin.classList.add('active');
+      openDrawer(pin.dataset.station);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  // 목록 구분 탭 (충전소 전체 / 자주 쓰는 충전소)
+  document.querySelectorAll('.list-tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('.list-tab').forEach(function (x) { x.classList.remove('active'); });
+      this.classList.add('active');
+      var v = this.dataset.listtab;
+      document.querySelectorAll('[data-listpanel]').forEach(function (p) { p.hidden = (p.dataset.listpanel !== v); });
+    });
+  });
+
+  // 전기차/수소 모드 전환 (필터·카드·핀·범례 분리)
+  function cardVehicle(card) { return card.querySelector('.st-type.h2') ? 'h2' : 'ev'; }
+  function setMode(mode) {
+    // 토글 버튼 (지도 모드 버튼만)
+    document.querySelectorAll('.map-mode-btn[data-mode]').forEach(function (b) { b.classList.toggle('active', b.dataset.mode === mode); });
+    // 모드별 필터 표시
+    document.querySelectorAll('.ev-only').forEach(function (e) { e.style.display = (mode === 'ev') ? '' : 'none'; });
+    document.querySelectorAll('.h2-only').forEach(function (e) { e.style.display = (mode === 'h2') ? '' : 'none'; });
+    // 범례
+    document.querySelectorAll('[data-legend]').forEach(function (l) { l.hidden = (l.dataset.legend !== mode); });
+    // 목록 카드
+    var visible = 0;
+    document.querySelectorAll('#stationList .station-card').forEach(function (c) {
+      var show = cardVehicle(c) === mode;
+      c.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    var cnt = document.getElementById('station-count');
+    if (cnt) cnt.textContent = visible;
+    // 지도 핀
+    document.querySelectorAll('.finder-map .map-pin').forEach(function (p) {
+      var pv = p.classList.contains('h2') ? 'h2' : 'ev';
+      p.style.display = (pv === mode) ? '' : 'none';
+    });
+  }
+  document.querySelectorAll('.map-mode-btn[data-mode]').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(this.dataset.mode); });
+  });
+  setMode('ev');
+
+  // 내 주변 충전소 — 전기/수소 전환 (내 차 종류)
+  function showNearEl(e, show) {
+    if (!show) { e.style.display = 'none'; return; }
+    e.style.display = e.classList.contains('near-checkrow') ? 'flex' : '';
+  }
+  function setNearMode(mode) {
+    document.querySelectorAll('.near-mode').forEach(function (b) { b.classList.toggle('active', b.dataset.nearmode === mode); });
+    document.querySelectorAll('.near-ev-only').forEach(function (e) { showNearEl(e, mode === 'ev'); });
+    document.querySelectorAll('.near-h2-only').forEach(function (e) { showNearEl(e, mode === 'h2'); });
+    var n = 0;
+    document.querySelectorAll('#nearList .station-card').forEach(function (c) {
+      var v = c.querySelector('.st-type.h2') ? 'h2' : 'ev';
+      var show = (v === mode); c.style.display = show ? '' : 'none'; if (show) n++;
+    });
+    var cnt = document.getElementById('near-count'); if (cnt) cnt.textContent = n;
+  }
+  document.querySelectorAll('.near-mode').forEach(function (b) {
+    b.addEventListener('click', function () { setNearMode(this.dataset.nearmode); });
+  });
+  setNearMode('ev');
+})();
+</script>
+</body>
+</html>

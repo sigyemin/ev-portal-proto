@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 충전요금 시뮬레이터 | 충전소·요금 정보 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/charging.css">
+<style>
+  /* ════════════════════════════════════════════════════════════════
+     충전요금 시뮬레이터 전용 페이지 — 와이드 + 큰 타이포
+     ════════════════════════════════════════════════════════════════ */
+
+  .sim-page-hero {
+    background: linear-gradient(135deg, #F0FDF4 0%, #EFF6FF 100%);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .sim-page-hero .container { padding-top: 32px; padding-bottom: 32px; }
+  .sim-page-hero h1 { font-size: 32px; font-weight: var(--fw-bold); letter-spacing: -0.03em; margin: 0 0 8px; color: var(--text-primary); }
+  .sim-page-hero .hero-lead { font-size: 16px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+
+  /* 메인 시뮬레이터 카드 */
+  .sim-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-10);
+    margin-top: var(--space-8);
+    box-shadow: var(--shadow-sm);
+  }
+  .sim-card h2 {
+    font-size: 22px; font-weight: var(--fw-bold); letter-spacing: -0.025em;
+    margin: 0 0 8px; color: var(--text-primary);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sim-card h2::before {
+    content: ''; width: 6px; height: 22px;
+    background: var(--gradient-primary); border-radius: var(--radius-xs);
+  }
+  .sim-card-desc { font-size: 14.5px; color: var(--text-secondary); margin: 0 0 28px; line-height: 1.65; }
+
+  /* 그리드 레이아웃 — 와이드 */
+  .sim-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 1080px) { .sim-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+  /* 입력 영역 */
+  .sim-inputs { display: flex; flex-direction: column; gap: 18px; }
+  .sim-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .sim-row2 { grid-template-columns: 1fr; } }
+
+  .sim-field { display: flex; flex-direction: column; gap: 8px; }
+  .sim-field label {
+    font-size: 14px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-gray-700);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .sim-field select,
+  .sim-field input[type=range] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-family: inherit;
+    background: #fff;
+    color: var(--text-primary);
+    transition: border-color var(--t-fast);
+  }
+  .sim-field select { -webkit-appearance: none; appearance: none; cursor: pointer; padding-right: 38px;
+    background: #fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 14px center;
+  }
+  .sim-field select:focus,
+  .sim-field input:focus {
+    outline: 2px solid var(--color-primary-500); outline-offset: 2px;
+    border-color: var(--color-primary-500);
+  }
+  .sim-field input[type=range] { padding: 0; height: 36px; cursor: pointer; }
+
+  /* 모델 정보 배너 */
+  #simModelInfo {
+    display: none;
+    background: var(--color-secondary-50);
+    border: 1px solid #BAE6FD;
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--color-secondary-700);
+    gap: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #simModelInfo span { display: inline-flex; align-items: center; gap: 6px; }
+  #simModelInfo strong { color: var(--color-secondary-700); font-weight: var(--fw-bold); font-size: 15px; }
+
+  /* 충전량 슬라이더 */
+  .sim-kwh-row { display: flex; flex-direction: column; gap: 8px; }
+  .sim-kwh-row label { font-size: 14px; font-weight: var(--fw-semibold); color: var(--color-gray-700); display: flex; justify-content: space-between; align-items: baseline; }
+  .sim-kwh-row label .val { font-size: 17px; font-weight: var(--fw-bold); color: var(--color-primary-700); letter-spacing: -0.02em; }
+
+  /* 결과 영역 — 와이드, 큰 강조 */
+  .sim-result-wrap {
+    position: sticky; top: calc(var(--header-height) + 24px);
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .sim-result-lbl {
+    font-size: 13px;
+    color: var(--color-gray-600);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .sim-result-mini {
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border-radius: var(--radius-xl);
+    padding: 36px 32px;
+    border: 1px solid #BAE6FD;
+  }
+  .sim-result-mini .big {
+    font-size: 48px;
+    font-weight: var(--fw-bold);
+    color: #0D57B0;
+    margin: 0 0 14px;
+    font-feature-settings: "tnum";
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+  .sim-result-mini .name {
+    font-size: 16px;
+    color: var(--color-gray-800);
+    font-weight: var(--fw-semibold);
+    margin-bottom: 8px;
+  }
+  .sim-result-mini .sub {
+    font-size: 14px;
+    color: var(--color-gray-600);
+    line-height: 1.6;
+  }
+
+  /* 결과 보조 정보 */
+  .sim-result-meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .sim-result-meta .meta-item {
+    background: var(--color-gray-50);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .sim-result-meta .meta-item .lbl { font-size: 12.5px; color: var(--color-gray-500); font-weight: var(--fw-medium); margin-bottom: 4px; }
+  .sim-result-meta .meta-item .val { font-size: 17px; font-weight: var(--fw-bold); color: var(--color-gray-900); font-feature-settings: "tnum"; }
+
+  /* 도움말 카드 그리드 */
+  .sim-help-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    margin-top: var(--space-8);
+  }
+  @media (max-width: 1080px) { .sim-help-grid { grid-template-columns: 1fr; } }
+  .sim-help-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 24px 26px;
+  }
+  .sim-help-card h3 {
+    font-size: 17px; font-weight: var(--fw-bold); letter-spacing: -0.02em;
+    margin: 0 0 10px; color: var(--text-primary);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sim-help-card h3 .ico {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--color-primary-50); color: var(--color-primary-700);
+    flex-shrink: 0;
+  }
+  .sim-help-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin: 0; }
+
+  /* 안내 박스 */
+  .sim-note-box {
+    background: var(--color-gray-50);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-top: var(--space-6);
+    font-size: 13.5px;
+    color: var(--color-gray-600);
+    line-height: 1.75;
+  }
+  .sim-note-box strong { color: var(--color-gray-800); font-weight: var(--fw-semibold); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact sim-page-hero">
+    <div class="container container-wide">
+      <nav class="breadcrumb" data-i18n-aria="nav.breadcrumb.aria" aria-label="경로">
+        <a href="index.html" data-i18n="charging.fee.sim.bc.home">홈</a><span class="sep">›</span>
+        <a href="charging.html" data-i18n="charging.fee.sim.bc.charging">충전소·요금 정보</a><span class="sep">›</span>
+        <a href="charging-fee.html?tab=ev" data-i18n="charging.fee.sim.bc.fee">충전요금 안내</a><span class="sep">›</span>
+        <span class="current" data-i18n="charging.fee.sim.bc.current">내 충전요금 시뮬레이터</span>
+      </nav>
+      <h1 data-i18n="charging.fee.sim.hero.title">내 충전요금 시뮬레이터</h1>
+      <p class="hero-lead" data-i18n-html="charging.fee.sim.hero.lead">차량 모델 · 결제 카드 · 충전기 조합으로 <strong>내 충전 1회 비용</strong>을 즉시 계산하세요. 회원·로밍·비회원 시나리오를 모두 지원합니다.</p>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide">
+
+      <!-- 메인 시뮬레이터 -->
+      <div class="sim-card">
+        <h2 data-i18n="charging.fee.sim.card.title">충전요금 계산</h2>
+        <p class="sim-card-desc" data-i18n="charging.fee.sim.card.desc">제조사 → 차량 모델 → 결제 카드 → 충전기 → 회원유형 → 출력 → 충전량 순으로 선택하시면 단가와 예상 비용이 즉시 계산됩니다.</p>
+
+        <div class="sim-grid">
+          <div class="sim-inputs">
+            <div class="sim-row2">
+              <div class="sim-field">
+                <label for="simBrand" data-i18n="charging.fee.sim.lbl.brand">제조사</label>
+                <select id="simBrand">
+                  <option value="" data-i18n="charging.fee.sim.opt.choose">선택</option>
+                </select>
+              </div>
+              <div class="sim-field">
+                <label for="simModel" data-i18n="charging.fee.sim.lbl.model">차량 모델</label>
+                <select id="simModel">
+                  <option value="" data-i18n="charging.fee.sim.opt.brand_first">제조사 먼저 선택</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="simModelInfo">
+              <span><span data-i18n="charging.fee.sim.battery.prefix">배터리</span> <strong id="simBatteryVal">—</strong></span>
+              <span>SOC <strong id="simSocVal">—</strong></span>
+              <span style="color:var(--color-gray-500);font-size:13px;font-weight:500;" data-i18n="charging.fee.sim.battery.note">※ 모델 선택 시 충전량은 배터리의 95%로 자동 세팅됩니다</span>
+            </div>
+
+            <div class="sim-row2">
+              <div class="sim-field">
+                <label for="simCard" data-i18n="charging.fee.sim.lbl.card">내 카드 (사업자)</label>
+                <select id="simCard"></select>
+              </div>
+              <div class="sim-field">
+                <label for="simCharger" data-i18n="charging.fee.sim.lbl.charger">타사 충전기</label>
+                <select id="simCharger"></select>
+              </div>
+            </div>
+
+            <div class="sim-row2">
+              <div class="sim-field">
+                <label for="simMember" data-i18n="charging.fee.sim.lbl.member">회원유형</label>
+                <select id="simMember">
+                  <option value="member" selected data-i18n="charging.fee.sim.opt.member">회원</option>
+                  <option value="roaming" data-i18n="charging.fee.sim.opt.roaming">로밍</option>
+                  <option value="nonmember" data-i18n="charging.fee.sim.opt.nonmember">비회원</option>
+                </select>
+              </div>
+              <div class="sim-field">
+                <label for="simSpeed" data-i18n="charging.fee.sim.lbl.speed">출력</label>
+                <select id="simSpeed"></select>
+              </div>
+            </div>
+
+            <div class="sim-row2" id="simConditionRow" style="display:none;">
+              <div class="sim-field">
+                <label for="simCondition" data-i18n="charging.fee.sim.lbl.condition">조건 (선택)</label>
+                <select id="simCondition">
+                  <option value="" data-i18n="charging.fee.sim.opt.default">기본 (조건 없음)</option>
+                </select>
+              </div>
+              <div class="sim-field" id="simTouInputs" style="display:none;">
+                <label data-i18n="charging.fee.sim.lbl.season">계절 · 요일 · 시간대</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <select id="simSeason" style="flex:1;min-width:110px;">
+                    <option value="summer" data-i18n="charging.fee.sim.opt.summer">여름</option>
+                    <option value="spring_fall" selected data-i18n="charging.fee.sim.opt.spring_fall">봄·가을</option>
+                    <option value="winter" data-i18n="charging.fee.sim.opt.winter">겨울</option>
+                  </select>
+                  <select id="simDay" style="flex:1;min-width:110px;">
+                    <option value="weekday" selected>평일</option>
+                    <option value="saturday">토요일</option>
+                    <option value="sunday">일·공휴일</option>
+                  </select>
+                  <select id="simTimeSlot" style="flex:1;min-width:110px;">
+                    <option value="off" selected data-i18n="charging.fee.sim.opt.off">경부하</option>
+                    <option value="mid" data-i18n="charging.fee.sim.opt.mid">중간부하</option>
+                    <option value="on" data-i18n="charging.fee.sim.opt.on">최대부하</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-kwh-row">
+              <label for="simKwh">
+                <span data-i18n="charging.fee.sim.lbl.kwh">충전량</span>
+                <span class="val" id="simKwhVal">60 kWh</span>
+              </label>
+              <input type="range" id="simKwh" min="10" max="100" value="60" step="1" data-i18n-aria="charging.fee.sim.kwh.aria" aria-label="충전량 (kWh)">
+            </div>
+          </div>
+
+          <div class="sim-result-wrap">
+            <span class="sim-result-lbl" id="simLbl" data-i18n="charging.fee.sim.result.lbl">예상 충전요금 (회원)</span>
+            <div class="sim-result-mini">
+              <div class="big" id="simPrice">—</div>
+              <div class="name" id="simRateLine" data-i18n="charging.fee.sim.result.rateline">단가 — 원/kWh</div>
+              <div class="sub" id="simNote" data-i18n="charging.fee.sim.result.note">제조사·차량 모델·카드·충전기를 선택해 주세요.</div>
+            </div>
+
+            <div class="sim-result-meta">
+              <div class="meta-item">
+                <div class="lbl" data-i18n="charging.fee.sim.result.card">결제 카드</div>
+                <div class="val" id="simResultCard">—</div>
+              </div>
+              <div class="meta-item">
+                <div class="lbl" data-i18n="charging.fee.sim.result.charger">이용 충전기</div>
+                <div class="val" id="simResultCharger">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-note-box">
+<span data-i18n-html="charging.fee.sim.alert.calc"><strong>요금 산정 방식</strong> · 사업자별로 회원·비회원·로밍 요금이 다르며, 일부 사업자는 계절·시간대별(계시별) 요금제를 적용합니다. T-Index FEE_TABLE 2026.04.21 공시 기준이며 실제 결제 금액과 차이가 있을 수 있습니다.</span>
+        </div>
+      </div>
+
+      <!-- 도움말 3단 -->
+      <div class="sim-help-grid">
+        <div class="sim-help-card">
+          <h3>
+            <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+            <span data-i18n="charging.fee.sim.faq.q1">회원 vs 로밍 vs 비회원</span>
+          </h3>
+          <p data-i18n-html="charging.fee.sim.faq.a1"><strong>회원</strong>은 카드사 자체 요금, <strong>로밍</strong>은 다른 사업자 충전기 이용 시 협약 요금, <strong>비회원</strong>은 카드 등록 없이 단발성 결제 시 적용되는 가장 비싼 단가입니다.</p>
+        </div>
+        <div class="sim-help-card">
+          <h3>
+            <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span data-i18n="charging.fee.sim.faq.q2">계절시간제 (계시별)</span>
+          </h3>
+          <p data-i18n="charging.fee.sim.faq.a2">한전 KEPCO 등 일부 사업자는 시간대(경부하·중간·최대) + 계절(봄·여름·겨울)로 단가가 달라집니다. 심야·주말 충전이 가장 저렴합니다.</p>
+        </div>
+        <div class="sim-help-card">
+          <h3>
+            <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3v4zM3 19a2 2 0 0 0 2 2h1v-6H3v4z"/></svg></span>
+            <span data-i18n="charging.fee.sim.faq.q3">기후부 통합카드 추천</span>
+          </h3>
+          <p data-i18n="charging.fee.sim.faq.a3">기후부 통합카드는 모든 사업자 충전기를 자체 요금으로 이용 가능하며 로밍 수수료가 발생하지 않아 가장 경제적입니다 (정부 협약).</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260630b"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/charging-fee.js?v=20260625t10"></script>
+<script>
+/* ── 결과 보조 정보(카드/충전기 명) 동기화 ── */
+(function(){
+  const cardSel = document.getElementById('simCard');
+  const chargerSel = document.getElementById('simCharger');
+  const memSel = document.getElementById('simMember');
+  const cardOut = document.getElementById('simResultCard');
+  const chargerOut = document.getElementById('simResultCharger');
+  if (!cardSel || !chargerSel) return;
+
+  function syncMeta() {
+    const cText = cardSel.options[cardSel.selectedIndex]?.text || '—';
+    const chText = chargerSel.options[chargerSel.selectedIndex]?.text || '—';
+    cardOut.textContent = cText;
+    chargerOut.textContent = chText;
+    if (memSel.value === 'member') chargerOut.textContent = cText + ' (자사)';
+  }
+
+  cardSel.addEventListener('change', syncMeta);
+  chargerSel.addEventListener('change', syncMeta);
+  memSel.addEventListener('change', syncMeta);
+  setTimeout(syncMeta, 300);  // 옵션 채워진 후
+})();
+</script>
+</body>
+</html>

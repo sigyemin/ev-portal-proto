@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg-ioniq" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E6F7F0"/>
+      <stop offset="1" stop-color="#EBF5FF"/>
+    </linearGradient>
+    <linearGradient id="body-ioniq" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5B8DEE"/>
+      <stop offset="1" stop-color="#2C5FC0"/>
+    </linearGradient>
+    <linearGradient id="glass-ioniq" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B8D5FF" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#6FA3E8" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="180" fill="url(#bg-ioniq)"/>
+  <!-- 지면 그림자 -->
+  <ellipse cx="160" cy="148" rx="110" ry="6" fill="#000" opacity="0.08"/>
+  <!-- 차체: 스포츠 세단 (아이오닉 6 실루엣 — 낮고 긴 유선형) -->
+  <path d="M42,130 L56,124 Q72,108 100,102 L136,92 Q165,88 198,92 L238,100 Q262,106 278,118 L292,126 L292,134 Q292,140 286,140 L250,140 L250,138 A20 20 0 0 0 210,138 L210,140 L128,140 L128,138 A20 20 0 0 0 88,138 L88,140 L50,140 Q42,140 42,134 Z"
+        fill="url(#body-ioniq)"/>
+  <!-- 유리창 (쿠페 스타일) -->
+  <path d="M96,110 Q120,96 152,93 L198,93 Q226,96 248,112 L238,120 Q212,113 180,112 L138,112 Q112,114 96,120 Z"
+        fill="url(#glass-ioniq)"/>
+  <!-- 도어 라인 -->
+  <line x1="170" y1="96" x2="170" y2="132" stroke="#1A3C7A" stroke-width="1" opacity="0.35"/>
+  <!-- 보디 하이라이트 -->
+  <path d="M48,130 Q150,120 290,128" stroke="#fff" stroke-width="1.2" fill="none" opacity="0.25"/>
+  <!-- 전조등 -->
+  <ellipse cx="285" cy="123" rx="5" ry="3" fill="#FFF4B8"/>
+  <!-- 후미등 -->
+  <rect x="44" y="122" width="6" height="5" rx="1" fill="#FF5A5A"/>
+  <!-- 바퀴 -->
+  <circle cx="108" cy="140" r="16" fill="#1E293B"/>
+  <circle cx="108" cy="140" r="9" fill="#475569"/>
+  <circle cx="108" cy="140" r="3" fill="#CBD5E1"/>
+  <circle cx="230" cy="140" r="16" fill="#1E293B"/>
+  <circle cx="230" cy="140" r="9" fill="#475569"/>
+  <circle cx="230" cy="140" r="3" fill="#CBD5E1"/>
+  <!-- EV 뱃지 -->
+  <rect x="150" y="127" width="20" height="8" rx="2" fill="#1AAD6C"/>
+  <text x="160" y="133" text-anchor="middle" font-family="Pretendard, Arial" font-size="6" font-weight="700" fill="#fff">EV</text>
+</svg>
