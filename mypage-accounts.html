@@ -7,6 +7,18 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/auth.css">
+<style>
+  .mpa-hist-td{padding:10px 12px;border-bottom:1px solid var(--border-light);}
+  .mpa-res{font-weight:600;}
+  .mpa-res.ok{color:var(--color-success);}
+  .mpa-res.fail{color:var(--color-danger,#d92d20);}
+  .mpa-res.block{color:var(--color-warning,#f79009);}
+  .mpa-pager{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:16px;}
+  .mpa-pager button{min-width:32px;height:32px;padding:0 8px;border:1px solid var(--border-light);background:#fff;border-radius:6px;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:all var(--t-fast);}
+  .mpa-pager button:hover:not(:disabled){border-color:var(--color-primary-400);color:var(--color-primary-700);}
+  .mpa-pager button.is-active{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;font-weight:700;}
+  .mpa-pager button:disabled{opacity:.4;cursor:not-allowed;}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -49,13 +61,8 @@
               <div class="mp-account-logo naver" aria-hidden="true">N</div>
               <div class="mp-account-info">
                 <strong data-i18n="mpa.naver">네이버</strong>
-                <span data-i18n="mpa.naver.meta">hjshin***@naver.com · 연결일 2024-08-12</span>
               </div>
-              <span class="mp-account-status linked">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span data-i18n="mpa.status.linked">연결됨</span>
-              </span>
-              <button type="button" class="btn btn-secondary btn-sm mpa-unlink-btn" data-provider="네이버" data-provider-en="Naver" style="margin-left:8px;" data-i18n="mpa.btn.unlink">연결 해제</button>
+              <button type="button" class="btn btn-secondary btn-sm mpa-unlink-btn" data-provider="네이버" data-provider-en="Naver" data-i18n="mpa.btn.unlink">연결 해제</button>
             </div>
 
             <!-- [요청] 카카오 추가 — 네이버와 동일 형식(연결됨/연결 해제) -->
@@ -63,13 +70,8 @@
               <div class="mp-account-logo kakao" aria-hidden="true">K</div>
               <div class="mp-account-info">
                 <strong data-i18n="mpa.kakao">카카오</strong>
-                <span data-i18n="mpa.kakao.meta">hjshin***@kakao.com · 연결일 2024-08-12</span>
               </div>
-              <span class="mp-account-status linked">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span data-i18n="mpa.status.linked">연결됨</span>
-              </span>
-              <button type="button" class="btn btn-secondary btn-sm mpa-unlink-btn" data-provider="카카오" data-provider-en="Kakao" style="margin-left:8px;" data-i18n="mpa.btn.unlink">연결 해제</button>
+              <button type="button" class="btn btn-secondary btn-sm mpa-unlink-btn" data-provider="카카오" data-provider-en="Kakao" data-i18n="mpa.btn.unlink">연결 해제</button>
             </div>
 
             <!-- [요청] 행정전자서명(GPKI) 추가 — 공동인증서와 동일 형식(미등록/등록하기) -->
@@ -77,10 +79,8 @@
               <div class="mp-account-logo" style="background:#003A70;color:#fff;font-weight:700;" aria-hidden="true" data-i18n="mpa.gpki.label">행정</div>
               <div class="mp-account-info">
                 <strong data-i18n="mpa.gpki.title">행정전자서명(GPKI)</strong>
-                <span data-i18n="mpa.gpki.desc">행정기관 발급 전자서명 · 공공 행정서비스 본인확인 시 사용</span>
               </div>
-              <span class="mp-account-status unlinked" data-i18n="mpa.status.unlinked">미등록</span>
-              <button type="button" class="btn btn-primary btn-sm mpa-reg-gpki" style="margin-left:8px;" data-i18n="mpa.btn.register">등록하기</button>
+              <button type="button" class="btn btn-primary btn-sm mpa-reg-gpki" data-i18n="mpa.btn.register">등록하기</button>
             </div>
           </div>
 
@@ -139,12 +139,9 @@
                   <th scope="col" style="padding:10px 12px;border-bottom:1px solid var(--border-light);width:100px;" data-i18n="mpa.col.result">결과</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);">2026-04-27 09:07</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.method.mobile">휴대폰 본인확인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.purpose.login">로그인 본인확인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);"><span style="color:var(--color-success);font-weight:600;" data-i18n="mpa.result.success">성공</span></td></tr>
-                <tr><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);">2026-04-18 14:32</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.method.naver">네이버</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.purpose.social">소셜 로그인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);"><span style="color:var(--color-success);font-weight:600;" data-i18n="mpa.result.success">성공</span></td></tr>
-                <tr><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);">2026-04-12 10:15</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.method.mobile">휴대폰 본인확인</td><td style="padding:10px 12px;border-bottom:1px solid var(--border-light);" data-i18n="mpa.purpose.subsidy">보조금 신청 본인확인</td><td style="padding:10px 12px;"><span style="color:var(--color-success);font-weight:600;" data-i18n="mpa.result.success">성공</span></td></tr>
-              </tbody>
+              <tbody id="mpaHistBody"></tbody>
             </table>
+            <div class="mpa-pager" id="mpaPager" role="navigation" aria-label="본인 확인 활동 페이지"></div>
           </div>
 
           <div class="mp-policy">
@@ -209,6 +206,59 @@
     if (regGpki) regGpki.addEventListener('click', function () {
       alert(_t('mpa.msg.gpki.register', '행정전자서명(GPKI) 등록 창으로 이동합니다.'));
     });
+
+    // [요청] 최근 본인 확인 활동 — 페이지네이션 + 로그인 시도 상태(성공/실패/차단)
+    var HIST = [
+      ['2026-04-27 09:07', '휴대폰 본인확인', '로그인 본인확인',     'ok',    '성공'],
+      ['2026-04-26 22:41', '비밀번호',       '로그인 시도',         'fail',  '실패 (비밀번호 불일치)'],
+      ['2026-04-26 22:39', '비밀번호',       '로그인 시도',         'fail',  '실패 (비밀번호 불일치)'],
+      ['2026-04-25 08:12', '네이버',         '소셜 로그인',         'ok',    '성공'],
+      ['2026-04-22 19:03', '카카오',         '소셜 로그인',         'ok',    '성공'],
+      ['2026-04-20 11:20', '비밀번호',       '로그인 시도',         'block', '차단 (5회 실패)'],
+      ['2026-04-18 14:32', '네이버',         '소셜 로그인',         'ok',    '성공'],
+      ['2026-04-15 09:55', '휴대폰 본인확인', '민원 접수 본인확인',   'ok',    '성공'],
+      ['2026-04-12 10:15', '휴대폰 본인확인', '보조금 신청 본인확인', 'ok',    '성공'],
+      ['2026-04-08 17:48', '비밀번호',       '로그인 시도',         'fail',  '실패 (비밀번호 불일치)'],
+      ['2026-04-05 07:30', '카카오',         '소셜 로그인',         'ok',    '성공'],
+      ['2026-04-01 13:22', '휴대폰 본인확인', '로그인 본인확인',     'ok',    '성공']
+    ];
+    var PAGE_SIZE = 5;
+    var body  = document.getElementById('mpaHistBody');
+    var pager = document.getElementById('mpaPager');
+    if (body && pager) {
+      var pages = Math.ceil(HIST.length / PAGE_SIZE);
+      var cur = 1;
+      function esc(s){ return String(s).replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+      function renderRows() {
+        var start = (cur - 1) * PAGE_SIZE;
+        var rows = HIST.slice(start, start + PAGE_SIZE);
+        body.innerHTML = rows.map(function (r) {
+          return '<tr>'
+            + '<td class="mpa-hist-td">' + esc(r[0]) + '</td>'
+            + '<td class="mpa-hist-td">' + esc(r[1]) + '</td>'
+            + '<td class="mpa-hist-td">' + esc(r[2]) + '</td>'
+            + '<td class="mpa-hist-td"><span class="mpa-res ' + r[3] + '">' + esc(r[4]) + '</span></td>'
+            + '</tr>';
+        }).join('');
+      }
+      function renderPager() {
+        var html = '<button type="button" data-go="prev"' + (cur === 1 ? ' disabled' : '') + ' aria-label="이전">‹</button>';
+        for (var p = 1; p <= pages; p++) {
+          html += '<button type="button" data-go="' + p + '" class="' + (p === cur ? 'is-active' : '') + '"' + (p === cur ? ' aria-current="page"' : '') + '>' + p + '</button>';
+        }
+        html += '<button type="button" data-go="next"' + (cur === pages ? ' disabled' : '') + ' aria-label="다음">›</button>';
+        pager.innerHTML = html;
+      }
+      pager.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        var go = b.dataset.go;
+        if (go === 'prev') cur = Math.max(1, cur - 1);
+        else if (go === 'next') cur = Math.min(pages, cur + 1);
+        else cur = parseInt(go, 10);
+        renderRows(); renderPager();
+      });
+      renderRows(); renderPager();
+    }
   })();
 </script>
 </body>
