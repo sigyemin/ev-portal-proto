@@ -107,7 +107,7 @@
     /* charging-card.html — 본문 */
     'charging.card.tab.apply':    { ko: '회원카드 신청·발급조회', en: 'Apply / Check Card' },
     'charging.card.tab.edit':     { ko: '카드 정보 수정', en: 'Edit Card Info' },
-    'charging.card.tab.history':  { ko: '이용요금·명세서 조회', en: 'Usage & Statements' },
+    'charging.card.tab.history':  { ko: '충전요금 조회', en: 'Charging Fee' },
     'charging.card.tab.point':    { ko: '충전 포인트', en: 'Charging Points' },
 
     /* charging-install.html — 본문 */

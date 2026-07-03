@@ -36,7 +36,7 @@
         <span class="current" aria-current="page">질의응답(건의사항)</span>
       </nav>
       <h1>질문·건의사항 등록</h1>
-      <p class="hero-lead">등록 후 담당 부서가 영업일 기준 3일 이내 답변합니다. 유사 질문이 FAQ에 있는 경우 FAQ 답변이 함께 제공됩니다.</p>
+      <p class="hero-lead">등록 후 담당 부서가 답변합니다. 유사 질문이 FAQ에 있는 경우 FAQ 답변이 함께 제공됩니다.</p>
     </div>
   </section>
 
@@ -92,9 +92,9 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260630b"></script>
+<script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260626e"></script>
+<script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -117,7 +117,7 @@
   document.getElementById('qnaWriteForm').addEventListener('submit', function(e){
     e.preventDefault();
     var secret = document.getElementById('qwSecret').checked;
-    var msg = '질문이 등록되었습니다' + (secret ? ' (비공개)' : '') + '. 담당 부서가 영업일 기준 3일 이내 답변하며, 진행 상황은 내 질문에서 확인하실 수 있습니다.';
+    var msg = '질문이 등록되었습니다' + (secret ? ' (비공개)' : '') + '. 담당 부서가 답변하며, 진행 상황은 내 질문에서 확인하실 수 있습니다.';
     if (window.__toast) window.__toast(msg, 'success'); else alert(msg);
     setTimeout(function(){ location.href = 'inquiry-qna.html?tab=mine'; }, 1400);
   });

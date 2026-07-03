@@ -53,7 +53,7 @@
                                 en: 'Link social accounts and configure simple authentication' },
     'mp.card.account.a1':     { ko: '네이버 계정 연결', en: 'Link Naver Account' },
     'mp.card.account.a2':     { ko: '카카오 계정 연결', en: 'Link Kakao Account' },
-    'mp.card.account.a3':     { ko: '간편 인증 관리', en: 'Simple Auth Management' },
+    'mp.card.account.gpki':   { ko: 'GPKI 등록하기', en: 'Register GPKI' },
 
     'mp.card.withdraw.tag':   { ko: '회원 탈퇴', en: 'Withdraw' },
     'mp.card.withdraw.title': { ko: '회원 탈퇴', en: 'Withdraw Membership' },

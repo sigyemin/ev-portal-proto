@@ -111,7 +111,7 @@
     'mega.charging.card.apply':     { ko: '회원카드 신청',         en: 'Apply for Card' },
     'mega.charging.card.check':     { ko: '회원카드 발급조회',     en: 'Card Issuance Status' },
     'mega.charging.card.edit':      { ko: '카드 정보 수정',         en: 'Edit Card Info' },
-    'mega.charging.card.history':   { ko: '이용요금·명세서 조회',   en: 'Usage & Statements' },
+    'mega.charging.card.history':   { ko: '충전요금 조회',   en: 'Charging Fees' },
     'mega.charging.card.point':     { ko: '충전 포인트',            en: 'Charging Points' },
     'mega.charging.install.slow':   { ko: '공용 완속충전시설 직접신청', en: 'Public Slow Charger Application' },
     'mega.charging.install.contest':{ ko: '공용 완속/급속·중속 충전시설 운영사·제조사 공모 신청', en: 'Operator/Maker Charger Open Call' },

@@ -28,8 +28,29 @@ window.SubsidyAuth = (function () {
     function pageMatches(a) { return pageType === 'personal' ? a.type === 'personal' : (a.type === 'biz' || a.type === 'gov'); }
     function reveal(a) {
       gate.hidden = true; gate.innerHTML = '';
-      if (view) view.hidden = false;
+      if (view) { view.hidden = false; ensureResetBar(); }
       if (typeof opts.onAuthed === 'function') opts.onAuthed(a);
+    }
+
+    // 인증 해제(조회 종료) 바 — 리스트 상단에 1회 주입. 로그인은 유지, 게이트 인증만 클리어.
+    function ensureResetBar() {
+      if (!view || view.querySelector('.sa-reset-bar')) return;
+      var bar = document.createElement('div');
+      bar.className = 'sa-reset-bar';
+      bar.innerHTML =
+        '<p class="sa-reset-hint">다른 유형(개인/법인/공공)으로 조회하려면 인증 해제 후 다시 인증하세요.</p>' +
+        '<button type="button" class="btn btn-secondary btn-sm sa-reset-btn" aria-label="인증 해제 후 다른 유형으로 다시 조회">인증 해제 · 다른 유형 조회</button>';
+      view.insertBefore(bar, view.firstChild);
+      bar.querySelector('.sa-reset-btn').addEventListener('click', resetAuth);
+    }
+    function resetAuth() {
+      clear();                               // 게이트 인증 플래그만 제거(마이페이지 로그인 유지)
+      if (view) view.hidden = true;          // 리스트/신원 화면에서 내림
+      gate.hidden = false;
+      showChoose();                          // 인증페이지(유형 3버튼)로 복귀 — 자동전환 없이 재인증 경유
+      var first = gate.querySelector('.sa-type');
+      if (first) first.focus();              // 포커스: 게이트 첫 유형 버튼
+      if (window.__toast) window.__toast('인증이 해제되었습니다.', 'success');
     }
     function routeTo(a) {
       if (pageMatches(a)) reveal(a);
