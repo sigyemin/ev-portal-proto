@@ -13,13 +13,6 @@
   .cc-info-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
   .cc-info-cards .info-side-card { margin:0; }
   @media (max-width:760px){ .cc-info-cards { grid-template-columns:1fr; } }
-  /* 발급조회 필터 */
-  .cc-check-filter { display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; padding:18px; background:var(--color-gray-50,#f7f8fa); border:1px solid var(--border-light); border-radius:12px; margin:14px 0; }
-  .cc-check-filter label { font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:5px; }
-  .cc-check-filter select { height:42px; min-width:180px; padding:0 12px; border:1px solid var(--border-medium); border-radius:8px; font-size:13.5px; font-family:inherit; background:#fff; }
-  .cc-tabs { display:flex; gap:0; border-bottom:2px solid var(--border-light); margin-bottom:20px; }
-  .cc-tab { padding:12px 22px; border:none; background:none; font-size:15.5px; font-weight:700; color:var(--text-tertiary); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; }
-  .cc-tab.active { color:var(--color-primary-700); border-bottom-color:var(--color-primary-600); }
   .cc-req-note { text-align:right; font-size:13px; color:var(--text-secondary); margin:0 0 8px; }
   .cc-req-note b { color:var(--color-secondary-700); }
   .cc-inline { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -52,7 +45,7 @@
         <span class="current" aria-current="page">회원카드 신청</span>
       </nav>
       <h1>회원카드 신청</h1>
-      <p class="hero-lead">환경부 무공해차 <strong style="color:#fff;">통합 회원카드</strong>를 신청하고 발급 상태를 조회합니다.</p>
+      <p class="hero-lead">환경부 무공해차 <strong style="color:#fff;">통합 회원카드</strong>를 신청합니다.</p>
     </div>
   </section>
 
@@ -60,14 +53,8 @@
     <div class="container container-wide">
 
       <div style="max-width:980px;">
-          <!-- 탭 -->
-          <div class="cc-tabs" role="tablist">
-            <button type="button" class="cc-tab active" data-cctab="apply" role="tab" aria-selected="true">회원카드/번호 신청서</button>
-            <button type="button" class="cc-tab" data-cctab="check" role="tab" aria-selected="false">회원카드/번호 발급조회</button>
-          </div>
-
-          <!-- ===== 신청서 ===== -->
-          <div data-ccpanel="apply">
+          <!-- ===== 회원카드/번호 신청서 (단일 페이지) ===== -->
+          <div>
             <div class="alert alert-info" style="margin-bottom:18px;">
               <div class="alert-icon"></div>
               <div class="alert-body"><strong>활용 TIP</strong> 모바일 EV이음앱을 통한 모바일 카드 발급 시, 결제카드 등록 후 기후에너지환경부 충전기는 바로 사용 가능합니다. (안드로이드만 가능)</div>
@@ -172,47 +159,8 @@
 
             <div id="applyDone" class="alert alert-success mt-3" style="display:none;">
               <div class="alert-icon"></div>
-              <div class="alert-body"><strong>회원카드 신청이 접수되었습니다.</strong><br>발급 후 등기우편으로 배송됩니다(영업일 5~7일). 진행 상태는 '회원카드/번호 발급조회'에서 확인하세요.</div>
+              <div class="alert-body"><strong>회원카드 신청이 접수되었습니다.</strong><br>발급 후 등기우편으로 배송됩니다(영업일 5~7일). 진행 상태는 <a href="charging-card.html?tab=mycard" style="color:var(--color-secondary-700,#1f5fa8);font-weight:600;">회원카드 관리</a>의 '내 회원카드'에서 확인하세요.</div>
             </div>
-          </div>
-
-          <!-- ===== 발급조회 (소스: 회원카드/번호 발급조회) ===== -->
-          <div data-ccpanel="check" hidden>
-            <h3 class="section-h">회원카드/번호 발급조회</h3>
-            <!-- 필터: 발급요청사유 · 발급상태 (소스 ISSUE_REASON / CARD_ISSUE_STAT) -->
-            <div class="cc-check-filter">
-              <div>
-                <label for="chkReason">발급요청사유</label>
-                <select id="chkReason"><option value="">전체</option><option>신규(신차)</option><option>신규(중고)</option><option>분실</option><option>파손</option><option>기타</option></select>
-              </div>
-              <div>
-                <label for="chkStat">발급상태</label>
-                <select id="chkStat"><option value="">전체</option><option>신청접수</option><option>카드제작</option><option>발송(등기)</option><option>수령완료</option><option>반려</option></select>
-              </div>
-              <button type="button" class="btn btn-primary" id="chkBtn">조회</button>
-            </div>
-            <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;"><b id="chkCount" style="color:var(--color-primary-700);">1</b>건 조회</p>
-            <div class="table-wrap" style="overflow-x:auto;">
-              <table class="board-table std-board" style="font-size:13px;min-width:920px;">
-                <thead>
-                  <tr><th>신청일자</th><th>카드번호</th><th>차량번호<br>(유효)</th><th>차량번호<br>(신청시)</th><th>발급방법</th><th>발급상태</th><th>발급요청사유</th><th>배송지</th><th>회원카드</th></tr>
-                </thead>
-                <tbody id="chkBody">
-                  <tr>
-                    <td>2026-06-16</td>
-                    <td>EVCD-2026-0456-7788</td>
-                    <td>34나 5678</td>
-                    <td>34나 5678</td>
-                    <td>등기배송</td>
-                    <td><span class="cat-chip charge">발송(등기)</span></td>
-                    <td>신규(중고)</td>
-                    <td>서울특별시 강남구 테헤란로 152</td>
-                    <td>실물카드</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="cc-notes" style="margin-top:10px;">※ 발급 안내문자 수신 후 우체국 등기 영업일 기준 10일 이내 수령 가능합니다. (신청량·연휴 등에 따라 변경될 수 있음)</p>
           </div>
       </div>
 
@@ -228,20 +176,6 @@
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
 (function(){
-  // 탭 전환
-  document.querySelectorAll('.cc-tab').forEach(function(t){
-    t.addEventListener('click', function(){
-      document.querySelectorAll('.cc-tab').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
-      this.classList.add('active'); this.setAttribute('aria-selected','true');
-      var v = this.dataset.cctab;
-      document.querySelectorAll('[data-ccpanel]').forEach(function(p){ p.hidden = (p.dataset.ccpanel !== v); });
-    });
-  });
-  // 발급조회 (소스: getCardIssueList) — 발급요청사유·발급상태 필터 조회
-  var chkBtn = document.getElementById('chkBtn');
-  if (chkBtn) chkBtn.addEventListener('click', function(){
-    if (window.__toast) window.__toast('발급조회를 실행했습니다.', 'info');
-  });
 
   // 임시번호 체크 시 차량번호 안내
   var temp = document.getElementById('tempNoChk');

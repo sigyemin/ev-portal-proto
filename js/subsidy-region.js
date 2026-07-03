@@ -871,63 +871,6 @@
       </div>
     `;
 
-    // ========== 모델별 지방비 (AS-IS ev.or.kr psPopupLocalCarModelPrice 반영) ==========
-    const models = buildModelsForRow(r);
-    const modelsHTML = models.length === 0 ? '' : `
-      <div class="model-price-wrap">
-        <div class="model-price-head">
-          <div>
-            <span class="mp-title">${tr('label','모델별 지방비 상세')}</span>
-            <span class="mp-sub">${tRegion(r.region)} · ${tr('vt', r.vehicleType)} · ${tYear(r.year)} · ${models.length} ${_lang()==='en'?'models':'개 모델'}</span>
-          </div>
-          <button class="btn btn-ghost btn-sm" type="button"
-                  data-action="download"
-                  data-action-label="${r.region} ${r.vehicleType} 모델별 지방비 (Excel)">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            ${tr('label','엑셀 다운로드')}
-          </button>
-        </div>
-        <div class="model-price-table-wrap">
-          <table class="model-price-table">
-            <thead>
-              <tr>
-                <th>${tr('label','모델명')}</th>
-                <th>${tr('label','제조사')}</th>
-                <th>${tr('label','배터리')}</th>
-                <th>${tr('label','주행거리')}</th>
-                <th class="num">${tr('label','국비')}</th>
-                <th class="num">${tr('label','지방비')}</th>
-                <th class="num hi">${tr('label','총 지원금')}</th>
-                <th style="width:84px; text-align:center;">${tr('label','지원여부')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${models.map(m => `
-                <tr class="${m.availability === '미지원' ? 'disabled' : ''}">
-                  <td><strong>${m.model}</strong></td>
-                  <td>${m.maker}</td>
-                  <td>${m.battery}</td>
-                  <td>${m.range}</td>
-                  <td class="num">${fmt(m.national)}${tr('label','만원')}</td>
-                  <td class="num">${fmt(m.local)}${tr('label','만원')}</td>
-                  <td class="num hi">${fmt(m.total)}${tr('label','만원')}</td>
-                  <td style="text-align:center;">
-                    ${m.availability === '지원'
-                      ? `<span class="chip chip-success" style="font-size:10.5px;padding:2px 8px;">${tr('label','지원')}</span>`
-                      : `<span class="chip" style="font-size:10.5px;padding:2px 8px;background:#FEE2E2;color:var(--color-danger);">${tr('label','미지원')}</span>`}
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-        <div class="model-price-note">
-          <strong>${tr('label','안내')}</strong>
-          ${_lang()==='en' ? `National subsidy is uniform nationwide; local subsidy is based on ${tr('sido',r.sido)}. Actual payments may differ by ${tr('sido',r.sido)} priority and bonus criteria. Bonus benefits (vulnerable groups +20%, youth/first-time +10%, multi-child +10%, etc.) apply separately.` : `국비는 전국 공통이며, 지방비는 ${r.sido} 지자체 기준입니다. 동일 차종이라도 ${r.sido}의 우선순위·가산 요건에 따라 실제 지급액은 다를 수 있습니다. 가산 혜택(취약계층 +20%, 청년·생애최초 +10%, 다자녀 +10% 등)은 별도 적용됩니다.`}
-        </div>
-      </div>
-    `;
-
     return `
       <div class="detail-body v2">
         <!-- 공고별 일정(접수기간·신청마감·공고문) + 비고 + 담당자 -->
@@ -977,9 +920,6 @@
 
         <!-- 카테고리별 분포 -->
         ${stackChartHTML}
-
-        <!-- 모델별 지방비 상세 (AS-IS psPopupLocalCarModelPrice) -->
-        ${modelsHTML}
       </div>
     `;
   }

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI 표준화 비교 보드 (임시 검수용)</title>
+<style>
+  :root{--ink:#16231d;--muted:#586860;--border:#e0e7e0;--accent:#1d9e75;--accentink:#0f6e56;--accbg:#e3f3ec;--recbg:#fff7e6;--recink:#8a5a0b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:#f2f5f1;line-height:1.5}
+  header{padding:20px 24px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+  header h1{margin:0 0 3px;font-size:19px}
+  header p{margin:0;font-size:13px;color:var(--muted)}
+  nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  nav.toc a{font-size:12.5px;text-decoration:none;color:var(--accentink);background:var(--accbg);padding:4px 10px;border-radius:999px}
+  .dec{background:#fff;margin:18px 20px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .dec-h{padding:14px 18px;border-bottom:1px solid var(--border)}
+  .dec-h h2{margin:0 0 4px;font-size:16px}
+  .dec-h .q{font-size:13px;color:var(--muted)}
+  .rec{margin-top:8px;font-size:13px;background:var(--recbg);color:var(--recink);border:1px solid #f0dcae;padding:7px 11px;border-radius:8px}
+  .rec b{color:var(--recink)}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:0}
+  .col{border-top:1px solid var(--border)}
+  .col+.col{border-left:1px solid var(--border)}
+  .cap{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fafbf9;border-bottom:1px solid var(--border);font-size:13px;flex-wrap:wrap}
+  .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px}
+  .tagA{background:#eef1f7;color:#4c5c79}.tagB{background:#f8f0da;color:#8a5a0b}.tagStd{background:var(--accbg);color:var(--accentink)}
+  .cap .fn{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:var(--muted)}
+  .cap .open{margin-left:auto;font-size:12px;color:var(--accentink);text-decoration:none}
+  iframe{width:100%;height:520px;border:0;display:block;background:#fff}
+  .hint{font-size:12px;color:var(--muted);padding:10px 18px 16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>UI 표준화 비교 보드 <span style="font-size:12px;color:#8a968e;font-weight:400">· 임시 검수용(_audit-compare.html)</span></h1>
+  <p>같은 계열인데 서로 다른 UI를 실제로 나란히 띄웠습니다. 각 결정마다 어느 쪽으로 통일할지 고르세요. 노란 박스는 제 추천입니다.</p>
+  <nav class="toc">
+    <a href="#d1">1 이용신청 폼</a>
+    <a href="#d2">2 게시판 목록</a>
+    <a href="#d3">3 상세 골격</a>
+    <a href="#d4">4 마이페이지 네비</a>
+    <a href="#d5">5 통계 카드</a>
+    <a href="#d6">6 신청 플로우</a>
+    <a href="#d7">7 공모 상세(통일 완료)</a>
+  </nav>
+</header>
+
+<section class="dec" id="d1">
+  <div class="dec-h">
+    <h2>1. 업무지원 이용신청 — 폼 패턴 두 종류</h2>
+    <div class="q">같은 "이용신청"인데 A(범용 약관·첨부형)와 B(EVUSER 라디오·상태토글형)로 갈립니다. 어느 패턴으로 통일할까요?</div>
+    <div class="rec">추천: <b>B계열(현행 EVUSER 반영형)</b> — 실 DB 필드·상태토글이 실제 업무 흐름에 맞음. A계열을 B로 흡수.</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagA">A계열</span><span class="fn">business-apply-subsidy.html</span><a class="open" href="business-apply-subsidy.html" target="_blank">새 탭 ↗</a></div><iframe src="business-apply-subsidy.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagB">B계열</span><span class="fn">business-apply-roaming.html</span><a class="open" href="business-apply-roaming.html" target="_blank">새 탭 ↗</a></div><iframe src="business-apply-roaming.html" loading="lazy"></iframe></div>
+  </div>
+  <div class="hint">※ brand·subsidy·slow-subsidy는 apply=A, status=B로 짝까지 어긋나 있어, 통일 패턴을 먼저 정해야 짝을 맞출 수 있습니다.</div>
+</section>
+
+<section class="dec" id="d2">
+  <div class="dec-h">
+    <h2>2. 게시판·자료실 목록 — 같은 board 표준 family</h2>
+    <div class="q">공지사항·보도자료·공개자료·홍보자료·일반 자료실은 모두 같은 board 표준이어야 하는 목록 family입니다. 균일한지 보고, 어긋난 것을 표준으로 맞춥니다.</div>
+    <div class="rec">추천: <b>공지사항(notice-list) board 표준으로 통일</b> — 홍보자료(카드뷰 기본)·서식/인증(자체 표)을 흡수. FAQ 아코디언은 의도된 예외라 별도 유지.</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagStd">표준·공지사항</span><span class="fn">notice-list.html</span><a class="open" href="notice-list.html" target="_blank">새 탭 ↗</a></div><iframe src="notice-list.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagStd">보도자료</span><span class="fn">notice-press.html</span><a class="open" href="notice-press.html" target="_blank">새 탭 ↗</a></div><iframe src="notice-press.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagStd">공개자료</span><span class="fn">notice-data.html</span><a class="open" href="notice-data.html" target="_blank">새 탭 ↗</a></div><iframe src="notice-data.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagB">홍보자료(카드뷰 기본)</span><span class="fn">notice-promo.html</span><a class="open" href="notice-promo.html" target="_blank">새 탭 ↗</a></div><iframe src="notice-promo.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagStd">일반 자료실</span><span class="fn">info-library.html</span><a class="open" href="info-library.html" target="_blank">새 탭 ↗</a></div><iframe src="info-library.html" loading="lazy"></iframe></div>
+  </div>
+  <div class="hint">※ 이 family(공지·보도·공개·홍보·일반자료실)를 하나로 균일화. 어긋난 것: 홍보자료=카드뷰 기본(→표 기본), 서식(info-forms)=자체 파일그리드, 인증기준(info-cert)=자체 veh-table → board 표준으로 흡수 대상. inquiry-faq(아코디언)은 성격이 달라 이 그룹 아님(유지).</div>
+</section>
+
+<section class="dec" id="d3">
+  <div class="dec-h">
+    <h2>3. 게시판 상세 — 이전/다음글 골격</h2>
+    <div class="q">notice-detail엔 이전/다음글이 있고 qna-detail엔 없습니다. 상세 골격을 하나로 통일할까요?</div>
+    <div class="rec">추천: <b>notice-detail 골격(메타+본문+첨부+이전/다음+목록)으로 통일</b> — qna-detail에 이전/다음 추가.</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagStd">이전/다음 있음</span><span class="fn">notice-detail.html</span><a class="open" href="notice-detail.html" target="_blank">새 탭 ↗</a></div><iframe src="notice-detail.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagA">없음</span><span class="fn">qna-detail.html</span><a class="open" href="qna-detail.html" target="_blank">새 탭 ↗</a></div><iframe src="qna-detail.html" loading="lazy"></iframe></div>
+  </div>
+</section>
+
+<section class="dec" id="d4">
+  <div class="dec-h">
+    <h2>4. 마이페이지 — 좌측네비 폐지 vs 슬롯 잔존</h2>
+    <div class="q">메인(mypage.html)은 좌측네비 폐지·풀폭인데, 하위 8개 페이지엔 좌측네비 슬롯이 남아 있습니다.</div>
+    <div class="rec">추천: <b>풀폭(mypage.html)으로 통일</b> — 하위 8개에서 좌측네비 슬롯 제거.</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagStd">풀폭(폐지)</span><span class="fn">mypage.html</span><a class="open" href="mypage.html" target="_blank">새 탭 ↗</a></div><iframe src="mypage.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagA">슬롯 잔존</span><span class="fn">mypage-accounts.html</span><a class="open" href="mypage-accounts.html" target="_blank">새 탭 ↗</a></div><iframe src="mypage-accounts.html" loading="lazy"></iframe></div>
+  </div>
+</section>
+
+<section class="dec" id="d5">
+  <div class="dec-h">
+    <h2>5. 통계 카드 — 두 클래스 체계</h2>
+    <div class="q">data.html은 .stat-value(2줄), 상세들은 .st-val+.st-unit(단위 분리)로 카드 마크업이 다릅니다.</div>
+    <div class="rec">추천: <b>단위 분리형(.st-val+.st-unit)으로 통일</b> — 숫자/단위 정렬이 더 정돈됨.</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagA">.stat-value</span><span class="fn">data.html</span><a class="open" href="data.html" target="_blank">새 탭 ↗</a></div><iframe src="data.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagB">.st-val+unit</span><span class="fn">data-infra.html</span><a class="open" href="data-infra.html" target="_blank">새 탭 ↗</a></div><iframe src="data-infra.html" loading="lazy"></iframe></div>
+  </div>
+</section>
+
+<section class="dec" id="d6">
+  <div class="dec-h">
+    <h2>6. 신청 플로우 — 위저드 vs 탭형 SPA(고아)</h2>
+    <div class="q">install 신청은 위저드(동의→인증→작성→완료), public-bus-apply만 탭형 SPA인데 아무도 링크 안 하는 고아입니다.</div>
+    <div class="rec">추천: <b>위저드(install)로 통일</b> — public-bus-apply는 메뉴에서 내림(원본 파일은 보존).</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagStd">위저드</span><span class="fn">charging-install-slow-apply.html</span><a class="open" href="charging-install-slow-apply.html" target="_blank">새 탭 ↗</a></div><iframe src="charging-install-slow-apply.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagA">탭 SPA(고아)</span><span class="fn">public-bus-apply.html</span><a class="open" href="public-bus-apply.html" target="_blank">새 탭 ↗</a></div><iframe src="public-bus-apply.html" loading="lazy"></iframe></div>
+  </div>
+</section>
+
+<section class="dec" id="d7">
+  <div class="dec-h">
+    <h2>7. 공모 상세 — 이미 통일된 표준 (참고)</h2>
+    <div class="q">공모 status 8종은 contest-detail 공통 컴포넌트로 이미 통일돼 있습니다. "동일 UI가 된 상태"의 참고 예시입니다.</div>
+    <div class="rec">이건 <b>양호(정상)</b> — 다른 계열도 이 수준으로 맞추는 게 목표.</div>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="cap"><span class="tag tagStd">통일됨</span><span class="fn">public-bus-status.html</span><a class="open" href="public-bus-status.html" target="_blank">새 탭 ↗</a></div><iframe src="public-bus-status.html" loading="lazy"></iframe></div>
+    <div class="col"><div class="cap"><span class="tag tagStd">통일됨</span><span class="fn">charging-install-brand-status.html</span><a class="open" href="charging-install-brand-status.html" target="_blank">새 탭 ↗</a></div><iframe src="charging-install-brand-status.html" loading="lazy"></iframe></div>
+  </div>
+</section>
+
+<p class="hint" style="text-align:center;padding:24px">임시 검수 파일입니다. 결정 끝나면 삭제하면 됩니다. · 프로토타입 원본은 건드리지 않았습니다.</p>
+</body>
+</html>

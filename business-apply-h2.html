@@ -6,7 +6,7 @@
 <title>수소차 충전인프라 이용신청 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
-<link rel="stylesheet" href="css/business-apply.css">
+<link rel="stylesheet" href="css/business-apply.css?v=20260703b">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -21,8 +21,8 @@
         <a href="mypage.html#mp-business">업무지원시스템 이용신청</a><span class="sep" aria-hidden="true">›</span>
         <span class="current" aria-current="page">수소차 충전인프라 이용신청</span>
       </nav>
-      <h1 data-i18n="biz.h2.bc.full">수소차 충전인프라 이용신청</h1>
-      <p class="hero-lead" data-i18n="biz.h2.lead.full">수소충전소 사업자의 운영·점검·이력 통합 관리</p>
+      <h1>수소차 충전인프라 이용신청</h1>
+      <p class="hero-lead"><strong style="color:#fff;">수소충전소 사업자</strong>의 운영·점검·이력 통합 관리 시스템 이용을 신청합니다.</p>
     </div>
   </section>
 
@@ -37,66 +37,88 @@
         <span class="bf-statetoggle-lab">개발자 확인용 (실서비스: 계정 상태로 분기)</span>
       </div>
 
+      <div class="alert alert-info alert-inline mb-4">
+        <div class="alert-icon"></div>
+        <div class="alert-body" style="line-height:1.7;">신청 후 관리자(한국환경공단) 승인을 받아야 이용이 가능합니다.<br>동시 로그인이 안 되니 개인별로 가입하여 이용합니다.</div>
+      </div>
 
-      <form class="bf-card" onsubmit="alert(window.__i18n&&window.__i18n.getLang()==='en'?'Application submitted. You will receive a result via email/SMS within 5–7 business days.':'이용신청이 접수되었습니다. 영업일 5~7일 이내 등록 이메일·SMS로 결과가 통보됩니다.');location.href='mypage.html';return false;">
+      <form class="bf-card" id="subForm">
 
         <div class="bf-block">
-          <h3 class="bf-h" data-i18n="biz.h.bizinfo">사업자 정보</h3>
+          <h3 class="bf-h">사업자 정보</h3>
           <div class="bf-grid">
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.bizno">사업자 등록번호</span><input type="text" placeholder="000-00-00000" required></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.firm">법인·상호명</span><input type="text" placeholder="(주)○○에너지" required data-i18n-attr="placeholder:biz.ph.firm"></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.rep">대표자명</span><input type="text" required></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.ind">업종·업태</span><input type="text" placeholder="예: 전기차 충전 서비스업" data-i18n-attr="placeholder:biz.ph.ind"></label>
-            <label class="bf-row bf-row-full"><span class="bf-lab" data-i18n="biz.lab.addr">사업장 소재지</span><input type="text" placeholder="시·도 → 시군구 → 상세주소" required data-i18n-attr="placeholder:biz.ph.addr"></label>
+            <label class="bf-row"><span class="bf-lab">사업자 등록번호 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="000-00-00000" required></label>
+            <label class="bf-row"><span class="bf-lab">법인·상호명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="(주)○○에너지" required></label>
+            <label class="bf-row"><span class="bf-lab">대표자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab">업종·업태</span><input type="text" placeholder="예: 전기차 충전 서비스업"></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">사업장 소재지 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="시·도 → 시군구 → 상세주소" required></label>
           </div>
         </div>
 
         <div class="bf-block">
-          <h3 class="bf-h" data-i18n="biz.h.poc">담당자 정보</h3>
+          <h3 class="bf-h">담당자 정보</h3>
           <div class="bf-grid">
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.pocname">담당자명</span><input type="text" required></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.poctitle">직책·부서</span><input type="text" placeholder="예: 사업운영팀 과장" data-i18n-attr="placeholder:biz.ph.poctitle"></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.tel">휴대폰</span><input type="tel" placeholder="010-0000-0000" required></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.lab.email">이메일</span><input type="email" placeholder="manager@example.com" required></label>
+            <label class="bf-row"><span class="bf-lab">담당자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab">직책·부서</span><input type="text" placeholder="예: 사업운영팀 과장"></label>
+            <label class="bf-row"><span class="bf-lab">휴대폰 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="tel" placeholder="010-0000-0000" class="num-only" required></label>
+            <label class="bf-row"><span class="bf-lab">이메일 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="email" placeholder="manager@example.com" required></label>
           </div>
         </div>
 
         <div class="bf-block">
-          <h3 class="bf-h" data-i18n="biz.h.req">신청 내용</h3>
+          <h3 class="bf-h">신청 내용</h3>
           <div class="bf-grid">
-            <label class="bf-row bf-row-full"><span class="bf-lab" data-i18n="biz.h2.lab.license">수소충전소 운영 허가번호</span><input type="text" placeholder="" required></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.h2.lab.cnt">운영 충전소 수</span><span class="bf-input-wrap"><input type="number" min="0" required> <span class="bf-unit" data-i18n="biz.unit.sites">개소</span></span></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.h2.lab.disp">1일 평균 디스펜서 처리</span><span class="bf-input-wrap"><input type="number" min="0" required> <span class="bf-unit" data-i18n="biz.unit.cars">대</span></span></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.h2.lab.supply">수소 공급 방식</span><select required><option data-i18n="biz.h2.opt.tube">튜브트레일러</option><option data-i18n="biz.h2.opt.pipe">파이프라인</option><option data-i18n="biz.h2.opt.smr">자체 생산(SMR/수전해)</option><option data-i18n="biz.h2.opt.mix">복합</option></select></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.h2.lab.pressure">충전 압력</span><select required><option data-i18n="biz.h2.opt.350">350bar</option><option data-i18n="biz.h2.opt.700">700bar</option><option data-i18n="biz.h2.opt.dual">이중</option></select></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.h2.lab.safe">안전관리책임자명</span><input type="text" placeholder="" required></label>
-            <label class="bf-row"><span class="bf-lab" data-i18n="biz.h2.lab.cert">안전관리 자격번호</span><input type="text" placeholder="" required></label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">수소충전소 운영 허가번호 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab">운영 충전소 수 <em style="color:var(--color-danger,#e11d48);">*</em></span><span class="bf-input-wrap"><input type="number" min="0" required> <span class="bf-unit">개소</span></span></label>
+            <label class="bf-row"><span class="bf-lab">1일 평균 디스펜서 처리 <em style="color:var(--color-danger,#e11d48);">*</em></span><span class="bf-input-wrap"><input type="number" min="0" required> <span class="bf-unit">대</span></span></label>
+            <label class="bf-row"><span class="bf-lab">수소 공급 방식 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>튜브트레일러</option><option>파이프라인</option><option>자체 생산(SMR/수전해)</option><option>복합</option></select></label>
+            <label class="bf-row"><span class="bf-lab">충전 압력 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>350bar</option><option>700bar</option><option>이중</option></select></label>
+            <label class="bf-row"><span class="bf-lab">안전관리책임자명 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <label class="bf-row"><span class="bf-lab">안전관리 자격번호 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
           </div>
         </div>
 
         <div class="bf-block">
-          <h3 class="bf-h" data-i18n="biz.h.attach">첨부 서류</h3>
-          <ul class="bf-attach-list">
-            <li class="bf-attach-item"><span class="bf-attach-num">1</span><span class="bf-attach-name" data-i18n="biz.attach.bizreg">사업자 등록증</span><button type="button" class="bf-attach-pick">파일</button></li>
-            <li class="bf-attach-item"><span class="bf-attach-num">2</span><span class="bf-attach-name" data-i18n="biz.h2.attach.lic">수소충전소 운영 허가증</span><button type="button" class="bf-attach-pick">파일</button></li>
-            <li class="bf-attach-item"><span class="bf-attach-num">3</span><span class="bf-attach-name" data-i18n="biz.h2.attach.scert">안전관리책임자 자격증</span><button type="button" class="bf-attach-pick">파일</button></li>
-            <li class="bf-attach-item"><span class="bf-attach-num">4</span><span class="bf-attach-name" data-i18n="biz.h2.attach.chk">정기 점검 계획서</span><button type="button" class="bf-attach-pick">파일</button></li>
-          </ul>
-          <p class="bf-attach-note" data-i18n="biz.attach.note">PDF·JPG·PNG 형식, 각 10MB 이내 / 모든 서류는 발급일 3개월 이내</p>
+          <h3 class="bf-h">첨부 서류</h3>
+          <div class="bf-grid" style="gap:14px;">
+            <label class="bf-row bf-row-full"><span class="bf-lab">사업자 등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_bizreg">파일첨부</button><input type="file" id="f_bizreg" hidden></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">수소충전소 운영 허가증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_lic">파일첨부</button><input type="file" id="f_lic" hidden></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">안전관리책임자 자격증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_scert">파일첨부</button><input type="file" id="f_scert" hidden></span>
+            </label>
+            <label class="bf-row bf-row-full"><span class="bf-lab">정기 점검 계획서 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_chk">파일첨부</button><input type="file" id="f_chk" hidden></span>
+            </label>
+          </div>
+          <p class="bf-attach-note">※ PDF·JPG·PNG 형식, 각 10MB 이내 / 모든 서류는 발급일 3개월 이내</p>
         </div>
 
-        <div class="bf-agree">
-          <label><input type="checkbox" required> <span data-i18n-html="biz.agree.html"><strong>[필수]</strong> 이용약관·개인정보 수집·이용에 동의합니다.</span> <a href="info-terms.html" class="bf-agree-link" data-i18n="biz.agree.view">전체보기</a></label>
+        <div class="bf-block">
+          <h3 class="bf-h">진행상태</h3>
+          <div class="bf-grid">
+            <label class="bf-row"><span class="bf-lab">승인여부</span><input type="text" value="신청 전" readonly></label>
+            <label class="bf-row"><span class="bf-lab">신청일자</span><input type="text" value="" readonly></label>
+          </div>
         </div>
 
         <div class="bf-foot">
-          <a href="mypage.html" class="btn btn-secondary" data-i18n="biz.btn.cancel">취소</a>
-          <button type="submit" class="btn btn-primary" data-i18n="biz.btn.submit">이용신청 제출</button>
+          <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
+          <button type="submit" class="btn btn-primary">신청</button>
         </div>
-
-        <p class="bf-note" data-i18n="biz.note">처리 기간 영업일 5~7일 · 결과 등록 이메일·SMS 통보 · 문의 1661-0970 (평일 09~18시)</p>
       </form>
 
+      <div class="alert alert-info alert-inline" style="margin-top:24px;">
+        <div class="alert-icon"></div>
+        <div class="alert-body">신청 후 승인을 받아야 이용이 가능하며, 승인까지 영업일 5~7일 소요됩니다. 결과는 등록하신 이메일·SMS로 통보됩니다.</div>
+      </div>
+      <div class="bf-contact">
+        <div class="bf-contact-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 1 3-3c0 1.6-1.2 2.2-1.2 3.4 0 .9 .5 1.6 1.2 1.6"/><rect x="4.5" y="17" width="15" height="3.2" rx="1.2"/></svg></div>
+        <div class="bf-contact-body"><strong>승인 요청</strong><span class="bf-contact-item">수소충전 인프라팀 | 1661-0970</span></div>
+      </div>
     </div>
   </section>
 </main>
@@ -105,8 +127,35 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-business.js?v=20260520"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function toast(msg, type){ if(window.__toast) window.__toast(msg, type||'info'); }
+  document.querySelectorAll('.num-only').forEach(function(el){
+    el.addEventListener('input', function(){ this.value = this.value.replace(/[^0-9-]/g,''); });
+  });
+  document.querySelectorAll('.bf-file-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ var i=document.getElementById(this.getAttribute('data-target')); if(i) i.click(); });
+  });
+  var fileInputs = Array.prototype.slice.call(document.querySelectorAll('input[type=file]'));
+  function fileRow(inp){ return inp.closest('.bf-row'); }
+  function fileLabel(inp){ var r=fileRow(inp), l=r&&r.querySelector('.bf-lab'); return (l?l.textContent:'첨부').replace(/[*\s]+$/,'').trim(); }
+  function fileRequired(inp){ var r=fileRow(inp); return !!(r && r.querySelector('.bf-lab em')); }
+  fileInputs.forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var row=this.closest('.bf-file-row'), nameEl=row?row.querySelector('.bf-file-name'):null;
+      if(nameEl){ if(this.files&&this.files.length){ nameEl.textContent=this.files[0].name; nameEl.classList.add('has'); } else { nameEl.textContent='선택된 파일 없음'; nameEl.classList.remove('has'); } }
+    });
+  });
+  document.getElementById('subForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var missing = fileInputs.filter(function(inp){ return fileRequired(inp) && !(inp.files && inp.files.length); });
+    if(missing.length){ toast('필수 첨부서류가 누락되었습니다: '+missing.map(fileLabel).join(', '), 'error'); return; }
+    toast('이용신청이 접수되었습니다. 관리자 승인 후 이용하실 수 있습니다.', 'success');
+    setTimeout(function(){ location.href='mypage.html#mp-business'; }, 900);
+  });
+})();
+</script>
 </body>
 </html>
