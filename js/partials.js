@@ -132,22 +132,11 @@
                       <li><a href="subsidy-target.html" data-i18n="mega.purchase.subsidy.target">보조금 지원 대상·신청절차</a></li>
                       <li><a href="subsidy-region.html" data-i18n="mega.purchase.subsidy.region">지자체별 보조금 현황</a></li>
                       <li><a href="subsidy-local.html" data-i18n="mega.purchase.subsidy.local">지자체별 차종·모델 보조금</a></li>
-                      <!-- [삭제] 지역별 추가 혜택(tax-region) — 헤더/햄버거/사이트맵 제외. 원본 보존: <li><a href="tax-region.html" data-i18n="mega.purchase.tax.region">지역별 추가 혜택</a></li> -->
                       <li><a href="subsidy-vehicles.html" data-i18n="mega.purchase.subsidy.vehicles">보조금 지급대상 차종</a></li>
                       <li><a href="subsidy-info.html" data-i18n="mega.purchase.subsidy.info">보조금 안내·계산기</a></li>
                       <li><a href="subsidy-refund.html" data-i18n="mega.purchase.subsidy.refund">보조금 환수금 안내·계산기</a></li>
                     </ul>
                   </div>
-                  <!-- v0.12 IA 재편: '세제·정보 안내' 컬럼 삭제(2·5). 통합안내 페이지 삭제, 지역별 추가혜택→구매보조금 안내(3), 내 차 저공해 등급 확인→차량 비교(4)로 이동. 원본 보존(주석)
-                  <div class="mega-col">
-                    <a href="tax-integrated.html" class="mega-col-title"><span data-i18n="mega.purchase.tax">세제·정보 안내</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
-                    <ul>
-                      <li><a href="tax-integrated.html" data-i18n="mega.purchase.tax.integrated">세제 정보 통합 안내</a></li>
-                      <li><a href="tax-region.html" data-i18n="mega.purchase.tax.region">지역별 추가 혜택</a></li>
-                      <li><a href="tax-grade.html" data-i18n="mega.purchase.tax.grade">내 차 저공해 등급 확인</a></li>
-                    </ul>
-                  </div>
-                  -->
                   <div class="mega-col">
                     <a href="compare-tool.html" class="mega-col-title"><span data-i18n="mega.purchase.compare">차량 비교</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
                     <ul>
@@ -291,12 +280,8 @@
                     </ul>
                   </div>
                   <div class="mega-col">
-                    <!-- [수정 작업3] 알림·공지 클릭 시 공지사항(notice-list.html)으로 이동 (기존: notice-keeper.html) -->
                     <a href="notice-list.html" class="mega-col-title"><span data-i18n="mega.community.notice">알림·공지</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
                     <ul>
-                      <!-- [삭제 작업4] 전기차 충전소 지킴이 활동 메뉴 항목 주석처리
-                      <li><a href="notice-keeper.html" data-i18n="mega.community.notice.keeper">전기차 충전소 지킴이 활동</a></li>
-                      -->
                       <li><a href="notice-list.html" data-i18n="mega.community.notice.list">공지사항</a></li>
                       <li><a href="notice-press.html" data-i18n="mega.community.notice.press">보도자료</a></li>
                       <li><a href="notice-promo.html" data-i18n="mega.community.notice.promo">홍보자료</a></li>
@@ -388,8 +373,7 @@
   // V3.2: i18n 키 기반 — { tKey, items: [[label, href, itemKey]] }
   const sitemapSections = [
     { tKey: 'nav.purchase', cols: [
-      { tKey: 'mega.purchase.subsidy', items: [['보조금 지원 대상·신청절차','subsidy-target.html','mega.purchase.subsidy.target'],['지자체별 보조금 현황','subsidy-region.html','mega.purchase.subsidy.region'],['지자체별 차종·모델 보조금','subsidy-local.html','mega.purchase.subsidy.local'],/* [삭제] ['지역별 추가 혜택','tax-region.html','mega.purchase.tax.region'], */['보조금 지급대상 차종','subsidy-vehicles.html','mega.purchase.subsidy.vehicles'],['보조금 안내·계산기','subsidy-info.html','mega.purchase.subsidy.info'],['보조금 환수금 안내·계산기','subsidy-refund.html','mega.purchase.subsidy.refund']] },
-      /* v0.12 IA 재편: 세제·정보 안내 컬럼 삭제(2·5) — 지역별 추가혜택→구매보조금 안내(3), 내 차 저공해 등급 확인→차량 비교(4)로 이동. 원본 보존: { tKey: 'mega.purchase.tax', items: [['세제 정보 통합 안내','tax-integrated.html','mega.purchase.tax.integrated'],['지역별 추가 혜택','tax-region.html','mega.purchase.tax.region'],['내 차 저공해 등급 확인','tax-grade.html','mega.purchase.tax.grade']] }, */
+      { tKey: 'mega.purchase.subsidy', items: [['보조금 지원 대상·신청절차','subsidy-target.html','mega.purchase.subsidy.target'],['지자체별 보조금 현황','subsidy-region.html','mega.purchase.subsidy.region'],['지자체별 차종·모델 보조금','subsidy-local.html','mega.purchase.subsidy.local'],['보조금 지급대상 차종','subsidy-vehicles.html','mega.purchase.subsidy.vehicles'],['보조금 안내·계산기','subsidy-info.html','mega.purchase.subsidy.info'],['보조금 환수금 안내·계산기','subsidy-refund.html','mega.purchase.subsidy.refund']] },
       { tKey: 'mega.purchase.compare', items: [['차종 비교 도구','compare-tool.html','mega.purchase.compare.tool'],['내 차 저공해 등급 확인','tax-grade.html','mega.purchase.tax.grade'] /* v0.12 TCO 계산 삭제(6): ,['총소유비용(TCO) 계산','compare-tco.html','mega.purchase.compare.tco'] */] },
       { tKey: 'mega.purchase.public', items: [['전기자동차 수행자 선정 평가 신청','public-ev.html','mega.purchase.public.ev'],['전기승합차 공모 신청','public-bus.html','mega.purchase.public.bus'],['전기지게차 공모 신청','public-construction.html','mega.purchase.public.const'],['전기이륜차 수행자 선정 평가 신청','public-moto.html','mega.purchase.public.moto'],['지자체 문의처 안내','public-contact.html','mega.purchase.public.contact']] },
       { tKey: 'mega.purchase.kev100', items: [['K-EV100 소개','kev100-about.html','mega.purchase.kev100.about'],['참여 방법·절차','kev100-process.html','mega.purchase.kev100.process'],['참여기업 현황','kev100-companies.html','mega.purchase.kev100.companies'],['참여 혜택·지원','kev100-benefits.html','mega.purchase.kev100.benefits']] },
@@ -408,7 +392,7 @@
     ]},
     { tKey: 'nav.community', cols: [
       { tKey: 'mega.community.ai', items: [['AI 맞춤 상담','index.html?ai=personal#aiSectionAnchor','mega.community.ai.personal'],['보조금 큐레이터','index.html?ai=subsidy#aiSectionAnchor','mega.community.ai.subsidy'],['장애 대응 안내','index.html?ai=charge#aiSectionAnchor','mega.community.ai.charge']] },
-      { tKey: 'mega.community.notice', items: [/* [삭제 작업4] ['전기차 충전소 지킴이 활동','notice-keeper.html','mega.community.notice.keeper'], */['공지사항','notice-list.html','mega.community.notice.list'],['보도자료','notice-press.html','mega.community.notice.press'],['홍보자료','notice-promo.html','mega.community.notice.promo'],['공개자료','notice-data.html','mega.community.notice.data']] },
+      { tKey: 'mega.community.notice', items: [['공지사항','notice-list.html','mega.community.notice.list'],['보도자료','notice-press.html','mega.community.notice.press'],['홍보자료','notice-promo.html','mega.community.notice.promo'],['공개자료','notice-data.html','mega.community.notice.data']] },
       { tKey: 'mega.community.inquiry', items: [['FAQ (자주 묻는 질문)','inquiry-faq.html','mega.community.inquiry.faq'],['질의응답(건의사항)','inquiry-qna.html','mega.community.inquiry.qna'],['불편 민원 신고','inquiry-complaint.html','mega.community.inquiry.complaint'],['보조금 부적정집행 신고','inquiry-report.html','mega.community.inquiry.report'],['충전요금 할인 미적용 신고','inquiry-charge-discount.html','mega.community.inquiry.discount'],['민원 처리 현황 조회','inquiry-status.html','mega.community.inquiry.status']] },
     ]},
     { tKey: 'nav.info', cols: [

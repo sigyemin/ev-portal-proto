@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/screens-v2.css">
+<link rel="stylesheet" href="css/auth.css">
 <style>
   [hidden]{display:none!important;}
   .ba-wrap{max-width:1180px;}
@@ -106,6 +107,21 @@
         <div class="ba-foot">
           <a href="charging-install-brand.html" class="btn btn-secondary">이전</a>
           <button type="button" class="btn btn-primary" id="agreeNext">신청</button>
+        </div>
+      </div>
+
+      <!-- ===== 0.5 대표자 본인 인증 (공통 .cf-auth — 인증 단계 신규 추가) ===== -->
+      <div data-bpanel="verify" hidden>
+        <h2 style="font-size:24px;font-weight:800;margin:0 0 8px;">대표자 본인 인증</h2>
+        <p class="cf-auth-lead">「전자서명법」에 따라 <strong>대표자 본인 명의 휴대폰</strong>으로 안전하게 처리됩니다. 아래 버튼으로 휴대전화 본인인증을 완료해 주세요.</p>
+        <div class="cf-auth-card" id="brdAuthCard" style="max-width:560px;margin:0 auto;">
+          <div class="cf-auth-ico" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg></div>
+          <button type="button" class="cf-auth-btn" id="brdAuthBtn"><span>휴대전화 인증하기</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+          <p class="cf-auth-note">PASS 앱·통신사 인증으로 대표자 본인 명의 휴대폰에서 처리됩니다. (프로토타입: 데모 인증)</p>
+        </div>
+        <div class="ba-foot">
+          <button type="button" class="btn btn-secondary" id="verifyPrev">이전</button>
+          <button type="button" class="btn btn-primary" id="verifyNext" disabled>다음 (신청서 작성)</button>
         </div>
       </div>
 
@@ -369,6 +385,7 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/auth-verify.js?v=20260706"></script>
 <script>
 (function(){
   function $(s,r){ return (r||document).querySelector(s); }
@@ -387,6 +404,18 @@
   agItem.addEventListener('change',function(){ syncAgree('item'); });
   $('#agreeNext').addEventListener('click',function(){
     if(!agItem.checked){ if(window.__toast) window.__toast('개인정보 수집·이용에 동의해 주세요.','info'); return; }
+    bGo('verify');
+  });
+
+  // 본인 인증 (공통 컴포넌트 .cf-auth — PASS 방식 단일 버튼) · brand 인증 단계 신규
+  var verified=false, _verData=null;
+  if(window.AuthVerify) AuthVerify.mount('#brdAuthCard', { session:'install_brand_auth', onVerified:function(data){
+    verified=true; _verData=data; $('#verifyNext').disabled=false;
+  }});
+  var _vp=$('#verifyPrev'); if(_vp) _vp.addEventListener('click',function(){ bGo('agree'); });
+  var _vn=$('#verifyNext'); if(_vn) _vn.addEventListener('click',function(){
+    if(!verified){ if(window.__toast) window.__toast('휴대전화 본인인증을 먼저 완료해 주세요.','info'); return; }
+    var nm=(_verData&&_verData.name)||''; if(nm){ var rep=document.querySelector('[data-bpanel=form] input[placeholder=대표자명]'); if(rep && !rep.value) rep.value=nm; }
     bGo('form');
   });
 

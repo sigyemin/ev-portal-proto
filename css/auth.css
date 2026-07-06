@@ -2175,3 +2175,21 @@
   .mp-form-label { padding-top: 0; }
   .mp-notify-head, .mp-notify-row { grid-template-columns: 1fr 60px 60px; }
 }
+
+/* ============================================================
+   휴대전화 본인인증 공통 컴포넌트 (.cf-auth) — signup 표준 이관
+   (JS: js/auth-verify.js · 이벤트 cf-auth:verified / API AuthVerify.mount)
+   ============================================================ */
+.cf-auth-lead { font-size:14.5px; color:var(--text-secondary); margin:0 0 14px; }
+.cf-auth-card { position:relative; border:1px solid var(--border-light); border-radius:16px; padding:28px; text-align:center; background:var(--color-gray-50); transition:opacity .15s ease, border-color .15s ease, background .15s ease; }
+.cf-auth-card.is-locked { opacity:.5; pointer-events:none; }
+.cf-auth-card.is-verified { border-color:var(--color-primary-300,#8fc9a8); background:var(--color-primary-50,#eefaf2); }
+.cf-auth-ico { color:var(--color-secondary-600); margin-bottom:14px; }
+.cf-auth-card.is-verified .cf-auth-ico { color:var(--color-primary-600,#16a34a); }
+.cf-auth-btn { display:inline-flex; align-items:center; gap:10px; background:var(--text-primary); color:#fff; border:none; border-radius:999px; padding:14px 32px; font-size:15.5px; font-weight:700; cursor:pointer; font-family:inherit; }
+.cf-auth-btn:hover { background:#000; }
+.cf-auth-btn.done { background:var(--color-primary-600,#16a34a); cursor:default; }
+.cf-auth-btn:disabled { opacity:.6; cursor:not-allowed; }
+.cf-auth-btn:focus-visible { outline:2px solid var(--color-primary-500,#22c55e); outline-offset:3px; }
+.cf-auth-note { font-size:12.5px; color:var(--text-tertiary); margin:12px 0 0; }
+.cf-auth-live { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); border:0; }

@@ -410,11 +410,6 @@ const NOTICE_ORDER = ['n001','n002','n003','n004','n005','n006','n007','n008','n
 
     document.title = item.title + ' | 무공해차 통합누리집';
     document.getElementById('pageH1').textContent = isPromo ? '[홍보자료-상세]' : isPress ? '[보도자료-상세]' : '[공지사항-상세]';
-    const bcParent = document.getElementById('bcParent');
-    if (bcParent) {
-      bcParent.textContent = isPromo ? '홍보자료' : isPress ? '보도자료' : '공지사항';
-      bcParent.href = isPromo ? 'notice-promo.html' : isPress ? 'notice-press.html' : 'notice-list.html';
-    }
 
     document.getElementById('ndTitle').textContent = item.title;
     document.getElementById('ndDept').textContent = item.dept || '-';

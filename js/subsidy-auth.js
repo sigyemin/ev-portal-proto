@@ -99,6 +99,28 @@ window.SubsidyAuth = (function () {
     }
 
     function showAuth(type) {
+      // 개인 = 휴대폰 본인인증(PASS) → 공통 .cf-auth 컴포넌트. 법인/공공(공동인증서·GPKI)은 이번 범위 아님(기존 모의 유지).
+      if (type === 'personal') {
+        gate.innerHTML =
+          '<div class="sa-gate">' +
+          '<p class="cf-auth-lead" style="text-align:center;">휴대전화 본인인증(PASS)으로 본인확인을 완료해 주세요.</p>' +
+          '<div class="cf-auth-card" id="saAuthCard" style="max-width:460px;margin:0 auto;">' +
+          '<div class="cf-auth-ico" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg></div>' +
+          '<button type="button" class="cf-auth-btn" id="saAuthBtn"><span>휴대전화 인증하기</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>' +
+          '<p class="cf-auth-note">PASS 앱·통신사 인증으로 본인 명의 휴대폰에서 처리됩니다. (프로토타입: 데모 인증)</p>' +
+          '</div>' +
+          '<div class="sa-actions" style="margin-top:16px;">' +
+          '<button type="button" class="btn btn-ghost" id="saMismatch">(데모) 타인 명의로 인증</button>' +
+          '<button type="button" class="btn btn-ghost" id="saCancel">취소</button>' +
+          '</div>' +
+          '</div>';
+        var card = gate.querySelector('#saAuthCard');
+        if (window.AuthVerify) window.AuthVerify.mount(card, { onVerified: function () { succeed('personal', true); } });
+        else gate.querySelector('#saAuthBtn').addEventListener('click', function () { succeed('personal', true); });
+        gate.querySelector('#saMismatch').addEventListener('click', function () { succeed('personal', false); });
+        gate.querySelector('#saCancel').addEventListener('click', function () { showFail('취소'); });
+        return;
+      }
       gate.innerHTML =
         '<div class="sa-gate">' +
         '<div class="sa-auth" role="status" aria-live="polite">' +
@@ -108,12 +130,10 @@ window.SubsidyAuth = (function () {
         '</div>' +
         '<div class="sa-actions">' +
         '<button type="button" class="btn btn-primary btn-lg" id="saOk">인증 완료</button>' +
-        (type === 'personal' ? '<button type="button" class="btn btn-ghost" id="saMismatch">(데모) 타인 명의로 인증</button>' : '') +
         '<button type="button" class="btn btn-ghost" id="saCancel">취소</button>' +
         '</div>' +
         '</div>';
       gate.querySelector('#saOk').addEventListener('click', function () { succeed(type, true); });
-      var mm = gate.querySelector('#saMismatch'); if (mm) mm.addEventListener('click', function () { succeed(type, false); });
       gate.querySelector('#saCancel').addEventListener('click', function () { showFail('취소'); });
     }
 
