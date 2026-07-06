@@ -6,6 +6,10 @@
 *.bak*
 *.xlsx
 CHANGELOG*.md
+# 내부 정리 매니페스트/백업 zip (예: ev-portal-0522_v0.20_...매니페스트.csv, ..._백업.zip)
+ev-portal-0522_*
+*매니페스트*.csv
+*백업*.zip
 
 # 로컬 배포 스크립트 (사이트에 올리지 않음)
 배포하기.bat
