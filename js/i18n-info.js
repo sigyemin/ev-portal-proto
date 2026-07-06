@@ -625,8 +625,8 @@
     'info.reg.cert.ce.dt4':       { ko: '인증 기관',                                en: 'Certifying Body' },
     'info.reg.cert.ce.dd4':       { ko: '건설기계검사원, 환경공단',                  en: 'Construction Equipment Inspection Agency, Korea Environment Corp.' },
     'info.reg.cert.alert.title':  { ko: '인증 기준 변경 알림',                      en: 'Certification Standards Change Notice' },
-    'info.reg.cert.alert.body':   { ko: '인증 기준은 「대기환경보전법 시행규칙」 및 환경부 고시에 따라 정기적으로 개정됩니다. 신규 차종·충전기의 인증 일정·결과는 환경공단 인증 DB에서 조회하시거나 통합 콜센터 1661-0970로 문의해 주시기 바랍니다.',
-                                    en: 'Certification standards are periodically revised per the Clean Air Conservation Act Enforcement Rules and MCEE notices. For new vehicle/charger certification schedules and results, check the Korea Environment Corp. certification DB or contact the call center at 1661-0970.' },
+    'info.reg.cert.alert.body':   { ko: '인증 기준은 「대기환경보전법 시행규칙」 및 환경부 고시에 따라 정기적으로 개정됩니다.',
+                                    en: 'Certification standards are periodically revised per the Clean Air Conservation Act Enforcement Rules and MCEE notices.' },
 
     'info.terms.d15':             { ko: '회원이 공단의 영업 활동을 방해하는 경우',    en: 'Member interferes with the Corporation\'s business activities' },
     'info.terms.d16':             { ko: '천재지변, 비상사태, 정전, 통신 장애 등의 불가항력적 사유가 있는 경우',

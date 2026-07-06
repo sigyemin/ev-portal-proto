@@ -144,11 +144,15 @@
     document.addEventListener('click', function (e) {
       if (!quick.contains(e.target)) quick.classList.remove('open');
     });
-    // AI 헬프데스크 → 메인페이지 히어로 AI 헬프데스크로 이동 (헤더·햄버거·사이트맵과 동일)
+    // AI 헬프데스크 → 우측 슬라이드 AI 헬프데스크 패널 열기 (aif). 없으면 히어로로 이동(폴백)
     var aiBtn = quick.querySelector('[data-quick="ai"]');
     if (aiBtn) aiBtn.addEventListener('click', function () {
       quick.classList.remove('open');
-      location.href = 'index.html?ai=personal#aiSectionAnchor';
+      if (window.AIFloating && typeof window.AIFloating.open === 'function') {
+        window.AIFloating.open('personal');
+      } else {
+        location.href = 'index.html?ai=personal#aiSectionAnchor';
+      }
     });
     // 회원카드 추가 → 발급 신청 페이지로 이동(링크는 마크업의 href 사용)
   }

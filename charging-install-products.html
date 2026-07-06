@@ -92,6 +92,7 @@
           <label data-i18n="charging.install.products.lbl.maker">제조사</label>
           <input type="text" id="fMaker" placeholder="제조사 검색" data-i18n-attr="placeholder:charging.install.products.ph.maker">
         </div>
+        <button class="btn btn-primary" type="button" id="fSearch" data-i18n="charging.install.products.btn.search">검색</button>
         <button class="btn btn-secondary" type="button" id="fReset">초기화</button>
       </div>
 
@@ -293,6 +294,8 @@
   document.getElementById('fPower').addEventListener('change', function(e){ state.power=e.target.value; render(); });
   document.getElementById('fPay').addEventListener('change', function(e){ state.pay=e.target.value; render(); });
   document.getElementById('fMaker').addEventListener('input', function(e){ state.maker=e.target.value.trim(); render(); });
+  document.getElementById('fMaker').addEventListener('keydown', function(e){ if(e.key==='Enter'){ state.maker=e.target.value.trim(); render(); } });
+  document.getElementById('fSearch').addEventListener('click', function(){ state.maker=document.getElementById('fMaker').value.trim(); render(); });
   document.getElementById('fReset').addEventListener('click', function(){
     state.type='all'; state.power='all'; state.pay='all'; state.maker='';
     document.getElementById('fType').value='all'; document.getElementById('fPower').value='all';

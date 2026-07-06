@@ -50,6 +50,26 @@
 .map-pin.h2 { background: var(--color-secondary-500); box-shadow: 0 4px 12px rgba(44,123,229,0.35); }
 .map-pin.busy { background: var(--color-accent-500); box-shadow: 0 4px 12px rgba(255,154,46,0.35); }
 .map-pin.fault { background: var(--color-danger); box-shadow: 0 4px 12px rgba(239,68,68,0.35); }
+.map-pin.mk, .map-cluster.mk { -webkit-appearance:none; appearance:none; font-family:inherit; }
+/* ── 클러스터 마커 (행정구역 4티어 집계) ── */
+.map-clusters { position:absolute; inset:0; pointer-events:none; }
+.map-cluster { position:absolute; transform:translate(-50%,-50%); border:none; border-radius:50%; background:rgba(26,173,108,0.92); color:#fff; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(26,173,108,0.35); pointer-events:auto; font-family:inherit; line-height:1.05; }
+.map-cluster:hover { background:rgba(15,122,74,0.96); transform:translate(-50%,-50%) scale(1.08); z-index:4; }
+.map-cluster .mc-count { font-size:15px; font-weight:800; }
+.map-cluster .mc-label { font-size:10px; font-weight:600; opacity:.92; margin-top:2px; }
+/* ── 집계 티어 컨트롤 (지도 상단 오버레이) ── */
+.map-tier { position:absolute; top:14px; left:50%; transform:translateX(-50%); z-index:6; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.95); border:1px solid var(--border-light); border-radius:999px; padding:5px 8px 5px 14px; box-shadow:0 4px 14px rgba(0,0,0,.1); }
+.map-tier .mt-label { font-size:11.5px; font-weight:700; color:var(--text-tertiary); white-space:nowrap; }
+.map-tier .mt-steps { display:inline-flex; gap:2px; }
+.mt-step { border:none; background:none; padding:5px 10px; border-radius:999px; font-size:12px; font-weight:700; color:var(--text-secondary); cursor:pointer; font-family:inherit; white-space:nowrap; }
+.mt-step:hover { background:var(--color-gray-100); }
+.mt-step.active { background:var(--color-primary-500); color:#fff; }
+/* ── 지도 범례 보조 문구 ── */
+.map-legend .lg-note { font-size:11px; color:var(--text-tertiary); font-weight:500; }
+/* ── 드로어 충전기 상태 범례 (지도에서 이관) ── */
+.sd-status-legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:10px; padding:10px 12px; background:var(--color-gray-50); border:1px solid var(--border-light); border-radius:10px; font-size:12px; color:var(--text-secondary); }
+.sd-status-legend span { display:inline-flex; align-items:center; gap:6px; }
+.sd-status-legend .sl-dot { width:9px; height:9px; border-radius:50%; display:inline-block; flex:none; }
 .map-pin::after {
   content: '';
   position: absolute;
@@ -469,8 +489,9 @@
 
             <div data-listpanel="fav" hidden style="padding:48px 16px; text-align:center; color:var(--text-tertiary);">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <p style="font-size:14px; font-weight:600; margin-top:12px; color:var(--color-gray-600);">자주 쓰는 충전소가 없습니다</p>
-              <p style="font-size:12.5px; margin-top:6px;">로그인 후 충전소를 즐겨찾기하면<br>여기에 모아 빠르게 찾을 수 있습니다.</p>
+              <p style="font-size:15px; font-weight:700; margin-top:12px; color:var(--color-gray-700);">로그인이 필요합니다</p>
+              <p style="font-size:12.5px; margin-top:6px;">자주 쓰는 충전소는 <b>로그인 회원별</b>로 관리됩니다.<br>로그인 후 충전소를 즐겨찾기하면 여기에 모아 빠르게 찾을 수 있습니다.</p>
+              <a href="login.html?redirect=charging-find.html%3Ftab%3Dmap%26list%3Dfav" class="btn btn-primary" style="margin-top:16px;">로그인</a>
             </div>
           </aside>
 
@@ -497,15 +518,13 @@
               </div>
             </div>
 
-            <div class="map-pin" style="top: 30%; left: 25%;" data-station="s1" title="GS칼텍스 강남" data-i18n-attr="title:charging.find.st.s1.name">4</div>
-            <div class="map-pin h2" style="top: 35%; left: 40%;" data-station="s2" title="스타광장 수소" data-i18n-attr="title:charging.find.st.s2.name">2</div>
-            <div class="map-pin" style="top: 45%; left: 32%;" data-station="s3" title="강남구청 공공" data-i18n-attr="title:charging.find.st.s3.name">6</div>
-            <div class="map-pin busy" style="top: 50%; left: 45%;" data-station="s4" title="대치역 초급속" data-i18n-attr="title:charging.find.st.s4.name">2</div>
-            <div class="map-pin h2" style="top: 58%; left: 55%;" data-station="s5" title="양재IC 수소" data-i18n-attr="title:charging.find.st.s5.name" data-i18n="charging.find.status.wait">대기</div>
-            <div class="map-pin" style="top: 42%; left: 58%;" data-station="s6" title="서초동 완속" data-i18n-attr="title:charging.find.st.s6.name">18</div>
-            <div class="map-pin busy" style="top: 55%; left: 65%;" data-station="s7" title="롯데월드몰" data-i18n-attr="title:charging.find.st.s7.name">8</div>
-            <div class="map-pin h2" style="top: 60%; left: 72%;" data-station="s8" title="잠실 수소" data-i18n-attr="title:charging.find.st.s8.name">1</div>
-            <div class="map-pin fault" style="top: 48%; left: 52%;" title="고장 신고" data-i18n-attr="title:charging.find.status.faultreport">!</div>
+            <!-- 집계 티어 컨트롤 (Lv1 시·도 → Lv2 시·군·구 → Lv3 읍·면·동 → Lv4 개별) -->
+            <div class="map-tier" id="mapTier">
+              <span class="mt-label">🔍 줌 확대·축소 시 자동으로 합쳐지고 나뉩니다 (거리 기반 클러스터)</span>
+            </div>
+
+            <!-- 마커/클러스터 = JS 자동 거리 클러스터 렌더 (개별 마커=충전기 대수, 클러스터=대수 합계) -->
+            <div class="map-clusters" id="mapMarkers"></div>
 
             <div class="map-controls">
               <button data-i18n-attr="title:charging.find.map.zoomin,aria-label:charging.find.map.zoomin" title="확대" aria-label="확대"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
@@ -513,23 +532,11 @@
               <button data-i18n-attr="title:charging.find.map.mylocation,aria-label:charging.find.map.mylocation" title="현재 위치" aria-label="현재 위치"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg></button>
             </div>
 
-            <!-- 전기차 범례 -->
-            <div class="map-legend" data-legend="ev">
-              <span><span class="dot" style="background:#2c7be5;" aria-hidden="true"></span>사용가능</span>
-              <span><span class="dot" style="background:var(--color-primary-500);" aria-hidden="true"></span>사용중</span>
-              <span><span class="dot" style="background:#1f2937;" aria-hidden="true"></span>사용불가</span>
-              <span><span class="dot" style="background:#c2703d;" aria-hidden="true"></span>상태미확인</span>
-              <span><span class="dot" style="background:#14b8a6;" aria-hidden="true"></span>이용자제한</span>
-              <span class="lg-sep" aria-hidden="true"></span>
-              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#9aa6b2;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>50kW·완속</span>
-              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#5fb878;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>100kW</span>
-              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#2aa45a;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>200kW</span>
-              <span><svg class="bolt" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#1a7d3c;" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>350kW</span>
-            </div>
-            <!-- 수소 범례 -->
-            <div class="map-legend" data-legend="h2" hidden>
-              <span><span class="dot" style="background:var(--color-primary-500);" aria-hidden="true"></span>영업중</span>
-              <span><span class="dot" style="background:var(--color-gray-400,#9aa6b2);" aria-hidden="true"></span>영업마감</span>
+            <!-- 지도 범례 = 지도가 인코딩하는 것만(전기/수소 구분). 상태 5종·출력 4종은 우측 상세로 이관. -->
+            <div class="map-legend">
+              <span><span class="dot" style="background:var(--color-primary-500);" aria-hidden="true"></span>전기</span>
+              <span><span class="dot" style="background:var(--color-secondary-500,#2c7be5);" aria-hidden="true"></span>수소</span>
+              <span class="lg-note">※ 마커 숫자 = 충전기 대수 · 실시간 상태는 충전소 클릭 → 상세</span>
             </div>
           </div>
         </div>
@@ -702,6 +709,17 @@
       </div>
     </div>
   </section>
+<!-- ★개발 참고 — 지도/마커 데이터 매핑 (프로덕션 전 제거 가능) -->
+<details class="dev-note" style="max-width:1160px;margin:24px auto 0;border:1px dashed var(--color-primary-300,#8fc9a8);border-radius:12px;background:#f6faf7;">
+  <summary style="cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--color-primary-700);">🛠 개발 참고 — 충전소 지도/마커 데이터 매핑</summary>
+  <div style="padding:2px 18px 18px;font-size:12.5px;color:var(--text-secondary);line-height:1.7;">
+    <p>· <b>마커 숫자 = 충전기 전체 대수</b>(사용가능 대수 아님). <b>운영종료·폐쇄</b>(DB 상태값) 충전소는 조회에서 제외 → 지도에 미표시.</p>
+    <p>· <b>좌표</b> = <code>LAT/LNG</code>(예: 수소 <code>H2_STATION.LAT/LNG</code>, 전기 충전소 마스터의 위경도). 실시간 개별 충전기 상태는 로딩 과다로 지도 미노출 → <b>우측 슬라이드 전용</b>.</p>
+    <p>· <b>클러스터</b> = 실서비스는 지도 라이브러리(네이버/카카오)의 <b>as-is 자동 거리 클러스터</b>(줌 축소 시 합침·확대 시 분할, 명시적 행정티어 없음). 클러스터 마커 = 대수 합계.</p>
+    <p>· <b>연동</b>: 필터(급속·사업자·회원카드 등) 조작 → 마커/클러스터 즉시 갱신 · 검색(주소·충전소명·지역) → 지도 이동+줌 · '내 주변' 리스트 ↔ 지도(같은 필터·데이터, 항목 클릭 → 마커 하이라이트+슬라이드). 본 프로토타입은 실지도 없어 mock 연동으로 시연.</p>
+    <p>· <b>즐겨찾기</b>(자주 쓰는 충전소)는 로그인 회원별 → 본 페이지 '자주 쓰는 충전소' 뷰로 일원화(구 mypage-favorites 흡수). 비로그인 진입 시 로그인 유도.</p>
+  </div>
+</details>
 </main>
 
 <!-- ============ 충전소 상세 드로어 ============ -->
@@ -739,6 +757,13 @@
         <div class="chg-slot fault"><div class="cs-id">#06</div><div class="cs-type fast">급속</div><div class="cs-state">고장 · 점검중</div><div class="cs-meta">50kW · DC콤보</div></div>
       </div>
       <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">구분: <b>완속</b> 7~11kW · <b>급속</b> 50~100kW · <b>초급속</b> 200kW↑ · <span style="color:var(--color-danger);">고장</span> 충전기는 이용 불가</p>
+      <div class="sd-status-legend" aria-label="충전기 실시간 상태 범례">
+        <span><i class="sl-dot" style="background:#2c7be5;"></i>사용가능</span>
+        <span><i class="sl-dot" style="background:var(--color-primary-500);"></i>사용중</span>
+        <span><i class="sl-dot" style="background:#1f2937;"></i>사용불가</span>
+        <span><i class="sl-dot" style="background:#c2703d;"></i>상태미확인</span>
+        <span><i class="sl-dot" style="background:#14b8a6;"></i>이용자제한</span>
+      </div>
     </div>
 
     <!-- 충전 요금 -->
@@ -843,6 +868,12 @@
     const btn = document.querySelector(`#findTabs .tab[data-tab="${tab}"]`);
     if (btn) btn.click();
   }
+  // 즐겨찾기 통합: ?list=fav 진입 시 '자주 쓰는 충전소' 뷰 활성 (mypage 통합)
+  const listv = url.searchParams.get('list');
+  if (listv === 'fav' || listv === 'all') {
+    document.querySelectorAll('.list-tab').forEach(function(x){ x.classList.toggle('active', x.dataset.listtab === listv); });
+    document.querySelectorAll('[data-listpanel]').forEach(function(p){ p.hidden = (p.dataset.listpanel !== listv); });
+  }
 
   // 메인 충전요금 비교 → 충전소 찾기 진입 시 충전기사업자 필터 사전 선택
   const op = url.searchParams.get('operator');
@@ -909,7 +940,7 @@
       document.querySelectorAll('.station-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       const id = card.dataset.station;
-      if (id) openDrawer(id);
+      if (id) { openDrawer(id); if (window.__highlightMarker) window.__highlightMarker(id); }
     });
   });
 
@@ -953,11 +984,9 @@
     });
     var cnt = document.getElementById('station-count');
     if (cnt) cnt.textContent = visible;
-    // 지도 핀
-    document.querySelectorAll('.finder-map .map-pin').forEach(function (p) {
-      var pv = p.classList.contains('h2') ? 'h2' : 'ev';
-      p.style.display = (pv === mode) ? '' : 'none';
-    });
+    // 지도 마커 — 현재 모드(전기/수소)로 자동 클러스터 재렌더
+    __currentMode = mode;
+    if (typeof renderMap === 'function') renderMap();
   }
   document.querySelectorAll('.map-mode-btn[data-mode]').forEach(function (b) {
     b.addEventListener('click', function () { setMode(this.dataset.mode); });
@@ -984,6 +1013,70 @@
     b.addEventListener('click', function () { setNearMode(this.dataset.nearmode); });
   });
   setNearMode('ev');
+
+  // ===== 자동 거리 클러스터 (줌 기반, mock) — 명시적 행정티어 없음 =====
+  //  줌 축소(low) → 가까운 충전소 자동 합침 / 확대(high) → 자동 분할. 클러스터=대수 합계(숫자만).
+  var __currentMode = 'ev', __zoom = 1, __ZMAX = 5;
+  var MARKERS = [
+    {id:'s1',top:30,left:25,count:4,type:'ev'},  {id:'s2',top:35,left:40,count:2,type:'h2'},
+    {id:'s3',top:45,left:32,count:6,type:'ev'},  {id:'s4',top:50,left:45,count:4,type:'ev'},
+    {id:'s5',top:58,left:55,count:2,type:'h2'},  {id:'s6',top:42,left:58,count:18,type:'ev'},
+    {id:'s7',top:55,left:65,count:8,type:'ev'},  {id:'s8',top:60,left:72,count:1,type:'h2'}
+  ];
+  var THRESH = {1:42, 2:26, 3:16, 4:8, 5:0}; // 줌1=많이 합침 … 줌5=개별
+  var mapWrap = document.getElementById('mapMarkers');
+  function dist(a,b){ var dx=a.left-b.left, dy=a.top-b.top; return Math.sqrt(dx*dx+dy*dy); }
+  function clusterBy(pts, thr){
+    var used={}, out=[];
+    pts.forEach(function(p,i){
+      if(used[i]) return; used[i]=1; var grp=[p];
+      pts.forEach(function(q,j){ if(!used[j] && dist(p,q)<=thr){ used[j]=1; grp.push(q); } });
+      out.push({ members:grp,
+        count:grp.reduce(function(a,g){return a+g.count;},0),
+        top:grp.reduce(function(a,g){return a+g.top;},0)/grp.length,
+        left:grp.reduce(function(a,g){return a+g.left;},0)/grp.length });
+    });
+    return out;
+  }
+  function renderMap(){
+    if(!mapWrap) return;
+    var pts = MARKERS.filter(function(m){ return m.type === __currentMode; });
+    var groups = clusterBy(pts, THRESH[__zoom] || 0);
+    mapWrap.innerHTML = groups.map(function(g){
+      if(g.members.length === 1){
+        var m=g.members[0];
+        return '<button type="button" class="map-pin mk'+(m.type==='h2'?' h2':'')+'" data-station="'+m.id+'" style="top:'+m.top+'%;left:'+m.left+'%;" title="충전기 '+m.count+'기">'+m.count+'</button>';
+      }
+      var sz=Math.round(40 + Math.min(1, g.count/40)*36);
+      return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="충전기 '+g.count+'기 · 클릭 시 확대"><span class="mc-count">'+g.count+'</span></button>';
+    }).join('');
+  }
+  // 마커/클러스터 클릭 (위임): 개별→슬라이드, 클러스터→줌인
+  if(mapWrap) mapWrap.addEventListener('click', function(e){
+    var b=e.target.closest('.mk'); if(!b) return;
+    if(b.dataset.station){
+      mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active'); openDrawer(b.dataset.station);
+    } else { __zoom = Math.min(__ZMAX, __zoom + 1); renderMap(); }
+  });
+  // 줌 +/- → 자동 합침/분할
+  var __z = document.querySelectorAll('.map-controls button');
+  if(__z[0]) __z[0].addEventListener('click', function(){ __zoom=Math.min(__ZMAX,__zoom+1); renderMap(); });
+  if(__z[1]) __z[1].addEventListener('click', function(){ __zoom=Math.max(1,__zoom-1); renderMap(); });
+  // 필터 변경 → 지도 마커/클러스터 즉시 갱신 (mock 연동)
+  document.querySelectorAll('.finder-side select, .finder-side input[type=checkbox]').forEach(function(el){
+    el.addEventListener('change', function(){ renderMap(); });
+  });
+  // 검색 → 해당 위치 이동+줌 (mock)
+  var __sb = document.querySelector('.finder-side input[type=search], .finder-side input[type=text]');
+  if(__sb) __sb.addEventListener('keydown', function(e){ if(e.key==='Enter'){ __zoom=Math.min(__ZMAX,4); renderMap(); if(window.__toast) window.__toast('검색 위치로 지도를 이동합니다. (mock)','info'); } });
+  // 리스트 항목 → 해당 마커 하이라이트
+  window.__highlightMarker = function(id){
+    if(!mapWrap) return;
+    var m=mapWrap.querySelector('[data-station="'+id+'"]');
+    if(m){ mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); }); m.classList.add('active'); }
+  };
+  renderMap();
 })();
 </script>
 <script>

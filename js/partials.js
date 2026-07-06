@@ -593,7 +593,7 @@
       ]},
       { titleKey: 'mp.side.group.charging', titleFallback: '나의 충전', items: [
         ['charging-card', 'card', 'charging-card.html',    '충전 카드 관리',     'mp.side.item.card'],
-        ['charging-fav',  'star', 'mypage-favorites.html', '자주 쓰는 충전소',   'mp.side.item.fav']
+        ['charging-fav',  'star', 'charging-find.html?tab=map&list=fav', '자주 쓰는 충전소',   'mp.side.item.fav']
       ]},
       { titleKey: 'mp.side.group.subsidy', titleFallback: '보조금·민원', items: [
         ['subsidy-status', 'money', 'subsidy-status.html',   '보조금 신청 현황', 'mp.side.item.subsidy'],

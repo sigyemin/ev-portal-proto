@@ -31,8 +31,8 @@
     /* === compare-tool.html === */
     'ctool.bc.current':       { ko: '차종 비교 도구', en: 'Vehicle Comparison Tool' },
     'ctool.h1':               { ko: '차종 비교 도구', en: 'Vehicle Comparison Tool' },
-    'ctool.lead':             { ko: '최대 3대의 차량을 선택하여 핵심 스펙·보조금·TCO를 <strong style="color:#fff;">나란히 비교</strong>합니다.',
-                                en: 'Select up to 3 vehicles to compare key specs, subsidies, and TCO <strong style="color:#fff;">side-by-side</strong>.' },
+    'ctool.lead':             { ko: '관심 있는 무공해차를 <strong style="color:#fff;">나란히 놓고</strong> 스펙·보조금·비용을 비교합니다.',
+                                en: 'Line up the zero-emission vehicles you want and compare <strong style="color:#fff;">specs, subsidies, and costs</strong>.' },
     'ctool.sel.title':        { ko: '선택한 차량 (2/3)', en: 'Selected Vehicles (2/3)' },
     'ctool.btn.reset':        { ko: '초기화',            en: 'Reset' },
     'ctool.btn.add':          { ko: '+ 차량 추가',       en: '+ Add Vehicle' },
