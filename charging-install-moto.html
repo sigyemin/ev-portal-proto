@@ -125,7 +125,6 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:4px;">
               <label class="pe-demo" style="margin-top:12px;">(데모) 로그인 상태 <input type="checkbox" id="bizLoginChk"></label>
-              <label class="pe-demo" style="margin-top:0;">(데모) 업무지원시스템 이용권한 보유 <input type="checkbox" id="bizAuthChk" checked></label>
             </div>
 
             <div class="divider"></div>
@@ -136,7 +135,6 @@
               <div><div class="text-sm text-muted">접수 마감</div><div class="num-highlight" style="font-size: 20px;">5.18 (월) <span style="font-size:13px;color:var(--text-secondary);">12:00</span></div></div>
               <div><div class="text-sm text-muted">사업예산</div><div class="num-highlight" style="font-size: 20px;">50억원</div></div>
             </div>
-            <p style="font-size:12px;color:var(--text-tertiary);margin-top:14px;line-height:1.6;">권한이 없으면 마이페이지 &gt; 이용권한 신청으로 안내됩니다.</p>
           </div>
         </div>
       </div>
@@ -162,7 +160,6 @@
 (function(){
   var btn = document.getElementById('bizApplyBtn');
   var loginChk = document.getElementById('bizLoginChk');
-  var authChk = document.getElementById('bizAuthChk');
   if (!btn) return;
   function realLoggedIn(){
     try { if (JSON.parse(sessionStorage.getItem('mp_user') || 'null')) return true; } catch(e){}
@@ -171,19 +168,13 @@
   if (loginChk) loginChk.checked = realLoggedIn();
   btn.addEventListener('click', function(){
     var loggedIn = loginChk ? loginChk.checked : realLoggedIn();
+    // 로그인 게이트만 — 미로그인 시 로그인 페이지, 로그인 시 BSS 공모 신청서 작성 페이지로 이동
     if (!loggedIn) {
       if (window.__toast) window.__toast('로그인이 필요합니다. 로그인 페이지로 이동합니다.', 'info');
       setTimeout(function(){ location.href = 'login.html'; }, 1300);
       return;
     }
-    var hasAuth = authChk ? authChk.checked : false;
-    if (!hasAuth) {
-      if (window.__toast) window.__toast('업무지원시스템 사용 권한이 필요합니다. 마이페이지 이용권한 신청으로 이동합니다.', 'info');
-      setTimeout(function(){ location.href = 'mypage.html#mp-business'; }, 1300);
-      return;
-    }
-    if (window.__toast) window.__toast('업무지원시스템 BSS 공모 신청 화면으로 이동합니다. (연동 경로는 추후 적용)', 'info');
-    else alert('업무지원시스템 BSS 공모 신청 화면으로 이동합니다. (연동 경로는 추후 적용)');
+    location.href = 'charging-install-moto-apply.html';
   });
 })();
 

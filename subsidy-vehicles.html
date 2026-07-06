@@ -65,12 +65,6 @@
             <button class="btn" type="button" id="sv-reset" aria-label="필터 초기화">초기화</button>
           </div>
         </div>
-        <div class="flex gap-2 mt-4 flex-wrap" data-chip-filter-group>
-          <button class="chip chip-active" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.korean">✓ 국내 조립</button>
-          <button class="chip" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.400km">400km 이상</button>
-          <button class="chip" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.under50m">5천만원 이하</button>
-          <button class="chip" style="cursor:pointer;" type="button" data-chip-filter data-i18n="subsidy.vehicles.chip.cargo">소형 화물</button>
-        </div>
       </div>
 
       <!-- 정렬 (필터 아님 · 결과 영역 상단 별도 배치) -->
@@ -84,9 +78,25 @@
         </select>
       </div>
 
-      <!-- Vehicle Grid Cards -->
-      <div>
-        <div class="grid grid-3" style="gap: 20px;" data-reveal>
+      <!-- 뷰 전환 토글 (카드형 기본) -->
+      <div class="mb-4" data-reveal style="display:flex; justify-content:flex-end;">
+        <div class="btn-group" data-view-toggle="#sv-views">
+          <button class="btn active" data-view="card" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            <span data-i18n="subsidy.vehicles.view.card">카드형</span>
+          </button>
+          <button class="btn" data-view="table" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <span data-i18n="subsidy.vehicles.view.table">표형</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== 뷰 패널 ===== -->
+      <div id="sv-views">
+        <!-- 카드형 뷰 -->
+        <div data-view-panel="card">
+        <div class="grid grid-3" style="gap: 20px;" data-reveal id="sv-card-grid">
           <!-- CARD 1 -->
           <div class="car-card">
             <div class="car-image"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="아이오닉 6 전기승용차 이미지" data-i18n-attr="alt:subsidy.vehicles.car.ioniq6"></div>
@@ -195,8 +205,147 @@
             </div>
             <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
           </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="코나 일렉트릭 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">코나 일렉트릭</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,110만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>417km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>41분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>64.8kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>4,152만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-crossover-ev6.svg" alt="니로 EV 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">니로 EV</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">기아 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,140만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>401km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>43분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>64.8kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>4,640만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="아이오닉 5 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">아이오닉 5</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,180만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>458km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>18분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>84kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>5,150만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-crossover-ev6.svg" alt="EV9 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">EV9</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">기아 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,150만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>501km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>24분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>99.8kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>7,337만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-sedan-model3.svg" alt="GV60 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">GV60</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">제네시스 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,020만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>451km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>18분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>77.4kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>6,550만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-sedan-ioniq6.svg" alt="캐스퍼 일렉트릭 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">캐스퍼 일렉트릭</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-success">전기승용</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,200만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>315km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>30분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>49kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>2,990만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-truck-porter.svg" alt="봉고 III EV 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">봉고 III EV</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-warning">전기화물</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">기아 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,600만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>211km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>54분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>58.8kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>4,340만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
+          <div class="car-card">
+            <div class="car-image"><img src="assets/cars/ev-truck-porter.svg" alt="ST1 카고 이미지"></div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">ST1 카고</h3>
+            <div class="flex gap-2 mb-2"><span class="chip chip-warning">전기화물</span></div>
+            <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">현대자동차 · 2026년형</p>
+            <div style="padding: 12px; background: var(--color-primary-50); border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--color-primary-700); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px;" data-i18n="subsidy.vehicles.label.maxsupport">국비 지원금</div>
+              <div style="font-size: 22px; font-weight: 700; color: var(--color-primary-700);">1,600만원</div>
+            </div>
+            <div class="car-specs">
+              <div class="car-spec-item"><strong>317km</strong><span data-i18n="subsidy.vehicles.spec.range1">1회 충전</span></div>
+              <div class="car-spec-item"><strong>58분</strong><span data-i18n="subsidy.vehicles.spec.fast80">급속(80%)</span></div>
+              <div class="car-spec-item"><strong>76.1kWh</strong><span data-i18n="subsidy.vehicles.spec.battery">배터리</span></div>
+              <div class="car-spec-item"><strong>5,980만원~</strong><span data-i18n="subsidy.vehicles.spec.price">판매가</span></div>
+            </div>
+            <a href="compare-tool.html" class="btn btn-ghost btn-sm mt-4" style="width: 100%;" data-i18n="subsidy.vehicles.btn.compare">상세 비교</a>
+          </div>
         </div>
+          <div class="pagination" data-total="3" data-current="1" id="svCardPager"></div>
+        </div><!-- /card panel -->
 
+        <div data-view-panel="table" style="display:none;">
         <!-- Also provide table view -->
         <div class="mt-8" data-reveal>
           <div class="flex justify-between items-center mb-4">
@@ -305,6 +454,7 @@
           </div>
           <div class="pagination" data-total="10" data-current="1"></div>
         </div>
+        </div><!-- /table panel -->
       </div>
 
     </div>
@@ -346,6 +496,54 @@
       if (table) table.querySelectorAll('tbody tr').forEach(function (tr) { tr.style.display = ''; });
     });
   }
+})();
+</script>
+<script>
+/* 카드형 뷰 페이지네이션 (6/페이지) + 검색어 카드 필터 반영 (표형은 main.js data-table-search) */
+(function(){
+  var grid = document.getElementById('sv-card-grid');
+  var pager = document.getElementById('svCardPager');
+  var search = document.getElementById('sv-search');
+  if(!grid || !pager) return;
+  var PER = 6;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.car-card'));
+  cards.forEach(function(c){ c._text=(c.textContent||'').toLowerCase(); c._hidden=false; });
+
+  function matched(){ return cards.filter(function(c){ return !c._hidden; }); }
+  function pageCount(){ return Math.max(1, Math.ceil(matched().length / PER)); }
+  function showPage(p){
+    var m=matched(), total=Math.max(1,Math.ceil(m.length/PER));
+    p=Math.min(total,Math.max(1,p));
+    m.forEach(function(c,i){ c.style.display=(i>=(p-1)*PER && i<p*PER)?'':'none'; });
+  }
+  function renderPager(el,total,current){
+    total=Math.max(1,total); current=Math.min(total,Math.max(1,current));
+    el.dataset.total=total; el.dataset.current=current;
+    var win=10, bi=Math.floor((current-1)/win), bs=bi*win+1, be=Math.min(bs+win-1,total), html='', i;
+    html+='<button '+(current<=1?'disabled':'')+' data-p="first" aria-label="처음 페이지">\u00ab</button>';
+    html+='<button '+(current<=1?'disabled':'')+' data-p="prev" aria-label="이전 페이지">\u2039</button>';
+    for(i=bs;i<=be;i++){ html+='<button class="'+(i===current?'active':'')+'" data-p="'+i+'"'+(i===current?' aria-current="page"':'')+' aria-label="'+i+'페이지">'+i+'</button>'; }
+    html+='<button '+(current>=total?'disabled':'')+' data-p="next" aria-label="다음 페이지">\u203a</button>';
+    html+='<button '+(current>=total?'disabled':'')+' data-p="last" aria-label="마지막 페이지">\u00bb</button>';
+    el.innerHTML=html;
+    el.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){
+      var p=b.dataset.p, cur=parseInt(el.dataset.current,10)||1, tot=parseInt(el.dataset.total,10)||1, np=cur;
+      if(p==='first')np=1; else if(p==='last')np=tot; else if(p==='prev')np=Math.max(1,cur-1); else if(p==='next')np=Math.min(tot,cur+1); else np=parseInt(p,10);
+      renderPager(el,tot,np);
+      el.dispatchEvent(new CustomEvent('page:change',{detail:{page:np,total:tot}}));
+    }); });
+  }
+  pager.addEventListener('page:change', function(e){ showPage(e.detail.page); });
+  function refresh(reset){ var cur=reset?1:(parseInt(pager.dataset.current,10)||1); renderPager(pager,pageCount(),cur); showPage(parseInt(pager.dataset.current,10)||1); }
+
+  if(search){
+    search.addEventListener('input', function(){
+      var q=(search.value||'').toLowerCase().trim();
+      cards.forEach(function(c){ var hit=!q||c._text.indexOf(q)>=0; c._hidden=!hit; if(!hit) c.style.display='none'; });
+      refresh(true);
+    });
+  }
+  refresh(true);
 })();
 </script>
 </body>

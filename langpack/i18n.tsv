@@ -173,8 +173,6 @@ charging.card.myinfo.reissue	charging	재발급	Reissue
 charging.card.pay.bank	charging	계좌 자동이체	Auto Bank Transfer
 charging.card.pay.credit	charging	신용카드 자동 결제	Auto Credit Card Payment
 charging.card.pay.prepaid	charging	선불 충전 (포인트)	Prepaid (Points)
-charging.card.point.alert.desc	charging	공공 충전소 2%, 민간 제휴 충전소 1.5% 적립. 유효기간은 적립일로부터 2년. 충전 결제 시 자동 우선 차감됩니다.	2% for public stations, 1.5% for affiliated private stations. Valid for 2 years from earning date. Auto-deducted first on charging payments.
-charging.card.point.alert.title	charging	포인트 적립 안내	Point Earning Notice
 charging.card.point.avail.label	charging	사용 가능 포인트	Available Points
 charging.card.point.avail.note	charging	1P = 1원 (충전 시 자동 차감)	1P = KRW 1 (auto-deducted on charging)
 charging.card.point.bc.current	charging	충전 포인트	Charging Points
@@ -1623,23 +1621,6 @@ mp.sec.info.title	mypage	내 정보 관리	Account Management
 mp.sec.ip.current	mypage	현재 IP	Current IP
 mp.sec.ip.external	mypage	외부 IP	External IP
 mp.sec.lastlogin	mypage	마지막 로그인	Last Login
-mp.side.aria	common	마이페이지 메뉴	My Page menu
-mp.side.group.charging	common	나의 충전	My Charging
-mp.side.group.info	common	내 정보 관리	Account
-mp.side.group.subsidy	common	보조금·민원	Subsidy & Inquiries
-mp.side.item.accounts	common	계정 연결·간편인증	Linked Accounts
-mp.side.item.card	common	충전 카드 관리	Charging Card
-mp.side.item.fav	common	자주 쓰는 충전소	Favorite Stations
-mp.side.item.home	common	마이페이지 홈	My Page Home
-mp.side.item.info	common	회원 정보 조회·수정	View / Edit Profile
-mp.side.item.inquiry	common	민원 처리 현황	Inquiry Status
-mp.side.item.notifications	common	알림 설정	Notification Settings
-mp.side.item.password	common	비밀번호 변경	Change Password
-mp.side.item.public	common	공모 신청 현황	Procurement Status
-mp.side.item.subsidy	common	보조금 신청 현황	Subsidy Status
-mp.side.item.withdraw	common	회원 탈퇴	Withdraw Membership
-mp.side.role.business	common	사업자 회원	Business Member
-mp.side.role.personal	common	일반 회원	Personal Member
 mp.stat.amount.label	mypage	이번 달 이용금액	This Month Usage
 mp.stat.amount.unit	mypage	원	KRW
 mp.stat.fav.label	mypage	즐겨찾기 충전소	Favorite Stations

@@ -170,15 +170,6 @@
         + '<button class="aif-flow-btn active" data-flow="subsidy" type="button">' + ICON.money + '보조금 큐레이터</button>'
         + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '장애 대응</button>'
       + '</nav>'
-      /* [요청] 상단 검색창 제거 — 코드는 보존, 주석 처리만 함
-      + '<div class="aif-search">'
-        + '<form class="aif-search-bar" id="aifSearchForm" autocomplete="off">'
-          + ICON.search
-          + '<input type="text" id="aifSearchInput" placeholder="" aria-label="질문 입력">'
-          + '<button type="submit">검색</button>'
-        + '</form>'
-      + '</div>'
-      */
       + '<div class="aif-chips-wrap"><div class="aif-chips-label">자주 묻는 질문</div><div class="aif-chips" id="aifChips"></div></div>'
       + '<div class="aif-feed" id="aifFeed"></div>'
       + '<form class="aif-followup" id="aifFollowupForm" autocomplete="off" hidden>'
@@ -201,9 +192,6 @@
   var chipsBox = document.getElementById('aifChips');
   var feed = document.getElementById('aifFeed');
   var subText = document.getElementById('aifSub');
-  // [요청] 상단 검색창 제거에 따라 미사용 — 주석 처리
-  // var searchForm = document.getElementById('aifSearchForm');
-  // var searchInput = document.getElementById('aifSearchInput');
   var followupForm = document.getElementById('aifFollowupForm');
   var followupInput = document.getElementById('aifFollowupInput');
 
@@ -262,8 +250,6 @@
       b.classList.toggle('active', on);
       b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
-    // [요청] 상단 검색창 제거에 따라 미사용 — 주석 처리
-    // searchInput.placeholder = FLOWS[flow].placeholder;
     // 서브 설명은 고정 카피로 유지 (탭 전환 시 덮어쓰지 않음)
     // subText.innerHTML 은 헤더 초기값을 그대로 사용
     renderChips();
@@ -343,15 +329,11 @@
     q = (q || '').trim();
     if (!q) return;
     addUserMsg(q);
-    // [요청] 상단 검색창 제거에 따라 미사용 — 주석 처리
-    // searchInput.value = '';
     followupInput.value = '';
     addTyping();
     var ans = FLOWS[currentFlow].answer;
     setTimeout(function () { removeTyping(); addBotMsg(ans); }, 720);
   }
-  // [요청] 상단 검색창 제거에 따라 미사용 — 주석 처리
-  // searchForm.addEventListener('submit', function (e) { e.preventDefault(); runQuery(searchInput.value); });
   followupForm.addEventListener('submit', function (e) { e.preventDefault(); runQuery(followupInput.value); });
 
   // ===== 패널 열고 닫기 =====
@@ -363,8 +345,6 @@
     panel.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     prevFocus = document.activeElement;
-    // [요청] 상단 검색창 제거 — 기존 포커스 대상(searchInput) 미사용, 주석 처리
-    // setTimeout(function () { try { searchInput.focus(); } catch (e) {} }, 360);
     // 대체: 패널 열 때 첫 진입 요소(추천 카드 → 칩 → 닫기 버튼)로 포커스
     setTimeout(function () {
       try {

@@ -1054,18 +1054,6 @@
       "en": "Prepaid (Points)"
     },
     {
-      "key": "charging.card.point.alert.desc",
-      "scope": "charging",
-      "ko": "공공 충전소 2%, 민간 제휴 충전소 1.5% 적립. 유효기간은 적립일로부터 2년. 충전 결제 시 자동 우선 차감됩니다.",
-      "en": "2% for public stations, 1.5% for affiliated private stations. Valid for 2 years from earning date. Auto-deducted first on charging payments."
-    },
-    {
-      "key": "charging.card.point.alert.title",
-      "scope": "charging",
-      "ko": "포인트 적립 안내",
-      "en": "Point Earning Notice"
-    },
-    {
       "key": "charging.card.point.avail.label",
       "scope": "charging",
       "ko": "사용 가능 포인트",
@@ -9752,108 +9740,6 @@
       "scope": "mypage",
       "ko": "마지막 로그인",
       "en": "Last Login"
-    },
-    {
-      "key": "mp.side.aria",
-      "scope": "common",
-      "ko": "마이페이지 메뉴",
-      "en": "My Page menu"
-    },
-    {
-      "key": "mp.side.group.charging",
-      "scope": "common",
-      "ko": "나의 충전",
-      "en": "My Charging"
-    },
-    {
-      "key": "mp.side.group.info",
-      "scope": "common",
-      "ko": "내 정보 관리",
-      "en": "Account"
-    },
-    {
-      "key": "mp.side.group.subsidy",
-      "scope": "common",
-      "ko": "보조금·민원",
-      "en": "Subsidy & Inquiries"
-    },
-    {
-      "key": "mp.side.item.accounts",
-      "scope": "common",
-      "ko": "계정 연결·간편인증",
-      "en": "Linked Accounts"
-    },
-    {
-      "key": "mp.side.item.card",
-      "scope": "common",
-      "ko": "충전 카드 관리",
-      "en": "Charging Card"
-    },
-    {
-      "key": "mp.side.item.fav",
-      "scope": "common",
-      "ko": "자주 쓰는 충전소",
-      "en": "Favorite Stations"
-    },
-    {
-      "key": "mp.side.item.home",
-      "scope": "common",
-      "ko": "마이페이지 홈",
-      "en": "My Page Home"
-    },
-    {
-      "key": "mp.side.item.info",
-      "scope": "common",
-      "ko": "회원 정보 조회·수정",
-      "en": "View / Edit Profile"
-    },
-    {
-      "key": "mp.side.item.inquiry",
-      "scope": "common",
-      "ko": "민원 처리 현황",
-      "en": "Inquiry Status"
-    },
-    {
-      "key": "mp.side.item.notifications",
-      "scope": "common",
-      "ko": "알림 설정",
-      "en": "Notification Settings"
-    },
-    {
-      "key": "mp.side.item.password",
-      "scope": "common",
-      "ko": "비밀번호 변경",
-      "en": "Change Password"
-    },
-    {
-      "key": "mp.side.item.public",
-      "scope": "common",
-      "ko": "공모 신청 현황",
-      "en": "Procurement Status"
-    },
-    {
-      "key": "mp.side.item.subsidy",
-      "scope": "common",
-      "ko": "보조금 신청 현황",
-      "en": "Subsidy Status"
-    },
-    {
-      "key": "mp.side.item.withdraw",
-      "scope": "common",
-      "ko": "회원 탈퇴",
-      "en": "Withdraw Membership"
-    },
-    {
-      "key": "mp.side.role.business",
-      "scope": "common",
-      "ko": "사업자 회원",
-      "en": "Business Member"
-    },
-    {
-      "key": "mp.side.role.personal",
-      "scope": "common",
-      "ko": "일반 회원",
-      "en": "Personal Member"
     },
     {
       "key": "mp.stat.amount.label",

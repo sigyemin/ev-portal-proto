@@ -168,7 +168,6 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:4px;">
               <label class="pe-demo" style="margin-top:12px;">(데모) 로그인 상태 <input type="checkbox" id="bizLoginChk"></label>
-              <label class="pe-demo" style="margin-top:0;">(데모) 업무지원시스템 이용권한 보유 <input type="checkbox" id="bizAuthChk" checked></label>
             </div>
 
             <div class="divider"></div>
@@ -179,7 +178,6 @@
               <div><div class="text-sm text-muted">접수기간</div><div class="num-highlight" style="font-size: 20px;">03.17 ~ 04.10</div></div>
               <div><div class="text-sm text-muted">지원대수</div><div class="num-highlight" style="font-size: 20px;">2,500<span style="font-size:13px;color:var(--text-secondary);">대 이내</span></div></div>
             </div>
-            <p style="font-size:12px;color:var(--text-tertiary);margin-top:14px;line-height:1.6;">권한이 없으면 마이페이지 &gt; 이용권한 신청으로 안내됩니다.</p>
           </div>
         </div>
       </div>
@@ -205,7 +203,6 @@
 (function(){
   var btn = document.getElementById('bizApplyBtn');
   var loginChk = document.getElementById('bizLoginChk');
-  var authChk = document.getElementById('bizAuthChk');
   if (!btn) return;
 
   // 데모: 실제 로그인 상태(sessionStorage mp_user / window.__loggedIn) 반영
@@ -217,22 +214,15 @@
 
   btn.addEventListener('click', function(){
     var loggedIn = loginChk ? loginChk.checked : realLoggedIn();
-    // 1) 로그인 여부 — 미로그인 시 로그인 페이지로 이동
+    // 로그인 게이트 — 미로그인 시 로그인 페이지로 이동
     if (!loggedIn) {
       if (window.__toast) window.__toast('로그인이 필요합니다. 로그인 페이지로 이동합니다.', 'info');
       setTimeout(function(){ location.href = 'login.html'; }, 1300);
       return;
     }
-    // 2) 업무지원시스템 이용권한 여부 — 미보유 시 마이페이지 이용신청으로 이동
-    var hasAuth = authChk ? authChk.checked : false;
-    if (!hasAuth) {
-      if (window.__toast) window.__toast('업무지원시스템 사용 권한이 필요합니다. 마이페이지 이용권한 신청으로 이동합니다.', 'info');
-      setTimeout(function(){ location.href = 'mypage.html#mp-business'; }, 1300);
-      return;
-    }
-    // 3) 로그인 + 권한 모두 충족 → 업무지원시스템으로 이동 (연동 경로 추후 적용 · 현재는 안내 푸시만)
-    if (window.__toast) window.__toast('업무지원시스템 공모 신청 화면으로 이동합니다. (연동 경로는 추후 적용)', 'info');
-    else alert('업무지원시스템 공모 신청 화면으로 이동합니다. (연동 경로는 추후 적용)');
+    // 전기승합차 공모 신청은 업무지원시스템에서 진행 (포털 내 신청서 화면 미제공)
+    if (window.__toast) window.__toast('전기승합차 공모 신청은 업무지원시스템에서 진행됩니다. (연동 경로는 추후 적용)', 'info');
+    else alert('전기승합차 공모 신청은 업무지원시스템에서 진행됩니다. (연동 경로는 추후 적용)');
   });
 })();
 

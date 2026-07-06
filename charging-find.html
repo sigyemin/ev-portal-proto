@@ -51,6 +51,8 @@
 .map-pin.busy { background: var(--color-accent-500); box-shadow: 0 4px 12px rgba(255,154,46,0.35); }
 .map-pin.fault { background: var(--color-danger); box-shadow: 0 4px 12px rgba(239,68,68,0.35); }
 .map-pin.mk, .map-cluster.mk { -webkit-appearance:none; appearance:none; font-family:inherit; }
+.fav-star { color:#f5b301; margin-right:5px; font-size:14px; line-height:1; vertical-align:baseline; }
+.sd-fav-btn.is-fav { background:#fff7e0; border-color:#f0c34a; color:#a8791a; }
 /* ── 클러스터 마커 (행정구역 4티어 집계) ── */
 .map-clusters { position:absolute; inset:0; pointer-events:none; }
 .map-cluster { position:absolute; transform:translate(-50%,-50%); border:none; border-radius:50%; background:rgba(26,173,108,0.92); color:#fff; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(26,173,108,0.35); pointer-events:auto; font-family:inherit; line-height:1.05; }
@@ -487,11 +489,46 @@
             </div>
             </div><!-- /listpanel all -->
 
-            <div data-listpanel="fav" hidden style="padding:48px 16px; text-align:center; color:var(--text-tertiary);">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <p style="font-size:15px; font-weight:700; margin-top:12px; color:var(--color-gray-700);">로그인이 필요합니다</p>
-              <p style="font-size:12.5px; margin-top:6px;">자주 쓰는 충전소는 <b>로그인 회원별</b>로 관리됩니다.<br>로그인 후 충전소를 즐겨찾기하면 여기에 모아 빠르게 찾을 수 있습니다.</p>
-              <a href="login.html?redirect=charging-find.html%3Ftab%3Dmap%26list%3Dfav" class="btn btn-primary" style="margin-top:16px;">로그인</a>
+            <div data-listpanel="fav" hidden>
+              <!-- 데모 토글 (개발자 확인용: 로그인 전/후 화면 전환. 실서비스는 로그인 계정으로 분기) -->
+              <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+                <button type="button" id="favDemoToggle" class="btn btn-ghost btn-sm" style="font-size:12px;">데모: 로그인 상태로 보기</button>
+              </div>
+              <!-- 비로그인 상태 -->
+              <div id="favGuest" style="padding:36px 16px 20px; text-align:center; color:var(--text-tertiary);">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <p style="font-size:15px; font-weight:700; margin-top:12px; color:var(--color-gray-700);">로그인이 필요합니다</p>
+                <p style="font-size:12.5px; margin-top:6px;">자주 쓰는 충전소는 <b>로그인 회원별</b>로 관리됩니다.<br>로그인 후 충전소를 즐겨찾기하면 여기에 모아 빠르게 찾을 수 있습니다.</p>
+                <a href="login.html?redirect=charging-find.html%3Ftab%3Dmap%26list%3Dfav" class="btn btn-primary" style="margin-top:16px;">로그인</a>
+              </div>
+              <!-- 로그인 상태: 즐겨찾기 목록 -->
+              <div id="favUser" hidden>
+                <div class="flex justify-between items-center" style="margin-bottom:10px; gap:8px; flex-wrap:wrap;">
+                  <div style="font-size:14px;"><b style="color:var(--color-primary-700);">홍길동</b>님의 자주 쓰는 충전소 <strong style="color:var(--color-primary-700);">3</strong>곳</div>
+                  <span style="font-size:12px; color:var(--text-tertiary);">별표한 충전소를 모아 봅니다</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <div class="station-card" data-station="s1">
+                    <h4>GS칼텍스 강남 직영 <span class="st-type ev">전기</span></h4>
+                    <div class="st-address">서울 강남구 테헤란로 152 · 1층 주차장</div>
+                    <div class="st-spec"><span class="sp"><b>운영기관</b><span>GS칼텍스</span></span><span class="sp"><b>충전기</b><span>총 6기 · 급속4·완속2</span></span><span class="sp"><b>최대출력</b><span>100kW</span></span></div>
+                    <div class="st-tags"><span class="tag cat">상업시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+                  </div>
+                  <div class="station-card" data-station="s3">
+                    <h4>환경부 강남구청 공공 <span class="st-type ev">전기</span></h4>
+                    <div class="st-address">서울 강남구 학동로 426 · 공영주차장 B1</div>
+                    <div class="st-spec"><span class="sp"><b>운영기관</b><span>환경부</span></span><span class="sp"><b>충전기</b><span>총 12기 · 급속2·완속10</span></span><span class="sp"><b>최대출력</b><span>50kW</span></span></div>
+                    <div class="st-tags"><span class="tag cat">공공시설</span><span class="tag">24시간</span><span class="tag">개방형</span></div>
+                  </div>
+                  <div class="station-card" data-station="s6">
+                    <h4>서초동 EV Infra 완속 <span class="st-type ev">전기</span></h4>
+                    <div class="st-address">서울 서초구 서초대로 396 · 지하주차장</div>
+                    <div class="st-spec"><span class="sp"><b>운영기관</b><span>EV Infra</span></span><span class="sp"><b>충전기</b><span>총 24기 · 완속24</span></span><span class="sp"><b>최대출력</b><span>7kW</span></span></div>
+                    <div class="st-tags"><span class="tag cat">주거시설</span><span class="tag">완속전용</span><span class="tag">개방형</span></div>
+                  </div>
+                </div>
+                <p style="font-size:12px; color:var(--text-tertiary); margin-top:12px; text-align:center;">※ 카드를 누르면 지도 마커 하이라이트 + 상세가 열립니다. (즐겨찾기 해제는 상세에서)</p>
+              </div>
             </div>
           </aside>
 
@@ -805,7 +842,7 @@
 
     <div class="sd-action-row">
       <button class="btn btn-primary" type="button" data-action="notify" data-action-label="네이버지도에서 길찾기 열기">길찾기</button>
-      <button class="btn btn-secondary" type="button" data-action="notify" data-action-label="즐겨찾기에 추가되었습니다.">즐겨찾기</button>
+      <button class="btn btn-secondary sd-fav-btn" type="button">☆ 즐겨찾기</button>
     </div>
   </div>
 
@@ -848,7 +885,7 @@
 
     <div class="sd-action-row">
       <button class="btn btn-primary" type="button" data-action="notify" data-action-label="네이버지도에서 길찾기 열기">길찾기</button>
-      <button class="btn btn-secondary" type="button" data-action="notify" data-action-label="즐겨찾기에 추가되었습니다.">즐겨찾기</button>
+      <button class="btn btn-secondary sd-fav-btn" type="button">☆ 즐겨찾기</button>
     </div>
   </div>
 </aside>
@@ -905,9 +942,11 @@
     s8: { name: '잠실 코하이젠 수소충전소', addr: '서울 송파구 올림픽로 35길 124', brand: '코하이젠', type: 'h2', avail: 1 }
   };
 
+  var __curStation = null;
   function openDrawer(stationId) {
     const data = STATIONS[stationId];
     if (!data) return;
+    __curStation = stationId;
     document.getElementById('sdTitle').textContent = data.name;
     document.getElementById('sdAddr').textContent = data.addr;
     document.getElementById('sdBrand').textContent = data.brand;
@@ -924,10 +963,40 @@
     } else {
       var oh = document.getElementById('sdOperH2'); if (oh) oh.textContent = data.brand;
     }
+    refreshDrawerFav();
     drawer.classList.add('open');
     backdrop.classList.add('open');
     drawer.setAttribute('aria-hidden', 'false');
   }
+
+  // ===== 즐겨찾기(★) — 전기/수소 공통, 이름 옆 별표 + 드로어 버튼 토글 =====
+  var FAVS = { s1:true, s3:true, s6:true };   // mock 기본 즐겨찾기
+  function starEl(){ var s=document.createElement('span'); s.className='fav-star'; s.setAttribute('aria-label','즐겨찾기'); s.title='즐겨찾기'; s.textContent='★'; return s; }
+  function refreshStars(){
+    document.querySelectorAll('.station-card[data-station]').forEach(function(card){
+      var id=card.dataset.station, h4=card.querySelector('h4'); if(!h4) return;
+      var st=h4.querySelector('.fav-star');
+      if(FAVS[id]){ if(!st) h4.insertBefore(starEl(), h4.firstChild); }
+      else if(st){ st.remove(); }
+    });
+  }
+  function refreshDrawerFav(){
+    var on = !!(__curStation && FAVS[__curStation]);
+    document.querySelectorAll('.sd-fav-btn').forEach(function(b){
+      b.textContent = on ? '★ 즐겨찾기 됨' : '☆ 즐겨찾기';
+      b.classList.toggle('is-fav', on);
+    });
+  }
+  document.querySelectorAll('.sd-fav-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(!__curStation) return;
+      FAVS[__curStation] = !FAVS[__curStation];
+      var on = FAVS[__curStation];
+      if(window.__toast) window.__toast(on ? '즐겨찾기에 추가되었습니다.' : '즐겨찾기에서 해제되었습니다.', on ? 'success' : 'info');
+      refreshDrawerFav(); refreshStars();
+    });
+  });
+  refreshStars();
 
   function closeDrawer() {
     drawer.classList.remove('open');
@@ -963,6 +1032,16 @@
       var v = this.dataset.listtab;
       document.querySelectorAll('[data-listpanel]').forEach(function (p) { p.hidden = (p.dataset.listpanel !== v); });
     });
+  });
+
+  // 자주 쓰는 충전소 — 데모: 로그인 전/후 화면 전환 (실서비스는 로그인 계정 상태로 분기)
+  var favToggle = document.getElementById('favDemoToggle');
+  if (favToggle) favToggle.addEventListener('click', function(){
+    var guest = document.getElementById('favGuest'), user = document.getElementById('favUser');
+    var toUser = guest && !guest.hidden;   // 현재 게스트 화면이면 → 로그인 화면으로
+    if (guest) guest.hidden = toUser;
+    if (user) user.hidden = !toUser;
+    this.textContent = toUser ? '데모: 비로그인 상태로 보기' : '데모: 로그인 상태로 보기';
   });
 
   // 전기차/수소 모드 전환 (필터·카드·핀·범례 분리)

@@ -899,10 +899,6 @@
     'charging.card.point.chip.use':       { ko: '차감',                            en: 'Used' },
     'charging.card.point.chip.event':     { ko: '이벤트',                          en: 'Event' },
 
-    'charging.card.point.alert.title':    { ko: '포인트 적립 안내',                en: 'Point Earning Notice' },
-    'charging.card.point.alert.desc':     { ko: '공공 충전소 2%, 민간 제휴 충전소 1.5% 적립. 유효기간은 적립일로부터 2년. 충전 결제 시 자동 우선 차감됩니다.',
-                                            en: '2% for public stations, 1.5% for affiliated private stations. Valid for 2 years from earning date. Auto-deducted first on charging payments.' },
-
     /* 사용 내역 행 (7개) — HTML 통째로 i18n-html */
     'charging.card.row.h1':               { ko: '<td>2026.04.22 08:15</td><td>GS칼텍스 강남</td><td>급속 100kW</td><td class="num">24.5kWh</td><td class="num">347원</td><td class="num">8,502원</td><td class="num">+170P</td>',
                                             en: '<td>2026.04.22 08:15</td><td>GS Caltex Gangnam</td><td>100kW Fast</td><td class="num">24.5 kWh</td><td class="num">KRW 347</td><td class="num">KRW 8,502</td><td class="num">+170P</td>' },

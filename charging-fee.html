@@ -716,281 +716,191 @@
     </div>
   </section>
 
-  <!-- 충전기 요금 구분 표 (출력 5밴드 기준) -->
-  <section class="section-sm" style="padding-top:0;">
-    <div class="container container-wide">
-      <div class="fee-band-card" style="border:1px solid var(--border-light);border-radius:14px;background:#fff;padding:18px 20px;margin-top:18px;">
-        <h2 style="font-size:17px;font-weight:800;margin:0 0 4px;color:var(--text-primary);" data-i18n="charging.fee.band.h2">충전기 요금 구분 (출력 5단계)</h2>
-        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 14px;" data-i18n="charging.fee.band.note">정부(기후에너지환경부) 공공충전 5단계 출력 기준이며, 민간 사업자는 자체 단가를 적용합니다.</p>
-        <div style="overflow-x:auto;">
-          <table class="data-table" style="min-width:520px;">
-            <thead><tr>
-              <th data-i18n="charging.fee.band.col.band">구분</th>
-              <th data-i18n="charging.fee.band.col.range">출력 범위</th>
-              <th class="num" data-i18n="charging.fee.band.col.gov">환경부 기준단가 (원/kWh, 참고)</th>
-            </tr></thead>
-            <tbody>
-              <tr><td><strong>완속</strong></td><td>30kW 미만</td><td class="num">294.3</td></tr>
-              <tr><td><strong>중속</strong></td><td>30 ~ 50kW 미만</td><td class="num">306.0</td></tr>
-              <tr><td><strong>급속 100kW미만</strong></td><td>50 ~ 100kW 미만</td><td class="num">324.4</td></tr>
-              <tr><td><strong>급속 100kW이상</strong></td><td>100 ~ 200kW 미만</td><td class="num">347.2</td></tr>
-              <tr><td><strong>초급속</strong></td><td>200kW 이상</td><td class="num">391.9</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <nav class="tab-nav" data-i18n-aria="charging.fee.aria.menu" aria-label="요금 메뉴">
-    <div class="container container-wide" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
-      <div class="tabs-pill" data-tabs id="feeTabs">
-        <button class="tab active" data-tab="ev" type="button" data-i18n="charging.fee.tab.ev">전기차 충전요금</button>
-        <button class="tab" type="button" data-scroll-to="#section-matrix" data-i18n="charging.fee.tab.matrix">요금매트릭스</button>
-      </div>
-      <div style="display:inline-flex; gap:8px; align-items:center;">
-        <a href="charging-fee-simulator.html" id="simulatorBtn" class="btn btn-primary btn-sm" data-i18n-aria="charging.fee.tab.sim" aria-label="내 충전요금 시뮬레이터 페이지로 이동" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14v4"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg><span data-i18n="charging.fee.tab.sim">내 충전요금 시뮬레이터</span></a>
-        <button type="button" id="tariffBtn" class="btn btn-secondary btn-sm" data-i18n-aria="charging.fee.aria.tariff" aria-label="시간대별 충전요금 모달 열기" style="display:inline-flex; align-items:center; gap:8px; background:#fff; color:var(--color-primary-700); border:1.5px solid var(--color-primary-500);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span data-i18n="charging.fee.btn.tariff">시간대별 충전요금</span></button>
-      </div>
-    </div>
-  </nav>
-
   <section class="section-sm">
     <div class="container container-wide">
 
-      <!-- ───────── 전기차 충전요금 ───────── -->
-      <div class="tab-content active" data-tab-content="ev">
-
-        <!-- 핵심 KPI 카드 4개 -->
-        <div class="grid grid-4 mb-6" style="gap:16px;">
-          <div class="stat-card">
-            <div class="stat-label" data-i18n="charging.fee.kpi.tindex.label">투명성지수 등재 사업자</div>
-            <div class="stat-value" style="font-size:24px;"><span>159</span><span class="unit" data-i18n="charging.fee.kpi.tindex.unit">개사</span></div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.tindex.note">우수 19 · 보통 109 · 개선필요 31</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label" data-i18n="charging.fee.kpi.total.label">전국 충전기 합계</div>
-            <div class="stat-value" style="font-size:24px;"><span>596,368</span><span class="unit" data-i18n="charging.fee.kpi.total.unit">기</span></div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.total.note">tindex/data_v3.json 2026-04 기준</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label" data-i18n="charging.fee.kpi.public.label">기후에너지환경부 공공 급속</div>
-            <div class="stat-value" style="font-size:24px;"><span>324.4</span><span class="unit" data-i18n="charging.fee.kpi.public.unit">원/kWh</span></div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.public.note">50kW 미만 · 100kW이상 347.2원</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label" data-i18n="charging.fee.kpi.private.label">민간 급속 평균</div>
-            <div class="stat-value" style="font-size:24px;"><span>355</span><span class="unit" data-i18n="charging.fee.kpi.public.unit">원/kWh</span></div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.fee.kpi.private.note">투명성지수 등재 9개사 fast_m 평균</div>
-          </div>
-        </div>
-
-        <!-- ─── 전기충전소 요금 검색 (AS-IS 기능 유지) ─── -->
-        <section class="ev-search-wrap" aria-labelledby="ev-search-title">
-          <div class="ev-search-head">
-            <h3 id="ev-search-title" data-i18n="charging.fee.search.title">전기충전소 요금 검색</h3>
-            <span class="ev-search-meta" data-i18n="charging.fee.search.meta">전국 596,368기 · 투명성지수 갱신 5분 주기 · 22개 사업자 등재</span>
-          </div>
-          <form class="ev-search-grid" id="evSearchForm" autocomplete="off">
-            <div class="ev-search-field">
-              <label for="evSido" data-i18n="charging.fee.search.sido">시·도</label>
-              <select id="evSido" data-i18n-aria="charging.fee.aria.sido" aria-label="시도 선택">
-                <option value="" data-i18n="charging.fee.opt.all">전체</option>
-                <option value="서울" data-i18n="subsidy.region.sido.seoul">서울특별시</option>
-                <option value="부산" data-i18n="subsidy.region.sido.busan">부산광역시</option>
-                <option value="대구" data-i18n="subsidy.region.sido.daegu">대구광역시</option>
-                <option value="인천" data-i18n="subsidy.region.sido.incheon">인천광역시</option>
-                <option value="광주" data-i18n="subsidy.region.sido.gwangju">광주광역시</option>
-                <option value="대전" data-i18n="subsidy.region.sido.daejeon">대전광역시</option>
-                <option value="울산" data-i18n="subsidy.region.sido.ulsan">울산광역시</option>
-                <option value="세종" data-i18n="subsidy.region.sido.sejong">세종특별자치시</option>
-                <option value="경기" data-i18n="subsidy.region.sido.gyeonggi">경기도</option>
-                <option value="강원" data-i18n="subsidy.region.sido.gangwon">강원특별자치도</option>
-                <option value="충북" data-i18n="subsidy.region.sido.chungbuk">충청북도</option>
-                <option value="충남" data-i18n="subsidy.region.sido.chungnam">충청남도</option>
-                <option value="전북" data-i18n="subsidy.region.sido.jeonbuk">전북특별자치도</option>
-                <option value="전남" data-i18n="subsidy.region.sido.jeonnam">전라남도</option>
-                <option value="경북" data-i18n="subsidy.region.sido.gyeongbuk">경상북도</option>
-                <option value="경남" data-i18n="subsidy.region.sido.gyeongnam">경상남도</option>
-                <option value="제주" data-i18n="subsidy.region.sido.jeju">제주특별자치도</option>
-              </select>
-            </div>
-            <div class="ev-search-field">
-              <label data-i18n="charging.fee.search.operator">사업자</label>
-              <div class="ms-dd" id="evOperatorMs" data-all-label="전체 사업자">
-                <button type="button" class="ms-btn" aria-haspopup="listbox" aria-expanded="false">전체 사업자</button>
-                <div class="ms-pop" hidden role="listbox" aria-multiselectable="true" aria-label="사업자 다중 선택">
-                  <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all" checked> 전체</label>
-                  <div class="ms-list">
-                    <label class="ms-opt"><input type="checkbox" value="ME"> 기후부</label>
-                    <label class="ms-opt"><input type="checkbox" value="KP"> 한전 KEPCO</label>
-                    <label class="ms-opt"><input type="checkbox" value="HE"> 한국전기차충전서비스(해피차저)</label>
-                    <label class="ms-opt"><input type="checkbox" value="EV"> 에버온</label>
-                    <label class="ms-opt"><input type="checkbox" value="PI"> GS차지비</label>
-                    <label class="ms-opt"><input type="checkbox" value="ST"> SK일렉링크</label>
-                    <label class="ms-opt"><input type="checkbox" value="CV"> 채비</label>
-                    <label class="ms-opt"><input type="checkbox" value="HM"> 휴맥스이브이</label>
-                    <label class="ms-opt"><input type="checkbox" value="LU"> 볼트업(LG U+)</label>
-                    <label class="ms-opt"><input type="checkbox" value="NT"> 나이스차저</label>
-                    <label class="ms-opt"><input type="checkbox" value="EC"> 이지차저</label>
-                    <label class="ms-opt"><input type="checkbox" value="PC"> 아이파킹</label>
-                    <label class="ms-opt"><input type="checkbox" value="SF"> 스타코프</label>
-                    <label class="ms-opt"><input type="checkbox" value="PL"> 플러그링크</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="ev-search-field">
-              <label data-i18n="charging.fee.search.speed">출력</label>
-              <div class="ms-dd" id="evSpeedMs" data-all-label="전체 출력">
-                <button type="button" class="ms-btn" aria-haspopup="listbox" aria-expanded="false">전체 출력</button>
-                <div class="ms-pop" hidden role="listbox" aria-multiselectable="true" aria-label="출력 다중 선택">
-                  <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all" checked> 전체</label>
-                  <div class="ms-list">
-                    <label class="ms-opt"><input type="checkbox" value="slow"> 완속 (30kW 미만)</label>
-                    <label class="ms-opt"><input type="checkbox" value="mid"> 중속 (30~50kW)</label>
-                    <label class="ms-opt"><input type="checkbox" value="fast50"> 급속 100kW미만 (50~100kW)</label>
-                    <label class="ms-opt"><input type="checkbox" value="fast100"> 급속 100kW이상 (100~200kW)</label>
-                    <label class="ms-opt"><input type="checkbox" value="ultra"> 초급속 (200kW 이상)</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="ev-search-field">
-              <label for="evMember" data-i18n="charging.fee.search.member">회원 구분</label>
-              <select id="evMember" data-i18n-aria="charging.fee.aria.member" aria-label="회원 구분 선택">
-                <option value="all" data-i18n="charging.fee.opt.all">전체</option>
-                <option value="member" data-i18n="charging.fee.opt.member">회원</option>
-                <option value="nonmember" data-i18n="charging.fee.opt.nonmember">비회원</option>
-              </select>
-            </div>
-            <div class="ev-search-field">
-              <label for="evKeyword" data-i18n="charging.fee.search.keyword">충전소명·주소</label>
-              <input type="text" id="evKeyword" placeholder="충전소명 또는 주소 키워드" data-i18n-attr="placeholder:charging.fee.search.kw.ph,aria-label:charging.fee.aria.keyword" aria-label="충전소명 또는 주소 검색어 입력">
-            </div>
-            <div class="ev-search-actions">
-              <button type="submit" class="btn btn-primary" id="evSearchBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <span data-i18n="charging.fee.search.btn">검색</span>
-              </button>
-              <button type="button" class="btn btn-ghost" id="evResetBtn" data-i18n="charging.fee.search.reset">초기화</button>
-            </div>
-          </form>
-        </section>
-
-        <!-- ─── 검색 결과 테이블 + 다운로드 ─── -->
-        <div class="ev-result-wrap" id="evResultWrap">
-          <div class="ev-result-head">
-            <span class="ev-result-count"><span data-i18n="charging.fee.result.prefix">총</span> <strong id="evResultCount">20</strong><span data-i18n="charging.fee.result.suffix">건의 충전소 요금 결과</span></span>
-            <div class="ev-result-tools">
-              <button type="button" class="ev-download-btn xlsx" data-action="download" data-action-label="전기충전소 요금 검색결과.xlsx">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span class="ext">XLSX</span>
-                <span data-i18n="charging.fee.result.xlsx">Excel 다운로드</span>
-              </button>
-              <button type="button" class="ev-download-btn csv" data-action="download" data-action-label="전기충전소 요금 검색결과.csv">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span class="ext">CSV</span>
-                <span data-i18n="charging.fee.result.csv">CSV 다운로드</span>
-              </button>
-            </div>
-          </div>
-          <div style="overflow-x:auto;">
-            <table class="ev-result-table">
-              <caption class="sr-only" data-i18n="charging.fee.search.title">전기충전소 요금 검색</caption>
-              <thead>
-                <tr>
-                  <th scope="col" style="width:64px;text-align:center;" data-i18n="charging.fee.result.col.no">번호</th>
-                  <th scope="col" data-i18n="charging.fee.result.col.station">충전소명 / 주소</th>
-                  <th scope="col" data-i18n="charging.fee.result.col.operator">사업자</th>
-                  <th scope="col" style="width:120px;" data-i18n="charging.fee.result.col.output">출력</th>
-                  <th scope="col" class="num" data-i18n="charging.fee.result.col.memrate">회원 요금</th>
-                  <th scope="col" class="num" data-i18n="charging.fee.result.col.nonmemrate">비회원 요금</th>
-                  <th scope="col" style="width:96px;text-align:center;" data-i18n="charging.fee.result.col.status">상태</th>
-                </tr>
-              </thead>
-              <tbody id="evResultTbody"></tbody>
-            </table>
-          </div>
-          <div class="ev-result-pagination" data-i18n-aria="util.pagination.aria" aria-label="페이지 이동"></div>
-        </div>
-
-        <!-- 사업자별 충전 요금 매트릭스 -->
-        <h3 id="section-matrix" class="section-h mt-8" style="scroll-margin-top:96px;"><span data-i18n="charging.fee.matrix.title">사업자별 충전 요금 매트릭스</span> <span data-i18n="charging.fee.matrix.unit">(단위: 원/kWh)</span></h3>
-        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0 14px;">
-          <div id="matrix-type-tabs" role="group" data-i18n-aria="charging.fee.matrix.aria.type" aria-label="요금 유형" style="display:flex;">
-            <button class="tab active" data-mtype="basic" type="button" data-i18n="charging.fee.matrix.type.basic">기본요금</button>
-            <button class="tab" data-mtype="special" type="button" data-i18n="charging.fee.matrix.type.special">지원·조건별</button>
-            <button class="tab" data-mtype="tou" type="button" data-i18n="charging.fee.matrix.type.tou">계절시간제</button>
-          </div>
-          <div id="matrix-mem-tabs" role="group" data-i18n-aria="charging.fee.matrix.aria.mem" aria-label="회원 구분" style="display:flex;">
-            <button class="tab active" data-mmem="member" type="button" data-i18n="charging.fee.matrix.mem.member">회원</button>
-            <button class="tab" data-mmem="nonmember" type="button" data-i18n="charging.fee.matrix.mem.nonmember">비회원</button>
-          </div>
-          <span id="matrix-count" data-i18n="charging.fee.matrix.count">22개 사업자</span>
-          <label class="cf-fav-only-toggle" style="display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:13px;color:var(--text-secondary);font-weight:600;cursor:pointer;padding:6px 14px;border:1px solid var(--border-medium);border-radius:999px;background:#fff;transition:background var(--t-fast),border-color var(--t-fast);">
-            <input type="checkbox" id="matrixFavOnly" style="accent-color:var(--color-accent-500);cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9A2E" stroke="#FF9A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg>
-            <span data-i18n="charging.fee.matrix.favonly">즐겨찾기만 보기</span>
-          </label>
-        </div>
-        <div id="matrix-wrap"></div>
-        <div class="charge-fine-note" style="margin-top:12px;" data-i18n-html="charging.fee.matrix.note">
-          ※ 계절시간제는 한전 KEPCO 아파트 충전기에만 적용 · 완속 기준<br>
-          ※ 비회원 단일요금 미공시 사업자는 — 표시
-        </div>
-
-        <!-- 로밍 요금 -->
-        <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;"><span data-i18n="charging.fee.roaming.title">로밍 요금 (타 사업자 카드 사용 시)</span><span class="info-tip-wrap"><button type="button" class="info-tip-btn" aria-label="로밍 안내" aria-expanded="false" aria-describedby="roamingTip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><span class="info-tip" id="roamingTip" role="tooltip" data-i18n="charging.fee.roaming.alert.body">내 회원카드로 다른 사업자 충전기를 이용하는 것. 로밍 요금이 기본 요금에 추가됩니다. 기후부 통합카드는 모든 사업자 충전기 사용 가능 (로밍 수수료 없음).</span></span></h3>
-        <!-- v0.12 [26] '로밍이란?' 파란 박스 삭제(25번 툴팁으로 대체). 원본 보존(주석)
-        <div class="alert alert-info mt-3">
-          <div class="alert-icon" aria-hidden="true"></div>
-          <div class="alert-body"><strong data-i18n="charging.fee.roaming.alert.title">로밍이란?</strong><span data-i18n="charging.fee.roaming.alert.body">내 회원카드로 다른 사업자 충전기를 이용하는 것. 로밍 요금이 기본 요금에 추가됩니다. 기후부 통합카드는 모든 사업자 충전기 사용 가능 (로밍 수수료 없음).</span></div>
-        </div>
-        -->
-        <!-- v0.12 [29] 내 카드 다중 선택 (더미데이터) -->
-        <div style="margin:18px 0 10px;">
-          <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">내 카드 선택 <span style="font-weight:500;color:var(--color-gray-500);">(복수 선택 시 보유 카드 행만 표시)</span></div>
-          <div id="roaming-card-select" role="group" aria-label="내 카드 선택" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"></div>
-        </div>
-        <!-- v0.12 [28] 8단 속도 탭 (선택 카드의 계약 속도 합집합으로 필터) -->
-        <div style="display:flex;gap:14px;margin:6px 0 14px;align-items:center;flex-wrap:wrap;">
-          <div id="roaming-tier-tabs" role="group" aria-label="충전 속도 선택" style="display:flex;flex-wrap:wrap;"></div>
-          <span style="font-size:var(--fs-sm);color:var(--color-gray-500);font-weight:var(--fw-medium);" data-i18n="charging.fee.roaming.unit">(단위: 원/kWh)</span>
-        </div>
-        <div id="roaming-wrap"></div>
-        <!-- v0.12 [32] 카드 행별 최저/최대 요금만 강조 -->
-        <div style="margin-top:14px;font-size:13px;color:var(--color-gray-600);line-height:2;display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
-          <span style="font-weight:var(--fw-medium);">※ 예시 더미데이터 · 카드 행별 최저/최대 요금만 강조:</span>
-          <span style="background:#F0FDF4;padding:3px 10px;border-radius:6px;color:#166534;font-weight:var(--fw-semibold);font-size:12.5px;">최저요금</span>
-          <span style="background:#FEF2F2;padding:3px 10px;border-radius:6px;color:#991B1B;font-weight:var(--fw-semibold);font-size:12.5px;">최대요금</span>
-          <span style="background:#f3f4f6;padding:3px 10px;border-radius:6px;color:var(--color-gray-500);font-weight:var(--fw-semibold);font-size:12.5px;">미공시</span>
-        </div>
-
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <a href="charging-fee-simulator.html" class="btn btn-primary btn-sm" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14v4"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>내 충전요금 시뮬레이터</a>
       </div>
+      <!-- ═══════ KPI (범위형) ═══════ -->
+      <div class="grid grid-4 mb-6" style="gap:16px;">
+        <div class="stat-card">
+          <div class="stat-label">공공 기준단가</div>
+          <div class="stat-value" style="font-size:22px;"><span>294~392</span><span class="unit" style="font-size:13px;">원/kWh</span></div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">완속 294.3 ~ 초급속 391.9</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">민간 요금대</div>
+          <div class="stat-value" style="font-size:22px;"><span>약 280~450</span><span class="unit" style="font-size:13px;">원/kWh</span></div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">등재 CPO 회원가 범위</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">계절시간제 운영 사업자</div>
+          <div class="stat-value" style="font-size:22px;"><span id="kpiTouCount">—</span><span class="unit" style="font-size:13px;">개사</span></div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">계절·시간대 할인규칙 등록</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">등재 충전사업자</div>
+          <div class="stat-value" style="font-size:22px;"><span>159</span><span class="unit" style="font-size:13px;">개사</span></div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">투명성지수 등재 기준</div>
+        </div>
+      </div>
+
+      <!-- ═══════ 충전소 요금 검색 ═══════ -->
+      <section class="ev-search-wrap" aria-labelledby="ev-search-title">
+        <div class="ev-search-head">
+          <h3 id="ev-search-title">충전소 요금 검색</h3>
+          <span class="ev-search-meta">지역·충전소명으로 조회 · 회원가(지금 시각) 기준 · 충전기 상태는 <a href="charging-find.html?tab=map" style="color:var(--color-primary-700);font-weight:600;">충전소 찾기</a>에서 확인</span>
+        </div>
+        <form class="ev-search-grid" id="evSearchForm" autocomplete="off" style="grid-template-columns:1fr 1fr 1.6fr auto;">
+          <div class="ev-search-field">
+            <label for="evSido">시·도</label>
+            <select id="evSido" aria-label="시도 선택">
+              <option value="">전체</option>
+              <option value="서울">서울특별시</option>
+              <option value="부산">부산광역시</option>
+              <option value="대구">대구광역시</option>
+              <option value="인천">인천광역시</option>
+              <option value="광주">광주광역시</option>
+              <option value="대전">대전광역시</option>
+              <option value="울산">울산광역시</option>
+              <option value="세종">세종특별자치시</option>
+              <option value="경기">경기도</option>
+              <option value="강원">강원특별자치도</option>
+              <option value="충북">충청북도</option>
+              <option value="충남">충청남도</option>
+              <option value="전북">전북특별자치도</option>
+              <option value="전남">전라남도</option>
+              <option value="경북">경상북도</option>
+              <option value="경남">경상남도</option>
+              <option value="제주">제주특별자치도</option>
+            </select>
+          </div>
+          <div class="ev-search-field">
+            <label for="evGugun">구·군</label>
+            <select id="evGugun" aria-label="구군 선택"><option value="">전체</option></select>
+          </div>
+          <div class="ev-search-field">
+            <label for="evKeyword">충전소명</label>
+            <input type="text" id="evKeyword" placeholder="충전소명 키워드" aria-label="충전소명 검색어 입력">
+          </div>
+          <div class="ev-search-actions">
+            <button type="submit" class="btn btn-primary" id="evSearchBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <span>검색</span>
+            </button>
+            <button type="button" class="btn btn-ghost" id="evResetBtn">초기화</button>
+          </div>
+        </form>
+      </section>
+
+      <div class="ev-result-wrap" id="evResultWrap">
+        <div class="ev-result-head">
+          <span class="ev-result-count">총 <strong id="evResultCount">0</strong>건</span>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div id="ev-mem-tabs" class="tabs-pill" role="group" aria-label="요금 기준" style="display:inline-flex;">
+              <button class="tab active" data-emem="member" type="button">회원가</button>
+              <button class="tab" data-emem="nonmember" type="button">비회원가</button>
+            </div>
+            <span style="font-size:12.5px;color:var(--color-gray-500);" id="evResultTime">회원가 기준</span>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="ev-result-table">
+            <caption class="sr-only">충전소 요금 검색 결과</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="sortable" data-esk="no" tabindex="0" role="button" style="width:56px;text-align:center;">번호</th>
+                <th scope="col" class="sortable" data-esk="name" tabindex="0" role="button">충전소명 / 주소</th>
+                <th scope="col" class="sortable" data-esk="cpo" tabindex="0" role="button">사업자(CPO)</th>
+                <th scope="col" class="num sortable" data-esk="slow" tabindex="0" role="button">완속</th>
+                <th scope="col" class="num sortable" data-esk="mid" tabindex="0" role="button">중속</th>
+                <th scope="col" class="num sortable" data-esk="fast50" tabindex="0" role="button">급속<br><span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">50~100</span></th>
+                <th scope="col" class="num sortable" data-esk="fast100" tabindex="0" role="button">급속<br><span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">100~200</span></th>
+                <th scope="col" class="num sortable" data-esk="ultra" tabindex="0" role="button">초급속</th>
+                <th scope="col" style="width:118px;text-align:center;">로밍</th>
+              </tr>
+            </thead>
+            <tbody id="evResultTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════ 사업자별 요금 매트릭스 ═══════ -->
+      <h3 id="section-matrix" class="section-h mt-8" style="scroll-margin-top:96px;">사업자별 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span></h3>
+
+      <!-- 요금조건: 셀 값 계산 -->
+      <div class="mx-cond" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 10px;">
+        <div id="mx-mem-tabs" class="tabs-pill" role="group" aria-label="회원 구분" style="display:inline-flex;">
+          <button class="tab active" data-mmem="member" type="button">회원</button>
+          <button class="tab" data-mmem="nonmember" type="button">비회원</button>
+        </div>
+        <div id="mx-season-tabs" class="tabs-pill" role="group" aria-label="계절" style="display:inline-flex;">
+          <button class="tab" data-season="spring" type="button">봄·가을</button>
+          <button class="tab" data-season="summer" type="button">여름</button>
+          <button class="tab" data-season="winter" type="button">겨울</button>
+        </div>
+        <div id="mx-day-tabs" class="tabs-pill" role="group" aria-label="요일" style="display:inline-flex;">
+          <button class="tab" data-day="weekday" type="button">평일</button>
+          <button class="tab" data-day="saturday" type="button">토요일</button>
+          <button class="tab" data-day="sunday" type="button">일·공휴일</button>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:8px;">
+          <label for="mxHour" style="font-size:13px;font-weight:600;color:var(--text-secondary);white-space:nowrap;">시각</label>
+          <input type="range" id="mxHour" min="0" max="23" step="1" value="0" style="width:150px;accent-color:var(--color-primary-500);" aria-label="시각 선택">
+          <span id="mxHourVal" style="font-size:13px;font-weight:700;min-width:78px;color:var(--color-primary-700);">00시</span>
+        </div>
+      </div>
+
+      <!-- 필터바: 행 추림 -->
+      <div class="mx-filter" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px;">
+        <div class="mx-search-box" style="position:relative;display:inline-flex;align-items:center;">
+          <input type="text" id="mxSearch" placeholder="사업자명 검색" aria-label="사업자명 검색" style="height:40px;padding:0 34px 0 12px;border:1px solid var(--border-light);border-radius:8px;font-size:14px;min-width:200px;font-family:inherit;">
+          <button type="button" id="mxSearchClear" aria-label="검색어 지우기" hidden style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:var(--color-gray-200);color:var(--color-gray-600);border-radius:50%;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;">✕</button>
+        </div>
+        <div id="mxBands" role="group" aria-label="출력밴드 필터" style="display:inline-flex;gap:6px;flex-wrap:wrap;"></div>
+      </div>
+
+      <div id="matrix-wrap"></div>
+
+      <div class="charge-fine-note" style="margin-top:10px;">
+        ※ 계절·시간대 할인이 있는 사업자는 선택한 시각·계절·요일에 따라 금액이 바뀝니다.<br>
+        ※ 사업자 행을 클릭하면 하루 24시간 요금 변화와 할인 정보를 볼 수 있습니다.
+      </div>
+
+      <!-- ═══════ 로밍 요금 매트릭스 ═══════ -->
+      <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;">로밍 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(발급 카드 × 이용 충전기 · 단위: 원/kWh)</span></h3>
+      <div class="alert alert-info mt-3">
+        <div class="alert-icon" aria-hidden="true"></div>
+        <div class="alert-body"><strong>로밍이란?</strong> 내 회원카드(발급 사업자)로 다른 사업자(이용 충전기)의 충전기를 이용하는 것입니다. 협약된 사업자 간에만 로밍되며, <strong>무공해차 통합카드는 로밍 수수료가 없습니다.</strong></div>
+      </div>
+      <div style="margin:16px 0 10px;">
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">내 카드(발급 사업자) 선택 <span style="font-weight:500;color:var(--color-gray-500);font-size:12px;">— 선택한 발급사 행만 표시 · 미선택 시 전체</span></div>
+        <div id="roam-card-filter" role="group" aria-label="발급 카드 필터" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 10px;">
+        <div id="roam-band-tabs" class="tabs-pill" role="group" aria-label="용량 구분" style="display:inline-flex;flex-wrap:wrap;"></div>
+        <span style="font-size:12.5px;color:var(--color-gray-500);">행 = 발급 카드 사업자 · 열 = 이용 충전기 사업자</span>
+      </div>
+      <div id="roaming-wrap"></div>
+      <div id="roam-legend" style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--color-gray-600);"></div>
 
     </div>
   </section>
+
 </main>
 
-<!-- ── 사업자 요금 상세 모달 — 사이트 디자인 시스템 정합 ── -->
-<div id="op-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="op-modal-name" aria-hidden="true">
-  <div id="op-modal">
-    <header id="op-modal-hdr">
-      <div class="op-meta">
-        <h2 class="op-name" id="op-modal-name">—</h2>
-        <div class="op-bid" id="op-modal-bid">—</div>
+<!-- 로밍 요금 팝업 -->
+<div id="rp-overlay" role="dialog" aria-modal="true" aria-labelledby="rpTitle">
+  <div class="rp-box">
+    <div class="rp-hd">
+      <div style="flex:1;min-width:0;">
+        <div id="rpTitle" style="font-size:17px;font-weight:800;">로밍 요금</div>
+        <div id="rpSub" style="font-size:12.5px;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
       </div>
-      <span class="op-chip" id="op-modal-type">—</span>
-      <button id="op-modal-close" type="button" data-i18n-aria="charging.fee.opmodal.close.aria" aria-label="모달 닫기">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </header>
-    <div id="op-modal-body"></div>
-    <footer id="op-modal-foot">
-      <span class="foot-meta" data-i18n="charging.fee.opmodal.source">출처: 투명성지수 FEE_TABLE 2026-04-21</span>
-      <button type="button" class="btn btn-ghost btn-sm" id="op-modal-close-2" data-i18n="charging.fee.opmodal.close">닫기</button>
-    </footer>
+      <button type="button" id="rpClose" class="rp-close" aria-label="닫기">&#10005;</button>
+    </div>
+    <div class="rp-bd"><div id="rpBody"></div></div>
   </div>
 </div>
 
@@ -1001,147 +911,106 @@
 <script src="js/i18n-charging.js?v=20260626d"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/favorites.js"></script>
-<script src="js/charging-fee.js?v=20260625t10"></script>
-<script>
-  // 사업자 매트릭스 — 즐겨찾기만 보기 토글
-  (function () {
-    const toggle = document.getElementById('matrixFavOnly');
-    const label  = toggle && toggle.closest('.cf-fav-only-toggle');
-    if (!toggle) return;
-    function syncLabel() {
-      if (toggle.checked) { label.style.borderColor = 'var(--color-accent-500)'; label.style.background = '#FFF7ED'; label.style.color = '#9A3412'; }
-      else { label.style.borderColor = ''; label.style.background = ''; label.style.color = ''; }
-    }
-    toggle.addEventListener('change', () => {
-      // charging-fee.js 내부 변수 직접 접근 불가 → window 이벤트로 통신
-      window.__cfMatrixFavOnly = toggle.checked;
-      syncLabel();
-      document.dispatchEvent(new CustomEvent('cf:fav-only-changed', { detail: { on: toggle.checked } }));
-    });
-    document.addEventListener('favorites:changed', () => {
-      // 다른 탭에서 즐겨찾기 변경 시 매트릭스 갱신
-      document.dispatchEvent(new CustomEvent('cf:fav-only-changed', { detail: { on: toggle.checked } }));
-    });
-  })();
 
-  // 메인페이지 충전요금 비교 카드 → ?op=<사업자명> 으로 진입 시 매트릭스에서 해당 사업자 행을 찾아 스크롤+하이라이트
-  (function () {
-    var op = new URLSearchParams(location.search).get('op');
-    if (!op) return;
-    var tries = 0;
-    var timer = setInterval(function () {
-      var wrap = document.getElementById('matrix-wrap');
-      var row = wrap && Array.prototype.find.call(wrap.querySelectorAll('tbody tr'), function (tr) {
-        return tr.textContent.indexOf(op) >= 0;
-      });
-      if (row) {
-        clearInterval(timer);
-        row.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        row.style.transition = 'background-color .4s';
-        row.style.background = '#FFF7C2';
-        setTimeout(function () { row.style.background = ''; }, 2200);
-      } else if (++tries > 20) { clearInterval(timer); }
-    }, 150);
-  })();
-</script>
 <style>
-  .cf-fav-btn:hover { background:#FFF7ED !important; border-color:#FED7AA !important; transform:scale(1.05); }
-  .cf-fav-btn[aria-pressed="true"] { background:#FFF7ED !important; border-color:#FED7AA !important; }
-  .cf-fav-only-toggle:hover { border-color:var(--color-accent-500) !important; }
+  /* ── 매트릭스 & 행펼침 (신규) ── */
+  #matrix-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border-light);background:#fff;}
+  .mx-table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px;}
+  .mx-table thead th{position:sticky;top:0;background:#F8FAFC;color:var(--color-gray-700);font-weight:700;padding:12px;text-align:right;border-bottom:1px solid var(--border-light);font-size:13px;z-index:1;}
+  .mx-table thead th.opcol{text-align:left;}
+  .mx-table thead th small{display:block;font-weight:400;color:var(--color-gray-400);font-size:11px;}
+  .mx-table tbody td{padding:12px;border-bottom:1px solid #F1F5F9;text-align:right;font-feature-settings:"tnum";font-weight:600;color:var(--text-primary);}
+  .mx-table tbody td.opcol{text-align:left;font-weight:700;white-space:nowrap;}
+  .mx-table tbody tr.pub{background:#F0F9FF;}
+  .mx-table tbody tr.pub td{color:#0d57b0;}
+  .mx-table tbody tr:hover{background:var(--color-gray-50);}
+  .mx-table tbody tr.pub:hover{background:#e4f2ff;}
+  .mx-null{color:var(--color-gray-300);font-weight:500;}
+  .mx-disc{color:#1AA46A;}
+  .mx-disc::after{content:" ▼";font-size:10px;}
+  .mx-exp-btn{background:none;border:none;cursor:pointer;color:var(--color-gray-500);font-size:13px;margin-right:6px;padding:0;width:14px;display:inline-block;transition:transform .15s;}
+  .mx-exp-btn.open{color:var(--color-primary-600);transform:rotate(90deg);}
+  .mx-exp-row > td{background:#FAFBFC;padding:16px 18px;}
+  .mx-bars{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:end;height:150px;padding:6px 4px;background:#fff;border:1px solid var(--border-light);border-radius:10px;}
+  .mx-bars .bar{border-radius:3px 3px 0 0;min-height:4px;position:relative;cursor:pointer;}
+  .mx-bars .bar:hover{filter:brightness(1.08);}
+  .mx-bars .bar:hover::after{content:attr(data-label);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:10;}
+  .mx-axis{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;padding:0 4px;margin-top:4px;font-size:11px;color:var(--text-tertiary);text-align:center;}
+  .mx-eband{display:inline-flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
+  .mx-eband button{padding:5px 12px;border:1px solid var(--border-light);background:#fff;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--text-secondary);cursor:pointer;font-family:inherit;}
+  .mx-eband button.on{background:var(--color-primary-500);color:#fff;border-color:var(--color-primary-500);}
+  .mx-band-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border-medium);border-radius:999px;font-size:13px;font-weight:600;color:var(--text-secondary);background:#fff;cursor:pointer;user-select:none;}
+  .mx-band-chip input{accent-color:var(--color-primary-600);cursor:pointer;margin:0;}
+  .mx-band-chip.on{border-color:var(--color-primary-400);background:var(--color-primary-50);color:var(--color-primary-700);}
+  .rf-tbl{width:100%;border-collapse:collapse;font-size:14px;}
+  .rf-tbl th,.rf-tbl td{padding:10px 12px;border-bottom:1px solid #F1F5F9;text-align:right;font-feature-settings:"tnum";}
+  .rf-tbl thead th{background:#F8FAFC;color:var(--color-gray-600);font-size:12.5px;font-weight:700;}
+  .rf-tbl th:first-child,.rf-tbl td:first-child{text-align:left;}
+  .roam-card-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border:1px solid var(--border-medium);border-radius:999px;font-size:14px;font-weight:600;color:var(--text-secondary);background:#fff;cursor:pointer;}
+  .roam-card-chip.on{border-color:var(--color-primary-500);background:var(--color-primary-50);color:var(--color-primary-700);}
+  .ev-cpo-link{background:none;border:none;padding:0;color:var(--color-primary-700);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .ev-cpo-link:hover{color:var(--color-primary-800);}
+  .ev-roam-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--color-primary-300);background:#fff;color:var(--color-primary-700);border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .ev-roam-btn:hover{background:var(--color-primary-50);}
+  /* 매트릭스 정렬(공지 리스트 표준 .sortable 재사용) + 행클릭 펼침 + 검색 클리어 */
+  .mx-table thead th.sortable{cursor:pointer;user-select:none;}
+  .mx-table thead th.sortable::after{content:' ↕';color:#6B7280;font-size:12px;font-weight:400;}
+  .mx-table thead th.sort-desc::after{content:' ↓';color:var(--color-primary-600);}
+  .mx-table thead th.sort-asc::after{content:' ↑';color:var(--color-primary-600);}
+  .mx-table thead th.sortable:hover{color:var(--color-primary-700);}
+  .mx-table tbody tr[data-row]{cursor:pointer;}
+  .mx-exp-ind{display:inline-block;margin-right:6px;color:var(--color-gray-400);transition:transform .15s;font-size:12px;}
+  .mx-exp-ind.open{transform:rotate(90deg);color:var(--color-primary-600);}
+  #mxSearchClear:hover{background:var(--color-gray-300);}
+  /* 로밍 요금 매트릭스 (발급 × 이용) */
+  .roam-mx{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px;}
+  .roam-mx th,.roam-mx td{border:1px solid var(--border-light);padding:9px 10px;text-align:center;font-feature-settings:"tnum";}
+  .roam-mx thead th{background:#F8FAFC;color:var(--color-gray-700);font-weight:700;font-size:12.5px;}
+  .roam-mx thead th:first-child{text-align:left;color:var(--color-gray-500);font-weight:600;}
+  .roam-mx tbody th{background:#F8FAFC;text-align:left;font-weight:700;white-space:nowrap;color:var(--text-primary);}
+  .roam-mx td.self{background:var(--color-gray-50);color:var(--color-gray-400);font-weight:500;}
+  .roam-mx td.na{color:var(--color-gray-300);}
+  .roam-free{background:#F0FDF4;color:#166534;font-weight:700;}
+  .roam-mid{background:#FFFBEB;color:#92400E;font-weight:600;}
+  .roam-high{background:#FEF2F2;color:#991B1B;font-weight:700;}
+  .roam-tou-badge{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:6px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:10.5px;font-weight:700;vertical-align:middle;}
+  .roam-lg{display:inline-flex;align-items:center;gap:6px;}
+  .roam-lg .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.08);}
+  /* 검색 리스트 정렬(공지 표준 .sortable) */
+  .ev-result-table thead th.sortable{cursor:pointer;user-select:none;}
+  .ev-result-table thead th.sortable::after{content:' ↕';color:#6B7280;font-size:12px;font-weight:400;}
+  .ev-result-table thead th.sort-desc::after{content:' ↓';color:var(--color-primary-600);}
+  .ev-result-table thead th.sort-asc::after{content:' ↑';color:var(--color-primary-600);}
+  .ev-result-table thead th.sortable:hover{color:var(--color-primary-700);}
+  /* 로밍 요금 팝업 */
+  #rp-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9200;align-items:center;justify-content:center;padding:20px;}
+  #rp-overlay.open{display:flex;}
+  .rp-box{background:#fff;border-radius:16px;width:min(640px,100%);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.3);}
+  .rp-hd{padding:18px 22px;background:linear-gradient(135deg,var(--color-primary-500),var(--color-primary-700));color:#fff;display:flex;align-items:center;gap:12px;}
+  .rp-bd{padding:20px 22px;overflow-y:auto;}
+  .rp-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:#fff;cursor:pointer;font-size:18px;flex:none;}
+  .rp-tbl{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .rp-tbl th,.rp-tbl td{border:1px solid var(--border-light);padding:9px 10px;text-align:right;font-feature-settings:"tnum";}
+  .rp-tbl thead th{background:#F8FAFC;color:var(--color-gray-700);font-size:12.5px;font-weight:700;text-align:center;}
+  .rp-tbl tbody th{background:#F8FAFC;text-align:left;font-weight:700;white-space:nowrap;}
 </style>
-
-
-<!-- ── [ev_prototype_0510 hyun 정합] 시간대별 충전요금 모달 ── -->
-<style>
-#tariff-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9100; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
-#tariff-modal-overlay.open { display:flex; }
-#tariff-modal { background:#fff; border-radius:14px; width:min(1200px,96vw); max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden; animation:tariffIn 0.22s ease-out; }
-@keyframes tariffIn { from{transform:translateY(-12px) scale(0.98);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
-#tariff-modal-hdr { padding:14px 20px; background:linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700)); color:#fff; display:flex; align-items:center; gap:12px; }
-#tariff-modal-hdr .ttl { font-size:16px; font-weight:700; flex:1; }
-#tariff-modal-close { background:rgba(255,255,255,0.2); border:none; color:#fff; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
-#tariff-modal-close:hover { background:rgba(255,255,255,0.35); transform:rotate(90deg); }
-#tariff-modal-body { padding:24px; overflow-y:auto; flex:1; }
-#tariff-modal-body .tou-bars { display:grid; grid-template-columns:repeat(24,1fr); gap:2px; align-items:end; height:200px; padding:8px 4px; background:#fff; border:1px solid var(--border-light,#E2E8F0); border-radius:10px; }
-#tariff-modal-body .tou-bars .bar { background:#4A90D9; border-radius:3px 3px 0 0; min-height:5px; transition:filter 160ms ease; position:relative; cursor:pointer; }
-#tariff-modal-body .tou-bars .bar:hover { filter:brightness(1.1); }
-#tariff-modal-body .tou-bars .bar:hover::after { content:attr(data-label); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#1E293B; color:#fff; font-size:11px; padding:4px 8px; border-radius:6px; white-space:nowrap; pointer-events:none; z-index:10; }
-#tariff-modal-body .tou-axis { display:grid; grid-template-columns:repeat(24,1fr); gap:2px; padding:0 4px; margin-top:4px; font-size:11px; color:var(--text-tertiary,#94A3B8); text-align:center; }
-#tariff-modal-body .tou-legend { display:flex; gap:14px; flex-wrap:wrap; padding:10px 0 0; }
-#tariff-modal-body select { -webkit-appearance:none; appearance:none; height:36px; padding:0 30px 0 12px; border:1px solid var(--border-light,#E2E8F0); border-radius:8px; font-size:13px; background:#fff; cursor:pointer; min-width:180px; font-family:inherit; }
-#tariff-modal-body .tab { padding:6px 12px; border:1px solid var(--border-light,#E2E8F0); background:#fff; border-radius:8px; font-size:12.5px; font-weight:600; color:var(--text-secondary,#475569); cursor:pointer; font-family:inherit; transition:all 160ms ease; }
-#tariff-modal-body .tab.active { background:var(--color-primary-500); color:#fff; border-color:var(--color-primary-500); }
-#tariff-modal-body .tab:disabled { opacity:0.4; cursor:not-allowed; }
-</style>
-
-<div id="tariff-modal-overlay">
-  <div id="tariff-modal" role="dialog" aria-labelledby="tariffModalTitle">
-    <div id="tariff-modal-hdr">
-      <div class="ttl" id="tariffModalTitle" data-i18n="charging.fee.tariff.title">⏰ 시간대별 충전요금</div>
-      <button id="tariff-modal-close" type="button" data-i18n-aria="charging.fee.tariff.close.aria" aria-label="닫기">✕</button>
-    </div>
-    <div id="tariff-modal-body">
-      <div class="tou-chart-wrap">
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
-          <select id="tou-operator" aria-label="사업자 선택">
-            <optgroup label="공공 · 계절시간제">
-              <option value="ME" selected>기후부 (공공급속) · 계시</option>
-              <option value="KP">한전 KEPCO (아파트) · 계시</option>
-              <option value="HE">한국전기차충전서비스</option>
-            </optgroup>
-            <optgroup label="민간">
-              <option value="EV">에버온 · 계시</option>
-              <option value="CV">채비</option>
-              <option value="PI">GS차지비</option>
-              <option value="ST">SK일렉링크</option>
-              <option value="HM">휴맥스이브이</option>
-              <option value="PL">플러그링크</option>
-            </optgroup>
-          </select>
-          <select id="tou-capacity" aria-label="용량 구분 선택">
-            <option value="slow">완속</option>
-            <option value="mid">중속</option>
-            <option value="fast50" selected>급속 100kW미만</option>
-            <option value="fast100">급속 100kW이상</option>
-            <option value="ultra">초급속</option>
-          </select>
-          <div style="display:flex;gap:4px;" id="tou-member-tabs" role="group" aria-label="회원 구분">
-            <button class="tab active" data-mem="member" type="button">회원</button>
-            <button class="tab" data-mem="nonmember" type="button">비회원</button>
-          </div>
-          <div style="display:flex;gap:4px;" id="tou-season-tabs">
-            <button class="tab active" data-season="spring" type="button" data-i18n="charging.fee.tariff.season.spring">봄·가을</button>
-            <button class="tab" data-season="summer" type="button" data-i18n="charging.fee.tariff.season.summer">여름</button>
-            <button class="tab" data-season="winter" type="button" data-i18n="charging.fee.tariff.season.winter">겨울</button>
-          </div>
-          <div style="display:flex;gap:4px;" id="tou-day-tabs">
-            <button class="tab" data-day="weekday" type="button" data-i18n="charging.fee.tariff.day.weekday">평일</button>
-            <button class="tab active" data-day="saturday" type="button" data-i18n="charging.fee.tariff.day.saturday">토요일</button>
-            <button class="tab" data-day="sunday" type="button" data-i18n="charging.fee.tariff.day.sunday">일·공휴일</button>
-          </div>
-        </div>
-        <div id="tou-summary" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;"></div>
-        <div class="tou-bars" id="touBars"></div>
-        <div class="tou-axis" id="touAxis"></div>
-        <div class="tou-legend" id="touLegend" style="margin-top:10px;"></div>
-        <div style="margin-top:14px;font-size:12px;color:var(--text-tertiary,#94A3B8);line-height:1.6;background:#f9fafb;padding:12px 14px;border-radius:8px;">
-          ※ 용량(완속·중속·급속100kW미만·급속100kW이상·초급속)과 회원/비회원을 선택한 뒤 시즌·요일별 24시간 단가를 확인하세요. <b style="color:#1AA46A;">초록 막대</b>가 할인 적용 구간입니다.<br>
-          ※ 할인방식: 정액(원 차감)·정률(% 차감)·고정단가(단가 대체). 같은 (용량·시즌·요일·시간대) 구간에 규칙이 겹치면 나중 규칙이 앞 규칙을 덮어씁니다.<br>
-          ※ 계절·시간 할인규칙은 충전사업자가 관리자 화면에서 입력한 값으로, 본 차트는 예시 데이터입니다.
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
 (function(){
-  // v0.17 계절시간제: 용량 5종(완속/중속/급속100미만/급속100이상/초급속) × 회원/비회원
-  //  + 할인규칙(시즌·요일·시간대·대상·할인방식[정액/정률/고정])
-  var CAP_LABEL = { slow:'완속', mid:'중속', fast50:'급속 100kW미만', fast100:'급속 100kW이상', ultra:'초급속' };
-  // rate: { member:{cap:단가}, nonmember:{cap:단가} }  (null=미공시)
-  // rules: { season, days[], caps[|'all'], target('member'|'nonmember'|'common'), mode('amount'|'percent'|'fixed'), value, hours:[시작,종료) }
+  "use strict";
+  function $(s,c){return (c||document).querySelector(s);}
+  function $$(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s));}
+  function esc(v){return v==null?"":String(v).replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m];});}
+  function fmt(v){return v==null?"—":(Math.round(v*10)/10).toLocaleString();}
+
+  var CAP_LABEL = { slow:"완속", mid:"중속", fast50:"급속 100kW미만", fast100:"급속 100kW이상", ultra:"초급속" };
+  var BANDS = [
+    {k:"slow",  label:"완속",  sub:"&lt;30kW"},
+    {k:"mid",   label:"중속",  sub:"30~50"},
+    {k:"fast50",label:"급속",  sub:"50~100"},
+    {k:"fast100",label:"급속", sub:"100~200"},
+    {k:"ultra", label:"초급속",sub:"≥200"}
+  ];
   var TOU_OPERATORS = {
     'ME': { name:'기후부 (공공급속)', type:'공공', tou:true,
       member:    { slow:null, mid:null, fast50:324.4, fast100:347.2, ultra:347.2 },
@@ -1169,18 +1038,19 @@
     'HM': { name:'휴맥스이브이', type:'민간', tou:false, member:{slow:270,mid:290,fast50:320,fast100:340,ultra:340}, nonmember:{slow:300,mid:320,fast50:350,fast100:370,ultra:370}, rules:[] },
     'PL': { name:'플러그링크', type:'민간', tou:false, member:{slow:260,mid:280,fast50:324.4,fast100:324.4,ultra:324.4}, nonmember:{slow:290,mid:310,fast50:350,fast100:350,ultra:350}, rules:[] }
   };
-  function $(s,c){return (c||document).querySelector(s);}
-  function $$(s,c){return Array.from((c||document).querySelectorAll(s));}
+  var PUBLIC = { name:"환경부(공공)", rate:{ slow:294.3, mid:306.0, fast50:324.4, fast100:347.2, ultra:391.9 } };
+  var CPO_ORDER = ['KP','EV','HE','CV','PI','ST','HM','PL'];
 
+  var MODE_LABEL = { amount:"정액(원 차감)", percent:"정률(% 차감)", fixed:"고정단가" };
   function applyMode(base, mode, value){
     if (mode==='percent') return Math.round(base*(1-value/100)*10)/10;
     if (mode==='fixed')   return value;
-    return Math.round((base-value)*10)/10;  // amount
+    return Math.round((base-value)*10)/10;
   }
-  function hoursOf(rule){ // [시작,종료) · 자정 넘으면 분리
-    var s=rule.hours[0], e=rule.hours[1], arr=[];
-    if (s<e){ for(var h=s;h<e;h++) arr.push(h); }
-    else { for(var h=s;h<24;h++) arr.push(h); for(var h2=0;h2<e;h2++) arr.push(h2); }
+  function hoursOf(rule){
+    var s=rule.hours[0], e=rule.hours[1], arr=[], h;
+    if (s<e){ for(h=s;h<e;h++) arr.push(h); }
+    else { for(h=s;h<24;h++) arr.push(h); for(h=0;h<e;h++) arr.push(h); }
     return arr;
   }
   function ruleMatches(rule, season, day, cap, target){
@@ -1190,124 +1060,380 @@
     if (rule.target!=='common' && rule.target!==target) return false;
     return true;
   }
-  var MODE_LABEL = { amount:'정액(원 차감)', percent:'정률(% 차감)', fixed:'고정단가' };
 
-  function renderTOU(){
-    var opKey = ($('#tou-operator')||{}).value || 'ME';
-    var op = TOU_OPERATORS[opKey] || TOU_OPERATORS['ME'];
-    var cap = ($('#tou-capacity')||{}).value || 'fast50';
-    var mT = $('#tou-member-tabs .tab.active'), sT = $('#tou-season-tabs .tab.active'), dT = $('#tou-day-tabs .tab.active');
-    var target = mT ? mT.dataset.mem : 'member';
-    var season = sT ? sT.dataset.season : 'spring';
-    var day = dT ? dT.dataset.day : 'saturday';
-    var base = (op[target]||{})[cap];
-    var touBars=$('#touBars'), touAxis=$('#touAxis'), touLegend=$('#touLegend'), touSum=$('#tou-summary');
-    if (!touBars) return;
-    touBars.innerHTML=''; touAxis.innerHTML=''; touLegend.innerHTML=''; touSum.innerHTML='';
-    var __rl=document.getElementById('touRuleList'); if(__rl) __rl.remove();
-    // 계시 미적용 사업자는 시즌·요일 탭 비활성
-    $$('#tou-season-tabs .tab, #tou-day-tabs .tab').forEach(function(t){
-      if (op.tou){t.disabled=false; t.style.opacity=''; t.style.cursor='pointer';}
-      else {t.disabled=true; t.style.opacity='0.4'; t.style.cursor='not-allowed';}
-    });
-    if (base==null||isNaN(base)){
-      touBars.innerHTML='<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#64748b;padding:20px;text-align:center;width:100%;"><div style="font-size:32px;opacity:0.4;">📊</div><div style="font-size:14px;font-weight:600;color:#475569;">'+op.name+' · '+CAP_LABEL[cap]+' · '+(target==='member'?'회원':'비회원')+' 요금 정보가 없습니다.</div></div>';
-      touSum.insertAdjacentHTML('beforeend','<div class="tou-summary-card"><div class="ts-label">사업자</div><div class="ts-value" style="color:#475569;font-size:15px;">'+op.name+'</div></div>');
-      return;
+  var now = new Date();
+  var curHour = now.getHours();
+  var curSeason = ([2,3,4,8,9].indexOf(now.getMonth())>=0) ? 'spring' : ([5,6,7].indexOf(now.getMonth())>=0) ? 'summer' : 'winter';
+  var curDay = (function(){ var d=now.getDay(); return d===0?'sunday':(d===6?'saturday':'weekday'); })();
+  var SEASON_KO = { spring:"봄·가을", summer:"여름", winter:"겨울" };
+  var DAY_KO = { weekday:"평일", saturday:"토요일", sunday:"일·공휴일" };
+
+  // (op, band, target, season, hour, day) → {v, base, disc} | null
+  function computeRate(op, band, target, season, hour, day){
+    var base = (op[target]||{})[band];
+    if (base==null || isNaN(base)) return null;
+    var val = base, disc = false;
+    if (op.tou){
+      (op.rules||[]).forEach(function(r){
+        if (!ruleMatches(r, season, day, band, target)) return;
+        if (hoursOf(r).indexOf(hour) < 0) return;
+        val = applyMode(base, r.mode, r.value); disc = true;
+      });
     }
-    // 적용 규칙(SEQ 순) — 시간대별 단가 계산
-    var rates=[]; for(var i=0;i<24;i++) rates.push(base);
-    var applied=[];  // {hours[], label, mode}
-    (op.tou ? op.rules : []).forEach(function(rule){
-      if (!ruleMatches(rule, season, day, cap, target)) return;
-      var hrs=hoursOf(rule), val=applyMode(base, rule.mode, rule.value);
-      hrs.forEach(function(h){ rates[h]=val; });
-      applied.push({hours:hrs, val:val, mode:rule.mode, value:rule.value, label:rule.hours[0]+'~'+rule.hours[1]+'시'});
-    });
-    var hasDisc = applied.length>0;
-    var SCALE_MAX = Math.max.apply(null, rates.concat([base])) * 1.15;
-    rates.forEach(function(r,i){
-      var isDisc = r!==base;
-      var color = isDisc ? '#1AA46A' : '#4A90D9';
-      var h = Math.max(5, r/SCALE_MAX*100).toFixed(1);
-      touBars.insertAdjacentHTML('beforeend','<div class="bar" style="height:'+h+'%;background:'+color+';" data-label="'+String(i).padStart(2,'0')+'시 · '+r+'원/kWh"></div>');
-      touAxis.insertAdjacentHTML('beforeend','<div>'+(i%3===0?i:'')+'</div>');
-    });
-    var sum=[{label:'사업자',value:op.name,color:'#475569'},
-             {label:'대상',value:(target==='member'?'회원':'비회원'),color:'#475569'},
-             {label:'기본 단가',value:base+'원/kWh',color:'#4A90D9'}];
-    if (hasDisc){ var a=applied[0]; sum.push({label:'할인 단가 ('+a.label+')',value:a.val+'원/kWh',color:'#1AA46A'},{label:'할인방식',value:MODE_LABEL[a.mode]+' '+a.value+(a.mode==='percent'?'%':a.mode==='fixed'?'원':'원'),color:'#E26B84'}); }
-    else if (!op.tou){ sum.push({label:'요금 체계',value:'시간대 무관(계시 미적용)',color:'#94a3b8'}); }
-    sum.forEach(function(it){
-      touSum.insertAdjacentHTML('beforeend','<div class="tou-summary-card"><div class="ts-label">'+it.label+'</div><div class="ts-value" style="color:'+it.color+';font-size:'+(it.label==='사업자'||it.label==='대상'?15:17)+'px;">'+it.value+'</div></div>');
-    });
-    var legend=[{color:'#4A90D9',label:'기본 요금 '+base+'원/kWh'}];
-    if (hasDisc) legend.push({color:'#1AA46A',label:'할인 적용 '+applied[0].label+' '+applied[0].val+'원/kWh'});
-    legend.forEach(function(it){
-      touLegend.insertAdjacentHTML('beforeend','<span class="lg-item" style="display:inline-flex;align-items:center;gap:8px;margin-right:20px;"><span style="width:14px;height:14px;border-radius:3px;background:'+it.color+';flex-shrink:0;"></span>'+it.label+'</span>');
-    });
-    // 규칙 목록(다른 시즌·요일 규칙 포함)
-    if (op.tou && op.rules.length){
-      var list = op.rules.map(function(r){
-        var seasonKo = {spring:'봄·가을',summer:'여름',winter:'겨울'}[r.season]||r.season;
-        var dayKo = r.days.map(function(d){return {weekday:'평일',saturday:'토',sunday:'일·공휴일'}[d]||d;}).join('·');
-        var tgtKo = {member:'회원',nonmember:'비회원',common:'공통'}[r.target];
-        var capKo = r.caps.indexOf('all')>=0?'전체':r.caps.map(function(c){return CAP_LABEL[c];}).join('·');
-        return '<li style="margin-bottom:3px;">'+seasonKo+' · '+dayKo+' · '+r.hours[0]+'~'+r.hours[1]+'시 · '+capKo+' · <b>'+tgtKo+'</b> · '+MODE_LABEL[r.mode]+' '+r.value+(r.mode==='percent'?'%':'원')+'</li>';
+    return { v: val, base: base, disc: disc };
+  }
+
+  // ════════ KPI: 계절시간제 운영 사업자 수 ════════
+  (function initKpi(){
+    var n=0; for (var k in TOU_OPERATORS){ var o=TOU_OPERATORS[k]; if(o.tou && o.rules && o.rules.length) n++; }
+    var el=document.getElementById('kpiTouCount'); if(el) el.textContent=n;
+  })();
+
+  // ════════ 매트릭스 ════════
+  var mxState = { mem:"member", season:curSeason, day:curDay, hour:curHour, search:"", sortKey:null, sortDir:0,
+                  bands:{slow:true,mid:true,fast50:true,fast100:true,ultra:true}, expanded:{} };
+  function activeBands(){ return BANDS.filter(function(b){ return mxState.bands[b.k]; }); }
+  function mxRate(op, band){ return computeRate(op, band, mxState.mem, mxState.season, mxState.hour, mxState.day); }
+  function cellHTML(rate){ if(!rate) return '<span class="mx-null">—</span>'; return '<span class="'+(rate.disc?'mx-disc':'')+'">'+fmt(rate.v)+'</span>'; }
+  function rowVal(op, key){ var r=mxRate(op,key); return r?r.v:null; }
+  function publicVisible(){ var q=mxState.search.trim(); return !q || PUBLIC.name.indexOf(q)>=0 || "환경부".indexOf(q)>=0 || q.indexOf("환경부")>=0 || q.indexOf("공공")>=0; }
+  function cpoRows(){
+    var q=mxState.search.trim();
+    var rows=CPO_ORDER.map(function(bid){return {bid:bid,op:TOU_OPERATORS[bid]};}).filter(function(r){return r.op&&(!q||r.op.name.indexOf(q)>=0);});
+    if(mxState.sortKey){
+      var key=mxState.sortKey, dir=mxState.sortDir;
+      rows.sort(function(a,b){
+        if(key==='name'){ var c=a.op.name.localeCompare(b.op.name,'ko'); return dir===1?-c:c; }
+        var va=rowVal(a.op,key), vb=rowVal(b.op,key);
+        if(va==null&&vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;
+        return dir===1?(vb-va):(va-vb);
+      });
+    }
+    return rows;
+  }
+
+  var expandBand = {};
+  function defaultBand(op){ var order=['fast50','fast100','ultra','slow','mid']; for(var i=0;i<order.length;i++){ if((op.member||{})[order[i]]!=null) return order[i]; } return 'fast50'; }
+  function expandHTML(bid){
+    var op=TOU_OPERATORS[bid];
+    var avail=BANDS.filter(function(b){ return (op.member||{})[b.k]!=null || (op.nonmember||{})[b.k]!=null; });
+    var cur=expandBand[bid]||defaultBand(op);
+    var btns='<div class="mx-eband" data-eband="'+bid+'">'+avail.map(function(b){ return '<button type="button" data-eb="'+b.k+'" class="'+(b.k===cur?'on':'')+'">'+CAP_LABEL[b.k]+'</button>'; }).join('')+'</div>';
+    var rulesHTML='';
+    if(op.tou && op.rules.length){
+      var lis=op.rules.map(function(r){
+        var dayKo=r.days.map(function(d){return DAY_KO[d]||d;}).join('·');
+        var capKo=r.caps.indexOf('all')>=0?'전체':r.caps.map(function(c){return CAP_LABEL[c];}).join('·');
+        var tgtKo={member:'회원',nonmember:'비회원',common:'공통'}[r.target];
+        return '<li style="margin-bottom:3px;">'+SEASON_KO[r.season]+' · '+dayKo+' · '+r.hours[0]+'~'+r.hours[1]+'시 · '+capKo+' · <b>'+tgtKo+'</b> · '+MODE_LABEL[r.mode]+' '+r.value+(r.mode==='percent'?'%':'원')+'</li>';
       }).join('');
-      touLegend.insertAdjacentHTML('afterend','<div id="touRuleList" style="margin-top:12px;font-size:12.5px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;"><div style="font-weight:700;margin-bottom:6px;color:#334155;">계절·시간 할인규칙 ('+op.rules.length+'건)</div><ul style="margin:0;padding-left:18px;line-height:1.7;">'+list+'</ul></div>');
+      rulesHTML='<div style="margin-top:12px;font-size:12.5px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;"><div style="font-weight:700;margin-bottom:6px;color:#334155;">계절·시간 할인규칙 ('+op.rules.length+'건)</div><ul style="margin:0;padding-left:18px;line-height:1.7;">'+lis+'</ul></div>';
+    } else {
+      rulesHTML='<div style="margin-top:12px;font-size:12.5px;color:var(--color-gray-500);">평단가(시간대 무관) 사업자 · 계절·시간 할인규칙 없음</div>';
     }
+    return '<div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">'+esc(op.name)+' · 24시간 요금곡선 <span style="font-weight:500;color:var(--color-gray-500);">('+SEASON_KO[mxState.season]+' · '+DAY_KO[mxState.day]+' · '+(mxState.mem==='member'?'회원':'비회원')+')</span></div>'
+      + btns + '<div class="mx-bars" id="mxbars-'+bid+'"></div><div class="mx-axis" id="mxaxis-'+bid+'"></div>' + rulesHTML;
   }
-  window.__renderTOU = renderTOU;
+  function drawCurve(bid, band){
+    var op=TOU_OPERATORS[bid]; if(!op) return;
+    expandBand[bid]=band;
+    var bars=document.getElementById('mxbars-'+bid), axis=document.getElementById('mxaxis-'+bid);
+    if(!bars||!axis) return;
+    var rates=[]; for(var h=0;h<24;h++){ var r=computeRate(op,band,mxState.mem,mxState.season,h,mxState.day); rates.push(r?r.v:null); }
+    var nums=rates.filter(function(x){return x!=null;});
+    var scale=(nums.length?Math.max.apply(null,nums):100)*1.15;
+    var baseR=computeRate(op,band,mxState.mem,mxState.season,0,mxState.day); var baseV=baseR?baseR.base:null;
+    var bh='', ax='';
+    rates.forEach(function(v,i){
+      if(v==null){ bh+='<div class="bar" style="height:4%;background:#e5e7eb;" data-label="'+i+'시 · 미공시"></div>'; }
+      else{ var disc=(baseV!=null && v!==baseV); var col=disc?'#1AA46A':'#4A90D9'; var ht=Math.max(4,v/scale*100).toFixed(1);
+        bh+='<div class="bar" style="height:'+ht+'%;background:'+col+';" data-label="'+(i<10?'0'+i:i)+'시 · '+fmt(v)+'원/kWh"></div>'; }
+      ax+='<div>'+(i%3===0?i:'')+'</div>';
+    });
+    bars.innerHTML=bh; axis.innerHTML=ax;
+  }
 
-  function tabGroup(sel){
-    $$(sel+' .tab').forEach(function(b){
-      b.addEventListener('click',function(){ if(b.disabled)return; $$(sel+' .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); cleanRuleList(); renderTOU(); });
+  function renderMatrix(){
+    var wrap=$('#matrix-wrap'); if(!wrap) return;
+    var bands=activeBands();
+    function thSort(key,label,sub){
+      var cls='sortable'+(key==='name'?' opcol':'');
+      if(mxState.sortKey===key){ cls+=(mxState.sortDir===1?' sort-desc':(mxState.sortDir===2?' sort-asc':'')); }
+      return '<th class="'+cls+'" data-sk="'+key+'" tabindex="0" role="button">'+label+(sub?'<small>'+sub+'</small>':'')+'</th>';
+    }
+    var thead='<thead><tr>'+thSort('name','사업자','')+bands.map(function(b){return thSort(b.k,b.label,b.sub);}).join('')+'</tr></thead>';
+    var body='';
+    var showPub=publicVisible();
+    if(showPub){
+      var pubOpen=!!mxState.expanded['__PUB__'];
+      body+='<tr class="pub" data-row="__PUB__"><td class="opcol"><span class="mx-exp-ind '+(pubOpen?'open':'')+'">▸</span>'+PUBLIC.name+'</td>'+bands.map(function(b){return '<td>'+fmt(PUBLIC.rate[b.k])+'</td>';}).join('')+'</tr>';
+      if(pubOpen){
+        body+='<tr class="mx-exp-row"><td colspan="'+(bands.length+1)+'"><div style="font-size:13.5px;color:var(--color-gray-700);line-height:1.8;"><b>환경부 공공 표준단가</b> · 출력 5단계 고정단가로 <b>시각·요일·회원 구분과 무관</b>하게 적용됩니다.<br>완속 294.3 · 중속 306.0 · 급속(50~100) 324.4 · 급속(100~200) 347.2 · 초급속 391.9 원/kWh</div></td></tr>';
+      }
+    }
+    var rows=cpoRows();
+    rows.forEach(function(r){
+      var op=r.op, open=!!mxState.expanded[r.bid];
+      body+='<tr data-row="'+r.bid+'"><td class="opcol"><span class="mx-exp-ind '+(open?'open':'')+'">▸</span>'+esc(op.name)+'</td>'+bands.map(function(b){return '<td>'+cellHTML(mxRate(op,b.k))+'</td>';}).join('')+'</tr>';
+      if(open){ body+='<tr class="mx-exp-row" data-exprow="'+r.bid+'"><td colspan="'+(bands.length+1)+'">'+expandHTML(r.bid)+'</td></tr>'; }
+    });
+    wrap.innerHTML='<table class="mx-table">'+thead+'<tbody>'+body+'</tbody></table>';
+    rows.forEach(function(r){ if(mxState.expanded[r.bid]) drawCurve(r.bid, expandBand[r.bid]||defaultBand(r.op)); });
+  }
+
+  (function initMatrix(){
+    var bandBox=$('#mxBands');
+    if(bandBox){
+      bandBox.innerHTML=BANDS.map(function(b){ return '<label class="mx-band-chip on" data-band="'+b.k+'"><input type="checkbox" checked value="'+b.k+'"> '+b.label+'</label>'; }).join('');
+      bandBox.addEventListener('change',function(e){ var cb=e.target.closest('input'); if(!cb) return; mxState.bands[cb.value]=cb.checked; cb.closest('.mx-band-chip').classList.toggle('on',cb.checked); renderMatrix(); });
+    }
+    $$('#mx-mem-tabs .tab').forEach(function(b){ b.addEventListener('click',function(){ $$('#mx-mem-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mxState.mem=b.dataset.mmem; renderMatrix(); }); });
+    $$('#mx-season-tabs .tab').forEach(function(b){
+      b.classList.toggle('active', b.dataset.season===curSeason);
+      b.addEventListener('click',function(){ $$('#mx-season-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mxState.season=b.dataset.season; renderMatrix(); });
+    });
+    $$('#mx-day-tabs .tab').forEach(function(b){
+      b.classList.toggle('active', b.dataset.day===curDay);
+      b.addEventListener('click',function(){ $$('#mx-day-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mxState.day=b.dataset.day; renderMatrix(); });
+    });
+    var hr=$('#mxHour'), hv=$('#mxHourVal');
+    if(hr){ hr.value=curHour; if(hv) hv.textContent=(curHour<10?'0'+curHour:curHour)+'시 (지금)';
+      hr.addEventListener('input',function(){ mxState.hour=parseInt(hr.value,10); if(hv) hv.textContent=(mxState.hour<10?'0'+mxState.hour:mxState.hour)+'시'+(mxState.hour===curHour?' (지금)':''); renderMatrix(); });
+    }
+    var se=$('#mxSearch'), clr=$('#mxSearchClear');
+    function syncClear(){ if(clr) clr.hidden = !(se&&se.value); }
+    if(se) se.addEventListener('input',function(){ mxState.search=se.value; syncClear(); renderMatrix(); });
+    if(clr) clr.addEventListener('click',function(){ if(se){se.value=''; se.focus();} mxState.search=''; syncClear(); renderMatrix(); });
+    var wrap=$('#matrix-wrap');
+    if(wrap) wrap.addEventListener('click',function(e){
+      var th=e.target.closest('thead th.sortable');
+      if(th){ var key=th.dataset.sk; if(mxState.sortKey!==key){mxState.sortKey=key;mxState.sortDir=1;} else {mxState.sortDir=(mxState.sortDir+1)%3; if(mxState.sortDir===0) mxState.sortKey=null;} renderMatrix(); return; }
+      var eb=e.target.closest('.mx-eband button');
+      if(eb){ var box=eb.closest('.mx-eband'); var bid=box.dataset.eband; $$('button',box).forEach(function(x){x.classList.remove('on');}); eb.classList.add('on'); drawCurve(bid,eb.dataset.eb); return; }
+      if(e.target.closest('.mx-exp-row')) return;
+      var tr=e.target.closest('tr[data-row]');
+      if(tr){ var id=tr.getAttribute('data-row'); mxState.expanded[id]=!mxState.expanded[id]; renderMatrix(); }
+    });
+    if(wrap) wrap.addEventListener('keydown',function(e){
+      if((e.key==='Enter'||e.key===' ')){ var th=e.target.closest('thead th.sortable'); if(th){ e.preventDefault(); th.click(); } }
+    });
+    renderMatrix();
+  })();
+
+  // ════════ 충전소 요금 검색 ════════
+  var STATIONS = [
+    { no:1,  name:'서울 강남 롯데타워 충전소',  addr:'서울 송파구 올림픽로 300', sido:'서울', op:'ME' },
+    { no:2,  name:'서울 양재 SK일렉링크 허브',  addr:'서울 서초구 강남대로 311', sido:'서울', op:'ST' },
+    { no:3,  name:'서울 상암 GS차지비 1호점',    addr:'서울 마포구 월드컵북로 396', sido:'서울', op:'PI' },
+    { no:4,  name:'서울 송파 휴맥스이브이 거점', addr:'서울 송파구 위례성대로 220', sido:'서울', op:'HM' },
+    { no:5,  name:'경기 분당 채비 야탑 충전소',  addr:'경기 성남시 야탑동 343', sido:'경기', op:'CV' },
+    { no:6,  name:'경기 화성 에버온 동탄 충전소',addr:'경기 화성시 동탄대로 1', sido:'경기', op:'EV' },
+    { no:7,  name:'경기 평택 한전 KEPCO 충전소',addr:'경기 평택시 청북읍 백봉리 11', sido:'경기', op:'KP' },
+    { no:8,  name:'인천 송도 GS차지비 컨벤시아',addr:'인천 연수구 컨벤시아대로 165', sido:'인천', op:'PI' },
+    { no:9,  name:'인천공항 T2 SK일렉링크',     addr:'인천 중구 공항로 272', sido:'인천', op:'ST' },
+    { no:10, name:'대전 둔산 한국전기차충전서비스', addr:'대전 서구 둔산동 1004', sido:'대전', op:'HE' },
+    { no:11, name:'부산 해운대 채비 신세계',    addr:'부산 해운대구 센텀남대로 35', sido:'부산', op:'CV' },
+    { no:12, name:'부산 강서 GS차지비 명지점', addr:'부산 강서구 명지동 1234', sido:'부산', op:'PI' },
+    { no:13, name:'대구 동성로 SK일렉링크',     addr:'대구 중구 동성로 62', sido:'대구', op:'ST' },
+    { no:14, name:'광주 첨단 에버온',           addr:'광주 광산구 첨단3로 88', sido:'광주', op:'EV' },
+    { no:15, name:'울산 매암 휴맥스이브이',     addr:'울산 남구 매암동 137', sido:'울산', op:'HM' },
+    { no:16, name:'세종 정부청사 기후부 충전소',addr:'세종 어진동 670', sido:'세종', op:'ME' },
+    { no:17, name:'제주 함덕 한전 KEPCO',       addr:'제주 제주시 함덕리 55', sido:'제주', op:'KP' },
+    { no:18, name:'제주 서귀포 플러그링크',     addr:'제주 서귀포시 중앙로 105', sido:'제주', op:'PL' },
+    { no:19, name:'강원 춘천 에버온 명동',      addr:'강원 춘천시 명동길 22', sido:'강원', op:'EV' },
+    { no:20, name:'충북 청주 SK일렉링크 청주IC',addr:'충북 청주시 흥덕구 옥산면', sido:'충북', op:'ST' }
+  ];
+  function gugunOf(addr){ var p=addr.split(' '); return p[1]||''; }
+  var evTbody=$('#evResultTbody'), evCount=$('#evResultCount'), evTime=$('#evResultTime');
+  var evState = { mem:"member", sortKey:null, sortDir:0 };
+  // 검색 리스트는 '지금 시각(오늘)' 기준 — 매트릭스 조건과 독립
+  function evBand(op, band){ var r=op?computeRate(op,band,evState.mem,curSeason,curHour,curDay):null; return r?r.v:null; }
+  function evSortVal(s, key){
+    if(key==='no') return s.no;
+    if(key==='name') return s.name;
+    if(key==='cpo'){ var op=TOU_OPERATORS[s.op]; return op?op.name:s.op; }
+    return evBand(TOU_OPERATORS[s.op], key);   // 밴드
+  }
+  function evSorted(list){
+    if(!evState.sortKey) return list;
+    var key=evState.sortKey, dir=evState.sortDir, arr=list.slice();
+    arr.sort(function(a,b){
+      var va=evSortVal(a,key), vb=evSortVal(b,key);
+      if(va==null&&vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;
+      var c = (typeof va==='number'&&typeof vb==='number') ? (va-vb) : String(va).localeCompare(String(vb),'ko');
+      return dir===1 ? -c : c;
+    });
+    return arr;
+  }
+  var _evList = STATIONS.slice();
+  function renderEv(){
+    if(!evTbody) return;
+    var list=evSorted(_evList);
+    evTbody.innerHTML=list.map(function(s){
+      var op=TOU_OPERATORS[s.op]; var nm=op?op.name:s.op;
+      function cell(band){ return '<td class="num">'+fmt(evBand(op,band))+'</td>'; }
+      return '<tr>' +
+        '<td style="text-align:center;color:var(--color-gray-500);">'+s.no+'</td>' +
+        '<td><div class="station-name">'+esc(s.name)+'</div><div class="station-addr">'+esc(s.addr)+'</div></td>' +
+        '<td><button type="button" class="ev-cpo-link" data-cpo="'+esc(nm)+'">'+esc(nm)+'</button></td>' +
+        cell('slow')+cell('mid')+cell('fast50')+cell('fast100')+cell('ultra') +
+        '<td style="text-align:center;"><button type="button" class="ev-roam-btn" data-roam="'+s.no+'">로밍요금 보기</button></td>' +
+      '</tr>';
+    }).join('');
+    if(evCount) evCount.textContent=list.length;
+    if(evTime) evTime.textContent=(curHour<10?'0'+curHour:curHour)+'시 · '+(evState.mem==='member'?'회원가':'비회원가')+' 기준';
+    // 정렬 표시
+    $$('.ev-result-table thead th.sortable').forEach(function(th){
+      th.classList.remove('sort-asc','sort-desc');
+      if(evState.sortKey===th.dataset.esk){ th.classList.toggle('sort-desc', evState.sortDir===1); th.classList.toggle('sort-asc', evState.sortDir===2); }
     });
   }
-  function cleanRuleList(){ var el=document.getElementById('touRuleList'); if(el) el.remove(); }
-  function init(){
-    var mo = new Date().getMonth();
-    var auto = [2,3,4,8,9].indexOf(mo)>=0 ? 'spring' : [5,6,7].indexOf(mo)>=0 ? 'summer' : 'winter';
-    $$('#tou-season-tabs .tab').forEach(function(b){b.classList.toggle('active',b.dataset.season===auto);});
-    tabGroup('#tou-member-tabs'); tabGroup('#tou-season-tabs'); tabGroup('#tou-day-tabs');
-    var opSel=$('#tou-operator'), capSel=$('#tou-capacity');
-    if (opSel) opSel.addEventListener('change',function(){cleanRuleList();renderTOU();});
-    if (capSel) capSel.addEventListener('change',function(){cleanRuleList();renderTOU();});
+  function applyEvFilter(){
+    var sido=($('#evSido')||{}).value||'', gugun=($('#evGugun')||{}).value||'', kw=(($('#evKeyword')||{}).value||'').trim();
+    return STATIONS.filter(function(s){
+      if(sido && s.sido!==sido) return false;
+      if(gugun && gugunOf(s.addr)!==gugun) return false;
+      if(kw && s.name.indexOf(kw)<0 && s.addr.indexOf(kw)<0) return false;
+      return true;
+    });
   }
-  var btn = $('#tariffBtn'), overlay=$('#tariff-modal-overlay'), closeBtn=$('#tariff-modal-close');
-  if (btn && overlay){
-    btn.addEventListener('click',function(){overlay.classList.add('open'); document.body.style.overflow='hidden'; setTimeout(renderTOU,30);});
-    closeBtn.addEventListener('click',function(){overlay.classList.remove('open'); document.body.style.overflow='';});
-    overlay.addEventListener('click',function(e){if(e.target===overlay){overlay.classList.remove('open'); document.body.style.overflow='';}});
-    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('open')){overlay.classList.remove('open'); document.body.style.overflow='';}});
-  }
-  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
-  else init();
-})();
-</script>
+  (function initEv(){
+    var sidoSel=$('#evSido'), gugunSel=$('#evGugun'), form=$('#evSearchForm'), reset=$('#evResetBtn'), wrap=$('#evResultWrap');
+    function fillGugun(){
+      if(!gugunSel) return;
+      var sido=sidoSel.value, set=[];
+      STATIONS.forEach(function(s){ if(!sido||s.sido===sido){ var g=gugunOf(s.addr); if(g && set.indexOf(g)<0) set.push(g); } });
+      gugunSel.innerHTML='<option value="">전체</option>'+set.map(function(g){return '<option value="'+esc(g)+'">'+esc(g)+'</option>';}).join('');
+    }
+    if(sidoSel) sidoSel.addEventListener('change', fillGugun);
+    if(form) form.addEventListener('submit', function(e){ e.preventDefault(); _evList=applyEvFilter(); renderEv(); if(wrap) wrap.scrollIntoView({behavior:'smooth', block:'start'}); });
+    if(reset) reset.addEventListener('click', function(){ if(sidoSel) sidoSel.value=''; fillGugun(); if(gugunSel) gugunSel.value=''; var kw=$('#evKeyword'); if(kw) kw.value=''; _evList=STATIONS.slice(); renderEv(); });
+    // 회원/비회원 토글
+    $$('#ev-mem-tabs .tab').forEach(function(b){ b.addEventListener('click',function(){ $$('#ev-mem-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); evState.mem=b.dataset.emem; renderEv(); }); });
+    // 정렬 헤더 (공지 표준 3단 사이클)
+    $$('.ev-result-table thead th.sortable').forEach(function(th){
+      function cycle(){ var key=th.dataset.esk; if(evState.sortKey!==key){evState.sortKey=key;evState.sortDir=1;} else {evState.sortDir=(evState.sortDir+1)%3; if(evState.sortDir===0) evState.sortKey=null;} renderEv(); }
+      th.addEventListener('click', cycle);
+      th.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); cycle(); } });
+    });
+    // 결과 위임: CPO → 매트릭스 필터 / 로밍 → 팝업
+    if(evTbody) evTbody.addEventListener('click', function(e){
+      var cpo=e.target.closest('.ev-cpo-link');
+      if(cpo){ var nm=cpo.dataset.cpo; var ms=$('#mxSearch'); if(ms){ ms.value=nm; mxState.search=nm; var c=$('#mxSearchClear'); if(c) c.hidden=!nm; renderMatrix(); } var sec=$('#section-matrix'); if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+      var rb=e.target.closest('.ev-roam-btn');
+      if(rb){ openRoamPopup(parseInt(rb.dataset.roam,10)); return; }
+    });
+    fillGugun();
+    renderEv();
+  })();
 
-<script>
-/* v0.12 [25] 로밍 안내 툴팁 토글 (클릭 토글 + 호버/포커스 + ESC/외부클릭 닫기) */
-(function(){
-  var btn=document.querySelector('.info-tip-btn[aria-describedby="roamingTip"]');
-  var tip=document.getElementById('roamingTip');
-  if(!btn||!tip) return;
-  function close(){ tip.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
-  btn.addEventListener('click', function(e){ e.stopPropagation(); var open=tip.classList.toggle('is-open'); btn.setAttribute('aria-expanded', open?'true':'false'); });
-  document.addEventListener('click', function(e){ if(!e.target.closest('.info-tip-wrap')) close(); });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-})();
-</script>
-<script>
-/* 브레드크럼 3뎁스 = 활성 탭 라벨 동기화 (탭 전환·언어변경 반영) */
-(function(){
-  var crumb=document.querySelector('.breadcrumb .current');
-  var g=document.querySelector('[data-tabs]');
-  if(!crumb||!g) return;
-  function sync(){var a=g.querySelector('.tab.active'); if(a){var s=(a.textContent||'').trim(); if(s) crumb.textContent=s;}}
-  new MutationObserver(sync).observe(g,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class']});
-  sync();
+  // ════════ 로밍 요금 매트릭스 (발급 카드 × 이용 충전기) ════════
+  var ROAM_ISSUERS = [
+    {bid:'ME',name:'무공해차 통합카드(공단)'},
+    {bid:'PI',name:'GS차지비'},
+    {bid:'ST',name:'SK일렉링크'},
+    {bid:'EV',name:'에버온'},
+    {bid:'KP',name:'한전 KEPCO'}
+  ];
+  var ROAM_USED = [
+    {bid:'ME',name:'환경부(공공)'},
+    {bid:'PI',name:'GS차지비'},
+    {bid:'ST',name:'SK일렉링크'},
+    {bid:'EV',name:'에버온'},
+    {bid:'KP',name:'한전 KEPCO'},
+    {bid:'CV',name:'채비'},
+    {bid:'HM',name:'휴맥스이브이'}
+  ];
+  // 발급 CPO별 협약(이용 CPO) 로밍 할증(원). 없으면 미협약. ME=통합카드 전 CPO 0(수수료 없음).
+  var ROAM_SURCHARGE = {
+    ME: {ME:0,PI:0,ST:0,EV:0,KP:0,CV:0,HM:0,HE:0,PL:0},
+    PI: {ME:0,PI:0,ST:60,EV:40,KP:0,CV:80,PL:55},
+    ST: {ME:0,PI:60,ST:0,EV:50,KP:0,HM:70,HE:65},
+    EV: {ME:0,PI:40,ST:50,EV:0,KP:0,HE:60},
+    KP: {ME:0,PI:0,ST:0,EV:0,KP:0}
+  };
+  function ownRate(usedBid, band){ if(usedBid==='ME') return PUBLIC.rate[band]; var op=TOU_OPERATORS[usedBid]; return op?((op.member||{})[band]):null; }
+  function roamCellClass(sur){ if(sur===0) return 'roam-free'; if(sur<=50) return 'roam-mid'; return 'roam-high'; }
+  var roamBand='fast50';
+  var roamSel = {};   // 발급 카드 다중필터 (bid→true)
+  function roamSelActive(){ return Object.keys(roamSel).filter(function(k){return roamSel[k];}); }
+  function renderRoamCardFilter(){
+    var box=$('#roam-card-filter'); if(!box) return;
+    box.innerHTML=ROAM_ISSUERS.map(function(iss){ return '<button type="button" class="roam-card-chip'+(roamSel[iss.bid]?' on':'')+'" data-rc="'+iss.bid+'">'+esc(iss.name)+'</button>'; }).join('');
+  }
+  function renderRoamTabs(){
+    var box=$('#roam-band-tabs'); if(!box) return;
+    box.innerHTML=BANDS.map(function(b){ return '<button class="tab'+(b.k===roamBand?' active':'')+'" data-rb="'+b.k+'" type="button">'+CAP_LABEL[b.k]+'</button>'; }).join('');
+  }
+  function renderRoamMatrix(){
+    var wrap=$('#roaming-wrap'); if(!wrap) return;
+    var head='<thead><tr><th>발급 \\ 이용</th>'+ROAM_USED.map(function(u){ return '<th>'+esc(u.name)+'</th>'; }).join('')+'</tr></thead>';
+    var act=roamSelActive();
+    var issuers=act.length?ROAM_ISSUERS.filter(function(i){return roamSel[i.bid];}):ROAM_ISSUERS;
+    var body=issuers.map(function(iss){
+      var tds=ROAM_USED.map(function(u){
+        if(iss.bid===u.bid) return '<td class="self">자사요금</td>';
+        var sur=(ROAM_SURCHARGE[iss.bid]||{})[u.bid];
+        if(sur===undefined) return '<td class="na">—</td>';
+        var own=ownRate(u.bid, roamBand);
+        if(own==null) return '<td class="na">—</td>';
+        var roam=Math.round((own+sur)*10)/10;
+        return '<td class="'+roamCellClass(sur)+'" title="자사요금 '+fmt(own)+'원 + 로밍 할증 '+sur+'원">'+fmt(roam)+'</td>';
+      }).join('');
+      return '<tr><th>'+esc(iss.name)+'</th>'+tds+'</tr>';
+    }).join('');
+    wrap.innerHTML='<div style="overflow-x:auto;border:1px solid var(--border-light);border-radius:14px;background:#fff;"><table class="roam-mx">'+head+'<tbody>'+body+'</tbody></table></div>';
+  }
+  function renderRoamLegend(){
+    var el=$('#roam-legend'); if(!el) return;
+    var items=[['#F0FDF4','수수료 없음/동일'],['#FFFBEB','소폭 할증(≤50원)'],['#FEF2F2','할증 큼(&gt;50원)'],['var(--color-gray-50)','자사요금'],['#fff','미협약 —']];
+    el.innerHTML=items.map(function(x){ return '<span class="roam-lg"><span class="sw" style="background:'+x[0]+';"></span>'+x[1]+'</span>'; }).join('');
+  }
+  (function initRoam(){
+    renderRoamCardFilter(); renderRoamTabs(); renderRoamMatrix(); renderRoamLegend();
+    var cf=$('#roam-card-filter');
+    if(cf) cf.addEventListener('click',function(e){ var b=e.target.closest('button[data-rc]'); if(!b) return; var bid=b.dataset.rc; roamSel[bid]=!roamSel[bid]; renderRoamCardFilter(); renderRoamMatrix(); });
+    var tabs=$('#roam-band-tabs');
+    if(tabs) tabs.addEventListener('click',function(e){ var b=e.target.closest('button[data-rb]'); if(!b) return; roamBand=b.dataset.rb; renderRoamTabs(); renderRoamMatrix(); });
+  })();
+
+  // ════════ 로밍 요금 팝업 (검색 결과 · 이용 CPO 기준 발급카드별) ════════
+  var rpOverlay=$('#rp-overlay'), rpBody=$('#rpBody'), rpSub=$('#rpSub');
+  function openRoamPopup(no){
+    var s=STATIONS.filter(function(x){return x.no===no;})[0]; if(!s||!rpOverlay) return;
+    var tbid=s.op, op=TOU_OPERATORS[tbid];
+    var destName=op?op.name:(tbid==='ME'?PUBLIC.name:tbid);
+    if(rpSub) rpSub.textContent=s.name+' · 이용 충전기 '+destName;
+    // 협약된 발급 카드만
+    var issuers=ROAM_ISSUERS.filter(function(iss){ return (ROAM_SURCHARGE[iss.bid]||{})[tbid]!==undefined; });
+    var html;
+    if(!issuers.length){
+      html='<div style="padding:20px;text-align:center;color:var(--color-gray-500);font-size:14px;">이 충전기와 협약된 발급 카드가 없습니다. (예시 더미)</div>';
+    } else {
+      var thead='<thead><tr><th style="text-align:left;">발급 카드</th>'+BANDS.map(function(b){return '<th>'+b.label+'<br><span style="font-weight:400;color:var(--color-gray-400);font-size:10.5px;">'+CAP_LABEL[b.k].replace('급속 ','').replace('완속','<30').replace('중속','30~50').replace('초급속','≥200')+'</span></th>';}).join('')+'</tr></thead>';
+      var rows=issuers.map(function(iss){
+        var sur=(ROAM_SURCHARGE[iss.bid]||{})[tbid];
+        var tds=BANDS.map(function(b){
+          var own=ownRate(tbid,b.k);
+          if(own==null) return '<td class="na" style="color:var(--color-gray-300);">—</td>';
+          var val=Math.round((own+sur)*10)/10;
+          var cls=roamCellClass(sur);
+          return '<td class="'+cls+'">'+fmt(val)+'</td>';
+        }).join('');
+        var self=(iss.bid===tbid)?' <span style="font-size:11px;color:var(--color-gray-400);font-weight:500;">(자사)</span>':'';
+        return '<tr><th>'+esc(iss.name)+self+'</th>'+tds+'</tr>';
+      }).join('');
+      html='<table class="rp-tbl">'+thead+'<tbody>'+rows+'</tbody></table>'
+        +'<div style="margin-top:12px;font-size:12.5px;color:var(--color-gray-600);line-height:1.7;">※ 협약된 발급 카드만 표시 · 로밍요금 = 이용 충전기('+esc(destName)+') 자사요금 + 협약 할증 · 회원 기준. 무공해차 통합카드는 로밍 수수료가 없습니다. (예시 더미)</div>';
+    }
+    rpBody.innerHTML=html;
+    rpOverlay.classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeRp(){ if(rpOverlay){ rpOverlay.classList.remove('open'); document.body.style.overflow=''; } }
+  var rpC=$('#rpClose'); if(rpC) rpC.addEventListener('click', closeRp);
+  if(rpOverlay) rpOverlay.addEventListener('click', function(e){ if(e.target===rpOverlay) closeRp(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && rpOverlay && rpOverlay.classList.contains('open')) closeRp(); });
+
 })();
 </script>
 </body>

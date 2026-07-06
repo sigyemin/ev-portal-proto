@@ -202,6 +202,8 @@
     'subsidy.vehicles.field.type':     { ko: '차종 유형', en: 'Vehicle Type' },
     'subsidy.vehicles.field.maker':    { ko: '제조사', en: 'Manufacturer' },
     'subsidy.vehicles.field.sort':     { ko: '정렬', en: 'Sort' },
+    'subsidy.vehicles.view.card':      { ko: '카드형', en: 'Cards' },
+    'subsidy.vehicles.view.table':     { ko: '표형', en: 'Table' },
     'subsidy.vehicles.opt.all':        { ko: '전체', en: 'All' },
     'subsidy.vehicles.opt.ev':         { ko: '전기승용', en: 'EV Passenger' },
     'subsidy.vehicles.opt.h2':         { ko: '수소승용', en: 'H2 Passenger' },

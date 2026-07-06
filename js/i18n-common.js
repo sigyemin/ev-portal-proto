@@ -183,25 +183,6 @@
     'footer.partner.wa':      { ko: 'WA 웹접근성',                en: 'WA Web Accessibility' },
     'footer.partner.newwindow': { ko: ' (새 창)',                en: ' (new window)' },
 
-    /* 마이페이지 사이드 */
-    'mp.side.aria':            { ko: '마이페이지 메뉴',  en: 'My Page menu' },
-    'mp.side.role.personal':   { ko: '일반 회원',       en: 'Personal Member' },
-    'mp.side.role.business':   { ko: '사업자 회원',     en: 'Business Member' },
-    'mp.side.group.info':      { ko: '내 정보 관리',    en: 'Account' },
-    'mp.side.group.charging':  { ko: '나의 충전',       en: 'My Charging' },
-    'mp.side.group.subsidy':   { ko: '보조금·민원',     en: 'Subsidy & Inquiries' },
-    'mp.side.item.home':       { ko: '마이페이지 홈',   en: 'My Page Home' },
-    'mp.side.item.info':       { ko: '회원 정보 조회·수정', en: 'View / Edit Profile' },
-    'mp.side.item.password':   { ko: '비밀번호 변경',   en: 'Change Password' },
-    'mp.side.item.notifications': { ko: '알림 설정',    en: 'Notification Settings' },
-    'mp.side.item.accounts':   { ko: '계정 연결', en: 'Linked Accounts' },
-    'mp.side.item.withdraw':   { ko: '회원 탈퇴',       en: 'Withdraw Membership' },
-    'mp.side.item.card':       { ko: '충전 카드 관리',  en: 'Charging Card' },
-    'mp.side.item.fav':        { ko: '자주 쓰는 충전소', en: 'Favorite Stations' },
-    'mp.side.item.subsidy':    { ko: '보조금 신청 현황', en: 'Subsidy Status' },
-    'mp.side.item.inquiry':    { ko: '민원 처리 현황',  en: 'Inquiry Status' },
-    'mp.side.item.public':     { ko: '공모 신청 현황',  en: 'Procurement Status' },
-
     /* 알림 메시지 */
     'fontsize.larger':        { ko: '글자 크기가 커졌습니다',     en: 'Font size enlarged' },
     'fontsize.default':       { ko: '글자 크기가 기본으로 돌아왔습니다', en: 'Font size reset to default' },

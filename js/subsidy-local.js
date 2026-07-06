@@ -312,6 +312,28 @@
     if (els.tier) els.tier.addEventListener('change', function () { state.tier = this.value; refreshOpenPanel(); });
     if (els.modelSearch) els.modelSearch.addEventListener('input', function () { state.modelQ = this.value.trim(); refreshOpenPanel(); });
 
+    // 검색 / 초기화 (표준 필터바)
+    els.search = document.getElementById('slSearch');
+    if (els.search) els.search.addEventListener('click', function () {
+      if (els.localeSearch) state.localeQ = els.localeSearch.value.trim();
+      if (els.modelSearch) state.modelQ = els.modelSearch.value.trim();
+      state.open = null;
+      renderList(); refreshOpenPanel();
+    });
+    els.reset = document.getElementById('slReset');
+    if (els.reset) els.reset.addEventListener('click', function () {
+      state.cat = 'all'; state.sido = '전체'; state.sigungu = '전체';
+      state.localeQ = ''; state.tier = '전체'; state.modelQ = ''; state.open = null;
+      if (els.cat) els.cat.value = 'all';
+      if (els.sido) els.sido.value = '전체';
+      fillSigungu();
+      if (els.localeSearch) els.localeSearch.value = '';
+      fillTierSelect();
+      if (els.modelSearch) els.modelSearch.value = '';
+      updateCompareLink();
+      renderList();
+    });
+
     // 아코디언 토글 + 정렬 (이벤트 위임)
     els.list.addEventListener('click', function (e) {
       var th = e.target.closest('.sl-th-sort');

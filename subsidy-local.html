@@ -29,9 +29,15 @@
   <section class="section-sm">
     <div class="container container-wide">
 
+      <!-- 상단 우측 글로벌 버튼 (필터바 밖) -->
+      <div class="sl-toolbar" style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+        <a href="subsidy-info.html" class="btn btn-secondary btn-sm">보조금 계산기</a>
+        <a href="compare-tool.html" id="slCompareBtn" class="btn btn-primary btn-sm">차종 비교 도구</a>
+      </div>
+
       <!-- (A) 상단 필터바 — 모든 펼침에 공통 적용 -->
       <div class="sl-filterbar">
-        <!-- 광역시도 / 시군구 / 지자체 검색 + 글로벌 버튼 -->
+        <!-- 광역시도 / 시군구 / 지자체 검색 -->
         <div class="sl-fb-row">
           <div class="form-group">
             <label class="sl-fb-lab" for="slSido">광역시도</label>
@@ -44,10 +50,6 @@
           <div class="form-group sl-fb-grow">
             <label class="sl-fb-lab" for="slLocaleSearch">지자체 검색</label>
             <input id="slLocaleSearch" type="text" placeholder="지자체명 입력 (예: 성남, 제주)">
-          </div>
-          <div class="sl-globalbtns">
-            <a href="subsidy-info.html" class="btn btn-secondary btn-sm">보조금 계산기</a>
-            <a href="compare-tool.html" id="slCompareBtn" class="btn btn-primary btn-sm">차종 비교 도구</a>
           </div>
         </div>
         <!-- 차종 / 규격 / 모델 검색 -->
@@ -64,6 +66,10 @@
             <label class="sl-fb-lab" for="slModelSearch">모델명 검색</label>
             <input id="slModelSearch" type="text" placeholder="모델명 입력 (예: 아이오닉)">
           </div>
+        </div>
+        <div class="sl-fb-actions" style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+          <button type="button" class="btn btn-primary btn-sm" id="slSearch">검색</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="slReset">초기화</button>
         </div>
       </div>
 
@@ -85,6 +91,6 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/subsidy-local.js?v=20260630b"></script>
+<script src="js/subsidy-local.js?v=20260703c"></script>
 </body>
 </html>

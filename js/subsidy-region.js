@@ -374,6 +374,7 @@
     emptyTable: $('#empty-state'),
     emptyCard: $('#empty-state-card'),
     pagination: $('#pagination'),
+    paginationCard: $('#pagination-card'),
     resultCount: $('#result-count'),
     resultSummary: $('#result-summary'),
     statAnn: $('#stat-announcement'),
@@ -621,11 +622,9 @@
         <div style="position:absolute;top:8px;right:8px;z-index:2;">${favBtnCard(r.id)}</div>
         <div class="sc-head">
           <h4>${tRegion(r.region)}</h4>
-          <span class="status-chip ${statusClass(r.status)}">${tr('status', r.status)}</span>
         </div>
         <div class="sc-meta">
           <span class="vehicle-chip">${tr('vt', r.vehicleType)} · ${tr('sub', r.vehicleSub)}</span>
-          <span class="method-chip">${tr('method', r.method)}</span>
         </div>
         <div class="sc-stats">
           <div class="sc-stat"><span class="s-label">${tr('label','공고')}</span><span class="s-value">${fmt(r.announcement)}</span></div>
@@ -633,16 +632,13 @@
           <div class="sc-stat sc-sel"><span class="s-label">${_lang()==='en'?'Selected':'선정'}</span><span class="s-value">${fmt(selTotal)}</span></div>
           <div class="sc-stat delivered"><span class="s-label">${tr('label','출고')}</span><span class="s-value">${fmt(r.delivered)}</span></div>
           <div class="sc-stat sc-sel"><span class="s-label">${_lang()==='en'?'Sel. Rem.':'선정잔여'}</span><span class="s-value">${fmt(selRemTotal)}</span></div>
+          <div class="sc-stat delivered"><span class="s-label">${_lang()==='en'?'Out-del. Rem.':'출고잔여'}</span><span class="s-value">${fmt(Math.max(0, r.announcement - r.delivered))}</span></div>
         </div>
         <div class="sc-progress">
           <div class="sc-progress-head"><span>${_lang()==='en'?'Selection Rate (units)':'선정률 (대수 기준)'}</span><strong>${selPct}% · ${tr('label','잔여')} ${100 - selPct}%</strong></div>
-          <div class="progress"><div class="progress-bar" style="width:${selPct}%; background: ${barColor(selPct)};"></div></div>
+          <div class="progress"><div class="progress-bar" style="width:${selPct}%; background: var(--color-primary-500);"></div></div>
           <div class="sc-progress-head" style="margin-top:8px;"><span>${_lang()==='en'?'Budget Used (budget)':'예산 소진율 (예산 기준)'}</span><strong>${budPct}% · ${tr('label','잔여')} ${100 - budPct}%</strong></div>
           <div class="progress"><div class="progress-bar" style="width:${budPct}%; background: var(--color-secondary-500);"></div></div>
-        </div>
-        <div class="sc-footer">
-          <span>☎ ${r.phone || '-'}</span>
-          <span class="notices-count">${tr('label','공고')} ${r.notices.length}${tr('label','건')}</span>
         </div>
       </div>
       `;
@@ -696,27 +692,30 @@
     const pageRows = state.filtered.slice(start, start + state.perPage);
 
     renderTable(pageRows);
-    renderCards(state.filtered); // 카드형은 전체 표시 (페이지네이션 없음)
+    renderCards(pageRows); // 카드형도 페이지네이션 적용
     renderPagination(total, pages);
   }
 
   function renderPagination(total, pages) {
-    if (!els.pagination) return;
-    if (total === 0) { els.pagination.innerHTML = ''; return; }
+    const targets = [els.pagination, els.paginationCard].filter(Boolean);
+    if (!targets.length) return;
+    if (total === 0) { targets.forEach(el => { el.innerHTML = ''; }); return; }
     const p = state.page;
     let html = `<button type="button" ${p <= 1 ? 'disabled' : ''} data-p="prev" aria-label="${tr('label','이전')}">‹</button>`;
     for (let i = 1; i <= pages; i++) {
       html += `<button type="button" class="${i === p ? 'active' : ''}" data-p="${i}">${i}</button>`;
     }
     html += `<button type="button" ${p >= pages ? 'disabled' : ''} data-p="next" aria-label="${tr('label','다음')}">›</button>`;
-    els.pagination.innerHTML = html;
-    els.pagination.querySelectorAll('button').forEach(b => {
-      b.addEventListener('click', () => {
-        const v = b.dataset.p;
-        if (v === 'prev') state.page = Math.max(1, state.page - 1);
-        else if (v === 'next') state.page = Math.min(pages, state.page + 1);
-        else state.page = parseInt(v, 10);
-        render();
+    targets.forEach(elp => {
+      elp.innerHTML = html;
+      elp.querySelectorAll('button').forEach(b => {
+        b.addEventListener('click', () => {
+          const v = b.dataset.p;
+          if (v === 'prev') state.page = Math.max(1, state.page - 1);
+          else if (v === 'next') state.page = Math.min(pages, state.page + 1);
+          else state.page = parseInt(v, 10);
+          render();
+        });
       });
     });
   }
@@ -824,7 +823,7 @@
       `;
     };
 
-    // 카테고리별 분포 (수평 누적 바) — 3개 지표(공고/접수/출고)
+    // 카테고리별 분포 (수평 누적 바) — 공고/접수/선정/출고/선정잔여/출고잔여
     const cats = [
       { k:'priority',  label:tr('label','우선순위'),  color:'#1AAD6C' },
       { k:'corporate', label:tr('label','법인·기관'), color:'#2C7BE5' },
@@ -837,6 +836,7 @@
       { key:'select',   label:_lang()==='en'?'Selected':'선정', total:selTotal, fn:(k)=>selCat(k), emph:true },
       { key:'deliver',  label:tr('label','출고'), total:r.delivered },
       { key:'selremain',label:_lang()==='en'?'Selection Rem.':'선정잔여', total:selRemTotal, fn:(k)=> r.breakdown[k].announce - selCat(k), emph:true },
+      { key:'remaining',label:_lang()==='en'?'Out-delivery Rem.':'출고잔여', total:r.remaining, fn:(k)=> Math.max(0, r.breakdown[k].announce - r.breakdown[k].deliver) },
     ];
     const stackChartHTML = `
       <div class="stack-chart">
