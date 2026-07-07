@@ -43,6 +43,22 @@
   .ba-foot{display:flex;justify-content:center;gap:12px;margin-top:36px;}
   .ba-foot .btn{min-width:150px;}
   @media (max-width:820px){ .ba-grid{grid-template-columns:1fr;} .ba-grid > .lab{border-right:none;border-bottom:1px solid var(--border-light);} .ba-grid > .val{border-right:none;} .ba-file{grid-template-columns:1fr;} }
+  /* number 스피너(위/아래 삼각형) 제거 */
+  .ba-grid input[type=number]{-moz-appearance:textfield;appearance:textfield;}
+  .ba-grid input[type=number]::-webkit-outer-spin-button,
+  .ba-grid input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  /* 사업수행기관 검색형 콤보 */
+  .pref-combo{position:relative;width:100%;}
+  .pref-combo .pref-input{width:100%;height:42px;padding:0 12px 0 38px;border:1px solid var(--border-light);border-radius:8px;font-size:14px;font-family:inherit;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><line x1='16.5' y1='16.5' x2='21' y2='21'/></svg>") no-repeat 12px center;}
+  .pref-combo .pref-input:focus{outline:none;border-color:var(--color-secondary-500,#5D87FF);box-shadow:0 0 0 3px rgba(93,135,255,.15);}
+  .pref-combo.chosen .pref-input{font-weight:600;color:var(--text-primary);}
+  .pref-list{position:absolute;top:47px;left:0;right:0;z-index:30;background:#fff;border:1px solid var(--border-light);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.13);max-height:236px;overflow-y:auto;padding:6px;}
+  .pref-item{padding:9px 12px;border-radius:7px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .pref-item:hover{background:var(--color-secondary-50,#F3F7FF);}
+  .pref-item.taken{color:var(--text-tertiary);cursor:not-allowed;opacity:.55;}
+  .pref-item.taken:hover{background:transparent;}
+  .pref-item .tag{font-size:11px;font-weight:600;color:var(--color-secondary-600,#3D6BF0);white-space:nowrap;}
+  .pref-empty{padding:14px 12px;color:var(--text-tertiary);font-size:13px;text-align:center;}
 </style>
 </head>
 <body>
@@ -111,41 +127,33 @@
       <div data-bpanel="form" hidden>
         <div class="ba-steps">
           <span class="ba-step active">01. 신청서 작성</span><span class="ba-step-arrow">›</span>
-          <span class="ba-step">02. 사전 현장 컨설팅·심사</span><span class="ba-step-arrow">›</span>
-          <span class="ba-step">03. 신청완료</span>
+          <span class="ba-step">02. 신청완료</span>
         </div>
 
-        <!-- 신청 구분 -->
+        <!-- 신청자 정보 -->
         <div class="ba-sec">
-          <div class="ba-sec-head"><h3>신청 구분</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-sec-head"><h3>신청자 정보</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
           <div class="ba-grid">
-            <div class="lab">신청 종류 <span class="req-star">*</span></div>
-            <div class="val">
-              <label class="ba-radio"><input type="radio" name="kind" value="new" checked> 신규신청</label>
-              <label class="ba-radio"><input type="radio" name="kind" value="replace"> 교체설치 신청</label>
-            </div>
-            <div class="lab">사용유형 <span class="req-star">*</span></div>
-            <div class="val" style="grid-column:span 3;">
-              <label class="ba-radio"><input type="radio" name="useType" value="apt" checked> 공동주택</label>
-              <label class="ba-radio"><input type="radio" name="useType" value="biz"> 사업장</label>
-              <label class="ba-radio"><input type="radio" name="useType" value="small"> 소상공인(영업용)</label>
-              <label class="ba-radio"><input type="radio" name="useType" value="etc"> 기타</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 신청자(대표자) 정보 -->
-        <div class="ba-sec">
-          <div class="ba-sec-head"><h3>신청자(대표자) 정보</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
-          <div class="ba-grid">
-            <div class="lab">성명/단체명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="신청자 또는 입주자대표회의·관리단 명"></div>
-            <div class="lab">생년월일/<br>법인등록번호 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="생년월일 또는 법인등록번호" class="num-only"></div>
-            <div class="lab">전화번호</div><div class="val"><input type="tel" placeholder="지역번호 포함" class="num-only"></div>
-          </div>
-          <div class="ba-grid">
-            <div class="lab">휴대전화 <span class="req-star">*</span></div>
+            <div class="lab">신청자명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="신청자명"></div>
+            <div class="lab">전화번호(유선)</div><div class="val"><input type="tel" placeholder="지역번호 포함" class="num-only"></div>
+            <div class="lab">휴대폰 <span class="req-star">*</span></div>
             <div class="val" style="gap:8px;"><input type="tel" placeholder="본인인증 시 자동입력" class="num-only" id="phoneInput" readonly><span id="phoneVerified" style="font-size:12.5px;color:var(--color-primary-600);font-weight:600;"></span></div>
-            <div class="lab">이메일 <span class="req-star">*</span></div><div class="val" style="grid-column:span 3;"><input type="email" placeholder="이메일"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">신청부지와의<br>관계 <span class="req-star">*</span></div>
+            <div class="val"><select id="relSel">
+              <option value="">선택</option>
+              <option value="owner">건물(부지)소유자 (입주자대표회의·관리단 포함)</option>
+              <option value="mgr">시설 관리자 (공동주택 관리사무소 등)</option>
+              <option value="unit">구분 소유자 (빌라·연립 등)</option>
+              <option value="biz">사업자</option>
+            </select></div>
+            <div class="lab">기관명<br>(설치지점명) <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 3;"><input type="text" placeholder="예: ○○아파트"></div>
+          </div>
+          <div class="ba-grid" id="bizNoRow" hidden>
+            <div class="lab">사업자번호 <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 5;"><input type="text" placeholder="사업자등록번호 (관계=사업자 시 필수)" class="num-only" style="max-width:280px;"></div>
           </div>
         </div>
 
@@ -153,12 +161,20 @@
         <div class="ba-sec">
           <div class="ba-sec-head"><h3>설치장소</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
           <div class="ba-grid">
-            <div class="lab">충전소명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="예: OO아파트 지하주차장"></div>
-            <div class="lab">보유 주차면수 <span class="req-star">*</span></div><div class="val"><input type="number" min="0" value="0"> 면</div>
+            <div class="lab">설치희망지<br>구분 <span class="req-star">*</span></div>
+            <div class="val"><select id="siteType">
+              <option value="">선택</option>
+              <option>주거시설 1 (공동주택: 아파트·연립·다세대·기숙사 등)</option>
+              <option>주거시설 2 (공동주택 외: 단독·다가구 등)</option>
+              <option>업무·상업시설 (사무실·오피스텔·백화점·마트 등)</option>
+              <option>공공시설 (관공서·공영주차장·복지관·문화센터·학교 등)</option>
+              <option>기타시설 (의료·종교·숙박 등)</option>
+            </select></div>
+            <div class="lab">총 주차면수 <span class="req-star">*</span></div><div class="val"><input type="number" min="0" value="0"> 면</div>
             <div class="lab"></div><div class="val"></div>
           </div>
           <div class="ba-grid">
-            <div class="lab">설치 주소 <span class="req-star">*</span></div>
+            <div class="lab">설치희망지<br>(주소) <span class="req-star">*</span></div>
             <div class="val" style="grid-column:span 5;align-items:flex-start;flex-direction:column;gap:8px;">
               <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="우편번호" readonly style="max-width:140px;" id="zip"><button type="button" class="ba-inline-btn" id="zipBtn">우편번호 검색</button></div>
               <input type="text" placeholder="기본주소" readonly id="addr1" style="width:100%;">
@@ -167,63 +183,83 @@
           </div>
         </div>
 
-        <!-- 사업수행기관·충전기 -->
+        <!-- 충전기 현황 -->
         <div class="ba-sec">
-          <div class="ba-sec-head"><h3>사업수행기관·충전기</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-sec-head"><h3>충전기 현황</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
           <div class="ba-grid">
-            <div class="lab">사업수행기관 <span class="req-star">*</span></div>
-            <div class="val"><select><option value="">선택</option><option>NICE인프라</option><option>GS차지비</option><option>SK일렉링크</option><option>대영채비</option><option>파워큐브코리아</option></select></div>
-            <div class="lab">충전기 용량 <span class="req-star">*</span></div>
-            <div class="val"><label class="ba-radio"><input type="radio" name="kw" value="7" checked> 7kW</label><label class="ba-radio"><input type="radio" name="kw" value="11"> 11kW</label></div>
-            <div class="lab">총 희망수량 <span class="req-star">*</span></div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">기설치 충전기<br>수량 <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 5;gap:16px;">
+              <span class="qty-set" data-set="exist" style="display:inline-flex;align-items:center;gap:6px;">급속 <input type="number" min="0" value="0" style="max-width:80px;"> 기 &nbsp;·&nbsp; 완속 <input type="number" min="0" value="0" style="max-width:80px;"> 기</span>
+              <label class="ba-radio" style="margin:0;"><input type="checkbox" class="qty-none" data-target="exist"> 해당사항 없음</label>
+            </div>
           </div>
           <div class="ba-grid">
-            <div class="lab">케이블 종류 <span class="req-star">*</span></div>
-            <div class="val"><label class="ba-radio"><input type="radio" name="cable" value="int" checked> 일체형(C타입)</label><label class="ba-radio"><input type="radio" name="cable" value="sep"> 분리형</label></div>
-            <div class="lab">케이블 수</div><div class="val"><input type="number" min="0" value="0"> 개</div>
-            <div class="lab">모델명</div><div class="val"><input type="text" placeholder="설치 모델명(선택)"></div>
+            <div class="lab">설치예정 충전기<br>수량 <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 5;gap:16px;">
+              <span class="qty-set" data-set="plan" style="display:inline-flex;align-items:center;gap:6px;">급속 <input type="number" min="0" value="0" style="max-width:80px;"> 기 &nbsp;·&nbsp; 완속 <input type="number" min="0" value="0" style="max-width:80px;"> 기</span>
+              <label class="ba-radio" style="margin:0;"><input type="checkbox" class="qty-none" data-target="plan"> 해당사항 없음</label>
+            </div>
           </div>
         </div>
 
-        <!-- 소상공인 영업용 전기차 정보 (사용유형=소상공인 시) -->
-        <div class="ba-sec" id="evSection" hidden>
-          <div class="ba-sec-head"><h3>영업용 전기차 정보 (소상공인)</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+        <!-- 설치희망 수량 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>설치희망 수량</h3><span class="ba-req">단위: 기 · 미해당 항목은 0</span></div>
           <div class="ba-grid">
-            <div class="lab">차종 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="차종"></div>
-            <div class="lab">차량번호 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="차량번호"></div>
-            <div class="lab">차대번호 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="차대번호"></div>
+            <div class="lab">3kW이상~<br>7kW미만</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">7kW이상~<br>11kW미만</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">11kW이상~<br>20kW미만</div><div class="val"><input type="number" min="0" value="0"> 기</div>
           </div>
-          <p class="ba-note">※ ‘24.7.8 이후 신규 등록한 개인택시·개인화물 운송사업자 영업용 전기차에 한하며, 한국환경공단과 사전 협의가 필요합니다.</p>
-        </div>
-
-        <!-- 구비서류 -->
-        <div class="ba-sec">
-          <div class="ba-sec-head"><h3>구비서류</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
-          <div style="color:#c0392b;font-size:13.5px;line-height:1.9;margin:12px 0 6px;">
-            <strong>[첨부파일 제출 전 확인사항]</strong><br>
-            ※ 첨부파일 총합 용량 제한(900MB 이하)을 확인하였으며, 위반건축물은 보조금 지급 대상에서 제외됩니다. <label style="color:var(--text-secondary);"><input type="checkbox"> 확인</label>
+          <div class="ba-grid">
+            <div class="lab">30kW이상</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">전력분배형<br>충전기</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">키오스크형<br>충전기</div><div class="val"><input type="number" min="0" value="0"> 기</div>
           </div>
-          <div class="ba-file" style="border-top:1px solid var(--border-light);">
-            <div class="ba-file-label">제출 서류 양식(설치동의서·승낙서 등)</div>
-            <button type="button" class="ba-dl-btn" data-action="download">서식 다운로드</button><span></span>
+          <div class="ba-grid">
+            <div class="lab">과금형<br>콘센트</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">(스마트)<br>3kW이상</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">(스마트)<br>7kW이상</div><div class="val"><input type="number" min="0" value="0"> 기</div>
           </div>
-          <div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부1]</span> 충전시설 설치계약서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부2]</span> 건축물대장(90일 이내 발급분) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span><div class="ba-file-sub">※ 주차면수 확인 불가 시 K-apt 등 추가 증빙 / 위반건축물은 지급 불가</div></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부3]</span> 입주자대표회의(관리단)·사업장 사업자등록증 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부4]</span> 설치동의서(입주민 80% 이상) 또는 회의록 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span><div class="ba-file-sub">※ 입주자대표회의가 없거나 행위신고 의무가 아닌 경우 제출</div></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부5]</span> 개인정보 제공 동의서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file" data-doc="small" hidden><div class="ba-file-label"><span class="att">[첨부6]</span> 전기차 등록증 사본·주민등록초본 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file" data-doc="small" hidden><div class="ba-file-label"><span class="att">[첨부7]</span> 소상공인 확인서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file" data-doc="small" hidden><div class="ba-file-label"><span class="att">[첨부8]</span> 여객/화물 운송사업 면허·허가증 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부9]</span> 기타 증빙 서류</div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+          <div class="ba-grid">
+            <div class="lab">(스마트)<br>11kW이상</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab">(스마트)<br>30kW이상</div><div class="val"><input type="number" min="0" value="0"> 기</div>
+            <div class="lab"></div><div class="val"></div>
           </div>
         </div>
 
+        <!-- 사업수행기관 선호순위 -->
         <div class="ba-sec">
-          <div style="color:#c0392b;font-size:13.5px;line-height:1.9;">
-            ※ 허위신청 또는 대표자가 아닌 자의 신청은 접수되지 않을 수 있습니다. <label style="color:var(--text-secondary);"><input type="checkbox"> 확인</label>
+          <div class="ba-sec-head"><h3>사업수행기관 선호순위</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-grid">
+            <div class="lab">1순위 <span class="req-star">*</span></div>
+            <div class="val"><div class="pref-combo" data-rank="1"><input type="text" class="pref-input" placeholder="사업수행기관 검색" autocomplete="off"><input type="hidden" class="pref-val"><div class="pref-list" hidden></div></div></div>
+            <div class="lab">2순위</div>
+            <div class="val"><div class="pref-combo" data-rank="2"><input type="text" class="pref-input" placeholder="사업수행기관 검색" autocomplete="off"><input type="hidden" class="pref-val"><div class="pref-list" hidden></div></div></div>
+            <div class="lab">3순위</div>
+            <div class="val"><div class="pref-combo" data-rank="3"><input type="text" class="pref-input" placeholder="사업수행기관 검색" autocomplete="off"><input type="hidden" class="pref-val"><div class="pref-list" hidden></div></div></div>
           </div>
+          <p class="ba-note">※ 기관명을 입력해 검색·선택하세요. 동일 사업수행기관은 순위별로 중복 선택할 수 없습니다.</p>
+        </div>
+
+        <!-- 설치동의·구비서류 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>설치동의·구비서류</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-grid">
+            <div class="lab">설치동의 여부 <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 5;">
+              <label class="ba-radio" style="margin:0;white-space:normal;"><input type="checkbox" id="installAgree"> 설치 부지 및 시설에 대한 충전기 설치에 동의합니다.</label>
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <div class="ba-file" style="border-top:1px solid var(--border-light);"><div class="ba-file-label"><span class="att">[첨부1]</span> 건축물대장(90일 이내 발급분) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span><div class="ba-file-sub">※ 주차면수 확인 불가 시 K-apt 등 추가 증빙 / 위반건축물은 지급 불가</div></div>
+            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부2]</span> 설치동의서 또는 회의록 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+          </div>
+        </div>
+
+        <!-- 특이사항 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>특이사항</h3></div>
+          <textarea placeholder="현장 특이사항, 요청사항 등을 입력해 주세요. (선택)" style="width:100%;min-height:110px;margin-top:14px;padding:12px 14px;border:1px solid var(--border-light);border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
         </div>
 
         <p style="text-align:center;font-size:18px;font-weight:800;margin:40px 0 0;">상기 내용을 확인하였으며, 공용 완속충전시설 설치를 신청합니다.</p>
@@ -238,16 +274,14 @@
       <div data-bpanel="done" hidden>
         <div class="ba-steps">
           <span class="ba-step done">01. 신청서 작성</span><span class="ba-step-arrow">›</span>
-          <span class="ba-step done">02. 사전 현장 컨설팅·심사</span><span class="ba-step-arrow">›</span>
-          <span class="ba-step active">03. 신청완료</span>
+          <span class="ba-step active">02. 신청완료</span>
         </div>
         <div style="text-align:center;padding:40px 20px 10px;">
           <div style="width:84px;height:84px;border-radius:50%;background:var(--color-primary-50);color:var(--color-primary-600);display:grid;place-items:center;margin:0 auto 22px;">
             <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h2 style="font-size:26px;font-weight:800;margin:0 0 12px;">완속충전시설 설치 신청이 접수되었습니다</h2>
-          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto 6px;max-width:640px;">접수번호 <strong id="rcptNo">-</strong> 로 접수되었습니다. 사업수행기관이 <strong>7일 이내 사전 현장 컨설팅</strong>을 진행하며, 결과는 무공해차 통합누리집에 등록됩니다.</p>
-          <p style="color:var(--text-tertiary);font-size:13.5px;margin:0 auto;max-width:640px;">접수·진행 상태는 등록하신 휴대전화로 문자(SMS) 안내되며, <strong>신청조회</strong>에서도 확인하실 수 있습니다.</p>
+          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto;max-width:640px;">접수번호 <strong id="rcptNo">-</strong> 로 접수되었습니다. 제출 후 담당자 심사·평가(보완요청·승인·선정)가 진행되며, 진행상태는 <strong>신청조회</strong>에서 확인하실 수 있습니다.</p>
           <div class="ba-foot">
             <a href="charging-install-slow-status.html" class="btn btn-primary">신청조회</a>
             <a href="charging-install-slow.html" class="btn btn-secondary">직접신청 안내로</a>
@@ -291,13 +325,58 @@
     bGo('verify');
   });
 
-  // 사용유형 → 소상공인 전기차/서류 토글
-  function syncUseType(){
-    var v=$('input[name=useType]:checked').value, small=(v==='small');
-    var ev=$('#evSection'); if(ev) ev.hidden=!small;
-    document.querySelectorAll('[data-doc=small]').forEach(function(el){ el.hidden=!small; });
+  // 신청부지와의 관계 → 사업자번호 노출(관계=사업자 시)
+  var relSel=$('#relSel');
+  function syncRel(){ var row=$('#bizNoRow'); if(row) row.hidden = !(relSel && relSel.value==='biz'); }
+  if(relSel) relSel.addEventListener('change', syncRel);
+
+  // 기설치/설치예정 수량 '해당사항 없음' → 수량 입력 비활성
+  document.querySelectorAll('.qty-none').forEach(function(chk){
+    chk.addEventListener('change',function(){
+      var set=document.querySelector('.qty-set[data-set="'+chk.getAttribute('data-target')+'"]');
+      if(!set) return;
+      set.querySelectorAll('input[type=number]').forEach(function(inp){
+        inp.disabled=chk.checked; if(chk.checked) inp.value='0';
+      });
+      set.style.opacity = chk.checked ? '.45' : '';
+    });
+  });
+
+  // 사업수행기관 선호순위 — 검색형 콤보 + 중복 방지
+  var PREF_ORGS=['현대엔지니어링','플러그링크','아이파킹','NICE인프라','GS차지비','SK일렉링크','대영채비','파워큐브','스타코프','이브이시스'];
+  var prefCombos=[].slice.call(document.querySelectorAll('.pref-combo'));
+  function prefTakenExcept(combo){
+    return prefCombos.filter(function(c){ return c!==combo; })
+      .map(function(c){ return c.querySelector('.pref-val').value; }).filter(Boolean);
   }
-  document.querySelectorAll('input[name=useType]').forEach(function(r){ r.addEventListener('change',syncUseType); });
+  function renderPrefList(combo){
+    var list=combo.querySelector('.pref-list');
+    var q=combo.querySelector('.pref-input').value.trim().toLowerCase();
+    var taken=prefTakenExcept(combo);
+    var matched=PREF_ORGS.filter(function(o){ return o.toLowerCase().indexOf(q)>=0; });
+    if(!matched.length){ list.innerHTML='<div class="pref-empty">검색 결과가 없습니다.</div>'; return; }
+    list.innerHTML=matched.map(function(o){
+      var t=taken.indexOf(o)>=0;
+      return '<div class="pref-item'+(t?' taken':'')+'" data-org="'+o+'">'+o+(t?'<span class="tag">선택됨</span>':'')+'</div>';
+    }).join('');
+  }
+  prefCombos.forEach(function(combo){
+    var input=combo.querySelector('.pref-input'), val=combo.querySelector('.pref-val'), list=combo.querySelector('.pref-list');
+    input.addEventListener('focus',function(){ renderPrefList(combo); list.hidden=false; });
+    input.addEventListener('input',function(){ renderPrefList(combo); list.hidden=false; });
+    list.addEventListener('mousedown',function(e){
+      var item=e.target.closest('.pref-item'); if(!item || item.classList.contains('taken')) return;
+      e.preventDefault();
+      var org=item.getAttribute('data-org');
+      input.value=org; val.value=org; combo.classList.add('chosen'); list.hidden=true;
+    });
+    input.addEventListener('blur',function(){
+      setTimeout(function(){
+        list.hidden=true;
+        if(input.value!==val.value){ input.value=val.value; combo.classList.toggle('chosen', !!val.value); }
+      },140);
+    });
+  });
 
   // 본인 인증 (공통 컴포넌트 .cf-auth — PASS 방식 단일 버튼)
   var verified=false, _verData=null;
@@ -320,11 +399,6 @@
     if(window.__toast) window.__toast('주소가 입력되었습니다. (데모)','info');
   });
 
-  // 서식 다운로드
-  document.addEventListener('click',function(e){
-    if(e.target.matches('[data-action=download]')){ if(window.__toast) window.__toast('설치동의서·승낙서 등 서식을 다운로드합니다. (데모)','info'); }
-  });
-
   // 파일 선택 → 파일명 표시
   document.addEventListener('change',function(e){
     if(e.target.matches('.ba-file-pick input[type=file]')){
@@ -339,13 +413,16 @@
   $('#formSave').addEventListener('click',function(){ if(window.__toast) window.__toast('작성 내용이 임시저장되었습니다.','success'); });
   $('#formSubmit').addEventListener('click',function(){
     if(!verified){ if(window.__toast) window.__toast('본인 인증을 먼저 완료해 주세요.','warning'); return; }
+    if(relSel && !relSel.value){ if(window.__toast) window.__toast('신청부지와의 관계를 선택해 주세요.','info'); return; }
+    var p1=document.querySelector('.pref-combo[data-rank="1"] .pref-val'); if(p1 && !p1.value){ if(window.__toast) window.__toast('사업수행기관 1순위를 선택해 주세요.','info'); return; }
+    if(!$('#installAgree').checked){ if(window.__toast) window.__toast('설치동의 여부에 체크해 주세요.','info'); return; }
     var no='2026-SC-'+String(Math.floor(Math.random()*9000)+1000);
     var el=$('#rcptNo'); if(el) el.textContent=no;
     if(window.__toast) window.__toast('설치 신청서가 제출되었습니다. 접수번호 '+no,'success');
     bGo('done');
   });
 
-  syncUseType();
+  syncRel();
   bGo('agree');
 })();
 </script>

@@ -129,6 +129,11 @@
   }
   .h2-download-btn.csv .ext { background: #DBEAFE; color: #1E40AF; }
   .h2-download-btn.xlsx .ext { background: #DCFCE7; color: #166534; }
+  .h2-result-table thead th.sortable{cursor:pointer;user-select:none;}
+  .h2-result-table thead th.sortable::after{content:' ↕';color:#6B7280;font-size:12px;font-weight:400;}
+  .h2-result-table thead th.sort-desc::after{content:' ↓';color:var(--color-primary-600);}
+  .h2-result-table thead th.sort-asc::after{content:' ↑';color:var(--color-primary-600);}
+  .h2-result-table thead th.sortable:hover{color:var(--color-primary-700);}
 
   /* 결과 테이블 */
   .h2-result-table {
@@ -312,15 +317,10 @@
           <span class="h2-result-count"><span data-i18n="charging.fee.h2.result.count.prefix">총</span> <strong id="h2ResultCount">12</strong><span data-i18n="charging.fee.h2.result.count.suffix">건의 수소충전소 요금 결과</span></span>
           <div class="h2-result-tools">
             <div class="download-group">
-              <button type="button" class="h2-download-btn xlsx" data-action="download" data-action-label="수소충전소 요금 검색결과.xlsx">
+              <button type="button" class="h2-download-btn xlsx" id="h2ExcelBtn" aria-label="검색결과 엑셀 다운로드">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 <span class="ext">XLSX</span>
                 <span data-i18n="charging.fee.h2.result.xlsx">Excel 다운로드</span>
-              </button>
-              <button type="button" class="h2-download-btn csv" data-action="download" data-action-label="수소충전소 요금 검색결과.csv">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span class="ext">CSV</span>
-                <span data-i18n="charging.fee.h2.result.csv">CSV 다운로드</span>
               </button>
             </div>
           </div>
@@ -329,14 +329,12 @@
           <table class="h2-result-table">
             <thead>
               <tr>
-                <th style="width:64px;text-align:center;" data-i18n="charging.fee.h2.col.no">번호</th>
-                <th data-i18n="charging.fee.h2.col.station">충전소명 / 주소</th>
-                <th data-i18n="charging.fee.h2.col.operator">사업자</th>
-                <th style="width:120px;" data-i18n="charging.fee.h2.col.spec">규격</th>
-                <th class="num" data-i18n="charging.fee.h2.col.passenger">승용 요금</th>
-                <th class="num" data-i18n="charging.fee.h2.col.commercial">상용 요금</th>
-                <th style="width:130px;" data-i18n="charging.fee.h2.col.hours">운영 시간</th>
-                <th style="width:96px;text-align:center;" data-i18n="charging.fee.h2.col.status">상태</th>
+                <th class="sortable" data-sk="no" tabindex="0" role="button" style="width:64px;text-align:center;" data-i18n="charging.fee.h2.col.no">번호</th>
+                <th class="sortable" data-sk="name" tabindex="0" role="button" data-i18n="charging.fee.h2.col.station">충전소명 / 주소</th>
+                <th class="sortable" data-sk="op" tabindex="0" role="button" data-i18n="charging.fee.h2.col.operator">사업자</th>
+                <th class="sortable" data-sk="spec" tabindex="0" role="button" style="width:120px;" data-i18n="charging.fee.h2.col.spec">규격</th>
+                <th class="sortable num" data-sk="fee" tabindex="0" role="button">판매가<br><span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">원/kg</span></th>
+                <th class="sortable" data-sk="hours" tabindex="0" role="button" style="width:130px;" data-i18n="charging.fee.h2.col.hours">운영 시간</th>
               </tr>
             </thead>
             <tbody id="h2ResultTbody">
@@ -350,23 +348,6 @@
           <button type="button" class="h2-page-btn">2</button>
           <button type="button" class="h2-page-btn" data-i18n-aria="charging.fee.h2.page.next" aria-label="다음 페이지">›</button>
         </div>
-      </div>
-
-      <h3 class="section-h mt-8" data-i18n="charging.fee.h2.opsum.title">사업자별 수소 충전 요금 (요약)</h3>
-      <div class="table-wrap" style="overflow-x:auto;">
-        <table class="data-table">
-          <thead>
-            <tr data-i18n-html="charging.fee.h2.opsum.header"><th>사업자</th><th>운영 충전소</th><th class="num">승용 요금</th><th class="num">상용 요금</th><th>정부 지원</th><th>비고</th></tr>
-          </thead>
-          <tbody>
-            <tr data-i18n-html="charging.fee.h2.opsum.row.cohygen"><td><strong>코하이젠</strong></td><td>전국 42개소</td><td class="num">9,800원/kg</td><td class="num">9,500원/kg</td><td>수소버스 보조</td><td>가장 많은 충전소</td></tr>
-            <tr data-i18n-html="charging.fee.h2.opsum.row.hynet"><td><strong>하이넷</strong></td><td>전국 38개소</td><td class="num">9,500원/kg</td><td class="num">9,200원/kg</td><td>공공 주도</td><td>수도권 집중</td></tr>
-            <tr data-i18n-html="charging.fee.h2.opsum.row.hyosung"><td><strong>효성</strong></td><td>전국 28개소</td><td class="num">9,600원/kg</td><td class="num">9,400원/kg</td><td>민관협력</td><td>산업단지 인접</td></tr>
-            <tr data-i18n-html="charging.fee.h2.opsum.row.skenergy"><td><strong>SK에너지</strong></td><td>전국 22개소</td><td class="num">9,800원/kg</td><td class="num">-</td><td>-</td><td>주유소 병설</td></tr>
-            <tr data-i18n-html="charging.fee.h2.opsum.row.gscaltex"><td><strong>GS칼텍스</strong></td><td>전국 18개소</td><td class="num">9,700원/kg</td><td class="num">-</td><td>-</td><td>고속도로 휴게소</td></tr>
-            <tr data-i18n-html="charging.fee.h2.opsum.row.hyundaimobis"><td><strong>현대모비스</strong></td><td>전국 12개소</td><td class="num">9,500원/kg</td><td class="num">9,200원/kg</td><td>수소트럭 전용</td><td>물류단지 인근</td></tr>
-          </tbody>
-        </table>
       </div>
 
       <h3 class="section-h mt-8" data-i18n="charging.fee.h2.spec.title">수소 충전 방식별 특징</h3>
@@ -385,25 +366,6 @@
         </div>
       </div>
 
-      <h3 class="section-h mt-8" data-i18n="charging.fee.h2.compare.title">에너지원별 연료비 비교 (월 1,500km 기준)</h3>
-      <div class="table-wrap mt-3" style="overflow-x:auto;">
-        <table class="data-table">
-          <thead>
-            <tr data-i18n-html="charging.fee.h2.compare.header"><th>구분</th><th>연비/효율</th><th class="num">월 에너지 소모</th><th class="num">단가</th><th class="num">월 연료비</th><th class="num">연간 연료비</th><th>vs 가솔린</th></tr>
-          </thead>
-          <tbody>
-            <tr data-i18n-html="charging.fee.h2.compare.row.ev_home"><td><strong>전기차 (자택 완속·심야)</strong></td><td>5.5km/kWh</td><td class="num">273kWh</td><td class="num">72원/kWh</td><td class="num" style="color:var(--color-primary-700);font-weight:700;">19,656원</td><td class="num" style="color:var(--color-primary-700);font-weight:700;">235,872원</td><td style="color:var(--color-primary-700);font-weight:700;">-91% 절감</td></tr>
-            <tr data-i18n-html="charging.fee.h2.compare.row.ev_public"><td><strong>전기차 (공공 급속)</strong></td><td>5.5km/kWh</td><td class="num">273kWh</td><td class="num">324.4원/kWh</td><td class="num">88,561원</td><td class="num">1,062,732원</td><td>-59% 절감</td></tr>
-            <tr data-i18n-html="charging.fee.h2.compare.row.h2_nexo" style="background:var(--color-primary-50);"><td><strong>수소차 (NEXO)</strong></td><td>96km/kg</td><td class="num">15.6kg</td><td class="num">9,500원/kg</td><td class="num" style="color:var(--color-primary-700);font-weight:700;">148,200원</td><td class="num" style="color:var(--color-primary-700);font-weight:700;">1,778,400원</td><td style="color:var(--color-primary-700);font-weight:700;">-32% 절감</td></tr>
-            <tr data-i18n-html="charging.fee.h2.compare.row.gasoline"><td><strong>가솔린 (쏘나타)</strong></td><td>12km/L</td><td class="num">125L</td><td class="num">1,740원/L</td><td class="num">217,500원</td><td class="num">2,610,000원</td><td>기준 (100%)</td></tr>
-            <tr data-i18n-html="charging.fee.h2.compare.row.diesel"><td><strong>디젤 (싼타페)</strong></td><td>14km/L</td><td class="num">107L</td><td class="num">1,620원/L</td><td class="num">173,340원</td><td class="num">2,080,080원</td><td>-20% 절감</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="alert alert-info mt-6">
-        <div class="alert-icon"></div>
-        <div class="alert-body" data-i18n-html="charging.fee.h2.compare.callout"><strong>수소차는 가솔린 대비 약 32% 연료비 절감</strong> 1회 충전으로 약 600km 주행, 충전 시간은 5분 이내로 내연기관과 유사한 사용 경험을 제공합니다. 단, 충전소 인프라가 제한적이므로 사전 위치 확인이 필요합니다.</div>
-      </div>
     </div>
   </section>
 </main>
@@ -470,6 +432,18 @@
   const PAGE_SIZE = 12;
   let currentPage = 1;
   let filtered = STATIONS.slice();
+  let sortKey = null, sortDir = 0;   // 공지 표준 정렬: 기본→내림(1)→올림(2)→기본
+  function feeOf(s){ return s.car != null ? s.car : s.com; }   // H2_STATION.FEE 단일 판매가
+  function sortVal(s,k){ if(k==='no') return s.no; if(k==='fee') return feeOf(s); return s[k]; }
+  function sortedFiltered(){
+    if(!sortKey) return filtered;
+    var a=filtered.slice();
+    a.sort(function(x,y){ var vx=sortVal(x,sortKey), vy=sortVal(y,sortKey);
+      if(vx==null&&vy==null)return 0; if(vx==null)return 1; if(vy==null)return -1;
+      var c=(typeof vx==='number'&&typeof vy==='number')?(vx-vy):String(vx).localeCompare(String(vy),'ko');
+      return sortDir===1?-c:c; });
+    return a;
+  }
 
   const sidoSel  = document.getElementById('h2Sido');
   const sigunguSel = document.getElementById('h2Sigungu');
@@ -498,18 +472,14 @@
     const cls = spec === '700bar' ? 'bar700' : spec === '350bar' ? 'bar350' : 'both';
     return `<span class="h2-result-chip ${cls}">${spec}</span>`;
   }
-  function statusEl(s) {
-    const map = { on:['on','정상 운영'], off:['off','운영 중지'], maint:['maint','점검 중'] };
-    const [cls, label] = map[s] || ['off','—'];
-    return `<span class="h2-status-dot ${cls}">${label}</span>`;
-  }
   function fmtPrice(v) { return v != null ? v.toLocaleString() + '원/kg' : '—'; }
 
   function render() {
+    const arr = sortedFiltered();
     const start = (currentPage - 1) * PAGE_SIZE;
-    const slice = filtered.slice(start, start + PAGE_SIZE);
+    const slice = arr.slice(start, start + PAGE_SIZE);
     if (!slice.length) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--color-gray-500);font-size:14.5px;">조건에 맞는 충전소가 없습니다. 검색 조건을 바꿔 보세요.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--color-gray-500);font-size:14.5px;">조건에 맞는 충전소가 없습니다. 검색 조건을 바꿔 보세요.</td></tr>`;
     } else {
       tbody.innerHTML = slice.map(s => `
         <tr>
@@ -520,13 +490,12 @@
           </td>
           <td>${s.op}</td>
           <td>${chip(s.spec)}</td>
-          <td class="num">${fmtPrice(s.car)}</td>
-          <td class="num">${fmtPrice(s.com)}</td>
+          <td class="num">${fmtPrice(feeOf(s))}</td>
           <td>${s.hours}</td>
-          <td style="text-align:center;">${statusEl(s.status)}</td>
         </tr>`).join('');
     }
     cntEl.textContent = filtered.length;
+    document.querySelectorAll('.h2-result-table thead th.sortable').forEach(function(th){ th.classList.remove('sort-asc','sort-desc'); if(sortKey===th.dataset.sk){ th.classList.toggle('sort-desc', sortDir===1); th.classList.toggle('sort-asc', sortDir===2); } });
 
     // 페이지 버튼 갱신
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -574,6 +543,59 @@
     currentPage = 1;
     render();
     if (window.__toast) window.__toast('검색 조건이 초기화되었습니다.', 'info');
+  });
+
+  // 정렬 헤더 (공지 표준: 기본→내림→올림→기본)
+  document.querySelectorAll('.h2-result-table thead th.sortable').forEach(function(th){
+    function cyc(){ var k=th.dataset.sk; if(sortKey!==k){sortKey=k;sortDir=1;} else {sortDir=(sortDir+1)%3; if(sortDir===0) sortKey=null;} currentPage=1; render(); }
+    th.addEventListener('click', cyc);
+    th.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); cyc(); } });
+  });
+
+  // 엑셀(.xlsx) 실다운로드 — 외부 라이브러리 없이 최소 OOXML ZIP(stored)
+  function _xe(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function _col(n){ var s=''; n+=1; while(n>0){ var m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26); } return s; }
+  function _sheetXml(aoa){
+    var rows=aoa.map(function(row,ri){ var cells=row.map(function(val,ci){ var ref=_col(ci)+(ri+1);
+      if(typeof val==='number' && isFinite(val)) return '<c r="'+ref+'"><v>'+val+'</v></c>';
+      return '<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+_xe(val)+'</t></is></c>'; }).join('');
+      return '<row r="'+(ri+1)+'">'+cells+'</row>'; }).join('');
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+rows+'</sheetData></worksheet>';
+  }
+  function _crc32(b){ var c,crc=0xFFFFFFFF,i,k; for(i=0;i<b.length;i++){ c=(crc^b[i])&0xFF; for(k=0;k<8;k++){ c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); } crc=(crc>>>8)^c; } return (crc^0xFFFFFFFF)>>>0; }
+  function downloadXlsx(fname, sheetName, aoa){
+    var enc=new TextEncoder();
+    var files=[
+      ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'],
+      ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+      ['xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+_xe(sheetName)+'" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+      ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>'],
+      ['xl/worksheets/sheet1.xml',_sheetXml(aoa)]
+    ];
+    var local=[], cd=[], offset=0, n=files.length;
+    function le(arr,val,bytes){ for(var i=0;i<bytes;i++) arr.push((val>>>(8*i))&0xFF); }
+    files.forEach(function(pair){
+      var nb=enc.encode(pair[0]), data=enc.encode(pair[1]), crc=_crc32(data);
+      var lh=[]; le(lh,0x04034b50,4); le(lh,20,2); le(lh,0,2); le(lh,0,2); le(lh,0,2); le(lh,0,2); le(lh,crc,4); le(lh,data.length,4); le(lh,data.length,4); le(lh,nb.length,2); le(lh,0,2);
+      local.push(new Uint8Array(lh), nb, data);
+      var c=[]; le(c,0x02014b50,4); le(c,20,2); le(c,20,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,crc,4); le(c,data.length,4); le(c,data.length,4); le(c,nb.length,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,4); le(c,offset,4);
+      cd.push(new Uint8Array(c), nb);
+      offset += lh.length + nb.length + data.length;
+    });
+    var cdSize=0; cd.forEach(function(u){ cdSize+=u.length; });
+    var eocd=[]; le(eocd,0x06054b50,4); le(eocd,0,2); le(eocd,0,2); le(eocd,n,2); le(eocd,n,2); le(eocd,cdSize,4); le(eocd,offset,4); le(eocd,0,2);
+    var parts=local.concat(cd); parts.push(new Uint8Array(eocd));
+    var blob=new Blob(parts,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    var url=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=url; a.download=fname; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+  }
+  document.getElementById('h2ExcelBtn')?.addEventListener('click', function(){
+    var list=sortedFiltered();
+    var head=['번호','충전소명','주소','사업자','규격','판매가(원/kg)','운영시간'];
+    var aoa=[head].concat(list.map(function(s){ var fee=feeOf(s); return [s.no, s.name, s.addr, s.op, s.spec, (fee==null?'—':fee), s.hours]; }));
+    downloadXlsx('수소충전소_요금_검색결과.xlsx','수소충전소 요금', aoa);
+    if(window.__toast) window.__toast(list.length+'건을 엑셀(xlsx)로 내려받았습니다.','success');
   });
 
   // 초기 렌더링

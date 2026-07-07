@@ -149,7 +149,7 @@
         <div>
           <div class="card-hero sticky-aside">
             <h3 style="font-size: 20px; margin-bottom: 8px;">신청 및 확인</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 4px;">공고문·설치동의서 등 서식을 확인한 후 신청하세요.</p>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 4px;">로그인 후 누리집에서 신청서를 작성·제출합니다. 공고문·평가기준·진행상태는 본 페이지에서 확인할 수 있습니다.</p>
 
             <div class="pe-aside-btns">
               <button type="button" class="btn btn-ghost lib-dl-btn" data-doc="2026년 전기자동차 완속충전시설 보조사업 — 공고 및 신청서식" data-files='[{"name":"2026년 전기자동차 완속충전시설 보조사업 보조금 및 설치운영지침(개정).pdf","size":"PDF · 1.6MB"},{"name":"전기자동차 공용충전시설 설치이용승낙서(지침양식).hwp","size":"HWP · 86KB"},{"name":"전기자동차 완속충전시설 설치동의서(참고용).hwpx","size":"HWPX · 64KB"}]' aria-haspopup="dialog" style="width:100%;">
@@ -199,22 +199,49 @@
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
 (function(){
+  // ===== [공모/평가 신청 게이트 표준] 로그인 게이트 + 접수기간 판정(권한 게이트 제거) =====
+  var APPLY_URL = 'charging-install-slow-apply.html';   // 완속충전 직접신청 = 상시접수(예산 소진 시 조기 마감)
+  var APPLY_READY = true;   // -apply 폼 존재 여부(false면 프로토타입 준비중 안내)
+  var PERIODS = [ { label:'', start:[2026,1,1], end:[2026,12,31] } ];     // 접수기간(하나라도 접수중이면 '중')
   var btn = document.getElementById('bizApplyBtn');
   var loginChk = document.getElementById('bizLoginChk');
   if (!btn) return;
-  function realLoggedIn(){
-    try { if (JSON.parse(sessionStorage.getItem('mp_user') || 'null')) return true; } catch(e){}
-    return !!window.__loggedIn;
-  }
+  function realLoggedIn(){ try { if (JSON.parse(sessionStorage.getItem('mp_user')||'null')) return true; } catch(e){} return !!window.__loggedIn; }
   if (loginChk) loginChk.checked = realLoggedIn();
+  function today(){ var d=new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
+  function ymd(a){ return a[0]*10000+a[1]*100+a[2]; }
+  function mmdd(a){ return ('0'+a[1]).slice(-2)+'.'+('0'+a[2]).slice(-2); }
+  function inPeriod(){ var tt=today(); return PERIODS.some(function(p){ return tt>=ymd(p.start) && tt<=ymd(p.end); }); }
+  function periodsText(){ return PERIODS.map(function(p){ return (p.label?p.label+' ':'')+mmdd(p.start)+' ~ '+mmdd(p.end); }).join(' · '); }
+  function goApply(){ if (APPLY_READY) { location.href = APPLY_URL; } else { if (window.__toast) window.__toast('신청서 페이지는 준비 중입니다. (프로토타입)','info'); else alert('신청서 페이지는 준비 중입니다.'); } }
+  function closeGate(){ var ov=document.getElementById('gateModalOverlay'); if(ov){ ov.style.display='none'; document.body.style.overflow=''; } }
+  function openGateModal(){
+    var ov=document.getElementById('gateModalOverlay');
+    if(!ov){
+      ov=document.createElement('div'); ov.id='gateModalOverlay';
+      ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','공모 접수기간 안내');
+      ov.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9300;display:flex;align-items:center;justify-content:center;padding:20px;';
+      ov.innerHTML='<div style="background:#fff;border-radius:16px;width:min(460px,100%);box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;">'
+        +'<div style="padding:22px 24px 0;"><h3 style="font-size:18px;font-weight:800;margin:0 0 10px;">공모 접수기간이 아닙니다</h3>'
+        +'<p style="font-size:14px;color:var(--text-secondary,#475569);line-height:1.7;margin:0 0 8px;">현재는 공모 접수기간이 아닙니다. 접수기간에 다시 신청해 주세요.</p>'
+        +'<p style="font-size:13px;color:var(--text-tertiary,#94a3b8);margin:0;">공모 접수기간: <b id="gateModalPeriod" style="color:var(--color-primary-700,#1f5fa8);"></b></p></div>'
+        +'<div style="display:flex;gap:8px;justify-content:flex-end;padding:18px 24px 20px;">'
+        +'<button type="button" id="gateModalClose" class="btn btn-secondary btn-sm">닫기</button>'
+        +'<button type="button" id="gateModalGo" class="btn btn-primary btn-sm">(데모) 신청하러 가기</button></div></div>';
+      document.body.appendChild(ov);
+      ov.addEventListener('click', function(e){ if(e.target===ov) closeGate(); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeGate(); });
+      ov.querySelector('#gateModalClose').addEventListener('click', closeGate);
+      ov.querySelector('#gateModalGo').addEventListener('click', function(){ closeGate(); goApply(); });
+    }
+    ov.querySelector('#gateModalPeriod').textContent = periodsText();
+    ov.style.display='flex'; document.body.style.overflow='hidden';
+  }
   btn.addEventListener('click', function(){
     var loggedIn = loginChk ? loginChk.checked : realLoggedIn();
-    if (!loggedIn) {
-      if (window.__toast) window.__toast('로그인이 필요합니다. 로그인 페이지로 이동합니다.', 'info');
-      setTimeout(function(){ location.href = 'login.html'; }, 1300);
-      return;
-    }
-    location.href = 'charging-install-slow-apply.html';
+    if (!loggedIn) { location.href='login.html'; return; }         // 미로그인 → 로그인
+    if (inPeriod()) { goApply(); return; }                          // 접수기간 중 → -apply
+    openGateModal();                                                // 접수기간 외 → 공모기간 팝업
   });
 })();
 

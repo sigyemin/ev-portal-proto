@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전기승합차(법인·개인사업자) 공모 신청 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/screens-v2.css">
+<link rel="stylesheet" href="css/auth.css">
+<style>
+  [hidden]{display:none!important;}
+  .ba-wrap{max-width:1180px;}
+  /* 단계 표시 */
+  .ba-steps{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 36px;flex-wrap:wrap;}
+  .ba-step{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border:1px solid var(--border-medium);border-radius:999px;font-size:15px;font-weight:700;color:var(--text-tertiary);background:#fff;}
+  .ba-step.active{border-color:var(--color-secondary-500,#5D87FF);background:var(--color-secondary-50,#F3F7FF);color:var(--color-secondary-700,#1f5fa8);}
+  .ba-step.done{border-color:var(--color-primary-500);color:var(--color-primary-700);}
+  .ba-step-arrow{color:var(--color-gray-400);}
+  /* 섹션 */
+  .ba-sec{margin-top:40px;}
+  .ba-sec-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--text-primary);padding-bottom:10px;margin-bottom:0;}
+  .ba-sec-head h3{font-size:22px;font-weight:800;margin:0;}
+  .ba-req{font-size:13px;color:var(--color-secondary-600,#3D6BF0);font-weight:600;}
+  .ba-req b{color:var(--color-secondary-600,#3D6BF0);}
+  /* 행 그리드 */
+  .ba-grid{display:grid;grid-template-columns:140px 1fr 140px 1fr 140px 1fr;border-bottom:1px solid var(--border-light);}
+  .ba-grid > .lab{display:flex;align-items:center;padding:14px 12px;font-weight:700;font-size:14px;background:var(--color-gray-50);border-right:1px solid var(--border-light);}
+  .ba-grid > .val{display:flex;align-items:center;padding:10px 14px;gap:10px;border-right:1px solid var(--border-light);flex-wrap:wrap;}
+  .ba-grid > .val:last-child{border-right:none;}
+  .ba-grid input[type=text],.ba-grid input[type=email],.ba-grid input[type=tel],.ba-grid input[type=number],.ba-grid select{width:100%;height:42px;padding:0 12px;border:1px solid var(--border-light);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;}
+  .ba-grid input[readonly]{background:var(--color-gray-100);color:var(--text-secondary);}
+  .req-star{color:var(--color-secondary-600,#3D6BF0);}
+  .ba-radio{display:inline-flex;align-items:center;gap:7px;font-size:14px;white-space:nowrap;margin-right:14px;}
+  .ba-note{font-size:12.5px;color:var(--text-tertiary);margin:8px 0 0;line-height:1.7;}
+  .ba-note.warn{color:#c0392b;}
+  /* 첨부 행 */
+  .ba-file{display:grid;grid-template-columns:340px auto 1fr;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid var(--border-light);}
+  .ba-file-label{font-weight:700;font-size:14px;line-height:1.5;}
+  .ba-file-label .att{color:var(--color-secondary-700,#1f5fa8);}
+  .ba-file-label .ext{color:var(--text-tertiary);font-size:12px;font-weight:600;margin-left:4px;}
+  .ba-file-pick{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;background:var(--color-gray-800);color:#fff;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .ba-file-name{height:40px;display:flex;align-items:center;padding:0 14px;background:var(--color-gray-100);border:1px solid var(--border-light);border-radius:8px;color:var(--text-tertiary);font-size:13.5px;}
+  .ba-file-name.has{color:var(--text-primary);}
+  .ba-dl-btn{display:inline-flex;align-items:center;height:38px;padding:0 16px;background:#e98a7a;color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;}
+  .ba-foot{display:flex;justify-content:center;gap:12px;margin-top:36px;}
+  .ba-foot .btn{min-width:150px;}
+  /* 구매보조금 표 */
+  .pb-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+  .pb-tbl th,.pb-tbl td{border:1px solid var(--border-light);padding:9px 6px;text-align:center;white-space:nowrap;}
+  .pb-tbl thead th{background:var(--color-gray-100);font-weight:700;}
+  .pb-tbl .empty{color:var(--text-tertiary);padding:22px;}
+  .pb-sum{display:flex;gap:18px;justify-content:flex-end;font-size:13.5px;font-weight:700;margin-top:10px;}
+  .pb-sum b{color:var(--color-secondary-700,#1f5fa8);}
+  .pb-chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;background:var(--color-secondary-50,#F3F7FF);color:var(--color-secondary-700,#1f5fa8);font-size:13px;font-weight:700;}
+  /* 모달 */
+  .pb-modal-ov{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9300;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .pb-modal{background:#fff;border-radius:16px;width:min(1040px,100%);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;}
+  .pb-modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-light);}
+  .pb-modal-head h3{margin:0;font-size:19px;font-weight:800;}
+  .pb-modal-body{padding:20px 24px;overflow:auto;}
+  .pb-modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--border-light);}
+  .pb-x{border:none;background:transparent;font-size:26px;cursor:pointer;color:var(--text-tertiary);line-height:1;}
+  .pb-search{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 16px;align-items:end;}
+  .pb-search label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--text-secondary);}
+  .pb-search input,.pb-search select{height:38px;border:1px solid var(--border-light);border-radius:8px;padding:0 10px;font-size:13.5px;font-family:inherit;background:#fff;}
+  .pb-scroll{max-height:260px;overflow:auto;border:1px solid var(--border-light);border-radius:8px;}
+  .pb-del-btn{border:none;background:#e98a7a;color:#fff;border-radius:6px;height:30px;padding:0 12px;font-size:12.5px;cursor:pointer;}
+  .pb-aptype-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .pb-aptype-card{border:2px solid var(--border-light);border-radius:12px;padding:22px 20px;cursor:pointer;text-align:left;background:#fff;transition:.15s;}
+  .pb-aptype-card:hover{border-color:var(--color-secondary-500,#5D87FF);background:var(--color-secondary-50,#F3F7FF);}
+  .pb-aptype-card h4{margin:0 0 8px;font-size:17px;font-weight:800;}
+  .pb-aptype-card p{margin:0;font-size:13px;color:var(--text-secondary);line-height:1.6;}
+  @media (max-width:820px){ .ba-grid{grid-template-columns:1fr;} .ba-grid > .lab{border-right:none;border-bottom:1px solid var(--border-light);} .ba-grid > .val{border-right:none;} .ba-file{grid-template-columns:1fr;} .pb-search{grid-template-columns:1fr 1fr;} .pb-aptype-cards{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">본문 바로가기</a>
+<script>window.__activeNav = 'purchase';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="subsidy-target.html">구매·보조금</a><span class="sep" aria-hidden="true">›</span>
+        <a href="public-ev.html">공모·신청</a><span class="sep" aria-hidden="true">›</span>
+        <a href="public-bus.html">전기승합차 공모 신청</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" aria-current="page">공모 신청서 작성</span>
+      </nav>
+      <h1 id="hTitle">전기승합차(법인·개인사업자) 공모 신청</h1>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container container-wide ba-wrap">
+
+      <!-- ===== 0. 개인정보 동의 ===== -->
+      <div data-bpanel="agree">
+        <h2 style="font-size:24px;font-weight:800;margin:0 0 14px;">개인정보 수집·이용 동의서</h2>
+        <p style="color:var(--text-secondary);line-height:1.8;font-size:14.5px;margin:0 0 10px;">전기승합차(법인·개인사업자) 공모 신청과 관련하여 「개인정보보호법」 제15조(개인정보의 수집·이용) 및 제22조에 따라 귀하의 개인정보를 아래와 같이 수집·이용하고자 합니다. 다음의 사항에 대해 충분히 읽어보신 후, 동의 여부를 체크하여 주시기 바랍니다.</p>
+        <div class="alert alert-info" style="margin:8px 0 24px;">
+          <div class="alert-icon"></div>
+          <div class="alert-body">귀하께서는 개인정보 제공 및 활용을 거부할 권리가 있으며, 제공사항은 전기승합차 공모 신청을 위해 반드시 필요한 사항으로 동의하지 않을 경우 공모 신청이 제한될 수 있음을 알려드립니다.</div>
+        </div>
+
+        <div style="border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);padding:18px 4px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:16px;font-weight:700;">개인정보 수집 및 이용 동의 <span class="req-star">[필수]</span></div>
+            <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--color-secondary-700,#1f5fa8);"><input type="checkbox" id="agreeItem" style="width:18px;height:18px;"> 동의</label>
+          </div>
+          <div style="margin-top:10px;font-size:13px;color:var(--text-secondary);line-height:1.8;background:var(--color-gray-50);border:1px solid var(--border-light);border-radius:8px;padding:14px 16px;max-height:200px;overflow-y:auto;">
+            <p style="margin:0 0 6px;"><strong>1. 수집·이용 목적</strong> : 전기승합차 공모 신청·접수·심사, 사업수행기관 선정 및 사후관리, 신청 결과 통지</p>
+            <p style="margin:0 0 6px;"><strong>2. 수집 항목</strong> : 지자체·제작수입사명, 담당자 성명·부서·연락처·이메일, 제작수입사 사업자등록증 등</p>
+            <p style="margin:0 0 6px;"><strong>3. 보유·이용 기간</strong> : 공모 종료 및 사업 정산 완료 후 관계 법령이 정한 기간까지 보관 후 파기</p>
+            <p style="margin:0;"><strong>4. 동의 거부 권리</strong> : 동의를 거부할 수 있으나, 거부 시 공모 신청이 제한됩니다.</p>
+          </div>
+        </div>
+
+        <label style="display:inline-flex;align-items:center;gap:10px;margin-top:20px;font-size:15px;font-weight:700;"><input type="checkbox" id="agreeAll" style="width:20px;height:20px;"> 모든 개인정보에 동의합니다.</label>
+
+        <div class="ba-foot">
+          <a href="public-bus.html" class="btn btn-secondary">이전</a>
+          <button type="button" class="btn btn-primary" id="agreeNext">신청</button>
+        </div>
+      </div>
+
+      <!-- ===== 1. 신청서 작성 ===== -->
+      <div data-bpanel="form" hidden>
+        <div class="ba-steps">
+          <span class="ba-step active">01. 신청서 작성</span>
+          <span class="ba-step-arrow">›</span>
+          <span class="ba-step">02. 신청완료</span>
+        </div>
+
+        <!-- 신청정보(제안자) -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>신청정보(제안자)</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-grid">
+            <div class="lab">신청유형 <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 5;gap:12px;"><span class="pb-chip" id="apTypeLabel">미선택</span><button type="button" class="btn btn-sm btn-secondary" id="apTypeChange" style="height:32px;">신청유형 변경</button></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">주신청자 <span class="req-star">*</span></div>
+            <div class="val"><label class="ba-radio"><input type="radio" name="mainapp" value="local" checked> 지자체</label><label class="ba-radio"><input type="radio" name="mainapp" value="maker"> 제작수입사</label></div>
+            <div class="lab">주신청자ID <span class="req-star">*</span></div><div class="val"><input type="text" value="bus_applicant01" readonly></div>
+            <div class="lab">부신청자ID 1 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="부신청자ID 1"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">부신청자ID 2</div><div class="val"><input type="text" placeholder="부신청자ID 2"></div>
+            <div class="lab">지자체(광역) <span class="req-star">*</span></div><div class="val"><select id="pbSido"></select></div>
+            <div class="lab">지자체(기초) <span class="req-star">*</span></div><div class="val"><select id="pbGugun"></select></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">담당부서 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="담당부서"></div>
+            <div class="lab">연락처 <span class="req-star">*</span></div><div class="val"><input type="tel" placeholder="연락처"></div>
+            <div class="lab">이메일 <span class="req-star">*</span></div><div class="val"><input type="email" placeholder="이메일"></div>
+          </div>
+        </div>
+
+        <!-- 제작수입사 정보 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>제작수입사 정보</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-grid">
+            <div class="lab">제작수입사 <span class="req-star">*</span></div><div class="val"><select id="pbMaker"></select></div>
+            <div class="lab">담당실무자 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="담당실무자"></div>
+            <div class="lab">연락처 <span class="req-star">*</span></div><div class="val"><input type="tel" placeholder="연락처"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">이메일 <span class="req-star">*</span></div><div class="val"><input type="email" placeholder="이메일"></div>
+            <div class="lab">사업자등록증 <span class="req-star">*</span></div><div class="val"><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name" style="flex:1;min-width:120px;">선택된 파일 없음</span></div>
+            <div class="lab">공모연도</div><div class="val">2026년</div>
+          </div>
+        </div>
+
+        <!-- 충전사업자 정보 (B유형) -->
+        <div class="ba-sec" data-btype hidden>
+          <div class="ba-sec-head"><h3>충전사업자 정보</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-grid" style="border-top:1px solid var(--border-light);">
+            <div class="lab">충전사업자 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="충전사업자명"></div>
+            <div class="lab">담당실무자 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="담당실무자"></div>
+            <div class="lab">연락처 <span class="req-star">*</span></div><div class="val"><input type="tel" placeholder="연락처"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">이메일 <span class="req-star">*</span></div><div class="val" style="grid-column:span 5;"><input type="email" placeholder="이메일" style="max-width:380px;"></div>
+          </div>
+          <p class="ba-note">※ [B유형] 충전인프라 구축이 필요한 경우, 함께 참여하는 충전사업자 1개사를 등록해 주세요.</p>
+        </div>
+
+        <!-- 구매보조금 신청번호 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>구매보조금 신청번호</h3><button type="button" class="btn btn-primary btn-sm" id="pbRegBtn">신청번호 등록</button></div>
+          <div style="overflow-x:auto;margin-top:12px;">
+            <table class="pb-tbl">
+              <thead><tr><th>신청번호</th><th>신청지자체</th><th>신청지자체(상세)</th><th>제작수입사명</th><th>신청자명</th><th>모델명</th><th>신청대수</th><th>신청총금액(만원)</th><th>사업연도</th></tr></thead>
+              <tbody id="pbParentBody"></tbody>
+            </table>
+          </div>
+          <div class="pb-sum" id="pbParentSum" hidden></div>
+          <p class="ba-note">※ 상세보급계획에 포함된 신청번호를 모두 선택하여 등록해 주세요.</p>
+        </div>
+
+        <!-- 지원신청 첨부문서 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>지원신청 첨부문서</h3></div>
+          <div style="border-top:1px solid var(--border-light);">
+            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부1]</span> 별지 제1호 서식 사업 공모 지원신청서(전기승합차) <span class="req-star">*</span><span class="ext">(PDF)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부2]</span> 별지 제2호 서식 전기승합차 보급사업 계획서 <span class="req-star">*</span><span class="ext">(PDF)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부3]</span> 상세 보급계획 <span class="req-star">*</span><span class="ext">(엑셀 xls)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부4]</span> 지자체 예산 각목명세서 사본 등 제안서 평가를 위한 증명 서류 등 <span class="req-star">*</span><span class="ext">(PDF)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부5]</span> 구매지원 신청 시 제출자료(구매지원신청서, 구매계약서) <span class="req-star">*</span><span class="ext">(ZIP)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file" data-btype hidden><div class="ba-file-label"><span class="att">[첨부6]</span> 충전시설 <span class="req-star">*</span><span class="ext">[B유형]</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file" data-btype hidden><div class="ba-file-label"><span class="att">[첨부7]</span> 충전시설 및 추가 증빙자료 <span class="ext">[B유형 · 선택]</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+          </div>
+          <p class="ba-note">※ 서식은 공모 안내 페이지에서 내려받아 작성 후 업로드하세요. 파일 1건당 용량 제한을 확인해 주세요.</p>
+        </div>
+
+        <!-- 신청 메모 -->
+        <div class="ba-sec">
+          <div class="ba-sec-head"><h3>신청 메모</h3></div>
+          <textarea id="pbMemo" rows="4" style="width:100%;margin-top:12px;padding:12px 14px;border:1px solid var(--border-light);border-radius:8px;font-family:inherit;font-size:14px;resize:vertical;" placeholder="신청 관련 메모를 입력하세요. (선택)"></textarea>
+        </div>
+
+        <p style="text-align:center;font-size:18px;font-weight:800;margin:40px 0 0;">상기 내용을 확인하였으며, 전기승합차 공모에 신청합니다.</p>
+        <div class="ba-foot">
+          <button type="button" class="btn btn-secondary" id="formPrev">이전</button>
+          <button type="button" class="btn btn-primary" id="formSave" style="background:var(--color-gray-800);border-color:var(--color-gray-800);">임시 저장</button>
+          <button type="button" class="btn btn-primary" id="formSubmit">신청서 제출</button>
+        </div>
+      </div>
+
+      <!-- ===== 2. 신청완료 ===== -->
+      <div data-bpanel="done" hidden>
+        <div class="ba-steps">
+          <span class="ba-step done">01. 신청서 작성</span>
+          <span class="ba-step-arrow">›</span>
+          <span class="ba-step active">02. 신청완료</span>
+        </div>
+        <div style="text-align:center;padding:40px 20px 10px;">
+          <div style="width:84px;height:84px;border-radius:50%;background:var(--color-primary-50);color:var(--color-primary-600);display:grid;place-items:center;margin:0 auto 22px;">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 style="font-size:26px;font-weight:800;margin:0 0 12px;">전기승합차 공모 신청이 접수되었습니다</h2>
+          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto;max-width:640px;">접수번호 <strong id="rcptNo">-</strong> 로 접수되었습니다. 제출 후 담당자 심사·평가(보완요청·승인·선정)가 진행되며, 진행상태는 <strong>신청조회</strong>에서 확인하실 수 있습니다.</p>
+          <div class="ba-foot">
+            <a href="public-bus-status.html" class="btn btn-primary">공모 신청 조회</a>
+            <a href="public-bus.html" class="btn btn-secondary">공모 안내로</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- 신청유형 선택 모달 (진입) -->
+<div class="pb-modal-ov" id="pbAptypeOv" style="display:none;">
+  <div class="pb-modal" style="width:min(680px,100%);">
+    <div class="pb-modal-head"><h3>신청유형 선택</h3></div>
+    <div class="pb-modal-body">
+      <p class="ba-note" style="margin:0 0 16px;font-size:13.5px;">충전인프라 구축 여부에 따라 신청유형을 선택하세요. 선택에 따라 <strong>충전사업자·충전시설</strong> 항목이 달라집니다.</p>
+      <div class="pb-aptype-cards">
+        <button type="button" class="pb-aptype-card" data-ap="A"><h4>A유형 · 충전인프라 기구축</h4><p>운행 지역에 전기승합차 충전인프라가 이미 구축되어 있는 경우</p></button>
+        <button type="button" class="pb-aptype-card" data-ap="B"><h4>B유형 · 충전인프라 구축필요</h4><p>충전사업자와 함께 충전시설을 신규 구축해야 하는 경우</p></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 구매보조금 신청등록 모달 -->
+<div class="pb-modal-ov" id="pbSubsidyOv" style="display:none;">
+  <div class="pb-modal">
+    <div class="pb-modal-head"><h3>구매보조금 신청등록</h3><button type="button" class="pb-x" id="pbModalX" aria-label="닫기">×</button></div>
+    <div class="pb-modal-body">
+      <div class="pb-search">
+        <label>신청번호<input type="text" id="pbfNo" placeholder="신청번호"></label>
+        <label>사업연도<select id="pbfYear"><option value="">전체</option><option selected>2026</option><option>2025</option></select></label>
+        <label>신청자명<input type="text" id="pbfApplicant" placeholder="신청자명"></label>
+        <label>지방자치단체(광역)<select id="pbfSido"></select></label>
+        <label>지방자치단체(기초)<select id="pbfGugun"></select></label>
+        <label>제작수입사<select id="pbfMaker"></select></label>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px;"><button type="button" class="btn btn-primary btn-sm" id="pbModalSearch">조회</button></div>
+
+      <h4 style="margin:18px 0 4px;font-size:15px;font-weight:800;">조회 결과</h4>
+      <div class="pb-scroll">
+        <table class="pb-tbl">
+          <thead><tr><th>추가</th><th>신청번호</th><th>신청지자체</th><th>신청지자체(상세)</th><th>제작수입사명</th><th>신청자명</th><th>모델명</th><th>신청대수</th><th>신청총금액(만원)</th><th>사업연도</th></tr></thead>
+          <tbody id="pbResBody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:10px;">
+        <button type="button" class="btn btn-sm btn-secondary" id="pbPrev">이전</button>
+        <span id="pbPageInfo" style="font-size:13px;font-weight:700;">1 / 1</span>
+        <button type="button" class="btn btn-sm btn-secondary" id="pbNext">다음</button>
+      </div>
+
+      <h4 style="margin:22px 0 4px;font-size:15px;font-weight:800;">선택된 신청 건</h4>
+      <div class="pb-scroll">
+        <table class="pb-tbl">
+          <thead><tr><th>삭제</th><th>신청번호</th><th>신청지자체</th><th>신청지자체(상세)</th><th>제작수입사명</th><th>신청자명</th><th>모델명</th><th>신청대수</th><th>신청총금액(만원)</th></tr></thead>
+          <tbody id="pbSelBody"></tbody>
+        </table>
+      </div>
+      <div class="pb-sum" id="pbSelSum">선택 <b>0</b>건 · 신청대수 <b>0</b>대 · 신청총금액 <b>0</b>만원</div>
+    </div>
+    <div class="pb-modal-foot">
+      <button type="button" class="btn btn-secondary" id="pbModalClose">닫기</button>
+      <button type="button" class="btn btn-primary" id="pbModalSave">저장</button>
+    </div>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260703a"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260703a"></script>
+<script src="js/main.js?v=20260520"></script>
+<script src="js/ai-floating.js?v=20260626d"></script>
+<script>
+(function(){
+  function $(s,r){ return (r||document).querySelector(s); }
+  function $all(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function bGo(name){
+    document.querySelectorAll('[data-bpanel]').forEach(function(p){ p.hidden = p.getAttribute('data-bpanel')!==name; });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // ── 더미 데이터 ──
+  var SIDO=['서울특별시','부산광역시','경기도','전라남도','경상북도'];
+  var SIGUNGU={'서울특별시':['강남구','서초구','송파구'],'부산광역시':['해운대구','부산진구'],'경기도':['수원시','성남시','고양시'],'전라남도':['순천시','여수시','목포시'],'경상북도':['포항시','경주시']};
+  var MAKERS=['MTR','범한자동차','에빅모토모티브코리아','우진산전','이엠코리아','중원자동차','케이지모빌리티커머셜','티에스모터스','피라인모터스','한사','현대자동차'];
+  var POOL=[
+    {no:'2026-BUS-000131',sido:'전라남도',gugun:'순천시',maker:'현대자동차',applicant:'순천여객(주)',model:'일렉시티',cnt:3,amt:63000,year:2026},
+    {no:'2026-BUS-000148',sido:'전라남도',gugun:'여수시',maker:'우진산전',applicant:'여수교통(주)',model:'아폴로1100',cnt:2,amt:40000,year:2026},
+    {no:'2026-BUS-000155',sido:'경기도',gugun:'수원시',maker:'현대자동차',applicant:'수원버스(주)',model:'일렉시티',cnt:5,amt:105000,year:2026},
+    {no:'2026-BUS-000162',sido:'경기도',gugun:'성남시',maker:'케이지모빌리티커머셜',applicant:'성남시내버스',model:'스마트110E',cnt:4,amt:78000,year:2026},
+    {no:'2026-BUS-000170',sido:'서울특별시',gugun:'강남구',maker:'범한자동차',applicant:'강남운수(주)',model:'E-STAR',cnt:2,amt:42000,year:2026},
+    {no:'2026-BUS-000181',sido:'부산광역시',gugun:'해운대구',maker:'피라인모터스',applicant:'해운대버스',model:'P-BUS',cnt:3,amt:60000,year:2026},
+    {no:'2026-BUS-000199',sido:'경상북도',gugun:'포항시',maker:'이엠코리아',applicant:'포항시내버스',model:'EM-CITY',cnt:1,amt:21000,year:2026},
+    {no:'2025-BUS-000512',sido:'전라남도',gugun:'목포시',maker:'현대자동차',applicant:'목포버스(주)',model:'일렉시티',cnt:2,amt:41000,year:2025}
+  ];
+
+  function fillSido(sel){ sel.innerHTML='<option value="">선택</option>'+SIDO.map(function(s){return '<option>'+s+'</option>';}).join(''); }
+  function fillSigungu(sel,sido){ var arr=SIGUNGU[sido]||[]; sel.innerHTML='<option value="">선택</option>'+arr.map(function(s){return '<option>'+s+'</option>';}).join(''); }
+  function fillMakers(sel,withAll){ sel.innerHTML=(withAll?'<option value="">전체</option>':'<option value="">선택</option>')+MAKERS.map(function(m){return '<option>'+m+'</option>';}).join(''); }
+
+  // ── 개인정보 동의 ──
+  var agAll=$('#agreeAll'), agItem=$('#agreeItem');
+  function syncAgree(src){ if(src==='all'){ agItem.checked=agAll.checked; } else { agAll.checked=agItem.checked; } }
+  agAll.addEventListener('change',function(){ syncAgree('all'); });
+  agItem.addEventListener('change',function(){ syncAgree('item'); });
+  $('#agreeNext').addEventListener('click',function(){
+    if(!agItem.checked){ if(window.__toast) window.__toast('개인정보 수집·이용에 동의해 주세요.','info'); return; }
+    bGo('form');
+    if(!APTYPE) openAptypeModal();
+  });
+
+  // ── 신청유형 A/B 모달 ──
+  var APTYPE=null;
+  function openAptypeModal(){ $('#pbAptypeOv').style.display='flex'; document.body.style.overflow='hidden'; }
+  function closeAptypeModal(){ $('#pbAptypeOv').style.display='none'; document.body.style.overflow=''; }
+  function applyAptype(v){
+    APTYPE=v;
+    $('#apTypeLabel').textContent = v==='A' ? 'A유형 · 충전인프라 기구축' : 'B유형 · 충전인프라 구축필요';
+    $all('[data-btype]').forEach(function(el){ el.hidden = (v!=='B'); });
+    closeAptypeModal();
+  }
+  $all('#pbAptypeOv .pb-aptype-card').forEach(function(c){ c.addEventListener('click',function(){ applyAptype(c.getAttribute('data-ap')); }); });
+  $('#apTypeChange').addEventListener('click',openAptypeModal);
+
+  // ── 지자체(광역/기초) · 제작수입사 select ──
+  fillSido($('#pbSido')); fillSigungu($('#pbGugun'),'');
+  fillMakers($('#pbMaker'),false);
+  $('#pbSido').addEventListener('change',function(){ fillSigungu($('#pbGugun'),this.value); });
+
+  // ── 구매보조금 신청번호 : 부모 표 ──
+  var COMMITTED=[];
+  function renderParentTable(){
+    var tb=$('#pbParentBody');
+    if(!COMMITTED.length){
+      tb.innerHTML='<tr><td colspan="9" class="empty">등록된 구매지원 신청번호가 없습니다.</td></tr>';
+      $('#pbParentSum').hidden=true; return;
+    }
+    tb.innerHTML=COMMITTED.map(function(r){
+      return '<tr><td>'+r.no+'</td><td>'+r.sido+'</td><td>'+r.gugun+'</td><td>'+r.maker+'</td><td>'+r.applicant+'</td><td>'+r.model+'</td><td>'+fmt(r.cnt)+'</td><td>'+fmt(r.amt)+'</td><td>'+r.year+'</td></tr>';
+    }).join('');
+    var cnt=COMMITTED.reduce(function(a,r){return a+r.cnt;},0);
+    var amt=COMMITTED.reduce(function(a,r){return a+r.amt;},0);
+    $('#pbParentSum').hidden=false;
+    $('#pbParentSum').innerHTML='선택 <b>'+COMMITTED.length+'</b>건 · 신청대수 합 <b>'+fmt(cnt)+'</b>대 · 신청총금액 합 <b>'+fmt(amt)+'</b>만원';
+  }
+
+  // ── 구매보조금 신청등록 모달 ──
+  var MODAL_SEL=[], mPage=1, mPageSize=5;
+  fillSido($('#pbfSido')); fillSigungu($('#pbfGugun'),''); fillMakers($('#pbfMaker'),true);
+  $('#pbfSido').addEventListener('change',function(){ fillSigungu($('#pbfGugun'),this.value); });
+
+  function modalFiltered(){
+    var no=$('#pbfNo').value.trim(), yr=$('#pbfYear').value, nm=$('#pbfApplicant').value.trim(),
+        sido=$('#pbfSido').value, gugun=$('#pbfGugun').value, mk=$('#pbfMaker').value;
+    return POOL.filter(function(r){
+      if(no && r.no.indexOf(no)<0) return false;
+      if(yr && String(r.year)!==yr) return false;
+      if(nm && r.applicant.indexOf(nm)<0) return false;
+      if(sido && r.sido!==sido) return false;
+      if(gugun && r.gugun!==gugun) return false;
+      if(mk && r.maker!==mk) return false;
+      return true;
+    });
+  }
+  function renderModalResults(){
+    var rows=modalFiltered();
+    var pages=Math.max(1,Math.ceil(rows.length/mPageSize));
+    if(mPage>pages) mPage=pages; if(mPage<1) mPage=1;
+    var slice=rows.slice((mPage-1)*mPageSize, mPage*mPageSize);
+    var tb=$('#pbResBody');
+    if(!rows.length){ tb.innerHTML='<tr><td colspan="10" class="empty">조회 결과가 없습니다.</td></tr>'; }
+    else {
+      tb.innerHTML=slice.map(function(r){
+        var on=MODAL_SEL.some(function(s){return s.no===r.no;});
+        return '<tr><td><input type="checkbox" class="pbResChk" data-no="'+r.no+'"'+(on?' checked':'')+'></td><td>'+r.no+'</td><td>'+r.sido+'</td><td>'+r.gugun+'</td><td>'+r.maker+'</td><td>'+r.applicant+'</td><td>'+r.model+'</td><td>'+fmt(r.cnt)+'</td><td>'+fmt(r.amt)+'</td><td>'+r.year+'</td></tr>';
+      }).join('');
+    }
+    $('#pbPageInfo').textContent=mPage+' / '+pages;
+  }
+  function renderModalSelected(){
+    var tb=$('#pbSelBody');
+    if(!MODAL_SEL.length){ tb.innerHTML='<tr><td colspan="9" class="empty">선택된 신청 건이 없습니다.</td></tr>'; }
+    else {
+      tb.innerHTML=MODAL_SEL.map(function(r){
+        return '<tr><td><button type="button" class="pb-del-btn" data-del="'+r.no+'">삭제</button></td><td>'+r.no+'</td><td>'+r.sido+'</td><td>'+r.gugun+'</td><td>'+r.maker+'</td><td>'+r.applicant+'</td><td>'+r.model+'</td><td>'+fmt(r.cnt)+'</td><td>'+fmt(r.amt)+'</td></tr>';
+      }).join('');
+    }
+    var cnt=MODAL_SEL.reduce(function(a,r){return a+r.cnt;},0);
+    var amt=MODAL_SEL.reduce(function(a,r){return a+r.amt;},0);
+    $('#pbSelSum').innerHTML='선택 <b>'+MODAL_SEL.length+'</b>건 · 신청대수 <b>'+fmt(cnt)+'</b>대 · 신청총금액 <b>'+fmt(amt)+'</b>만원';
+  }
+  $('#pbResBody').addEventListener('change',function(e){
+    if(e.target.classList && e.target.classList.contains('pbResChk')){
+      var no=e.target.getAttribute('data-no'), r=POOL.filter(function(x){return x.no===no;})[0];
+      if(e.target.checked){ if(!MODAL_SEL.some(function(s){return s.no===no;})) MODAL_SEL.push(r); }
+      else { MODAL_SEL=MODAL_SEL.filter(function(s){return s.no!==no;}); }
+      renderModalSelected();
+    }
+  });
+  $('#pbSelBody').addEventListener('click',function(e){
+    var no=e.target.getAttribute && e.target.getAttribute('data-del');
+    if(no){ MODAL_SEL=MODAL_SEL.filter(function(s){return s.no!==no;}); renderModalSelected(); renderModalResults(); }
+  });
+  function openSubsidyModal(){ MODAL_SEL=COMMITTED.slice(); mPage=1; renderModalResults(); renderModalSelected(); $('#pbSubsidyOv').style.display='flex'; document.body.style.overflow='hidden'; }
+  function closeSubsidyModal(){ $('#pbSubsidyOv').style.display='none'; document.body.style.overflow=''; }
+  $('#pbRegBtn').addEventListener('click',openSubsidyModal);
+  $('#pbModalSearch').addEventListener('click',function(){ mPage=1; renderModalResults(); });
+  $('#pbPrev').addEventListener('click',function(){ if(mPage>1){ mPage--; renderModalResults(); } });
+  $('#pbNext').addEventListener('click',function(){ mPage++; renderModalResults(); });
+  $('#pbModalSave').addEventListener('click',function(){
+    COMMITTED=MODAL_SEL.slice(); renderParentTable(); closeSubsidyModal();
+    if(window.__toast) window.__toast(COMMITTED.length+'건의 구매보조금 신청번호가 반영되었습니다.','success');
+  });
+  $('#pbModalClose').addEventListener('click',closeSubsidyModal);
+  $('#pbModalX').addEventListener('click',closeSubsidyModal);
+  $('#pbSubsidyOv').addEventListener('click',function(e){ if(e.target===this) closeSubsidyModal(); });
+
+  // ── 파일 선택 → 파일명 표시 ──
+  document.addEventListener('change',function(e){
+    if(e.target.matches('.ba-file-pick input[type=file]')){
+      var wrap=e.target.closest('.ba-file')||e.target.closest('.val')||e.target.parentElement.parentElement;
+      var span=wrap && wrap.querySelector('.ba-file-name');
+      if(span){ var f=e.target.files&&e.target.files[0]; span.textContent=f?f.name:'선택된 파일 없음'; span.classList.toggle('has',!!f); }
+    }
+  });
+
+  // ── 하단 버튼 ──
+  $('#formPrev').addEventListener('click',function(){ bGo('agree'); });
+  $('#formSave').addEventListener('click',function(){ if(window.__toast) window.__toast('작성 내용이 임시저장되었습니다.','success'); });
+  $('#formSubmit').addEventListener('click',function(){
+    if(!APTYPE){ if(window.__toast) window.__toast('신청유형(A/B)을 먼저 선택해 주세요.','info'); openAptypeModal(); return; }
+    var no='2026-BUSAP-'+String(Math.floor(Math.random()*9000)+1000);
+    var el=$('#rcptNo'); if(el) el.textContent=no;
+    if(window.__toast) window.__toast('전기승합차 공모 신청서가 제출되었습니다. 접수번호 '+no,'success');
+    bGo('done');
+  });
+
+  // init
+  renderParentTable();
+  bGo('agree');
+})();
+</script>
+</body>
+</html>

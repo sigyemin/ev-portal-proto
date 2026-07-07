@@ -91,118 +91,63 @@
         </div>
       </div>
 
-      <!-- ===== 0.5 본인 인증 ===== -->
-      <div data-bpanel="verify" hidden>
-        <h2 style="font-size:24px;font-weight:800;margin:0 0 8px;">대표자 본인 인증</h2>
-        <p class="cf-auth-lead">「전자서명법」에 따라 <strong>대표자 본인 명의 휴대폰</strong>으로 안전하게 처리됩니다. 아래 버튼으로 휴대전화 본인인증을 완료해 주세요.</p>
-        <div class="cf-auth-card" id="ctAuthCard" style="max-width:560px;margin:0 auto;">
-          <div class="cf-auth-ico" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg></div>
-          <button type="button" class="cf-auth-btn" id="ctAuthBtn"><span>휴대전화 인증하기</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
-          <p class="cf-auth-note">PASS 앱·통신사 인증으로 대표자 본인 명의 휴대폰에서 처리됩니다. (프로토타입: 데모 인증)</p>
-        </div>
-        <div class="ba-foot">
-          <button type="button" class="btn btn-secondary" id="verifyPrev">이전</button>
-          <button type="button" class="btn btn-primary" id="verifyNext" disabled>다음 (신청서 작성)</button>
-        </div>
-      </div>
-
       <!-- ===== 1. 신청서 작성 ===== -->
       <div data-bpanel="form" hidden>
         <div class="ba-steps">
           <span class="ba-step active">01. 신청서 작성</span>
           <span class="ba-step-arrow">›</span>
-          <span class="ba-step">02. 신청서 심사·평가</span>
-          <span class="ba-step-arrow">›</span>
-          <span class="ba-step">03. 신청완료</span>
+          <span class="ba-step">02. 신청완료</span>
         </div>
 
-        <!-- 신청 구분 -->
+        <!-- 제안자/사업자 정보 -->
         <div class="ba-sec">
-          <div class="ba-sec-head"><h3>신청 구분</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div class="ba-sec-head"><h3>제안자/사업자 정보</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
           <div class="ba-grid">
-            <div class="lab">신청 유형 <span class="req-star">*</span></div>
+            <div class="lab">사업자명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="사업자명"></div>
+            <div class="lab">사업자 구분 <span class="req-star">*</span></div>
+            <div class="val">
+              <label class="ba-radio"><input type="radio" name="biztype" value="new" checked> 신규 사업자</label>
+              <label class="ba-radio"><input type="radio" name="biztype" value="exist"> 기등록 사업자</label>
+            </div>
+            <div class="lab">사업자코드</div><div class="val"><span id="bizCode" style="font-size:13.5px;color:var(--text-tertiary);">신규 신청 시 자동 생성됩니다.</span></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">공모 신청 시스템 <span class="req-star">*</span></div>
             <div class="val" style="grid-column:span 3;">
+              <label class="ba-radio"><input type="radio" name="sys" value="slow" checked> 완속 충전사업자</label>
+              <label class="ba-radio"><input type="radio" name="sys" value="fast"> 급속·중속 충전사업자</label>
+            </div>
+            <div class="lab">신청자ID <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="신청자 ID"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">신청 구분 <span class="req-star">*</span></div>
+            <div class="val" style="grid-column:span 5;">
               <label class="ba-radio"><input type="radio" name="aptype" value="op" checked> 운영사</label>
               <label class="ba-radio"><input type="radio" name="aptype" value="mk"> 제조사</label>
-              <label class="ba-radio"><input type="radio" name="aptype" value="cons"> 운영사＋제조사 컨소시엄</label>
-            </div>
-            <div class="lab">충전기 구분 <span class="req-star">*</span></div>
-            <div class="val">
-              <label class="ba-radio"><input type="radio" name="chgtype" value="slow" checked> 완속</label>
-              <label class="ba-radio"><input type="radio" name="chgtype" value="fast"> 급속·중속</label>
             </div>
           </div>
           <div class="ba-grid">
-            <div class="lab">공모연도 <span class="req-star">*</span></div><div class="val">2026년</div>
-            <div class="lab">접수기관 <span class="req-star">*</span></div>
-            <div class="val" style="grid-column:span 3;">
-              <label class="ba-radio"><input type="radio" name="org" value="keco" checked> 한국환경공단</label>
-              <label class="ba-radio"><input type="radio" name="org" value="kama"> 한국자동차환경협회</label>
-            </div>
+            <div class="lab">담당자1 명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="담당자1 명"></div>
+            <div class="lab">담당자1 연락처 <span class="req-star">*</span></div><div class="val"><input type="tel" placeholder="담당자1 연락처" class="num-only"></div>
+            <div class="lab">담당자1 이메일 <span class="req-star">*</span></div><div class="val"><input type="email" placeholder="담당자1 이메일"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">담당자2 명</div><div class="val"><input type="text" placeholder="담당자2 명"></div>
+            <div class="lab">담당자2 연락처</div><div class="val"><input type="tel" placeholder="담당자2 연락처" class="num-only"></div>
+            <div class="lab">담당자2 이메일</div><div class="val"><input type="email" placeholder="담당자2 이메일"></div>
+          </div>
+          <div class="ba-grid">
+            <div class="lab">공모신청 연도 <span class="req-star">*</span></div><div class="val">2026년 1차</div>
+            <div class="lab">대표전화(콜센터)</div><div class="val"><input type="tel" placeholder="대표전화" class="num-only"></div>
+            <div class="lab">홈페이지 URL</div><div class="val"><input type="text" placeholder="https://"></div>
           </div>
         </div>
 
-        <!-- 신청 업체 정보 -->
+        <!-- 첨부서류 (신청 구분에 따라 세트 전환) -->
         <div class="ba-sec">
-          <div class="ba-sec-head"><h3>신청 업체 정보</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
-          <div class="ba-grid">
-            <div class="lab">업체명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="업체명"></div>
-            <div class="lab">대표자명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="대표자명"></div>
-            <div class="lab">사업자등록번호 <span class="req-star">*</span></div><div class="val" style="gap:8px;"><input type="text" placeholder="000-00-00000" class="num-only"><button type="button" class="ba-inline-btn" data-biz-check>진위확인</button></div>
-          </div>
-          <div class="ba-grid">
-            <div class="lab">법인등록번호 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="법인등록번호" class="num-only"></div>
-            <div class="lab">전기신사업자<br>등록번호 <span class="req-star">*</span></div><div class="val" style="gap:6px;">제 <input type="text" placeholder="등록번호" class="num-only" style="max-width:160px;"> 호 <button type="button" class="ba-inline-btn" data-elec-check>등록확인</button></div>
-            <div class="lab"></div><div class="val"></div>
-          </div>
-          <div class="ba-grid">
-            <div class="lab">담당자명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="담당자명"></div>
-            <div class="lab">연락처 <span class="req-star">*</span></div><div class="val"><input type="tel" placeholder="담당자 연락처" class="num-only"></div>
-            <div class="lab">이메일 <span class="req-star">*</span></div><div class="val"><input type="email" placeholder="담당자 이메일"></div>
-          </div>
-        </div>
-
-        <!-- 운영사 제출서류 -->
-        <div class="ba-sec" data-qual="op">
-          <div class="ba-sec-head"><h3>운영사 제출서류</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
-          <div class="ba-file" style="border-top:1px solid var(--border-light);">
-            <div class="ba-file-label">제출 서류 양식</div>
-            <button type="button" class="ba-dl-btn" data-action="download">제출 서류 양식 다운로드</button><span></span>
-          </div>
-          <div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부1]</span> 운영사 공모 지원신청서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부2]</span> 신청 제안서 및 조견표 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부3]</span> 사업자등록증·전기신사업자 등록증 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부4]</span> 법인 등기부등본·인감증명서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span><div class="ba-file-sub">※ 사용인감 사용 시 사용인감계 별도 제출</div></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부5]</span> 공공기관 제출용 신용평가등급 확인서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부6]</span> OCPP 1.6 인증서(운영시스템 Full Certificate) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부7]</span> 전담인력(S/W·A/S) 재직·경력·자격·4대보험 증빙 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부8]</span> 콜센터·정산시스템 구축 증빙(위탁계약서/재직증명 등) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부9]</span> 기 운영 충전시설 요금 납부 현황 등 운영 현황</div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부10]</span> 정량평가 항목 자체 점검 점수표 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부11]</span> 제안서 평가 요약본(20페이지 이내) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부12]</span> 기타 정성·정량 평가 증명 서류</div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-          </div>
-        </div>
-
-        <!-- 제조사 제출서류 -->
-        <div class="ba-sec" data-qual="mk" hidden>
-          <div class="ba-sec-head"><h3>제조사 제출서류</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
-          <div>
-            <div class="ba-file" style="border-top:1px solid var(--border-light);"><div class="ba-file-label"><span class="att">[첨부1]</span> 제조사 공모 지원신청서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부2]</span> 신청 제안서 및 조견표 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부3]</span> 사업자등록증 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부4]</span> 법인 등기부등본·인감증명서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부5]</span> 공공기관 제출용 신용평가등급 확인서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부6]</span> 충전기 설명서·부품리스트·원가계산보고서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부7]</span> 전기자동차용 충전기 제조 공장등록증 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부8]</span> 안전확인신고·형식승인·고효율인증 시험성적서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부9]</span> OCPP 1.6 인증서(충전기 Subset Certificate) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부10]</span> 전담인력(H/W·S/W) 재직·경력·자격·4대보험 증빙 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부11]</span> 정량평가 항목 자체 점검 점수표 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부12]</span> 제안서 평가 요약본(20페이지 이내) <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부13]</span> 기타 정성·정량 평가 증명 서류</div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-          </div>
+          <div class="ba-sec-head"><h3>첨부서류</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
+          <div id="attachList"></div>
+          <p class="ba-note">※ '기타 서류'를 제외한 모든 첨부는 필수입니다. 신청 구분(운영사/제조사)에 따라 제출 서류가 전환됩니다.</p>
         </div>
 
         <!-- 확인 -->
@@ -226,16 +171,14 @@
       <div data-bpanel="done" hidden>
         <div class="ba-steps">
           <span class="ba-step done">01. 신청서 작성</span><span class="ba-step-arrow">›</span>
-          <span class="ba-step done">02. 신청서 심사·평가</span><span class="ba-step-arrow">›</span>
-          <span class="ba-step active">03. 신청완료</span>
+          <span class="ba-step active">02. 신청완료</span>
         </div>
         <div style="text-align:center;padding:40px 20px 10px;">
           <div style="width:84px;height:84px;border-radius:50%;background:var(--color-primary-50);color:var(--color-primary-600);display:grid;place-items:center;margin:0 auto 22px;">
             <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h2 style="font-size:26px;font-weight:800;margin:0 0 12px;">운영사·제조사 공모 신청이 접수되었습니다</h2>
-          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto 6px;max-width:640px;">접수번호 <strong id="rcptNo">-</strong> 로 접수되었습니다. 제출하신 신청서는 <strong>02. 신청서 심사·평가</strong> 단계로 진행되며, 평가위원회 평가 후 선정 결과를 통지합니다.</p>
-          <p style="color:var(--text-tertiary);font-size:13.5px;margin:0 auto;max-width:640px;">접수 결과는 등록하신 담당자 연락처로 문자(SMS)·이메일 안내되며, 진행상태는 <strong>내 신청 조회</strong>에서 확인하실 수 있습니다.</p>
+          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto;max-width:640px;">접수번호 <strong id="rcptNo">-</strong> 로 접수되었습니다. 제출 후 담당자 심사·평가(보완요청·승인·선정)가 진행되며, 진행상태는 <strong>신청조회</strong>에서 확인하실 수 있습니다.</p>
           <div class="ba-foot">
             <a href="charging-install-contest-status.html" class="btn btn-primary">내 신청 조회</a>
             <a href="charging-install-contest.html" class="btn btn-secondary">공모 안내로</a>
@@ -276,35 +219,68 @@
   agItem.addEventListener('change',function(){ syncAgree('item'); });
   $('#agreeNext').addEventListener('click',function(){
     if(!agItem.checked){ if(window.__toast) window.__toast('개인정보 수집·이용에 동의해 주세요.','info'); return; }
-    bGo('verify');
-  });
-
-  // 본인 인증 (공통 컴포넌트 .cf-auth — PASS 방식 단일 버튼)
-  var verified=false, _verData=null;
-  if(window.AuthVerify) AuthVerify.mount('#ctAuthCard', { session:'install_contest_auth', onVerified:function(data){
-    verified=true; _verData=data; $('#verifyNext').disabled=false;
-  }});
-  $('#verifyPrev').addEventListener('click',function(){ bGo('agree'); });
-  $('#verifyNext').addEventListener('click',function(){
-    if(!verified){ if(window.__toast) window.__toast('휴대전화 본인인증을 먼저 완료해 주세요.','info'); return; }
-    var nm=(_verData&&_verData.name)||''; if(nm){ var rep=document.querySelector('[data-bpanel=form] .ba-grid .val input[placeholder=대표자명]'); if(rep && !rep.value) rep.value=nm; }
     bGo('form');
   });
 
-  // 신청 유형 → 운영사/제조사 제출서류 섹션 토글
-  function syncQual(){
-    var v=$('input[name=aptype]:checked').value;
-    var op=document.querySelector('[data-qual=op]'), mk=document.querySelector('[data-qual=mk]');
-    op.hidden = (v==='mk');
-    mk.hidden = (v==='op');
+
+  // 신청 구분(운영사/제조사) → 첨부서류 세트 전환 (제조사 15 / 운영사 14, 기타 서류만 선택)
+  var DOCS_OP = [
+    ['공모지원 신청서'],
+    ['제안서 및 조견표'],
+    ['사업자등록증 및 전기신사업자등록증'],
+    ['법인 등기부등본','※ 개인사업자는 대표자 주민등록초본 제출'],
+    ['법인 인감증명서','※ 개인사업자는 대표자 인감증명서 제출'],
+    ['공공기관제출용 신용평가등급확인서'],
+    ['OCA 발급 OCPP1.6 인증서'],
+    ['전담인력 관련 증빙'],
+    ['콜센터 및 정산시스템 구축 여부 증빙'],
+    ['기 운영 충전시설 요금 납부 현황 등 운영 현황 자료'],
+    ['정량평가 자체 점검 점수표'],
+    ['제안서 평가 요약본'],
+    ['기타 정성·정량 증명 서류'],
+    ['기타 서류']
+  ];
+  var DOCS_MK = [
+    ['공모지원 신청서'],
+    ['제안서 및 조견표'],
+    ['사업자등록증 및 전기신사업자등록증'],
+    ['법인 등기부등본','※ 개인사업자는 대표자 주민등록초본 제출'],
+    ['법인 인감증명서','※ 개인사업자는 대표자 인감증명서 제출'],
+    ['공공기관제출용 신용평가등급확인서'],
+    ['충전기 설명서·부품리스트·원가계산보고서'],
+    ['충전기 제조 공장등록증'],
+    ['안전확인신고 증명서 등 공인기관 시험성적서'],
+    ['OCA 발급 OCPP1.6 인증서'],
+    ['전담인력 관련 증빙'],
+    ['정량평가 자체 점검 점수표'],
+    ['제안서 평가 요약본'],
+    ['기타 정성·정량 증명 서류'],
+    ['기타 서류']
+  ];
+  function fileRow(idx,label,req,sub){ return '<div class="ba-file"><div class="ba-file-label"><span class="att">[첨부'+idx+']</span> '+label+(req?' <span class="req-star">*</span>':'')+'</div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span>'+(sub?'<div class="ba-file-sub">'+sub+'</div>':'')+'</div>'; }
+  function renderAttach(){
+    var ap=($('input[name=aptype]:checked')||{}).value||'op';
+    var sys=($('input[name=sys]:checked')||{}).value||'slow';
+    var doc3 = sys==='fast' ? '사업자등록증' : '사업자등록증 및 전기신사업자등록증'; // 급속·중속=사업자등록증 / 완속=+전기신사업자등록증
+    var docs = ap==='mk' ? DOCS_MK : DOCS_OP;
+    var box=document.getElementById('attachList'); if(!box) return;
+    box.innerHTML = docs.map(function(d,i){ var label=(i===2)?doc3:d[0]; return fileRow(i+1, label, i!==docs.length-1, d[1]||''); }).join('');
   }
-  document.querySelectorAll('input[name=aptype]').forEach(function(r){ r.addEventListener('change',syncQual); });
+  // 사업자 구분 → 사업자코드 (기등록=코드 표시 / 신규=생성 안내)
+  function syncBizCode(){
+    var bt=($('input[name=biztype]:checked')||{}).value||'new';
+    var el=document.getElementById('bizCode'); if(!el) return;
+    if(bt==='exist'){ el.textContent='CPO-20240137 (기등록 사업자 코드)'; el.style.color='var(--text-primary)'; el.style.fontWeight='700'; }
+    else { el.textContent='신규 신청 시 자동 생성됩니다.'; el.style.color='var(--text-tertiary)'; el.style.fontWeight='400'; }
+  }
+  document.querySelectorAll('input[name=aptype]').forEach(function(r){ r.addEventListener('change',renderAttach); });
+  document.querySelectorAll('input[name=sys]').forEach(function(r){ r.addEventListener('change',renderAttach); }); // 공모 시스템 → [첨부3] 문구 전환
+  document.querySelectorAll('input[name=biztype]').forEach(function(r){ r.addEventListener('change',syncBizCode); });
 
   // 사업자등록증 진위확인 / 전기신사업자 등록확인 (데모)
   document.addEventListener('click',function(e){
     if(e.target.matches('[data-biz-check]')){ if(window.__toast) window.__toast('국세청 사업자등록 상태 조회 결과: 정상 사업자입니다. (데모)','success'); }
     if(e.target.matches('[data-elec-check]')){ if(window.__toast) window.__toast('전기신사업자 등록 확인 결과: 등록된 충전사업자입니다. (데모)','success'); }
-    if(e.target.matches('[data-action=download]')){ if(window.__toast) window.__toast('제출 서류 양식(ZIP)을 다운로드합니다. (데모)','info'); }
   });
 
   // 파일 선택 → 파일명 표시
@@ -317,7 +293,7 @@
   });
 
   // 작성 패널 버튼
-  $('#formPrev').addEventListener('click',function(){ bGo('verify'); });
+  $('#formPrev').addEventListener('click',function(){ bGo('agree'); });
   $('#formSave').addEventListener('click',function(){ if(window.__toast) window.__toast('작성 내용이 임시저장되었습니다.','success'); });
   $('#formSubmit').addEventListener('click',function(){
     var no = '2026-OM-' + String(Math.floor(Math.random()*9000)+1000);
@@ -326,7 +302,7 @@
     bGo('done');
   });
 
-  syncQual();
+  renderAttach(); syncBizCode();
   bGo('agree');
 })();
 </script>

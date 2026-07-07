@@ -1214,7 +1214,9 @@
       ['조회 조건', fParts.join(' · ')],
       ['조회 건수', `${rows.length}건`],
       ['단위', '대수=대, 비율=%, 금액=만원'],
-      ['산식', '선정=min(공고,접수) · 선정잔여=공고−선정 · 출고잔여=공고−출고 · 예산소진율은 실예산 비공개로 선정 기준'],
+      ['산식', '선정=min(공고,접수) · 선정잔여=공고−선정 · 출고잔여=공고−출고'],
+      ['예산현황', '실예산 비공개 · 예산소진율=카테고리 단가 가중(우선순위 1.2 · 택시 1.1 · 법인·기관/일반 1.0) 선정 기준 → [예산현황] 시트 참조'],
+      ['변경이력', '리스트/공고 변경 시 변경일자·변경 항목·변경 전후를 [변경이력] 시트에 기록'],
     ];
 
     // ── 시트 1: 요약(메인표) ──
@@ -1227,13 +1229,13 @@
       ...rows.map(r => {
         const sel = rowSel(r);
         const selRem = Math.max(0, r.announcement - sel);
-        const used = pct(sel, r.announcement);
+        const bud = budgetUsedPctOf(r); // 예산소진율 = 카테고리 단가 가중(화면 '예산 현황'과 동일)
         return [
           key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub, r.method, r.status,
           kindSummary(r), r.notices.length, lastDeadline(r),
           r.announcement, r.received, sel, r.delivered, selRem, r.remaining,
           pct(r.received, r.announcement), pct(sel, r.announcement), pct(r.delivered, r.announcement),
-          used, Math.max(0, 100 - used),
+          bud, Math.max(0, 100 - bud),
           r.dept, r.phone, (r.remark || '-').replace(/\n/g, ' ')
         ];
       })
@@ -1275,13 +1277,13 @@
     // ── 시트 3: 공고별_일정·공고문 (공고 1건 = 1행) ──
     const announce = [
       ['관리번호', '기준년도', '시도', '지역구분', '차종', '세부차종',
-       '공고종류', '공고명', '게시일', '접수시작', '접수마감', '신청마감', '공고문 파일']
+       '공고종류', '공고명', '게시일', '접수시작', '접수마감', '신청마감']
     ];
     rows.forEach(r => {
       r.notices.forEach(n => {
         const s = noticeSchedule(n);
         announce.push([key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub,
-          noticeKind(n.label), n.label, n.date, s.start, s.end, s.deadline, n.file || '-']);
+          noticeKind(n.label), n.label, n.date, s.start, s.end, s.deadline]);
       });
     });
 
@@ -1297,6 +1299,27 @@
       });
     });
 
+    // ── 시트: 예산현황 (실예산 비공개 · 카테고리 단가 가중 선정 기준 소진율) ──
+    const budgetSheet = [
+      ['관리번호', '기준년도', '시도', '지역구분', '차종', '세부차종',
+       '공고대수', '선정대수', '예산소진율(%)', '잔여예산비율(%)', '예산 기준', '비고']
+    ];
+    rows.forEach(r => {
+      const bud = budgetUsedPctOf(r);
+      budgetSheet.push([key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub,
+        r.announcement, rowSel(r), bud, Math.max(0, 100 - bud),
+        '실예산 비공개 · 카테고리 단가 가중 선정 기준', (r.remark || '-').replace(/\n/g, ' ')]);
+    });
+
+    // ── 시트 5: 변경이력 (관리번호별 변경 이력 — 실데이터 연동 전 더미 샘플) ──
+    const changeLog = [
+      ['관리번호', '변경일자', '변경 구분', '변경 항목', '변경 전', '변경 후', '안내']
+    ];
+    rows.forEach(r => {
+      changeLog.push([key(r), '2026-04-18', '리스트항목', '공고대수(전체)', '100', '120', '2차 공고분 추가']);
+      changeLog.push([key(r), '2026-05-02', '공고', '접수마감', '05.02', '05.15', '접수기간 연장 공고']);
+    });
+
     // ── 워크북 조립 ──
     const wb = XLSX.utils.book_new();
     const ws0 = XLSX.utils.aoa_to_sheet(info);
@@ -1304,25 +1327,31 @@
     const ws2 = XLSX.utils.aoa_to_sheet(detail);
     const ws3 = XLSX.utils.aoa_to_sheet(announce);
     const ws4 = XLSX.utils.aoa_to_sheet(modelSheet);
+    const wsBud = XLSX.utils.aoa_to_sheet(budgetSheet);
+    const ws5 = XLSX.utils.aoa_to_sheet(changeLog);
 
     ws0['!cols'] = [{wch:14},{wch:80}];
     ws1['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:9},
                     {wch:14},{wch:9},{wch:15},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},
                     {wch:9},{wch:9},{wch:9},{wch:12},{wch:13},{wch:26},{wch:14},{wch:40}];
     ws2['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:11},{wch:11},{wch:11},{wch:11},{wch:11}];
-    ws3['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:14},{wch:13},{wch:18},{wch:18},{wch:18},{wch:28}];
+    ws3['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:14},{wch:13},{wch:18},{wch:18},{wch:18}];
     ws4['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:18},{wch:12},{wch:11},{wch:11},{wch:12},{wch:12},{wch:14},{wch:10}];
+    wsBud['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:10},{wch:13},{wch:15},{wch:34},{wch:40}];
+    ws5['!cols'] = [{wch:10},{wch:12},{wch:12},{wch:18},{wch:14},{wch:14},{wch:30}];
 
     XLSX.utils.book_append_sheet(wb, ws0, '안내');
     XLSX.utils.book_append_sheet(wb, ws1, '요약');
     XLSX.utils.book_append_sheet(wb, ws2, '상세_대수정보');
+    XLSX.utils.book_append_sheet(wb, wsBud, '예산현황');
     XLSX.utils.book_append_sheet(wb, ws3, '공고별_일정');
     XLSX.utils.book_append_sheet(wb, ws4, '모델별_지방비');
+    XLSX.utils.book_append_sheet(wb, ws5, '변경이력');
 
     const year = els.year.value;
     const fname = `무공해차_보조금현황_${year}_${new Date().toISOString().slice(0,10)}.xlsx`;
     XLSX.writeFile(wb, fname);
-    if (window.__toast) window.__toast(`엑셀 파일 "${fname}" 다운로드를 시작합니다. (5개 시트)`, 'success');
+    if (window.__toast) window.__toast(`엑셀 파일 "${fname}" 다운로드를 시작합니다. (7개 시트)`, 'success');
   }
 
   // ---------------- Reset ----------------

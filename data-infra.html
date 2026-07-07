@@ -30,32 +30,12 @@
   <section class="section-sm">
     <div class="container container-wide">
 
-      <div class="stat-grid">
-        <div class="stat-card"><div class="st-label" data-i18n="inf.s1.lbl">전체 충전기</div><div class="st-val">412,580<span class="st-unit">기</span></div><div class="st-trend up">▲ +3.4%</div></div>
-        <div class="stat-card"><div class="st-label" data-i18n="inf.s2.lbl">급속 (50kW+)</div><div class="st-val">68,420<span class="st-unit">기</span></div><div class="st-trend up">▲ +5.2%</div></div>
-        <div class="stat-card"><div class="st-label" data-i18n="inf.s3.lbl">완속 (3~22kW)</div><div class="st-val">344,160<span class="st-unit">기</span></div><div class="st-trend up">▲ +3.0%</div></div>
-        <div class="stat-card"><div class="st-label" data-i18n="inf.s4.lbl">평균 가동률</div><div class="st-val">94.2<span class="st-unit">%</span></div><div class="st-trend down">▼ -0.3%p</div></div>
-      </div>
-
-      <h3 class="section-h mt-5" data-i18n="inf.h3.region">권역별 충전기 분포</h3>
-      <div class="region-map mt-3">
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.seoul">서울</div><div class="rt-val">68,420</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.gyeonggi">경기</div><div class="rt-val">98,340</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.incheon">인천</div><div class="rt-val">28,150</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.gangwon">강원</div><div class="rt-val">14,820</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.chungbuk">충북</div><div class="rt-val">15,640</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.chungnam">충남</div><div class="rt-val">22,180</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.daejeon">대전</div><div class="rt-val">12,090</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.sejong">세종</div><div class="rt-val">4,820</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.jeonbuk">전북</div><div class="rt-val">17,540</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.jeonnam">전남</div><div class="rt-val">18,920</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.gwangju">광주</div><div class="rt-val">11,420</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.gyeongbuk">경북</div><div class="rt-val">24,860</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.daegu">대구</div><div class="rt-val">19,540</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.gyeongnam">경남</div><div class="rt-val">28,420</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.busan">부산</div><div class="rt-val">22,180</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.ulsan">울산</div><div class="rt-val">9,840</div></div>
-        <div class="region-tile"><div class="rt-name" data-i18n="sido.short.jeju">제주</div><div class="rt-val">14,460</div></div>
+      <div class="stat-grid" style="grid-template-columns:repeat(5,1fr);">
+        <div class="stat-card"><div class="st-label" data-i18n="inf.s1.lbl">완속 (30kW 미만)</div><div class="st-val">300,000<span class="st-unit">기</span></div><div class="st-trend up">▲ +3.0%</div></div>
+        <div class="stat-card"><div class="st-label" data-i18n="inf.s2.lbl">중속 (30~50kW)</div><div class="st-val">44,160<span class="st-unit">기</span></div><div class="st-trend up">▲ +6.1%</div></div>
+        <div class="stat-card"><div class="st-label" data-i18n="inf.s3.lbl">급속 (50~100kW)</div><div class="st-val">40,000<span class="st-unit">기</span></div><div class="st-trend up">▲ +4.2%</div></div>
+        <div class="stat-card"><div class="st-label" data-i18n="inf.s4.lbl">급속 (100~200kW)</div><div class="st-val">20,000<span class="st-unit">기</span></div><div class="st-trend up">▲ +9.4%</div></div>
+        <div class="stat-card"><div class="st-label" data-i18n="inf.s5.lbl">초급속 (200kW 이상)</div><div class="st-val">8,420<span class="st-unit">기</span></div><div class="st-trend up">▲ +12.8%</div></div>
       </div>
 
       <h3 class="section-h mt-5" data-i18n="inf.h3.top10">사업자별 충전기 보유 현황 (Top 10)</h3>
@@ -87,7 +67,7 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-data.js?v=20260520"></script>
+<script src="js/i18n-data.js?v=20260707a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 </body>

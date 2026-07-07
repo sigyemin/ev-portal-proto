@@ -100,7 +100,6 @@
     'charging.fee.tab.sim':       { ko: '내 충전요금 시뮬레이터', en: 'My Fee Simulator' },
     'charging.fee.btn.tindex':    { ko: '충전사업자 투명성지수', en: 'CPO Transparency Index' },
     'charging.fee.btn.tariff':    { ko: '시간대별 충전요금', en: 'Time-of-Use Fees' },
-    'charging.fee.aria.tindex':   { ko: '충전사업자 투명성지수 모달 열기', en: 'Open operator status modal' },
     'charging.fee.aria.tariff':   { ko: '시간대별 충전요금 모달 열기', en: 'Open time-of-use fee modal' },
     'charging.fee.aria.menu':     { ko: '요금 메뉴', en: 'Fee menu' },
 
@@ -377,15 +376,6 @@
     'charging.fee.opmodal.close.aria':    { ko: '모달 닫기',                       en: 'Close modal' },
     'charging.fee.opmodal.source':        { ko: '출처: 투명성지수 FEE_TABLE 2026-04-21', en: 'Source: Transparency Index FEE_TABLE 2026-04-21' },
     'charging.fee.opmodal.close':         { ko: '닫기',                             en: 'Close' },
-
-    /* === 충전요금 - 투명성지수 풀스크린 모달 (미사용) === */
-    'charging.fee.tindex.eyebrow':        { ko: '충전사업자 투명성지수 v4', en: 'Charging Infrastructure Transparency Index v3' },
-    'charging.fee.tindex.title':          { ko: '충전사업자 투명성지수 대시보드',         en: 'Operator Status Dashboard' },
-    'charging.fee.tindex.role.aria':      { ko: '역할 선택',                         en: 'Select role' },
-    'charging.fee.tindex.role.public':    { ko: '사용자',                           en: 'User' },
-    'charging.fee.tindex.role.cpo':       { ko: '사업자',                           en: 'Operator' },
-    'charging.fee.tindex.role.admin':     { ko: '담당자',                           en: 'Administrator' },
-    'charging.fee.tindex.close.aria':     { ko: '모달 닫기',                         en: 'Close modal' },
 
     /* === 충전요금 - 시간대별 충전요금 모달 === */
     'charging.fee.tariff.title':          { ko: '⏰ 시간대별 충전요금',              en: '⏰ Time-of-Use Charging Rates' },

@@ -110,29 +110,12 @@
         </div>
       </div>
 
-      <!-- ===== 0.5 대표자 본인 인증 (공통 .cf-auth — 인증 단계 신규 추가) ===== -->
-      <div data-bpanel="verify" hidden>
-        <h2 style="font-size:24px;font-weight:800;margin:0 0 8px;">대표자 본인 인증</h2>
-        <p class="cf-auth-lead">「전자서명법」에 따라 <strong>대표자 본인 명의 휴대폰</strong>으로 안전하게 처리됩니다. 아래 버튼으로 휴대전화 본인인증을 완료해 주세요.</p>
-        <div class="cf-auth-card" id="brdAuthCard" style="max-width:560px;margin:0 auto;">
-          <div class="cf-auth-ico" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg></div>
-          <button type="button" class="cf-auth-btn" id="brdAuthBtn"><span>휴대전화 인증하기</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
-          <p class="cf-auth-note">PASS 앱·통신사 인증으로 대표자 본인 명의 휴대폰에서 처리됩니다. (프로토타입: 데모 인증)</p>
-        </div>
-        <div class="ba-foot">
-          <button type="button" class="btn btn-secondary" id="verifyPrev">이전</button>
-          <button type="button" class="btn btn-primary" id="verifyNext" disabled>다음 (신청서 작성)</button>
-        </div>
-      </div>
-
       <!-- ===== 1. 신청서 작성 ===== -->
       <div data-bpanel="form" hidden>
         <div class="ba-steps">
           <span class="ba-step active">01. 신청서 작성</span>
           <span class="ba-step-arrow">›</span>
-          <span class="ba-step">02. 신청서 심사</span>
-          <span class="ba-step-arrow">›</span>
-          <span class="ba-step">03. 신청완료</span>
+          <span class="ba-step">02. 신청완료</span>
         </div>
 
         <!-- 사업수행기관 정보 -->
@@ -152,7 +135,7 @@
           </div>
           <div class="ba-grid">
             <div class="lab">구분 <span class="req-star">*</span></div>
-            <div class="val">사업수행기관</div>
+            <div class="val">사업수행기관 <label class="ba-radio" style="margin-left:auto;"><input type="checkbox" class="rep-proposer" data-rep="main" checked> 대표제안사</label></div>
             <div class="lab">사업자구분 <span class="req-star">*</span></div>
             <div class="val" style="grid-column:span 3;">
               <label class="ba-radio"><input type="radio" name="biztype" value="new" checked> 신규사업자</label>
@@ -284,11 +267,6 @@
             - 첨부파일의 총합 용량이 900MB를 초과할 경우 업로드가 제한될 수 있으므로, 압축·해상도 조정 등을 통해 용량을 축소하여 제출해 주시기 바랍니다.<br>
             - 작성 중 입력 내용의 유실을 방지하기 위해, 수시로 [임시저장] 기능을 활용해 주시기 바랍니다.
           </div>
-          <div class="ba-file" style="border-top:1px solid var(--border-light);">
-            <div class="ba-file-label">제출 서류 양식</div>
-            <button type="button" class="ba-dl-btn" data-action="download" data-action-label="제출 서류 양식(Excel/Zip)">제출 서류 양식 다운로드</button>
-            <span></span>
-          </div>
           <div data-filelist="qual">
             <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부1]</span> 전기신사업자등록증 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
             <div class="ba-file"><div class="ba-file-label"><span class="att">[첨부2]</span> 콜센터 및 유지관리 위탁계약서 등 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span><div class="ba-file-sub">※ 주민등록번호가 포함된 경우 뒷자리 마스킹 처리 필수</div></div>
@@ -338,16 +316,14 @@
         <div class="ba-steps">
           <span class="ba-step done">01. 신청서 작성</span>
           <span class="ba-step-arrow">›</span>
-          <span class="ba-step done">02. 신청서 심사</span>
-          <span class="ba-step-arrow">›</span>
-          <span class="ba-step active">03. 신청완료</span>
+          <span class="ba-step active">02. 신청완료</span>
         </div>
         <div style="text-align:center;padding:40px 20px 10px;">
           <div style="width:84px;height:84px;border-radius:50%;background:var(--color-primary-50);color:var(--color-primary-600);display:grid;place-items:center;margin:0 auto 22px;">
             <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h2 style="font-size:26px;font-weight:800;margin:0 0 12px;">브랜드 사업 공모 신청이 접수되었습니다</h2>
-          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto;max-width:620px;">제출하신 신청서는 <strong>02. 신청서 심사</strong> 단계로 진행됩니다. 서류 보완이 필요한 경우 담당자 연락처로 안내되며, 진행상태는 <strong>공모 신청 조회</strong>에서 확인하실 수 있습니다.</p>
+          <p style="color:var(--text-secondary);font-size:15px;line-height:1.8;margin:0 auto;max-width:640px;">접수번호 <strong id="rcptNo">-</strong> 로 접수되었습니다. 제출 후 담당자 심사·평가(보완요청·승인·선정)가 진행되며, 진행상태는 <strong>신청조회</strong>에서 확인하실 수 있습니다.</p>
           <div class="ba-foot">
             <a href="charging-install-brand-status.html" class="btn btn-primary">공모 신청 조회</a>
             <a href="charging-install-brand.html" class="btn btn-secondary">공모 안내로</a>
@@ -362,7 +338,7 @@
 <!-- 컨소시엄 블록 템플릿 -->
 <template id="consTpl">
   <div class="ba-grid cons-item" style="margin-top:14px;border:1px solid var(--border-light);border-bottom:none;">
-    <div class="lab">구분 <span class="req-star">*</span></div><div class="val">공동사업자 <span style="color:var(--text-tertiary);font-size:12px;">(#<span class="cons-no"></span>)</span></div>
+    <div class="lab">구분 <span class="req-star">*</span></div><div class="val">공동사업자 <span style="color:var(--text-tertiary);font-size:12px;">(#<span class="cons-no"></span>)</span> <label class="ba-radio" style="margin-left:auto;"><input type="checkbox" class="rep-proposer" data-rep="cons"> 대표제안사</label></div>
     <div class="lab">사업자구분 <span class="req-star">*</span></div>
     <div class="val" style="grid-column:span 3;"><label class="ba-radio"><input type="radio" name="" value="new" checked> 신규사업자</label><label class="ba-radio"><input type="radio" name="" value="exist"> 기등록 사업자</label></div>
     <div class="lab">업체명 <span class="req-star">*</span></div><div class="val"><input type="text" placeholder="업체명"></div>
@@ -404,20 +380,9 @@
   agItem.addEventListener('change',function(){ syncAgree('item'); });
   $('#agreeNext').addEventListener('click',function(){
     if(!agItem.checked){ if(window.__toast) window.__toast('개인정보 수집·이용에 동의해 주세요.','info'); return; }
-    bGo('verify');
-  });
-
-  // 본인 인증 (공통 컴포넌트 .cf-auth — PASS 방식 단일 버튼) · brand 인증 단계 신규
-  var verified=false, _verData=null;
-  if(window.AuthVerify) AuthVerify.mount('#brdAuthCard', { session:'install_brand_auth', onVerified:function(data){
-    verified=true; _verData=data; $('#verifyNext').disabled=false;
-  }});
-  var _vp=$('#verifyPrev'); if(_vp) _vp.addEventListener('click',function(){ bGo('agree'); });
-  var _vn=$('#verifyNext'); if(_vn) _vn.addEventListener('click',function(){
-    if(!verified){ if(window.__toast) window.__toast('휴대전화 본인인증을 먼저 완료해 주세요.','info'); return; }
-    var nm=(_verData&&_verData.name)||''; if(nm){ var rep=document.querySelector('[data-bpanel=form] input[placeholder=대표자명]'); if(rep && !rep.value) rep.value=nm; }
     bGo('form');
   });
+
 
   // 컨소시엄 여부 → 섹션 토글
   var consSection=$('#consSection');
@@ -439,7 +404,22 @@
   }
   $('#consAdd').addEventListener('click',addCons);
   $('#consDel').addEventListener('click',function(){
-    var list=$('#consList'); if(list.lastElementChild){ list.removeChild(list.lastElementChild); consNo=Math.max(0,consNo-1); }
+    var list=$('#consList'); if(list.lastElementChild){ list.removeChild(list.lastElementChild); consNo=Math.max(0,consNo-1); ensureOneRep(); }
+  });
+
+  // 대표제안사: 사업수행기관+컨소시엄사 통틀어 1개만(라디오형 상호배타, 기본=사업수행기관)
+  function ensureOneRep(){
+    var reps=document.querySelectorAll('.rep-proposer');
+    if(reps.length && ![].some.call(reps,function(c){ return c.checked; })){
+      var main=document.querySelector('.rep-proposer[data-rep=main]'); if(main) main.checked=true;
+    }
+  }
+  document.addEventListener('change',function(e){
+    if(e.target.classList && e.target.classList.contains('rep-proposer')){
+      if(e.target.checked){
+        document.querySelectorAll('.rep-proposer').forEach(function(c){ if(c!==e.target) c.checked=false; });
+      } else { e.target.checked=true; } // 최소 1개 유지
+    }
   });
 
   // 설치수량 합계
@@ -461,7 +441,7 @@
   // 작성 패널 버튼
   $('#formPrev').addEventListener('click',function(){ bGo('agree'); });
   $('#formSave').addEventListener('click',function(){ if(window.__toast) window.__toast('작성 내용이 임시저장되었습니다.','success'); });
-  $('#formSubmit').addEventListener('click',function(){ if(window.__toast) window.__toast('공모 신청서가 제출되었습니다.','success'); bGo('done'); });
+  $('#formSubmit').addEventListener('click',function(){ var no='2026-BRAND-'+String(Math.floor(Math.random()*9000)+1000); var el=$('#rcptNo'); if(el) el.textContent=no; if(window.__toast) window.__toast('공모 신청서가 제출되었습니다. 접수번호 '+no,'success'); bGo('done'); });
 
   bGo('agree');
 })();

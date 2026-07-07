@@ -719,14 +719,19 @@
     const seasonSel  = document.getElementById('simSeason');
     const slotSel    = document.getElementById('simTimeSlot');
     const daySel     = document.getElementById('simDay');
+    const hourInput  = document.getElementById('simHour');
+    const hourLabel  = document.getElementById('simHourVal');
     const kwhInput   = document.getElementById('simKwh');
-    // v0.17 PDF 계절시간제 — 요일·시간대 매칭 시 할인규칙(정액/정률/고정) 적용 (예시)
-    //  value: 요일별 차감/대체값. mode: amount(원 차감)·percent(% 차감)·fixed(단가 대체)
+    // [DEV] 계절시간제 할인규칙 = TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·TRGT_SE)
+    //  선택 (계절·요일·시각)이 규칙 창(startHr~endHr)에 들면 기본단가에 할인방식 적용. 부하 3단(경/중/최대) 아님. / 더미
+    //  mode: percent(정률 %)·amount(정액 원 차감)·fixed(고정단가 대체) · base: 기본단가(원/kWh, 완속 TRGT_SE)
     const SIM_TOU_RULES = {
-      KP: { season:'봄·가을', days:['saturday','sunday'], slots:['off'], mode:'amount', value:{ saturday:48.6, sunday:42.7 } },
-      EV: { season:'여름',    days:['saturday','sunday'], slots:['off'], mode:'fixed',  value:{ saturday:246, sunday:246 } },
-      JA: { season:'봄·가을', days:['weekday'],            slots:['off'], mode:'percent', value:{ weekday:15 } }
+      KP: { seasons:['봄·가을','겨울'], days:['saturday','sunday'], startHr:23, endHr:9,  mode:'amount',  value:48.6,  base:307.5 },
+      JA: { seasons:['봄·가을'],        days:['weekday'],            startHr:0,  endHr:8,  mode:'percent', value:20,    base:229   },
+      EV: { seasons:['여름'],           days:['saturday','sunday'], startHr:11, endHr:14, mode:'fixed',   value:259.5, base:296   }
     };
+    // 시각 창 매칭(자정 넘김 지원): start<=end → [start,end), 아니면 [start,24)∪[0,end)
+    function inHourWindow(h, s, e){ return s <= e ? (h >= s && h < e) : (h >= s || h < e); }
     function applyTouMode(base, mode, v){
       if (mode==='percent') return Math.round(base*(1-v/100)*10)/10;
       if (mode==='fixed')   return v;
@@ -1010,106 +1015,6 @@
     kwhInput  .addEventListener('input', update);
 
     fullRefresh();
-  })();
-
-  // ── 사업자별 운영 현황 모달 (투명성지수 · 미사용) ──────────────────────────────
-  (function initTindexModal() {
-    const btn = document.getElementById('opStatusBtn');
-    const overlay = document.getElementById('tindex-modal-overlay');
-    const closeBtn = document.getElementById('tindex-modal-close');
-    const body = document.getElementById('tindex-modal-body');
-    if (!btn || !overlay) return;
-
-    function buildSummary() {
-      // 사업자별 평균 단가 요약 표 + 점유율 차트 영역
-      const ops = MATRIX.basic;
-      // 회원 평균 단가 계산
-      const rows = ops.map(op => {
-        const slow = [op.s35, op.s7, op.s11].filter(v => v != null);
-        const fast = [op.f50, op.f100].filter(v => v != null);
-        const ultra = [op.u200, op.u350].filter(v => v != null);
-        return {
-          bid: op.bid, name: op.name, type: op.type,
-          slowAvg: slow.length ? (slow.reduce((a,b)=>a+b,0)/slow.length).toFixed(1) : '—',
-          fastAvg: fast.length ? (fast.reduce((a,b)=>a+b,0)/fast.length).toFixed(1) : '—',
-          ultraAvg: ultra.length ? (ultra.reduce((a,b)=>a+b,0)/ultra.length).toFixed(1) : '—',
-          nmr: op.nmr != null ? op.nmr : '—',
-          note: op.note,
-        };
-      });
-      const tbody = rows.map((r, i) => {
-        const chip = r.type === '공공'
-          ? '<span style="font-size:11px;color:var(--text-primary);font-weight:600;">공공</span>'  /* v0.12 [37b] 색 제거 */
-          : '<span style="font-size:11px;color:var(--text-primary);font-weight:600;">민간</span>';
-        return `<tr>
-          <td style="padding:8px 10px;color:#64748b;">${i+1}</td>
-          <td style="padding:8px 10px;"><strong>${r.name}</strong> <small style="color:#aaa;font-size:10px;">${r.bid}</small></td>
-          <td style="padding:8px 10px;">${chip}</td>
-          <td class="num" style="padding:8px 10px;">${r.slowAvg}</td>
-          <td class="num" style="padding:8px 10px;">${r.fastAvg}</td>
-          <td class="num" style="padding:8px 10px;">${r.ultraAvg}</td>
-          <td class="num" style="padding:8px 10px;">${r.nmr}</td>
-          <td style="padding:8px 10px;color:#9ca3af;font-size:11.5px;">${r.note || ''}</td>
-        </tr>`;
-      }).join('');
-
-      return `
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
-          <div style="font-size:11.5px;color:#64748b;font-weight:600;">등재 사업자</div>
-          <div style="font-size:28px;font-weight:800;color:#0d57b0;margin-top:4px;">${ops.length}<span style="font-size:14px;color:#94a3b8;font-weight:600;"> 개사</span></div>
-        </div>
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
-          <div style="font-size:11.5px;color:#64748b;font-weight:600;">공공 / 민간</div>
-          <div style="font-size:28px;font-weight:800;color:#1AAD6C;margin-top:4px;">${ops.filter(o=>o.type==='공공').length}<span style="font-size:18px;color:#94a3b8;"> / </span>${ops.filter(o=>o.type==='민간').length}</div>
-        </div>
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
-          <div style="font-size:11.5px;color:#64748b;font-weight:600;">완속 회원 평균</div>
-          <div style="font-size:28px;font-weight:800;color:#0d57b0;margin-top:4px;">301<span style="font-size:14px;color:#94a3b8;font-weight:600;"> 원/kWh</span></div>
-        </div>
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
-          <div style="font-size:11.5px;color:#64748b;font-weight:600;">급속 회원 평균</div>
-          <div style="font-size:28px;font-weight:800;color:#0d57b0;margin-top:4px;">355<span style="font-size:14px;color:#94a3b8;font-weight:600;"> 원/kWh</span></div>
-        </div>
-      </div>
-      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
-        <div style="padding:14px 18px;border-bottom:1px solid #f1f5f9;background:#f8fafc;">
-          <strong style="font-size:14px;">사업자별 평균 단가 (그룹별 평균 · 원/kWh)</strong>
-          <span style="font-size:11.5px;color:#94a3b8;margin-left:8px;">출처: 투명성지수 FEE_TABLE 2026-04-21</span>
-        </div>
-        <div style="overflow-x:auto;max-height:420px;">
-          <table class="data-table" style="border:none;width:100%;">
-            <thead style="position:sticky;top:0;background:#f8fafc;z-index:1;">
-              <tr style="font-size:11.5px;color:#475569;">
-                <th style="padding:10px;width:40px;">#</th>
-                <th style="padding:10px;text-align:left;">사업자</th>
-                <th style="padding:10px;text-align:left;">구분</th>
-                <th class="num" style="padding:10px;">완속 평균</th>
-                <th class="num" style="padding:10px;">급속 평균</th>
-                <th class="num" style="padding:10px;">초급속 평균</th>
-                <th class="num" style="padding:10px;">비회원</th>
-                <th style="padding:10px;text-align:left;">비고</th>
-              </tr>
-            </thead>
-            <tbody>${tbody}</tbody>
-          </table>
-        </div>
-      </div>`;
-    }
-
-    function open() {
-      body.innerHTML = buildSummary();
-      overlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-    function close() {
-      overlay.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-    btn.addEventListener('click', open);
-    closeBtn?.addEventListener('click', close);
-    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.style.display === 'flex') close(); });
   })();
 
   // ── 탭 클릭 시 섹션으로 스크롤 ────────────────────────────────────
