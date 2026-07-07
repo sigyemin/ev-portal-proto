@@ -770,8 +770,8 @@
     /* === tax-grade.html === */
     'tgr.bc.current':         { ko: '내 차 저공해 등급 확인',    en: 'Check My Vehicle Emission Grade' },
     'tgr.h1':                 { ko: '내 차 저공해 등급 확인',    en: 'Check My Vehicle Emission Grade' },
-    'tgr.lead':               { ko: '차량번호만 입력하면 내 차의 <strong style="color:#fff;">저공해 등급(1·2·3)</strong>과 받을 수 있는 혜택을 즉시 확인합니다.',
-                                en: 'Enter your vehicle number to instantly check its <strong style="color:#fff;">low-emission grade (1/2/3)</strong> and eligible benefits.' },
+    'tgr.lead':               { ko: '차량번호만 입력하면 내 차의 <strong style="color:#fff;">저공해 등급(1·2·3)</strong>을 즉시 확인합니다.',
+                                en: 'Enter your vehicle number to instantly check its <strong style="color:#fff;">low-emission grade (1/2/3)</strong>.' },
     'tgr.step1':              { ko: '1단계',                en: 'Step 1' },
     'tgr.h2.lookup':          { ko: '차량번호 조회',           en: 'Vehicle Number Lookup' },
     'tgr.lookup.p':           { ko: '차량 등록 시 발급받은 번호판을 입력해 주세요.',

@@ -803,6 +803,11 @@
               <button class="tab" data-emem="nonmember" type="button">비회원가</button>
             </div>
             <span style="font-size:12.5px;color:var(--color-gray-500);" id="evResultTime">회원가 기준</span>
+            <button type="button" class="ev-download-btn xlsx" id="evExcelBtn" aria-label="검색 결과 엑셀 다운로드">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span class="ext">XLSX</span>
+              <span>엑셀 다운로드</span>
+            </button>
           </div>
         </div>
         <div style="overflow-x:auto;">
@@ -813,6 +818,7 @@
                 <th scope="col" class="sortable" data-esk="no" tabindex="0" role="button" style="width:56px;text-align:center;">번호</th>
                 <th scope="col" class="sortable" data-esk="name" tabindex="0" role="button">충전소명 / 주소</th>
                 <th scope="col" class="sortable" data-esk="cpo" tabindex="0" role="button">사업자(CPO)</th>
+                <th scope="col" style="min-width:128px;">충전기 출력구성 <span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">(kW)</span></th>
                 <th scope="col" class="num sortable" data-esk="slow" tabindex="0" role="button">완속</th>
                 <th scope="col" class="num sortable" data-esk="mid" tabindex="0" role="button">중속</th>
                 <th scope="col" class="num sortable" data-esk="fast50" tabindex="0" role="button">급속<br><span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">50~100</span></th>
@@ -921,17 +927,14 @@
   .mx-table thead th small{display:block;font-weight:400;color:var(--color-gray-400);font-size:11px;}
   .mx-table tbody td{padding:12px;border-bottom:1px solid #F1F5F9;text-align:right;font-feature-settings:"tnum";font-weight:600;color:var(--text-primary);}
   .mx-table tbody td.opcol{text-align:left;font-weight:700;white-space:nowrap;}
-  .mx-table tbody tr.pub{background:#F0F9FF;}
-  .mx-table tbody tr.pub td{color:#0d57b0;}
   .mx-table tbody tr:hover{background:var(--color-gray-50);}
-  .mx-table tbody tr.pub:hover{background:#e4f2ff;}
   .mx-null{color:var(--color-gray-300);font-weight:500;}
   .mx-disc{color:#1AA46A;}
   .mx-disc::after{content:" ▼";font-size:10px;}
   .mx-exp-btn{background:none;border:none;cursor:pointer;color:var(--color-gray-500);font-size:13px;margin-right:6px;padding:0;width:14px;display:inline-block;transition:transform .15s;}
   .mx-exp-btn.open{color:var(--color-primary-600);transform:rotate(90deg);}
   .mx-exp-row > td{background:#FAFBFC;padding:16px 18px;}
-  .mx-bars{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:end;height:150px;padding:6px 4px;background:#fff;border:1px solid var(--border-light);border-radius:10px;}
+  .mx-bars{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:end;height:160px;padding:6px 4px;background:#fff;border:1px solid var(--border-light);border-radius:10px;position:relative;overflow:visible;}
   .mx-bars .bar{border-radius:3px 3px 0 0;min-height:4px;position:relative;cursor:pointer;}
   .mx-bars .bar:hover{filter:brightness(1.08);}
   .mx-bars .bar:hover::after{content:attr(data-label);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:10;}
@@ -939,6 +942,19 @@
   .mx-eband{display:inline-flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
   .mx-eband button{padding:5px 12px;border:1px solid var(--border-light);background:#fff;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--text-secondary);cursor:pointer;font-family:inherit;}
   .mx-eband button.on{background:var(--color-primary-500);color:#fff;border-color:var(--color-primary-500);}
+  /* 24h 요금곡선 개선: 헤더·배지·기준선·선택강조·범례 */
+  .mx-chart-head{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:8px;}
+  .mx-chart-head .now{color:var(--color-primary-700);}
+  .mx-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;font-size:12.5px;font-weight:700;margin-bottom:10px;}
+  .mx-badge svg{flex:none;}
+  .mx-bars-wrap{position:relative;}
+  .mx-bars .bar.sel{outline:2px solid var(--color-primary-600);outline-offset:1px;z-index:2;}
+  .mx-baseline{position:absolute;left:4px;right:4px;border-top:1.6px dashed #475569;z-index:3;pointer-events:none;}
+  .mx-baseline .lbl{position:absolute;right:2px;top:-16px;background:#fff;padding:0 5px;font-size:10.5px;font-weight:700;color:#334155;white-space:nowrap;border-radius:4px;}
+  .mx-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:12px;color:var(--color-gray-600);}
+  .mx-legend .lg{display:inline-flex;align-items:center;gap:6px;}
+  .mx-legend .sw{width:13px;height:13px;border-radius:3px;display:inline-block;}
+  .mx-legend .swline{width:18px;height:0;border-top:1.6px dashed #475569;display:inline-block;}
   .mx-band-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border-medium);border-radius:999px;font-size:13px;font-weight:600;color:var(--text-secondary);background:#fff;cursor:pointer;user-select:none;}
   .mx-band-chip input{accent-color:var(--color-primary-600);cursor:pointer;margin:0;}
   .mx-band-chip.on{border-color:var(--color-primary-400);background:var(--color-primary-50);color:var(--color-primary-700);}
@@ -952,6 +968,7 @@
   .ev-cpo-link:hover{color:var(--color-primary-800);}
   .ev-roam-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--color-primary-300);background:#fff;color:var(--color-primary-700);border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
   .ev-roam-btn:hover{background:var(--color-primary-50);}
+  .ev-out-cfg{font-size:13px;color:var(--text-secondary);font-feature-settings:"tnum";white-space:nowrap;}
   /* 매트릭스 정렬(공지 리스트 표준 .sortable 재사용) + 행클릭 펼침 + 검색 클리어 */
   .mx-table thead th.sortable{cursor:pointer;user-select:none;}
   .mx-table thead th.sortable::after{content:' ↕';color:#6B7280;font-size:12px;font-weight:400;}
@@ -1032,11 +1049,26 @@
         { season:'summer', days:['saturday','sunday'], caps:['fast50'], target:'member', mode:'fixed', value:246, hours:[11,16] }
       ] },
     'HE': { name:'한국전기차충전서비스', type:'공공', tou:false, member:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2}, nonmember:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2}, rules:[] },
-    'CV': { name:'채비', type:'민간', tou:false, member:{slow:300,mid:330,fast50:410,fast100:430,ultra:430}, nonmember:{slow:330,mid:360,fast50:450,fast100:470,ultra:470}, rules:[] },
-    'PI': { name:'GS차지비', type:'민간', tou:false, member:{slow:290,mid:310,fast50:335,fast100:345,ultra:345}, nonmember:{slow:320,mid:340,fast50:360,fast100:370,ultra:370}, rules:[] },
-    'ST': { name:'SK일렉링크', type:'민간', tou:false, member:{slow:280,mid:300,fast50:410,fast100:320,ultra:340}, nonmember:{slow:310,mid:330,fast50:450,fast100:360,ultra:380}, rules:[] },
-    'HM': { name:'휴맥스이브이', type:'민간', tou:false, member:{slow:270,mid:290,fast50:320,fast100:340,ultra:340}, nonmember:{slow:300,mid:320,fast50:350,fast100:370,ultra:370}, rules:[] },
-    'PL': { name:'플러그링크', type:'민간', tou:false, member:{slow:260,mid:280,fast50:324.4,fast100:324.4,ultra:324.4}, nonmember:{slow:290,mid:310,fast50:350,fast100:350,ultra:350}, rules:[] }
+    'CV': { name:'채비', type:'민간', tou:true, member:{slow:300,mid:330,fast50:410,fast100:430,ultra:430}, nonmember:{slow:330,mid:360,fast50:450,fast100:470,ultra:470},
+      rules:[
+        { season:'all', days:['weekday','saturday','sunday'], caps:['all'], target:'common', mode:'percent', value:15, hours:[23,6] }
+      ] },
+    'PI': { name:'GS차지비', type:'민간', tou:true, member:{slow:290,mid:310,fast50:335,fast100:345,ultra:345}, nonmember:{slow:320,mid:340,fast50:360,fast100:370,ultra:370},
+      rules:[
+        { season:'spring', days:['saturday','sunday'], caps:['fast50','fast100'], target:'common', mode:'amount', value:35, hours:[10,16] }
+      ] },
+    'ST': { name:'SK일렉링크', type:'민간', tou:true, member:{slow:280,mid:300,fast50:410,fast100:320,ultra:340}, nonmember:{slow:310,mid:330,fast50:450,fast100:360,ultra:380},
+      rules:[
+        { season:'all', days:['weekday','saturday','sunday'], caps:['all'], target:'common', mode:'amount', value:40, hours:[11,15] }
+      ] },
+    'HM': { name:'휴맥스이브이', type:'민간', tou:true, member:{slow:270,mid:290,fast50:320,fast100:340,ultra:340}, nonmember:{slow:300,mid:320,fast50:350,fast100:370,ultra:370},
+      rules:[
+        { season:'all', days:['weekday','saturday','sunday'], caps:['fast50'], target:'common', mode:'fixed', value:260, hours:[1,7] }
+      ] },
+    'PL': { name:'플러그링크', type:'민간', tou:true, member:{slow:260,mid:280,fast50:324.4,fast100:324.4,ultra:324.4}, nonmember:{slow:290,mid:310,fast50:350,fast100:350,ultra:350},
+      rules:[
+        { season:'all', days:['weekday','saturday','sunday'], caps:['all'], target:'common', mode:'percent', value:12, hours:[6,9] }
+      ] }
   };
   var PUBLIC = { name:"환경부(공공)", rate:{ slow:294.3, mid:306.0, fast50:324.4, fast100:347.2, ultra:391.9 } };
   var CPO_ORDER = ['KP','EV','HE','CV','PI','ST','HM','PL'];
@@ -1054,7 +1086,7 @@
     return arr;
   }
   function ruleMatches(rule, season, day, cap, target){
-    if (rule.season!==season) return false;
+    if (rule.season!=='all' && rule.season!==season) return false;
     if (rule.days.indexOf(day)<0) return false;
     if (rule.caps.indexOf('all')<0 && rule.caps.indexOf(cap)<0) return false;
     if (rule.target!=='common' && rule.target!==target) return false;
@@ -1065,7 +1097,7 @@
   var curHour = now.getHours();
   var curSeason = ([2,3,4,8,9].indexOf(now.getMonth())>=0) ? 'spring' : ([5,6,7].indexOf(now.getMonth())>=0) ? 'summer' : 'winter';
   var curDay = (function(){ var d=now.getDay(); return d===0?'sunday':(d===6?'saturday':'weekday'); })();
-  var SEASON_KO = { spring:"봄·가을", summer:"여름", winter:"겨울" };
+  var SEASON_KO = { spring:"봄·가을", summer:"여름", winter:"겨울", all:"전 계절" };
   var DAY_KO = { weekday:"평일", saturday:"토요일", sunday:"일·공휴일" };
 
   // (op, band, target, season, hour, day) → {v, base, disc} | null
@@ -1119,38 +1151,94 @@
     var avail=BANDS.filter(function(b){ return (op.member||{})[b.k]!=null || (op.nonmember||{})[b.k]!=null; });
     var cur=expandBand[bid]||defaultBand(op);
     var btns='<div class="mx-eband" data-eband="'+bid+'">'+avail.map(function(b){ return '<button type="button" data-eb="'+b.k+'" class="'+(b.k===cur?'on':'')+'">'+CAP_LABEL[b.k]+'</button>'; }).join('')+'</div>';
-    var rulesHTML='';
-    if(op.tou && op.rules.length){
-      var lis=op.rules.map(function(r){
-        var dayKo=r.days.map(function(d){return DAY_KO[d]||d;}).join('·');
-        var capKo=r.caps.indexOf('all')>=0?'전체':r.caps.map(function(c){return CAP_LABEL[c];}).join('·');
-        var tgtKo={member:'회원',nonmember:'비회원',common:'공통'}[r.target];
-        return '<li style="margin-bottom:3px;">'+SEASON_KO[r.season]+' · '+dayKo+' · '+r.hours[0]+'~'+r.hours[1]+'시 · '+capKo+' · <b>'+tgtKo+'</b> · '+MODE_LABEL[r.mode]+' '+r.value+(r.mode==='percent'?'%':'원')+'</li>';
-      }).join('');
-      rulesHTML='<div style="margin-top:12px;font-size:12.5px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;"><div style="font-weight:700;margin-bottom:6px;color:#334155;">계절·시간 할인규칙 ('+op.rules.length+'건)</div><ul style="margin:0;padding-left:18px;line-height:1.7;">'+lis+'</ul></div>';
-    } else {
-      rulesHTML='<div style="margin-top:12px;font-size:12.5px;color:var(--color-gray-500);">평단가(시간대 무관) 사업자 · 계절·시간 할인규칙 없음</div>';
-    }
     return '<div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">'+esc(op.name)+' · 24시간 요금곡선 <span style="font-weight:500;color:var(--color-gray-500);">('+SEASON_KO[mxState.season]+' · '+DAY_KO[mxState.day]+' · '+(mxState.mem==='member'?'회원':'비회원')+')</span></div>'
-      + btns + '<div class="mx-bars" id="mxbars-'+bid+'"></div><div class="mx-axis" id="mxaxis-'+bid+'"></div>' + rulesHTML;
+      + btns
+      + '<div class="mx-chart-head" id="mxhead-'+bid+'"></div>'
+      + '<div id="mxbadge-'+bid+'"></div>'
+      + '<div class="mx-bars-wrap"><div class="mx-bars" id="mxbars-'+bid+'"></div></div>'
+      + '<div class="mx-axis" id="mxaxis-'+bid+'"></div>'
+      + '<div class="mx-legend" id="mxlegend-'+bid+'"></div>'
+      + '<div id="mxrules-'+bid+'"></div>';
   }
   function drawCurve(bid, band){
     var op=TOU_OPERATORS[bid]; if(!op) return;
     expandBand[bid]=band;
     var bars=document.getElementById('mxbars-'+bid), axis=document.getElementById('mxaxis-'+bid);
     if(!bars||!axis) return;
-    var rates=[]; for(var h=0;h<24;h++){ var r=computeRate(op,band,mxState.mem,mxState.season,h,mxState.day); rates.push(r?r.v:null); }
+    var target=mxState.mem, season=mxState.season, day=mxState.day;
+    var base=(op[target]||{})[band]; if(base!=null && isNaN(base)) base=null;
+    var rates=[]; for(var h=0;h<24;h++){ var r=computeRate(op,band,target,season,h,day); rates.push(r?r.v:null); }
     var nums=rates.filter(function(x){return x!=null;});
-    var scale=(nums.length?Math.max.apply(null,nums):100)*1.15;
-    var baseR=computeRate(op,band,mxState.mem,mxState.season,0,mxState.day); var baseV=baseR?baseR.base:null;
-    var bh='', ax='';
+    var maxV=Math.max.apply(null, nums.concat(base!=null?[base]:[]).concat([1]));
+    var scale=maxV*1.12;   // y=0 기준(정직 비율) · 상단 여유
+    // 막대
+    var bh='';
     rates.forEach(function(v,i){
-      if(v==null){ bh+='<div class="bar" style="height:4%;background:#e5e7eb;" data-label="'+i+'시 · 미공시"></div>'; }
-      else{ var disc=(baseV!=null && v!==baseV); var col=disc?'#1AA46A':'#4A90D9'; var ht=Math.max(4,v/scale*100).toFixed(1);
-        bh+='<div class="bar" style="height:'+ht+'%;background:'+col+';" data-label="'+(i<10?'0'+i:i)+'시 · '+fmt(v)+'원/kWh"></div>'; }
-      ax+='<div>'+(i%3===0?i:'')+'</div>';
+      var selCls=(i===mxState.hour?' sel':'');
+      if(v==null){ bh+='<div class="bar'+selCls+'" style="height:3%;background:#e5e7eb;" data-label="'+i+'시 · 미공시"></div>'; return; }
+      var disc=(base!=null && v<base);
+      var col=disc?'#1AAD6C':'#94A3B8';   // 할인=초록 · 기본단가=회색
+      var ht=Math.max(2, v/scale*100).toFixed(1);
+      bh+='<div class="bar'+(disc?' disc':'')+selCls+'" style="height:'+ht+'%;background:'+col+';" data-label="'+(i<10?'0'+i:i)+'시 · '+fmt(v)+'원/kWh"></div>';
     });
-    bars.innerHTML=bh; axis.innerHTML=ax;
+    if(base!=null){ var bp=(base/scale*100).toFixed(1);
+      bh+='<div class="mx-baseline" style="bottom:'+bp+'%;"><span class="lbl">기본단가 '+fmt(base)+'원</span></div>'; }
+    bars.innerHTML=bh;
+    var ax=''; for(var j=0;j<24;j++){ ax+='<div>'+(j%3===0?j:'')+'</div>'; }
+    axis.innerHTML=ax;
+    // 현재 조건에 적용되는 규칙(마지막 매칭 = computeRate와 동일 우선순위)
+    var applied=null; (op.tou?op.rules:[]).forEach(function(r){ if(ruleMatches(r,season,day,band,target)) applied=r; });
+    // 헤더: 선택 시각 요금
+    var curV=rates[mxState.hour], hh=(mxState.hour<10?'0'+mxState.hour:mxState.hour);
+    var head=document.getElementById('mxhead-'+bid);
+    if(head){
+      var tail;
+      if(curV==null) tail='미공시';
+      else if(base!=null && curV<base){ var pc=Math.round((1-curV/base)*100); tail=fmt(curV)+'원 <span style="color:#1AAD6C;font-weight:700;">(−'+pc+'%)</span>'; }
+      else tail=fmt(curV)+'원 <span style="color:var(--color-gray-500);font-weight:600;">(할인 없음)</span>';
+      head.innerHTML='<span class="now">'+(mxState.hour===curHour?'지금 ':'')+hh+'시</span> = '+tail;
+    }
+    // 요약 배지
+    var badge=document.getElementById('mxbadge-'+bid);
+    if(badge){
+      if(applied && base!=null){
+        var after=applyMode(base, applied.mode, applied.value);
+        var hrs=applied.hours[0]+'~'+applied.hours[1]+'시', main, money;
+        if(applied.mode==='percent'){ main='정률 '+applied.value+'% 할인'; money=' · '+fmt(base)+'→'+fmt(after)+'원'; }
+        else if(applied.mode==='amount'){ main='정액 '+applied.value+'원 할인'; money=' · '+fmt(base)+'→'+fmt(after)+'원'; }
+        else { main='고정단가 '+fmt(applied.value)+'원 적용'; money=''; }
+        badge.innerHTML='<div class="mx-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>'+main+' · '+hrs+money+'</div>';
+      } else { badge.innerHTML=''; }
+    }
+    // 범례
+    var legend=document.getElementById('mxlegend-'+bid);
+    if(legend){
+      var discV=null;
+      if(applied && base!=null){ discV = (applied.mode==='fixed') ? applied.value : applyMode(base,applied.mode,applied.value); }
+      var lg='';
+      lg+='<span class="lg"><span class="sw" style="background:#1AAD6C;"></span>할인 적용'+(discV!=null?' '+fmt(discV)+'원':'')+'</span>';
+      lg+='<span class="lg"><span class="sw" style="background:#94A3B8;"></span>기본단가'+(base!=null?' '+fmt(base)+'원':'')+'</span>';
+      lg+='<span class="lg"><span class="swline"></span>기본단가 기준선</span>';
+      legend.innerHTML=lg;
+    }
+    // 규칙 목록 (읽기 쉬운 형식 + 실제 할인액)
+    var rulesEl=document.getElementById('mxrules-'+bid);
+    if(rulesEl){
+      if(op.tou && op.rules.length){
+        var lis=op.rules.map(function(r){
+          var dayKo=r.days.map(function(d){return DAY_KO[d]||d;}).join('·');
+          var useCap=(r.caps.indexOf('all')>=0||r.caps.indexOf(band)>=0)?band:r.caps[0];
+          var tgt=(r.target==='common')?target:r.target;
+          var bs=(op[tgt]||{})[useCap], amtTxt='';
+          if(bs!=null){ var af=applyMode(bs,r.mode,r.value), amt=Math.round((bs-af)*10)/10; amtTxt=' → <b style="color:#1AAD6C;">'+fmt(amt)+'원 할인</b>'; }
+          var modeTxt=(r.mode==='percent'?'정률 '+r.value+'%':r.mode==='amount'?'정액 '+r.value+'원':'고정단가 '+fmt(r.value)+'원');
+          return '<li style="margin-bottom:4px;">'+SEASON_KO[r.season]+' · '+dayKo+' · '+r.hours[0]+'~'+r.hours[1]+'시 · <b>'+modeTxt+'</b>'+amtTxt+'</li>';
+        }).join('');
+        rulesEl.innerHTML='<div style="margin-top:12px;font-size:12.5px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;"><div style="font-weight:700;margin-bottom:6px;color:#334155;">계절·시간 할인규칙 ('+op.rules.length+'건)</div><ul style="margin:0;padding-left:18px;line-height:1.7;">'+lis+'</ul></div>';
+      } else {
+        rulesEl.innerHTML='<div style="margin-top:12px;font-size:12.5px;color:var(--color-gray-500);">평단가(시간대 무관) 사업자 · 계절·시간 할인규칙 없음</div>';
+      }
+    }
   }
 
   function renderMatrix(){
@@ -1222,27 +1310,34 @@
 
   // ════════ 충전소 요금 검색 ════════
   var STATIONS = [
-    { no:1,  name:'서울 강남 롯데타워 충전소',  addr:'서울 송파구 올림픽로 300', sido:'서울', op:'ME' },
-    { no:2,  name:'서울 양재 SK일렉링크 허브',  addr:'서울 서초구 강남대로 311', sido:'서울', op:'ST' },
-    { no:3,  name:'서울 상암 GS차지비 1호점',    addr:'서울 마포구 월드컵북로 396', sido:'서울', op:'PI' },
-    { no:4,  name:'서울 송파 휴맥스이브이 거점', addr:'서울 송파구 위례성대로 220', sido:'서울', op:'HM' },
-    { no:5,  name:'경기 분당 채비 야탑 충전소',  addr:'경기 성남시 야탑동 343', sido:'경기', op:'CV' },
-    { no:6,  name:'경기 화성 에버온 동탄 충전소',addr:'경기 화성시 동탄대로 1', sido:'경기', op:'EV' },
-    { no:7,  name:'경기 평택 한전 KEPCO 충전소',addr:'경기 평택시 청북읍 백봉리 11', sido:'경기', op:'KP' },
-    { no:8,  name:'인천 송도 GS차지비 컨벤시아',addr:'인천 연수구 컨벤시아대로 165', sido:'인천', op:'PI' },
-    { no:9,  name:'인천공항 T2 SK일렉링크',     addr:'인천 중구 공항로 272', sido:'인천', op:'ST' },
-    { no:10, name:'대전 둔산 한국전기차충전서비스', addr:'대전 서구 둔산동 1004', sido:'대전', op:'HE' },
-    { no:11, name:'부산 해운대 채비 신세계',    addr:'부산 해운대구 센텀남대로 35', sido:'부산', op:'CV' },
-    { no:12, name:'부산 강서 GS차지비 명지점', addr:'부산 강서구 명지동 1234', sido:'부산', op:'PI' },
-    { no:13, name:'대구 동성로 SK일렉링크',     addr:'대구 중구 동성로 62', sido:'대구', op:'ST' },
-    { no:14, name:'광주 첨단 에버온',           addr:'광주 광산구 첨단3로 88', sido:'광주', op:'EV' },
-    { no:15, name:'울산 매암 휴맥스이브이',     addr:'울산 남구 매암동 137', sido:'울산', op:'HM' },
-    { no:16, name:'세종 정부청사 기후부 충전소',addr:'세종 어진동 670', sido:'세종', op:'ME' },
-    { no:17, name:'제주 함덕 한전 KEPCO',       addr:'제주 제주시 함덕리 55', sido:'제주', op:'KP' },
-    { no:18, name:'제주 서귀포 플러그링크',     addr:'제주 서귀포시 중앙로 105', sido:'제주', op:'PL' },
-    { no:19, name:'강원 춘천 에버온 명동',      addr:'강원 춘천시 명동길 22', sido:'강원', op:'EV' },
-    { no:20, name:'충북 청주 SK일렉링크 청주IC',addr:'충북 청주시 흥덕구 옥산면', sido:'충북', op:'ST' }
+    { no:1,  name:'서울 강남 롯데타워 충전소',  addr:'서울 송파구 올림픽로 300', sido:'서울', op:'ME', out:[100,200,350] },
+    { no:2,  name:'서울 양재 SK일렉링크 허브',  addr:'서울 서초구 강남대로 311', sido:'서울', op:'ST', out:[7,100,350] },
+    { no:3,  name:'서울 상암 GS차지비 1호점',    addr:'서울 마포구 월드컵북로 396', sido:'서울', op:'PI', out:[7,50,100] },
+    { no:4,  name:'서울 송파 휴맥스이브이 거점', addr:'서울 송파구 위례성대로 220', sido:'서울', op:'HM', out:[100,200] },
+    { no:5,  name:'경기 분당 채비 야탑 충전소',  addr:'경기 성남시 야탑동 343', sido:'경기', op:'CV', out:[100,350] },
+    { no:6,  name:'경기 화성 에버온 동탄 충전소',addr:'경기 화성시 동탄대로 1', sido:'경기', op:'EV', out:[7,30,100] },
+    { no:7,  name:'경기 평택 한전 KEPCO 충전소',addr:'경기 평택시 청북읍 백봉리 11', sido:'경기', op:'KP', out:[7,50] },
+    { no:8,  name:'인천 송도 GS차지비 컨벤시아',addr:'인천 연수구 컨벤시아대로 165', sido:'인천', op:'PI', out:[50,100] },
+    { no:9,  name:'인천공항 T2 SK일렉링크',     addr:'인천 중구 공항로 272', sido:'인천', op:'ST', out:[200,350] },
+    { no:10, name:'대전 둔산 한국전기차충전서비스', addr:'대전 서구 둔산동 1004', sido:'대전', op:'HE', out:[100,350] },
+    { no:11, name:'부산 해운대 채비 신세계',    addr:'부산 해운대구 센텀남대로 35', sido:'부산', op:'CV', out:[100,200,350] },
+    { no:12, name:'부산 강서 GS차지비 명지점', addr:'부산 강서구 명지동 1234', sido:'부산', op:'PI', out:[7,50] },
+    { no:13, name:'대구 동성로 SK일렉링크',     addr:'대구 중구 동성로 62', sido:'대구', op:'ST', out:[200,350] },
+    { no:14, name:'광주 첨단 에버온',           addr:'광주 광산구 첨단3로 88', sido:'광주', op:'EV', out:[7,11] },
+    { no:15, name:'울산 매암 휴맥스이브이',     addr:'울산 남구 매암동 137', sido:'울산', op:'HM', out:[100] },
+    { no:16, name:'세종 정부청사 기후부 충전소',addr:'세종 어진동 670', sido:'세종', op:'ME', out:[200,350] },
+    { no:17, name:'제주 함덕 한전 KEPCO',       addr:'제주 제주시 함덕리 55', sido:'제주', op:'KP', out:[7,100] },
+    { no:18, name:'제주 서귀포 플러그링크',     addr:'제주 서귀포시 중앙로 105', sido:'제주', op:'PL', out:[7,11] },
+    { no:19, name:'강원 춘천 에버온 명동',      addr:'강원 춘천시 명동길 22', sido:'강원', op:'EV', out:[7] },
+    { no:20, name:'충북 청주 SK일렉링크 청주IC',addr:'충북 청주시 흥덕구 옥산면', sido:'충북', op:'ST', out:['50~200',350] }
   ];
+  // 출력구성 텍스트 (출력값만 · 중복제거 · 오름차순)
+  function outStart(o){ return (typeof o==='string' && o.indexOf('~')>=0) ? parseInt(o,10) : o; }
+  function outText(outs){
+    var u=[]; (outs||[]).forEach(function(o){ if(u.indexOf(o)<0) u.push(o); });
+    u.sort(function(a,b){ return outStart(a)-outStart(b); });
+    return u.length ? u.join(' · ') : '—';
+  }
   function gugunOf(addr){ var p=addr.split(' '); return p[1]||''; }
   var evTbody=$('#evResultTbody'), evCount=$('#evResultCount'), evTime=$('#evResultTime');
   var evState = { mem:"member", sortKey:null, sortDir:0 };
@@ -1276,12 +1371,17 @@
         '<td style="text-align:center;color:var(--color-gray-500);">'+s.no+'</td>' +
         '<td><div class="station-name">'+esc(s.name)+'</div><div class="station-addr">'+esc(s.addr)+'</div></td>' +
         '<td><button type="button" class="ev-cpo-link" data-cpo="'+esc(nm)+'">'+esc(nm)+'</button></td>' +
+        '<td class="ev-out-cfg">'+esc(outText(s.out))+'</td>' +
         cell('slow')+cell('mid')+cell('fast50')+cell('fast100')+cell('ultra') +
         '<td style="text-align:center;"><button type="button" class="ev-roam-btn" data-roam="'+s.no+'">로밍요금 보기</button></td>' +
       '</tr>';
     }).join('');
     if(evCount) evCount.textContent=list.length;
-    if(evTime) evTime.textContent=(curHour<10?'0'+curHour:curHour)+'시 · '+(evState.mem==='member'?'회원가':'비회원가')+' 기준';
+    if(evTime){
+      var WD=['일','월','화','수','목','금','토'][now.getDay()];
+      var _hh=(curHour<10?'0'+curHour:curHour), _mm=now.getMinutes(); _mm=(_mm<10?'0'+_mm:_mm);
+      evTime.textContent=(evState.mem==='member'?'회원가':'비회원가')+' · 오늘('+WD+') '+_hh+':'+_mm+' 기준';
+    }
     // 정렬 표시
     $$('.ev-result-table thead th.sortable').forEach(function(th){
       th.classList.remove('sort-asc','sort-desc');
@@ -1310,6 +1410,61 @@
     if(reset) reset.addEventListener('click', function(){ if(sidoSel) sidoSel.value=''; fillGugun(); if(gugunSel) gugunSel.value=''; var kw=$('#evKeyword'); if(kw) kw.value=''; _evList=STATIONS.slice(); renderEv(); });
     // 회원/비회원 토글
     $$('#ev-mem-tabs .tab').forEach(function(b){ b.addEventListener('click',function(){ $$('#ev-mem-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); evState.mem=b.dataset.emem; renderEv(); }); });
+    // ── 엑셀(.xlsx) 생성 — 외부 라이브러리 없이 최소 OOXML ZIP(stored) 직접 작성 ──
+    function _xe(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function _col(n){ var s=''; n+=1; while(n>0){ var m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26); } return s; }
+    function _sheetXml(aoa){
+      var rows=aoa.map(function(row,ri){
+        var cells=row.map(function(val,ci){
+          var ref=_col(ci)+(ri+1);
+          if(typeof val==='number' && isFinite(val)) return '<c r="'+ref+'"><v>'+val+'</v></c>';
+          return '<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+_xe(val)+'</t></is></c>';
+        }).join('');
+        return '<row r="'+(ri+1)+'">'+cells+'</row>';
+      }).join('');
+      return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+rows+'</sheetData></worksheet>';
+    }
+    function _crc32(b){ var c,crc=0xFFFFFFFF,i,k; for(i=0;i<b.length;i++){ c=(crc^b[i])&0xFF; for(k=0;k<8;k++){ c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); } crc=(crc>>>8)^c; } return (crc^0xFFFFFFFF)>>>0; }
+    function downloadXlsx(fname, sheetName, aoa){
+      var enc=new TextEncoder();
+      var files=[
+        ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'],
+        ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+        ['xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+_xe(sheetName)+'" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+        ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>'],
+        ['xl/worksheets/sheet1.xml',_sheetXml(aoa)]
+      ];
+      var local=[], cd=[], offset=0, n=files.length;
+      function le(arr,val,bytes){ for(var i=0;i<bytes;i++) arr.push((val>>>(8*i))&0xFF); }
+      files.forEach(function(pair){
+        var nb=enc.encode(pair[0]), data=enc.encode(pair[1]), crc=_crc32(data);
+        var lh=[]; le(lh,0x04034b50,4); le(lh,20,2); le(lh,0,2); le(lh,0,2); le(lh,0,2); le(lh,0,2); le(lh,crc,4); le(lh,data.length,4); le(lh,data.length,4); le(lh,nb.length,2); le(lh,0,2);
+        local.push(new Uint8Array(lh), nb, data);
+        var c=[]; le(c,0x02014b50,4); le(c,20,2); le(c,20,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,crc,4); le(c,data.length,4); le(c,data.length,4); le(c,nb.length,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,4); le(c,offset,4);
+        cd.push(new Uint8Array(c), nb);
+        offset += lh.length + nb.length + data.length;
+      });
+      var cdSize=0; cd.forEach(function(u){ cdSize+=u.length; });
+      var eocd=[]; le(eocd,0x06054b50,4); le(eocd,0,2); le(eocd,0,2); le(eocd,n,2); le(eocd,n,2); le(eocd,cdSize,4); le(eocd,offset,4); le(eocd,0,2);
+      var parts=local.concat(cd); parts.push(new Uint8Array(eocd));
+      var blob=new Blob(parts,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      var url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download=fname; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+    }
+    // 엑셀(.xlsx) 다운로드 — 현재 표시된 결과(필터·정렬·회원기준 반영)
+    var xls=$('#evExcelBtn');
+    if(xls) xls.addEventListener('click', function(){
+      var list=evSorted(_evList), basis=(evState.mem==='member'?'회원가':'비회원가');
+      var head=['번호','충전소명','주소','사업자(CPO)','충전기 출력구성(kW)','완속','중속','급속(50~100)','급속(100~200)','초급속','요금기준'];
+      var aoa=[head].concat(list.map(function(s){
+        var op=TOU_OPERATORS[s.op], nm=op?op.name:s.op;
+        function v(band){ var x=evBand(op,band); return x==null?'—':x; }
+        return [s.no,s.name,s.addr,nm,outText(s.out),v('slow'),v('mid'),v('fast50'),v('fast100'),v('ultra'),basis];
+      }));
+      downloadXlsx('충전소_요금_검색결과.xlsx','충전소 요금', aoa);
+      if(window.__toast) window.__toast(list.length+'건을 엑셀(xlsx)로 내려받았습니다.','success');
+    });
     // 정렬 헤더 (공지 표준 3단 사이클)
     $$('.ev-result-table thead th.sortable').forEach(function(th){
       function cycle(){ var key=th.dataset.esk; if(evState.sortKey!==key){evState.sortKey=key;evState.sortDir=1;} else {evState.sortDir=(evState.sortDir+1)%3; if(evState.sortDir===0) evState.sortKey=null;} renderEv(); }

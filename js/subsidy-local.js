@@ -155,7 +155,7 @@
     var note = '<p class="sl-note">'
       + '단위: <strong>만원</strong> · 2026년 지자체 공고 기준(지자체 공고에 따라 변동) · 출처: 각 지자체 공고<br>'
       + '<strong>국비는 전국 공통</strong>(지자체 무관 동일값)이며 지방비만 지자체별로 다릅니다. '
-      + '<strong>소계 = 국비 + 지방비</strong>이며 <strong>전환지원금은 소계에 포함되지 않습니다</strong>(조건부 옵트인, 별도 컬럼).'
+      + '<strong>소계 = 국비 + 지방비</strong>이며 <strong>전환지원금은 소계에 포함되지 않습니다.</strong>'
       + '</p>';
 
     var convTip = '전환지원금 <span class="sl-tip" tabindex="0">ⓘ'
