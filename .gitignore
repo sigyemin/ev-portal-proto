@@ -10,6 +10,10 @@ CHANGELOG*.md
 ev-portal-0522_*
 *매니페스트*.csv
 *백업*.zip
+# 로컬 삭제 휴지통·감사용 임시 (예: _deleted_bak_20260708_..., _audit-...)
+_deleted*/
+_deleted*
+_audit*
 
 # 로컬 배포 스크립트 (사이트에 올리지 않음)
 배포하기.bat
