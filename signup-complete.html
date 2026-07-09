@@ -26,14 +26,12 @@
     <div class="container container-wide">
 
       <div class="signup-stepper-wrap" data-reveal>
-        <ol class="signup-stepper-v2" data-i18n-aria="signup.stepper.aria" aria-label="회원가입 단계">
-          <li class="ssv-step done"><span class="ssv-num"><span class="ssv-num-inner">1</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.terms.label">약관 동의</span><span class="ssv-desc">완료</span></div></li>
+        <ol class="signup-stepper-v2 signup-stepper-3" data-i18n-aria="signup.stepper.aria" aria-label="회원가입 단계">
+          <li class="ssv-step done"><span class="ssv-num"><span class="ssv-num-inner">1</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="signup.step1.label">약관 동의 · 휴대전화 인증</span><span class="ssv-desc">완료</span></div></li>
           <li class="ssv-line"><span class="ssv-line-fill fill"></span></li>
-          <li class="ssv-step done"><span class="ssv-num"><span class="ssv-num-inner">2</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.verify.label">본인 인증</span><span class="ssv-desc">완료</span></div></li>
+          <li class="ssv-step done"><span class="ssv-num"><span class="ssv-num-inner">2</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.info.short">정보 입력</span><span class="ssv-desc">완료</span></div></li>
           <li class="ssv-line"><span class="ssv-line-fill fill"></span></li>
-          <li class="ssv-step done"><span class="ssv-num"><span class="ssv-num-inner">3</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.info.label">정보 입력</span><span class="ssv-desc">완료</span></div></li>
-          <li class="ssv-line"><span class="ssv-line-fill fill"></span></li>
-          <li class="ssv-step active done"><span class="ssv-num"><span class="ssv-num-inner">4</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.done.label">가입 완료</span><span class="ssv-desc">즉시 서비스 이용 시작</span></div></li>
+          <li class="ssv-step active done"><span class="ssv-num"><span class="ssv-num-inner">3</span></span><div class="ssv-text"><span class="ssv-label" data-i18n="auth.step.done.label">가입 완료</span><span class="ssv-desc">즉시 서비스 이용 시작</span></div></li>
         </ol>
       </div>
 
@@ -70,46 +68,8 @@
         </ul>
       </div>
 
-      <!-- 다음 행동 추천 -->
-      <section class="signup-next">
-        <div class="signup-next-head">
-          <h3 data-i18n="signup.cmp.start.title">지금 바로 시작해 보세요</h3>
-          <p data-i18n="signup.cmp.start.desc">가입 직후 가장 많이 이용하시는 서비스 3가지입니다.</p>
-        </div>
-        <div class="signup-next-grid">
-          <a href="subsidy-region.html" class="signup-next-card scheme-green">
-            <div class="snc-ico">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <h4 data-i18n="signup.cmp.s1.t">보조금 신청하기</h4>
-            <p data-i18n="signup.cmp.s1.d">거주 지자체 잔여 예산 확인 후 즉시 신청</p>
-            <span class="snc-cta" data-i18n="signup.cmp.s1.cta">신청 페이지 →</span>
-          </a>
-          <a href="charging-find.html" class="signup-next-card scheme-blue">
-            <div class="snc-ico">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <h4 data-i18n="signup.cmp.s2.t">충전소 찾기</h4>
-            <p data-i18n="signup.cmp.s2.d">전기·수소 통합 지도에서 가까운 충전소 검색</p>
-            <span class="snc-cta" data-i18n="signup.cmp.s2.cta">지도 열기 →</span>
-          </a>
-          <a href="mypage.html" class="signup-next-card scheme-orange">
-            <div class="snc-ico">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <h4 data-i18n="signup.cmp.s3.t">마이페이지 둘러보기</h4>
-            <p data-i18n="signup.cmp.s3.d">충전 카드·즐겨찾기·알림 설정을 관리</p>
-            <span class="snc-cta" data-i18n="signup.cmp.s3.cta">마이페이지 →</span>
-          </a>
-        </div>
-      </section>
-
-      <!-- 액션: 자동 이동 카운트다운 + 수동 이동 -->
+      <!-- 액션: 메인으로 · 마이페이지 바로가기 -->
       <div class="signup-complete-actions">
-        <p class="sca-countdown">
-<span data-i18n-html="signup.cmp.auto.body">          <span id="countdown">10</span>초 후 자동으로 마이페이지로 이동합니다.</span>
-          <button type="button" class="sca-cancel" id="cancelAuto" data-i18n="signup.cmp.auto.cancel">자동 이동 취소</button>
-        </p>
         <div class="sca-buttons">
           <a href="index.html" class="btn btn-ghost" data-i18n="signup.cmp.btn.main">메인으로</a>
           <a href="mypage.html" class="btn btn-primary btn-lg" id="goMypage">
@@ -127,7 +87,7 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-auth.js?v=20260630c"></script>
+<script src="js/i18n-auth.js?v=20260707b"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -150,27 +110,6 @@
       justSignedUp: true
     }));
   } catch(e){}
-
-  // 자동 이동 카운트다운 (10초)
-  let seconds = 10;
-  let timerId = null;
-  const cdEl = document.getElementById('countdown');
-  const cancelBtn = document.getElementById('cancelAuto');
-
-  function tick() {
-    seconds--;
-    if (cdEl) cdEl.textContent = seconds;
-    if (seconds <= 0) {
-      clearInterval(timerId);
-      location.href = 'mypage.html';
-    }
-  }
-  timerId = setInterval(tick, 1000);
-
-  cancelBtn?.addEventListener('click', () => {
-    clearInterval(timerId);
-    document.querySelector('.sca-countdown').innerHTML = '<span style="color:var(--color-gray-500);">자동 이동이 취소되었습니다. 원하실 때 아래 버튼을 클릭하세요.</span>';
-  });
 })();
 </script>
 </body>

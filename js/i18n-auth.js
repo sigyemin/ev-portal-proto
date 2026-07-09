@@ -22,6 +22,8 @@
     'auth.step.verify.desc':       { ko: '휴대폰 또는 공동·금융 인증서',           en: 'Mobile or Joint/Financial Cert.' },
     'auth.step.info.label':        { ko: '정보 입력 · 가입 완료',                   en: 'Info Input · Complete' },
     'auth.step.info.desc':         { ko: '유형별 정보 입력 후 즉시 시작',           en: 'Enter info by type and start immediately' },
+    'auth.step.info.short':        { ko: '정보 입력',                              en: 'Info Input' },
+    'auth.step.info.desc2':        { ko: '회원 유형별 정보 입력',                    en: 'Enter info by member type' },
     'auth.step.done.label':        { ko: '가입 완료',                              en: 'Complete' },
     'auth.step.done.desc':         { ko: '환영합니다!',                            en: 'Welcome!' },
 

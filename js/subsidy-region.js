@@ -148,18 +148,28 @@
     '경남': 0.50, '제주': 0.62
   };
 
+  // [DEV] 전환지원금 = 노후 경유·LPG차 폐차 후 무공해차 구매 시 가산(국비 정액 + 지자체 지방비 매칭).
+  //       실제 산식은 PS_LOCAL/보조금 규칙. 차종별 국비 정액은 전부 더미.
+  // ★ 전환지원금은 '엑셀 상세 자료 전용'. 화면(모델 상세 펼침)은 구매 국비/지방비만 노출(요약).
+  //    화면-엑셀 컬럼 차이는 의도된 설계(엑셀=상세, 화면=요약)이며 불일치 아님.
+  const CONV_NATIONAL = { '전기승용': 100, '수소승용': 100, '전기화물': 200, '전기승합': 300, '전기이륜': 30 };
+
   // 특정 row에 매칭되는 모델별 지방비 목록 생성
   function buildModelsForRow(row) {
     const models = MODEL_MASTER[row.vehicleType] || [];
     const w = LOCAL_WEIGHT[row.sido] || 0.45;
     // 세부차종 필터 (있으면)
     const filtered = models;
+    const convNational = CONV_NATIONAL[row.vehicleType] || 100; // 전환지원금 국비 정액(차종별·더미)
     return filtered.map(m => {
       const local = Math.round(m.national * w / 10) * 10; // 10만원 단위 반올림
+      const convLocal = Math.round(convNational * w / 10) * 10; // 전환 지방비 = 지자체 매칭(local과 동일 가중 재사용)
       // 일부 모델은 지역에 따라 공급사 직인 및 출시 전일 수 있음 - 랜덤성으로 소수 대상 제외 (결정적)
       return {
         ...m,
         local,
+        convNational,   // [DEV] 전환지원금 국비 — 엑셀 상세 전용(화면 미노출)
+        convLocal,      // [DEV] 전환지원금 지방비 — 엑셀 상세 전용(화면 미노출)
         total: m.national + local,
         availability: ((m.model.charCodeAt(0) + row.sido.charCodeAt(0)) % 10 < 8) ? '지원' : '미지원'
       };
@@ -1302,14 +1312,17 @@
     });
 
     // ── 시트 4: 모델별 지방비 (모델 1건 = 1행) ──
+    // [DEV] 전환지원금(국비/지방비)은 이 상세 시트 전용 컬럼 — 화면(모델 상세 펼침)은 구매 국비/지방비만 요약 노출.
     const modelSheet = [
       ['관리번호', '기준년도', '시도', '지역구분', '차종', '세부차종',
-       '모델명', '제조사', '배터리', '주행거리', '국비(만원)', '지방비(만원)', '총지원금(만원)', '지원여부']
+       '모델명', '제조사', '배터리', '주행거리', '국비(만원)', '지방비(만원)',
+       '전환지원금 국비(만원)', '전환지원금 지방비(만원)', '총지원금(만원)', '전환 포함 총액(만원)', '지원여부']
     ];
     rows.forEach(r => {
       buildModelsForRow(r).forEach(m => {
         modelSheet.push([key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub,
-          m.model, m.maker, m.battery, m.range, m.national, m.local, m.total, m.availability]);
+          m.model, m.maker, m.battery, m.range, m.national, m.local,
+          m.convNational, m.convLocal, m.total, (m.national + m.local + m.convNational + m.convLocal), m.availability]);
       });
     });
 
@@ -1350,7 +1363,7 @@
                     {wch:9},{wch:9},{wch:9},{wch:12},{wch:13},{wch:26},{wch:14},{wch:40}];
     ws2['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:11},{wch:11},{wch:11},{wch:11},{wch:11}];
     ws3['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:14},{wch:13},{wch:18},{wch:18}];
-    ws4['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:18},{wch:12},{wch:11},{wch:11},{wch:12},{wch:12},{wch:14},{wch:10}];
+    ws4['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:18},{wch:12},{wch:11},{wch:11},{wch:12},{wch:12},{wch:16},{wch:16},{wch:14},{wch:18},{wch:10}];
     wsBud['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:10},{wch:13},{wch:15},{wch:34},{wch:40}];
     ws5['!cols'] = [{wch:10},{wch:12},{wch:12},{wch:18},{wch:14},{wch:14},{wch:30}];
 

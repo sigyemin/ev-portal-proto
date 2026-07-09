@@ -30,7 +30,7 @@
 
       <!-- 2단계 스테퍼 (약관 동의 + 휴대전화 인증 통합 → 정보 입력) -->
       <div class="signup-stepper-wrap" data-reveal>
-        <ol class="signup-stepper-v2 signup-stepper-2" data-i18n-aria="signup.stepper.aria" aria-label="회원가입 단계">
+        <ol class="signup-stepper-v2 signup-stepper-3" data-i18n-aria="signup.stepper.aria" aria-label="회원가입 단계">
           <li class="ssv-step active" data-step="1">
             <span class="ssv-num"><span class="ssv-num-inner">1</span></span>
             <div class="ssv-text">
@@ -42,15 +42,23 @@
           <li class="ssv-step" data-step="2">
             <span class="ssv-num"><span class="ssv-num-inner">2</span></span>
             <div class="ssv-text">
-              <span class="ssv-label" data-i18n="signup.step2.label">정보 입력 · 가입 완료</span>
-              <span class="ssv-desc" data-i18n="auth.step.info.desc">정보 입력 후 즉시 시작</span>
+              <span class="ssv-label" data-i18n="auth.step.info.short">정보 입력</span>
+              <span class="ssv-desc" data-i18n="auth.step.info.desc2">회원 유형별 정보 입력</span>
+            </div>
+          </li>
+          <li class="ssv-line" aria-hidden="true"><span class="ssv-line-fill"></span></li>
+          <li class="ssv-step" data-step="3">
+            <span class="ssv-num"><span class="ssv-num-inner">3</span></span>
+            <div class="ssv-text">
+              <span class="ssv-label" data-i18n="auth.step.done.label">가입 완료</span>
+              <span class="ssv-desc" data-i18n="auth.step.done.desc">환영합니다!</span>
             </div>
           </li>
         </ol>
       </div>
 
-      <!-- 2컬럼 본체 (좌: 본문 / 우: 가입 혜택·도움말) -->
-      <div class="signup-wrap-v2">
+      <!-- 본체 (단일 컬럼) -->
+      <div class="signup-wrap-v2" style="grid-template-columns: minmax(0, 1fr);">
 
         <!-- 좌측 메인 -->
         <article class="signup-main">
@@ -194,64 +202,6 @@
           </div>
         </article>
 
-        <!-- 우측 사이드 (가입 혜택 + 도움) -->
-        <aside class="signup-side" data-i18n-aria="signup.side.aria" aria-label="회원가입 혜택 안내">
-          <div class="signup-side-hero">
-            <div class="ssh-illust" aria-hidden="true">
-              <svg viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="36" fill="url(#sshg)"/>
-                <path d="M28 42l8 8 16-20" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <defs>
-                  <linearGradient id="sshg" x1="0" x2="80" y1="0" y2="80">
-                    <stop stop-color="#1AAD6C"/><stop offset="1" stop-color="#4CA2E2"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <h3 data-i18n-html="signup.side.title">회원이 되시면<br>이런 혜택이 있어요</h3>
-            <p data-i18n="signup.side.lead">로그인 한 번으로 무공해차 관련 모든 서비스를 한 곳에서 이용할 수 있습니다.</p>
-          </div>
-
-          <ul class="signup-benefit-list">
-            <li>
-              <span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-              <div>
-                <div class="sbl-title" data-i18n="signup.side.b1.t">보조금 신청 일괄 관리</div>
-                <div class="sbl-desc" data-i18n="signup.side.b1.d">신청 → 심사 → 지급 단계 실시간 알림</div>
-              </div>
-            </li>
-            <li>
-              <span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="11" x2="22" y2="11"/></svg></span>
-              <div>
-                <div class="sbl-title" data-i18n="signup.side.b2.t">충전 카드·이용내역 통합</div>
-                <div class="sbl-desc" data-i18n="signup.side.b2.d">사업자별 카드 1개로 통합 관리</div>
-              </div>
-            </li>
-            <li>
-              <span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-              <div>
-                <div class="sbl-title" data-i18n="signup.side.b3.t">즐겨찾기 충전소</div>
-                <div class="sbl-desc" data-i18n="signup.side.b3.d">자주 쓰는 충전소 빠른 검색</div>
-              </div>
-            </li>
-            <li>
-              <span class="sbl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-              <div>
-                <div class="sbl-title" data-i18n="signup.side.b4.t">민원·문의 이력 관리</div>
-                <div class="sbl-desc" data-i18n="signup.side.b4.d">처리 단계 타임라인 + 답변 알림</div>
-              </div>
-            </li>
-          </ul>
-
-          <div class="signup-side-help">
-            <div class="ssh-help-head">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-<span data-i18n="signup.side.help.title">              가입에 도움이 필요하신가요?</span>
-            </div>
-            <p data-i18n-html="signup.side.help.body">통합 콜센터 <strong>1661-0970</strong> (평일 09:00~18:00)<br>또는 <a href="inquiry-faq.html">자주 묻는 질문</a>을 확인하세요.</p>
-          </div>
-        </aside>
-
       </div>
     </div>
   </section>
@@ -261,7 +211,7 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-auth.js?v=20260630c"></script>
+<script src="js/i18n-auth.js?v=20260707b"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
