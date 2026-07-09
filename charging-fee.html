@@ -881,6 +881,11 @@
       <!-- [DEV] 로밍 요금 매트릭스(getRoamingMatrixV2·현재 더미) — TNCC_RMNG_CHRGNG_UNTPC(BID 발급 × TBID 이용 × 정격용량구간, BUSI_UNTPC 자사단가·TARINSP_UNTPC 로밍단가) JOIN R_BUSI_REQ(REQ_STAT='CON' 및 오늘이 협약기간 내)로 협약 활성 쌍만. 대각선(발급=이용)=자사단가, 미협약=— -->
       <!-- ═══════ 로밍 요금 매트릭스 ═══════ -->
       <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;">로밍 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span></h3>
+      <!-- [DEV] 로밍 개념 안내(정적 텍스트) — 데이터 연동 없음 · 매트릭스 제목 바로 아래 배치 -->
+      <div class="alert alert-info mt-3">
+        <div class="alert-icon" aria-hidden="true"></div>
+        <div class="alert-body"><strong>로밍이란?</strong> 내 회원카드(발급 사업자)로 다른 사업자(이용 충전기)의 충전기를 이용하는 것입니다. 협약된 사업자 간에만 로밍되며, 로밍 시에는 <strong>이용 충전기 운영 CPO의 요금 체계</strong>가 적용됩니다. <strong>무공해차 통합카드는 로밍 수수료가 없습니다.</strong></div>
+      </div>
       <div class="roam-pick">
         <div class="roam-pick-panel">
           <div class="roam-pick-hd">회원 소속기관 <span>(발급 카드)</span></div>
@@ -899,22 +904,11 @@
           <div class="roam-pick-list" id="roamUsedList" role="group" aria-label="이용 사업자 선택"></div>
         </div>
       </div>
-      <div class="roam-pick-actions">
-        <button type="button" class="btn btn-primary btn-sm" id="roamSearchBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:5px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>검색</button>
-      </div>
-      <div class="roam-toolbar" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin:14px 0 12px;">
+      <div class="roam-toolbar" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin:16px 0 12px;">
         <div id="roam-band-tabs" class="tabs-pill" role="group" aria-label="용량 구분" style="display:inline-flex;flex-wrap:wrap;"></div>
         <button type="button" class="ev-download-btn xlsx" id="roamExcelBtn" aria-label="로밍 매트릭스 엑셀 다운로드"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="ext">XLSX</span><span>엑셀 다운로드</span></button>
       </div>
       <div id="roaming-wrap"></div>
-
-      <!-- ═══════ 로밍 안내 ═══════ -->
-      <!-- [DEV] 로밍 개념 안내(정적 텍스트) — 데이터 연동 없음 -->
-      <h3 class="section-h mt-8">로밍 안내</h3>
-      <div class="alert alert-info mt-3">
-        <div class="alert-icon" aria-hidden="true"></div>
-        <div class="alert-body"><strong>로밍이란?</strong> 내 회원카드(발급 사업자)로 다른 사업자(이용 충전기)의 충전기를 이용하는 것입니다. 협약된 사업자 간에만 로밍되며, 로밍 시에는 <strong>이용 충전기 운영 CPO의 요금 체계</strong>가 적용됩니다. <strong>무공해차 통합카드는 로밍 수수료가 없습니다.</strong></div>
-      </div>
 
     </div>
   </section>
@@ -1625,7 +1619,7 @@
     var wrap=$('#roaming-wrap'); if(!wrap) return;
     var iss=checkedBids('roamIssList'), used=checkedBids('roamUsedList');
     if(!iss.length || !used.length){
-      wrap.innerHTML='<div style="padding:28px 16px;text-align:center;color:var(--color-gray-500);font-size:14px;border:1px solid var(--border-light);border-radius:14px;background:#fff;">발급·이용 사업자를 선택하고 <b>[검색]</b>을 눌러 주세요.</div>';
+      wrap.innerHTML='<div style="padding:28px 16px;text-align:center;color:var(--color-gray-500);font-size:14px;border:1px solid var(--border-light);border-radius:14px;background:#fff;">발급·이용 사업자를 선택해 주세요.</div>';
       return;
     }
     var head='<thead><tr><th>발급 \\ 이용</th>'+used.map(function(u){ return '<th>'+esc(roamName(u))+'</th>'; }).join('')+'</tr></thead>';
@@ -1647,7 +1641,6 @@
     renderRoamTabs(); renderRoamMatrix();
     il.addEventListener('change', renderRoamMatrix);   // 발급 체크 → 즉시 반영
     ul.addEventListener('change', renderRoamMatrix);   // 이용 체크 → 즉시 반영
-    var sbtn=$('#roamSearchBtn'); if(sbtn) sbtn.addEventListener('click', renderRoamMatrix);
     var tabs=$('#roam-band-tabs'); if(tabs) tabs.addEventListener('click',function(e){ var b=e.target.closest('button[data-rb]'); if(!b) return; roamBand=b.dataset.rb; renderRoamTabs(); renderRoamMatrix(); });
     function filterPick(inpId,listId){ var el=$('#'+inpId); if(!el) return; var q=(el.value||'').toLowerCase().trim(); $$('#'+listId+' .roam-pick-item').forEach(function(it){ it.style.display=(!q||(it.dataset.name||'').toLowerCase().indexOf(q)>=0)?'':'none'; }); var clr=document.querySelector('.roam-search-clear[data-clear="'+inpId+'"]'); if(clr) clr.hidden=!el.value; }
     function bindSearch(inpId,listId){ var el=$('#'+inpId); if(!el) return; el.addEventListener('input',function(){ filterPick(inpId,listId); }); }
