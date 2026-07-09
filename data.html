@@ -17,6 +17,35 @@
 <div id="header-slot"></div>
 
 <main id="main" class="data-section">
+  <!-- ══════════════════════════════════════════════════════════════════════
+       [DEV] 데이터·통계 계산 로직 · 데이터 출처 (전 지표 시연용 더미)
+       ────────────────────────────────────────────────────────────────────
+       ● KPI (실시간 주요 지표)
+         - 누적 무공해차   = 전기차(EV 등록원부) + 수소차(H2_CAR) 등록 집계
+         - 전국 충전기     = EVCS_CHARGER_STATUS 등록 기수
+         - 수소충전소      = H2_STATION 등록 개소 (운영상태 컬럼 없음 → '등록' 기준)
+         - K-EV100 참여    = 참여기업 수
+         - 올해 집행 보조금 = 아래 '보조금 집행' 로직 참조
+       ● 충전사업자 투명성지수 (#tindex)
+         - 주지표 85 = 통신가동20 · 상태정합18 · 물리정합15 · 연계12 · 요금공시12 · 신뢰8
+         - 보조지표 15 (참고용, 등급 판정 제외)
+         - 등급 = 주지표 환산값 단독 2등급(우수/보통). '개선필요' 없음
+         - 출처 = 환경부 전기차충전소 DB + 공공 API + 사업자 공시
+       ● 지역별 보급 (#supply)
+         - 시·도별 차종 등록 집계(전기 EV 등록원부 / 수소 H2_CAR), 지역 = ZCODE
+         - 차종 6종: 전기승용 · 전기화물 · 전기승합 · 전기이륜 · 수소차 · 건설기계
+       ● 충전 인프라 — 출력 구간 5밴드 (#infra)
+         - EVCS_CHARGER_STATUS.CHGE_OUTPUT 집계
+         - 완속<30kW / 중속30~50 / 급속50~100 / 급속100~200 / 초급속≥200
+         - 법적 완속·급속 분류(CHGER_KIND)와 별개
+       ● 보조금 집행 현황 (#subsidy)
+         - 예산(배정) = PS_BUDGET + PS_BUDGET_MOTOR(이륜) + H2_BUDGET(수소) 합산
+             · 국비 = GAMT + ADD_GAMT(추경) + COM_GAMT (= THIS_GOV_AMT)
+         - 집행액 = 승인 기준(지급확정 아님) = PS_APPLY·H2_APPLY 승인분 REQ_GAMT(국비) 합계
+         - 소진률 = 승인액 ÷ 배정예산 × 100 (psDashBoard_sql.xml THIS_G_AMT_RATE 로직)
+         - 전년/올해 = YEAR 컬럼 필터 · 기준 = 국비 (총액 필요시 REQ_LAMT 등 지방비 합산)
+         - 범위 = 구매보조금 체계 전체(전기 전차종 + 이륜 + 수소, 설치보조금 제외)
+       ════════════════════════════════════════════════════════════════════ -->
   <section class="page-hero compact">
     <div class="container container-wide">
       <nav class="breadcrumb" aria-label="경로">
@@ -50,14 +79,15 @@
             <div class="lt-delta up" data-i18n="data.kpi.chgr.delta">▲ 4,280 / 주</div>
           </div>
           <div class="lt-label" style="display:none;"></div>
+          <!-- [DEV] 수소충전소 = H2_STATION 등록 개소(운영상태 컬럼 없음 → '등록' 기준). H2_CHARGER.MASK_STAT는 충전기 실시간 상태로 별개 / 더미 -->
           <div class="ds-live-tile">
-            <div class="lt-label" data-i18n="data.kpi.ops">충전 사업자</div>
-            <div class="lt-val"><span data-counter="159">0</span><span class="unit" data-i18n="data.unit.firms">개사</span></div>
-            <div class="lt-delta flat" data-i18n="data.kpi.ops.delta">투명성지수 공개</div>
+            <div class="lt-label" data-i18n="data.kpi.h2">수소충전소</div>
+            <div class="lt-val"><span data-counter="145">0</span><span class="unit" data-i18n="data.unit.stations">개소</span></div>
+            <div class="lt-delta up" data-i18n="data.kpi.h2.delta">▲ +6 / 분기</div>
           </div>
           <div class="ds-live-tile">
             <div class="lt-label" data-i18n="data.kpi.kev">K-EV100 참여</div>
-            <div class="lt-val"><span data-counter="524">0</span><span class="unit" data-i18n="data.unit.firmscn">社</span></div>
+            <div class="lt-val"><span data-counter="524">0</span><span class="unit" data-i18n="data.unit.firms">개사</span></div>
             <div class="lt-delta up" data-i18n="data.kpi.kev.delta">▲ +18 / 월</div>
           </div>
           <div class="ds-live-tile">
@@ -73,7 +103,7 @@
         <a href="#tindex" class="ds-dash-card scheme-blue">
           <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>
           <h4 data-i18n="data.dc1.h4">충전사업자 투명성지수</h4>
-          <p data-i18n="data.dc1.p">전국 159개 충전 사업자의 가격 투명성·운영 안정성·인프라 규모·신뢰도를 종합한 정량 평가 지수입니다.</p>
+          <p data-i18n="data.dc1.p">전국 159개 충전 사업자가 공개하는 요금·운영 정보의 충실도(정보충실도)를 중심으로 평가한 지수입니다. 정보충실도(주 지표)에 보조 지표를 더해 우수·보통 2등급으로 구분합니다.</p>
           <div class="dc-meta"><span data-i18n="data.dc1.date">2026.04.20 업데이트</span><span style="color:var(--color-primary-700);" data-i18n="data.dc1.link">159개사 →</span></div>
         </a>
         <a href="#supply" class="ds-dash-card">
@@ -98,50 +128,61 @@
 
       <!-- 충전 사업자 T-INDEX 랭킹 -->
       <div class="ds-ranking-wrap" id="tindex">
+        <!-- 1행: 제목 · 배점 설명 · 등급 요약 배지 (전체폭) -->
         <div class="ds-ranking-head">
-          <div>
-            <h3 data-i18n="data.tx.h3">충전사업자 투명성지수 TOP 30</h3>
-            <p data-i18n="data.tx.p">가격 투명성(20) · 운영 상태(20) · 가동률(10) · 인프라(15) · 신뢰도(10) 기준 종합 평가 (100점 만점)</p>
-          </div>
-          <div class="ds-ranking-filter">
-            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.grade">등급</label><select>
-              <option data-i18n="data.tx.f.allgrade">전체 등급</option>
-              <option data-i18n="data.tx.f.good">🟢 우수 (19개사)</option>
-              <option data-i18n="data.tx.f.normal">🟡 보통 (140개사)</option>
-              <!-- [삭제 작업14·15] 개선필요 옵션 주석처리 (개선필요 31개사는 보통으로 편입)
-              <option data-i18n="data.tx.f.improve">🔴 개선필요 (31개사)</option>
-              -->
-            </select></div>
-            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.sort">정렬</label><select>
-              <option data-i18n="data.tx.f.idx">지수 순</option>
-              <option data-i18n="data.tx.f.count">충전기 수 순</option>
-              <option data-i18n="data.tx.f.alpha">가나다 순</option>
-            </select></div>
+          <div style="width:100%;">
+            <h3 data-i18n="data.tx.h3">충전사업자 투명성지수</h3>
+            <p data-i18n="data.tx.p">주지표 85(통신가동20·상태정합18·물리정합15·연계12·요금공시12·신뢰8) + 보조지표 15. 등급은 주지표 환산값으로만 판정</p>
+            <div class="tx-grade-summary" style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;background:#DCFCE7;color:#166534;font-size:13px;font-weight:700;">🟢 <span data-i18n="data.tx.sum.good">우수</span> <b id="txCntGood">62</b><span data-i18n="data.unit.firms">개사</span></span>
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;background:#FEF3C7;color:#92400E;font-size:13px;font-weight:700;">🟡 <span data-i18n="data.tx.sum.normal">보통</span> <b id="txCntNormal">97</b><span data-i18n="data.unit.firms">개사</span></span>
+            </div>
           </div>
         </div>
 
-        <div style="overflow-x:auto;">
-          <table class="data-table" style="box-shadow:none;">
+        <!-- 2행: 필터바 (검색·등급·정렬) — 표 바로 위 독립 행, 설명과 미겹침 -->
+        <div class="ds-ranking-filter tx-filterbar" style="margin-top:18px;flex-wrap:wrap;align-items:flex-end;justify-content:flex-start;">
+          <div class="dsf-grp"><label class="dsf-label" data-i18n="data.tx.f.search">검색</label><input type="search" id="txSearch" placeholder="사업자명" data-i18n-attr="placeholder:data.tx.f.searchph" style="height:38px;border:1px solid var(--border-light);border-radius:8px;padding:0 12px;font-size:14px;font-family:inherit;min-width:160px;"></div>
+          <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.grade">등급</label><select id="txGrade">
+            <option value="" data-i18n="data.tx.f.allgrade">전체 등급</option>
+            <option value="우수" data-i18n="data.tx.f.good">🟢 우수 (62개사)</option>
+            <option value="보통" data-i18n="data.tx.f.normal">🟡 보통 (97개사)</option>
+          </select></div>
+          <button type="button" id="txExcel" class="btn btn-secondary btn-sm" style="margin-left:auto;align-self:flex-end;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span data-i18n="data.tx.excel">엑셀 다운로드</span>
+          </button>
+        </div>
+
+        <style>
+          #tindexTable th.sortable { cursor:pointer; user-select:none; white-space:nowrap; }
+          #tindexTable th.sortable::after { content:'↕'; font-size:11px; color:var(--color-gray-400,#9CA3AF); margin-left:4px; }
+          #tindexTable th.sortable.sort-desc::after { content:'↓'; color:var(--color-primary-600,#1D6F42); }
+          #tindexTable th.sortable.sort-asc::after { content:'↑'; color:var(--color-primary-600,#1D6F42); }
+        </style>
+        <div style="overflow-x:auto;margin-top:12px;">
+          <table class="data-table" id="tindexTable" style="box-shadow:none;">
             <thead>
               <tr>
                 <th style="width:60px;text-align:center;" data-i18n="data.tx.th.rank">순위</th>
-                <th data-i18n="data.tx.th.firm">사업자명</th>
-                <th class="num" data-i18n="data.tx.th.cnt">충전기</th>
-                <th class="num" data-i18n="data.tx.th.idx">투명성지수</th>
+                <th class="sortable" data-sk="bnm" data-i18n="data.tx.th.firm">사업자명</th>
+                <th class="sortable num" data-sk="cc" data-i18n="data.tx.th.cnt">충전기</th>
+                <th class="sortable num" data-sk="ti" data-i18n="data.tx.th.idx">투명성지수</th>
                 <th style="width:90px;text-align:center;" data-i18n="data.tx.th.grade">등급</th>
-                <th class="num" data-i18n="data.tx.th.price">가격</th>
-                <th class="num" data-i18n="data.tx.th.ops">운영</th>
-                <th class="num" data-i18n="data.tx.th.infra">인프라</th>
-                <th class="num" data-i18n="data.tx.th.trust">신뢰도</th>
+                <th class="sortable num" data-sk="uptime" data-i18n="data.tx.th.price">통신가동</th>
+                <th class="sortable num" data-sk="state" data-i18n="data.tx.th.ops">상태정합</th>
+                <th class="sortable num" data-sk="phys" data-i18n="data.tx.th.infra">물리정합</th>
+                <th class="sortable num" data-sk="trust" data-i18n="data.tx.th.trust">신뢰</th>
               </tr>
             </thead>
             <tbody id="tindexRows"></tbody>
           </table>
         </div>
 
-        <div class="flex justify-between items-center mt-4" style="font-size:13px;color:#4B5563;">
+        <div class="pagination" id="txPagination" style="justify-content:center;margin-top:18px;"></div>
+
+        <div class="mt-4" style="font-size:13px;color:#4B5563;">
           <span data-i18n="data.tx.source">자료 출처 · 투명성지수 2026.04.20 · 환경부 전기차충전소 DB + 공공 API + 사업자 공시</span>
-          <a href="#" style="color:var(--color-primary-700);font-weight:700;cursor:pointer;" data-action="download" data-action-label="투명성지수 전체 159개사 데이터.csv" data-i18n="data.tx.dl">전체 159개사 CSV 다운로드 →</a>
         </div>
       </div>
 
@@ -149,16 +190,46 @@
       <div class="ds-ranking-wrap mt-8" id="supply">
         <div class="ds-ranking-head">
           <div>
-            <h3 data-i18n="data.sp.h3">지역별 무공해차 보급 현황 TOP 10</h3>
-            <p data-i18n="data.sp.p">2026년 3월 말 기준 누적 등록 대수 (전기·수소차 합산)</p>
+            <h3 data-i18n="data.sp.h3">지역별 무공해차 보급 현황</h3>
+            <p data-i18n="data.sp.p">시·도별 무공해차 누적 등록 현황 · 차종 선택 조회 · 2026년 3월 말 기준</p>
           </div>
           <div class="ds-ranking-filter">
-            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.vtype">차종</label><select><option data-i18n="data.sp.f.all">전체 차종</option><option data-i18n="data.sp.f.ev">전기승용</option><option data-i18n="data.sp.f.truck">전기화물</option><option data-i18n="data.sp.f.h2">수소차</option></select></div>
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.vtype">차종</label><select id="spVt">
+              <option value="all" data-i18n="data.sp.f.all">전체 차종</option>
+              <option value="ev" data-i18n="data.sp.f.ev">전기승용</option>
+              <option value="truck" data-i18n="data.sp.f.truck">전기화물</option>
+              <option value="bus" data-i18n="data.sp.f.bus">전기승합</option>
+              <option value="moto" data-i18n="data.sp.f.moto">전기이륜</option>
+              <option value="h2" data-i18n="data.sp.f.h2">수소차</option>
+              <option value="cons" data-i18n="data.sp.f.cons">건설기계</option>
+            </select></div>
             <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.year">연도</label><select><option data-i18n="data.sp.f.y26">2026년 누적</option><option data-i18n="data.sp.f.y25">2025년</option><option data-i18n="data.sp.f.y24">2024년</option></select></div>
+            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.sp.f.search">검색</label><input type="search" id="spSearch" placeholder="시·도명" data-i18n-attr="placeholder:data.sp.f.searchph" style="height:38px;border:1px solid var(--border-light);border-radius:8px;padding:0 10px;font-size:14px;font-family:inherit;min-width:120px;"></div>
+            <button type="button" id="spExcel" class="btn btn-secondary btn-sm" style="align-self:flex-end;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span data-i18n="data.sp.excel">엑셀 다운로드</span>
+            </button>
           </div>
         </div>
 
-        <div class="ds-rank-list" id="supplyRank"></div>
+        <style>
+          #supplyTable th.sortable { cursor:pointer; user-select:none; white-space:nowrap; }
+          #supplyTable th.sortable::after { content:'↕'; font-size:11px; color:var(--color-gray-400); margin-left:4px; }
+          #supplyTable th.sortable.sort-desc::after { content:'↓'; color:var(--color-primary-600); }
+          #supplyTable th.sortable.sort-asc::after { content:'↑'; color:var(--color-primary-600); }
+        </style>
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="supplyTable" style="box-shadow:none;">
+            <thead>
+              <tr>
+                <th class="sortable" data-sk="sido" data-i18n="data.sp.th.sido">시·도</th>
+                <th class="sortable num" data-sk="reg" id="spThReg" style="text-align:right;">보급 대수</th>
+                <th class="sortable num" data-sk="pct" style="text-align:right;" data-i18n="data.sp.th.pct">구성비</th>
+              </tr>
+            </thead>
+            <tbody id="supplyRows"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 충전 인프라 현황 (anchor) -->
@@ -166,17 +237,16 @@
         <div class="ds-ranking-head">
           <div>
             <h3 data-i18n="data.if.h3">충전 인프라 현황</h3>
-            <p data-i18n="data.if.p">완속·급속·초급속 충전기 설치 및 가동률 (2026.04 기준)</p>
-          </div>
-          <div class="ds-ranking-filter">
-            <div class="dsf-grp"><label class="dsf-label" data-i18n="data.rk.f.region">지역</label><select aria-label="시도"><option data-i18n="data.if.f.nation">전국</option><option data-i18n="data.if.f.metro">수도권</option><option data-i18n="data.if.f.nonmetro">비수도권</option></select></div>
+            <p data-i18n="data.if.p">출력 구간별 충전기 보급 현황 (2026.04 기준)</p>
           </div>
         </div>
-        <div class="grid grid-4 mt-4" style="gap:14px;">
-          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.slow">완속 (7kW)</div><div class="stat-value"><span data-counter="421000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.fast">급속 (50kW)</div><div class="stat-value"><span data-counter="142000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.ultra">초급속 (100kW+)</div><div class="stat-value"><span data-counter="33368">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.uptime">평균 가동률</div><div class="stat-value"><span data-counter="92.4">0</span><span class="unit">%</span></div></div>
+        <!-- [DEV] 출력 구간 = EVCS_CHARGER_STATUS.CHGE_OUTPUT 집계(5밴드 공공 기준). 법적 완속/급속 분류(CHGER_KIND)와 별개. 전부 더미. -->
+        <div class="grid mt-4" style="grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;">
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.slow">완속 (30kW 미만)</div><div class="stat-value"><span data-counter="430000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.mid">중속 (30~50kW)</div><div class="stat-value"><span data-counter="62000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.fast">급속 (50~100kW)</div><div class="stat-value"><span data-counter="58000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.fast2">급속 (100~200kW)</div><div class="stat-value"><span data-counter="32000">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.if.l.ultra">초급속 (200kW 이상)</div><div class="stat-value"><span data-counter="14368">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div></div>
         </div>
       </div>
 
@@ -243,11 +313,13 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-data.js?v=20260624tx"></script>
+<script src="js/i18n-data.js?v=20260707s6"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<!-- [블라인드 처리] 사업자별 운영 현황(임시) 데이터 + 인라인 렌더러 비활성화
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- 투명성지수 전체 사업자(159) 데이터 — 전체 조회 리스트에서 사용 -->
 <script src="js/tindex-data.js?v=20260624tx"></script>
+<!-- [블라인드 처리] 사업자별 운영 현황 인라인 렌더러 위젯 비활성화 (데이터는 상단 전체 리스트에서 사용)
 <script src="js/tindex-inline.js?v=20260624tx"></script>
 -->
 <script>
@@ -262,55 +334,208 @@ const _REGION_EN = {
 };
 const _trGrade = (k) => _dataLang() === 'en' ? (_GRADE_EN[k] || k) : k;
 const _trRegion = (k) => _dataLang() === 'en' ? (_REGION_EN[k] || k) : k;
-// T-INDEX TOP 30 실데이터 (data_v3.json 기반)
-const TINDEX_DATA = [{"rank": 1, "bnm": "한국전기차충전서비스", "charger_count": 6657, "t_index": 86.5, "grade": "우수", "p_uptime": 17.8, "p_state": 17.9, "p_phys": 13.4, "p_trust": 8.0}, {"rank": 2, "bnm": "채비", "charger_count": 15580, "t_index": 84.6, "grade": "우수", "p_uptime": 15.4, "p_state": 15.1, "p_phys": 13.4, "p_trust": 8.0}, {"rank": 3, "bnm": "스타코프", "charger_count": 20805, "t_index": 83.1, "grade": "우수", "p_uptime": 19.0, "p_state": 18.0, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 4, "bnm": "이브이시스", "charger_count": 7163, "t_index": 83.0, "grade": "우수", "p_uptime": 17.4, "p_state": 17.3, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 5, "bnm": "에버온", "charger_count": 54189, "t_index": 81.3, "grade": "우수", "p_uptime": 14.0, "p_state": 13.6, "p_phys": 13.4, "p_trust": 8.0}, {"rank": 6, "bnm": "제주전기자동차서비스", "charger_count": 2053, "t_index": 80.7, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 7, "bnm": "SK일렉링크", "charger_count": 10662, "t_index": 79.4, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 3.2}, {"rank": 8, "bnm": "엔라이튼", "charger_count": 10, "t_index": 79.3, "grade": "우수", "p_uptime": 18.0, "p_state": 18.0, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 9, "bnm": "기후에너지환경부", "charger_count": 9800, "t_index": 79.1, "grade": "우수", "p_uptime": 17.0, "p_state": 16.9, "p_phys": 13.4, "p_trust": 3.2}, {"rank": 10, "bnm": "LG유플러스 볼트업(플러그인)", "charger_count": 2574, "t_index": 78.4, "grade": "우수", "p_uptime": 18.2, "p_state": 18.0, "p_phys": 13.4, "p_trust": 3.2}, {"rank": 11, "bnm": "서울씨엔지", "charger_count": 5403, "t_index": 78.4, "grade": "우수", "p_uptime": 15.6, "p_state": 15.4, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 12, "bnm": "아이파킹", "charger_count": 9895, "t_index": 77.9, "grade": "우수", "p_uptime": 16.4, "p_state": 16.2, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 13, "bnm": "휴맥스이브이", "charger_count": 18679, "t_index": 77.7, "grade": "우수", "p_uptime": 15.6, "p_state": 15.3, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 14, "bnm": "NICE인프라", "charger_count": 19615, "t_index": 77.4, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 15, "bnm": "펌프킨", "charger_count": 2544, "t_index": 77.4, "grade": "우수", "p_uptime": 14.0, "p_state": 13.5, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 16, "bnm": "GS차지비", "charger_count": 90491, "t_index": 76.8, "grade": "우수", "p_uptime": 15.2, "p_state": 14.8, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 17, "bnm": "동양이엔피", "charger_count": 792, "t_index": 75.5, "grade": "우수", "p_uptime": 15.8, "p_state": 15.6, "p_phys": 13.4, "p_trust": 4.8}, {"rank": 18, "bnm": "파워큐브", "charger_count": 69210, "t_index": 75.0, "grade": "우수", "p_uptime": 16.4, "p_state": 16.2, "p_phys": 13.4, "p_trust": 4.0}, {"rank": 19, "bnm": "리셀파워", "charger_count": 226, "t_index": 74.0, "grade": "우수", "p_uptime": 20.0, "p_state": 18.0, "p_phys": 13.4, "p_trust": 0.0}, {"rank": 20, "bnm": "대성물류건설", "charger_count": 250, "t_index": 72.9, "grade": "우수", "p_uptime": 13.0, "p_state": 13.5, "p_phys": 13.4, "p_trust": 4.8}];
+// 투명성지수 전체 사업자(159) — window.__TINDEX_DATA.operators 매핑
+const TINDEX_OPS = (window.__TINDEX_DATA && window.__TINDEX_DATA.operators || []).map(function(o){ return { rank:o.rank, bnm:o.name, charger_count:o.cc, t_index:o.ti, grade:o.grade, p_uptime:o.p_uptime, p_state:o.p_state, p_phys:o.p_phys, p_trust:o.p_trust }; });
 
-// TINDEX 테이블 렌더
+// ── 투명성지수 전체 조회 리스트 (검색·등급필터·정렬·페이지네이션 20/페이지) ──
+const TX_PAGE_SIZE = 20;
+// 정렬: 공지사항 표준 — 열 클릭 기본→내림(1)→올림(2) 순환 · sortKey 없음이면 순위 기본순
+const TX_FIELD = { bnm:'bnm', cc:'charger_count', ti:'t_index', uptime:'p_uptime', state:'p_state', phys:'p_phys', trust:'p_trust' };
+const txState = { search:'', grade:'', sortKey:'ti', sortDir:1, page:1 };  // 기본: 투명성지수 내림차순
+function txFilteredSorted() {
+  const s = txState.search.trim();
+  const arr = TINDEX_OPS.filter(o => (!txState.grade || o.grade === txState.grade) && (!s || (o.bnm||'').indexOf(s) >= 0));
+  if (!txState.sortKey) { arr.sort((a,b) => a.rank - b.rank); return arr; }  // 기본 = 순위순
+  const f = TX_FIELD[txState.sortKey] || 't_index';
+  const numeric = txState.sortKey !== 'bnm';
+  arr.sort((a,b) => {
+    const av = a[f], bv = b[f];
+    const c = numeric ? (av - bv) : String(av).localeCompare(String(bv), 'ko');
+    return txState.sortDir === 1 ? -c : c;   // 1 내림차순 · 2 올림차순
+  });
+  return arr;
+}
+function renderTxPagination(totalPages) {
+  const pag = document.getElementById('txPagination');
+  if (!pag) return;
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  const cur = txState.page, win = 10;
+  const block = Math.floor((cur-1)/win), start = block*win+1, end = Math.min(start+win-1, totalPages);
+  let h = '';
+  h += `<button ${cur<=1?'disabled':''} data-p="first" aria-label="처음 페이지">«</button>`;
+  h += `<button ${cur<=1?'disabled':''} data-p="prev" aria-label="이전 페이지">‹</button>`;
+  for (let i=start; i<=end; i++) h += `<button class="${i===cur?'active':''}" data-p="${i}" aria-label="${i}페이지"${i===cur?' aria-current="page"':''}>${i}</button>`;
+  h += `<button ${cur>=totalPages?'disabled':''} data-p="next" aria-label="다음 페이지">›</button>`;
+  h += `<button ${cur>=totalPages?'disabled':''} data-p="last" aria-label="마지막 페이지">»</button>`;
+  pag.innerHTML = h;
+  pag.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    const p = b.dataset.p;
+    if (p==='first') txState.page = 1; else if (p==='last') txState.page = totalPages;
+    else if (p==='prev') txState.page = Math.max(1, cur-1); else if (p==='next') txState.page = Math.min(totalPages, cur+1);
+    else txState.page = parseInt(p,10);
+    renderTindexRows();
+    try { document.getElementById('tindex').scrollIntoView({behavior:'smooth',block:'start'}); } catch(e){}
+  }));
+}
 function renderTindexRows() {
   const tbody = document.getElementById('tindexRows');
   if (!tbody) return;
-  tbody.innerHTML = TINDEX_DATA.map(op => {
-    const gradeStyle = op.grade === '우수' ? 'background:#DCFCE7;color:#166534;' :
-                       op.grade === '보통' ? 'background:#FEF3C7;color:#92400E;' :
-                       'background:#FEE2E2;color:#991B1B;';
-    const lightIcon = op.grade === '우수' ? '🟢' : op.grade === '보통' ? '🟡' : '🔴';
-    const gradeLabel = _trGrade(op.grade);
-    return `<tr>
-      <td style="text-align:center;font-weight:800;font-variant-numeric:tabular-nums;">${op.rank}</td>
-      <td style="font-weight:700;letter-spacing:-0.015em;">${op.bnm}</td>
-      <td class="num">${op.charger_count.toLocaleString('ko-KR')}</td>
-      <td class="num" style="font-weight:800;font-size:15px;color:${op.grade==='우수'?'#1AAD6C':op.grade==='보통'?'#E8760A':'#DC2626'};">${op.t_index.toFixed(1)}</td>
-      <td style="text-align:center;"><span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;${gradeStyle}">${lightIcon} ${gradeLabel}</span></td>
-      <td class="num">${op.p_uptime.toFixed(1)}</td>
-      <td class="num">${op.p_state.toFixed(1)}</td>
-      <td class="num">${op.p_phys.toFixed(1)}</td>
-      <td class="num">${op.p_trust.toFixed(1)}</td>
-    </tr>`;
-  }).join('');
+  const rows = txFilteredSorted();
+  const totalPages = Math.max(1, Math.ceil(rows.length / TX_PAGE_SIZE));
+  if (txState.page > totalPages) txState.page = totalPages;
+  const pageRows = rows.slice((txState.page-1)*TX_PAGE_SIZE, txState.page*TX_PAGE_SIZE);
+  if (!pageRows.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:28px;color:#6B7280;">${_dataLang()==='en'?'No operators found.':'조회 결과가 없습니다.'}</td></tr>`;
+  } else {
+    tbody.innerHTML = pageRows.map(op => {
+      const gradeStyle = op.grade === '우수' ? 'background:#DCFCE7;color:#166534;' : 'background:#FEF3C7;color:#92400E;';
+      const lightIcon = op.grade === '우수' ? '🟢' : '🟡';
+      const gradeLabel = _trGrade(op.grade);
+      return `<tr>
+        <td style="text-align:center;font-weight:800;font-variant-numeric:tabular-nums;">${op.rank}</td>
+        <td style="font-weight:700;letter-spacing:-0.015em;">${op.bnm}</td>
+        <td class="num">${op.charger_count.toLocaleString('ko-KR')}</td>
+        <td class="num" style="font-weight:800;font-size:15px;color:${op.grade==='우수'?'#1AAD6C':'#E8760A'};">${op.t_index.toFixed(1)}</td>
+        <td style="text-align:center;"><span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;${gradeStyle}">${lightIcon} ${gradeLabel}</span></td>
+        <td class="num">${op.p_uptime.toFixed(1)}</td>
+        <td class="num">${op.p_state.toFixed(1)}</td>
+        <td class="num">${op.p_phys.toFixed(1)}</td>
+        <td class="num">${op.p_trust.toFixed(1)}</td>
+      </tr>`;
+    }).join('');
+  }
+  renderTxPagination(totalPages);
+  // 헤더 정렬 표시(↕/↓/↑)
+  const tbl = document.getElementById('tindexTable');
+  if (tbl) tbl.querySelectorAll('th.sortable').forEach(h => {
+    const k = h.dataset.sk;
+    h.classList.toggle('sort-desc', txState.sortKey===k && txState.sortDir===1);
+    h.classList.toggle('sort-asc',  txState.sortKey===k && txState.sortDir===2);
+  });
+  const dist = (window.__TINDEX_DATA && window.__TINDEX_DATA.distribution) || { excellent:0, normal:0 };
+  const g = document.getElementById('txCntGood'), n = document.getElementById('txCntNormal');
+  if (g) g.textContent = dist.excellent; if (n) n.textContent = dist.normal;
 }
+(function bindTxControls(){
+  const se = document.getElementById('txSearch'); if (se) se.addEventListener('input', () => { txState.search = se.value; txState.page = 1; renderTindexRows(); });
+  const ge = document.getElementById('txGrade');  if (ge) ge.addEventListener('change', () => { txState.grade = ge.value; txState.page = 1; renderTindexRows(); });
+  // 정렬: 공지사항 표준 — 열 머리글 클릭(기본→내림→올림 순환) · 별도 정렬 드롭다운 없음
+  const tbl = document.getElementById('tindexTable');
+  if (tbl) tbl.querySelectorAll('th.sortable').forEach(h => h.addEventListener('click', () => {
+    const k = h.dataset.sk;
+    if (txState.sortKey === k) { txState.sortDir = (txState.sortDir+1)%3; if (txState.sortDir===0) txState.sortKey=''; }
+    else { txState.sortKey = k; txState.sortDir = 1; }
+    txState.page = 1; renderTindexRows();
+  }));
+})();
+// [DEV] 투명성지수 xlsx = TINDEX_OPS(전체 159개사) 롤업 · SheetJS · 더미
+function tindexExcel(){
+  if (typeof XLSX === 'undefined') { if (window.__toast) window.__toast('엑셀 라이브러리를 불러오지 못했습니다.','warning'); return; }
+  const dist = (window.__TINDEX_DATA && window.__TINDEX_DATA.distribution) || { excellent:0, normal:0 };
+  const info = [
+    ['항목','내용'],['자료명','충전사업자 투명성지수'],
+    ['출처','환경부 전기차충전소 DB + 공공 API + 사업자 공시 (시연용 더미 데이터)'],
+    ['기준일','2026.04.20'],['다운로드 시각', new Date().toLocaleString('ko-KR')],
+    ['등급 분포', '우수 '+dist.excellent+'개사 · 보통 '+dist.normal+'개사 (2등급 · 개선필요 없음)'],
+    ['배점','주지표 85(통신가동20·상태정합18·물리정합15·연계12·요금공시12·신뢰8) + 보조지표 15 · 등급=주지표 환산 단독']
+  ];
+  const head = ['순위','사업자명','충전기','투명성지수','등급','통신가동','상태정합','물리정합','신뢰'];
+  const body = TINDEX_OPS.map(o => [o.rank, o.bnm, o.charger_count, o.t_index, o.grade, o.p_uptime, o.p_state, o.p_phys, o.p_trust]);
+  const wb = XLSX.utils.book_new();
+  const ws0 = XLSX.utils.aoa_to_sheet(info); ws0['!cols'] = [{wch:14},{wch:72}];
+  const ws1 = XLSX.utils.aoa_to_sheet([head, ...body]); ws1['!cols'] = [{wch:6},{wch:22},{wch:10},{wch:11},{wch:8},{wch:10},{wch:10},{wch:10},{wch:8}];
+  XLSX.utils.book_append_sheet(wb, ws0, '안내');
+  XLSX.utils.book_append_sheet(wb, ws1, '투명성지수');
+  XLSX.writeFile(wb, '충전사업자_투명성지수.xlsx');
+  if (window.__toast) window.__toast('엑셀 파일 "충전사업자_투명성지수.xlsx" 다운로드를 시작합니다. (2개 시트)','success');
+}
+document.getElementById('txExcel') && document.getElementById('txExcel').addEventListener('click', tindexExcel);
 renderTindexRows();
 
-// 지역별 보급 현황 랭킹 (Mock 실데이터)
-const SUPPLY_RANK = [
-  ['경기도', 248640, 100], ['서울특별시', 187420, 75.4], ['인천광역시', 84820, 34.1],
-  ['부산광역시', 72140, 29.0], ['제주특별자치도', 68260, 27.5], ['경상남도', 58920, 23.7],
-  ['대구광역시', 48380, 19.5], ['충청남도', 42150, 17.0], ['경상북도', 38760, 15.6],
-  ['충청북도', 32540, 13.1]
-];
+// [DEV] 시도별 보급 = 차종별 등록 집계(전기 EV_CAR·수소 H2_CAR), 지역 구분 ZCODE 기준. 전부 더미.
+const SUPPLY_TOT = {
+  '경기도':248640,'서울특별시':187420,'인천광역시':84820,'부산광역시':72140,'제주특별자치도':68260,
+  '경상남도':58920,'대구광역시':48380,'충청남도':42150,'경상북도':38760,'강원특별자치도':34820,
+  '전라남도':33260,'충청북도':32540,'대전광역시':31240,'전북특별자치도':29480,'광주광역시':28640,
+  '울산광역시':22180,'세종특별자치시':12940
+};
+const SP_SHARE = { ev:0.68, truck:0.16, bus:0.02, moto:0.08, h2:0.04, cons:0.02 };
+const SUPPLY_DATA = Object.keys(SUPPLY_TOT).map(sido => {
+  const total = SUPPLY_TOT[sido];
+  const reg = { all: total };
+  Object.keys(SP_SHARE).forEach(k => reg[k] = Math.round(total * SP_SHARE[k]));
+  return { sido, reg };
+});
+const SP_VT_LABEL = { all:'전체', ev:'전기승용', truck:'전기화물', bus:'전기승합', moto:'전기이륜', h2:'수소차', cons:'건설기계' };
+const spState = { vt:'all', search:'', sortKey:'reg', sortDir:1 };   // 기본: 보급 대수 내림차순
 
+function spSumVt(vt){ return SUPPLY_DATA.reduce((a,r)=>a+r.reg[vt],0); }
+function spRows(){
+  const sum = spSumVt(spState.vt) || 1;
+  const arr = SUPPLY_DATA
+    .filter(r => !spState.search || r.sido.indexOf(spState.search) >= 0)
+    .map(r => ({ sido:r.sido, reg:r.reg[spState.vt], pct:r.reg[spState.vt]/sum*100 }));
+  if (spState.sortKey) {
+    const numeric = spState.sortKey !== 'sido';
+    arr.sort((a,b) => {
+      const av = a[spState.sortKey], bv = b[spState.sortKey];
+      const c = numeric ? (av-bv) : String(av).localeCompare(String(bv),'ko');
+      return spState.sortDir === 1 ? -c : c;   // 1 내림차순 · 2 올림차순
+    });
+  }
+  return arr;
+}
 function renderSupplyRank() {
-  const el = document.getElementById('supplyRank');
-  if (!el) return;
-  el.innerHTML = SUPPLY_RANK.map((item, i) => `
-    <div class="ds-rank-item${i < 3 ? ' top-3' : ''}">
-      <span class="ds-rank-num">${i+1}</span>
-      <div>
-        <div class="ds-rank-name">${_trRegion(item[0])}</div>
-        <div class="ds-rank-bar"><div class="fill" style="width:${item[2]}%;"></div></div>
-      </div>
-      <span class="ds-rank-val">${item[1].toLocaleString('ko-KR')}<span class="unit">${_dataLang()==='en'?' units':'대'}</span></span>
-    </div>
-  `).join('');
+  const tb = document.getElementById('supplyRows');
+  if (!tb) return;
+  const rows = spRows();
+  const th = document.getElementById('spThReg');
+  if (th && th.firstChild) th.firstChild.textContent = (spState.vt==='all' ? '보급 대수' : SP_VT_LABEL[spState.vt]+' 대수');
+  tb.innerHTML = rows.length
+    ? rows.map(r => `<tr>
+        <td style="font-weight:700;">${_trRegion(r.sido)}</td>
+        <td class="num" style="text-align:right;">${r.reg.toLocaleString('ko-KR')}${_dataLang()==='en'?'':'대'}</td>
+        <td class="num" style="text-align:right;">${r.pct.toFixed(1)}%</td>
+      </tr>`).join('')
+    : `<tr><td colspan="3" style="text-align:center;padding:24px;color:#6B7280;">${_dataLang()==='en'?'No results.':'조회 결과가 없습니다.'}</td></tr>`;
+  const tbl = document.getElementById('supplyTable');
+  if (tbl) tbl.querySelectorAll('th.sortable').forEach(h => {
+    const k = h.dataset.sk;
+    h.classList.toggle('sort-desc', spState.sortKey===k && spState.sortDir===1);
+    h.classList.toggle('sort-asc',  spState.sortKey===k && spState.sortDir===2);
+  });
+}
+(function bindSupply(){
+  const vt = document.getElementById('spVt'); if (vt) vt.addEventListener('change', () => { spState.vt = vt.value; renderSupplyRank(); });
+  const se = document.getElementById('spSearch'); if (se) se.addEventListener('input', () => { spState.search = se.value.trim(); renderSupplyRank(); });
+  const tbl = document.getElementById('supplyTable');
+  if (tbl) tbl.querySelectorAll('th.sortable').forEach(h => h.addEventListener('click', () => {
+    const k = h.dataset.sk;
+    if (spState.sortKey === k) { spState.sortDir = (spState.sortDir+1)%3; if (spState.sortDir===0) spState.sortKey=''; }
+    else { spState.sortKey = k; spState.sortDir = 1; }
+    renderSupplyRank();
+  }));
+  const ex = document.getElementById('spExcel'); if (ex) ex.addEventListener('click', spSupplyExcel);
+})();
+// [DEV] 엑셀 = 차종별 등록 집계(EV_CAR·H2_CAR) 시도 롤업 · SheetJS · 더미
+function spSupplyExcel(){
+  if (typeof XLSX === 'undefined') { if (window.__toast) window.__toast('엑셀 라이브러리를 불러오지 못했습니다.','warning'); return; }
+  const sumAll = spSumVt('all') || 1;
+  const info = [
+    ['항목','내용'],['자료명','지역별 무공해차 보급 현황'],
+    ['출처','KOSIS 국가통계포털 (월 1회 갱신 · 시연용 더미 데이터)'],
+    ['다운로드 시각', new Date().toLocaleString('ko-KR')],
+    ['단위','대'],['비고','시도별 차종 등록 집계(전기 EV_CAR·수소 H2_CAR), 지역 ZCODE 기준 · 더미']
+  ];
+  const head = ['시·도','전체','전기승용','전기화물','전기승합','전기이륜','수소차','건설기계','구성비(전체,%)'];
+  const body = SUPPLY_DATA.map(r => [r.sido, r.reg.all, r.reg.ev, r.reg.truck, r.reg.bus, r.reg.moto, r.reg.h2, r.reg.cons, +(r.reg.all/sumAll*100).toFixed(1)]);
+  const wb = XLSX.utils.book_new();
+  const ws0 = XLSX.utils.aoa_to_sheet(info); ws0['!cols'] = [{wch:14},{wch:60}];
+  const ws1 = XLSX.utils.aoa_to_sheet([head, ...body]); ws1['!cols'] = [{wch:16},{wch:11},{wch:10},{wch:10},{wch:10},{wch:10},{wch:9},{wch:10},{wch:14}];
+  XLSX.utils.book_append_sheet(wb, ws0, '안내');
+  XLSX.utils.book_append_sheet(wb, ws1, '지역별_보급현황');
+  XLSX.writeFile(wb, '지역별_무공해차_보급현황.xlsx');
+  if (window.__toast) window.__toast('엑셀 파일 "지역별_무공해차_보급현황.xlsx" 다운로드를 시작합니다. (2개 시트)','success');
 }
 renderSupplyRank();
 // 언어 전환 시 동적 데이터 재렌더

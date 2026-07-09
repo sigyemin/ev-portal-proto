@@ -711,27 +711,45 @@
   (function initSimulator() {
     const cardSel    = document.getElementById('simCard');
     const chargerSel = document.getElementById('simCharger');
-    const memberSel  = document.getElementById('simMember');
+    const nonmemberToggle = document.getElementById('simNonmember');
+    // 회원유형 자동: 비회원 토글 ON → 비회원 / OFF → 회원(카드=충전기 자사, 카드≠충전기 로밍)
+    function isNonmember(){ return !!(nonmemberToggle && nonmemberToggle.checked); }
     const speedSel   = document.getElementById('simSpeed');
     const condRow    = document.getElementById('simConditionRow');
     const condSel    = document.getElementById('simCondition');
     const touBlock   = document.getElementById('simTouInputs');
     const seasonSel  = document.getElementById('simSeason');
-    const slotSel    = document.getElementById('simTimeSlot');
     const daySel     = document.getElementById('simDay');
     const hourInput  = document.getElementById('simHour');
     const hourLabel  = document.getElementById('simHourVal');
     const kwhInput   = document.getElementById('simKwh');
-    // [DEV] 계절시간제 할인규칙 = TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·TRGT_SE)
-    //  선택 (계절·요일·시각)이 규칙 창(startHr~endHr)에 들면 기본단가에 할인방식 적용. 부하 3단(경/중/최대) 아님. / 더미
-    //  mode: percent(정률 %)·amount(정액 원 차감)·fixed(고정단가 대체) · base: 기본단가(원/kWh, 완속 TRGT_SE)
-    const SIM_TOU_RULES = {
-      KP: { seasons:['봄·가을','겨울'], days:['saturday','sunday'], startHr:23, endHr:9,  mode:'amount',  value:48.6,  base:307.5 },
-      JA: { seasons:['봄·가을'],        days:['weekday'],            startHr:0,  endHr:8,  mode:'percent', value:20,    base:229   },
-      EV: { seasons:['여름'],           days:['saturday','sunday'], startHr:11, endHr:14, mode:'fixed',   value:259.5, base:296   }
-    };
+    // [DEV] 계절시간제 할인 = TNCC_RMNG_SEAS_FEE(SEAS_SE 시즌·DAY_TYPE 요일·STRT_HR~END_HR·DSCNT_SE 방식·DSCNT_VAL 값·TRGT_SE 대상·CTYPE 용량)
+    //  (계절·요일·시각)이 규칙 창에 들고 출력밴드(cap)가 대상이면 기본단가에 할인 적용. 겹치면 SEQ 큰 규칙이 덮어씀. 부하 3단(경/중/최대) 아님. / 더미
+    //  mode: percent(정률 base×(1−값/100))·amount(정액 base−값)·fixed(고정 값) · cap: 급속/완속 · target: 회원/공통 · base: 기본단가 미공시 시 대체
+    const SIM_TOU_RULES = [
+      { bid:'ST', seq:1, seasons:['여름'],   days:['weekday'],                     startHr:22, endHr:8,  cap:'급속', mode:'percent', value:20,   target:'회원', base:null   },
+      { bid:'KP', seq:1, seasons:['봄·가을'], days:['weekday','saturday','sunday'], startHr:23, endHr:9,  cap:'완속', mode:'amount',  value:48.6, target:'공통', base:307.5 },
+      { bid:'ME', seq:1, seasons:['봄·가을'], days:['saturday'],                    startHr:11, endHr:14, cap:'급속', mode:'amount',  value:48.6, target:'회원', base:null   }
+    ];
+    // 출력밴드 → 용량구분(CTYPE)
+    const BAND_CAP = { slow:'완속', mid:'중속', fast50:'급속', fast100:'급속', ultra:'급속' };
     // 시각 창 매칭(자정 넘김 지원): start<=end → [start,end), 아니면 [start,24)∪[0,end)
     function inHourWindow(h, s, e){ return s <= e ? (h >= s && h < e) : (h >= s || h < e); }
+    function hasTouRule(bid){ return SIM_TOU_RULES.some(r => r.bid === bid); }
+    // (계절·요일·시각·용량밴드) 매칭 규칙 → 겹치면 SEQ 큰 규칙 우선
+    function matchTouRule(bid, season, day, hour, speed){
+      const cap = BAND_CAP[speed];
+      const hits = SIM_TOU_RULES.filter(r => r.bid === bid
+        && r.seasons.indexOf(season) >= 0 && r.days.indexOf(day) >= 0
+        && inHourWindow(hour, r.startHr, r.endHr) && r.cap === cap);
+      return hits.length ? hits.sort((a, b) => b.seq - a.seq)[0] : null;
+    }
+    // 완속 등 기본단가 미공시 시 규칙 base로 대체
+    function touBaseFallback(bid, speed){
+      const cap = BAND_CAP[speed];
+      const r = SIM_TOU_RULES.find(x => x.bid === bid && x.cap === cap && x.base != null);
+      return r ? r.base : null;
+    }
     function applyTouMode(base, mode, v){
       if (mode==='percent') return Math.round(base*(1-v/100)*10)/10;
       if (mode==='fixed')   return v;
@@ -836,13 +854,9 @@
     cardSel.value = 'ME';
     chargerSel.value = 'ST';
 
+    // 회원: 결제카드·이용충전기 모두 선택 가능(다르면 로밍 자동 반영) · 비회원: 이용충전기만
     function syncCardCharger() {
-      const m = memberSel.value;
-      if (m === 'member') {
-        chargerSel.value = cardSel.value;
-        chargerSel.disabled = true;
-        cardSel.disabled = false;
-      } else if (m === 'nonmember') {
+      if (isNonmember()) {
         cardSel.disabled = true;
         chargerSel.disabled = false;
       } else {
@@ -850,151 +864,157 @@
         chargerSel.disabled = false;
       }
     }
-
-    function rebuildSpeedDropdown() {
-      const m = memberSel.value;
-      const prev = speedSel.value;
-      if (m === 'roaming') {
-        speedSel.innerHTML = SIM_BANDS.map(c => `<option value="${c.key}">${c.label}</option>`).join('');
-        speedSel.value = SIM_BANDS.some(c => c.key === prev) ? prev : 'fast50';
-        return;
-      }
-      const bid = (m === 'nonmember') ? chargerSel.value : cardSel.value;
-      const op = MATRIX.basic.find(r => r.bid === bid);
-      if (!op) { speedSel.innerHTML = '<option value="">⚠ 요금 미공시</option>'; return; }
-
-      if (m === 'nonmember') {
-        const r = op.nmr;
-        speedSel.innerHTML = r != null
-          ? `<option value="nmr">비회원 단일가 · ${r}원/kWh</option>`
-          : '<option value="">⚠ 비회원 요금 미공시</option>';
-        return;
-      }
-      const opts = SIM_BANDS.map(c => {
-        const r = bandSrcVal(op, c.key);
-        return r != null ? `<option value="${c.key}">${c.label} · ${r}원/kWh</option>` : null;
-      }).filter(Boolean);
-      speedSel.innerHTML = opts.length ? opts.join('') : '<option value="">⚠ 회원가 미공시</option>';
-      if ([...speedSel.options].some(o => o.value === prev)) speedSel.value = prev;
+    // 로밍 자동 판정: 회원 + 결제카드(발급) ≠ 이용충전기(운영)
+    function isRoamingNow() {
+      return !isNonmember() && cardSel.value !== chargerSel.value;
     }
 
+    // 출력 5밴드 — 라벨만(단가는 결과 흐름에 표시)
+    function rebuildSpeedDropdown() {
+      const prev = speedSel.value;
+      speedSel.innerHTML = SIM_BANDS.map(c => `<option value="${c.key}">${c.label}</option>`).join('');
+      speedSel.value = SIM_BANDS.some(c => c.key === prev) ? prev : 'fast50';
+    }
+
+    // 계절시간제 규칙 적용 대상: 회원 + 결제카드=이용충전기(자사) + 규칙 보유
+    function touActive() {
+      return !isNonmember() && cardSel.value === chargerSel.value && hasTouRule(cardSel.value);
+    }
     function rebuildConditionRow() {
-      const m = memberSel.value;
-      if (m === 'roaming') { condRow.style.display='none'; touBlock.style.display='none'; return; }
-      const bid = (m === 'nonmember') ? chargerSel.value : cardSel.value;
-      const specials = MATRIX.special.filter(s => s.bid === bid);
-      const touOp = MATRIX.tou.find(t => t.bid === bid);
-      if (!specials.length && !touOp) {
-        condRow.style.display='none'; touBlock.style.display='none'; condSel.value=''; return;
+      const nonOrRoam = isNonmember() || isRoamingNow();
+      const specials = nonOrRoam ? [] : MATRIX.special.filter(s => s.bid === cardSel.value);
+      // 특례(조건) 드롭다운 — 특례 보유 시에만 노출
+      const condField = document.getElementById('simCondField');
+      if (specials.length) {
+        let opts = '<option value="">기본 (조건 없음)</option>';
+        specials.forEach((s, i) => { opts += `<option value="special:${i}">${s.note || ('조건 '+(i+1))}</option>`; });
+        condSel.innerHTML = opts;
+        if (condField) condField.style.display = '';
+      } else {
+        condSel.innerHTML = '<option value="">기본 (조건 없음)</option>'; condSel.value = '';
+        if (condField) condField.style.display = 'none';
       }
-      let opts = '<option value="">기본 (조건 없음)</option>';
-      specials.forEach((s, i) => {
-        const lbl = s.note || `조건 ${i+1}`;
-        opts += `<option value="special:${i}">${lbl}</option>`;
-      });
-      if (touOp) opts += '<option value="tou">계시별 (계절·시간대)</option>';
-      condSel.innerHTML = opts;
-      condRow.style.display = '';
-      touBlock.style.display = condSel.value === 'tou' ? '' : 'none';
+      // 계절·요일·시각 — 상시 표시. 규칙 없으면(평단가·비회원·로밍) 비활성 + 안내
+      const disabled = !touActive();
+      [seasonSel, daySel, hourInput].forEach(el => { if (el) el.disabled = disabled; });
+      if (touBlock) touBlock.classList.toggle('is-disabled', disabled);
+      const touNote = document.getElementById('simTouNote');
+      if (touNote) touNote.hidden = !disabled;
     }
 
     function calcRate() {
       const cardBid = cardSel.value;
       const chargerBid = chargerSel.value;
-      const m = memberSel.value;
+      const m = isNonmember() ? 'nonmember' : 'member';
       const speed = speedSel.value;
-      const op = MATRIX.basic.find(r => r.bid === (m==='nonmember' ? chargerBid : cardBid));
+      const cardOp = MATRIX.basic.find(r => r.bid === cardBid);
       const chargerOp = MATRIX.basic.find(r => r.bid === chargerBid);
-      const chargerNm = chargerOp?.name || ROAMING_MATRIX.cols.find(c=>c.bid===chargerBid)?.name || chargerBid;
+      const nmOf = (bid, op) => op?.name || ROAMING_MATRIX.cols.find(c=>c.bid===bid)?.name || bid;
+      const chargerNm = nmOf(chargerBid, chargerOp);
+      const cardNm = nmOf(cardBid, cardOp);
 
-      if (m === 'roaming') {
-        const tier = bandRoamTier(speed);
-        if (cardBid === chargerBid) {
-          const r = bandSrcVal(chargerOp, speed);
-          return { rate:r, note:`${chargerNm} 자체 요금 (동일 사업자)` };
-        }
-        const cardRow = ROAMING_MATRIX.rows.find(r => r.bid === cardBid);
-        if (!cardRow) return { rate:null, note:'해당 카드의 로밍 정책 미공시' };
-        if (cardRow.roaming_type === 'free') {
-          const ME_RATES = { slow:324.4, fast:324.4, ultra:347.2 };
-          return { rate:ME_RATES[tier], note:'기후부 통합카드 — 정부 협약 (전 사업자 동일)' };
-        }
-        if (cardRow.roaming_type === 'flat') {
-          const r = cardRow.flat[tier] ?? null;
-          return { rate:r, note:`${cardRow.name} 단일 로밍 요금` };
-        }
-        if (cardRow.roaming_type === 'partners') {
-          const p = (cardRow.partners || []).find(p => p.bid === chargerBid);
-          if (!p) return { rate:null, note:`${cardRow.name} ↔ ${chargerNm} 협약 미체결` };
-          return { rate:p[tier] ?? null, note:`${cardRow.name} 협약 로밍` };
-        }
-      }
+      // [DEV] 비회원 = TNCC_RMNG_RTCPCTY_FEE(이용충전기 운영사·정격용량구간, NONMEMBER_FEE) / 더미
       if (m === 'nonmember') {
-        if (!chargerOp) return { rate:null, note:`${chargerNm} 비회원 요금 미공시` };
-        return { rate: chargerOp.nmr ?? null, note:`${chargerNm} 비회원 단일가` };
+        if (!chargerOp || chargerOp.nmr == null) return { applied:null, roaming:false, note:`${chargerNm} 비회원 요금 미공시` };
+        return { base:chargerOp.nmr, applied:chargerOp.nmr, disc:null, roaming:false, note:`${chargerNm} 비회원 단일가` };
       }
-      if (!op) return { rate:null, note:'사업자 요금 미공시' };
+
+      // 회원 — 결제카드(발급) ≠ 이용 충전기(운영)면 로밍 자동 반영(안내멘트 없음)
+      if (cardBid !== chargerBid) {
+        // [DEV] 로밍단가 = TNCC_RMNG_CHRGNG_UNTPC.TARINSP_UNTPC(발급 BID × 운영 TBID × 용량구간, 협약 R_BUSI_REQ 활성) / 더미
+        const tier = bandRoamTier(speed);
+        const cardRow = ROAMING_MATRIX.rows.find(r => r.bid === cardBid);
+        let r = null;
+        if (cardRow) {
+          if (cardRow.roaming_type === 'free') { const G = { slow:324.4, fast:324.4, ultra:347.2 }; r = G[tier]; }
+          else if (cardRow.roaming_type === 'flat') { r = cardRow.flat ? (cardRow.flat[tier] ?? null) : null; }
+          else if (cardRow.roaming_type === 'partners') { const p = (cardRow.partners || []).find(pp => pp.bid === chargerBid); r = p ? (p[tier] ?? null) : null; }
+        }
+        if (r == null) return { applied:null, roaming:true, note:`${cardNm} → ${chargerNm} 로밍 요금 미공시` };
+        return { base:r, applied:r, disc:null, roaming:true, note:`${cardNm} 카드로 ${chargerNm} 충전기 이용` };
+      }
+
+      // 회원 — 자사(결제카드 = 이용 충전기)
+      if (!cardOp) return { applied:null, roaming:false, note:'사업자 요금 미공시' };
       const cv = condSel?.value || '';
+      // [DEV] 기본단가 = TNCC_RMNG_RTCPCTY_FEE(자사·정격용량구간, MEMBER_FEE) · special=서울시 설치지원 등 대체단가 / 더미
+      let base = bandSrcVal(cardOp, speed);
       if (cv.startsWith('special:')) {
         const idx = parseInt(cv.split(':')[1]);
         const sp = MATRIX.special.filter(s => s.bid === cardBid)[idx];
-        if (sp) return { rate:bandSrcVal(sp, speed), note:`${op.name} · ${sp.note}` };
+        if (sp) { const sr = bandSrcVal(sp, speed); if (sr != null) base = sr; }
       }
-      if (cv === 'tou') {
-        const touOp = MATRIX.tou.find(t => t.bid === cardBid);
-        if (touOp) {
-          const seasonMap = { spring_fall:'봄·가을', summer:'여름', winter:'겨울' };
-          const target = seasonMap[seasonSel.value];
-          const row = touOp.rows.find(r => r.season.includes(target));
-          if (row) {
-            const slot = slotSel.value;
-            const day = daySel ? daySel.value : 'weekday';
-            const slotLbl = { off:'경부하', mid:'중간부하', on:'최대부하' }[slot];
-            const dayLbl = { weekday:'평일', saturday:'토요일', sunday:'일·공휴일' }[day];
-            let rate = row[slot] ?? null;
-            let note = `${op.name} · ${row.season} ${dayLbl} ${slotLbl}`;
-            // PDF 계절시간제 할인규칙: (시즌·요일·시간대) 매칭 시 할인방식 적용
-            const rule = SIM_TOU_RULES[cardBid];
-            if (rate != null && rule && row.season.indexOf(rule.season) >= 0
-                && rule.days.indexOf(day) >= 0 && rule.slots.indexOf(slot) >= 0) {
-              const dv = rule.value[day];
-              if (dv != null) {
-                const before = rate;
-                rate = applyTouMode(before, rule.mode, dv);
-                const modeLbl = rule.mode === 'percent' ? `정률 -${dv}%`
-                              : rule.mode === 'fixed' ? `고정단가 ${dv}원`
-                              : `정액 -${dv}원`;
-                note += ` · 할인 적용(${modeLbl}) ${before}→${rate}원`;
-              }
-            }
-            return { rate, note };
-          }
-        }
+      if (base == null) base = touBaseFallback(cardBid, speed); // 완속 등 기본단가 미공시 시 규칙 base
+      if (base == null) return { applied:null, roaming:false, note:`${cardNm} 해당 출력 요금 미공시` };
+
+      // [DEV] 할인 = TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·CTYPE) 매칭 → SEQ 큰 규칙 적용 / 더미
+      let applied = base, disc = null;
+      const seasonMap = { spring_fall:'봄·가을', summer:'여름', winter:'겨울' };
+      const rule = matchTouRule(cardBid, seasonMap[seasonSel.value], daySel ? daySel.value : 'weekday', parseInt(hourInput.value, 10), speed);
+      if (rule) {
+        applied = applyTouMode(base, rule.mode, rule.value); // 정액 base−값 / 정률 base×(1−값/100) / 고정 값
+        disc = { mode:rule.mode, value:rule.value, cut:Math.round((base - applied) * 10) / 10 };
       }
-      return { rate: bandSrcVal(op, speed), note:`${op.name} 회원 자사 요금` };
+      return { base, applied, disc, roaming:false, note:`${cardNm} 회원 자사 요금` };
     }
 
+    const bandLabelOf = (k) => { const b = SIM_BANDS.find(x => x.key === k); return b ? b.label : k; };
+    // 계산 조건(통합) — 결제카드·이용충전기(+출력)·회원구분·계절·요일·시각
+    function condRows() {
+      const nmOf = (bid) => MATRIX.basic.find(r => r.bid === bid)?.name || ROAMING_MATRIX.cols.find(c => c.bid === bid)?.name || bid;
+      const isNon = isNonmember();
+      // 회원구분: 비회원 / 로밍(카드≠충전기) / 회원 자동 반영
+      const memLbl = isNon ? '비회원' : (isRoamingNow() ? '로밍' : '회원');
+      const rows = [
+        ['결제카드', isNon ? '—' : nmOf(cardSel.value)],
+        ['이용 충전기', `${nmOf(chargerSel.value)} · ${bandLabelOf(speedSel.value)}`],
+        ['회원구분', memLbl]
+      ];
+      // 계절시간제 적용 사업자(자사)일 때만 계절·요일·시각 노출
+      if (touActive()) {
+        rows.push(['계절', { spring_fall:'봄·가을', summer:'여름', winter:'겨울' }[seasonSel.value]]);
+        rows.push(['요일', { weekday:'평일', saturday:'토요일', sunday:'일·공휴일' }[daySel.value]]);
+        rows.push(['시각', `${parseInt(hourInput.value, 10)}시`]);
+      }
+      return rows.map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+    }
     function update() {
       const kwh = parseInt(kwhInput.value);
       const battery = getSelectedBattery();
-      if (battery) {
-        const pct = Math.round(kwh / battery * 100);
-        kwhLabel.textContent = `${kwh} kWh (${pct}%)`;
-      } else {
-        kwhLabel.textContent = `${kwh} kWh`;
-      }
-      lblEl.textContent = { member:'예상 충전요금 (회원)', roaming:'예상 충전요금 (로밍)', nonmember:'예상 충전요금 (비회원)' }[memberSel.value];
-      const { rate, note } = calcRate();
-      if (rate == null) {
+      kwhLabel.textContent = battery ? `${kwh} kWh (${Math.round(kwh / battery * 100)}%)` : `${kwh} kWh`;
+      if (hourLabel && hourInput) hourLabel.textContent = `${parseInt(hourInput.value, 10)}시`;
+
+      const R = calcRate();
+      // 로밍/회원 라벨 없이 '예상 충전요금'만 표기
+      lblEl.textContent = '예상 충전요금';
+
+      const flowEl = document.getElementById('simRateFlow');
+      const helpEl = document.getElementById('simRateHelp');
+      const condEl = document.getElementById('simCond');
+
+      if (R.applied == null) {
         priceEl.textContent = '—';
-        rateEl.textContent = '단가 미공시';
-        noteEl.innerHTML = `<span style="color:#b91c1c;">⚠ ${note}</span>`;
+        if (flowEl) flowEl.innerHTML = '<span class="base">단가 미공시</span>';
+        if (helpEl) helpEl.textContent = '';
+        noteEl.innerHTML = `<span style="color:#b91c1c;">⚠ ${R.note || '요금 미공시'}</span>`;
       } else {
-        const total = Math.round(rate * kwh);
-        priceEl.textContent = `${total.toLocaleString()}원`;
-        rateEl.textContent = `${rate} 원/kWh × ${kwh} kWh`;
-        noteEl.textContent = note;
+        priceEl.textContent = `${Math.round(R.applied * kwh).toLocaleString()}원`;
+        if (flowEl) {
+          if (R.disc) {
+            // 기본단가 → [할인 배지] → 적용단가 (할인규칙 있을 때만)
+            const badge = R.disc.mode === 'percent' ? `−${R.disc.value}%`
+                        : R.disc.mode === 'fixed'   ? `고정 ${R.disc.value}원`
+                        : `−${R.disc.value}원`;
+            flowEl.innerHTML = `<span class="base struck">${R.base}</span><span class="arrow">→</span><span class="badge">${badge}</span><span class="arrow">→</span><span class="applied">${R.applied}</span>`;
+          } else {
+            // 로밍·평단가 등 할인 없음 → 계산된 적용단가만 표기
+            flowEl.innerHTML = `<span class="applied">${R.applied}</span>`;
+          }
+        }
+        if (helpEl) helpEl.textContent = R.disc ? `${R.disc.cut}원/kWh 할인 · 단위 원/kWh` : '단위 원/kWh';
+        noteEl.textContent = ''; // 로밍/회원 설명 문구 표기하지 않음
       }
+      if (condEl) condEl.innerHTML = condRows();
     }
 
     function fullRefresh() {
@@ -1006,12 +1026,12 @@
 
     cardSel   .addEventListener('change', () => { syncCardCharger(); rebuildSpeedDropdown(); rebuildConditionRow(); update(); });
     chargerSel.addEventListener('change', () => { rebuildSpeedDropdown(); rebuildConditionRow(); update(); });
-    memberSel .addEventListener('change', fullRefresh);
+    if (nonmemberToggle) nonmemberToggle.addEventListener('change', fullRefresh);
     speedSel  .addEventListener('change', update);
-    condSel   .addEventListener('change', () => { touBlock.style.display = condSel.value === 'tou' ? '' : 'none'; update(); });
+    condSel   .addEventListener('change', update);
     seasonSel .addEventListener('change', update);
-    slotSel   .addEventListener('change', update);
     if (daySel) daySel.addEventListener('change', update);
+    if (hourInput) hourInput.addEventListener('input', update);
     kwhInput  .addEventListener('input', update);
 
     fullRefresh();

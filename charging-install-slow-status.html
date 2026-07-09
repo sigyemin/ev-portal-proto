@@ -8,6 +8,22 @@
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
 <link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+<style>
+  /* 실단계 2단계 스텝퍼 (SC_DIRECT_APPLY / SC_APPLY) */
+  .cd-stages { display:flex; flex-direction:column; gap:20px; margin-top:4px; }
+  .cd-stage-title { display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:800; color:var(--text-primary); margin:0 0 10px; }
+  .cd-stage-title .gnum { display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%; background:var(--color-gray-200,#e5e7eb); color:var(--text-secondary); font-size:12px; font-weight:800; }
+  .cd-stepper { display:flex; flex-wrap:wrap; gap:8px; }
+  .cd-step { flex:1 1 110px; min-width:104px; border:1px solid var(--border-light); border-radius:10px; padding:10px 12px; background:#fff; text-align:center; }
+  .cd-step .code { font-size:11px; font-weight:700; color:var(--text-tertiary); font-variant-numeric:tabular-nums; }
+  .cd-step .lab { font-size:13px; font-weight:700; color:var(--text-secondary); margin-top:3px; line-height:1.35; }
+  .cd-step.done { border-color:var(--color-primary-300,#86efac); background:var(--color-primary-50,#f0fdf4); }
+  .cd-step.done .lab { color:var(--color-primary-700,#15803d); }
+  .cd-step.done .code { color:var(--color-primary-600,#16a34a); }
+  .cd-step.current { border-color:var(--color-secondary-500,#5D87FF); background:var(--color-secondary-50,#F3F7FF); box-shadow:0 0 0 2px var(--color-secondary-100,#dbeafe); }
+  .cd-step.current .lab { color:var(--color-secondary-700,#1f5fa8); }
+  .cd-step.current .code { color:var(--color-secondary-600,#3D6BF0); }
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -40,28 +56,81 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260701b"></script>
+<script src="js/contest-detail.js?v=20260709b"></script>
 <script>
-ContestDetail.mount({
-  applyHref:'charging-install-slow.html', applyName:'공용 완속충전시설 직접신청', supplementHref:'#',
-  apps:[
-    { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'보완요청 반영 · 재신청 접수', result:'progress',
-      notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)', contact:'충전인프라팀 044-201-6100' },
-      applicant:{ org:'○○상가번영회', rep:'상가 대표', bizNo:'개인(대표자 인증)', manager:'김담당', tel:'032-111-2222' },
-      block4:{ title:'신청 내용 · 대상 (완속 직접설치)', rows:[['설치 장소','인천 연수구 ○○상가 주차장'],['영업용 전기차','법인 택시 6대'],['소상공인 여부','해당(소상공인)'],['충전기 규격','완속 7kW · 4기']] },
-      timeline:[{label:'접수 완료',date:'2026.04.28',state:'done'},{label:'서류심사(재검토)',date:'2026.05.06',state:'current'},{label:'설치 승인',date:'',state:''},{label:'설치·점검',date:'',state:''},{label:'정산 완료',date:'',state:''}],
-      docs:[{name:'설치 계획서',ok:true},{name:'임대차계약서(사용승낙 포함)',ok:true},{name:'전기증설 확인서',ok:false}],
-      supplement:{ reason:'설치 장소 임대차계약서의 사용 승낙 범위가 확인되지 않아 보완요청되었으며, 보완서류 반영 후 재신청 접수되었습니다.', due:'2026.05.02', docs:['임대차계약서(사용승낙 포함)','전기증설 확인서'] },
-      action:'보완서류가 접수되어 재검토 중입니다. 결과를 기다려 주세요.' },
-    { appId:'CIS-2026-002210', project:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', status:'설치 승인·정산 완료', result:'done',
-      notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)', contact:'충전인프라팀 044-201-6100' },
-      applicant:{ org:'행복아파트 입주자대표회의', rep:'관리소장', bizNo:'개인(대표자 인증)', manager:'이담당', tel:'032-333-4444' },
-      block4:{ title:'신청 내용 · 대상 (완속 직접설치)', rows:[['설치 장소','인천 남동구 행복아파트 지하주차장'],['영업용 전기차','—'],['소상공인 여부','해당없음'],['충전기 규격','완속 7kW · 6기']] },
-      timeline:[{label:'접수 완료',date:'2026.02.20',state:'done'},{label:'서류심사',date:'2026.02.27',state:'done'},{label:'설치 승인',date:'2026.03.10',state:'done'},{label:'설치·점검',date:'2026.04.18',state:'done'},{label:'정산 완료',date:'2026.04.30',state:'current'}],
-      docs:[{name:'설치 계획서',ok:true},{name:'임대차계약서(사용승낙 포함)',ok:true},{name:'전기증설 확인서',ok:true},{name:'준공·점검 확인서',ok:true}],
-      action:'설치·정산이 완료되어 모든 절차가 종료되었습니다.' }
-  ]
-});
+/* [DEV] 직접신청 상태 = SC_DIRECT_APPLY.APP_STEP(코드군 DIRECT_APP_STEP): 100 대기 / 200 승인(사업수행기관 배정) / 101 거절 / 102 차순위 이관 / 401 최종거절 / 201 승인취소 / 300 관리자취소
+   [DEV] 설치·지급 = SC_APPLY.APP_STEP: 130 접수승인 / 140 착공 / 150 공사완료 / 217 현장점검완료 / 221 지급확인 / 501 완료 · 보완요청 110(신청)·215(현장)·315(지급)
+   [DEV] 담당자 입력값 = 답변메모 · 지자체메모(현행분석 근거). 전부 더미. 5단계 허구 타임라인·문의처 제거. */
+(function(){
+  // 실단계 스텝 마스터 (state는 앱별로 지정)
+  function grpApply(states){   // [직접신청·배정]
+    var m=[['100','신청접수(대기)'],['200','승인 · 사업수행기관 배정']];
+    return { group:'직접신청 · 배정', steps:m.map(function(s,i){ return { code:s[0], label:s[1], state:(states[i]||'') }; }) };
+  }
+  function grpInstall(states){ // [설치·지급]
+    var m=[['130','접수승인'],['140','착공'],['150','공사완료'],['217','현장점검완료'],['221','지급확인'],['501','완료']];
+    return { group:'설치 · 지급', steps:m.map(function(s,i){ return { code:s[0], label:s[1], state:(states[i]||'') }; }) };
+  }
+  ContestDetail.mount({
+    applyHref:'charging-install-slow.html', applyName:'공용 완속충전시설 직접신청', supplementHref:'charging-install-slow.html',
+    devRef:{
+      stateGroups:[
+        { title:'① 직접신청 · 배정 — SC_DIRECT_APPLY.APP_STEP (DIRECT_APP_STEP)', states:[
+          {code:'000', label:'예비'}, {code:'100', label:'대기'}, {code:'101', label:'거절'},
+          {code:'102', label:'차순위 이관'}, {code:'200', label:'승인 (사업수행기관 배정)'}, {code:'201', label:'승인취소'},
+          {code:'300', label:'관리자 취소'}, {code:'301', label:'복구'}, {code:'401', label:'최종거절'}, {code:'900', label:'기타'}
+        ]},
+        { title:'② 설치 · 지급 — SC_APPLY.APP_STEP', states:[
+          {code:'102', label:'접수대기'}, {code:'110', label:'신청 보완요청'}, {code:'111', label:'보완확인'},
+          {code:'130', label:'접수승인'}, {code:'140', label:'착공'}, {code:'150', label:'공사완료'},
+          {code:'215', label:'현장 보완요청'}, {code:'216', label:'현장 보완확인'}, {code:'217', label:'현장점검 완료'},
+          {code:'220', label:'보조금 확인'}, {code:'221', label:'지급확인'},
+          {code:'315', label:'지급 보완요청'}, {code:'316', label:'지급 보완확인'}, {code:'317', label:'지급서류 완료'},
+          {code:'501', label:'완료'}, {code:'910', label:'지원취소'}, {code:'920', label:'신청포기'}, {code:'940', label:'접수불가'}
+        ]}
+      ],
+      manager:['답변메모 · 지자체메모 (담당자 입력)','보완요청 3종 : 신청 110 · 현장 215 · 지급 315'],
+      db:[
+        ['SC_DIRECT_APPLY.APP_STEP','직접신청·배정 상태 · 코드군 DIRECT_APP_STEP'],
+        ['SC_APPLY.APP_STEP','설치·지급 상태 (배정 후 연계)']
+      ]
+    },
+    apps:[
+      // ① 신청 보완요청(110) — 직접신청·배정 단계, 신청접수(대기) 현재
+      { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'보완요청 (110)', result:'progress',
+        notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)' },
+        applicant:{ title:'신청자',
+          rows:[['신청자','김주민 (개인)'],['본인인증','휴대폰 본인인증 완료'],['연락처','032-111-2222'],['이메일','resident@example.com']] },
+        block4:{ title:'신청 정보', rows:[
+          ['신청 부지 관계','임차 (사용 승낙 필요)'],
+          ['설치희망지 구분','근린생활시설(상가) 주차장'],
+          ['설치희망 수량','완속 7kW · 4기'],
+          ['선호 사업수행기관','1순위 A충전 · 2순위 B에너지 · 3순위 C모빌리티'],
+          ['배정 사업수행기관','배정 대기 (승인 시 확정)']
+        ]},
+        stages:[ grpApply(['current','']), grpInstall(['','','','','','']) ],
+        docs:[{name:'건축물대장',ok:true},{name:'설치동의서(사용 승낙)',ok:false},{name:'전기증설 확인서',ok:false},{name:'설치희망지 도면·현황 사진',ok:true}],
+        supplement:{ reason:'[지자체메모] 설치동의서의 사용 승낙 범위가 확인되지 않으며, 전기증설 확인서가 누락되었습니다. 해당 항목을 보완하여 재제출해 주세요. (보완확인 시 111로 진행)', due:'2026.05.02', docs:['설치동의서(사용 승낙)','전기증설 확인서'] },
+        action:'보완 요청 항목을 확인하고 기한(2026.05.02) 내 재제출해 주세요.' },
+
+      // ② 설치·지급 완료(501)
+      { appId:'CIS-2026-002210', project:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', status:'완료 (501)', result:'done',
+        notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)' },
+        applicant:{ title:'신청자',
+          rows:[['신청자','이관리 (개인)'],['본인인증','휴대폰 본인인증 완료'],['연락처','032-333-4444'],['이메일','manager@example.com']] },
+        block4:{ title:'신청 정보', rows:[
+          ['신청 부지 관계','소유 (입주자대표회의 결의)'],
+          ['설치희망지 구분','공동주택 지하주차장'],
+          ['설치희망 수량','완속 7kW · 6기'],
+          ['선호 사업수행기관','1순위 A충전 · 2순위 B에너지 · 3순위 C모빌리티'],
+          ['배정 사업수행기관','A충전(주) (200 승인 시 배정)']
+        ]},
+        stages:[ grpApply(['done','done']), grpInstall(['done','done','done','done','done','current']) ],
+        docs:[{name:'건축물대장',ok:true},{name:'설치동의서(사용 승낙)',ok:true},{name:'전기증설 확인서',ok:true},{name:'준공·현장점검 확인서',ok:true}],
+        action:'설치·지급이 완료되어 모든 절차가 종료되었습니다.' }
+    ]
+  });
+})();
 </script>
 </body>
 </html>

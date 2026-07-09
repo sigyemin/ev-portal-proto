@@ -33,11 +33,13 @@
       '전체':'All','일반':'General','소형':'Small','초소형':'Micro',
       '대형':'Large','중형':'Medium','경형':'Mini'
     },
-    method: { '선착순':'First-Come','공모':'RFP','전체':'All' },
-    status: {
-      '접수중':'Open','소진임박':'Almost Closed','대기':'Waiting','신규확대':'New Expansion',
-      '마감':'Closed','전체':'All'
+    method: {
+      '출고등록순':'By Delivery Reg.','접수순':'By Receipt Order',
+      '접수순(초과시 추첨)':'Receipt Order (Lottery if exceeded)',
+      '접수순(초과시 출고등록순)':'Receipt Order (Delivery Reg. if exceeded)',
+      '추첨':'Lottery','기타':'Other','전체':'All'
     },
+    status: { '대기':'Waiting','접수중':'Open','마감임박':'Closing Soon','마감':'Closed','전체':'All' },
     label: {
       '펼치기':'Expand','접기':'Collapse','공고':'Announced','접수':'Received','출고':'Delivered',
       '잔여':'Remaining','출고 진행률':'Delivery Progress','공고':'Notices','대':' units','년':'',
@@ -186,7 +188,7 @@
 
   const DATA = [
     // ============== 2026년 ==============
-    makeRow('r1', 2026, '서울', '서울특별시', '전기승용', '일반', '선착순', '접수중',
+    makeRow('r1', 2026, '서울', '서울특별시', '전기승용', '일반', '출고등록순', '접수중',
       12450, 12450, 10830,
       bd(3230,1850,2100,5270, 3230,1850,2100,5270, 2850,1650,1930,4400),
       [ {label:'본공고 1', file:'2026-seoul-ev-01.pdf', date:'2026.02.01'},
@@ -196,7 +198,7 @@
       '** 2026.6.15. 마감 기준, 상반기 서울시 전기승용차 보급 현황을 안내드립니다. (택시 마감)\n○ 보급목표 : 11,361대\n○ 접수대수 : 10,451대\n○ 잔여대수 : 910대\n※ 상반기 보급물량 소진 시에는 당초 일정보다 조기에 마감할 계획입니다.',
       '서울시 기후환경본부 무공해차지원팀', '02-2133-3000'),
 
-    makeRow('r2', 2026, '서울', '서울특별시', '전기화물', '소형', '선착순', '소진임박',
+    makeRow('r2', 2026, '서울', '서울특별시', '전기화물', '소형', '접수순', '소진임박',
       8200, 7980, 7350,
       bd(1200,3500,0,3500, 1180,3400,0,3400, 1100,3200,0,3050),
       [ {label:'본공고 1', file:'2026-seoul-truck-01.pdf', date:'2026.02.01'},
@@ -204,14 +206,14 @@
       '잔여 11% · 조기 마감 예상',
       '서울시 기후환경본부 무공해차지원팀', '02-2133-3000'),
 
-    makeRow('r3', 2026, '서울', '서울특별시', '수소승용', '일반', '선착순', '접수중',
+    makeRow('r3', 2026, '서울', '서울특별시', '수소승용', '일반', '접수순(초과시 추첨)', '접수중',
       520, 318, 296,
       bd(80,120,0,320, 52,78,0,188, 48,72,0,176),
       [ {label:'본공고 1', file:'2026-seoul-h2-01.pdf', date:'2026.02.15'} ],
       '접수 진행중',
       '서울시 기후환경본부 수소차지원팀', '02-2133-3050'),
 
-    makeRow('r4', 2026, '부산', '부산광역시 해운대구', '전기승용', '일반', '선착순', '접수중',
+    makeRow('r4', 2026, '부산', '부산광역시 해운대구', '전기승용', '일반', '접수순(초과시 출고등록순)', '접수중',
       3200, 1088, 960,
       bd(680,420,0,2100, 230,142,0,716, 202,125,0,633),
       [ {label:'본공고 1', file:'2026-busan-hd-ev-01.pdf', date:'2026.02.10'},
@@ -219,14 +221,14 @@
       '[긴급공지] 26.05.29 상반기 추가 공고물량 대상자 선정이 마감되었습니다. 하반기는 7월 예정이며, 대상자 미선정 건은 모두 취소되어 하반기 오픈 시 지원신청부터 진행하셔야 합니다.\n○ 상반기 추가 보급대수 : 1,000대 (승용 600 / 화물 400)\n○ 보급기간 : 26.05.27(수) 11:00 ~ 추가 보급분 예산 소진 시까지\n※ 신청 접수가 빨라도 서류 미비·시스템 입력 오기 시 보완처리로 대상자 선정이 지연될 수 있으니 누락 없이 정확히 작성 바랍니다.\n※ 전환지원금은 26.1.1 이후 판매 또는 폐차 건부터 지급신청 전까지 인정되며, "지급신청 이후"에 판매·폐차한 건은 불인정됩니다.',
       '부산 해운대구 환경위생과', '051-749-4100'),
 
-    makeRow('r5', 2026, '부산', '부산광역시 해운대구', '전기승합', '대형', '공모', '접수중',
+    makeRow('r5', 2026, '부산', '부산광역시 해운대구', '전기승합', '대형', '기타', '접수중',
       120, 42, 28,
       bd(0,120,0,0, 0,42,0,0, 0,28,0,0),
       [ {label:'공모공고 1', file:'2026-busan-bus-01.pdf', date:'2026.03.02'} ],
       '운수사업자 대상 공모',
       '부산시 대중교통과', '051-888-4350'),
 
-    makeRow('r6', 2026, '경기', '경기도 성남시', '전기승용', '일반', '선착순', '접수중',
+    makeRow('r6', 2026, '경기', '경기도 성남시', '전기승용', '일반', '출고등록순', '접수중',
       5600, 2688, 2350,
       bd(1120,840,0,3640, 538,403,0,1747, 470,352,0,1528),
       [ {label:'본공고 1', file:'2026-seongnam-ev-01.pdf', date:'2026.02.05'},
@@ -235,35 +237,35 @@
       '접수 진행중 · 가정 충전기 설치 +100만원',
       '성남시 기후환경과', '031-729-3000'),
 
-    makeRow('r7', 2026, '경기', '경기도 성남시', '전기이륜', '경형', '선착순', '접수중',
+    makeRow('r7', 2026, '경기', '경기도 성남시', '전기이륜', '경형', '추첨', '접수중',
       800, 312, 278,
       bd(0,0,150,650, 0,0,58,254, 0,0,52,226),
       [ {label:'본공고 1', file:'2026-seongnam-moto-01.pdf', date:'2026.03.01'} ],
       '배달 플랫폼 사업자 우대',
       '성남시 기후환경과', '031-729-3010'),
 
-    makeRow('r8', 2026, '제주', '제주특별자치도 제주시', '전기승용', '일반', '선착순', '신규확대',
+    makeRow('r8', 2026, '제주', '제주특별자치도 제주시', '전기승용', '일반', '접수순', '신규확대',
       2400, 528, 472,
       bd(480,360,0,1560, 106,79,0,343, 94,71,0,307),
       [ {label:'본공고 1', file:'2026-jeju-ev-01.pdf', date:'2026.02.12'} ],
       '카본프리 아일랜드 연계 · 도내 거주자 +50만원',
       '제주시 탄소중립지원과', '064-710-3000'),
 
-    makeRow('r9', 2026, '제주', '제주특별자치도 제주시', '수소승용', '일반', '선착순', '신규확대',
+    makeRow('r9', 2026, '제주', '제주특별자치도 제주시', '수소승용', '일반', '출고등록순', '신규확대',
       80, 18, 15,
       bd(0,40,0,40, 0,9,0,9, 0,7,0,8),
       [ {label:'본공고 1', file:'2026-jeju-h2-01.pdf', date:'2026.03.05'} ],
       '관광업 등록사업자 추가 지원',
       '제주시 탄소중립지원과', '064-710-3050'),
 
-    makeRow('r10', 2026, '대전', '대전광역시 유성구', '전기승용', '일반', '선착순', '대기',
+    makeRow('r10', 2026, '대전', '대전광역시 유성구', '전기승용', '일반', '접수순(초과시 추첨)', '대기',
       1800, 1710, 1620,
       bd(360,270,0,1170, 342,257,0,1111, 324,243,0,1053),
       [ {label:'본공고 1', file:'2026-daejeon-ys-ev-01.pdf', date:'2026.02.20'} ],
       '예산 소진 95% · 대기자 등록 운영',
       '대전 유성구 환경과', '042-611-2400'),
 
-    makeRow('r11', 2026, '인천', '인천광역시 연수구', '전기승용', '일반', '선착순', '접수중',
+    makeRow('r11', 2026, '인천', '인천광역시 연수구', '전기승용', '일반', '출고등록순', '접수중',
       2100, 924, 836,
       bd(420,315,0,1365, 185,139,0,600, 167,125,0,544),
       [ {label:'본공고 1', file:'2026-incheon-ys-ev-01.pdf', date:'2026.02.15'},
@@ -271,28 +273,28 @@
       '접수 진행중',
       '인천 연수구 녹색환경과', '032-749-7200'),
 
-    makeRow('r12', 2026, '인천', '인천광역시 연수구', '전기화물', '소형', '선착순', '접수중',
+    makeRow('r12', 2026, '인천', '인천광역시 연수구', '전기화물', '소형', '접수순', '접수중',
       600, 240, 210,
       bd(90,240,0,270, 36,96,0,108, 32,84,0,94),
       [ {label:'본공고 1', file:'2026-incheon-ys-truck-01.pdf', date:'2026.03.10'} ],
       '소상공인 우선 지원',
       '인천 연수구 녹색환경과', '032-749-7210'),
 
-    makeRow('r13', 2026, '대구', '대구광역시 수성구', '전기승용', '일반', '선착순', '접수중',
+    makeRow('r13', 2026, '대구', '대구광역시 수성구', '전기승용', '일반', '출고등록순', '접수중',
       1600, 768, 680,
       bd(320,240,0,1040, 154,115,0,499, 136,102,0,442),
       [ {label:'본공고 1', file:'2026-daegu-ss-ev-01.pdf', date:'2026.02.18'} ],
       '접수 진행중',
       '대구 수성구 환경도시과', '053-666-4000'),
 
-    makeRow('r14', 2026, '울산', '울산광역시 남구', '수소승용', '일반', '선착순', '접수중',
+    makeRow('r14', 2026, '울산', '울산광역시 남구', '수소승용', '일반', '접수순(초과시 출고등록순)', '접수중',
       150, 72, 66,
       bd(30,60,0,60, 14,29,0,29, 13,26,0,27),
       [ {label:'본공고 1', file:'2026-ulsan-nam-h2-01.pdf', date:'2026.02.25'} ],
       '수소버스 연계 사업 운영',
       '울산 남구 환경과', '052-226-5000'),
 
-    makeRow('r15', 2026, '광주', '광주광역시 서구', '전기승용', '일반', '선착순', '접수중',
+    makeRow('r15', 2026, '광주', '광주광역시 서구', '전기승용', '일반', '추첨', '접수중',
       1400, 560, 504,
       bd(280,210,0,910, 112,84,0,364, 101,76,0,327),
       [ {label:'본공고 1', file:'2026-gwangju-sg-ev-01.pdf', date:'2026.02.22'} ],
@@ -300,7 +302,7 @@
       '광주 서구 환경녹지과', '062-350-4200'),
 
     // ============== 2025년 (일부) ==============
-    makeRow('r16', 2025, '서울', '서울특별시', '전기승용', '일반', '선착순', '마감',
+    makeRow('r16', 2025, '서울', '서울특별시', '전기승용', '일반', '출고등록순', '마감',
       11000, 11000, 10890,
       bd(2860,1650,1870,4620, 2860,1650,1870,4620, 2830,1634,1852,4574),
       [ {label:'본공고 1', file:'2025-seoul-ev-01.pdf', date:'2025.02.01'},
@@ -309,7 +311,7 @@
       '예산 집행 완료',
       '서울시 기후환경본부 무공해차지원팀', '02-2133-3000'),
 
-    makeRow('r17', 2025, '경기', '경기도 성남시', '전기승용', '일반', '선착순', '마감',
+    makeRow('r17', 2025, '경기', '경기도 성남시', '전기승용', '일반', '접수순', '마감',
       4800, 4800, 4755,
       bd(960,720,0,3120, 960,720,0,3120, 950,713,0,3092),
       [ {label:'본공고 1', file:'2025-seongnam-ev-01.pdf', date:'2025.02.05'},
@@ -317,7 +319,7 @@
       '예산 집행 완료',
       '성남시 기후환경과', '031-729-3000'),
 
-    makeRow('r18', 2025, '부산', '부산광역시 해운대구', '전기승용', '일반', '선착순', '마감',
+    makeRow('r18', 2025, '부산', '부산광역시 해운대구', '전기승용', '일반', '출고등록순', '마감',
       2800, 2800, 2768,
       bd(560,420,0,1820, 560,420,0,1820, 553,415,0,1800),
       [ {label:'본공고 1', file:'2025-busan-hd-ev-01.pdf', date:'2025.02.10'} ],
@@ -325,14 +327,14 @@
       '부산 해운대구 환경위생과', '051-749-4100'),
 
     // ============== 2024년 (일부) ==============
-    makeRow('r19', 2024, '서울', '서울특별시', '전기승용', '일반', '선착순', '마감',
+    makeRow('r19', 2024, '서울', '서울특별시', '전기승용', '일반', '출고등록순', '마감',
       10000, 10000, 9950,
       bd(2500,1500,1800,4200, 2500,1500,1800,4200, 2488,1493,1791,4178),
       [ {label:'본공고 1', file:'2024-seoul-ev-01.pdf', date:'2024.02.01'} ],
       '예산 집행 완료',
       '서울시 기후환경본부 무공해차지원팀', '02-2133-3000'),
 
-    makeRow('r20', 2024, '경기', '경기도 성남시', '전기승용', '일반', '선착순', '마감',
+    makeRow('r20', 2024, '경기', '경기도 성남시', '전기승용', '일반', '접수순', '마감',
       4200, 4200, 4180,
       bd(840,630,0,2730, 840,630,0,2730, 836,627,0,2717),
       [ {label:'본공고 1', file:'2024-seongnam-ev-01.pdf', date:'2024.02.05'} ],
@@ -340,7 +342,7 @@
       '성남시 기후환경과', '031-729-3000'),
 
     // ============== 2023년 (일부) ==============
-    makeRow('r21', 2023, '서울', '서울특별시', '전기승용', '일반', '선착순', '마감',
+    makeRow('r21', 2023, '서울', '서울특별시', '전기승용', '일반', '출고등록순', '마감',
       9500, 9500, 9470,
       bd(2375,1425,1710,3990, 2375,1425,1710,3990, 2367,1420,1704,3979),
       [ {label:'본공고 1', file:'2023-seoul-ev-01.pdf', date:'2023.02.01'} ],
@@ -421,7 +423,7 @@
       if (sido !== '전체' && r.sido !== sido) return false;
       if (sg !== '전체' && !r.region.includes(sg)) return false;
       if (method !== '전체' && r.method !== method) return false;
-      if (status !== '전체' && r.status !== status) return false;
+      if (status !== '전체' && rowStatus(r) !== status) return false;
       if (favOnly && window.EVFavorites && !window.EVFavorites.isFav(String(r.id), 'region')) return false;
       return true;
     });
@@ -451,8 +453,7 @@
   // ---------------- Render ----------------
   const fmt = (n) => n == null ? '-' : n.toLocaleString('ko-KR');
   const statusClass = (s) => ({
-    '접수중': 'approach', '소진임박': 'warning', '대기': 'danger',
-    '신규확대': 'info', '마감': 'gray'
+    '대기': 'info', '접수중': 'approach', '마감임박': 'warning', '마감': 'gray'
   }[s] || 'gray');
 
   // v0.16 — 공고별 신청 마감 / 접수기간 (각 공고 게시일 기준 산출 → 공고마다 다름)
@@ -465,6 +466,21 @@
     const ed = new Date(sd); ed.setDate(ed.getDate() + span);
     return { start: n.date + ' 09시 00분', end: _fmtYMD(ed) + ' 18시 00분', deadline: _fmtYMD(ed) + ' 18시 00분' };
   }
+  // 접수상태 — 접수기간 기준 파생 (대기: 첫 공고 접수 전 · 마감임박: 최종 신청마감 30일 전부터 · 마감: 최종 신청마감 경과)
+  function rowStatus(r) {
+    if (!r.notices || !r.notices.length) return '접수중';
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const t = now.getTime();
+    const spanOf = (n) => /추경|공모/.test(n.label) ? 45 : 90;
+    const starts = r.notices.map(n => _parseYMD(n.date).getTime());
+    const ends = r.notices.map(n => { const ed = _parseYMD(n.date); ed.setDate(ed.getDate() + spanOf(n)); return ed.getTime(); });
+    const firstStart = Math.min(...starts);
+    const lastEnd = Math.max(...ends);
+    if (t < firstStart) return '대기';
+    if (t > lastEnd) return '마감';
+    const daysLeft = Math.ceil((lastEnd - t) / 86400000);
+    return daysLeft <= 30 ? '마감임박' : '접수중';
+  }
   // 표 셀용 짧은 접수기간 (26.02.01 ~ 05.02)
   function compactRange(n) {
     const sd = _parseYMD(n.date);
@@ -473,7 +489,6 @@
     const md = (d) => _pad2(d.getMonth() + 1) + '.' + _pad2(d.getDate());
     return String(sd.getFullYear()).slice(2) + '.' + md(sd) + ' ~ ' + md(ed);
   }
-  const METHOD_LABEL = { '선착순': '출고등록순', '공모': '공모', '추첨': '추첨순' };
   // 공고종류 (본공고/추경/공모) — 라벨에서 판별
   function noticeKind(label) { return /추경/.test(label) ? '추경' : /공모/.test(label) ? '공모' : '본공고'; }
   function noticeKindClass(label) { return /추경/.test(label) ? 'supp' : /공모/.test(label) ? 'bid' : 'main'; }
@@ -556,7 +571,6 @@
         <td class="cell-period"><ul class="nt-list nt-sched">${periods || empty}</ul></td>
         <td class="cell-deadline-c">${lastDeadline}</td>
         ${totalCountCell(r)}
-        <td class="cell-remark-c"><span class="remark-clamp" title="${remarkFull.replace(/"/g, '&quot;')}">${remarkFull}</span></td>
         <td style="text-align:center;">
           <button class="expand-toggle" type="button" aria-expanded="false">
             <span class="label">${tr('label','펼치기')}</span>
@@ -565,7 +579,7 @@
         </td>
       </tr>
       <tr class="detail-row" data-detail-for="${r.id}">
-        <td colspan="13"></td>
+        <td colspan="12"></td>
       </tr>
     `;
     }).join('');
@@ -1017,7 +1031,7 @@
     <dt>차종구분</dt><dd>${row.vehicleType} · ${row.vehicleSub || '일반'}</dd>
     <dt>기준년도</dt><dd>${row.year}년</dd>
     <dt>접수방법</dt><dd>${row.method}</dd>
-    <dt>접수상태</dt><dd><strong>${row.status}</strong></dd>
+    <dt>접수상태</dt><dd><strong>${rowStatus(row)}</strong></dd>
     <dt>문의처</dt><dd>${row.phone || '1661-0970'}</dd>
   </dl>
 
@@ -1231,7 +1245,7 @@
         const selRem = Math.max(0, r.announcement - sel);
         const bud = budgetUsedPctOf(r); // 예산소진율 = 카테고리 단가 가중(화면 '예산 현황'과 동일)
         return [
-          key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub, r.method, r.status,
+          key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub, r.method, rowStatus(r),
           kindSummary(r), r.notices.length, lastDeadline(r),
           r.announcement, r.received, sel, r.delivered, selRem, r.remaining,
           pct(r.received, r.announcement), pct(sel, r.announcement), pct(r.delivered, r.announcement),
@@ -1277,13 +1291,13 @@
     // ── 시트 3: 공고별_일정·공고문 (공고 1건 = 1행) ──
     const announce = [
       ['관리번호', '기준년도', '시도', '지역구분', '차종', '세부차종',
-       '공고종류', '공고명', '게시일', '접수시작', '접수마감', '신청마감']
+       '공고종류', '공고명', '게시일', '접수시작', '접수마감']
     ];
     rows.forEach(r => {
       r.notices.forEach(n => {
         const s = noticeSchedule(n);
         announce.push([key(r), r.year, r.sido, r.region, r.vehicleType, r.vehicleSub,
-          noticeKind(n.label), n.label, n.date, s.start, s.end, s.deadline]);
+          noticeKind(n.label), n.label, n.date, s.start, s.end]);
       });
     });
 
@@ -1335,7 +1349,7 @@
                     {wch:14},{wch:9},{wch:15},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},
                     {wch:9},{wch:9},{wch:9},{wch:12},{wch:13},{wch:26},{wch:14},{wch:40}];
     ws2['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:11},{wch:11},{wch:11},{wch:11},{wch:11}];
-    ws3['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:14},{wch:13},{wch:18},{wch:18},{wch:18}];
+    ws3['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:14},{wch:13},{wch:18},{wch:18}];
     ws4['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:18},{wch:12},{wch:11},{wch:11},{wch:12},{wch:12},{wch:14},{wch:10}];
     wsBud['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:10},{wch:13},{wch:15},{wch:34},{wch:40}];
     ws5['!cols'] = [{wch:10},{wch:12},{wch:12},{wch:18},{wch:14},{wch:14},{wch:30}];

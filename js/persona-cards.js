@@ -39,7 +39,7 @@
         { t: '수소차 충전요금 안내', t_en: 'H2 Charging Fees', d: '수소차 충전 단가와 지역별 요금 정보를 확인하세요.', d_en: 'Check hydrogen charging rates and regional fees.', href: 'charging-fee-h2.html', emoji: '💧' },
         { t: '운영 현황 안내', t_en: 'Operation Status', d: '수소충전소 운영·정비 현황을 안내해 드립니다.', d_en: 'See hydrogen station operation and maintenance status.', href: 'charging-help.html', emoji: '🛠️' },
         { t: '충전 사업자 운영 현황', t_en: 'Operator Status', d: '충전사업자 신뢰도·운영 현황을 확인하세요.', d_en: 'Check operator reliability and operation status.', href: 'data.html#tindex', emoji: '📊' },
-        { t: '충전 인프라 현황', t_en: 'Infra Status', d: '충전소 설치 현황·가동률 등 인프라 통계를 확인하세요.', d_en: 'See station counts, uptime and other infra stats.', href: 'data-infra.html', emoji: '📈' },
+        { t: '충전 인프라 현황', t_en: 'Infra Status', d: '충전소 설치 현황·가동률 등 인프라 통계를 확인하세요.', d_en: 'See station counts, uptime and other infra stats.', href: 'data.html#infra', emoji: '📈' },
         { t: '환수금 안내·계산기', t_en: 'Recovery Calculator', d: '잔여 의무기간을 기준으로 예상 보조금 환수금을 계산하세요.', d_en: 'Estimate subsidy recovery based on remaining duty period.', href: 'subsidy-refund.html', emoji: '↩️' },
         { t: 'AI 맞춤 상담', t_en: 'AI Assistant', d: '궁금한 점을 AI 헬프데스크에 자연어로 물어보세요.', d_en: 'Ask the AI help desk anything in plain language.', href: 'index.html?ai=personal#aiSectionAnchor', emoji: '🤖' }
       ]

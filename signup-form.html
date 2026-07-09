@@ -109,12 +109,19 @@
             <div class="form-section">
               <h3 class="fs-title" id="contactTitle" data-i18n="signup.f.fs.contact">연락처 및 추가 정보</h3>
 
+              <!-- 회원구분 (개인정보관리: PSNL_CRP_GB 코드113 · 개인/법인) -->
+              <div class="form-group">
+                <label class="form-label"><span data-i18n="signup.f.lbl.memtype">개인/법인사업자 여부</span> <span class="required">*</span></label>
+                <div class="vpf-carriers" id="memTypeRow">
+                  <label class="vpf-carrier"><input type="radio" name="memType" value="personal" checked><span data-i18n="signup.f.memtype.personal">개인</span></label>
+                  <label class="vpf-carrier"><input type="radio" name="memType" value="corp"><span data-i18n="signup.f.memtype.corp">법인사업자</span></label>
+                </div>
+                <div class="form-help" data-i18n="signup.f.memtype.help">법인사업자는 회사명·사업자등록번호·부서명을 추가로 입력합니다.</div>
+              </div>
+
               <div class="form-group">
                 <label class="form-label" for="fEmail"><span id="emailLabel" data-i18n="signup.f.lbl.email">이메일</span> <span class="required">*</span></label>
-                <div class="form-row-inline">
-                  <input type="email" class="form-input" id="fEmail" placeholder="example@domain.com" autocomplete="email" required>
-                  <button type="button" class="btn btn-secondary" id="verifyEmailBtn" data-i18n="signup.f.btn.verifyemail">이메일 인증</button>
-                </div>
+                <input type="email" class="form-input" id="fEmail" placeholder="example@domain.com" autocomplete="email" required>
                 <div class="form-help" id="emailHelp" data-i18n="signup.f.email.help">보조금 신청 결과·민원 처리 알림 발송에 사용됩니다.</div>
               </div>
 
@@ -139,14 +146,30 @@
                 </div>
               </div>
 
-              <!-- 사업자등록번호 (법인·기관 선택 입력 · 진위확인만) -->
-              <div class="form-group">
-                <label class="form-label" for="fBizNo" data-i18n="signup.f.lbl.bizno.opt">사업자등록번호 (선택 · 법인·기관)</label>
-                <div class="form-row-inline biz-check-row">
-                  <input type="text" class="form-input" id="fBizNo" inputmode="numeric" maxlength="12" placeholder='0000000000 (10자리, "-" 제외)' data-i18n-attr="placeholder:signup.f.bizno.ph">
-                  <button type="button" class="btn btn-secondary" id="checkBizBtn" data-i18n="signup.f.btn.checkbiz">진위 확인</button>
+              <!-- 법인사업자 전용 (회원구분=법인사업자 시 표시 · 개인정보관리 BUSI_NO 등) -->
+              <div id="bizFields" hidden>
+                <div class="form-group">
+                  <label class="form-label" for="fCompany"><span data-i18n="signup.f.lbl.company">회사명(소속)</span> <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="fCompany" placeholder="회사명(소속)" data-i18n-attr="placeholder:signup.f.company.ph">
                 </div>
-                <div class="form-help" id="bizHelp" data-i18n="signup.f.biz.help.opt">법인·기관 명의 가입 시 입력하세요. 없어도 가입할 수 있습니다.</div>
+                <div class="form-group">
+                  <label class="form-label" for="fBizNo1"><span data-i18n="signup.f.lbl.bizno">사업자등록번호</span> <span class="required">*</span></label>
+                  <div class="form-row-inline biz-check-row">
+                    <div style="display:flex;align-items:center;gap:6px;flex:1;">
+                      <input type="text" class="form-input" id="fBizNo1" inputmode="numeric" maxlength="3" placeholder="000" style="width:72px;text-align:center;">
+                      <span aria-hidden="true">-</span>
+                      <input type="text" class="form-input" id="fBizNo2" inputmode="numeric" maxlength="2" placeholder="00" style="width:58px;text-align:center;">
+                      <span aria-hidden="true">-</span>
+                      <input type="text" class="form-input" id="fBizNo3" inputmode="numeric" maxlength="5" placeholder="00000" style="width:96px;text-align:center;">
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="checkBizBtn" data-i18n="signup.f.btn.checkbiz">진위 확인</button>
+                  </div>
+                  <div class="form-help" id="bizHelp" data-i18n="signup.f.biz.help">사업자등록번호 10자리(3-2-5)를 입력 후 진위 확인해 주세요.</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="fDept"><span data-i18n="signup.f.lbl.dept">부서명</span> <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="fDept" placeholder="부서명" data-i18n-attr="placeholder:signup.f.dept.ph">
+                </div>
               </div>
 
               <div class="form-group">
@@ -255,7 +278,7 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-auth.js?v=20260630c"></script>
+<script src="js/i18n-auth.js?v=20260707s"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -313,36 +336,38 @@
     document.getElementById('fId').dataset.checked = 'true';
     validateForm();
   });
-  // ── 사업자등록번호: 선택 입력(법인·기관용) · 진위확인만 ──
-  const bizNoEl = document.getElementById('fBizNo');
+  // ── 회원구분(개인/법인사업자) 토글 ──
+  const bizFields = document.getElementById('bizFields');
+  function isCorp(){ return document.querySelector('input[name=memType]:checked')?.value === 'corp'; }
+  function syncMemType(){ if (bizFields) bizFields.hidden = !isCorp(); validateForm(); }
+  document.querySelectorAll('input[name=memType]').forEach(r => r.addEventListener('change', syncMemType));
+
+  // ── 사업자등록번호(법인사업자): 3분할(3-2-5) + 진위확인 ──
   const bizHelp = document.getElementById('bizHelp');
-  function bizDigits(){ return (bizNoEl?.value || '').replace(/\D/g, ''); }
+  const BIZ_PARTS = ['fBizNo1','fBizNo2','fBizNo3'];
+  let bizVerified = false;
+  function bizDigits(){ return BIZ_PARTS.map(id => (document.getElementById(id)?.value || '').replace(/\D/g, '')).join(''); }
 
   document.getElementById('checkBizBtn')?.addEventListener('click', () => {
-    const no = bizDigits();
-    if (no.length !== 10) {
-      bizHelp.innerHTML = '<span style="color:var(--color-danger);">사업자등록번호 10자리를 정확히 입력해 주세요.</span>';
+    if (bizDigits().length !== 10) {
+      bizHelp.innerHTML = '<span style="color:var(--color-danger);">사업자등록번호 10자리(3-2-5)를 정확히 입력해 주세요.</span>';
       return;
     }
+    bizVerified = true;
     bizHelp.innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">✓ 진위 확인이 완료되었습니다.</span>';
+    validateForm();
   });
-  bizNoEl?.addEventListener('input', () => {
-    bizHelp.innerHTML = '법인·기관 명의 가입 시 입력하세요. 없어도 가입할 수 있습니다.';
-    bizHelp.style.color = '';
-  });
+  BIZ_PARTS.forEach(id => document.getElementById(id)?.addEventListener('input', () => {
+    bizVerified = false;
+    bizHelp.textContent = '사업자등록번호 10자리(3-2-5)를 입력 후 진위 확인해 주세요.'; bizHelp.style.color = '';
+    validateForm();
+  }));
   const pw2 = document.getElementById('fPw2');
   pw2?.addEventListener('input', () => {
     const help = document.getElementById('pw2Help');
     if (!pw2.value) { help.textContent = '비밀번호와 동일하게 입력해 주세요.'; help.style.color = ''; }
     else if (pw2.value === pw.value) help.innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">✓ 비밀번호가 일치합니다.</span>';
     else help.innerHTML = '<span style="color:var(--color-danger);">비밀번호가 일치하지 않습니다.</span>';
-    validateForm();
-  });
-  document.getElementById('verifyEmailBtn')?.addEventListener('click', () => {
-    const email = document.getElementById('fEmail').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (window.__toast) window.__toast('올바른 이메일 형식을 입력해 주세요.', 'warning'); return; }
-    if (window.__toast) window.__toast(`${email}로 인증 메일을 발송하였습니다. (데모)`, 'success');
-    document.getElementById('fEmail').dataset.verified = 'true';
     validateForm();
   });
 
@@ -364,7 +389,14 @@
     const pw2Ok = pw2.value && pw2.value === pw.value;
     const email = document.getElementById('fEmail').value.trim();
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const ready = id.length >= 4 && idChecked && pwOk && pw2Ok && emailOk;
+    // 법인사업자: 회사명·부서명·사업자등록번호(진위) 필수 / 개인: 미검증
+    let bizOk = true;
+    if (isCorp()) {
+      const company = document.getElementById('fCompany').value.trim();
+      const dept = document.getElementById('fDept').value.trim();
+      bizOk = !!company && !!dept && bizVerified;
+    }
+    const ready = id.length >= 4 && idChecked && pwOk && pw2Ok && emailOk && bizOk;
     const btn = document.getElementById('submitSignup');
     btn.disabled = !ready;
     btn.classList.toggle('is-ready', ready);
@@ -376,7 +408,10 @@
     const btn = document.getElementById('submitSignup');
     if (btn.disabled) return;
     const data = {
-      bizNo: bizDigits(),
+      memType: document.querySelector('input[name=memType]:checked')?.value || 'personal',
+      company: document.getElementById('fCompany')?.value || '',
+      dept: document.getElementById('fDept')?.value || '',
+      bizNo: isCorp() ? bizDigits() : '',
       id: document.getElementById('fId').value,
       email: document.getElementById('fEmail').value,
       sido: document.getElementById('fSido')?.value || '',

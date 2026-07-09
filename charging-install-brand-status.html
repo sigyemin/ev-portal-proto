@@ -8,6 +8,11 @@
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
 <link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+<style>
+  /* 항목별 심사: 반려 행 강조(보완 대상) */
+  .cd-tbl tr.cd-reject td { background:#FEF2F2; }
+  .cd-tbl tr.cd-reject td:first-child { box-shadow:inset 3px 0 0 #DC2626; font-weight:700; }
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -40,23 +45,110 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260701b"></script>
+<script src="js/contest-detail.js?v=20260709b"></script>
 <script>
-ContestDetail.mount({
-  applyHref:'charging-install-brand.html', applyName:'지역별 무공해차 전환 브랜드 사업 공모 신청', supplementHref:'#',
-  apps:[
-    { appId:'CIB-2026-000045', project:'지역별 무공해차 전환 브랜드 사업 공모 신청', applyDate:'2026.01.30', status:'협약 체결 완료', result:'done',
-      notice:{ name:'2026년 지역별 무공해차 전환 브랜드 사업 공모', no:'환경부공고 제2026-032호', org:'한국환경공단', period:'2025.12.20 ~ 2026.01.30', announce:'2026.03.05', scale:'전국 10개 지역', contact:'무공해차전환팀 044-201-6200' },
-      applicant:{ org:'부산에코모빌리티(주)', rep:'윤대표', bizNo:'605-81-72340', manager:'강담당', tel:'051-700-8000',
-        consortium:[{name:'부산에코모빌리티(주)', role:'주관사'},{name:'○○충전(주)', role:'충전 인프라'},{name:'△△여객', role:'전환 수요처'}] },
-      block4:{ title:'신청 내용 · 대상 (브랜드 사업)', rows:[['브랜드 사업내용','무공해차 전환 + 충전 인프라 구축'],['설치 수량','급속 30기 / 완속 120기'],['대상 지역','부산광역시 전역']] },
-      timeline:[{label:'접수 완료',date:'2026.01.30',state:'done'},{label:'적격심사',date:'2026.02.10',state:'done'},{label:'평가·선정',date:'2026.03.05',state:'done'},{label:'협약 체결',date:'2026.03.12',state:'current'},{label:'사업 수행',date:'',state:''}],
-      docs:[{name:'사업계획서',ok:true},{name:'컨소시엄 협약서',ok:true},{name:'지자체 협조 공문',ok:true}],
-      selection:{ selected:true, volume:'충전 150기 + 전환 200대', rank:'—', note:'브랜드 사업자로 선정되었습니다.' },
-      agreement:{ date:'2026.03.12(체결완료)', guide:'협약이 체결되어 사업을 수행 중입니다. 단계별 정산은 실적 제출 후 진행됩니다.' },
-      action:'협약이 체결되었습니다. 사업 수행 및 정산 절차를 진행해 주세요.' }
-  ]
-});
+/* [DEV] 심사 상태 = TNSM_BRND_BSNS_APPLY.APPR_STS (I 제출완료 / S 보완완료 / Y 승인 / N 반려)
+   [DEV] 선정 결과 = SLCTN_YN (Y 선정 / N 미선정) — 심사 승인과 별개 축, 별도 배지
+   [DEV] result 매핑: 선정→selected · 반려/미선정→rejected · 제출완료·보완완료→progress · 승인(미선정 전)→progress
+   [DEV] 항목별 심사 = *_CHK 컬럼(Y 승인 / N 반려) · 첨부 = ATTCH_FILE_ID1~27(+_CHK) · 종합메모 = APPR_MEMO
+   [DEV] 접수기관 = BSNS_APPLY_JDT(K 한국환경공단 / A 한국자동차환경협회) · 컨소시엄 = CONSORTIUM_YN. 전부 더미. 5단계 허구 타임라인·문의처 제거. */
+(function(){
+  // 첨부 27종 (ATTCH_FILE_ID1~27) — reject: 반려 항목명 배열
+  var ATTACH27=['사업계획서','사업 제안서','컨소시엄 협약서','대표제안사 지정서','사업자등록증(주관사)','법인 등기부등본(주관사)','법인 인감증명서(주관사)','신용평가등급확인서','재무제표(최근 3개년)','컨소시엄 구성원 명부','구성원 사업자등록증','구성원 참여 확약서','지자체 협조 공문','전환 수요처 확약서','충전 인프라 구축계획서','완속 충전기 설치계획서','급속 충전기 설치계획서','설치부지 확보 증빙','설치동의서','전기증설 확인서','사업비 산출내역서','자부담 조달 확약서','지역 고용·기여 계획서','안전·품질관리 계획서','운영·유지관리 계획서','정량평가 자체점검표','기타 정성·정량 증빙'];
+  function docs27(reject){ return ATTACH27.map(function(n){ return { name:n, ok:(reject||[]).indexOf(n)<0 }; }); }
+
+  var reject1=['대표제안사 지정서','전기증설 확인서'];
+  ContestDetail.mount({
+    applyHref:'charging-install-brand.html', applyName:'지역별 무공해차 전환 브랜드 사업 공모 신청', supplementHref:'charging-install-brand.html',
+    devRef:{
+      stateGroups:[
+        { title:'① 심사 — APPR_STS', states:[
+          {code:'I', label:'제출완료', badge:'progress'},
+          {code:'S', label:'보완완료', badge:'progress'},
+          {code:'Y', label:'승인', badge:'done'},
+          {code:'N', label:'반려', badge:'rejected'}
+        ]},
+        { title:'② 선정 — SLCTN_YN (심사 승인과 별개 축)', states:[
+          {code:'Y', label:'선정', badge:'selected'},
+          {code:'N', label:'미선정', badge:'rejected'}
+        ]}
+      ],
+      manager:['APPR_MEMO — 담당자 종합 메모','항목별 CHK — 값 항목 · 첨부 27종 각 Y 승인 / N 반려','반려 항목 재제출 → 보완완료(S)'],
+      db:[
+        ['TNSM_BRND_BSNS_APPLY.APPR_STS','심사 상태 (I/S/Y/N)'],
+        ['TNSM_BRND_BSNS_APPLY.SLCTN_YN','선정 결과 (Y/N)'],
+        ['ATTCH_FILE_ID1~27 (+_CHK)','첨부 27종 · 항목별 승인/반려'],
+        ['BSNS_APPLY_JDT / CONSORTIUM_YN','접수기관(K/A) / 컨소시엄 여부']
+      ]
+    },
+    apps:[
+      // ① 제출완료 · 항목별 일부 반려(보완 대상)
+      { appId:'CIB-2026-000045', project:'지역별 무공해차 전환 브랜드 사업 공모', applyDate:'2026.01.30', status:'제출완료 · 항목 심사 중', result:'progress',
+        badges:[{text:'심사 : 제출완료', tone:'progress'}],
+        notice:{ name:'2026년 지역별 무공해차 전환 브랜드 사업 공모', no:'환경부공고 제2026-032호', org:'한국환경공단', period:'2025.12.20 ~ 2026.01.30', announce:'2026.03.05(예정)', scale:'평가 기준 충족 사업자 선정' },
+        applicant:{ title:'사업수행기관 · 컨소시엄',
+          rows:[['사업수행기관','부산에코모빌리티(주)'],['대표자','윤대표'],['사업자등록번호','605-81-72340'],['연락처','051-700-8000']],
+          consortium:[{name:'부산에코모빌리티(주)', role:'대표제안사 (주관)'},{name:'○○충전(주)', role:'컨소시엄사 · 충전 인프라'},{name:'△△여객', role:'컨소시엄사 · 전환 수요처'}] },
+        block4:{ title:'신청 정보', rows:[
+          ['사업명','부산 무공해차 전환 브랜드 사업'],
+          ['접수기관','한국환경공단'],
+          ['컨소시엄 여부','컨소시엄 신청'],
+          ['완속 설치 개소','120개소'],
+          ['급속 설치 개소','30개소'],
+          ['전체 설치 개소','150개소'],
+          ['전기승합 공모신청번호','—']
+        ]},
+        review:{
+          items:[
+            { label:'사업명', value:'부산 무공해차 전환 브랜드 사업', ok:true },
+            { label:'접수기관', value:'한국환경공단', ok:true },
+            { label:'컨소시엄 여부', value:'컨소시엄 신청', ok:true },
+            { label:'사업수행기관 정보', value:'부산에코모빌리티(주)', ok:true },
+            { label:'컨소시엄 정보', value:'대표제안사 지정 확인 불가', ok:false },
+            { label:'완속 설치 개소', value:'120개소', ok:true },
+            { label:'급속 설치 개소', value:'30개소 (산출 근거 미비)', ok:false },
+            { label:'전체 설치 개소', value:'150개소', ok:true }
+          ],
+          docs: docs27(reject1),
+          memo:'컨소시엄 정보(대표제안사 지정)·급속 설치 개소 산출 근거가 확인되지 않습니다. 반려 항목과 첨부 2건(대표제안사 지정서·전기증설 확인서)을 보완하여 재제출해 주세요.'
+        },
+        supplement:{ reason:'반려 항목의 근거 서류를 보완하여 재제출해 주세요. (보완 재제출 시 보완완료(S)로 처리)', due:'2026.02.14', docs:reject1 },
+        action:'반려 항목을 보완하고 기한(2026.02.14) 내 재제출해 주세요.' },
+
+      // ② 승인 + 선정 (2축)
+      { appId:'CIB-2026-000061', project:'지역별 무공해차 전환 브랜드 사업 공모', applyDate:'2026.01.28', status:'승인 · 선정', result:'selected',
+        badges:[{text:'심사 : 승인', tone:'done'},{text:'선정', tone:'selected'}],
+        notice:{ name:'2026년 지역별 무공해차 전환 브랜드 사업 공모', no:'환경부공고 제2026-032호', org:'한국환경공단', period:'2025.12.20 ~ 2026.01.30', announce:'2026.03.05', scale:'평가 기준 충족 사업자 선정' },
+        applicant:{ title:'사업수행기관 · 컨소시엄',
+          rows:[['사업수행기관','대전그린모빌리티(주)'],['대표자','서대표'],['사업자등록번호','314-81-22011'],['연락처','042-600-9000']],
+          consortium:[{name:'대전그린모빌리티(주)', role:'대표제안사 (주관)'},{name:'◇◇이브이(주)', role:'컨소시엄사 · 충전기 제조'},{name:'☆☆운수', role:'컨소시엄사 · 전환 수요처'}] },
+        block4:{ title:'신청 정보', rows:[
+          ['사업명','대전 무공해차 전환 브랜드 사업'],
+          ['접수기관','한국자동차환경협회'],
+          ['컨소시엄 여부','컨소시엄 신청'],
+          ['완속 설치 개소','90개소'],
+          ['급속 설치 개소','40개소'],
+          ['전체 설치 개소','130개소'],
+          ['전기승합 공모신청번호','2026-BUS-000155']
+        ]},
+        review:{
+          items:[
+            { label:'사업명', value:'대전 무공해차 전환 브랜드 사업', ok:true },
+            { label:'접수기관', value:'한국자동차환경협회', ok:true },
+            { label:'컨소시엄 여부', value:'컨소시엄 신청', ok:true },
+            { label:'사업수행기관 정보', value:'대전그린모빌리티(주)', ok:true },
+            { label:'컨소시엄 정보', value:'대표제안사 지정 확인', ok:true },
+            { label:'완속 설치 개소', value:'90개소', ok:true },
+            { label:'급속 설치 개소', value:'40개소', ok:true },
+            { label:'전체 설치 개소', value:'130개소', ok:true }
+          ],
+          docs: docs27([]),
+          memo:'전 항목·첨부 승인되었습니다. 선정 사업자로 확정되어 후속 절차 안내가 별도 통지될 예정입니다.'
+        },
+        action:'선정되었습니다. 후속 절차(협약 등) 안내를 기다려 주세요.' }
+    ]
+  });
+})();
 </script>
 </body>
 </html>

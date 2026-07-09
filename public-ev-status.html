@@ -40,20 +40,68 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260701b"></script>
+<script src="js/contest-detail.js?v=20260709b"></script>
 <script>
-ContestDetail.mount({
-  applyHref:'public-ev.html', applyName:'전기자동차 수행자 선정 평가 신청', supplementHref:'#',
-  apps:[
-    { appId:'PEV-2026-000771', project:'전기자동차 수행자 선정 평가 신청', applyDate:'2026.04.22', status:'서류심사 중', result:'progress',
-      notice:{ name:'2026년 전기승용 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20(예정)', scale:'전국 12개 권역 수행자', contact:'무공해차보급팀 044-201-6000' },
-      applicant:{ org:'그린모빌리티(주)', rep:'김대표', bizNo:'123-45-67890', manager:'박담당', tel:'02-1234-5678' },
-      block4:{ title:'신청 내용 · 대상 (차량)', rows:[['대상 차종·규격','전기승용(중형)'],['신청 대수','120대'],['제작·수입사','현대자동차(주)'],['국비 단가','660만원'],['지방비 단가','300만원']] },
-      timeline:[{label:'접수 완료',date:'2026.04.22',state:'done'},{label:'서류심사',date:'2026.05.06',state:'current'},{label:'현장평가',date:'',state:''},{label:'선정심의',date:'',state:''},{label:'선정발표',date:'',state:''}],
-      docs:[{name:'사업계획서',ok:true},{name:'법인 등기부등본',ok:true},{name:'재무제표',ok:true},{name:'수행실적 증빙',ok:false}],
-      action:'서류심사 결과를 기다려 주세요. 추가 서류 요청 시 안내드립니다.' }
-  ]
-});
+/* [DEV] 상태 = PS_EVALUATION_APPLY.REQ_STATUS · REQ_STATUS3 = 제출완료/보완요청/보완완료/승인 (2=보완요청 확정, 번호매핑 1/2/3/4 추정). 선정/미선정 축 없음
+   [DEV] result 배지 매핑: 제출완료·보완요청·보완완료→progress · 승인→done
+   [DEV] 담당자 입력값 = RES_CONT(보완요청 사유) · KECO_CONT(공단 안내)
+   [DEV] 차종 = CAR_TY_YN1~3(승용/승합/화물, 복수) · 사업자유형 = BSNM_TY_YN1~4(국내제작사/해외제작사 국내법인·지사/수입사/기타)
+   [DEV] 증빙 = REQ_FILE_ID_1~16(+ATCH). 전부 더미. */
+(function(){
+  function docs15(missing){
+    var names=['평가 신청서','제안서 및 조견표','연구개발투자 현황 증빙','연구개발인프라 현황 증빙','생산 및 공급 역량 증빙','부품산업 전환 기여 증빙','지역 공급망 안정성 증빙','고용창출 효과 증빙','기후위기 대응(탄소배출) 증빙','자원순환 역량 증빙','정비망(A/S) 구축 현황 증빙','사후책임 지속성 증빙','전기차 보급사업 지속성 증빙','전기차 화재 안전 대응 증빙','사이버 보안 대응 증빙'];
+    return names.map(function(n){ return { name:n, ok:(missing||[]).indexOf(n)<0 }; });
+  }
+  var missing1=['지역 공급망 안정성 증빙','사이버 보안 대응 증빙'];
+  ContestDetail.mount({
+    applyHref:'public-ev-apply.html', applyName:'전기자동차 수행자 선정 평가 신청', supplementHref:'public-ev-apply.html',
+    devRef:{
+      states:[
+        {code:'제출완료', label:'평가 신청서 제출 완료', badge:'progress'},
+        {code:'보완요청 (2)', label:'담당 검토 → 보완 요청 · RES_CONT 세팅', badge:'progress'},
+        {code:'보완완료', label:'보완 재제출 완료', badge:'progress'},
+        {code:'승인', label:'평가 승인 (최종)', badge:'done'}
+      ],
+      manager:['RES_CONT — 보완요청 사유 (담당자 입력)','KECO_CONT — 공단 안내 문구'],
+      db:[
+        ['PS_EVALUATION_APPLY.REQ_STATUS','상태값 · 코드군 EVCS_CODE_DETAIL REQ_STATUS3 (2=보완요청 확정, 1/3/4 추정)'],
+        ['CAR_TY_YN1~3 / BSNM_TY_YN1~4','평가 대상 차종(복수) / 사업자 유형'],
+        ['REQ_FILE_ID_1~16','평가 증빙 첨부'],
+        ['RES_CONT / KECO_CONT','보완요청 사유 / 공단 안내']
+      ]
+    },
+    apps:[
+      { appId:'PEV-2026-000771', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.22', status:'보완요청', result:'progress',
+        notice:{ name:'2026년 전기자동차 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20(예정)', scale:'평가 기준 충족 수행자 선정' },
+        applicant:{
+          rows:[['업체명','그린모빌리티(주)'],['대표자','김대표'],['법인등록번호','110111-1234567'],['사업자등록번호','123-45-67890'],['주소','서울특별시 강남구 테헤란로 000'],['전화','02-1234-5678'],['신청연도','2026'],['사업장 수','3개소']],
+          contactRows:[['성명','박담당'],['부서','사업기획팀'],['직위','과장'],['이메일','contact@greenmobility.co.kr']]
+        },
+        block4:{ title:'평가 신청 정보', rows:[
+          ['사업자 유형','국내 제작사 · 수입사'],
+          ['평가 대상 차종','승용 · 화물']
+        ]},
+        docs: docs15(missing1),
+        kecoNote:'제출하신 서류 중 일부 항목에 대한 보완이 필요합니다. 보완 요청 항목을 확인하시고 기한 내 재제출해 주시기 바랍니다.',
+        supplement:{ reason:'지역 공급망 안정성 증빙의 조달내역서가 누락되었으며, 사이버 보안 대응 증빙의 인증서 유효기간 확인이 불가합니다. 해당 서류를 보완하여 재제출해 주세요.', due:'2026.05.06', docs:missing1 },
+        action:'보완 요청 항목을 확인하고 기한(2026.05.06) 내 재제출해 주세요.' },
+
+      { appId:'PEV-2026-000742', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.18', status:'승인', result:'done',
+        notice:{ name:'2026년 전기자동차 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20', scale:'평가 기준 충족 수행자 선정' },
+        applicant:{
+          rows:[['업체명','미래EV모터스(주)'],['대표자','이대표'],['법인등록번호','110111-7654321'],['사업자등록번호','220-88-33221'],['주소','경기도 화성시 동탄대로 000'],['전화','031-222-3333'],['신청연도','2026'],['사업장 수','5개소']],
+          contactRows:[['성명','최담당'],['부서','인증관리실'],['직위','책임'],['이메일','cert@miraev.co.kr']]
+        },
+        block4:{ title:'평가 신청 정보', rows:[
+          ['사업자 유형','국내 제작사'],
+          ['평가 대상 차종','승용 · 승합 · 화물']
+        ]},
+        docs: docs15([]),
+        kecoNote:'승인되었습니다. 협약 체결 및 후속 절차 안내가 담당자 이메일·연락처로 별도 통지될 예정입니다.',
+        action:'협약 체결 안내를 기다려 주세요. 협약 관련 서류를 미리 준비해 주시기 바랍니다.' }
+    ]
+  });
+})();
 </script>
 </body>
 </html>

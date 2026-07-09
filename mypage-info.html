@@ -7,6 +7,29 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/auth.css">
+<style>
+  .mp-choices{display:flex;gap:10px;flex-wrap:wrap;}
+  .mp-choice{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:1px solid var(--border-medium);border-radius:9px;font-size:14.5px;font-weight:600;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;}
+  .mp-choice:hover{border-color:var(--color-secondary-400,#8aa8ff);}
+  .mp-choice:has(input:checked){border-color:var(--color-secondary-500,#5D87FF);background:var(--color-secondary-50,#F3F7FF);color:var(--color-secondary-700,#1f5fa8);}
+  .mp-choice input{accent-color:var(--color-secondary-500,#5D87FF);width:16px;height:16px;}
+  .mp-bizno{display:flex;align-items:center;gap:6px;flex:1;}
+  .mp-bizno input{text-align:center;}
+  /* 비밀번호 확인 게이트 */
+  .mpi-gate{display:flex;justify-content:center;padding:16px 0 48px;}
+  .mpi-gate-card{width:100%;max-width:440px;background:#fff;border:1px solid var(--border-light);border-radius:16px;padding:36px 32px;text-align:center;box-shadow:0 12px 32px rgba(0,0,0,.06);}
+  .mpi-gate-ico{width:64px;height:64px;border-radius:50%;background:var(--color-secondary-50,#F3F7FF);color:var(--color-secondary-600,#3D6BF0);display:grid;place-items:center;margin:0 auto 18px;}
+  .mpi-gate-card h2{font-size:22px;font-weight:800;margin:0 0 8px;}
+  .mpi-gate-card > p{color:var(--text-secondary);font-size:14px;line-height:1.65;margin:0 0 22px;}
+  .mpi-gate-card .mp-form-label{display:block;text-align:left;margin-bottom:6px;}
+  .mpi-gate-card input[type=password]{width:100%;height:46px;padding:0 14px;border:1px solid var(--border-light);border-radius:9px;font-size:15px;font-family:inherit;box-sizing:border-box;}
+  .mpi-gate-card input[type=password]:focus{outline:none;border-color:var(--color-secondary-500,#5D87FF);box-shadow:0 0 0 3px rgba(93,135,255,.15);}
+  .mpi-gate-err{color:var(--color-danger,#d33);font-size:13px;text-align:left;margin-top:8px;}
+  .mpi-gate-actions{display:flex;gap:10px;margin-top:20px;}
+  .mpi-gate-actions .btn{flex:1;justify-content:center;}
+  .mpi-gate-forgot{display:inline-block;margin-top:16px;font-size:13px;color:var(--color-secondary-600,#3D6BF0);}
+  .mpi-gate-note{font-size:12px;color:var(--text-tertiary);margin-top:16px;line-height:1.6;}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -31,6 +54,28 @@
       <div class="mp-shell">
 
         <div class="mp-content">
+
+          <!-- 비밀번호 확인 게이트 (회원정보 진입 재인증) -->
+          <div id="mpiGate" class="mpi-gate" hidden>
+            <div class="mpi-gate-card">
+              <div class="mpi-gate-ico" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <h2 data-i18n="mpi.gate.title">비밀번호 확인</h2>
+              <p data-i18n="mpi.gate.desc">회원 정보 보호를 위해 현재 비밀번호를 다시 한 번 확인합니다.</p>
+              <form id="mpiGateForm" autocomplete="off">
+                <label class="mp-form-label" for="mpi-gate-pw" data-i18n="mpi.gate.label">현재 비밀번호</label>
+                <input type="password" id="mpi-gate-pw" autocomplete="current-password" data-i18n-attr="placeholder:mpi.gate.ph" placeholder="현재 비밀번호를 입력하세요">
+                <div class="mpi-gate-err" id="mpiGateErr" hidden></div>
+                <div class="mpi-gate-actions">
+                  <a href="mypage.html" class="btn btn-secondary" data-i18n="mpi.gate.cancel">취소</a>
+                  <button type="submit" class="btn btn-primary" data-i18n="mpi.gate.confirm">확인</button>
+                </div>
+              </form>
+              <a href="mypage-password.html" class="mpi-gate-forgot" data-i18n="mpi.gate.forgot">비밀번호를 잊으셨나요?</a>
+              <p class="mpi-gate-note" data-i18n="mpi.gate.note">프로토타입: 데모 인증 — 실제 비밀번호 대조는 운영 연동 시 적용됩니다.</p>
+            </div>
+          </div>
 
           <div class="mp-content-head">
             <div>
@@ -69,7 +114,54 @@
               </div>
             </div>
 
+            <div class="mp-form-row">
+              <label class="mp-form-label"><span data-i18n="mpi.field.memtype">개인/법인사업자 여부</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <div class="mp-choices">
+                  <label class="mp-choice"><input type="radio" name="miMemType" value="personal" checked><span data-i18n="mpi.memtype.personal">개인</span></label>
+                  <label class="mp-choice"><input type="radio" name="miMemType" value="corp"><span data-i18n="mpi.memtype.corp">법인사업자</span></label>
+                </div>
+                <div class="mp-form-help" data-i18n="mpi.memtype.help">법인사업자는 회사명·사업자등록번호·부서명을 추가로 입력합니다.</div>
+              </div>
+            </div>
+
           </form>
+
+          <div class="mp-form-card" id="mpiBizCard" hidden>
+            <h3 class="mp-form-card-title" data-i18n="mpi.biz.title">사업자 정보</h3>
+            <p class="mp-form-card-desc" data-i18n="mpi.biz.desc">법인사업자 회원은 회사명·사업자등록번호·부서명을 확인·수정합니다.</p>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-company"><span data-i18n="mpi.field.company">회사명(소속)</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <input type="text" id="mi-company" value="(주)무공해모빌리티" data-i18n-attr="placeholder:mpi.field.company.ph" placeholder="회사명(소속)">
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-bizno1"><span data-i18n="mpi.field.bizno">사업자등록번호</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <div class="mp-form-inline" style="max-width:460px;">
+                  <div class="mp-bizno">
+                    <input type="text" id="mi-bizno1" inputmode="numeric" maxlength="3" value="123" aria-label="사업자등록번호 앞 3자리">
+                    <span aria-hidden="true">-</span>
+                    <input type="text" id="mi-bizno2" inputmode="numeric" maxlength="2" value="45" aria-label="사업자등록번호 가운데 2자리">
+                    <span aria-hidden="true">-</span>
+                    <input type="text" id="mi-bizno3" inputmode="numeric" maxlength="5" value="67890" aria-label="사업자등록번호 뒤 5자리">
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" id="miCheckBizBtn" data-i18n="mpi.field.bizno.check">진위 확인</button>
+                </div>
+                <div class="mp-form-help" id="miBizHelp" data-i18n="mpi.field.bizno.help">사업자등록번호 10자리(3-2-5)를 입력 후 진위 확인해 주세요.</div>
+              </div>
+            </div>
+
+            <div class="mp-form-row">
+              <label class="mp-form-label" for="mi-dept"><span data-i18n="mpi.field.dept">부서명</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
+              <div class="mp-form-control">
+                <input type="text" id="mi-dept" value="충전인프라팀" data-i18n-attr="placeholder:mpi.field.dept.ph" placeholder="부서명">
+              </div>
+            </div>
+          </div>
 
           <form class="mp-form-card" id="mpiContactForm">
 
@@ -79,11 +171,8 @@
             <div class="mp-form-row">
               <label class="mp-form-label" for="mi-email"><span data-i18n="mpi.field.email">이메일</span><span class="req" aria-hidden="true">*</span><span class="sr-only">(필수)</span></label>
               <div class="mp-form-control">
-                <div class="mp-form-inline">
-                  <input type="email" id="mi-email" value="hjshin@example.com">
-                  <button type="button" class="btn btn-secondary btn-sm" data-i18n="mpi.field.email.send">인증메일 발송</button>
-                </div>
-                <div class="mp-form-help" data-i18n="mpi.field.email.help">이메일 변경 후에는 인증을 완료해야 알림이 정상 발송됩니다.</div>
+                <input type="email" id="mi-email" value="hjshin@example.com">
+                <div class="mp-form-help" data-i18n="mpi.field.email.help">보조금 신청 결과·민원 처리 알림 발송에 사용됩니다.</div>
               </div>
             </div>
 
@@ -136,12 +225,77 @@
             }
             var f1 = document.getElementById('mpiProfileForm');
             var f2 = document.getElementById('mpiContactForm');
+
+            // ── 회원구분(개인/법인사업자) 토글 (DB PERSONAL_YN·코드113) ──
+            var bizCard = document.getElementById('mpiBizCard');
+            function isCorp(){ var r = document.querySelector('input[name=miMemType]:checked'); return !!r && r.value === 'corp'; }
+            function syncMemType(){ if (bizCard) bizCard.hidden = !isCorp(); }
+            Array.prototype.forEach.call(document.querySelectorAll('input[name=miMemType]'), function(r){ r.addEventListener('change', syncMemType); });
+            syncMemType();
+
+            // ── 사업자등록번호(법인): 3분할(3-2-5) + 진위확인 (DB BUSI_NO) ──
+            var BIZ_PARTS = ['mi-bizno1','mi-bizno2','mi-bizno3'];
+            var bizHelp = document.getElementById('miBizHelp');
+            var bizVerified = false;
+            function bizDigits(){ return BIZ_PARTS.map(function(id){ var el=document.getElementById(id); return (el && el.value || '').replace(/\D/g,''); }).join(''); }
+            var checkBtn = document.getElementById('miCheckBizBtn');
+            if (checkBtn) checkBtn.addEventListener('click', function(){
+              if (bizDigits().length !== 10){ bizHelp.innerHTML = '<span style="color:var(--color-danger,#d33);">' + _t('mpi.field.bizno.err','사업자등록번호 10자리(3-2-5)를 정확히 입력해 주세요.') + '</span>'; return; }
+              bizVerified = true;
+              bizHelp.innerHTML = '<span style="color:var(--color-primary-700);font-weight:700;">' + _t('mpi.field.bizno.ok','✓ 진위 확인이 완료되었습니다.') + '</span>';
+            });
+            BIZ_PARTS.forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('input', function(){ el.value = el.value.replace(/\D/g,''); bizVerified = false; bizHelp.textContent = _t('mpi.field.bizno.help','사업자등록번호 10자리(3-2-5)를 입력 후 진위 확인해 주세요.'); bizHelp.style.color=''; }); });
+
+            // ── 비밀번호 확인 게이트 (회원정보 진입 재인증) ──
+            var gate = document.getElementById('mpiGate');
+            var mpContent = gate ? gate.parentElement : null;
+            function revealBody(){
+              if (!mpContent) return;
+              Array.prototype.forEach.call(mpContent.children, function(c){
+                if (c !== gate && c.tagName !== 'SCRIPT' && c.id !== 'mpiBizCard') c.hidden = false;
+              });
+              syncMemType();          // 사업자 정보 카드 표시상태 복원(개인=숨김)
+              gate.hidden = true;
+            }
+            function showGate(){
+              if (!mpContent) return;
+              Array.prototype.forEach.call(mpContent.children, function(c){
+                if (c !== gate && c.tagName !== 'SCRIPT') c.hidden = true;
+              });
+              gate.hidden = false;
+              var pw = document.getElementById('mpi-gate-pw'); if (pw) pw.focus();
+            }
+            if (gate) {
+              var passed = false;
+              try { passed = sessionStorage.getItem('mpi_pw_ok') === '1'; } catch(e){}
+              if (passed) revealBody(); else showGate();
+              var gForm = document.getElementById('mpiGateForm'), gErr = document.getElementById('mpiGateErr');
+              if (gForm) gForm.addEventListener('submit', function(e){
+                e.preventDefault();
+                var pw = document.getElementById('mpi-gate-pw').value;
+                if (!pw){ gErr.textContent = _t('mpi.gate.err.empty','비밀번호를 입력해 주세요.'); gErr.hidden = false; return; }
+                // 프로토타입: 데모 인증(실제 비밀번호 대조는 운영 연동 시 적용)
+                try { sessionStorage.setItem('mpi_pw_ok','1'); } catch(e){}
+                gErr.hidden = true;
+                revealBody();
+                if (window.__toast) window.__toast(_t('mpi.gate.ok','본인 확인이 완료되었습니다.'), 'success');
+              });
+            }
+
             if (f1) f1.addEventListener('submit', function(e){
               e.preventDefault();
               alert(_t('mpi.msg.saved.profile', '회원 정보가 저장되었습니다.'));
             });
             if (f2) f2.addEventListener('submit', function(e){
               e.preventDefault();
+              // 법인사업자: 회사명·사업자등록번호(진위)·부서명 필수 / 개인: 미검증
+              if (isCorp()){
+                var company = (document.getElementById('mi-company').value || '').trim();
+                var dept = (document.getElementById('mi-dept').value || '').trim();
+                if (!company){ alert(_t('mpi.msg.need.company','회사명(소속)을 입력해 주세요.')); return; }
+                if (!bizVerified){ alert(_t('mpi.msg.need.bizverify','사업자등록번호 진위 확인을 완료해 주세요.')); return; }
+                if (!dept){ alert(_t('mpi.msg.need.dept','부서명을 입력해 주세요.')); return; }
+              }
               alert(_t('mpi.msg.saved.contact', '연락처 정보가 저장되었습니다.'));
             });
           })();
@@ -157,7 +311,7 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-mypage.js?v=20260520"></script>
+<script src="js/i18n-mypage.js?v=20260707t"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 </body>

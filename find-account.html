@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아이디 · 비밀번호 찾기 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/auth.css">
+<style>
+  /* login.html 표준(navy #1e3a5f · auth-method-card) 정합 */
+  .auth-method-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; margin-bottom:32px; max-width:840px; margin-left:auto; margin-right:auto; }
+  .auth-method-card { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:32px 28px; display:flex; flex-direction:column; min-height:320px; }
+  .auth-method-title { font-size:20px; font-weight:700; color:#1f2937; text-align:center; margin-bottom:8px; }
+  .fa-card-lead { font-size:13.5px; color:#6b7280; line-height:1.65; text-align:center; margin-bottom:20px; }
+  .auth-method-card .form-group { margin-bottom:12px; position:relative; }
+  .auth-method-card .form-label { display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px; }
+  .auth-method-card .form-input { width:100%; padding:14px 16px; border:1px solid #d1d5db; border-radius:4px; font-size:15px; box-sizing:border-box; }
+  .auth-method-card .auth-submit { width:100%; background:#1e3a5f; color:#fff; padding:14px; border-radius:4px; font-weight:600; border:none; cursor:pointer; font-size:15px; margin-top:auto; }
+  .auth-method-card .auth-submit:hover { background:#16304d; }
+  .fa-hint { font-size:12.5px; color:#9ca3af; line-height:1.6; margin:10px 0 0; }
+
+  /* 인증 완료 안내(전환) */
+  .fa-done { display:none; flex-direction:column; align-items:center; text-align:center; margin-top:auto; }
+  .fa-done.show { display:flex; }
+  .fa-done .fa-done-ico { width:52px; height:52px; border-radius:50%; display:grid; place-items:center; margin-bottom:14px; }
+  .fa-done.ok .fa-done-ico { background:#e6f6ee; color:#0f7a44; }
+  .fa-done.fail .fa-done-ico { background:#fdecec; color:#c0392b; }
+  .fa-done .fa-done-msg { font-size:14px; color:#374151; line-height:1.7; margin-bottom:18px; }
+  .fa-done .btn-login { width:100%; background:#1e3a5f; color:#fff; padding:13px; border-radius:4px; font-weight:600; border:none; cursor:pointer; font-size:15px; text-align:center; text-decoration:none; display:block; box-sizing:border-box; }
+  .fa-demo-link { display:inline-block; margin-top:14px; font-size:12px; color:#9ca3af; text-decoration:underline; cursor:pointer; }
+
+  /* 하단 링크 */
+  .fa-foot-links { text-align:center; margin-top:8px; font-size:14px; color:#6b7280; }
+  .fa-foot-links a { color:#1e3a5f; font-weight:600; text-decoration:underline; margin:0 10px; }
+
+  @media (max-width:768px){ .auth-method-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = '';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="auth-hero-v2">
+    <div class="container container-wide">
+      <span class="auth-hero-eyebrow">FIND ACCOUNT</span>
+      <h1 class="auth-hero-title">아이디 · 비밀번호 찾기</h1>
+      <p class="auth-hero-lead">본인인증 후 가입 시 등록한 휴대폰으로 발송됩니다.</p>
+    </div>
+  </section>
+
+  <section class="auth-page-section">
+    <div class="container container-wide">
+
+      <div class="auth-method-grid">
+
+        <!-- ① 아이디 찾기 -->
+        <div class="auth-method-card" id="cardId">
+          <h3 class="auth-method-title">아이디 찾기</h3>
+          <div class="fa-body" id="idBody">
+            <p class="fa-card-lead">가입 시 등록한 휴대폰 번호로 아이디를 발송합니다.</p>
+            <button type="button" class="auth-submit" id="btnFindId">휴대전화로 아이디 전송</button>
+            <p class="fa-hint">주민등록번호는 수집하지 않으며, 휴대폰 본인인증(PASS)으로 확인합니다.</p>
+          </div>
+          <!-- 인증 성공 → 완료 안내(발송) -->
+          <div class="fa-done ok" id="idDoneOk">
+            <div class="fa-done-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <p class="fa-done-msg">가입하신 아이디를 등록된 휴대폰으로 발송했습니다.<br>문자를 확인해 주세요.</p>
+            <a href="login.html" class="btn-login">로그인</a>
+            <span class="fa-demo-link" id="idShowFail">가입 이력이 없는 경우 보기 (데모)</span>
+          </div>
+          <!-- (실패 더미) 미가입 -->
+          <div class="fa-done fail" id="idDoneFail">
+            <div class="fa-done-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <p class="fa-done-msg">등록된 휴대폰으로 가입한 아이디가 없습니다.<br>회원가입 후 이용해 주세요.</p>
+            <a href="signup.html" class="btn-login">회원가입</a>
+            <span class="fa-demo-link" id="idResetDemo">처음으로 (데모)</span>
+          </div>
+        </div>
+
+        <!-- ② 비밀번호 찾기 -->
+        <div class="auth-method-card" id="cardPw">
+          <h3 class="auth-method-title">비밀번호 찾기</h3>
+          <div class="fa-body" id="pwBody">
+            <p class="fa-card-lead">본인인증 후 임시비밀번호를 휴대폰으로 발송합니다.<br>로그인 후 비밀번호를 변경해 주세요.</p>
+            <div class="form-group">
+              <label class="form-label" for="pwFindId">아이디</label>
+              <input type="text" id="pwFindId" class="form-input" placeholder="가입한 아이디를 입력하세요" autocomplete="username">
+            </div>
+            <button type="button" class="auth-submit" id="btnFindPw">휴대전화로 인증하기</button>
+            <p class="fa-hint">아이디와 본인인증 정보가 일치해야 임시비밀번호가 발송됩니다.</p>
+          </div>
+          <!-- 인증 성공 → 완료 안내(임시비번 발송) -->
+          <div class="fa-done ok" id="pwDoneOk">
+            <div class="fa-done-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <p class="fa-done-msg">임시비밀번호를 등록된 휴대폰으로 발송했습니다.<br><strong>로그인 후 비밀번호를 변경</strong>해 주세요.</p>
+            <a href="login.html" class="btn-login">로그인</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fa-foot-links">
+        <a href="login.html">로그인</a> · <a href="signup.html">회원가입</a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260703a"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260703a"></script>
+<script src="js/i18n-auth.js?v=20260520"></script>
+<script src="js/main.js?v=20260520"></script>
+<script>
+/* [DEV] 근거 = ev_ps PsMemberController.psfindId (dofindid: Y=아이디 SMS 발송 / N=임시비밀번호 SMS 발송)
+   [DEV] 아이디·임시비밀번호 모두 '휴대폰 문자 발송' 방식 — 화면에 아이디/비번을 표시하거나 재설정하는 화면 없음.
+   [DEV] 임시비밀번호는 로그인 후 mypage-password 에서 변경. 프로토타입: 본인인증(PASS) 팝업 단계는 생략(버튼→바로 발송 안내). SMS·가입 조회 전부 데모(더미). */
+(function(){
+  function show(el){ el.classList.add('show'); }
+  function hide(el){ el.classList.remove('show'); }
+
+  var idBody = document.getElementById('idBody'), idDoneOk = document.getElementById('idDoneOk'), idDoneFail = document.getElementById('idDoneFail');
+  var pwBody = document.getElementById('pwBody'), pwDoneOk = document.getElementById('pwDoneOk');
+
+  // ① 아이디 찾기 → 바로 발송 안내(데모)
+  document.getElementById('btnFindId').addEventListener('click', function(){
+    idBody.style.display = 'none'; show(idDoneOk);
+    if (window.__toast) window.__toast('아이디를 문자로 발송했습니다. (데모)', 'success');
+  });
+
+  // ② 비밀번호 찾기 → 아이디 검증 후 바로 발송 안내(데모)
+  document.getElementById('btnFindPw').addEventListener('click', function(){
+    var id = document.getElementById('pwFindId').value.trim();
+    if (!id){
+      if (window.__toast) window.__toast('아이디를 먼저 입력해 주세요.', 'warning');
+      document.getElementById('pwFindId').focus();
+      return;
+    }
+    pwBody.style.display = 'none'; show(pwDoneOk);
+    if (window.__toast) window.__toast('임시비밀번호를 문자로 발송했습니다. (데모)', 'success');
+  });
+
+  // (실패 더미) 미가입 안내 전환 / 복귀
+  document.getElementById('idShowFail').addEventListener('click', function(){ hide(idDoneOk); show(idDoneFail); });
+  document.getElementById('idResetDemo').addEventListener('click', function(){ hide(idDoneFail); idBody.style.display = ''; });
+})();
+</script>
+</body>
+</html>

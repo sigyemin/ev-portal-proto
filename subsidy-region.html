@@ -107,20 +107,22 @@
             <label class="form-label" for="f-method" data-i18n="subsidy.region.field.method">접수방법</label>
             <select class="form-select" id="f-method">
               <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
-              <option value="선착순" data-i18n="subsidy.region.opt.fcfs">선착순</option>
+              <option value="출고등록순" data-i18n="subsidy.region.opt.deliv">출고등록순</option>
+              <option value="접수순" data-i18n="subsidy.region.opt.recv">접수순</option>
+              <option value="접수순(초과시 추첨)" data-i18n="subsidy.region.opt.recvLot">접수순(초과시 추첨)</option>
+              <option value="접수순(초과시 출고등록순)" data-i18n="subsidy.region.opt.recvDel">접수순(초과시 출고등록순)</option>
               <option value="추첨" data-i18n="subsidy.region.opt.lottery">추첨</option>
-              <option value="공모" data-i18n="subsidy.region.opt.bid">공모</option>
+              <option value="기타" data-i18n="subsidy.region.opt.etc">기타</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label" for="f-status" data-i18n="subsidy.region.field.status">접수상태</label>
             <select class="form-select" id="f-status">
               <option value="전체" data-i18n="subsidy.region.opt.all">전체</option>
-              <option value="접수중" data-i18n="subsidy.region.opt.open">접수중</option>
               <option value="대기" data-i18n="subsidy.region.opt.wait">대기</option>
-              <option value="소진임박" data-i18n="subsidy.region.opt.lowstock">소진임박</option>
+              <option value="접수중" data-i18n="subsidy.region.opt.open">접수중</option>
+              <option value="마감임박" data-i18n="subsidy.region.opt.closingsoon">마감임박</option>
               <option value="마감" data-i18n="subsidy.region.opt.closed">마감</option>
-              <option value="신규확대" data-i18n="subsidy.region.opt.expanded">신규확대</option>
             </select>
           </div>
         </div>
@@ -212,7 +214,6 @@
                   <th scope="col" rowspan="2">공고별<br>접수기간</th>
                   <th scope="col" rowspan="2">신청 마감<br><span class="th-sub">(최종·시간까지)</span></th>
                   <th scope="col" class="cnt-cols-th" colspan="6">대수 현황 <span class="th-sub" style="display:inline;">(전체 기준 · 상세는 펼침)</span></th>
-                  <th scope="col" class="remark-th" rowspan="2">비고</th>
                   <th scope="col" rowspan="2" style="text-align:center; width: 84px;">상세</th>
                 </tr>
                 <tr>
@@ -278,11 +279,11 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-subsidy.js?v=20260630a"></script>
+<script src="js/i18n-subsidy.js?v=20260708c"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script src="js/favorites.js"></script>
-<script src="js/subsidy-region.js?v=20260703e"></script>
+<script src="js/subsidy-region.js?v=20260708c"></script>
 <script>
   // 지자체 보조금 — 즐겨찾기만 보기 토글
   (function () {

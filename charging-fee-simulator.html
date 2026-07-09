@@ -199,6 +199,16 @@
   .sim-hour-row label { font-size: 13px; font-weight: var(--fw-semibold); color: var(--color-gray-700); display: flex; justify-content: space-between; align-items: baseline; }
   .sim-hour-row label .val { font-size: 15px; font-weight: var(--fw-bold); color: var(--color-primary-700); }
   .sim-hour-row input[type=range] { width: 100%; height: 32px; cursor: pointer; }
+  /* 계절시간제 미적용(평단가·비회원·로밍) — 숨기지 않고 비활성 */
+  #simTouInputs.is-disabled { opacity: .5; }
+  #simTouInputs.is-disabled select,
+  #simTouInputs.is-disabled input[type=range] { pointer-events: none; }
+  .sim-tou-note { color: var(--color-gray-500) !important; margin-top: 6px; }
+  /* 내 카드 라벨 + 비회원 토글 */
+  .sim-label-row { display: flex; justify-content: space-between; align-items: center; }
+  .sim-nonmember-toggle { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: var(--fw-semibold); color: var(--color-gray-600); cursor: pointer; }
+  .sim-nonmember-toggle input { width: 15px; height: 15px; cursor: pointer; }
+  .sim-field select:disabled { background-color: var(--color-gray-100); color: var(--color-gray-400); cursor: not-allowed; }
 
   /* 결과 — 단가 흐름 (기본 → 할인 → 적용) */
   .sim-rate-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 20px; font-weight: var(--fw-bold); color: var(--color-gray-800); margin: 0 0 6px; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
@@ -211,6 +221,12 @@
   .sim-rate-help { font-size: 13px; color: var(--color-gray-500); margin: 0 0 12px; }
   .sim-cond { font-size: 13px; color: var(--color-gray-600); line-height: 1.75; margin-top: 4px; }
   .sim-cond b { color: var(--color-gray-800); font-weight: var(--fw-semibold); }
+  /* 계산 조건 (통합 블록) */
+  .sim-calc-cond { background: var(--color-gray-50); border-radius: var(--radius-lg); padding: 16px 18px; }
+  .sim-calc-cond .scc-title { font-size: 12.5px; font-weight: var(--fw-bold); color: var(--color-gray-500); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+  .scc-list { display: grid; grid-template-columns: auto 1fr; gap: 9px 16px; margin: 0; font-size: 13.5px; }
+  .scc-list dt { color: var(--color-gray-500); font-weight: var(--fw-medium); white-space: nowrap; }
+  .scc-list dd { margin: 0; color: var(--color-gray-900); font-weight: var(--fw-semibold); text-align: right; }
 </style>
 </head>
 <body>
@@ -264,39 +280,33 @@
 
             <div class="sim-row2">
               <div class="sim-field">
-                <label for="simCard" data-i18n="charging.fee.sim.lbl.card">내 카드 (사업자)</label>
+                <!-- [DEV] 회원유형 자동: 비회원 OFF+카드=충전기→회원가 / 비회원 OFF+카드≠충전기→로밍가 / 비회원 ON→비회원가 · 카드 잠금 / 더미 -->
+                <label for="simCard" class="sim-label-row">
+                  <span data-i18n="charging.fee.sim.lbl.card">내 카드 (사업자)</span>
+                  <label class="sim-nonmember-toggle"><input type="checkbox" id="simNonmember"> <span data-i18n="charging.fee.sim.opt.nonmember">비회원</span></label>
+                </label>
                 <select id="simCard"></select>
               </div>
               <div class="sim-field">
-                <label for="simCharger" data-i18n="charging.fee.sim.lbl.charger">타사 충전기</label>
+                <label for="simCharger" data-i18n="charging.fee.sim.lbl.charger">이용 충전기</label>
                 <select id="simCharger"></select>
               </div>
             </div>
 
-            <div class="sim-row2">
-              <div class="sim-field">
-                <label for="simMember" data-i18n="charging.fee.sim.lbl.member">회원유형</label>
-                <!-- [DEV] 로밍은 결제카드(발급 BID) ≠ 이용충전기(운영 TBID)면 자동 반영 → 로밍단가 적용. 회원/비회원만 선택 / 더미 -->
-                <select id="simMember">
-                  <option value="member" selected data-i18n="charging.fee.sim.opt.member">회원</option>
-                  <option value="nonmember" data-i18n="charging.fee.sim.opt.nonmember">비회원</option>
-                </select>
-              </div>
-              <div class="sim-field">
-                <label for="simSpeed" data-i18n="charging.fee.sim.lbl.speed">출력</label>
-                <select id="simSpeed"></select>
-              </div>
+            <div class="sim-field">
+              <label for="simSpeed" data-i18n="charging.fee.sim.lbl.speed">출력</label>
+              <select id="simSpeed"></select>
             </div>
 
-            <div class="sim-row2" id="simConditionRow" style="display:none;">
-              <div class="sim-field">
+            <div class="sim-row2" id="simConditionRow">
+              <div class="sim-field" id="simCondField" style="display:none;">
                 <label for="simCondition" data-i18n="charging.fee.sim.lbl.condition">조건 (선택)</label>
                 <select id="simCondition">
                   <option value="" data-i18n="charging.fee.sim.opt.default">기본 (조건 없음)</option>
                 </select>
               </div>
-              <div class="sim-field" id="simTouInputs" style="display:none;">
-                <!-- [DEV] 계절시간제 입력 = 계절·요일·시각(0~23시). 부하 3단(경/중/최대) 아님. 규칙 TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·TRGT_SE) / 더미 -->
+              <div class="sim-field" id="simTouInputs">
+                <!-- [DEV] 계절시간제 입력 = 계절·요일·시각(0~23시). 상시 표시 · 규칙 없는(평단가) 사업자는 비활성+안내. 규칙 TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·TRGT_SE) / 더미 -->
                 <label data-i18n="charging.fee.sim.lbl.season">계절 · 요일 · 시각</label>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
                   <select id="simSeason" style="flex:1;min-width:110px;">
@@ -314,6 +324,7 @@
                   <label for="simHour"><span>시각</span><span class="val" id="simHourVal">12시</span></label>
                   <input type="range" id="simHour" min="0" max="23" value="12" step="1" aria-label="시각 (0~23시)">
                 </div>
+                <div class="form-help sim-tou-note" id="simTouNote" data-i18n="charging.fee.sim.tou.none" hidden>이 사업자는 계절시간제가 적용되지 않습니다.</div>
               </div>
             </div>
 
@@ -327,7 +338,7 @@
           </div>
 
           <div class="sim-result-wrap">
-            <span class="sim-result-lbl" id="simLbl" data-i18n="charging.fee.sim.result.lbl">예상 충전요금 (회원)</span>
+            <span class="sim-result-lbl" id="simLbl" data-i18n="charging.fee.sim.result.lbl">예상 충전요금</span>
             <div class="sim-result-mini">
               <!-- [DEV] 예상 1회 충전비 = 적용단가 × 충전량(kWh). 단가 흐름: 기본단가 → [할인 배지] → 적용단가 / 더미 -->
               <div class="big" id="simPrice">—</div>
@@ -336,19 +347,11 @@
               <div class="sub" id="simNote" data-i18n="charging.fee.sim.result.note">제조사·차량 모델·카드·충전기를 선택해 주세요.</div>
             </div>
 
-            <div class="sim-result-meta">
-              <div class="meta-item">
-                <div class="lbl" data-i18n="charging.fee.sim.result.card">결제 카드 (발급)</div>
-                <div class="val" id="simResultCard">—</div>
-              </div>
-              <div class="meta-item">
-                <div class="lbl" data-i18n="charging.fee.sim.result.charger">이용 충전기 (운영)</div>
-                <div class="val" id="simResultCharger">—</div>
-              </div>
+            <!-- [DEV] 계산 조건: 결제카드·이용충전기(출력밴드)·회원구분·계절·요일·시각 / 더미 -->
+            <div class="sim-calc-cond">
+              <div class="scc-title" data-i18n="charging.fee.sim.result.condtitle">계산 조건</div>
+              <dl class="scc-list" id="simCond"></dl>
             </div>
-
-            <!-- [DEV] 적용 조건: 결제카드·이용충전기(출력밴드)·회원구분·계절·요일·시각 / 더미 -->
-            <div class="sim-cond" id="simCond"></div>
           </div>
         </div>
 
@@ -376,9 +379,9 @@
         <div class="sim-help-card">
           <h3>
             <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3v4zM3 19a2 2 0 0 0 2 2h1v-6H3v4z"/></svg></span>
-            <span data-i18n="charging.fee.sim.faq.q3">기후부 통합카드 추천</span>
+            <span data-i18n="charging.fee.sim.faq.q3">무공해차 통합카드</span>
           </h3>
-          <p data-i18n="charging.fee.sim.faq.a3">기후부 통합카드는 모든 사업자 충전기를 자체 요금으로 이용 가능하며 로밍 수수료가 발생하지 않아 가장 경제적입니다 (정부 협약).</p>
+          <p data-i18n="charging.fee.sim.faq.a3">기후에너지환경부(한국환경공단) 발급 무공해차 통합카드는 협약된 여러 사업자의 충전기를 카드 하나로 이용할 수 있습니다. 자사(공공) 충전기는 회원 요금, 협약된 타 사업자 충전기는 로밍 요금(해당 사업자 요금)이 적용됩니다.</p>
         </div>
       </div>
 
@@ -390,9 +393,9 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/i18n-charging.js?v=20260707s6"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/charging-fee.js?v=20260625t10"></script>
+<script src="js/charging-fee.js?v=20260707s5"></script>
 </body>
 </html>

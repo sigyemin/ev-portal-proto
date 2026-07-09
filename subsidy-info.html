@@ -34,7 +34,7 @@
 #g7 .data-table th,#g7 .data-table td{padding:7px 10px}
 /* ⑥ 시나리오 비교 — 가로형 컴팩트 카드, 고정 높이로 위에서부터 하나씩 쌓임 */
 .scen-grid{display:grid;grid-template-columns:1fr;gap:12px;align-content:start}
-.scen-card{position:relative;display:flex;align-items:center;gap:16px;height:104px;border:1px solid #e4e9ef;border-radius:14px;padding:14px 18px;background:#fff}
+.scen-card{position:relative;display:flex;align-items:center;gap:16px;min-height:112px;border:1px solid #e4e9ef;border-radius:14px;padding:14px 18px;background:#fff}
 .scen-card.best{border-color:#34b06f;background:#f7fdfa}
 .scen-badge{position:absolute;top:-9px;left:14px;background:#23a06a;color:#fff;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px}
 .scen-x{position:absolute;top:9px;right:9px;width:22px;height:22px;border:0;border-radius:7px;background:#f1f4f8;color:#8a93a0;cursor:pointer;font-size:12px;line-height:1}
@@ -45,6 +45,9 @@
 .scen-nums{flex:0 0 auto;text-align:right}
 .scen-row{display:flex;gap:14px;justify-content:flex-end;font-size:12.5px;color:#3a4654;padding:1px 0}
 .scen-row span:first-child{color:#8a93a0}
+.scen-row-extra{margin-top:3px;padding-top:4px;border-top:1px dashed #e4e9ef}
+.scen-row-extra span:last-child{color:#23a06a;font-weight:700}
+.scen-row-extra .ex-sub{font-size:10.5px;color:#a7b0bb;font-weight:400}
 .scen-total{flex:0 0 auto;text-align:right;padding-left:18px;border-left:1px dashed #dbe2ea}
 .scen-total .lbl{display:block;font-size:11px;color:#8a93a0;font-weight:700;margin-bottom:1px}
 .scen-total b{font-size:21px;color:#23a06a}
@@ -473,6 +476,7 @@
       region: (r1 && r2) ? (r1 + ' ' + r2) : '지역 미선택',
       nat: num(calcRoot.querySelector('[data-res-nat]').textContent),
       loc: num(calcRoot.querySelector('[data-res-local]').textContent),
+      extra: num(calcRoot.querySelector('[data-res-extra]').textContent),
       total: num(calcRoot.querySelector('[data-res-total]').textContent)
     };
   }
@@ -494,6 +498,7 @@
         + '<div class="scen-nums">'
         +   '<div class="scen-row"><span>국고</span><span>' + fmt(s.nat) + '만원</span></div>'
         +   '<div class="scen-row"><span>지방</span><span>' + fmt(s.loc) + '만원</span></div>'
+        +   '<div class="scen-row scen-row-extra"><span>추가지원 합계 <span class="ex-sub">(국비+지방비)</span></span><span>+' + fmt(s.extra || 0) + '만원</span></div>'
         + '</div>'
         + '<div class="scen-total"><span class="lbl">총 보조금</span><b>' + fmt(s.total) + '</b> 만원</div>'
         + '</div>';
