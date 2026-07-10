@@ -1,0 +1,33 @@
+========================================================================
+ev-portal-0522_v0.20 · 고아 페이지 목록 (도달 불가 = 실제 렌더링 안 됨)
+판별: index.html + 메가메뉴(js/partials.js)에서 시작한 링크 도달성(BFS)
+      → 도달 117 / 전체 131 · 고아 14
+작성: 2026-07-10
+========================================================================
+
+[옛 허브·랜딩 — 세부 페이지로 분리됨]
+  charging.html            → charging-find.html / charging-fee.html 로 분리
+  compare.html             → compare-tool.html / compare-tco.html
+  info.html                → info-encyclopedia.html 등
+  kev100.html              → kev100-about.html
+  notice.html              → notice-list.html
+  tax-integrated.html      → tax-grade.html / subsidy-info.html
+
+[탭으로 이관됨 — 소스 주석에 명시]
+  info-forms.html          → info-library.html 탭 (소스 "info-forms.html 과 통일")
+  info-request.html        → info-library.html 탭 (소스 "info-request.html → 탭 이관")
+  info-manual.html         → info-library.html 탭
+  info-cert.html           → info-regulation.html 탭
+
+[인라인화]
+  signup-complete.html     → signup-form.html 내 완료 카드로 단일 페이지 전환
+
+[미연결 — 어떤 라이브 페이지에서도 링크 없음]
+  charging-card-edit.html  (charging-card.html 에 링크 없음. ai-helpdesk-v2.js 잔존 참조만)
+  business-apply-fast.html
+  business-apply-station-mgmt.html
+
+------------------------------------------------------------------------
+참고: 이번 §1~§6 v0.20 스토리보드는 위 고아를 다루지 않음(라이브 페이지만 수록).
+      옛 v0.19 섹션 덱(01·02 등)에는 일부 고아 장표가 잔존 → 추후 정리 대상.
+------------------------------------------------------------------------

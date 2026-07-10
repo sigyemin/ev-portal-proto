@@ -59,7 +59,7 @@
           </li>
           <li>
             <span class="schs-key" data-i18n="signup.cmp.sum.phone">휴대폰</span>
-            <span class="schs-val">010-1234-5678</span>
+            <span class="schs-val" id="sumPhone">010-1234-5678</span>
           </li>
           <li>
             <span class="schs-key" data-i18n="signup.cmp.sum.sido">거주 지역</span>
@@ -87,26 +87,28 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-auth.js?v=20260707b"></script>
+<script src="js/i18n-auth.js?v=20260709a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
 (function(){
-  // 가입 정보 자동 채우기
+  // 가입 정보 자동 채우기 (signup_step3 세션값)
   let userData = null;
   try { userData = JSON.parse(sessionStorage.getItem('signup_step3') || 'null'); } catch(e){}
   if (userData) {
-    if (userData.id) document.getElementById('sumId').textContent = userData.id;
+    if (userData.id)    document.getElementById('sumId').textContent = userData.id;
     if (userData.email) document.getElementById('sumEmail').textContent = userData.email;
-    if (userData.sido) document.getElementById('sumSido').textContent = userData.sido;
+    if (userData.phone) document.getElementById('sumPhone').textContent = userData.phone;
+    if (userData.sido)  document.getElementById('sumSido').textContent = userData.sido;
+    if (userData.name)  document.getElementById('welcomeName').textContent = userData.name;
   }
 
-  // 가입 완료 → 자동 로그인 처리
+  // 가입 완료 → 자동 로그인 처리(mp_user) 유지 · 자동 리다이렉트 없음(버튼 클릭 이동만)
   try {
     sessionStorage.setItem('mp_user', JSON.stringify({
-      name: '홍길동',
+      name: userData?.name || '홍길동',
       id: userData?.id || 'newuser',
-      kind: 'personal',
+      kind: userData?.kind || 'personal',
       justSignedUp: true
     }));
   } catch(e){}

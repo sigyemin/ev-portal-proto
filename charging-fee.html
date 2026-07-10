@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/charging.css">
+<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260709">
 <style>
   /* ────── 전기차 충전요금 페이지 전용 스타일 ────── */
   /* TOU 컨트롤 셀렉트 — 폰트/사이즈 업 */
@@ -751,7 +752,7 @@
       <!-- ═══════ 충전소 요금 검색 ═══════ -->
       <section class="ev-search-wrap" aria-labelledby="ev-search-title">
         <div class="ev-search-head">
-          <h3 id="ev-search-title">충전소 요금 검색</h3>
+          <h3 id="ev-search-title">충전소 요금 검색 <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
           <span class="ev-search-meta">지역·충전소명으로 조회 · 회원가(지금 시각) 기준 · 충전기 상태는 <a href="charging-find.html?tab=map" style="color:var(--color-primary-700);font-weight:600;">충전소 찾기</a>에서 확인</span>
         </div>
         <form class="ev-search-grid" id="evSearchForm" autocomplete="off" style="grid-template-columns:1fr 1fr 1.6fr auto;">
@@ -831,12 +832,13 @@
             </thead>
             <tbody id="evResultTbody"></tbody>
           </table>
+          <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
         </div>
       </div>
 
       <!-- [DEV] 사업자별 요금 매트릭스(현재 더미) — 셀 = TNCC_RMNG_RTCPCTY_FEE 기본단가(정격용량구간 STRT/END_RTCPCTY·MEMBER_FEE/NONMEMBER_FEE)에 TNCC_RMNG_SEAS_FEE 규칙(SEAS_SE 시즌·DAY_TYPE 요일·STRT_HR/END_HR 시간·DSCNT_SE 방식[정액/정률/고정]·DSCNT_VAL·TRGT_SE 대상·CTYPE 용량) 매칭 적용(겹치면 SEQ 큰 규칙이 덮어씀). 공공 기준행 BID 'ME' · 사업자명 R_BUSI.BNM -->
       <!-- ═══════ 사업자별 요금 매트릭스 ═══════ -->
-      <h3 id="section-matrix" class="section-h mt-8" style="scroll-margin-top:96px;">사업자별 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span></h3>
+      <h3 id="section-matrix" class="section-h mt-8" style="scroll-margin-top:96px;">사업자별 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
 
       <!-- 요금조건: 셀 값 계산 -->
       <div class="mx-cond" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 10px;">
@@ -872,6 +874,7 @@
       </div>
 
       <div id="matrix-wrap"></div>
+      <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
 
       <div class="charge-fine-note" style="margin-top:10px;">
         ※ 계절·시간대 할인이 있는 사업자는 선택한 시각·계절·요일에 따라 금액이 바뀝니다.<br>
@@ -880,7 +883,7 @@
 
       <!-- [DEV] 로밍 요금 매트릭스(getRoamingMatrixV2·현재 더미) — TNCC_RMNG_CHRGNG_UNTPC(BID 발급 × TBID 이용 × 정격용량구간, BUSI_UNTPC 자사단가·TARINSP_UNTPC 로밍단가) JOIN R_BUSI_REQ(REQ_STAT='CON' 및 오늘이 협약기간 내)로 협약 활성 쌍만. 대각선(발급=이용)=자사단가, 미협약=— -->
       <!-- ═══════ 로밍 요금 매트릭스 ═══════ -->
-      <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;">로밍 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span></h3>
+      <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;">로밍 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
       <!-- [DEV] 로밍 개념 안내(정적 텍스트) — 데이터 연동 없음 · 매트릭스 제목 바로 아래 배치 -->
       <div class="alert alert-info mt-3">
         <div class="alert-icon" aria-hidden="true"></div>
@@ -909,6 +912,7 @@
         <button type="button" class="ev-download-btn xlsx" id="roamExcelBtn" aria-label="로밍 매트릭스 엑셀 다운로드"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="ext">XLSX</span><span>엑셀 다운로드</span></button>
       </div>
       <div id="roaming-wrap"></div>
+      <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
 
     </div>
   </section>
@@ -933,9 +937,10 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/i18n-charging.js?v=20260709a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/fee-disclaimer.js?v=20260709"></script>
 
 <style>
   /* ── 매트릭스 & 행펼침 (신규) ── */
@@ -1489,7 +1494,8 @@
     if(xls) xls.addEventListener('click', function(){
       var list=evSorted(_evList), basis=(evState.mem==='member'?'회원가':'비회원가');
       var head=['번호','충전소명','주소','사업자(CPO)','충전기 출력구성(kW)','완속','중속','급속(50~100)','급속(100~200)','초급속','요금기준'];
-      var aoa=[head].concat(list.map(function(s){
+      var disc=['※ 본 요금은 안내용이며 실제 결제 금액과 다를 수 있습니다'];   // 첫 행(제목 아래) 디스클레이머
+      var aoa=[disc,head].concat(list.map(function(s){
         var op=TOU_OPERATORS[s.op], nm=op?op.name:s.op;
         function v(band){ var x=evBand(op,band); return x==null?'—':x; }
         return [s.no,s.name,s.addr,nm,outText(s.out),v('slow'),v('mid'),v('fast50'),v('fast100'),v('ultra'),basis];

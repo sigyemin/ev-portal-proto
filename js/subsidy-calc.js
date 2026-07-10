@@ -469,6 +469,8 @@
       setText('[data-res-extra]', (extra >= 0 ? '+' : '') + fmt(extra) + '만원');
       setText('[data-res-total]', fmt(dTotal));
       if (result) result.classList.add('show');
+      // 예상액 스트립 최초 등장 1회만 펄스(세션 내 재계산 시 재펄스 없음)
+      if (window.FeeDisclaimer) window.FeeDisclaimer.pulse(document.getElementById('feeStripCalc'), 'subsidy-calc');
     });
 
     renderType();

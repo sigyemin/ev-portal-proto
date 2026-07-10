@@ -7,6 +7,11 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/subsidy-calc.css?v=20260613">
+<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260709b">
+<style>
+  /* 보조금=예상액 배지 (요금 안내가와 톤 구분: 살짝 다른 amber-그린) — v0.20 warning 계열 유지 */
+  #feeStripCalc{ margin:0 0 12px; }
+</style>
 <style>
 /* subsidy-info — 하단 안내 보강 섹션 (v0.17) · 공통 .stepper/.stat-card/.alert 재사용 */
 .si-sec{margin-top:44px}
@@ -135,7 +140,7 @@
               <li>③ 제조사·모델을 선택합니다.</li>
               <li>④ 해당하는 선택 항목(전환지원금·가산 등)을 고른 뒤 계산하기를 누릅니다.</li>
             </ul>
-            <p>국비와 지방비를 합산한 <strong>예상</strong> 보조금이 표시됩니다. 실제 지급액은 해당 연도 공고·지자체 예산·심사 결과에 따라 달라질 수 있습니다.</p>
+            <p>국비와 지방비를 합산한 <strong>예상</strong> 보조금이 표시됩니다. <span style="color:#8a93a0;">(실제 지급액 안내는 계산 결과 상단에 표시됩니다.)</span></p>
           </div>
           <div class="guide-panel" id="g3">
             <h4>선택 항목(추가·가산 지원)</h4>
@@ -331,12 +336,16 @@
           <button type="button" class="calc-run" data-calc-run>📊 계산하기</button>
 
           <div class="calc-result" data-calc-result>
-            <div class="calc-res-total"><span style="font-weight:800;">총 예상 보조금</span><span><b data-res-total>0</b> 만원</span></div>
+            <!-- [2층] 계산 결과 상단 스트립 (등장 시 1회 펄스) -->
+            <div class="fee-strip" id="feeStripCalc" role="note">
+              <span class="fee-strip-ico" aria-hidden="true">⚠</span>
+              <span>예상 보조금입니다. 실제 지급액은 해당 연도 공고·지자체 예산·심사 결과에 따라 달라질 수 있습니다.</span>
+            </div>
+            <div class="calc-res-total"><span style="font-weight:800;">총 예상 보조금 <button type="button" class="fee-badge est" data-fee-badge data-toast-text="국비 성능차등·지자체 예산 소진·가산 요건 심사에 따라 달라집니다." aria-label="예상액 설명 보기">예상액</button></span><span>약 <b data-res-total>0</b> 만원</span></div>
             <div class="calc-res-row"><span>국고 보조금</span><span data-res-nat>0만원</span></div>
             <div class="calc-res-row"><span>지방 보조금</span><span data-res-local>0만원</span></div>
             <div class="calc-res-row"><span>추가지원 합계 (국비+지방비)</span><span data-res-extra>0만원</span></div>
             <button type="button" class="btn btn-secondary mt-3" id="scenAddBtn" style="width:100%;">＋ 이 결과 시나리오로 담기</button>
-            <p style="font-size:12px;color:#8a93a0;margin-top:10px;">※ 데모용 추정치입니다. 실제 보조금은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</p>
           </div>
         </div>
         <div class="calc-card scen-col">
@@ -435,7 +444,8 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/subsidy-calc.js?v=20260626c"></script>
+<script src="js/fee-disclaimer.js?v=20260709b"></script>
+<script src="js/subsidy-calc.js?v=20260709a"></script>
 <script>
 (function () {
   // 가이드 탭

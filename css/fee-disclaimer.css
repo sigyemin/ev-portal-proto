@@ -1,0 +1,49 @@
+/* ════════════════════════════════════════════════════════════
+   충전요금 '안내가' 디스클레이머 3층 공통 (v0.20)
+   1층 배지(.fee-badge) · 2층 스트립(.fee-strip) · 3층 캡션(.fee-caption)
+   색은 v0.20 표준 amber/warning 토큰 계열. 핵심 문구는 상시 노출(hover 의존 금지).
+   ════════════════════════════════════════════════════════════ */
+
+/* [1층] 라벨 옆 amber 필 배지 「안내가」 — 클릭/탭 시 부가설명 토스트 */
+.fee-badge{
+  display:inline-flex; align-items:center; gap:4px; vertical-align:middle;
+  margin-left:8px; padding:3px 10px; border-radius:999px;
+  background:#FEF3C7; color:#92400E; border:1px solid #FDE68A;
+  font-size:12px; font-weight:800; line-height:1.2; letter-spacing:-0.01em;
+  font-family:inherit; cursor:pointer;
+  transition:background var(--t-fast,.15s ease), border-color var(--t-fast,.15s ease);
+}
+.fee-badge::before{ content:'ⓘ'; font-size:11px; line-height:1; }
+.fee-badge:hover{ background:#FDE68A; border-color:#F59E0B; }
+.fee-badge:focus-visible{ outline:2px solid #F59E0B; outline-offset:2px; }
+
+/* '(안내가)' 병기 텍스트 */
+.fee-anno{ font-size:0.72em; font-weight:600; color:#B45309; letter-spacing:-0.01em; }
+
+/* [2층] 결과 상단 amber 좌측보더 스트립 — 핵심 문구 상시 노출 */
+.fee-strip{
+  display:flex; align-items:flex-start; gap:10px;
+  background:#FFFBEB; border:1px solid #FDE68A; border-left:4px solid #F59E0B;
+  border-radius:10px; padding:12px 16px; margin:0 0 14px;
+  font-size:13.5px; line-height:1.6; color:#92400E; font-weight:600;
+}
+.fee-strip .fee-strip-ico{ flex-shrink:0; font-size:15px; line-height:1.5; }
+
+/* 결과 최초 렌더 시 1회만 링 펄스 (세션 내 재펄스 없음 — JS가 fee-pulse 부착) */
+.fee-pulse{ animation:feePulse .9s ease-out 1; }
+@keyframes feePulse{
+  0%{ box-shadow:0 0 0 0 rgba(245,158,11,.55); }
+  100%{ box-shadow:0 0 0 12px rgba(245,158,11,0); }
+}
+
+/* [3층] 표(가로스크롤 컨테이너) 하단 캡션 — 모바일 가로스크롤 시에도 항상 표 밑에 노출 */
+.fee-caption{
+  background:#FFFBEB; border:1px solid #FDE68A; border-top:none;
+  border-radius:0 0 10px 10px; padding:9px 14px;
+  font-size:12.5px; color:#92400E; font-weight:600; line-height:1.5;
+}
+/* 표 컨테이너에 붙는 캡션은 표 폭 전체 */
+.fee-caption.full{ width:100%; box-sizing:border-box; }
+
+/* 소형 캡션(1줄) — 슬라이드 패널 등 좁은 공간용(테두리 없이 amber 텍스트만) */
+.fee-caption-sm{ font-size:11.5px; color:#B45309; font-weight:600; line-height:1.5; margin-top:6px; }

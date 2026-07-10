@@ -183,7 +183,7 @@
     return { id, year, sido, region, vehicleType: vt, vehicleSub: sub, method, status,
       announcement, received, delivered,
       acceptable: Math.max(0, announcement - received),
-      remaining: announcement - delivered,
+      remaining: Math.max(0, announcement - delivered),   // 출고잔여 = MAX(0, 공고−출고)
       breakdown, notices, remark, dept, phone };
   }
   // breakdown: { priority, corporate, taxi, general } * { announce, receive, deliver }
@@ -208,7 +208,7 @@
       '** 2026.6.15. 마감 기준, 상반기 서울시 전기승용차 보급 현황을 안내드립니다. (택시 마감)\n○ 보급목표 : 11,361대\n○ 접수대수 : 10,451대\n○ 잔여대수 : 910대\n※ 상반기 보급물량 소진 시에는 당초 일정보다 조기에 마감할 계획입니다.',
       '서울시 기후환경본부 무공해차지원팀', '02-2133-3000'),
 
-    makeRow('r2', 2026, '서울', '서울특별시', '전기화물', '소형', '접수순', '소진임박',
+    makeRow('r2', 2026, '서울', '서울특별시', '전기화물', '소형', '접수순', '마감임박',
       8200, 7980, 7350,
       bd(1200,3500,0,3500, 1180,3400,0,3400, 1100,3200,0,3050),
       [ {label:'본공고 1', file:'2026-seoul-truck-01.pdf', date:'2026.02.01'},
@@ -254,14 +254,14 @@
       '배달 플랫폼 사업자 우대',
       '성남시 기후환경과', '031-729-3010'),
 
-    makeRow('r8', 2026, '제주', '제주특별자치도 제주시', '전기승용', '일반', '접수순', '신규확대',
+    makeRow('r8', 2026, '제주', '제주특별자치도 제주시', '전기승용', '일반', '접수순', '접수중',
       2400, 528, 472,
       bd(480,360,0,1560, 106,79,0,343, 94,71,0,307),
       [ {label:'본공고 1', file:'2026-jeju-ev-01.pdf', date:'2026.02.12'} ],
       '카본프리 아일랜드 연계 · 도내 거주자 +50만원',
       '제주시 탄소중립지원과', '064-710-3000'),
 
-    makeRow('r9', 2026, '제주', '제주특별자치도 제주시', '수소승용', '일반', '출고등록순', '신규확대',
+    makeRow('r9', 2026, '제주', '제주특별자치도 제주시', '수소승용', '일반', '출고등록순', '접수중',
       80, 18, 15,
       bd(0,40,0,40, 0,9,0,9, 0,7,0,8),
       [ {label:'본공고 1', file:'2026-jeju-h2-01.pdf', date:'2026.03.05'} ],
@@ -462,6 +462,13 @@
 
   // ---------------- Render ----------------
   const fmt = (n) => n == null ? '-' : n.toLocaleString('ko-KR');
+
+  // ── 대수 지표 확정 산식 (핸드오프 §3 · nportal buySupprt_subsidy_sqlmap.xml + ev_ps psLocal_sql.xml getLocalInfoList 교차검증) ──
+  // [DEV] 접수 = APP_STEP 101~900 (취소 처리 건 제외한 전체 신청건) · 선정 = 130~501 (대상자선정+출고, 신규 지표) · 출고 = 201~501 (지급신청 이후)
+  //       잔여 = MAX(0, 공고−각) · 민간구매 한정 = MODEL_CD NOT IN(HC·HCM) + LOCAL_CD ≠ 8000 (공공·조달 제외) · 원장 PS_APPLY 조회시점 SUM(실시간)
+  //       더미는 접수 ≥ 선정 ≥ 출고 포함관계를 보장(선정 = 출고 + 대상자선정). 잔여 음수 방지 MAX(0,…) 전 지점 적용.
+  const SELCNT = (b) => { const rc = b.receive, dv = Math.min(b.deliver, rc); return dv + Math.round((rc - dv) * 0.6); }; // 선정 = 출고 + 대상자선정(더미) → 출고 ≤ 선정 ≤ 접수
+  const REM0 = (announce, x) => Math.max(0, announce - x);   // 잔여 = MAX(0, 공고−해당)
   const statusClass = (s) => ({
     '대기': 'info', '접수중': 'approach', '마감임박': 'warning', '마감': 'gray'
   }[s] || 'gray');
@@ -476,7 +483,10 @@
     const ed = new Date(sd); ed.setDate(ed.getDate() + span);
     return { start: n.date + ' 09시 00분', end: _fmtYMD(ed) + ' 18시 00분', deadline: _fmtYMD(ed) + ' 18시 00분' };
   }
-  // 접수상태 — 접수기간 기준 파생 (대기: 첫 공고 접수 전 · 마감임박: 최종 신청마감 30일 전부터 · 마감: 최종 신청마감 경과)
+  // 접수상태 — AS-IS 파생값(저장 아님). 입력=공고대수(PS_BUDGET)·선정대수(APP_STEP 집계)·접수기간(공고 마스터)
+  // [DEV] 소진율 = 선정대수/공고대수(대수 기준). 실예산 비공개로 예산소진율 대신 대수 소진율 사용.
+  // [DEV] 마감임박 = (최종 마감 30일 이내) OR (소진율 80%↑) · 마감 = (마감 경과) OR (소진율 100%). 판정 우선순위: 마감 > 마감임박 > 대기 > 접수중.
+  //       상태 4종: 대기 / 접수중 / 마감임박 / 마감 (필터 status 옵션과 정합). 외부(캐스퍼) 산식 미사용.
   function rowStatus(r) {
     if (!r.notices || !r.notices.length) return '접수중';
     const now = new Date(); now.setHours(0, 0, 0, 0);
@@ -486,10 +496,16 @@
     const ends = r.notices.map(n => { const ed = _parseYMD(n.date); ed.setDate(ed.getDate() + spanOf(n)); return ed.getTime(); });
     const firstStart = Math.min(...starts);
     const lastEnd = Math.max(...ends);
-    if (t < firstStart) return '대기';
-    if (t > lastEnd) return '마감';
     const daysLeft = Math.ceil((lastEnd - t) / 86400000);
-    return daysLeft <= 30 ? '마감임박' : '접수중';
+    // 소진율 = 선정대수(Σ SELCNT = 대상자선정+출고 누적, APP_STEP 130~501) / 공고대수 — 표의 선정대수(totalCountCell)와 동일 산식
+    const cats = ['priority', 'corporate', 'taxi', 'general'];
+    const sel = r.breakdown ? cats.reduce((a, k) => a + SELCNT(r.breakdown[k]), 0) : 0;
+    const usedRate = r.announcement > 0 ? sel / r.announcement : 0;
+    // 판정 우선순위: 마감 > 마감임박 > 대기 > 접수중
+    if (t > lastEnd || usedRate >= 1.0) return '마감';
+    if (daysLeft <= 30 || usedRate >= 0.8) return '마감임박';
+    if (t < firstStart) return '대기';
+    return '접수중';
   }
   // 표 셀용 짧은 접수기간 (26.02.01 ~ 05.02)
   function compactRange(n) {
@@ -506,8 +522,8 @@
   function totalCountCell(r) {
     const b = r.breakdown;
     const cats = ['priority', 'corporate', 'taxi', 'general'];
-    const selTotal = cats.reduce((a, k) => a + Math.min(b[k].announce, b[k].receive), 0);
-    const selRemTotal = Math.max(0, r.announcement - selTotal);
+    const selTotal = cats.reduce((a, k) => a + SELCNT(b[k]), 0);
+    const selRemTotal = REM0(r.announcement, selTotal);
     return `<td class="cnt-c">${fmt(r.announcement)}</td>`
       + `<td class="cnt-c">${fmt(r.received)}</td>`
       + `<td class="cnt-c cnt-sel">${fmt(selTotal)}</td>`
@@ -522,20 +538,20 @@
     const b = r.breakdown;
     let selB = 0, annB = 0;
     Object.keys(CAT_COST_W).forEach(k => {
-      const sel = Math.min(b[k].announce, b[k].receive);
+      const sel = SELCNT(b[k]);
       selB += sel * CAT_COST_W[k];
       annB += b[k].announce * CAT_COST_W[k];
     });
     return annB > 0 ? Math.round((selB / annB) * 100) : 0;
   }
   // 대수 현황 매트릭스 셀 — 5행(전체/우선/법인·기관/택시/일반) × 6열(공고/접수/선정/출고/선정잔여/출고잔여)
-  // 선정 = 지급 선정(지급예정 포함) = min(공고, 접수) · 선정잔여 = 공고-선정(추가 선정 가능 여유) · 출고잔여 = 공고-출고
+  // 선정 = 출고 + 대상자선정(APP_STEP 130~501, 신규 지표) · 선정잔여 = MAX(0, 공고−선정) · 출고잔여 = MAX(0, 공고−출고)
   function matrixCell(r) {
     const b = r.breakdown;
     const cats = ['priority', 'corporate', 'taxi', 'general'];
-    const sel = (k) => Math.min(b[k].announce, b[k].receive);
-    const selRem = (k) => b[k].announce - sel(k);
-    const outRem = (k) => b[k].announce - b[k].deliver;
+    const sel = (k) => SELCNT(b[k]);
+    const selRem = (k) => REM0(b[k].announce, sel(k));
+    const outRem = (k) => REM0(b[k].announce, b[k].deliver);
     const sum = (fn) => cats.reduce((a, k) => a + fn(k), 0);
     const rows = [
       ['전체',     r.announcement, r.received, sum(sel),        r.delivered, sum(selRem),       r.remaining,     'mx-total'],
@@ -637,8 +653,8 @@
 
     els.cards.innerHTML = rows.map(r => {
       const _cats = ['priority', 'corporate', 'taxi', 'general'];
-      const selTotal = _cats.reduce((a, k) => a + Math.min(r.breakdown[k].announce, r.breakdown[k].receive), 0);
-      const selRemTotal = Math.max(0, r.announcement - selTotal);
+      const selTotal = _cats.reduce((a, k) => a + SELCNT(r.breakdown[k]), 0);
+      const selRemTotal = REM0(r.announcement, selTotal);
       const selPct = r.announcement > 0 ? Math.round((selTotal / r.announcement) * 100) : 0;
       const budPct = budgetUsedPctOf(r);
       return `
@@ -803,11 +819,11 @@
         <tbody>${noticeRows || '<tr><td colspan="4">등록된 공고가 없습니다.</td></tr>'}</tbody>
       </table>`;
 
-    // 선정(지급예정 포함) = min(공고, 접수) · 선정잔여 = 공고 − 선정(추가 선정 가능 여유)
+    // 선정 = 출고 + 대상자선정(APP_STEP 130~501, 신규 지표) · 선정잔여 = MAX(0, 공고 − 선정)
     const cats4 = ['priority', 'corporate', 'taxi', 'general'];
-    const selCat = (cat) => Math.min(r.breakdown[cat].announce, r.breakdown[cat].receive);
+    const selCat = (cat) => SELCNT(r.breakdown[cat]);
     const selTotal = cats4.reduce((a, c) => a + selCat(c), 0);
-    const selRemTotal = Math.max(0, r.announcement - selTotal);
+    const selRemTotal = REM0(r.announcement, selTotal);
     // 예산 비율 (실예산 비공개) — 카테고리 단가 가중 소진율 (대수 기준과 다를 수 있음)
     const budgetUsedPct = budgetUsedPctOf(r);
     const budgetRemainPct = Math.max(0, 100 - budgetUsedPct);
@@ -818,7 +834,7 @@
       { key:'announcement', title:_lang()==='en'?`${r.year} Private Announced Units`:`${r.year}년 민간공고대수`, total:r.announcement, pct:null,                         field:'announce' },
       { key:'received',     title:_lang()==='en'?'Received':'접수대수',                  total:r.received,  pct:receivedPct,                    field:'receive'  },
       { key:'selected',     title:_lang()==='en'?'Selected':'선정대수',                  total:selTotal,    pct:pct(selTotal, r.announcement),   fn:(cat)=>selCat(cat), emph:true },
-      { key:'selremain',    title:_lang()==='en'?'Selection Remaining':'선정잔여대수',     total:selRemTotal, pct:pct(selRemTotal, r.announcement), fn:(cat)=> r.breakdown[cat].announce - selCat(cat), emph:true },
+      { key:'selremain',    title:_lang()==='en'?'Selection Remaining':'선정잔여대수',     total:selRemTotal, pct:pct(selRemTotal, r.announcement), fn:(cat)=> REM0(r.breakdown[cat].announce, selCat(cat)), emph:true },
       { key:'delivered',    title:_lang()==='en'?'Delivered':'출고대수',                  total:r.delivered, pct:deliveredPct,                   field:'deliver'  },
       { key:'remaining',    title:_lang()==='en'?'Out-delivery Remaining':'출고잔여대수',  total:r.remaining, pct:remainingPct,                   field:null,
         fn: (cat) => Math.max(0, r.breakdown[cat].announce - r.breakdown[cat].deliver) },
@@ -859,7 +875,7 @@
       { key:'receive',  label:tr('label','접수'), total:r.received },
       { key:'select',   label:_lang()==='en'?'Selected':'선정', total:selTotal, fn:(k)=>selCat(k), emph:true },
       { key:'deliver',  label:tr('label','출고'), total:r.delivered },
-      { key:'selremain',label:_lang()==='en'?'Selection Rem.':'선정잔여', total:selRemTotal, fn:(k)=> r.breakdown[k].announce - selCat(k), emph:true },
+      { key:'selremain',label:_lang()==='en'?'Selection Rem.':'선정잔여', total:selRemTotal, fn:(k)=> REM0(r.breakdown[k].announce, selCat(k)), emph:true },
       { key:'remaining',label:_lang()==='en'?'Out-delivery Rem.':'출고잔여', total:r.remaining, fn:(k)=> Math.max(0, r.breakdown[k].announce - r.breakdown[k].deliver) },
     ];
     const stackChartHTML = `
@@ -1206,8 +1222,8 @@
     // ── 공통 헬퍼 ──
     const catKeys = ['priority', 'corporate', 'taxi', 'general'];
     const key = (r) => `${r.year}-${r.id}`;                                   // 조인 키
-    const selCat = (r, k) => Math.min(r.breakdown[k].announce, r.breakdown[k].receive);
-    const rowSel = (r) => catKeys.reduce((a, k) => a + selCat(r, k), 0);       // 선정 = Σ min(공고,접수)
+    const selCat = (r, k) => SELCNT(r.breakdown[k]);
+    const rowSel = (r) => catKeys.reduce((a, k) => a + selCat(r, k), 0);       // 선정 = Σ(출고 + 대상자선정) · 접수 ≥ 선정 ≥ 출고
     const pct = (a, b) => b > 0 ? Math.round((a / b) * 100) : 0;
     // 공고종류 요약 (예: "본공고2·추경1")
     const kindSummary = (r) => {
@@ -1233,12 +1249,15 @@
       ['항목', '내용'],
       ['자료명', '지자체별 보조금 현황'],
       ['출처', '환경부 보조금관리시스템(한국환경공단) 실시간 연동'],
-      ['집계 안내', '매 영업일 09시·14시 집계 반영'],
+      // [DEV] 반영 주기 = 실시간. 접수/출고/선정/잔여 = PS_APPLY 원장 실시간 집계(getStepAmt = FROM PS_APPLY on-demand SUM),
+      //       공고대수 = PS_BUDGET 수동 입력(입력 즉시 반영). 실시간=조회시점 집계이므로 인덱스(YEAR,LOCAL_CD,APP_STEP)·부하 관리 필요.
+      ['반영 주기', '실시간(지자체 입력·처리 즉시 반영)'],
       ['다운로드 시각', new Date().toLocaleString('ko-KR')],
       ['조회 조건', fParts.join(' · ')],
       ['조회 건수', `${rows.length}건`],
       ['단위', '대수=대, 비율=%, 금액=만원'],
-      ['산식', '선정=min(공고,접수) · 선정잔여=공고−선정 · 출고잔여=공고−출고'],
+      ['산식', '접수=취소 제외 전체 신청건 · 선정=대상자선정+출고 · 출고=지급신청 이후 · 선정잔여=max(0, 공고−선정) · 출고잔여=max(0, 공고−출고) · 민간구매 한정(공공·조달 제외)'],
+      ['각주', '접수대수는 취소 처리 건 제외 · 민간구매 대수만 표시'],
       ['예산현황', '실예산 비공개 · 예산소진율=카테고리 단가 가중(우선순위 1.2 · 택시 1.1 · 법인·기관/일반 1.0) 선정 기준 → [예산현황] 시트 참조'],
       ['변경이력', '리스트/공고 변경 시 변경일자·변경 항목·변경 전후를 [변경이력] 시트에 기록'],
     ];
@@ -1285,17 +1304,17 @@
         r.delivered, r.breakdown.priority.deliver, r.breakdown.corporate.deliver,
         r.breakdown.taxi.deliver, r.breakdown.general.deliver]);
       detail.push([...head, '선정잔여',
-        Math.max(0, r.announcement - rowSel(r)),
-        r.breakdown.priority.announce - sel('priority'),
-        r.breakdown.corporate.announce - sel('corporate'),
-        r.breakdown.taxi.announce - sel('taxi'),
-        r.breakdown.general.announce - sel('general')]);
+        REM0(r.announcement, rowSel(r)),
+        REM0(r.breakdown.priority.announce, sel('priority')),
+        REM0(r.breakdown.corporate.announce, sel('corporate')),
+        REM0(r.breakdown.taxi.announce, sel('taxi')),
+        REM0(r.breakdown.general.announce, sel('general'))]);
       detail.push([...head, '출고잔여',
         r.remaining,
-        r.breakdown.priority.announce - r.breakdown.priority.deliver,
-        r.breakdown.corporate.announce - r.breakdown.corporate.deliver,
-        r.breakdown.taxi.announce - r.breakdown.taxi.deliver,
-        r.breakdown.general.announce - r.breakdown.general.deliver]);
+        REM0(r.breakdown.priority.announce, r.breakdown.priority.deliver),
+        REM0(r.breakdown.corporate.announce, r.breakdown.corporate.deliver),
+        REM0(r.breakdown.taxi.announce, r.breakdown.taxi.deliver),
+        REM0(r.breakdown.general.announce, r.breakdown.general.deliver)]);
     });
 
     // ── 시트 3: 공고별_일정·공고문 (공고 1건 = 1행) ──
@@ -1338,13 +1357,17 @@
         '실예산 비공개 · 카테고리 단가 가중 선정 기준', (r.remark || '-').replace(/\n/g, ' ')]);
     });
 
-    // ── 시트 5: 변경이력 (관리번호별 변경 이력 — 실데이터 연동 전 더미 샘플) ──
+    // ── 시트 5: 변경이력 (관리자 수동 입력·공시 항목의 변경만 기록 = 감사로그 · 더미) ──
+    //   ★ 실시간 집계(접수·선정·출고·잔여 대수/율, 예산소진율)는 '변경'이 아니므로 제외. 공고문 파일 교체도 제외.
     const changeLog = [
-      ['관리번호', '변경일자', '변경 구분', '변경 항목', '변경 전', '변경 후', '안내']
+      ['관리번호', '변경일시', '변경자', '변경 항목', '변경 전', '변경 후']
     ];
     rows.forEach(r => {
-      changeLog.push([key(r), '2026-04-18', '리스트항목', '공고대수(전체)', '100', '120', '2차 공고분 추가']);
-      changeLog.push([key(r), '2026-05-02', '공고', '접수마감', '05.02', '05.15', '접수기간 연장 공고']);
+      changeLog.push([key(r), '2026-04-18 14:20', '김담당', '공고대수(전체)', '100', '120']);
+      changeLog.push([key(r), '2026-04-18 14:22', '김담당', '공고대수(우선순위)', '30', '40']);
+      changeLog.push([key(r), '2026-05-02 10:05', '김담당', '접수 마감일', '2026-05-02', '2026-05-15']);
+      changeLog.push([key(r), '2026-03-10 09:30', '이담당', '접수방법', '접수순', '접수순(초과 시 추첨)']);
+      changeLog.push([key(r), '2026-06-01 11:00', '박담당', '비고', '-', '추경 예산 반영 2차 공고']);
     });
 
     // ── 워크북 조립 ──
@@ -1365,7 +1388,7 @@
     ws3['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:9},{wch:14},{wch:13},{wch:18},{wch:18}];
     ws4['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:18},{wch:12},{wch:11},{wch:11},{wch:12},{wch:12},{wch:16},{wch:16},{wch:14},{wch:18},{wch:10}];
     wsBud['!cols'] = [{wch:10},{wch:9},{wch:8},{wch:22},{wch:10},{wch:9},{wch:10},{wch:10},{wch:13},{wch:15},{wch:34},{wch:40}];
-    ws5['!cols'] = [{wch:10},{wch:12},{wch:12},{wch:18},{wch:14},{wch:14},{wch:30}];
+    ws5['!cols'] = [{wch:10},{wch:16},{wch:10},{wch:20},{wch:16},{wch:16}];
 
     XLSX.utils.book_append_sheet(wb, ws0, '안내');
     XLSX.utils.book_append_sheet(wb, ws1, '요약');

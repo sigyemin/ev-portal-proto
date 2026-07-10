@@ -17,6 +17,13 @@
 /* 추가 모달 radio-card: 라디오 선택 표시 */
 [data-modal-car-select] .radio-card{display:flex;align-items:center;cursor:pointer;}
 [data-modal-car-select] .radio-card:has(input:checked){border-color:var(--color-primary-500,#22c55e);box-shadow:0 0 0 2px var(--color-primary-100,#dcfce7);}
+/* 모달 내부 스크롤 보정(목록이 길어도 body가 스크롤되도록) */
+#addCarModal .modal-body{flex:1 1 auto;min-height:0;}
+/* 추가 모달 페이지네이션 */
+#cmpModalPager{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+#cmpModalPager button{min-width:34px;height:34px;padding:0 10px;border:1px solid var(--border-light);border-radius:8px;background:#fff;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;}
+#cmpModalPager button.active{background:var(--color-primary-500,#22c55e);border-color:var(--color-primary-500,#22c55e);color:#fff;}
+#cmpModalPager button:disabled{opacity:.4;cursor:default;}
 </style>
 </head>
 <body>
@@ -95,13 +102,17 @@
       <div class="search-field mb-4">
         <input type="text" class="form-input" id="cmpSearch" placeholder="제조사, 모델명 검색" data-i18n-attr="placeholder:ctool.modal.search">
       </div>
-      <div class="tabs-pill" data-tabs>
-        <button class="tab active" data-tab="m-all" data-i18n="ctool.mtab.all">전체</button>
-        <button class="tab" data-tab="m-ev" data-i18n="ctool.mtab.ev">전기</button>
-        <button class="tab" data-tab="m-h" data-i18n="ctool.mtab.h">수소</button>
-        <button class="tab" data-tab="m-truck" data-i18n="ctool.mtab.truck">화물</button>
+      <div class="tabs-pill" data-tabs style="flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <button class="tab active" data-tab="전기승용">전기승용</button>
+        <button class="tab" data-tab="전기승합">전기승합</button>
+        <button class="tab" data-tab="전기화물">전기화물</button>
+        <button class="tab" data-tab="전기이륜">전기이륜</button>
+        <button class="tab" data-tab="수소차">수소차</button>
+        <button class="tab" data-tab="건설기계">건설기계</button>
       </div>
       <div class="flex flex-col gap-2" data-modal-car-select id="cmpModalList"></div>
+      <p id="cmpModalEmpty" style="color:var(--text-tertiary);padding:16px;text-align:center;display:none;">해당 차종의 차량이 없습니다.</p>
+      <div id="cmpModalPager"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" data-modal-close type="button" data-i18n="ctool.btn.cancel">취소</button>
@@ -147,7 +158,61 @@
     nexo:{ name:'NEXO', maker:'현대자동차', energy:'fcev', chip:'수소승용', chipClass:'chip-info', img:'assets/cars/fcev-suv-nexo.svg',
       basic:{ 차종:'수소승용', 차급:'중형 SUV', 구동방식:'전륜(2WD)', 정원:'5명', 크기:'4,670 × 1,860 × 1,640 mm', 축거:'2,790 mm', 공차중량:'1,890 kg', 모터출력:'120 kW', 토크:'395 Nm', 최고속도:'179 km/h', 복합효율:'96.2 km/kg', 저공해등급:'1종', 효율등급:'1등급' },
       fcev:{ 수소탱크:'6.33 kg', 충전압력:'700 bar', 주행상온:'609 km', 주행저온:'약 540 km', 충전시간:'약 5분', 연비:'96.2 km/kg' },
-      subsidy:{ 국비:2250, 출고가:7650, 세제감면:660 }, running:{ 에너지비용:'약 183만원 (수소료)' } }
+      subsidy:{ 국비:2250, 출고가:7650, 세제감면:660 }, running:{ 에너지비용:'약 183만원 (수소료)' } },
+    // ── 전기승용 (더미 추가) ──
+    kona:{ name:'코나 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg',
+      basic:{ 차종:'전기승용', 차급:'소형 SUV', 구동방식:'전륜(2WD)', 정원:'5명', 크기:'4,355 × 1,825 × 1,575 mm', 축거:'2,660 mm', 공차중량:'1,690 kg', 모터출력:'150 kW', 토크:'255 Nm', 최고속도:'172 km/h', 복합효율:'5.4 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
+      ev:{ 배터리용량:'64.8 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'417 km', 주행저온:'약 350 km', 완속:'약 9시간', 급속:'41분', 급속출력:'100 kW' },
+      subsidy:{ 국비:640, 출고가:4735, 세제감면:530 }, running:{ 에너지비용:'약 66만원 (전기 충전료)' } },
+    model3:{ name:'모델 3', maker:'테슬라', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-model3.svg',
+      basic:{ 차종:'전기승용', 차급:'준중형', 구동방식:'후륜(2WD)', 정원:'5명', 크기:'4,720 × 1,850 × 1,441 mm', 축거:'2,875 mm', 공차중량:'1,760 kg', 모터출력:'208 kW', 토크:'420 Nm', 최고속도:'201 km/h', 복합효율:'5.6 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
+      ev:{ 배터리용량:'57.5 kWh', 배터리종류:'리튬인산철 (LFP)', 주행상온:'403 km', 주행저온:'약 340 km', 완속:'약 8시간', 급속:'27분', 급속출력:'170 kW' },
+      subsidy:{ 국비:230, 출고가:5199, 세제감면:530 }, running:{ 에너지비용:'약 69만원 (전기 충전료)' } },
+    // ── 전기승합 (더미) ──
+    elecCity:{ name:'일렉시티 (전기버스)', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg',
+      basic:{ 차종:'전기승합', 차급:'대형 저상버스', 구동방식:'후륜(2WD)', 정원:'49명', 크기:'10,995 × 2,490 × 3,375 mm', 축거:'5,400 mm', 공차중량:'11,700 kg', 모터출력:'240 kW', 토크:'-', 최고속도:'약 90 km/h', 복합효율:'0.9 km/kWh', 저공해등급:'1종', 효율등급:'-' },
+      ev:{ 배터리용량:'384 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'319 km', 주행저온:'약 260 km', 완속:'약 6시간', 급속:'약 72분', 급속출력:'150 kW' },
+      subsidy:{ 국비:7000, 출고가:38000, 세제감면:0 }, running:{ 에너지비용:'약 620만원 (전기 충전료)' } },
+    countyEv:{ name:'카운티 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg',
+      basic:{ 차종:'전기승합', 차급:'소형 승합', 구동방식:'후륜(2WD)', 정원:'25명', 크기:'7,745 × 2,038 × 2,760 mm', 축거:'4,085 mm', 공차중량:'5,600 kg', 모터출력:'150 kW', 토크:'-', 최고속도:'약 92 km/h', 복합효율:'1.4 km/kWh', 저공해등급:'1종', 효율등급:'-' },
+      ev:{ 배터리용량:'128 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'161 km', 주행저온:'약 130 km', 완속:'약 5시간', 급속:'약 72분', 급속출력:'100 kW' },
+      subsidy:{ 국비:6000, 출고가:15500, 세제감면:0 }, running:{ 에너지비용:'약 330만원 (전기 충전료)' } },
+    // ── 전기화물 (더미 추가) ──
+    bongo3:{ name:'봉고3 EV', maker:'기아', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
+      basic:{ 차종:'전기화물', 차급:'소형 트럭(1톤)', 구동방식:'후륜(2WD)', 정원:'3명', 크기:'5,120 × 1,740 × 1,995 mm', 축거:'2,615 mm', 공차중량:'1,985 kg', 모터출력:'135 kW', 토크:'395 Nm', 최고속도:'약 130 km/h', 복합효율:'3.1 km/kWh', 저공해등급:'1종', 효율등급:'-' },
+      ev:{ 배터리용량:'58.8 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'211 km', 주행저온:'약 175 km', 완속:'약 9.5시간', 급속:'약 40분', 급속출력:'100 kW' },
+      subsidy:{ 국비:1100, 출고가:4330, 세제감면:460 }, running:{ 에너지비용:'약 94만원 (전기 충전료)' } },
+    evMighty:{ name:'이-마이티', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
+      basic:{ 차종:'전기화물', 차급:'중형 트럭(3.5톤)', 구동방식:'후륜(2WD)', 정원:'3명', 크기:'6,285 × 2,020 × 2,230 mm', 축거:'3,435 mm', 공차중량:'3,700 kg', 모터출력:'160 kW', 토크:'320 Nm', 최고속도:'약 110 km/h', 복합효율:'1.9 km/kWh', 저공해등급:'1종', 효율등급:'-' },
+      ev:{ 배터리용량:'114.5 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'202 km', 주행저온:'약 165 km', 완속:'약 15시간', 급속:'약 60분', 급속출력:'100 kW' },
+      subsidy:{ 국비:1600, 출고가:9200, 세제감면:700 }, running:{ 에너지비용:'약 150만원 (전기 충전료)' } },
+    // ── 전기이륜 (더미) ──
+    smartEvz:{ name:'스마트 EV Z', maker:'그린모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg',
+      basic:{ 차종:'전기이륜', 차급:'경형 이륜(스쿠터)', 구동방식:'후륜', 정원:'2명', 크기:'1,870 × 690 × 1,140 mm', 축거:'1,320 mm', 공차중량:'110 kg', 모터출력:'4 kW', 토크:'-', 최고속도:'약 78 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
+      ev:{ 배터리용량:'3.4 kWh', 배터리종류:'리튬이온 (탈착식)', 주행상온:'95 km', 주행저온:'약 75 km', 완속:'약 4시간', 급속:'-', 급속출력:'-' },
+      subsidy:{ 국비:140, 출고가:430, 세제감면:0 }, running:{ 에너지비용:'약 8만원 (전기 충전료)' } },
+    emVibe:{ name:'EM 바이브', maker:'대동모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg',
+      basic:{ 차종:'전기이륜', 차급:'소형 이륜(스쿠터)', 구동방식:'후륜', 정원:'2명', 크기:'1,930 × 700 × 1,180 mm', 축거:'1,350 mm', 공차중량:'125 kg', 모터출력:'6 kW', 토크:'-', 최고속도:'약 85 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
+      ev:{ 배터리용량:'4.6 kWh', 배터리종류:'리튬이온 (탈착식)', 주행상온:'120 km', 주행저온:'약 95 km', 완속:'약 5시간', 급속:'-', 급속출력:'-' },
+      subsidy:{ 국비:180, 출고가:560, 세제감면:0 }, running:{ 에너지비용:'약 9만원 (전기 충전료)' } },
+    // ── 수소차 (더미: 버스·트럭) ──
+    h2bus:{ name:'일렉시티 수소전기버스', maker:'현대자동차', energy:'fcev', chip:'수소버스', chipClass:'chip-info', img:'assets/cars/ev-bus-elec-city.svg',
+      basic:{ 차종:'수소버스', 차급:'대형 저상버스', 구동방식:'후륜(2WD)', 정원:'49명', 크기:'10,995 × 2,490 × 3,405 mm', 축거:'5,400 mm', 공차중량:'13,500 kg', 모터출력:'180 kW', 토크:'-', 최고속도:'약 90 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
+      fcev:{ 수소탱크:'34.5 kg', 충전압력:'350 bar', 주행상온:'474 km', 주행저온:'약 400 km', 충전시간:'약 15분', 연비:'13.8 km/kg' },
+      subsidy:{ 국비:21000, 출고가:66000, 세제감면:0 }, running:{ 에너지비용:'약 2,400만원 (수소료)' } },
+    h2truck:{ name:'엑시언트 수소전기트럭', maker:'현대자동차', energy:'fcev', chip:'수소트럭', chipClass:'chip-info', img:'assets/cars/ev-truck-porter.svg',
+      basic:{ 차종:'수소트럭', 차급:'대형 트럭(카고)', 구동방식:'후륜(6×2)', 정원:'2명', 크기:'9,745 × 2,490 × 3,730 mm', 축거:'4,635 mm', 공차중량:'9,800 kg', 모터출력:'350 kW', 토크:'-', 최고속도:'약 85 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
+      fcev:{ 수소탱크:'31 kg', 충전압력:'350 bar', 주행상온:'570 km', 주행저온:'약 480 km', 충전시간:'약 20분', 연비:'18.4 km/kg' },
+      subsidy:{ 국비:25000, 출고가:69000, 세제감면:0 }, running:{ 에너지비용:'약 2,800만원 (수소료)' } },
+    // ── 건설기계 (더미) ──
+    forkliftEv:{ name:'전동 지게차 3톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
+      basic:{ 차종:'건설기계', 차급:'전동 지게차(3톤)', 구동방식:'후륜 조향', 정원:'1명', 크기:'3,720 × 1,270 × 2,200 mm', 축거:'1,700 mm', 공차중량:'4,900 kg', 모터출력:'2 × 11 kW', 토크:'-', 최고속도:'약 18 km/h', 복합효율:'-', 저공해등급:'-', 효율등급:'-' },
+      ev:{ 배터리용량:'51.2 kWh', 배터리종류:'리튬이온 (LFP)', 주행상온:'약 8시간 가동', 주행저온:'약 6시간 가동', 완속:'약 6시간', 급속:'약 90분', 급속출력:'30 kW' },
+      subsidy:{ 국비:500, 출고가:5200, 세제감면:0 }, running:{ 에너지비용:'약 120만원 (전기 충전료)' } },
+    excavatorEv:{ name:'전동 굴착기 1.9톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
+      basic:{ 차종:'건설기계', 차급:'미니 굴착기(1.9톤)', 구동방식:'무한궤도', 정원:'1명', 크기:'3,880 × 1,360 × 2,510 mm', 축거:'-', 공차중량:'1,900 kg', 모터출력:'18 kW', 토크:'-', 최고속도:'약 4.5 km/h', 복합효율:'-', 저공해등급:'-', 효율등급:'-' },
+      ev:{ 배터리용량:'32 kWh', 배터리종류:'리튬이온 (LFP)', 주행상온:'약 4시간 가동', 주행저온:'약 3시간 가동', 완속:'약 4시간', 급속:'약 60분', 급속출력:'20 kW' },
+      subsidy:{ 국비:600, 출고가:8500, 세제감면:0 }, running:{ 에너지비용:'약 90만원 (전기 충전료)' } }
   };
 
   // 시도 → [시군구, 지방비(만원)] · 자동차세 용도(만원) — 공통(같은 조건으로 차량 비교)
@@ -165,7 +230,8 @@
   var DEFAULT=['ioniq6','ev6'];
   var state=DEFAULT.slice();                 // 선택 차량 키 배열(최대 3)
   var selSido='충청남도', selSgg=String((REGION['충청남도'][0]||[])[1]||0), selUse=String(TAX[0][1]);
-  var modalTab='m-all', modalQuery='';
+  var modalTab='전기승용', modalQuery='', modalPage=1;
+  var MODAL_PAGE_SIZE=3;
 
   function won(n){ return Number(n).toLocaleString('ko-KR'); }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -298,23 +364,41 @@
   }
 
   // ── 추가 모달 리스트 ──
+  function carCat(c){ return /^수소/.test(c.chip) ? '수소차' : c.chip; }
   function renderModalList(){
     var host=$('cmpModalList'); if(!host) return;
     var avail=Object.keys(CARS).filter(function(k){return state.indexOf(k)<0;});
     host.innerHTML=avail.map(function(k){ var c=CARS[k];
-      return '<label class="radio-card" data-car="'+k+'" data-energy="'+c.energy+'" data-truck="'+(/화물/.test(c.basic.차종)?'1':'0')+'">'
+      return '<label class="radio-card" data-car="'+k+'" data-cat="'+esc(carCat(c))+'">'
         +'<input type="radio" name="addPick" value="'+k+'" style="margin-right:10px;">'
         +'<div class="flex justify-between" style="flex:1;"><div><strong>'+esc(c.name)+'</strong><br><span style="font-size:13px;color:var(--text-tertiary);">'+esc(c.maker)+' · '+esc(c.chip)+'</span></div>'
         +'<div style="text-align:right;"><span class="chip '+c.chipClass+'">국비 '+won(c.subsidy.국비)+'만원</span></div></div></label>';
-    }).join('') || '<p style="color:var(--text-tertiary);padding:12px;">추가할 수 있는 차량이 없습니다. (최대 3대)</p>';
+    }).join('');
+    modalPage=1;
     applyModalFilter();
   }
+  function renderModalPager(pages){
+    var pg=$('cmpModalPager'); if(!pg) return;
+    if(pages<=1){ pg.innerHTML=''; return; }
+    var h='<button type="button" data-pg="prev"'+(modalPage<=1?' disabled':'')+' aria-label="이전">‹</button>';
+    for(var i=1;i<=pages;i++){ h+='<button type="button" data-pg="'+i+'"'+(i===modalPage?' class="active"':'')+'>'+i+'</button>'; }
+    h+='<button type="button" data-pg="next"'+(modalPage>=pages?' disabled':'')+' aria-label="다음">›</button>';
+    pg.innerHTML=h;
+  }
   function applyModalFilter(){
-    document.querySelectorAll('#cmpModalList .radio-card').forEach(function(el){
-      var okTab = modalTab==='m-all' || (modalTab==='m-ev'&&el.dataset.energy==='ev') || (modalTab==='m-h'&&el.dataset.energy==='fcev') || (modalTab==='m-truck'&&el.dataset.truck==='1');
+    var cards=[].slice.call(document.querySelectorAll('#cmpModalList .radio-card'));
+    var matched=cards.filter(function(el){
+      var okTab = el.dataset.cat===modalTab;
       var okQ = !modalQuery || el.textContent.toLowerCase().indexOf(modalQuery)>=0;
-      el.style.display=(okTab&&okQ)?'':'none';
+      return okTab && okQ;
     });
+    var pages=Math.max(1, Math.ceil(matched.length/MODAL_PAGE_SIZE));
+    if(modalPage>pages) modalPage=pages;
+    var start=(modalPage-1)*MODAL_PAGE_SIZE, end=start+MODAL_PAGE_SIZE;
+    cards.forEach(function(el){ el.style.display='none'; });
+    matched.forEach(function(el,i){ el.style.display=(i>=start&&i<end)?'':'none'; });
+    var empty=$('cmpModalEmpty'); if(empty) empty.style.display=matched.length?'none':'';
+    renderModalPager(pages);
   }
   function closeAddModal(){
     var m=$('addCarModal'); if(!m) return;
@@ -340,10 +424,16 @@
     if(rm){ e.preventDefault(); state.splice(+rm.dataset.idx,1); renderAll(); toast('비교 목록에서 제거되었습니다.','info'); return; }
     if(e.target.closest('[data-modal-open="addCarModal"]')){ renderModalList(); return; }
     var mt=e.target.closest('#addCarModal .tab[data-tab]');
-    if(mt){ modalTab=mt.dataset.tab; applyModalFilter(); return; }
+    if(mt){ modalTab=mt.dataset.tab; modalPage=1; applyModalFilter(); return; }
+    var pgBtn=e.target.closest('#cmpModalPager button[data-pg]');
+    if(pgBtn){ var v=pgBtn.dataset.pg;
+      if(v==='prev') modalPage=Math.max(1, modalPage-1);
+      else if(v==='next') modalPage=modalPage+1;
+      else modalPage=parseInt(v,10);
+      applyModalFilter(); return; }
   });
   var searchEl=$('cmpSearch');
-  if(searchEl) searchEl.addEventListener('input', function(){ modalQuery=this.value.trim().toLowerCase(); applyModalFilter(); });
+  if(searchEl) searchEl.addEventListener('input', function(){ modalQuery=this.value.trim().toLowerCase(); modalPage=1; applyModalFilter(); });
   var applyEl=$('cmpApply');
   if(applyEl) applyEl.addEventListener('click', function(){
     var picked=document.querySelector('#cmpModalList input[name=addPick]:checked');

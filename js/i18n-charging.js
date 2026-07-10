@@ -29,6 +29,18 @@
     'charging.fee.sim.lead':  { ko: '주행거리·충전 패턴을 입력하면 월 예상 충전비와 사업자별 최적 요금제를 계산합니다.',
                                 en: 'Enter your driving distance and charging pattern to estimate monthly cost and find the best operator rate plan.' },
 
+    /* 안내가 디스클레이머 3층 (fee-disclaimer) */
+    'charging.fee.disc.anno':    { ko: '(안내가)', en: '(Est.)' },
+    'charging.fee.disc.badge':   { ko: '안내가', en: 'Estimate' },
+    'charging.fee.disc.strip':   { ko: '안내용 요금입니다. 실제 결제 금액은 현장 단가·프로모션·로밍 여부에 따라 다를 수 있습니다.',
+                                   en: 'These are reference rates. Actual charges may differ depending on on-site pricing, promotions, and roaming.' },
+    'charging.fee.disc.caption': { ko: '※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다',
+                                   en: '※ Displayed rates are estimates and may differ from the actual amount charged' },
+    'charging.fee.disc.toast':   { ko: '현장 단가·사업자 프로모션·로밍 할증·멤버십에 따라 실제 결제 금액이 달라질 수 있습니다.',
+                                   en: 'The actual amount charged may vary with on-site pricing, operator promotions, roaming surcharges, and membership.' },
+    'charging.fee.disc.captionSlide': { ko: '※ 안내가 — 실제 결제 금액과 다를 수 있습니다',
+                                   en: '※ Estimate — may differ from the actual amount charged' },
+
     /* charging-card.html */
     'charging.card.title':    { ko: '회원카드 관리', en: 'Member Card Management' },
     'charging.card.lead':     { ko: '내 보유 카드를 한 곳에서 — <strong>발급조회·정보수정·분실신고·재발급</strong>을 카드별로 처리합니다.',

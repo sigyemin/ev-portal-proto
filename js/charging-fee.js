@@ -733,6 +733,8 @@
     ];
     // 출력밴드 → 용량구분(CTYPE)
     const BAND_CAP = { slow:'완속', mid:'중속', fast50:'급속', fast100:'급속', ultra:'급속' };
+    // 출력밴드 → 대표 출력(kW) — 충전시간(=충전량÷출력) 산출용
+    const BAND_KW = { slow:7, mid:14, fast50:50, fast100:100, ultra:200 };
     // 시각 창 매칭(자정 넘김 지원): start<=end → [start,end), 아니면 [start,24)∪[0,end)
     function inHourWindow(h, s, e){ return s <= e ? (h >= s && h < e) : (h >= s || h < e); }
     function hasTouRule(bid){ return SIM_TOU_RULES.some(r => r.bid === bid); }
@@ -902,7 +904,7 @@
       if (touNote) touNote.hidden = !disabled;
     }
 
-    function calcRate() {
+    function calcRate(hourOverride) {
       const cardBid = cardSel.value;
       const chargerBid = chargerSel.value;
       const m = isNonmember() ? 'nonmember' : 'member';
@@ -950,12 +952,75 @@
       // [DEV] 할인 = TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·CTYPE) 매칭 → SEQ 큰 규칙 적용 / 더미
       let applied = base, disc = null;
       const seasonMap = { spring_fall:'봄·가을', summer:'여름', winter:'겨울' };
-      const rule = matchTouRule(cardBid, seasonMap[seasonSel.value], daySel ? daySel.value : 'weekday', parseInt(hourInput.value, 10), speed);
+      const _hr = (hourOverride != null) ? hourOverride : parseInt(hourInput.value, 10);
+      const rule = matchTouRule(cardBid, seasonMap[seasonSel.value], daySel ? daySel.value : 'weekday', _hr, speed);
       if (rule) {
         applied = applyTouMode(base, rule.mode, rule.value); // 정액 base−값 / 정률 base×(1−값/100) / 고정 값
         disc = { mode:rule.mode, value:rule.value, cut:Math.round((base - applied) * 10) / 10 };
       }
       return { base, applied, disc, roaming:false, note:`${cardNm} 회원 자사 요금` };
+    }
+
+    // [DEV] 안내 산식 = 구간 분할 합산(공급 시점 단가 원칙). 실제 과금의 경계 처리 방식(시작시각 고정/분할/기타)은
+    //       CPO·로밍 정산 정책으로 DB·소스에 미정의(정산 서버 미추출) → 백엔드 개발 시 정산 주체와 확정 필요.
+    //       확정 전까지 시뮬레이터는 '분할 안내가' 기준(시작시각 고정 적용 금지 — 왜곡 안내).
+    //  충전시간 = 충전량÷출력 → [시작~종료]를 계절시간제 시간대 경계로 분할 → 세그먼트별 kWh×적용단가 합산(자정 넘김 포함).
+    function fmtHM(hf) {
+      const hh = ((Math.floor(hf) % 24) + 24) % 24;
+      let m = Math.round((hf - Math.floor(hf)) * 60), h = hh;
+      if (m === 60) { m = 0; h = (h + 1) % 24; }
+      return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+    }
+    function calcSegments(kwh) {
+      const R0 = calcRate();  // 기본단가·적용유형(비회원/로밍/자사) 판정 + 안내문구
+      if (R0.applied == null) return { applied: null, note: R0.note, segments: [] };
+      const kW = BAND_KW[speedSel.value] || 50;
+      const dur = kwh / kW;                       // 충전시간(h)
+      const start = parseInt(hourInput.value, 10);
+      // 계절시간제 미적용(비회원·로밍·규칙 없음) → 단일 구간
+      if (!touActive()) {
+        const amount = Math.round(R0.applied * kwh);
+        return { total: amount, base: R0.base, applied: R0.applied, disc: R0.disc, note: R0.note, split: false,
+          segments: [{ t0: start, t1: start + dur, hours: dur, kwh: kwh, applied: R0.applied, base: R0.base, disc: R0.disc, amount }] };
+      }
+      // 자사 회원 + 규칙 보유 → 시각 경계로 세그먼트 분할(자정 넘김 포함)
+      let t = start, rem = dur; const raw = []; let guard = 0;
+      while (rem > 1e-6 && guard++ < 240) {
+        const hb = ((Math.floor(t) % 24) + 24) % 24;
+        const R = calcRate(hb);
+        const nextB = Math.floor(t + 1e-9) + 1;   // 다음 정시 경계
+        const t1 = Math.min(t + rem, nextB);
+        raw.push({ t0: t, t1: t1, hours: t1 - t, applied: R.applied, base: R.base, disc: R.disc });
+        rem -= (t1 - t); t = t1;
+      }
+      // 인접 동일단가 병합
+      const merged = [];
+      raw.forEach(s => {
+        const sig = s.applied + '|' + (s.disc ? (s.disc.mode + s.disc.value) : 'n');
+        const last = merged[merged.length - 1];
+        if (last && last.sig === sig) { last.t1 = s.t1; last.hours += s.hours; }
+        else merged.push(Object.assign({ sig }, s));
+      });
+      merged.forEach(s => { s.kwh = s.hours * kW; s.amount = Math.round(s.applied * s.kwh); });
+      const total = merged.reduce((a, s) => a + s.amount, 0);
+      return { total, base: R0.base, applied: R0.applied, disc: R0.disc, note: R0.note, split: merged.length > 1, segments: merged };
+    }
+    function renderSegments(SEG, kwh) {
+      const host = document.getElementById('simSegments');
+      if (!host) return;
+      if (!SEG.segments || !SEG.segments.length) { host.innerHTML = ''; host.hidden = true; return; }
+      host.hidden = false;
+      const r1 = (v) => Math.round(v * 10) / 10;
+      const rows = SEG.segments.map(s => {
+        const rate = s.disc
+          ? `<span class="seg-base">${s.base}</span> <span class="seg-arrow">→</span> <strong>${s.applied}</strong> <span class="seg-disc">할인</span>`
+          : `<strong>${s.applied}</strong>`;
+        return `<tr><td>${fmtHM(s.t0)}~${fmtHM(s.t1)}</td><td class="num">${rate} <span class="seg-unit">원/kWh</span></td><td class="num">${r1(s.kwh)} kWh</td><td class="num">${s.amount.toLocaleString()}원</td></tr>`;
+      }).join('');
+      host.innerHTML = `<div class="seg-title">시간대별 적용 내역${SEG.split ? ' <span class="seg-split-badge">구간 분할</span>' : ''}</div>`
+        + `<div style="overflow-x:auto;"><table class="seg-table"><thead><tr><th>시간 구간</th><th class="num">적용 단가</th><th class="num">충전량</th><th class="num">금액</th></tr></thead>`
+        + `<tbody>${rows}</tbody>`
+        + `<tfoot><tr><td>합계</td><td></td><td class="num">${r1(kwh)} kWh</td><td class="num"><strong>${SEG.total.toLocaleString()}원</strong></td></tr></tfoot></table></div>`;
     }
 
     const bandLabelOf = (k) => { const b = SIM_BANDS.find(x => x.key === k); return b ? b.label : k; };
@@ -985,8 +1050,10 @@
       if (hourLabel && hourInput) hourLabel.textContent = `${parseInt(hourInput.value, 10)}시`;
 
       const R = calcRate();
-      // 로밍/회원 라벨 없이 '예상 충전요금'만 표기
-      lblEl.textContent = '예상 충전요금';
+      // 로밍/회원 라벨 없이 '1회 충전 예상 비용'만 표기 (안내가 배지는 별도 span이라 유지)
+      const _lblText = document.getElementById('simLblText');
+      if (_lblText) _lblText.textContent = '1회 충전 예상 비용';
+      else if (lblEl) lblEl.textContent = '1회 충전 예상 비용';
 
       const flowEl = document.getElementById('simRateFlow');
       const helpEl = document.getElementById('simRateHelp');
@@ -997,8 +1064,14 @@
         if (flowEl) flowEl.innerHTML = '<span class="base">단가 미공시</span>';
         if (helpEl) helpEl.textContent = '';
         noteEl.innerHTML = `<span style="color:#b91c1c;">⚠ ${R.note || '요금 미공시'}</span>`;
+        renderSegments({ segments: [] });   // 미공시 → 내역 숨김
       } else {
-        priceEl.textContent = `${Math.round(R.applied * kwh).toLocaleString()}원`;
+        // 총액 = 구간 분할 합산(경계 걸침 시 단순 단가×kWh와 다를 수 있음) · '약' prefix(안내가)
+        const SEG = calcSegments(kwh);
+        priceEl.textContent = `약 ${SEG.total.toLocaleString()}원`;
+        renderSegments(SEG, kwh);
+        // 결과 최초 산정 1회만 스트립 펄스(세션 내 재계산 시 재펄스 없음)
+        if (window.FeeDisclaimer) window.FeeDisclaimer.pulse(document.getElementById('feeStripSim'), 'fee-sim');
         if (flowEl) {
           if (R.disc) {
             // 기본단가 → [할인 배지] → 적용단가 (할인규칙 있을 때만)

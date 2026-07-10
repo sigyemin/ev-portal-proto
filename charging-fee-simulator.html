@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/charging.css">
+<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260709">
 <style>
   /* ════════════════════════════════════════════════════════════════
      충전요금 시뮬레이터 전용 페이지 — 와이드 + 큰 타이포
@@ -210,6 +211,20 @@
   .sim-nonmember-toggle input { width: 15px; height: 15px; cursor: pointer; }
   .sim-field select:disabled { background-color: var(--color-gray-100); color: var(--color-gray-400); cursor: not-allowed; }
 
+  /* 시간대별 적용 내역(구간 분할) 표 */
+  .sim-segments { margin-top: 14px; }
+  .sim-segments .seg-title { font-size: 12.5px; font-weight: var(--fw-bold); color: var(--color-gray-700); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+  .sim-segments .seg-split-badge { font-size: 10.5px; font-weight: 800; padding: 1px 7px; border-radius: 999px; background: #eef2ff; color: #4338ca; }
+  .sim-segments .seg-table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; }
+  .sim-segments .seg-table th { background: #f8fafc; color: var(--color-gray-600); font-weight: var(--fw-semibold); padding: 8px 10px; text-align: left; font-size: 11.5px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
+  .sim-segments .seg-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: var(--color-gray-800); font-feature-settings: "tnum"; white-space: nowrap; }
+  .sim-segments .seg-table .num { text-align: right; }
+  .sim-segments .seg-table tfoot td { border-top: 1px solid var(--border-light); border-bottom: none; font-weight: 700; background: #fafbfc; }
+  .sim-segments .seg-base { text-decoration: line-through; color: #9ca3af; }
+  .sim-segments .seg-arrow { color: #9ca3af; }
+  .sim-segments .seg-disc { font-size: 10px; font-weight: 800; padding: 0 5px; border-radius: 4px; background: #e6f6ee; color: #0f7a44; margin-left: 2px; }
+  .sim-segments .seg-unit { font-size: 10.5px; color: var(--color-gray-400); font-weight: 500; }
+
   /* 결과 — 단가 흐름 (기본 → 할인 → 적용) */
   .sim-rate-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 20px; font-weight: var(--fw-bold); color: var(--color-gray-800); margin: 0 0 6px; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
   .sim-rate-flow .base { color: var(--color-gray-500); }
@@ -338,7 +353,12 @@
           </div>
 
           <div class="sim-result-wrap">
-            <span class="sim-result-lbl" id="simLbl" data-i18n="charging.fee.sim.result.lbl">예상 충전요금</span>
+            <!-- [2층] 결과 상단 스트립 — 기존 하단 '요금 산정 방식' 안내를 이 스트립으로 승격·이동(중복 제거) -->
+            <div class="fee-strip" id="feeStripSim" role="note">
+              <span class="fee-strip-ico" aria-hidden="true">⚠</span>
+              <span data-i18n="charging.fee.disc.strip">안내용 요금입니다. 실제 결제 금액은 현장 단가·프로모션·로밍 여부에 따라 다를 수 있습니다.</span>
+            </div>
+            <span class="sim-result-lbl" id="simLbl"><span id="simLblText">1회 충전 예상 비용</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></span>
             <div class="sim-result-mini">
               <!-- [DEV] 예상 1회 충전비 = 적용단가 × 충전량(kWh). 단가 흐름: 기본단가 → [할인 배지] → 적용단가 / 더미 -->
               <div class="big" id="simPrice">—</div>
@@ -347,16 +367,15 @@
               <div class="sub" id="simNote" data-i18n="charging.fee.sim.result.note">제조사·차량 모델·카드·충전기를 선택해 주세요.</div>
             </div>
 
+            <!-- 시간대별 적용 내역(구간 분할 합산) — 경계 걸침 시 2행 이상 자연 노출 -->
+            <div id="simSegments" class="sim-segments" hidden></div>
+
             <!-- [DEV] 계산 조건: 결제카드·이용충전기(출력밴드)·회원구분·계절·요일·시각 / 더미 -->
             <div class="sim-calc-cond">
               <div class="scc-title" data-i18n="charging.fee.sim.result.condtitle">계산 조건</div>
               <dl class="scc-list" id="simCond"></dl>
             </div>
           </div>
-        </div>
-
-        <div class="sim-note-box">
-<span data-i18n-html="charging.fee.sim.alert.calc"><strong>요금 산정 방식</strong> · 충전요금은 사업자별 기본단가에 계절시간제 할인규칙을 적용해 산정되며, 실제 결제 금액과 차이가 있을 수 있습니다.</span>
         </div>
       </div>
 
@@ -393,9 +412,10 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-charging.js?v=20260707s6"></script>
+<script src="js/i18n-charging.js?v=20260709a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/charging-fee.js?v=20260707s5"></script>
+<script src="js/fee-disclaimer.js?v=20260709"></script>
+<script src="js/charging-fee.js?v=20260709b"></script>
 </body>
 </html>

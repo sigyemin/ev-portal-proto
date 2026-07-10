@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/charging.css">
+<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260709">
 <style>
   /* ── 수소충전소 요금 검색 영역 ── */
   .h2-search-wrap {
@@ -252,7 +253,7 @@
       <!-- ─── 수소충전소 요금 검색 (AS-IS 기능 유지·강화) ─── -->
       <section class="h2-search-wrap" aria-labelledby="h2-search-title">
         <div class="h2-search-head">
-          <h3 id="h2-search-title" data-i18n="charging.fee.h2.search.title">수소충전소 요금 검색</h3>
+          <h3 id="h2-search-title"><span data-i18n="charging.fee.h2.search.title">수소충전소 요금 검색</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
           <span class="h2-search-meta" data-i18n="charging.fee.h2.search.meta">전국 162개소 · 2026.04.20 갱신 · 5분 주기 자동 동기화</span>
         </div>
         <form class="h2-search-grid" id="h2SearchForm" autocomplete="off" onsubmit="return false;">
@@ -341,6 +342,7 @@
               <!-- JS로 동적 렌더링 -->
             </tbody>
           </table>
+          <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
         </div>
         <div class="h2-result-pagination" data-i18n-aria="util.pagination.aria" aria-label="페이지 이동">
           <button type="button" class="h2-page-btn" data-i18n-aria="charging.fee.h2.page.prev" aria-label="이전 페이지">‹</button>
@@ -374,9 +376,10 @@
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-charging.js?v=20260626d"></script>
+<script src="js/i18n-charging.js?v=20260709a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/fee-disclaimer.js?v=20260709"></script>
 <script>
 /* ─── 수소충전소 요금 검색 ─── */
 (function(){
@@ -593,7 +596,8 @@
   document.getElementById('h2ExcelBtn')?.addEventListener('click', function(){
     var list=sortedFiltered();
     var head=['번호','충전소명','주소','사업자','규격','판매가(원/kg)','운영시간'];
-    var aoa=[head].concat(list.map(function(s){ var fee=feeOf(s); return [s.no, s.name, s.addr, s.op, s.spec, (fee==null?'—':fee), s.hours]; }));
+    var disc=['※ 본 요금은 안내용이며 실제 결제 금액과 다를 수 있습니다'];   // 첫 행(제목 아래) 디스클레이머
+    var aoa=[disc,head].concat(list.map(function(s){ var fee=feeOf(s); return [s.no, s.name, s.addr, s.op, s.spec, (fee==null?'—':fee), s.hours]; }));
     downloadXlsx('수소충전소_요금_검색결과.xlsx','수소충전소 요금', aoa);
     if(window.__toast) window.__toast(list.length+'건을 엑셀(xlsx)로 내려받았습니다.','success');
   });
