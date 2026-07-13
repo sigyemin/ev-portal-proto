@@ -116,16 +116,21 @@
     'qna.aria.cat':           { ko: '카테고리 선택',            en: 'Select Category' },
     'qna.f.allcat':           { ko: '전체 카테고리',            en: 'All Categories' },
     /* QNAGBN 코드그룹 실값 (운영 화면 기준 3종) */
-    'qna.cat.op':             { ko: '충전기운영/회원카드및결제', en: 'Operation / Member Card & Payment' },
-    'qna.cat.slow':           { ko: '완속충전기설치/보조금',     en: 'Slow Charger Install / Subsidy' },
-    'qna.cat.fast':           { ko: '급속충전기설치',           en: 'Fast Charger Install' },
+    /* [DEV] 카테고리 = EVUSER QNAGBN 코드그룹(5슬롯) · 재편 근거 SFR-021 + 콜센터 상담 분류표(최종 라벨은 분류표 확정 시 조정) */
+    'qna.cat.account':        { ko: '회원가입·계정',            en: 'Sign-up & Account' },
+    'qna.cat.op':             { ko: '충전기 운영·회원카드/결제', en: 'Charger Operation · Card/Payment' },
+    'qna.cat.install':        { ko: '충전시설 설치·설치보조금',  en: 'Charger Installation & Subsidy' },
+    /* (구) 완속/급속 분리 슬롯 — SFR-021 재편으로 install 통합, 하위호환용 잔존 */
+    'qna.cat.slow':           { ko: '충전시설 설치·설치보조금',  en: 'Charger Installation & Subsidy' },
+    'qna.cat.fast':           { ko: '충전시설 설치·설치보조금',  en: 'Charger Installation & Subsidy' },
     /* (구) 임의 분류 — 미사용, 호환용 보존 */
-    'qna.cat.subsidy':        { ko: '보조금',                en: 'Subsidy' },
-    'qna.cat.charge':         { ko: '충전',                 en: 'Charging' },
-    'qna.cat.tax':            { ko: '세제',                 en: 'Tax' },
-    'qna.cat.policy':         { ko: '정책·공모',              en: 'Policy & RFP' },
-    'qna.cat.kev':            { ko: 'K-EV100',             en: 'K-EV100' },
-    'qna.cat.etc':            { ko: '계정·기타',              en: 'Account & Other' },
+    'qna.cat.subsidy':        { ko: '구매보조금',             en: 'Purchase Subsidy' },
+    'qna.cat.etc':            { ko: '기타',                 en: 'Other' },
+    /* (구) 레거시 라벨 — 재편 후 install/subsidy/etc로 흡수, 하위호환용 잔존 */
+    'qna.cat.charge':         { ko: '충전기 운영·회원카드/결제', en: 'Charger Operation · Card/Payment' },
+    'qna.cat.tax':            { ko: '구매보조금',             en: 'Purchase Subsidy' },
+    'qna.cat.policy':         { ko: '기타',                 en: 'Other' },
+    'qna.cat.kev':            { ko: '기타',                 en: 'Other' },
     'qna.aria.state':         { ko: '답변 상태 선택',           en: 'Select Status' },
     'qna.f.allstate':         { ko: '답변 상태 전체',           en: 'All Statuses' },
     'qna.state.done':         { ko: '답변완료',               en: 'Answered' },
