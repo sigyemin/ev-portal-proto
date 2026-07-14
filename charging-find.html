@@ -131,6 +131,48 @@
 .map-legend-bar .mlb-bolt{ color:var(--color-primary-600); font-size:12px; letter-spacing:-1.5px; }
 .map-legend-bar .mlb-band{ display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:18px; padding:0 6px; border-radius:5px; background:var(--color-gray-100); color:var(--text-secondary); font-size:10.5px; font-weight:800; }
 
+/* ── 멀티 마커(동일 좌표 복수 충전소) ×N 뱃지 ── */
+.map-pin.mk .mp-multi-badge{ position:absolute; top:-8px; right:-8px; background:#111827; color:#fff; font-size:10px; font-weight:800; line-height:1; padding:2px 5px; border-radius:999px; border:1.5px solid #fff; }
+.map-pin.mk.is-multi{ box-shadow:0 4px 12px rgba(17,24,39,.35), 0 0 0 3px rgba(255,255,255,.9), 6px 6px 0 -1px rgba(148,163,184,.5); }  /* 겹친 카드 느낌 */
+
+/* ── 위치 목록(1뎁스) ── */
+.sd-back{ display:inline-flex; align-items:center; gap:3px; margin-bottom:6px; padding:3px 9px 3px 6px; border:1px solid var(--border-light); background:#fff; border-radius:999px; font-size:12px; font-weight:700; color:var(--text-secondary); cursor:pointer; }
+.sd-back:hover{ background:var(--color-gray-50); color:var(--color-primary-700); }
+.sd-loc-lead{ font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0 0 12px; }
+.loc-list{ display:flex; flex-direction:column; gap:8px; }
+.loc-item{ position:relative; display:block; width:100%; text-align:left; border:1px solid var(--border-light); border-radius:12px; background:#fff; padding:13px 34px 13px 15px; cursor:pointer; transition:border-color var(--t-fast), background var(--t-fast); }
+.loc-item:hover{ border-color:var(--color-primary-300); background:var(--color-primary-50); }
+.loc-item .li-name{ font-size:14.5px; font-weight:700; color:var(--text-primary); }
+.loc-item .li-meta{ font-size:12px; color:var(--color-gray-500); margin-top:3px; display:flex; align-items:center; gap:6px; }
+.loc-item .li-dot{ width:8px; height:8px; border-radius:50%; flex:none; background:var(--color-gray-400); }
+.loc-item .li-dot.st-available{ background:var(--mk-available); } .loc-item .li-dot.st-busy{ background:var(--mk-busy); }
+.loc-item .li-dot.st-unavailable{ background:var(--mk-unavailable); } .loc-item .li-dot.st-unknown{ background:var(--mk-unknown); }
+.loc-item .li-dot.st-restricted{ background:var(--mk-restricted); } .loc-item .li-dot.st-h2{ background:var(--mk-busy); }
+.loc-item .li-arrow{ position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:20px; color:var(--color-gray-400); }
+
+/* ── 충전기 목록(대용량 대응) ── */
+.chg-list{ display:flex; flex-direction:column; gap:4px; }
+.chg-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:8px 11px; border:1px solid var(--border-light); border-left-width:3px; border-radius:8px; font-size:12.5px; background:#fff; }
+/* 충전기 상태색 = 마커 단일 토큰(--mk-*) 참조. 사용가능 그린 / 사용중 파랑 / 불가 그레이900 */
+.chg-row.st-avail{ border-left-color:var(--mk-available); }
+.chg-row.st-busy{ border-left-color:var(--mk-busy); }
+.chg-row.st-fault{ border-left-color:var(--mk-unavailable); background:var(--color-gray-50); }
+.chg-row .cr-id{ font-weight:800; color:var(--text-secondary); font-variant-numeric:tabular-nums; min-width:30px; }
+.chg-row .cr-band{ font-weight:800; }
+.chg-row .cr-conn{ color:var(--text-secondary); font-weight:600; }
+.chg-row .cr-state{ margin-left:auto; font-weight:700; font-size:11.5px; color:var(--text-secondary); }
+.chg-row.st-fault .cr-state{ color:var(--mk-unavailable); }
+.chg-row .cr-loc{ flex-basis:100%; text-align:left; margin-top:2px; padding:0; border:none; background:none; cursor:pointer; font-size:11.5px; color:var(--color-primary-700); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.chg-row .cr-loc.open{ white-space:normal; overflow:visible; }
+.chg-more{ width:100%; margin-top:8px; padding:9px; border:1px dashed var(--border-medium); background:var(--color-gray-50); border-radius:8px; font-size:12.5px; font-weight:700; color:var(--text-secondary); cursor:pointer; }
+.chg-more:hover{ background:var(--color-gray-100); color:var(--color-primary-700); }
+
+/* 표준 다운로드 버튼(charging-fee ev-download-btn xlsx 규격) */
+.ev-download-btn{ display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:#fff; border:1px solid var(--border-light); border-radius:var(--radius-sm); font-size:13.5px; font-weight:var(--fw-semibold); color:var(--text-primary); cursor:pointer; transition:all var(--t-fast); }
+.ev-download-btn:hover{ background:var(--color-primary-50); border-color:var(--color-primary-300); color:var(--color-primary-700); }
+.ev-download-btn .ext{ font-size:11.5px; font-weight:var(--fw-bold); padding:1px 6px; border-radius:3px; }
+.ev-download-btn.xlsx .ext{ background:#DCFCE7; color:#166534; }
+
 .map-controls {
   position: absolute;
   top: 16px; right: 16px;
@@ -433,12 +475,10 @@
                 <select class="form-select" style="width:140px;padding:6px 30px 6px 10px;font-size:12px;" data-i18n-aria="charging.find.sort.aria" aria-label="정렬">
                   <option data-i18n="charging.find.sort.distance">거리순</option><option data-i18n="charging.find.sort.avail">이용 가능한순</option><option data-i18n="charging.find.sort.uptime">가동률 높은순</option><option data-i18n="charging.find.sort.cheap">요금 저렴한순</option>
                 </select>
-                <button type="button" class="btn btn-ghost btn-sm" style="padding:6px 10px;font-size:12px;" data-action="download" data-action-label="검색결과 충전소.xlsx" data-i18n-attr="title:charging.find.btn.xlsx.title" title="Excel 다운로드">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  XLSX
-                </button>
-                <button type="button" class="btn btn-ghost btn-sm" style="padding:6px 10px;font-size:12px;" data-action="download" data-action-label="검색결과 충전소.csv" data-i18n-attr="title:charging.find.btn.csv.title" title="CSV 다운로드">
-                  CSV
+                <button type="button" class="ev-download-btn xlsx" id="stationXlsxBtn" aria-label="검색 결과 엑셀 다운로드">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span class="ext">XLSX</span>
+                  <span>엑셀 다운로드</span>
                 </button>
               </div>
             </div>
@@ -825,14 +865,6 @@
           </div>
         </div>
       </div>
-      <!-- 데이터 출처 -->
-      <div class="alert alert-info mt-8">
-        <div class="alert-icon"></div>
-        <div class="alert-body">
-          <strong data-i18n="charging.find.source.title">데이터 출처·갱신</strong>
-<span data-i18n="charging.find.source.desc">          공공데이터포털 "한국환경공단 전기자동차 충전소 정보" API + H2KOREA 수소충전소 API 실시간 연동. 충전기 상태·가동률·고장 정보는 5분 주기로 갱신됩니다.</span>
-        </div>
-      </div>
     </div>
   </section>
 <!-- ★개발 참고 — 지도/마커 데이터 매핑 (프로덕션 전 제거 가능) -->
@@ -852,7 +884,11 @@
 <div class="sd-backdrop" id="sdBackdrop"></div>
 <aside class="station-drawer" id="stationDrawer" aria-hidden="true" aria-labelledby="sdTitle">
   <div class="sd-head">
-    <div>
+    <div style="min-width:0;">
+      <!-- 위치 목록에서 진입 시 뒤로가기(2뎁스→1뎁스) -->
+      <button type="button" class="sd-back" id="sdBack" hidden aria-label="이 위치의 충전소 목록으로">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>목록
+      </button>
       <div class="flex items-center gap-2"><span id="sdType" class="st-type ev" data-i18n="charging.find.type.ev">전기</span><span id="sdBrand" style="font-size:11px;color:var(--color-gray-500);font-weight:600;" data-i18n="charging.find.sd.brand">GS칼텍스</span></div>
       <h3 id="sdTitle" style="margin-top:4px;" data-i18n="charging.find.sd.title">GS칼텍스 강남 직영</h3>
       <div id="sdAddr" class="sd-addr" data-i18n="charging.find.sd.addr">서울 강남구 테헤란로 152 · 1층 주차장</div>
@@ -862,42 +898,36 @@
     </button>
   </div>
 
+  <!-- ===== 이 위치의 충전소 목록 (1뎁스, 멀티 마커) ===== -->
+  <div class="sd-body" id="sdBodyLoc" hidden>
+    <p class="sd-loc-lead">이 위치에 <strong id="sdLocCount">3</strong>개 충전소가 등록되어 있습니다. 선택하면 상세로 이동합니다.</p>
+    <div class="loc-list" id="sdLocList"></div>
+  </div>
+
   <!-- ===== 전기차 상세 ===== -->
   <div class="sd-body" id="sdBodyEv">
-    <!-- 실시간 상태 요약 -->
+    <!-- 실시간 상태 요약 (충전기 목록 집계) -->
     <div class="sc-grid" style="grid-template-columns:repeat(3,1fr);gap:10px;">
-      <div class="sc-tile ev"><div class="sc-label">이용가능</div><div class="sc-val" id="sdAvail">4</div><div class="sc-sub">대기 없음</div></div>
-      <div class="sc-tile"><div class="sc-label">사용중</div><div class="sc-val">1</div><div class="sc-sub">평균 18분</div></div>
-      <div class="sc-tile"><div class="sc-label">고장</div><div class="sc-val" style="color:var(--color-danger);">1</div><div class="sc-sub">점검 요청됨</div></div>
+      <div class="sc-tile ev"><div class="sc-label">이용가능</div><div class="sc-val" id="sdAvail">0</div><div class="sc-sub">대기 없음</div></div>
+      <div class="sc-tile"><div class="sc-label">사용중</div><div class="sc-val" id="sdBusy">0</div><div class="sc-sub">충전 진행</div></div>
+      <div class="sc-tile"><div class="sc-label">불가</div><div class="sc-val" id="sdFault" style="color:var(--mk-unavailable);">0</div><div class="sc-sub">고장·점검</div></div>
     </div>
 
-    <!-- 충전기 현황 (구분: 완속/급속/초급속 + 고장 예시) -->
+    <!-- 충전기 현황 — 목록형(기본 8개 + 더보기, 최대 97기 대응) -->
+    <!-- [DEV] R_CHARGER: #ID(2자리·상한99) · CHGE_OUTPUT(밴드) · CONNECTOR · 상태 · POSITION_DESC(상세위치, 입력률 17%·최대 99자, Disclosure 펼침) -->
     <div class="sd-section">
-      <h4>충전기 현황 (6기)</h4>
-      <!-- [DEV] 충전기 단위 상세위치 = R_CHARGER.PID·POSITION_DESC(충전기별) · 충전소 상세위치 = LOCATION. 슬롯 메타 = 출력 · 커넥터 · 📍상세위치(없으면 생략) -->
-      <div class="chg-slots">
-        <div class="chg-slot avail"><div class="cs-id">#01</div><div class="cs-type slow">완속</div><div class="cs-state">이용가능</div><div class="cs-meta">7kW · AC완속 · 📍1층 주차장 A</div></div>
-        <div class="chg-slot avail"><div class="cs-id">#02</div><div class="cs-type fast">급속</div><div class="cs-state">이용가능</div><div class="cs-meta">100kW · DC콤보 · 📍지상 주차장 B2</div></div>
-        <div class="chg-slot busy"><div class="cs-id">#03</div><div class="cs-type fast">급속</div><div class="cs-state">사용중 08분</div><div class="cs-meta">100kW · NACS · 📍지상 주차장 B3</div></div>
-        <div class="chg-slot avail"><div class="cs-id">#04</div><div class="cs-type ultra">초급속</div><div class="cs-state">이용가능</div><div class="cs-meta">200kW · DC콤보 · 📍지하 1층 급속존</div></div>
-        <div class="chg-slot avail"><div class="cs-id">#05</div><div class="cs-type fast">급속</div><div class="cs-state">이용가능</div><div class="cs-meta">50kW · 차데모</div></div>
-        <div class="chg-slot fault"><div class="cs-id">#06</div><div class="cs-type fast">급속</div><div class="cs-state">고장 · 점검중</div><div class="cs-meta">50kW · DC콤보 · 📍지하 1층 급속존</div></div>
-      </div>
-      <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · <span style="color:var(--color-danger);">고장</span> 충전기는 이용 불가</p>
-      <div class="sd-status-legend" aria-label="충전기 실시간 상태 범례">
-        <span><i class="sl-dot" style="background:#2c7be5;"></i>사용가능</span>
-        <span><i class="sl-dot" style="background:var(--color-primary-500);"></i>사용중</span>
-        <span><i class="sl-dot" style="background:#1f2937;"></i>사용불가</span>
-        <span><i class="sl-dot" style="background:#c2703d;"></i>상태미확인</span>
-        <span><i class="sl-dot" style="background:#14b8a6;"></i>이용자제한</span>
-      </div>
+      <h4>충전기 현황 <span id="sdChgTotal" style="font-size:12px;color:var(--color-gray-500);font-weight:600;">(0기)</span></h4>
+      <div class="chg-list" id="sdChargerList"></div>
+      <button type="button" class="chg-more" id="sdChgMore" hidden></button>
+      <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · 상태: <span style="color:var(--mk-available);">이용가능</span>·<span style="color:var(--mk-busy);">사용중</span>·<span style="color:var(--mk-unavailable);">불가</span></p>
     </div>
 
     <!-- 충전 요금 -->
-    <!-- [DEV] 단가 = APP_CHARGE_PRICE 5밴드(완속<30/중속30~50/급속50~100/급속100~200/초급속≥200) 정규화 · 충전소 출력구성(CHGE_OUTPUT)에 존재하는 밴드 행만 노출(예시=중속 없음)
+    <!-- [DEV] 단가 = APP_CHARGE_PRICE.MEMBER_PRICE(회원가) · 5밴드(완속<30/중속30~50/급속50~100/급속100~200/초급속≥200) 정규화 · 충전소 출력구성(CHGE_OUTPUT)에 존재하는 밴드 행만 노출(예시=중속 없음)
+         비회원가(GUEST_PRICE)는 미노출 — 요금 비교·시뮬레이터에서 제공
          할인 = TNCC_RMNG_SEAS_FEE 규칙 생성 표기(자유텍스트 할인 필드 없음) · 규칙 등록 사업자만 '할인' 행 노출. 회원/심야 할인 문구는 근거 없어 삭제 -->
     <div class="sd-section">
-      <h4>충전 요금 <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h4>
+      <h4>충전 요금 <span style="font-size:11.5px;font-weight:600;color:var(--text-tertiary);">회원가 기준</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h4>
       <dl class="sd-kv">
         <dt>완속 (&lt;30kW)</dt><dd>292원/kWh</dd>
         <dt>급속 (50~100kW)</dt><dd>347원/kWh</dd>
@@ -984,6 +1014,7 @@
 </aside>
 
 <div id="footer-slot"></div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="js/partials.js?v=20260703a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
@@ -1033,26 +1064,98 @@
     s5: { name: '양재IC 현대 수소충전소', addr: '서울 서초구 남부순환로 2688', brand: '현대모비스', type: 'h2', avail: 0 },
     s6: { name: '서초동 EV Infra 완속', addr: '서울 서초구 서초대로 396 · 지하주차장', brand: 'EV Infra', type: 'ev', avail: 18 },
     s7: { name: '롯데월드몰 파워큐브', addr: '서울 송파구 올림픽로 300 · 지하 3층', brand: '파워큐브', type: 'ev', avail: 8 },
-    s8: { name: '잠실 코하이젠 수소충전소', addr: '서울 송파구 올림픽로 35길 124', brand: '코하이젠', type: 'h2', avail: 1 }
+    s8: { name: '잠실 코하이젠 수소충전소', addr: '서울 송파구 올림픽로 35길 124', brand: '코하이젠', type: 'h2', avail: 1 },
+    // 60기급 대단지 완속 (더보기 시연)
+    big1: { name: '행복드림아파트 완속 충전소', addr: '서울 성동구 왕십리로 222 · 지하주차장 전역', brand: '기후에너지환경부', type: 'ev', avail: 47 },
+    // 드림타워 사례 — 같은 좌표 3개 코드(구역별)
+    d1: { name: '드림타워 충전소 A구역(지하1층)', addr: '서울 강남구 논현로 508 · 지하 1층', brand: '대영채비', type: 'ev', avail: 28 },
+    d2: { name: '드림타워 충전소 B구역(지하2층)', addr: '서울 강남구 논현로 508 · 지하 2층', brand: 'SK일렉링크', type: 'ev', avail: 12 },
+    d3: { name: '드림타워 충전소 C구역(지상)', addr: '서울 강남구 논현로 508 · 지상 주차타워', brand: 'GS차지비', type: 'ev', avail: 22 }
   };
+  // 충전기 목록 (mock) — 없으면 station.avail·마커 count 기반 기본 생성. [DEV] R_CHARGER: #ID(2자리·상한99) · CHGE_OUTPUT(밴드) · CONNECTOR · 상태 · POSITION_DESC(상세위치, 입력률 17%·최대 99자)
+  var CHARGERS = {
+    s1: [
+      {id:'01',band:'slow',conn:'AC완속',state:'avail',loc:'1층 주차장 A'},
+      {id:'02',band:'fast',conn:'DC콤보',state:'avail',loc:'지상 주차장 B2'},
+      {id:'03',band:'fast',conn:'NACS',state:'busy',loc:'지상 주차장 B3'},
+      {id:'04',band:'ultra',conn:'DC콤보',state:'avail',loc:'지하 1층 급속존'},
+      {id:'05',band:'fast',conn:'차데모',state:'avail',loc:''},
+      {id:'06',band:'fast',conn:'DC콤보',state:'fault',loc:'지하 1층 급속존'}
+    ]
+  };
+  function bandOfKw(k){ return k<30?'slow':k<50?'mid':k<100?'fast':k<200?'fastp':'ultra'; }
+  function chargersOf(stationId){
+    if(CHARGERS[stationId]) return CHARGERS[stationId];
+    // 기본 생성: 마커 count = 총 대수 · avail = 이용가능 · 1 사용중 · 1 고장(대수>2)
+    var mk=MARKERS.filter(function(m){return m.id===stationId;})[0];
+    var st=STATIONS[stationId]||{}; var total=mk?mk.count:(st.avail||6); var band=mk?mk.band:'slow';
+    var conn = band==='slow'?'AC완속':(band==='ultra'?'DC콤보':'DC콤보');
+    var availN=Math.min(st.avail!=null?st.avail:total, total);
+    var arr=[];
+    // 상세위치 입력률 낮게(약 17%) — 6기당 1개꼴
+    var locs=['지하 1층 A열','지상 방문자 주차','기둥 P-7 옆'];
+    for(var i=1;i<=total;i++){
+      var state = i<=availN ? 'avail' : (i===availN+1 && total>2 ? 'busy' : (i===total && total>3 ? 'fault' : 'avail'));
+      arr.push({ id:(i<10?'0'+i:''+i), band:band, conn:conn, state:state, loc:(i%6===1? locs[(i/6|0)%locs.length] : '') });
+    }
+    CHARGERS[stationId]=arr; return arr;
+  }
 
-  var __curStation = null;
-  function openDrawer(stationId) {
+  var __curStation = null, __locBackKey = null;   // __locBackKey: 위치 목록에서 진입 시 복귀 키
+  var BAND_LBL = { slow:'완속', mid:'중속', fast:'급속', fastp:'급속+', ultra:'초급속' };
+  var BAND_CLR = { slow:'#2C7BE5', mid:'#0D9488', fast:'#CA9A00', fastp:'#F97316', ultra:'#EF4444' };
+  var CHG_STATE = { avail:'이용가능', busy:'사용중', fault:'불가(고장·점검)' };
+  var __chgExpanded = false;
+
+  // 충전기 목록 렌더 — 기본 8개 + '전체 N기 보기' 더보기/접기 · 상세위치 Disclosure
+  function renderChargerList(stationId){
+    var host=document.getElementById('sdChargerList'); if(!host) return;
+    var list=chargersOf(stationId);
+    var av=list.filter(function(c){return c.state==='avail';}).length;
+    var bs=list.filter(function(c){return c.state==='busy';}).length;
+    var ft=list.filter(function(c){return c.state==='fault';}).length;
+    var e;
+    if((e=document.getElementById('sdAvail'))) e.textContent=av;
+    if((e=document.getElementById('sdBusy'))) e.textContent=bs;
+    if((e=document.getElementById('sdFault'))) e.textContent=ft;
+    if((e=document.getElementById('sdChgTotal'))) e.textContent='('+list.length+'기)';
+    var shown = __chgExpanded ? list.length : Math.min(8, list.length);
+    host.innerHTML = list.slice(0,shown).map(function(c){
+      var loc = c.loc ? '<button type="button" class="cr-loc" data-loc-toggle title="'+esc(c.loc)+'">📍 '+esc(c.loc)+'</button>' : '';
+      return '<div class="chg-row st-'+c.state+'">'
+        + '<span class="cr-id">#'+c.id+'</span>'
+        + '<span class="cr-band" style="color:'+BAND_CLR[c.band]+';">'+BAND_LBL[c.band]+'</span>'
+        + '<span class="cr-conn">'+esc(c.conn)+'</span>'
+        + '<span class="cr-state">'+CHG_STATE[c.state]+'</span>'
+        + loc + '</div>';
+    }).join('');
+    var more=document.getElementById('sdChgMore');
+    if(more){
+      if(list.length>8){ more.hidden=false; more.textContent = __chgExpanded ? '접기 ▲' : ('전체 '+list.length+'기 보기 ▼'); }
+      else more.hidden=true;
+    }
+  }
+
+  function openDrawer(stationId, fromLocKey) {
     const data = STATIONS[stationId];
     if (!data) return;
     __curStation = stationId;
+    __locBackKey = (fromLocKey !== undefined) ? fromLocKey : __locBackKey;   // 목록 진입 시만 갱신
     document.getElementById('sdTitle').textContent = data.name;
     document.getElementById('sdAddr').textContent = data.addr;
     document.getElementById('sdBrand').textContent = data.brand;
     const typeEl = document.getElementById('sdType');
     typeEl.className = 'st-type ' + data.type;
     typeEl.textContent = data.type === 'ev' ? '전기' : '수소';
-    // 차종별 본문 전환 (전기 ↔ 수소)
+    // 뒤로가기(목록 복귀) 버튼 — 멀티 마커 목록에서 진입한 경우만
+    var back=document.getElementById('sdBack'); if(back) back.hidden = !__locBackKey;
+    // 뷰 전환: 위치 목록 숨김 · 차종별 본문 표시
+    document.getElementById('sdBodyLoc').hidden = true;
     const isEv = data.type === 'ev';
     document.getElementById('sdBodyEv').hidden = !isEv;
     document.getElementById('sdBodyH2').hidden = isEv;
     if (isEv) {
-      document.getElementById('sdAvail').textContent = data.avail;
+      __chgExpanded = false; renderChargerList(stationId);
       var oe = document.getElementById('sdOperEv'); if (oe) oe.textContent = data.brand;
     } else {
       var oh = document.getElementById('sdOperH2'); if (oh) oh.textContent = data.brand;
@@ -1062,6 +1165,45 @@
     backdrop.classList.add('open');
     drawer.setAttribute('aria-hidden', 'false');
   }
+
+  // '이 위치의 충전소' 목록(1뎁스) — 멀티 마커 클릭 시
+  function openLocationList(key){
+    var members = MARKERS.filter(function(m){ return coordKey(m)===key; });
+    if(members.length<=1){ if(members[0]) openDrawer(members[0].id, null); return; }
+    __locBackKey = key;
+    var first = STATIONS[members[0].id] || {};
+    document.getElementById('sdTitle').textContent = '이 위치의 충전소';
+    document.getElementById('sdAddr').textContent = first.addr ? first.addr.split('·')[0].trim() : '';
+    document.getElementById('sdBrand').textContent = members.length+'개 등록';
+    var typeEl=document.getElementById('sdType'); typeEl.className='st-type ev'; typeEl.textContent='전기';
+    var back=document.getElementById('sdBack'); if(back) back.hidden=true;   // 목록이 1뎁스라 뒤로가기 없음
+    document.getElementById('sdBodyEv').hidden=true; document.getElementById('sdBodyH2').hidden=true;
+    document.getElementById('sdBodyLoc').hidden=false;
+    document.getElementById('sdLocCount').textContent = members.length;
+    document.getElementById('sdLocList').innerHTML = members.map(function(m){
+      var s=STATIONS[m.id]||{}; var chg=chargersOf(m.id);
+      var av=chg.filter(function(c){return c.state==='avail';}).length;
+      return '<button type="button" class="loc-item" data-loc-station="'+m.id+'">'
+        + '<div class="li-name">'+esc(s.name||m.id)+'</div>'
+        + '<div class="li-meta"><span class="li-dot st-'+ (m.type==='h2'?('h2'):(m.status)) +'"></span>'+esc(s.brand||'')+' · 충전기 '+m.count+'기 · 이용가능 '+av+'</div>'
+        + '<span class="li-arrow">›</span></button>';
+    }).join('');
+    drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden','false');
+  }
+  // 위치 목록 항목 클릭 → 2뎁스(충전소 상세, 뒤로가기 활성)
+  document.getElementById('sdLocList')?.addEventListener('click', function(e){
+    var it=e.target.closest('[data-loc-station]'); if(!it) return;
+    __activeStation = it.dataset.locStation;
+    openDrawer(it.dataset.locStation);   // __locBackKey 유지 → 뒤로가기 노출
+  });
+  // 뒤로가기 → 위치 목록(1뎁스) 복귀
+  document.getElementById('sdBack')?.addEventListener('click', function(){ if(__locBackKey) openLocationList(__locBackKey); });
+  // 충전기 더보기/접기
+  document.getElementById('sdChgMore')?.addEventListener('click', function(){ __chgExpanded=!__chgExpanded; if(__curStation) renderChargerList(__curStation); });
+  // 상세위치 Disclosure — 말줄임 ↔ 전체 텍스트
+  document.getElementById('sdChargerList')?.addEventListener('click', function(e){
+    var b=e.target.closest('[data-loc-toggle]'); if(!b) return; b.classList.toggle('open');
+  });
 
   // ===== 즐겨찾기(★) — 전기/수소 공통, 이름 옆 별표 + 드로어 버튼 토글 =====
   var FAVS = { s1:true, s3:true, s6:true };   // mock 기본 즐겨찾기
@@ -1208,11 +1350,21 @@
     {id:'s4',top:50,left:45,count:4, type:'ev', status:'restricted',  band:'slow',  cpo:{abbr:'에버온', name:'에버온'}},
     {id:'s6',top:42,left:58,count:18,type:'ev', status:'unknown',     band:'fastp', cpo:{abbr:'GS',   name:'GS차지비'}},
     {id:'s7',top:55,left:65,count:8, type:'ev', status:'unavailable', band:'mid',   cpo:{abbr:'에버온', name:'에버온'}},
+    // 60기급 대단지 완속 (더보기 시연) — 상세위치 입력률 낮음(17%)
+    {id:'big1',top:66,left:36,count:60,type:'ev', status:'available', band:'slow', cpo:{abbr:'환경부', name:'기후에너지환경부'}, lat:37.5502, lng:127.0503},
+    // 드림타워 사례: 같은 좌표 3개 코드(A/B/C구역, 105기) → 멀티 마커
+    {id:'d1',top:38,left:50,count:40,type:'ev', status:'available',   band:'ultra', cpo:{abbr:'대영채비', name:'대영채비'}, lat:37.52110, lng:127.03350},
+    {id:'d2',top:38,left:50,count:35,type:'ev', status:'busy',        band:'fastp', cpo:{abbr:'SK',    name:'SK일렉링크'}, lat:37.52112, lng:127.03352},
+    {id:'d3',top:38,left:50,count:30,type:'ev', status:'available',   band:'fast',  cpo:{abbr:'GS',    name:'GS차지비'},   lat:37.52108, lng:127.03349},
     // 수소 = AS-IS 계승: 상태 2종(영업중/영업마감)만 · 출력·압력·가격 마커 미표시
     {id:'s2',top:35,left:40,count:2, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}},
     {id:'s5',top:58,left:55,count:2, type:'h2', h2status:'closed', cpo:{abbr:'코하이젠', name:'코하이젠'}},
     {id:'s8',top:60,left:72,count:1, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}}
   ];
+  // [DEV] 멀티 마커 판정 = lat/lng 소수 4자리 반올림 그룹(≈10m 근접) — 같은 단지 CPO별 등록 좌표 미세차 흡수.
+  //   실서비스는 지도 라이브러리 클러스터 최소반경으로 대체 가능. lat/lng 없는 더미는 id로 단독 그룹.
+  //   물리 병합 금지(구역 분리·명의별 등록 혼재·주소 품질 불량) → 표시 계층 멀티 마커만. 코드 2자리·상한 99·초과 시 분리는 DB 사실.
+  function coordKey(m){ return (m.lat!=null && m.lng!=null) ? (Math.round(m.lat*1e4)+','+Math.round(m.lng*1e4)) : ('id:'+m.id); }
   var mapWrap = document.getElementById('mapMarkers');
   function dist(a,b){ var dx=a.left-b.left, dy=a.top-b.top; return Math.sqrt(dx*dx+dy*dy); }
   function clusterBy(pts, thr){
@@ -1256,8 +1408,13 @@
         return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="충전기 '+g.count+'기 · 클릭 시 확대"><span class="mc-count">'+g.count+'</span></button>';
       }).join('');
     } else {
-      // 중간=상태핀 / 확대=핀 확대+CPO 마크 (개별 렌더)
-      mapWrap.innerHTML = pts.map(pinHTML).join('');
+      // 중간=상태핀 / 확대=핀 확대+CPO 마크 · 동일 좌표(≈10m) 복수 코드는 멀티 마커 1개로 묶고 ×N 뱃지
+      var byCoord = {}, order = [];
+      pts.forEach(function(m){ var k=coordKey(m); if(!byCoord[k]){ byCoord[k]=[]; order.push(k); } byCoord[k].push(m); });
+      mapWrap.innerHTML = order.map(function(k){
+        var grp = byCoord[k];
+        return grp.length > 1 ? multiMarkerHTML(grp, k) : pinHTML(grp[0]);
+      }).join('');
       // 선택 핀 하이라이트 연속성(중간→확대 진행 시 유지)
       if(__activeStation){
         var am=mapWrap.querySelector('.map-pin[data-station="'+__activeStation+'"]');
@@ -1265,6 +1422,19 @@
       }
     }
   }
+  // 멀티 마커(동일 좌표 복수 충전소) — ×N 뱃지, 대표 상태색은 첫 코드 기준
+  function multiMarkerHTML(grp, key){
+    var m = grp[0], isH2 = (m.type==='h2');
+    var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+m.status);
+    var total = grp.reduce(function(a,g){return a+g.count;},0);
+    var inner = isH2 ? '<span class="mp-bolts">H₂</span>' : (__lod==='cpo' ? '<span class="mp-bolt" style="color:'+BAND_COLOR[m.band]+';">⚡</span>' : '');
+    var title = grp.length+'개 충전소 · 총 '+total+'기 · 클릭 시 목록';
+    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+' is-multi" data-multi="'+esc(key)+'" title="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
+      + inner + '<span class="mp-count">'+total+'</span>'
+      + '<span class="mp-multi-badge">×'+grp.length+'</span></button>';
+  }
+  // 좌표 그룹의 멤버 stationId 배열
+  function multiMembers(key){ return MARKERS.filter(function(m){ return coordKey(m)===key && m.type===__currentMode; }); }
   // LOD 토글 (축소/중간/확대) 동기화
   function setLod(lod){
     __lod = lod;
@@ -1284,8 +1454,12 @@
       // 축소·중간: 클러스터/핀 클릭 → 한 단계 확대(분리). 핀이면 선택 유지(확대 후 하이라이트)
       __activeStation = b.dataset.station || __activeStation;
       stepLod(1);
+    } else if(b.dataset.multi){
+      // 확대(최종): 멀티 마커 → '이 위치의 충전소' 선택 리스트(1뎁스)
+      mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active'); openLocationList(b.dataset.multi);
     } else if(b.dataset.station){
-      // 확대(최종): 핀 클릭 → 하이라이트 + 우측 슬라이드
+      // 확대(최종): 단일 핀 → 하이라이트 + 우측 슬라이드(바로 상세)
       __activeStation = b.dataset.station;
       mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); });
       b.classList.add('active'); openDrawer(b.dataset.station);
@@ -1314,6 +1488,30 @@
     if(m){ mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); }); m.classList.add('active'); }
   };
   renderMap();
+
+  // ── 충전소 검색결과 XLSX 다운로드 (SheetJS) — 첫 행 안내가 문구 규칙 유지 ──
+  var __xlsxBtn = document.getElementById('stationXlsxBtn');
+  if(__xlsxBtn) __xlsxBtn.addEventListener('click', function(){
+    if(typeof XLSX === 'undefined'){ if(window.__toast) window.__toast('엑셀 라이브러리 로딩 중입니다. 잠시 후 다시 시도해 주세요.','info'); return; }
+    var rows = MARKERS.filter(function(m){ return m.type === __currentMode; });
+    var head = ['번호','충전소명','운영기관','주소','충전기 수','이용가능','최고 출력밴드','상태'];
+    var disc = ['※ 표시 요금·상태는 안내용이며 실제와 다를 수 있습니다'];   // 첫 행 안내가 문구
+    var aoa = [disc, head];
+    rows.forEach(function(m, i){
+      var s = STATIONS[m.id] || {};
+      var chg = chargersOf(m.id);
+      var av = chg.filter(function(c){ return c.state==='avail'; }).length;
+      var band = (m.type==='h2') ? '수소' : (BAND_LABEL[m.band]+' '+BAND_RANGE[m.band].replace('&lt;','<'));
+      var stTxt = (m.type==='h2') ? (H2_STATUS[m.h2status]||'') : ({available:'사용가능',busy:'사용중',unavailable:'사용불가',unknown:'상태미확인',restricted:'이용자제한'}[m.status]||'');
+      aoa.push([ i+1, s.name||m.id, s.brand||'', s.addr||'', m.count, av, band, stTxt ]);
+    });
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = [{wch:6},{wch:28},{wch:16},{wch:34},{wch:9},{wch:9},{wch:16},{wch:12}];
+    XLSX.utils.book_append_sheet(wb, ws, '충전소 검색결과');
+    XLSX.writeFile(wb, '충전소_검색결과.xlsx');
+    if(window.__toast) window.__toast(rows.length+'건을 엑셀(xlsx)로 내려받았습니다.','success');
+  });
 })();
 </script>
 <script>

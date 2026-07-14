@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260714a">
 <style>
   /* 실단계 2단계 스텝퍼 (SC_DIRECT_APPLY / SC_APPLY) */
   .cd-stages { display:flex; flex-direction:column; gap:20px; margin-top:4px; }
@@ -56,7 +56,7 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260709b"></script>
+<script src="js/contest-detail.js?v=20260714a"></script>
 <script>
 /* [DEV] 직접신청 상태 = SC_DIRECT_APPLY.APP_STEP(코드군 DIRECT_APP_STEP): 100 대기 / 200 승인(사업수행기관 배정) / 101 거절 / 102 차순위 이관 / 401 최종거절 / 201 승인취소 / 300 관리자취소
    [DEV] 설치·지급 = SC_APPLY.APP_STEP: 130 접수승인 / 140 착공 / 150 공사완료 / 217 현장점검완료 / 221 지급확인 / 501 완료 · 보완요청 110(신청)·215(현장)·315(지급)
@@ -109,9 +109,8 @@
           ['배정 사업수행기관','배정 대기 (승인 시 확정)']
         ]},
         stages:[ grpApply(['current','']), grpInstall(['','','','','','']) ],
-        docs:[{name:'건축물대장',ok:true},{name:'설치동의서(사용 승낙)',ok:false},{name:'전기증설 확인서',ok:false},{name:'설치희망지 도면·현황 사진',ok:true}],
-        supplement:{ reason:'[지자체메모] 설치동의서의 사용 승낙 범위가 확인되지 않으며, 전기증설 확인서가 누락되었습니다. 해당 항목을 보완하여 재제출해 주세요. (보완확인 시 111로 진행)', due:'2026.05.02', docs:['설치동의서(사용 승낙)','전기증설 확인서'] },
-        action:'보완 요청 항목을 확인하고 기한(2026.05.02) 내 재제출해 주세요.' },
+        docs:[{name:'건축물대장',status:'done'},{name:'설치동의서(사용 승낙)',status:'supplement'},{name:'전기증설 확인서',status:'missing'},{name:'설치희망지 도면·현황 사진',status:'done'}],
+        supplement:{ reason:'[지자체메모] 설치동의서의 사용 승낙 범위가 확인되지 않아 보완요청 상태이며, 전기증설 확인서는 미제출입니다. 해당 항목을 보완하여 재제출해 주세요. (보완확인 시 111로 진행)' } },
 
       // ② 설치·지급 완료(501)
       { appId:'CIS-2026-002210', project:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', status:'완료 (501)', result:'done',
@@ -126,7 +125,7 @@
           ['배정 사업수행기관','A충전(주) (200 승인 시 배정)']
         ]},
         stages:[ grpApply(['done','done']), grpInstall(['done','done','done','done','done','current']) ],
-        docs:[{name:'건축물대장',ok:true},{name:'설치동의서(사용 승낙)',ok:true},{name:'전기증설 확인서',ok:true},{name:'준공·현장점검 확인서',ok:true}],
+        docs:[{name:'건축물대장',status:'done'},{name:'설치동의서(사용 승낙)',status:'done'},{name:'전기증설 확인서',status:'done'},{name:'준공·현장점검 확인서',status:'done'}],
         action:'설치·지급이 완료되어 모든 절차가 종료되었습니다.' }
     ]
   });

@@ -10,6 +10,39 @@ window.ContestDetail = (function () {
   function badge(res){ var r=RESULT[res]||RESULT.progress; return '<span class="cd-badge '+r[1]+'">'+r[0]+'</span>'; }
   function dl(pairs){ return '<div class="cd-dl'+(pairs.length<=3?' ':' ')+'">'+pairs.map(function(p){ return '<dl><dt>'+esc(p[0])+'</dt><dd>'+p[1]+'</dd></dl>'; }).join('')+'</div>'; }
 
+  /* 제출서류 3종 상태 배지 · 제출 파일 링크(mock) · 조건부 파일선택 */
+  var DOC_BADGE = { done:['제출완료','cd-doc-ok'], supplement:['보완요청','cd-doc-supp'], missing:['미제출','cd-doc-no'] };
+  function docStatus(d){ if(d.status) return d.status; return d.ok ? 'done' : 'missing'; } // legacy {ok} 호환
+  function docFileName(n){ return String(n).replace(/^\[[^\]]*\]\s*/,'').replace(/\([^)]*\)/g,'').replace(/\s*(증빙|사본|서식)\s*$/,'').replace(/[\/·]/g,' ').trim().replace(/\s+/g,'_')+'.pdf'; }
+  var _docSeq;
+  function docRowHTML(d){
+    var stt = docStatus(d), bd = DOC_BADGE[stt]||DOC_BADGE.missing, idx = _docSeq++;
+    // 제출완료·보완요청 → 제출 파일명 노출(없으면 서류명에서 목업 파일명 생성) · 미제출 → 파일 없음
+    var fname = d.file || (stt==='missing' ? '' : docFileName(d.name));
+    var fileCell = fname
+      ? '<a href="#" class="cd-file-link" data-file="'+esc(fname)+'" onclick="return false;" title="다운로드(mock)">'+esc(fname)+'</a>'
+      : '<span class="cd-file-none">—</span>';
+    var pick = (stt==='done')
+      ? '<span class="cd-file-none">—</span>'
+      : '<span class="cd-pick" data-doc="'+idx+'">'
+        + '<input type="file" id="cddoc-'+idx+'" class="cd-pick-input" aria-label="'+esc(d.name)+' 파일 선택">'
+        + '<label for="cddoc-'+idx+'" class="cd-pick-btn">파일선택</label>'
+        + '<span class="cd-pick-file" aria-live="polite" hidden></span>'
+        + '<button type="button" class="cd-pick-del" hidden aria-label="선택 취소">×</button>'
+        + '</span>';
+    return '<tr class="cd-doc-row'+(stt==='supplement'?' cd-reject':'')+'" data-doc-row="'+idx+'" data-status="'+stt+'">'
+      + '<td>'+esc(d.name)+'</td>'
+      + '<td>'+fileCell+'</td>'
+      + '<td style="text-align:center;"><span class="'+bd[1]+'">'+bd[0]+'</span></td>'
+      + '<td style="text-align:center;">'+pick+'</td></tr>';
+  }
+  function docsTable(list){
+    return '<table class="cd-tbl cd-doc-tbl"><thead><tr>'
+      + '<th>구비서류</th><th>제출 파일</th>'
+      + '<th style="text-align:center;width:96px;">제출상태</th><th style="text-align:center;width:120px;">파일선택</th>'
+      + '</tr></thead><tbody>'+list.map(docRowHTML).join('')+'</tbody></table>';
+  }
+
   var cfg, root;
 
   function findApp(id){ for(var i=0;i<cfg.apps.length;i++) if(cfg.apps[i].appId===id) return cfg.apps[i]; return null; }
@@ -40,6 +73,7 @@ window.ContestDetail = (function () {
 
   /* ── 상세 뷰 ── */
   function renderDetail(a){
+    _docSeq = 0;
     var r = RESULT[a.result]||RESULT.progress;
     var h = '';
     h += '<button type="button" class="cd-back" id="cdBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> 신청 목록으로</button>';
@@ -102,14 +136,10 @@ window.ContestDetail = (function () {
       h += block(5,'진행 단계', '<ul class="cd-timeline">'+tl+'</ul>');
     }
 
-    // 6. 제출 서류 (조건부 — app.docs 있을 때만)
+    // 6. 제출 서류 (조건부 — app.docs 있을 때만) · 제출 파일 링크(mock) + 3종 상태 + 보완/미제출 행 파일선택
     if (a.docs && a.docs.length){
-      var docs = a.docs.map(function(d){
-        var st = d.ok ? '<span class="cd-doc-ok">제출완료</span>' : '<span class="cd-doc-no">미제출</span>';
-        var dlBtn = d.ok ? '<button type="button" class="cd-dl-btn" onclick="return false;">다운로드</button>' : '—';
-        return '<tr><td>'+esc(d.name)+'</td><td style="text-align:center;">'+st+'</td><td style="text-align:center;">'+dlBtn+'</td></tr>';
-      }).join('');
-      h += block(6,'제출 서류', '<table class="cd-tbl"><thead><tr><th>구비서류</th><th style="text-align:center;">제출 상태</th><th style="text-align:center;">첨부</th></tr></thead><tbody>'+docs+'</tbody></table>');
+      h += block(6,'제출 서류', docsTable(a.docs)
+        + '<p class="cd-doc-hint">· 제출 파일명을 누르면 다운로드됩니다(목업). 보완요청·미제출 서류만 파일을 새로 선택해 하단에서 제출할 수 있습니다.</p>');
     }
 
     // 6c. 항목별 심사 현황 (조건부 — 승인 Y / 반려 N, 반려=보완 대상 강조)
@@ -124,12 +154,10 @@ window.ContestDetail = (function () {
           + '<table class="cd-tbl"><thead><tr><th>항목</th><th>내용</th><th style="text-align:center;">심사</th></tr></thead><tbody>'+vrows+'</tbody></table>';
       }
       if (rv.docs && rv.docs.length){
-        var arows = rv.docs.map(function(d){
-          var st = d.ok ? '<span class="cd-doc-ok">승인</span>' : '<span class="cd-doc-no">반려</span>';
-          return '<tr'+(d.ok?'':' class="cd-reject"')+'><td>'+esc(d.name)+'</td><td style="text-align:center;">'+st+'</td><td style="text-align:center;"><button type="button" class="cd-dl-btn" onclick="return false;">다운로드</button></td></tr>';
-        }).join('');
+        // 첨부 심사결과를 제출상태로 매핑 : 반려(N) → 보완요청 · 승인(Y) → 제출완료
+        var mapped = rv.docs.map(function(d){ return { name:d.name, file:d.file, status:(docStatus(d)==='done'?'done':(d.ok===false?'supplement':docStatus(d))) }; });
         rvInner += '<h4 style="font-size:13px;font-weight:800;margin:16px 0 8px;color:var(--text-secondary);">첨부 서류 심사 ('+rv.docs.length+'종)</h4>'
-          + '<table class="cd-tbl"><thead><tr><th>첨부 서류</th><th style="text-align:center;">심사</th><th style="text-align:center;">첨부</th></tr></thead><tbody>'+arows+'</tbody></table>';
+          + docsTable(mapped);
       }
       if (rv.memo) rvInner += '<div class="alert alert-info" style="margin:14px 0 0;"><div class="alert-icon"></div><div class="alert-body"><strong>담당자 종합 메모</strong><br>'+esc(rv.memo)+'</div></div>';
       h += block(6,'항목별 심사 현황', rvInner);
@@ -140,19 +168,9 @@ window.ContestDetail = (function () {
       h += '<div class="alert alert-info" style="margin:16px 0;"><div class="alert-icon"></div><div class="alert-body"><strong>공단 안내</strong><br>'+esc(a.kecoNote)+'</div></div>';
     }
 
-    // 7. 보완요청 (조건부) — 요구서류별 재업로드 슬롯 + 제출(mock)
+    // 7. 보완요구사항 (조건부) — 지자체/담당자 메모만 (재업로드·제출은 하단 제출서류 표로 일원화)
     if (a.supplement){
       var sp=a.supplement;
-      var slots = (sp.docs&&sp.docs.length) ? sp.docs.map(function(d,di){
-        return '<div class="cd-up-slot" data-idx="'+di+'">'
-          + '<span class="cd-up-name">'+esc(d)+'</span>'
-          + '<span class="cd-up-ctrl">'
-          +   '<input type="file" id="cdup-'+di+'" class="cd-up-input" aria-label="'+esc(d)+' 파일 선택">'
-          +   '<label for="cdup-'+di+'" class="cd-up-btn">파일 선택</label>'
-          +   '<span class="cd-up-file" aria-live="polite">선택된 파일 없음</span>'
-          +   '<button type="button" class="cd-up-del" data-idx="'+di+'" hidden aria-label="'+esc(d)+' 선택 파일 삭제">삭제</button>'
-          + '</span></div>';
-      }).join('') : '';
       // 보완 본문: 누적 이력(sp.history) 우선 · 없으면 단일 사유(sp.reason)
       var suppBody;
       if (sp.history && sp.history.length){
@@ -163,16 +181,7 @@ window.ContestDetail = (function () {
         suppBody = '<div>'+esc(sp.reason)+'</div>';
       }
       if (sp.requester) suppBody += '<div style="margin-top:6px;font-size:13px;color:var(--text-secondary);">보완요청자 : '+esc(sp.requester)+'</div>';
-      h += '<div class="cd-callout supp"><h3>⚠ 보완요청</h3>'
-        + suppBody
-        + (sp.due?'<div style="margin-top:6px;"><strong>재제출 기한 : '+esc(sp.due)+'</strong></div>':'')
-        + (slots?'<div class="cd-uploads" role="group" aria-label="보완 요구서류 재업로드"><div class="cd-up-head">보완 요구서류 재업로드</div>'+slots+'</div>':'')
-        + '<div class="cd-supp-actions">'
-        +   '<button type="button" class="btn btn-primary btn-sm" id="cdSuppSubmit">보완서류 제출</button>'
-        +   '<a href="'+(cfg.supplementHref||'#')+'" class="btn btn-ghost btn-sm cd-supp-btn">또는 업무지원시스템에서 제출 →</a>'
-        + '</div>'
-        + '<p class="cd-supp-hint" id="cdSuppMsg" role="status" aria-live="polite" hidden></p>'
-        + '</div>';
+      h += '<div class="cd-callout supp"><h3>⚠ 보완요구사항</h3>' + suppBody + '</div>';
     }
 
     // 7b. 공단 메모(PBLCRP_MEMO) · 사업 메모(BSNS_MEMO) — 각각 별도 표기 (조건부)
@@ -204,11 +213,15 @@ window.ContestDetail = (function () {
         + (ag.guide?'<div style="margin-top:6px;">'+esc(ag.guide)+'</div>':'')+'</div>';
     }
 
-    // 10. 다음 액션 (문의처 블록 제거 — 공모/지자체마다 근거 상이 · 콜센터만 유지)
-    h += '<div class="cd-foot">'
-      + '<div class="cd-action"><strong>📌 내가 할 일</strong>'+esc(a.action||'현재 단계에서 별도 조치사항은 없습니다.')+'</div>'
-      + '</div>'
-      + '<p class="cd-callcenter" style="text-align:center;color:var(--text-tertiary,#94a3b8);font-size:13px;margin-top:14px;">문의 · 누리집콜센터 <strong>1661-0970</strong></p>';
+    // 10. 최하단 제출 (조건부) — 교체·첨부 가능 서류(보완요청/미제출)가 1건↑일 때만 노출
+    var _canSubmit = (a.docs||[]).concat(a.review&&a.review.docs?a.review.docs:[]).some(function(d){ var s=docStatus(d); return s==='supplement'||(d.ok===false)||s==='missing'; });
+    if (_canSubmit){
+      h += '<div class="cd-submit-bar">'
+        + '<p class="cd-submit-hint" id="cdSubmitMsg" role="status" aria-live="polite" hidden></p>'
+        + '<button type="button" class="btn btn-primary" id="cdDocSubmit" disabled aria-disabled="true">제출</button>'
+        + '</div>';
+    }
+    h += '<p class="cd-callcenter" style="text-align:center;color:var(--text-tertiary,#94a3b8);font-size:13px;margin-top:14px;">문의 · 누리집콜센터 <strong>1661-0970</strong></p>';
 
     // 11. 개발 참고(DEV) 패널 — 상세 뷰에서만 · 기본 접힘 (app.devRef 우선 · 없으면 mount.devRef)
     h += renderDevRef(a.devRef || cfg.devRef);
@@ -216,33 +229,52 @@ window.ContestDetail = (function () {
     root.innerHTML = h;
     var back=document.getElementById('cdBack');
     if(back) back.addEventListener('click', function(){ setHash(''); renderList(); window.scrollTo({top:0,behavior:'smooth'}); });
-    wireSupplement();
+    wireDocs();
     void r; // (badge already used)
   }
 
-  /* 보완요청 재업로드(mock) — 파일 선택 표시·삭제·제출 */
-  function wireSupplement(){
-    var inputs = root.querySelectorAll('.cd-up-input');
-    if(!inputs.length) return;
-    Array.prototype.forEach.call(inputs, function(inp){
-      var slot = inp.closest('.cd-up-slot');
-      var fileEl = slot.querySelector('.cd-up-file');
-      var delBtn = slot.querySelector('.cd-up-del');
+  /* 제출서류 파일선택(mock) — 보완요청/미제출 행 파일 교체 + 최하단 제출 */
+  function wireDocs(){
+    var picks = root.querySelectorAll('.cd-pick');
+    var submit = document.getElementById('cdDocSubmit');
+    function chosenRows(){ return root.querySelectorAll('.cd-doc-row[data-picked="1"]'); }
+    function sync(){ if(submit){ var n=chosenRows().length; submit.disabled=(n===0); submit.setAttribute('aria-disabled', n===0?'true':'false'); } }
+    Array.prototype.forEach.call(picks, function(pk){
+      var inp = pk.querySelector('.cd-pick-input'),
+          fileEl = pk.querySelector('.cd-pick-file'),
+          delBtn = pk.querySelector('.cd-pick-del'),
+          row = pk.closest('.cd-doc-row');
       inp.addEventListener('change', function(){
-        if(inp.files && inp.files.length){ fileEl.textContent = inp.files[0].name; fileEl.classList.add('has'); delBtn.hidden=false; }
-        else { fileEl.textContent='선택된 파일 없음'; fileEl.classList.remove('has'); delBtn.hidden=true; }
+        if(inp.files && inp.files.length){
+          fileEl.textContent = inp.files[0].name+' · 선택됨'; fileEl.hidden=false;
+          delBtn.hidden=false; row.setAttribute('data-picked','1');
+        } else { clear(); }
+        sync();
       });
-      delBtn.addEventListener('click', function(){ inp.value=''; fileEl.textContent='선택된 파일 없음'; fileEl.classList.remove('has'); delBtn.hidden=true; inp.focus(); });
+      delBtn.addEventListener('click', function(){ inp.value=''; clear(); sync(); inp.focus(); });
+      function clear(){ fileEl.textContent=''; fileEl.hidden=true; delBtn.hidden=true; row.removeAttribute('data-picked'); }
     });
-    var submit = document.getElementById('cdSuppSubmit');
     if(submit) submit.addEventListener('click', function(){
-      var chosen = root.querySelectorAll('.cd-up-file.has').length, total = inputs.length;
-      if(chosen===0){ var m0='제출할 보완서류를 먼저 선택해 주세요.'; if(window.__toast) window.__toast(m0,'info'); else alert(m0); return; }
-      if(window.__toast) window.__toast('보완서류가 제출되었습니다. 검토 후 안내드립니다.','success');
-      var msg = document.getElementById('cdSuppMsg');
-      if(msg){ msg.hidden=false; msg.textContent='✓ 보완서류가 제출되었습니다. 검토 후 안내드립니다. ('+chosen+'/'+total+'건 첨부)'; }
-      submit.disabled=true; submit.textContent='제출 완료';
+      var rows = chosenRows(); if(!rows.length) return;
+      Array.prototype.forEach.call(rows, function(row){
+        // 제출 상태 → '제출완료(검토 대기)' 갱신 + 선택 UI 정리
+        var badge = row.querySelector('td:nth-child(3) span');
+        if(badge){ badge.className='cd-doc-ok'; badge.textContent='제출완료(검토 대기)'; }
+        var fileName = (row.querySelector('.cd-pick-file')||{}).textContent || '';
+        fileName = fileName.replace(/ · 선택됨$/,'');
+        var link = row.querySelector('.cd-file-link'), fileTd = row.querySelector('td:nth-child(2)');
+        if(fileName && fileTd){ fileTd.innerHTML = '<a href="#" class="cd-file-link" onclick="return false;" title="다운로드(mock)">'+esc(fileName)+'</a>'; }
+        else if(link){ /* keep */ }
+        var pickTd = row.querySelector('td:nth-child(4)');
+        if(pickTd) pickTd.innerHTML = '<span class="cd-file-none">—</span>';
+        row.removeAttribute('data-picked'); row.setAttribute('data-status','done');
+        row.classList.remove('cd-reject');
+      });
+      var msg = document.getElementById('cdSubmitMsg');
+      if(msg){ msg.hidden=false; msg.textContent='✓ 제출되었습니다. 담당자 검토 후 안내드립니다.'; }
+      submit.disabled=true; submit.setAttribute('aria-disabled','true'); submit.textContent='제출 완료';
     });
+    sync();
   }
 
   function block(n,title,inner){ return '<div class="cd-block"><h3><span class="n">'+n+'</span>'+esc(title)+'</h3>'+inner+'</div>'; }

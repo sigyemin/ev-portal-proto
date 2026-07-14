@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260714a">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -40,7 +40,7 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260709b"></script>
+<script src="js/contest-detail.js?v=20260714a"></script>
 <script>
 /* [DEV] 상태 = PS_EV_VAN_APPLY.REQ_STATUS (REQ_STATUS3 = 제출완료/보완요청/보완완료/승인, 2=보완요청). 선정/미선정 축 없음
    [DEV] result 배지 매핑: 제출완료·보완요청·보완완료→progress · 승인→done
@@ -81,13 +81,12 @@ ContestDetail.mount({
       docs:[
         {name:'별지 제1호 서식 공모 지원신청서',ok:true},
         {name:'별지 제2호 서식 보급사업 계획서',ok:true},
-        {name:'상세 보급계획(엑셀)',ok:false},
+        {name:'상세 보급계획(엑셀)',status:'supplement'},
         {name:'지자체 예산 각목명세서 사본',ok:true},
         {name:'구매지원 신청 제출자료',ok:true},
-        {name:'[B유형] 충전시설 설치계획',ok:false}
+        {name:'[B유형] 충전시설 설치계획',status:'missing'}
       ],
-      supplement:{ reason:'상세 보급계획(엑셀)의 노선·투입 대수 내역이 누락되었고, [B유형] 충전시설 설치계획의 위치도·용량 자료가 확인되지 않습니다. 해당 서류를 보완하여 재제출해 주세요.', due:'2026.05.06', docs:['상세 보급계획(엑셀)','[B유형] 충전시설 설치계획'] },
-      action:'보완 요청 항목을 확인하고 기한(2026.05.06) 내 재제출해 주세요.' },
+      supplement:{ reason:'상세 보급계획(엑셀)의 노선·투입 대수 내역이 누락되었고, [B유형] 충전시설 설치계획의 위치도·용량 자료가 확인되지 않습니다. 해당 서류를 보완하여 재제출해 주세요.' } },
 
     { appId:'PB-2026-000512', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.02', status:'승인', result:'done',
       notice:{ name:'2026년 전기버스 보급사업 공모(2차)', no:'환경부공고 제2026-231호', org:'한국환경공단', period:'2026.04.25 ~ 2026.05.02', announce:'2026.06.02', scale:'평가 기준 충족 수행자 선정' },

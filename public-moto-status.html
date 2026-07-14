@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260701b">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260714a">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -40,7 +40,7 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260709b"></script>
+<script src="js/contest-detail.js?v=20260714a"></script>
 <script>
 /* [DEV] 상태 = PS_MOTOR_OC_APPLY.REQ_STATUS (REQ_STATUS3 = 제출완료/보완요청/보완완료/승인, 2=보완요청). 선정/미선정 축 없음
    [DEV] result 배지 매핑: 제출완료·보완요청·보완완료→progress · 승인→done
@@ -48,9 +48,9 @@
    [DEV] 첨부 = REQ_FILE_ID_1~8 · 처리정보 = UPD_DT·UPD_ID · 전부 더미.
    [DEV] 소스 psMgrMotorOcForm.jsp는 첨부[7]이 '무공해건설기계 인증 서류'로 오기 → 이륜차용 '무공해이륜차 인증 서류'로 교정. */
 (function(){
-  function docs8(cert, missing){
+  function docs8(cert, supp, miss){
     var names=['구매보조사업 참여 지원신청서 [별지 제1호 서식]','사업수행기관 신청 제안서 [별지 제2호 참고]','사업자등록증 1부','법인 등기부등본 1부','법인 인감증명서 1부','공공기관제출용 신용평가등급확인서', cert, '기타 제안서 정성·정량 평가를 위한 증빙 서류'];
-    return names.map(function(n){ return { name:n, ok:(missing||[]).indexOf(n)<0 }; });
+    return names.map(function(n){ var st=(supp||[]).indexOf(n)>=0?'supplement':((miss||[]).indexOf(n)>=0?'missing':'done'); return { name:n, status:st }; });
   }
   var CERT='무공해이륜차 인증 서류';
   ContestDetail.mount({
@@ -76,16 +76,15 @@
         applicant:{ title:'업체 정보',
           rows:[['업체명','라이드모빌리티(주)'],['대표자','한대표'],['법인등록번호','110111-4455667'],['사업자등록번호','514-81-99001'],['주소','서울특별시 성동구 성수이로 000 (3층)'],['연락처','02-555-6677']] },
         block4:{ title:'처리 정보', rows:[['최종 처리일시','2026.04.03 16:20'],['최종 처리자','한국환경공단 담당자 (보완요청)']] },
-        docs: docs8(CERT, [CERT]),
-        supplement:{ reason:'무공해이륜차 인증 서류의 안전확인신고 증명 자료가 누락되었습니다. 유효한 인증 서류를 보완하여 재제출해 주세요.', due:'2026.04.07', docs:[CERT] },
-        action:'보완 요청 항목을 확인하고 기한(2026.04.07) 내 재제출해 주세요.' },
+        docs: docs8(CERT, [CERT], ['기타 제안서 정성·정량 평가를 위한 증빙 서류']),
+        supplement:{ reason:'무공해이륜차 인증 서류의 안전확인신고 증명 자료가 확인되지 않아 보완요청 상태이며, 기타 정성·정량 평가 증빙 서류는 미제출입니다. 해당 서류를 보완하여 재제출해 주세요.' } },
 
       { appId:'PM-2026-000108', project:'무공해 이륜차 보급사업', applyDate:'2026.03.27', status:'승인', result:'done',
         notice:{ name:'2026년 무공해 이륜차 보급사업 공모', no:'환경부공고 제2026-160호', org:'한국환경공단', period:'2026.03.02 ~ 2026.03.28', announce:'2026.04.15', scale:'평가 기준 충족 신청기관 선정' },
         applicant:{ title:'업체 정보',
           rows:[['업체명','에코라이드(주)'],['대표자','서대표'],['법인등록번호','110111-3322110'],['사업자등록번호','606-81-22110'],['주소','부산광역시 사상구 학감대로 000'],['연락처','051-333-4444']] },
         block4:{ title:'처리 정보', rows:[['최종 처리일시','2026.04.15 10:00'],['최종 처리자','한국환경공단 담당자 (승인)']] },
-        docs: docs8(CERT, []),
+        docs: docs8(CERT, [], []),
         action:'승인되었습니다. 협약 체결 및 후속 절차 안내를 기다려 주세요.' }
     ]
   });
