@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260715f">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260716d">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -40,12 +40,14 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260715f"></script>
+<script src="js/contest-detail.js?v=20260716d"></script>
 <script>
 /* [DEV] ★ 신청 정보·제출 서류는 public-bus-apply.html 신청폼을 1:1 미러 (섹션/항목/라벨/순서 동일 · 값만 더미)
    [DEV] 상태 = PS_EV_VAN_APPLY.REQ_STATUS · REQ_STATUS3(전기승합) = 제출완료/보완요청/보완완료/검토완료/신청취소 (관리자 '수행자 선정 평가 신청관리' 실드롭다운 확정). '승인/선정/미선정' 표기 폐기
    [DEV] 결과(진행중/완료) 축·컬럼 폐지 → 현재 상태만 노출. 관리자 선정여부 컬럼은 값 미사용('-') → 대민 미노출
    [DEV] 담당자 입력값 = RES_CONT (보완요청·보완완료·신청취소에서 기록). KECO_CONT 없음(전기승합 미사용)
+   [DEV] 선정 = PS_EV_VAN_APPLY.SLCTN_YN (Y 선정 / N 미선정). 확정 시 현재 상태 병기 — 검토완료(선정)/검토완료(미선정) (미확정=원문 '검토완료'). 병기=결과열 폐지 대체 · 검토완료 건 '선정 결과' 섹션 유지. 관리자 목록 '-' = 선정 전(null)
+   [DEV] 신청취소 버튼 = 제출완료·보완요청·보완완료 구간만 노출(화면 기획값) → 클릭 시 REQ_STATUS3 4(신청취소). 실서비스 허용 구간은 담당 부서 정책 확인 필요
    [DEV] 신청유형 A/B = 폼 카드 선택값 · 충전사업자 = PS_EV_VAN_APPLY_CHG_BIZ(DB 복수구조·폼 단일, B유형만) · 구매보조금 연계 = BUS_APPLY_SEQ(콤마 복수) · 첨부 = REQ_FILE_ID_1~8(+_CHK 보완지정). 전부 더미. */
 (function(){
   // 제출 서류 = public-bus-apply '지원신청 첨부문서' 필드 1:1 미러 · 첨부6·7은 B유형 건에만
@@ -80,6 +82,7 @@
 
   ContestDetail.mount({
     applyHref:'public-bus-apply.html', applyName:'전기승합차 공모 신청', supplementHref:'public-bus-apply.html',
+    cancel:{ label:'신청 취소', to:'신청취소' },   // 취소 가능 구간(제출완료~보완완료)은 app.cancelable=true
     devRef:{
       states:[
         {code:'제출완료', label:'공모 신청서 제출 완료', badge:'progress'},
@@ -91,6 +94,7 @@
       manager:['RES_CONT — 보완/취소 사유 (보완요청·보완완료·신청취소에서 기록)','KECO_CONT 없음 (전기승합 미사용)','선정여부 컬럼 = 관리자 존재하나 값 미사용(-) → 대민 미노출'],
       db:[
         ['PS_EV_VAN_APPLY.REQ_STATUS','상태값 · 코드군 REQ_STATUS3 = 제출완료/보완요청/보완완료/검토완료/신청취소'],
+        ['PS_EV_VAN_APPLY.SLCTN_YN','선정 결과 (Y 선정 / N 미선정) · 검토완료 건 별도 섹션'],
         ['PS_EV_VAN_APPLY_CHG_BIZ','충전사업자(복수구조 · 폼 단일 · B유형)'],
         ['BUS_APPLY_SEQ','구매보조금 연계(콤마 복수 가능)'],
         ['REQ_FILE_ID_1~8','지원신청 첨부문서'],
@@ -99,7 +103,7 @@
     },
     apps:[
       // ① 보완요청 (B유형)
-      { appId:'PB-2026-000451', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.18', status:'보완요청',
+      { appId:'PB-2026-000451', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.18', status:'보완요청', cancelable:true,
         notice:{ name:'2026년 전기버스 보급사업 공모(1차)', no:'환경부공고 제2026-198호', org:'한국환경공단', period:'2026.03.20 ~ 2026.04.18', announce:'2026.05.06(예정)', scale:'평가 기준 충족 사업자 선정' },
         applicant:proposer({ apType:'B유형 · 충전인프라 구축필요', mainApp:'지자체', mainId:'bus_applicant01', sub1:'grn_bus02', sido:'경기도', gugun:'성남시', dept:'교통정책과', tel:'031-000-0000', email:'apply@seongnam.go.kr' }),
         sections:[
@@ -120,7 +124,7 @@
         supplement:{ reason:'상세 보급계획의 노선·투입 대수 내역이 누락되어 보완요청 상태이며, [B유형] 충전시설 자료는 미제출입니다. 해당 서류를 보완하여 재제출해 주세요.' } },
 
       // ② 검토완료 (A유형)
-      { appId:'PB-2026-000512', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.02', status:'검토완료',
+      { appId:'PB-2026-000512', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.02', status:'검토완료', slctn:'선정',
         notice:{ name:'2026년 전기버스 보급사업 공모(2차)', no:'환경부공고 제2026-231호', org:'한국환경공단', period:'2026.04.25 ~ 2026.05.02', announce:'2026.06.02', scale:'평가 기준 충족 사업자 선정' },
         applicant:proposer({ apType:'A유형 · 충전인프라 기구축', mainApp:'지자체', mainId:'bus_applicant07', sido:'전라남도', gugun:'여수시', dept:'기획실', tel:'061-111-2222', email:'plan@yeosu.go.kr' }),
         sections:[
@@ -130,7 +134,8 @@
           ]),
           memoSec('—')
         ],
-        docs: busDocs(false, {}) },
+        docs: busDocs(false, {}),
+        selection:{ selected:true, note:'검토완료 후 선정 대상으로 확정되었습니다. (SLCTN_YN = 선정) 협약 등 후속 절차 안내가 별도 통지될 예정입니다.' } },
 
       // ③ 신청취소 (A유형) — 취소 사유는 보완요구사항 영역에 표기
       { appId:'PB-2026-000388', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.10', status:'신청취소',
@@ -147,7 +152,7 @@
         supplement:{ title:'신청취소 사유', reason:'신청 기관의 요청으로 본 신청이 취소되었습니다. (사유: 사업계획 변경에 따른 자진 취소) 재신청은 차기 공모 시 가능합니다.' } },
 
       // ④ 제출완료 (A유형) — 심사 대기
-      { appId:'PB-2026-000603', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.05', status:'제출완료',
+      { appId:'PB-2026-000603', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.05', status:'제출완료', cancelable:true,
         notice:{ name:'2026년 전기버스 보급사업 공모(2차)', no:'환경부공고 제2026-231호', org:'한국환경공단', period:'2026.04.25 ~ 2026.05.02', announce:'2026.06.02', scale:'평가 기준 충족 사업자 선정' },
         applicant:proposer({ apType:'A유형 · 충전인프라 기구축', mainApp:'지자체', mainId:'bus_applicant11', sido:'서울특별시', gugun:'강남구', dept:'교통행정과', tel:'02-200-3000', email:'transit@gangnam.go.kr' }),
         sections:[
@@ -160,7 +165,7 @@
         docs: busDocs(false, {}) },
 
       // ⑤ 보완완료 (B유형) — 재제출 후 재검토
-      { appId:'PB-2026-000499', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.22', status:'보완완료',
+      { appId:'PB-2026-000499', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.22', status:'보완완료', cancelable:true,
         notice:{ name:'2026년 전기버스 보급사업 공모(1차)', no:'환경부공고 제2026-198호', org:'한국환경공단', period:'2026.03.20 ~ 2026.04.18', announce:'2026.05.06(예정)', scale:'평가 기준 충족 사업자 선정' },
         applicant:proposer({ apType:'B유형 · 충전인프라 구축필요', mainApp:'지자체', mainId:'bus_applicant09', sub1:'co_bus05', sido:'경상북도', gugun:'포항시', dept:'대중교통과', tel:'054-000-2222', email:'bus@pohang.go.kr' }),
         sections:[

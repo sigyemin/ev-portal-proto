@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260715f">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260716d">
 <style>
   /* 진행 상태 스텝퍼 (BRND_BSNS_STS 실코드) */
   .cd-stages { display:flex; flex-direction:column; gap:20px; margin-top:4px; }
@@ -56,26 +56,34 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260715f"></script>
+<script src="js/contest-detail.js?v=20260716d"></script>
 <script>
 /* [DEV] 상태 = TNSM_BRND_BUSI_MPPNG.PROGRS_STS_CD (코드군 BRND_BSNS_STS: RS-02 신청중 / RS-03 보완요청 / RS-04 재등록 / RS-05 검토완료 · RS-01 신규=제출 전 제외)
    [DEV] result 매핑: 신청중·보완요청·재등록 → progress · 검토완료 → done
    [DEV] 담당자 입력 = SPLEMNT_CNTS(보완내용 누적 로그) · SPLEMNT_RQESTER(보완요청자) · PBLCRP_MEMO(공단 메모) · BSNS_MEMO(사업 메모)
    [DEV] 공모시스템 = BRND_CHRGR_GB(F 급속 / S 완속 / C 완속·스마트제어형) · 첨부 신청구분 분기 = BRND_FILE_GB(SL 운영사·SI 제조사 등) · 전부 더미. 5단계 허구 타임라인·문의처 제거. */
 (function(){
-  function stMap(names, supp, miss){ return names.map(function(x){ var st=(supp||[]).indexOf(x)>=0?'supplement':((miss||[]).indexOf(x)>=0?'missing':'done'); return { name:x, status:st }; }); }
-  function docsOp(supp, miss){
-    return stMap(['공모지원 신청서','제안서 및 조견표','사업자등록증 및 전기신사업자등록증','법인 등기부등본','법인 인감증명서','공공기관제출용 신용평가등급확인서','OCA 발급 OCPP1.6 인증서','전담인력 관련 증빙','콜센터 및 정산시스템 구축 여부 증빙','기 운영 충전시설 운영 현황 자료','정량평가 자체 점검 점수표','제안서 평가 요약본','기타 정성·정량 증명 서류','기타 서류'], supp, miss);
+  // ── charging-install-contest-apply 섹션 1:1 미러 ──
+  function proposer(o){
+    return { title:'제안자/사업자 정보', rows:[
+      ['사업자명', o.biz],['사업자 구분', o.bizType],['사업자코드', o.bizCode],
+      ['공모 신청 시스템', o.sys],['신청자ID', o.id],['신청 구분', o.apType],
+      ['담당자1 명', o.m1n],['담당자1 연락처', o.m1t],['담당자1 이메일', o.m1e],
+      ['담당자2 명', o.m2n||'—'],['담당자2 연락처', o.m2t||'—'],['담당자2 이메일', o.m2e||'—'],
+      ['공모신청 연도', o.year||'2026년 1차'],['대표전화(콜센터)', o.tel||'—'],['홈페이지 URL', o.url||'—']
+    ] };
   }
-  function docsMk(supp, miss){
-    return stMap(['공모지원 신청서','제안서 및 조견표','사업자등록증 및 전기신사업자등록증','법인 등기부등본','법인 인감증명서','공공기관제출용 신용평가등급확인서','충전기 설명서·부품리스트·원가계산보고서','충전기 제조 공장등록증','안전확인신고 증명서 등 공인기관 시험성적서','OCA 발급 OCPP1.6 인증서','전담인력 관련 증빙','정량평가 자체 점검 점수표','제안서 평가 요약본','기타 정성·정량 증명 서류','기타 서류'], supp, miss);
-  }
+  function docMap(L, states){ return L.map(function(d,i){ return { tag:'[첨부'+(i+1)+']', name:d[0], note:d[1]||'', status:(states&&states[d[0]])||'done' }; }); }
+  // 첨부 세트 = 신청구분(운영사/제조사) 분기 · [첨부3] = 공모시스템(급속=사업자등록증 / 완속=+전기신사업자등록증)
+  function docsOp(sys, states){ var d3=sys==='급속'?'사업자등록증':'사업자등록증 및 전기신사업자등록증';
+    return docMap([['공모지원 신청서'],['제안서 및 조견표'],[d3],['법인 등기부등본','※ 개인사업자는 대표자 주민등록초본 제출'],['법인 인감증명서','※ 개인사업자는 대표자 인감증명서 제출'],['공공기관제출용 신용평가등급확인서'],['OCA 발급 OCPP1.6 인증서'],['전담인력 관련 증빙'],['콜센터 및 정산시스템 구축 여부 증빙'],['기 운영 충전시설 요금 납부 현황 등 운영 현황 자료'],['정량평가 자체 점검 점수표'],['제안서 평가 요약본'],['기타 정성·정량 증명 서류'],['기타 서류']], states); }
+  function docsMk(sys, states){ var d3=sys==='급속'?'사업자등록증':'사업자등록증 및 전기신사업자등록증';
+    return docMap([['공모지원 신청서'],['제안서 및 조견표'],[d3],['법인 등기부등본','※ 개인사업자는 대표자 주민등록초본 제출'],['법인 인감증명서','※ 개인사업자는 대표자 인감증명서 제출'],['공공기관제출용 신용평가등급확인서'],['충전기 설명서·부품리스트·원가계산보고서'],['충전기 제조 공장등록증'],['안전확인신고 증명서 등 공인기관 시험성적서'],['OCA 발급 OCPP1.6 인증서'],['전담인력 관련 증빙'],['정량평가 자체 점검 점수표'],['제안서 평가 요약본'],['기타 정성·정량 증명 서류'],['기타 서류']], states); }
   // BRND_BSNS_STS 스텝퍼 (신청중 → 보완요청 ↔ 재등록 → 검토완료)
   function brndStages(states){
     var m=[['RS-02','신청중'],['RS-03','보완요청'],['RS-04','재등록'],['RS-05','검토완료']];
     return [{ group:'진행 상태', steps:m.map(function(s,i){ return { code:s[0], label:s[1], state:(states[i]||'') }; }) }];
   }
-  var missing1=['콜센터 및 정산시스템 구축 여부 증빙','기 운영 충전시설 운영 현황 자료'];
   ContestDetail.mount({
     applyHref:'charging-install-contest.html', applyName:'운영사·제조사 공모 신청', supplementHref:'charging-install-contest.html',
     devRef:{
@@ -86,43 +94,53 @@
         {code:'RS-04', label:'재등록', badge:'progress'},
         {code:'RS-05', label:'검토완료 (최종)', badge:'done'}
       ],
-      manager:['SPLEMNT_CNTS — 보완내용 누적이력','SPLEMNT_RQESTER — 보완요청자','PBLCRP_MEMO — 공단 메모','BSNS_MEMO — 사업 메모'],
+      manager:['SPLEMNT_CNTS — 보완내용 누적이력 (보완요구사항)','SPLEMNT_RQESTER — 보완요청자'],
       db:[
         ['TNSM_BRND_BUSI_MPPNG.PROGRS_STS_CD','상태값 · 코드군 TNCM_COMM_CD BRND_BSNS_STS'],
-        ['BRND_CHRGR_GB','공모시스템 (F 급속 / S 완속 / C 완속·스마트제어형)'],
+        ['BRND_CHRGR_GB','공모시스템 (급속 / 완속 · 대민 표기는 급속/완속만)'],
         ['BRND_FILE_GB','첨부 신청구분 분기 (SL 운영사 · SI 제조사 등)']
       ]
     },
     apps:[
-      // ① 보완요청(RS-03) — 운영사 · 급속
-      { appId:'CIC-2026-000377', project:'완속/급속 충전시설 운영사·제조사 공모', applyDate:'2026.04.15', status:'보완요청 (RS-03)', result:'progress',
+      // ① 신청중(RS-02) — 운영사 · 완속
+      { appId:'CIC-2026-000355', project:'완속/급속 충전시설 운영사·제조사 공모', applyDate:'2026.04.16', status:'신청중 (RS-02)',
+        notice:{ name:'2026년 공용 완속/급속 충전시설 운영사·제조사 공모', no:'환경부공고 제2026-205호', org:'한국환경공단', period:'2026.03.25 ~ 2026.04.16', announce:'2026.05.25(예정)', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ biz:'그린차지(주)', bizType:'신규 사업자', bizCode:'신규 신청 시 자동 생성', sys:'완속', id:'greencharge01', apType:'운영사', m1n:'김담당', m1t:'02-100-1000', m1e:'pm@greencharge.co.kr', tel:'1600-2000', url:'https://greencharge.co.kr' }),
+        stages: brndStages(['current','','','']),
+        docs: docsOp('완속', {}) },
+
+      // ② 보완요청(RS-03) — 운영사 · 급속
+      { appId:'CIC-2026-000377', project:'완속/급속 충전시설 운영사·제조사 공모', applyDate:'2026.04.15', status:'보완요청 (RS-03)',
         notice:{ name:'2026년 공용 완속/급속 충전시설 운영사·제조사 공모', no:'환경부공고 제2026-205호', org:'한국환경공단', period:'2026.03.25 ~ 2026.04.15', announce:'2026.05.25(예정)', scale:'평가 기준 충족 사업자 선정' },
-        applicant:{ title:'제안자/사업자 정보',
-          rows:[['사업자명','에코차지(주)'],['신청자ID','ecocharge01'],['대표전화(콜센터)','1600-0000'],['홈페이지','https://ecocharge.co.kr'],['공모신청 연도','2026년 1차']],
-          contactRows:[['담당자1','박담당 · 02-100-2000 · pm1@ecocharge.co.kr'],['담당자2','이담당 · 02-100-2001 · pm2@ecocharge.co.kr']] },
-        block4:{ title:'공모 신청 정보', rows:[['공모 신청 시스템','급속'],['신청 구분','운영사']] },
+        applicant:proposer({ biz:'에코차지(주)', bizType:'기등록 사업자', bizCode:'CPO-20240137', sys:'급속', id:'ecocharge01', apType:'운영사', m1n:'박담당', m1t:'02-100-2000', m1e:'pm1@ecocharge.co.kr', m2n:'이담당', m2t:'02-100-2001', m2e:'pm2@ecocharge.co.kr', tel:'1600-0000', url:'https://ecocharge.co.kr' }),
         stages: brndStages(['done','current','','']),
-        docs: docsOp(missing1, ['기타 서류']),
+        docs: docsOp('급속', {'콜센터 및 정산시스템 구축 여부 증빙':'supplement','기 운영 충전시설 요금 납부 현황 등 운영 현황 자료':'missing'}),
         supplement:{
           history:[
-            { date:'2026.04.20', type:'보완요청', text:'콜센터·정산시스템 구축 증빙 미비 (담당 검토)' },
-            { date:'2026.04.24', type:'보완요청', text:'기 운영 충전시설 운영 현황 자료 최신본 재제출 요청' }
+            { date:'2026.04.20', type:'보완요청', text:'콜센터·정산시스템 구축 여부 증빙 미비 (담당 검토)' },
+            { date:'2026.04.24', type:'보완요청', text:'기 운영 충전시설 요금 납부 현황 등 운영 현황 자료 최신본 재제출 요청' }
           ],
-          requester:'한국환경공단 브랜드사업 담당' },
-        pbMemo:'제출 증빙 2건 보완 필요. 보완 재등록(RS-04) 후 검토 재개 예정입니다.',
-        bizMemo:'콜센터 위탁계약서 사본 포함 시 인정 가능. 운영 현황은 최근 3개월 기준으로 제출 바랍니다.' },
+          requester:'한국환경공단 브랜드사업 담당' } },
 
-      // ② 검토완료(RS-05) — 제조사 · 완속·스마트제어형
-      { appId:'CIC-2026-000402', project:'완속/급속 충전시설 운영사·제조사 공모', applyDate:'2026.04.12', status:'검토완료 (RS-05)', result:'done',
+      // ③ 재등록(RS-04) — 제조사 · 완속
+      { appId:'CIC-2026-000390', project:'완속/급속 충전시설 운영사·제조사 공모', applyDate:'2026.04.13', status:'재등록 (RS-04)',
+        notice:{ name:'2026년 공용 완속/급속 충전시설 운영사·제조사 공모', no:'환경부공고 제2026-205호', org:'한국환경공단', period:'2026.03.25 ~ 2026.04.15', announce:'2026.05.25(예정)', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ biz:'충전기제조(주)', bizType:'기등록 사업자', bizCode:'CPO-20250088', sys:'완속', id:'chgmaker03', apType:'제조사', m1n:'정담당', m1t:'031-300-3000', m1e:'mk@chgmaker.co.kr', tel:'1600-3000', url:'https://chgmaker.co.kr' }),
+        stages: brndStages(['done','done','current','']),
+        docs: docsMk('완속', {}),
+        supplement:{
+          history:[
+            { date:'2026.04.18', type:'보완요청', text:'제안서 평가 요약본 서식 불일치 (담당 검토)' },
+            { date:'2026.04.25', type:'재등록', text:'보완 서류 재제출 완료 · 검토 대기' }
+          ],
+          requester:'한국환경공단 브랜드사업 담당' } },
+
+      // ④ 검토완료(RS-05) — 제조사 · 급속
+      { appId:'CIC-2026-000402', project:'완속/급속 충전시설 운영사·제조사 공모', applyDate:'2026.04.12', status:'검토완료 (RS-05)',
         notice:{ name:'2026년 공용 완속/급속 충전시설 운영사·제조사 공모', no:'환경부공고 제2026-205호', org:'한국환경공단', period:'2026.03.25 ~ 2026.04.15', announce:'2026.05.25', scale:'평가 기준 충족 사업자 선정' },
-        applicant:{ title:'제안자/사업자 정보',
-          rows:[['사업자명','스마트EV충전(주)'],['신청자ID','smartev02'],['대표전화(콜센터)','1600-1111'],['홈페이지','https://smartev.co.kr'],['공모신청 연도','2026년 1차']],
-          contactRows:[['담당자1','최담당 · 031-200-3000 · cert@smartev.co.kr'],['담당자2','정담당 · 031-200-3001 · qa@smartev.co.kr']] },
-        block4:{ title:'공모 신청 정보', rows:[['공모 신청 시스템','완속·스마트제어형'],['신청 구분','제조사']] },
+        applicant:proposer({ biz:'스마트EV충전(주)', bizType:'기등록 사업자', bizCode:'CPO-20240210', sys:'급속', id:'smartev02', apType:'제조사', m1n:'최담당', m1t:'031-200-3000', m1e:'cert@smartev.co.kr', m2n:'정담당', m2t:'031-200-3001', m2e:'qa@smartev.co.kr', tel:'1600-1111', url:'https://smartev.co.kr' }),
         stages: brndStages(['done','done','done','current']),
-        docs: docsMk([], []),
-        pbMemo:'제출 서류 검토가 완료되었습니다. 후속 절차 안내가 별도 통지될 예정입니다.',
-        action:'검토가 완료되었습니다. 후속 절차 안내를 기다려 주세요.' }
+        docs: docsMk('급속', {}) }
     ]
   });
 })();

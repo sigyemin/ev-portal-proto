@@ -9,6 +9,8 @@ window.ContestDetail = (function () {
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function badge(res){ var r=RESULT[res]||RESULT.progress; return '<span class="cd-badge '+r[1]+'">'+r[0]+'</span>'; }
   function dl(pairs){ return '<div class="cd-dl'+(pairs.length<=3?' ':' ')+'">'+pairs.map(function(p){ return '<dl><dt>'+esc(p[0])+'</dt><dd>'+p[1]+'</dd></dl>'; }).join('')+'</div>'; }
+  // 현재 상태 표기 = 원문 + (선정 축 공모의 SLCTN_YN 확정 시) 괄호 병기 : 검토완료(선정)/승인(미선정) 등
+  function statusText(a){ return (a.status||'') + (a.slctn ? '('+a.slctn+')' : ''); }
 
   /* ★ 절대 원칙 : 상세조회의 '신청 정보'·'제출 서류'는 해당 신청(apply) 페이지의 섹션·항목·라벨·순서를
      1:1 미러한다. 항목 추가/삭제/개명/통합/재구성 금지. 각 페이지 데이터는 apply 소스에서 추출할 것.
@@ -20,6 +22,8 @@ window.ContestDetail = (function () {
     var e = (String(ext||'').match(/HWP|ZIP|PDF|XLSX?|DOCX?/i)||['PDF'])[0].toLowerCase();
     return String(n).replace(/^\[[^\]]*\]\s*/,'').replace(/\([^)]*\)/g,'').replace(/\s*(증빙|사본|서식)\s*$/,'').replace(/[\/·]/g,' ').trim().replace(/\s+/g,'_')+'.'+e;
   }
+  // 파일형식/확장자 라벨((PDF)·(HWP)·(ZIP)·(엑셀 xls) 등)은 구비서류명 옆에 표기하지 않음 — [B유형] 등 의미 라벨은 유지
+  function isFmtExt(e){ return /^\(\s*(pdf|hwp|hwpx|zip|xlsx?|docx?|pptx?|jpe?g|png|엑셀|한글|파일)/i.test(String(e||'')); }
   var _docSeq;
   function docRowHTML(d){
     var stt = docStatus(d), bd = DOC_BADGE[stt]||DOC_BADGE.missing, idx = _docSeq++;
@@ -38,7 +42,7 @@ window.ContestDetail = (function () {
         + '</span>';
     // 구비서류 셀 = apply 업로드 라벨 미러 : [tag] 서류명 (ext) + note(하위 증빙 안내, 개별 행 아님)
     var nameCell = (d.tag?'<span class="cd-doc-tag">'+esc(d.tag)+'</span> ':'') + esc(d.name)
-      + (d.ext?' <span class="cd-doc-ext">'+esc(d.ext)+'</span>':'')
+      + (d.ext && !isFmtExt(d.ext) ? ' <span class="cd-doc-ext">'+esc(d.ext)+'</span>' : '')
       + (d.note?'<div class="cd-doc-note">'+esc(d.note)+'</div>':'');
     return '<tr class="cd-doc-row'+(stt==='supplement'?' cd-reject':'')+'" data-doc-row="'+idx+'" data-status="'+stt+'">'
       + '<td>'+nameCell+'</td>'
@@ -64,7 +68,7 @@ window.ContestDetail = (function () {
         + '<td class="no">'+esc(a.appId)+'</td>'
         + '<td class="l">'+esc(a.project)+'</td>'
         + '<td>'+esc(a.applyDate)+'</td>'
-        + '<td><span class="cd-status-txt">'+esc(a.status)+'</span></td>'
+        + '<td><span class="cd-status-txt">'+esc(statusText(a))+'</span></td>'
         + '</tr>';
     }).join('');
     root.innerHTML =
@@ -91,7 +95,7 @@ window.ContestDetail = (function () {
       ? a.badges.map(function(b){ var t=RESULT[b.tone]||RESULT.progress; return '<span class="cd-badge '+t[1]+'">'+esc(b.text)+'</span>'; }).join(' ')
       : '';
     h += '<div class="cd-idhead"><div class="cd-idtop"><h2>'+esc(a.project)+'</h2>'+idBadges+'</div>'
-      + '<div class="cd-idmeta"><span>신청번호 <span class="no">'+esc(a.appId)+'</span></span><span>신청일 '+esc(a.applyDate)+'</span><span>현재 상태 <span class="st">'+esc(a.status)+'</span></span></div></div>';
+      + '<div class="cd-idmeta"><span>신청번호 <span class="no">'+esc(a.appId)+'</span></span><span>신청일 '+esc(a.applyDate)+'</span><span>현재 상태 <span class="st">'+esc(statusText(a))+'</span></span></div></div>';
 
     // 2. 공고 정보
     // TODO(실연동): 공고명(name)·지원규모(scale)·선정발표(announce)는 공고 마스터의 실제 컬럼으로 매핑 필요(현재 mock 표기).
@@ -188,7 +192,7 @@ window.ContestDetail = (function () {
       }
       if (rv.docs && rv.docs.length){
         // 첨부 심사결과를 제출상태로 매핑 : 반려(N) → 보완요청 · 승인(Y) → 제출완료
-        var mapped = rv.docs.map(function(d){ return { name:d.name, file:d.file, status:(docStatus(d)==='done'?'done':(d.ok===false?'supplement':docStatus(d))) }; });
+        var mapped = rv.docs.map(function(d){ return { tag:d.tag, ext:d.ext, note:d.note, name:d.name, file:d.file, status:(docStatus(d)==='done'?'done':(d.ok===false?'supplement':docStatus(d))) }; });
         rvInner += '<h4 style="font-size:13px;font-weight:800;margin:16px 0 8px;color:var(--text-secondary);">첨부 서류 심사 ('+rv.docs.length+'종)</h4>'
           + docsTable(mapped);
       }
@@ -226,8 +230,11 @@ window.ContestDetail = (function () {
     if (a.selection){
       var se=a.selection;
       if (se.selected){
+        var selPairs=[];
+        if (se.volume!=null) selPairs.push(['배정 물량', esc(se.volume)]);
+        if (se.rank!=null) selPairs.push(['우선순위', esc(se.rank)]);
         h += '<div class="cd-callout win"><h3>✓ 선정 결과 : 선정</h3>'
-          + '<div>'+dl([['배정 물량', esc(se.volume||'—')],['우선순위', esc(se.rank||'—')]])+'</div>'
+          + (selPairs.length?'<div>'+dl(selPairs)+'</div>':'')
           + (se.note?'<div style="margin-top:6px;">'+esc(se.note)+'</div>':'')+'</div>';
       } else {
         h += '<div class="cd-callout lose"><h3>미선정 안내</h3>'
@@ -243,12 +250,16 @@ window.ContestDetail = (function () {
         + (ag.guide?'<div style="margin-top:6px;">'+esc(ag.guide)+'</div>':'')+'</div>';
     }
 
-    // 10. 최하단 제출 (조건부) — 교체·첨부 가능 서류(보완요청/미제출)가 1건↑일 때만 노출
+    // 10. 최하단 액션 (조건부) — 제출(보완요청/미제출 서류 1건↑) · 신청취소(취소 가능 페이지 & 취소 가능 단계)
     var _canSubmit = (a.docs||[]).concat(a.review&&a.review.docs?a.review.docs:[]).some(function(d){ var s=docStatus(d); return s==='supplement'||(d.ok===false)||s==='missing'; });
-    if (_canSubmit){
+    var _canCancel = !!(cfg.cancel && a.cancelable);   // 취소 가능 구간(제출완료~보완완료 등)은 apps 데이터에서 지정
+    if (_canSubmit || _canCancel){
       h += '<div class="cd-submit-bar">'
         + '<p class="cd-submit-hint" id="cdSubmitMsg" role="status" aria-live="polite" hidden></p>'
-        + '<button type="button" class="btn btn-primary" id="cdDocSubmit" disabled aria-disabled="true">제출</button>'
+        + '<div class="cd-submit-btns">'
+        +   (_canCancel ? '<button type="button" class="btn cd-btn-cancel" id="cdCancelBtn">'+esc((cfg.cancel&&cfg.cancel.label)||'신청 취소')+'</button>' : '')
+        +   (_canSubmit ? '<button type="button" class="btn btn-primary" id="cdDocSubmit" disabled aria-disabled="true">제출</button>' : '')
+        + '</div>'
         + '</div>';
     }
     // (삭제됨) 문의 · 누리집콜센터 문구 — 하단 콜센터 라인 제거
@@ -333,6 +344,22 @@ window.ContestDetail = (function () {
       var msg = document.getElementById('cdSubmitMsg');
       if(msg){ msg.hidden=false; msg.textContent='✓ 제출되었습니다. 담당자 검토 후 안내드립니다.'; }
       submit.disabled=true; submit.setAttribute('aria-disabled','true'); submit.textContent='제출 완료';
+    });
+    // 신청취소(mock) — 확인 다이얼로그 → 현재 상태 갱신 + 파일선택/제출 비활성 + 인라인 확인(자동소멸 금지)
+    var cancelBtn = document.getElementById('cdCancelBtn');
+    if(cancelBtn) cancelBtn.addEventListener('click', function(){
+      if(!window.confirm('신청을 취소하면 되돌릴 수 없습니다. 취소하시겠습니까?')) return;
+      var toStatus = (cfg.cancel && cfg.cancel.to) || '신청취소';
+      var st = root.querySelector('.cd-idmeta .st'); if(st) st.textContent = toStatus;
+      Array.prototype.forEach.call(root.querySelectorAll('.cd-pick'), function(pk){
+        pk.style.opacity='.4'; pk.style.pointerEvents='none';
+        var i=pk.querySelector('.cd-pick-input'); if(i) i.disabled=true;
+      });
+      Array.prototype.forEach.call(root.querySelectorAll('.cd-doc-row[data-picked="1"]'), function(r){ r.removeAttribute('data-picked'); });
+      if(submit){ submit.disabled=true; submit.setAttribute('aria-disabled','true'); }
+      var msg2 = document.getElementById('cdSubmitMsg');
+      if(msg2){ msg2.hidden=false; msg2.textContent='신청이 취소되었습니다.'; }
+      cancelBtn.disabled=true; cancelBtn.textContent = (toStatus.indexOf('포기')>=0 ? '신청 포기됨' : '신청 취소됨');
     });
     sync();
   }

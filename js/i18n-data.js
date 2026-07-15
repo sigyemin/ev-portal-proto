@@ -97,6 +97,7 @@
                                  en: 'ZEV Adoption by Region' },
     'data.sp.p':               { ko: '시·도별 무공해차 누적 등록 현황 · 차종 선택 조회 · 2026년 3월 말 기준',
                                  en: 'Cumulative ZEV registrations by region · filter by vehicle type · as of end-March 2026' },
+    'data.refresh.5min':       { ko: '5분 주기 갱신',           en: 'Updated every 5 min' },
     'data.sp.f.all':           { ko: '전체 차종',             en: 'All Vehicle Types' },
     'data.sp.f.ev':            { ko: '전기승용',              en: 'EV Passenger' },
     'data.sp.f.truck':         { ko: '전기화물',              en: 'EV Truck' },

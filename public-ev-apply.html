@@ -142,10 +142,10 @@
         <div class="ba-sec">
           <div class="ba-sec-head"><h3>평가 신청서류</h3><span class="ba-req"><b>*</b> 는 필수 항목입니다.</span></div>
           <div style="border-top:1px solid var(--border-light);">
-            <div class="ba-file" style="border-bottom:1px solid var(--border-light);"><div class="ba-file-label"><span class="att">[신청서]</span> 평가 신청서 <span class="req-star">*</span><span class="ext">(PDF)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
-            <div class="ba-file" style="border-bottom:1px solid var(--border-light);"><div class="ba-file-label"><span class="att">[신청자료]</span> 평가 신청 자료 <span class="req-star">*</span><span class="ext">(HWP)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file" style="border-bottom:1px solid var(--border-light);"><div class="ba-file-label"><span class="att">[신청서]</span> 평가 신청서 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+            <div class="ba-file" style="border-bottom:1px solid var(--border-light);"><div class="ba-file-label"><span class="att">[신청자료]</span> 평가 신청 자료 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
             <div class="ev-doc">
-              <div class="ba-file"><div class="ba-file-label"><span class="att">[붙임자료]</span> 붙임자료 <span class="req-star">*</span><span class="ext">(ZIP)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
+              <div class="ba-file"><div class="ba-file-label"><span class="att">[붙임자료]</span> 붙임자료 <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>
               <ul class="ev-sub">
                 <li class="cap">증빙서류</li>
                 <li><span class="d">1. 사업자등록증</span><span class="tag req">필수</span></li>
@@ -300,7 +300,7 @@
     box.innerHTML=DOCS13.map(function(it,i){
       var subs=it.d.map(function(x){ return '<li><span class="d">'+esc(x[0])+'</span><span class="tag '+tagClass(x[1])+'">'+x[1]+'</span></li>'; }).join('');
       return '<div class="ev-doc">'
-        +'<div class="ba-file"><div class="ba-file-label"><span class="att">[증빙'+(i+1)+']</span> '+esc(it.t)+' <span class="req-star">*</span><span class="ext">(ZIP)</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>'
+        +'<div class="ba-file"><div class="ba-file-label"><span class="att">[증빙'+(i+1)+']</span> '+esc(it.t)+' <span class="req-star">*</span></div><label class="ba-file-pick">파일선택<input type="file" hidden></label><span class="ba-file-name">선택된 파일 없음</span></div>'
         +'<ul class="ev-sub"><li class="cap">증빙서류</li>'+subs+'</ul></div>';
     }).join('');
   }

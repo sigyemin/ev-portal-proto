@@ -160,17 +160,19 @@
   /* ── mock: 공모 신청 건 (신청번호 단위 · 상태·결과는 각 상세 실상태셋 정합, 더미) ──
      [DEV] 상태 실셋: ev/construction/moto/bus = REQ_STATUS3(제출완료·보완요청·보완완료·승인) · islow = DIRECT_APP_STEP/APP_STEP 실단계
            icontest = BRND_BSNS_STS(신청중·보완요청·재등록·검토완료) · ibrand = APPR_STS+SLCTN_YN · ibss = APPR_STS
-     [DEV] 조치 필요 = 보완요청 계열(REQ_STATUS3 보완요청 · APP_STEP 신청/현장/지급 보완요청 · BRND_BSNS_STS 보완요청 · APPR_STS 반려) */
+     [DEV] 조치 필요 = 보완요청 계열(REQ_STATUS3 보완요청 · APP_STEP 신청/현장/지급 보완요청 · BRND_BSNS_STS 보완요청 · APPR_STS 반려)
+     [DEV] 선정 축 병기 = 선정 축 공모(전기승합 bus·브랜드 ibrand)만 SLCTN_YN 확정 시 현재 상태에 괄호 병기(검토완료(선정)/승인(미선정)). 미확정=원문. 타 공모 병기 없음 · 상세 status 페이지 표기와 동일 */
   var DATA = [
     { key:'ev',  name:'전기자동차 보급사업 수행자 선정 평가', year:'2026', applyDate:'2026.04.22', appId:'PEV-2026-000771', result:'progress', status:'보완요청' },
-    { key:'ev',  name:'전기자동차 보급사업 수행자 선정 평가', year:'2026', applyDate:'2026.04.18', appId:'PEV-2026-000742', result:'done', status:'승인' },
-    { key:'bus', name:'전기승합차(법인·개인사업자) 공모', year:'2026', applyDate:'2026.05.02', appId:'PB-2026-000512', result:'done', status:'승인' },
+    { key:'ev',  name:'전기자동차 보급사업 수행자 선정 평가', year:'2026', applyDate:'2026.04.18', appId:'PEV-2026-000742', result:'done', status:'검토완료' },
+    { key:'bus', name:'전기승합차(법인·개인사업자) 공모', year:'2026', applyDate:'2026.05.02', appId:'PB-2026-000512', result:'selected', status:'검토완료', slctn:'선정' },
     { key:'bus', name:'전기승합차(법인·개인사업자) 공모', year:'2026', applyDate:'2026.04.18', appId:'PB-2026-000451', result:'progress', status:'보완요청' },
     { key:'construction', name:'무공해 건설기계(지게차) 보급사업', year:'2026', applyDate:'2026.04.10', appId:'PC-2026-000188', result:'progress', status:'보완요청' },
     { key:'moto', name:'무공해 이륜차 보급사업', year:'2026', applyDate:'2026.03.27', appId:'PM-2026-000108', result:'done', status:'승인' },
     { key:'islow', name:'공용 완속충전시설 직접신청', year:'2026', applyDate:'2026.04.28', appId:'CIS-2026-002455', result:'progress', status:'신청 보완요청' },
     { key:'icontest', name:'완속/급속 충전시설 운영사·제조사 공모', year:'2026', applyDate:'2026.04.12', appId:'CIC-2026-000402', result:'done', status:'검토완료' },
-    { key:'ibrand', name:'지역별 무공해차 전환 브랜드 사업 공모', year:'2026', applyDate:'2026.01.28', appId:'CIB-2026-000061', result:'selected', status:'승인 · 선정' },
+    { key:'ibrand', name:'지역별 무공해차 전환 브랜드 사업 공모', year:'2026', applyDate:'2026.01.28', appId:'CIB-2026-000061', result:'selected', status:'승인', slctn:'선정' },
+    { key:'ibrand', name:'지역별 무공해차 전환 브랜드 사업 공모', year:'2026', applyDate:'2026.01.26', appId:'CIB-2026-000078', result:'rejected', status:'승인', slctn:'미선정' },
     { key:'ibss', name:'지역별 무공해차 전환 브랜드 사업 (BSS) 공모', year:'2026', applyDate:'2026.02.01', appId:'CIM-2026-000098', result:'done', status:'승인' }
   ];
 
@@ -237,7 +239,7 @@
     var rows = DATA.filter(function(it){
       if (fName.value!=='all' && it.name!==fName.value) return false;
       if (fResult.value!=='all' && it.result!==fResult.value) return false;
-      if (kw && (it.name+it.appId+it.status).toLowerCase().indexOf(kw)<0) return false;
+      if (kw && (it.name+it.appId+it.status+(it.slctn||'')).toLowerCase().indexOf(kw)<0) return false;
       return true;
     });
     rows.sort(sorter);
@@ -255,7 +257,7 @@
         + '<td class="yr">'+esc(it.year)+'</td>'
         + '<td class="no">'+esc(it.appId)+'</td>'
         + '<td class="date">'+esc(it.applyDate)+'</td>'
-        + '<td><span class="ct-status">'+esc(it.status)+'</span>'+(act?'<span class="ct-action-badge">조치 필요</span>':'')+'</td>'
+        + '<td><span class="ct-status">'+esc(it.status)+(it.slctn?'('+esc(it.slctn)+')':'')+'</span>'+(act?'<span class="ct-action-badge">조치 필요</span>':'')+'</td>'
         + '<td class="cat"><span class="ct-badge '+r[1]+'">'+r[0]+'</span></td>'
         + '</tr>';
     }).join('');

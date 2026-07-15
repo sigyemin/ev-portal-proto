@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260715f">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260716d">
 <style>
   /* 실단계 2단계 스텝퍼 (SC_DIRECT_APPLY / SC_APPLY) */
   .cd-stages { display:flex; flex-direction:column; gap:20px; margin-top:4px; }
@@ -56,7 +56,7 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260715f"></script>
+<script src="js/contest-detail.js?v=20260716d"></script>
 <script>
 /* [DEV] 직접신청 상태 = SC_DIRECT_APPLY.APP_STEP(코드군 DIRECT_APP_STEP): 100 대기 / 200 승인(사업수행기관 배정) / 101 거절 / 102 차순위 이관 / 401 최종거절 / 201 승인취소 / 300 관리자취소
    [DEV] 설치·지급 = SC_APPLY.APP_STEP: 130 접수승인 / 140 착공 / 150 공사완료 / 217 현장점검완료 / 221 지급확인 / 501 완료 · 보완요청 110(신청)·215(현장)·315(지급)
@@ -71,8 +71,22 @@
     var m=[['130','접수승인'],['140','착공'],['150','공사완료'],['217','현장점검완료'],['221','지급확인'],['501','완료']];
     return { group:'설치 · 지급', steps:m.map(function(s,i){ return { code:s[0], label:s[1], state:(states[i]||'') }; }) };
   }
+  // ── charging-install-slow-apply 섹션 1:1 미러 ──
+  function applicantSec(o){ var r=[['신청자명',o.name],['전화번호(유선)',o.tel||'—'],['휴대폰',o.phone],['신청부지와의 관계',o.rel],['기관명(설치지점명)',o.site]]; if(o.bizNo) r.push(['사업자번호',o.bizNo]); return { title:'신청자 정보', rows:r }; }
+  function siteSec(o){ return { title:'설치장소', rows:[['설치희망지 구분',o.type],['총 주차면수',o.park],['설치희망지(주소)',o.addr]] }; }
+  function chargerSec(o){ return { title:'충전기 현황', rows:[['기설치 충전기 수량',o.exist],['설치예정 충전기 수량',o.plan]] }; }
+  function qtySec(rows){ return { title:'설치희망 수량', rows:rows }; }
+  function prefSec(o){ return { title:'사업수행기관 선호순위', rows:[['1순위',o.p1],['2순위',o.p2||'—'],['3순위',o.p3||'—']] }; }
+  function agreeSec(v){ return { title:'설치동의', rows:[['설치동의 여부',v||'동의함']] }; }
+  function assignSec(v){ return { title:'배정 결과', rows:[['배정 사업수행기관',v]] }; }
+  function noteSec(t){ return { title:'특이사항', memo:t||'—' }; }
+  function slowDocs(states){ states=states||{}; return [
+    { tag:'[첨부1]', name:'건축물대장(90일 이내 발급분)', status:states['건축물대장(90일 이내 발급분)']||'done' },
+    { tag:'[첨부2]', name:'설치동의서 또는 회의록', status:states['설치동의서 또는 회의록']||'done' }
+  ]; }
   ContestDetail.mount({
     applyHref:'charging-install-slow.html', applyName:'공용 완속충전시설 직접신청', supplementHref:'charging-install-slow.html',
+    cancel:{ label:'신청 포기', to:'신청포기' },   // 완속=실코드 920(신청포기) · 배정 확정 전(대기) 단계만 노출(app.cancelable)
     devRef:{
       stateGroups:[
         { title:'① 직접신청 · 배정 — SC_DIRECT_APPLY.APP_STEP (DIRECT_APP_STEP)', states:[
@@ -96,37 +110,51 @@
       ]
     },
     apps:[
-      // ① 신청 보완요청(110) — 직접신청·배정 단계, 신청접수(대기) 현재
-      { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'보완요청 (110)', result:'progress',
+      // ① 배정 단계 — 대기(100)
+      { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'대기 (100)', cancelable:true,
         notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)' },
-        applicant:{ title:'신청자',
-          rows:[['신청자','김주민 (개인)'],['본인인증','휴대폰 본인인증 완료'],['연락처','032-111-2222'],['이메일','resident@example.com']] },
-        block4:{ title:'신청 정보', rows:[
-          ['신청 부지 관계','임차 (사용 승낙 필요)'],
-          ['설치희망지 구분','근린생활시설(상가) 주차장'],
-          ['설치희망 수량','완속 7kW · 4기'],
-          ['선호 사업수행기관','1순위 A충전 · 2순위 B에너지 · 3순위 C모빌리티'],
-          ['배정 사업수행기관','배정 대기 (승인 시 확정)']
-        ]},
+        applicant:applicantSec({ name:'김주민', tel:'032-111-2222', phone:'010-1111-2222', rel:'건물(부지)소유자 (입주자대표회의·관리단 포함)', site:'한빛아파트' }),
+        sections:[
+          siteSec({ type:'주거시설 1 (공동주택: 아파트·연립·다세대·기숙사 등)', park:'120 면', addr:'서울특별시 강남구 테헤란로 123, 지하주차장 B2' }),
+          chargerSec({ exist:'급속 0기 · 완속 2기', plan:'급속 0기 · 완속 4기' }),
+          qtySec([['7kW이상~11kW미만','4기']]),
+          prefSec({ p1:'GS차지비', p2:'SK일렉링크', p3:'대영채비' }),
+          agreeSec('동의함'),
+          noteSec('지하 주차장 B2 구역에 설치 예정입니다.')
+        ],
         stages:[ grpApply(['current','']), grpInstall(['','','','','','']) ],
-        docs:[{name:'건축물대장',status:'done'},{name:'설치동의서(사용 승낙)',status:'supplement'},{name:'전기증설 확인서',status:'missing'},{name:'설치희망지 도면·현황 사진',status:'done'}],
-        supplement:{ reason:'[지자체메모] 설치동의서의 사용 승낙 범위가 확인되지 않아 보완요청 상태이며, 전기증설 확인서는 미제출입니다. 해당 항목을 보완하여 재제출해 주세요. (보완확인 시 111로 진행)' } },
+        docs: slowDocs({}) },
 
-      // ② 설치·지급 완료(501)
-      { appId:'CIS-2026-002210', project:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', status:'완료 (501)', result:'done',
+      // ② 시공 단계 — 현장 보완요청(215) · 조치 필요
+      { appId:'CIS-2026-002388', project:'공용 완속충전시설 직접신청', applyDate:'2026.03.19', status:'현장 보완요청 (215)',
         notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)' },
-        applicant:{ title:'신청자',
-          rows:[['신청자','이관리 (개인)'],['본인인증','휴대폰 본인인증 완료'],['연락처','032-333-4444'],['이메일','manager@example.com']] },
-        block4:{ title:'신청 정보', rows:[
-          ['신청 부지 관계','소유 (입주자대표회의 결의)'],
-          ['설치희망지 구분','공동주택 지하주차장'],
-          ['설치희망 수량','완속 7kW · 6기'],
-          ['선호 사업수행기관','1순위 A충전 · 2순위 B에너지 · 3순위 C모빌리티'],
-          ['배정 사업수행기관','A충전(주) (200 승인 시 배정)']
-        ]},
-        stages:[ grpApply(['done','done']), grpInstall(['done','done','done','done','done','current']) ],
-        docs:[{name:'건축물대장',status:'done'},{name:'설치동의서(사용 승낙)',status:'done'},{name:'전기증설 확인서',status:'done'},{name:'준공·현장점검 확인서',status:'done'}],
-        action:'설치·지급이 완료되어 모든 절차가 종료되었습니다.' }
+        applicant:applicantSec({ name:'이관리', tel:'031-222-3333', phone:'010-3333-4444', rel:'시설 관리자 (공동주택 관리사무소 등)', site:'새롬빌라' }),
+        sections:[
+          siteSec({ type:'주거시설 2 (공동주택 외: 단독·다가구 등)', park:'30 면', addr:'경기도 성남시 분당구 판교로 000' }),
+          chargerSec({ exist:'급속 0기 · 완속 0기', plan:'급속 0기 · 완속 3기' }),
+          qtySec([['3kW이상~7kW미만','3기']]),
+          prefSec({ p1:'대영채비', p2:'파워큐브', p3:'스타코프' }),
+          assignSec('대영채비(주)'),
+          noteSec('—')
+        ],
+        stages:[ grpApply(['done','done']), grpInstall(['done','done','done','current','','']) ],
+        docs: slowDocs({'설치동의서 또는 회의록':'supplement'}),
+        supplement:{ reason:'[지자체메모] 현장 점검 결과 설치동의서(회의록)의 동의 범위·서명이 확인되지 않습니다. 해당 서류를 보완하여 재제출해 주세요. (보완확인 시 216으로 진행)' } },
+
+      // ③ 완료(501)
+      { appId:'CIS-2026-002210', project:'공용 완속충전시설 직접신청', applyDate:'2026.02.20', status:'완료 (501)',
+        notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)' },
+        applicant:applicantSec({ name:'박완료', tel:'032-555-6666', phone:'010-5555-6666', rel:'건물(부지)소유자 (입주자대표회의·관리단 포함)', site:'푸른마을아파트' }),
+        sections:[
+          siteSec({ type:'주거시설 1 (공동주택: 아파트·연립·다세대·기숙사 등)', park:'200 면', addr:'인천광역시 연수구 컨벤시아대로 000' }),
+          chargerSec({ exist:'급속 0기 · 완속 4기', plan:'급속 0기 · 완속 6기' }),
+          qtySec([['7kW이상~11kW미만','6기']]),
+          prefSec({ p1:'GS차지비', p2:'SK일렉링크', p3:'대영채비' }),
+          assignSec('GS차지비(주)'),
+          noteSec('—')
+        ],
+        stages:[ grpApply(['done','done']), grpInstall(['done','done','done','done','done','done']) ],
+        docs: slowDocs({}) }
     ]
   });
 })();
