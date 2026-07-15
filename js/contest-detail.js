@@ -10,15 +10,21 @@ window.ContestDetail = (function () {
   function badge(res){ var r=RESULT[res]||RESULT.progress; return '<span class="cd-badge '+r[1]+'">'+r[0]+'</span>'; }
   function dl(pairs){ return '<div class="cd-dl'+(pairs.length<=3?' ':' ')+'">'+pairs.map(function(p){ return '<dl><dt>'+esc(p[0])+'</dt><dd>'+p[1]+'</dd></dl>'; }).join('')+'</div>'; }
 
-  /* 제출서류 3종 상태 배지 · 제출 파일 링크(mock) · 조건부 파일선택 */
+  /* ★ 절대 원칙 : 상세조회의 '신청 정보'·'제출 서류'는 해당 신청(apply) 페이지의 섹션·항목·라벨·순서를
+     1:1 미러한다. 항목 추가/삭제/개명/통합/재구성 금지. 각 페이지 데이터는 apply 소스에서 추출할 것.
+     제출 서류 행 = apply의 '업로드 필드' 단위(ZIP 묶음이면 1행). 개별 하위 증빙 나열 금지 → note 안내 텍스트로만. */
+  /* 제출서류 3종 상태 배지 · 제출 파일 링크(mock) · 조건부 파일선택 · tag/ext/note = apply 라벨 미러 */
   var DOC_BADGE = { done:['제출완료','cd-doc-ok'], supplement:['보완요청','cd-doc-supp'], missing:['미제출','cd-doc-no'] };
   function docStatus(d){ if(d.status) return d.status; return d.ok ? 'done' : 'missing'; } // legacy {ok} 호환
-  function docFileName(n){ return String(n).replace(/^\[[^\]]*\]\s*/,'').replace(/\([^)]*\)/g,'').replace(/\s*(증빙|사본|서식)\s*$/,'').replace(/[\/·]/g,' ').trim().replace(/\s+/g,'_')+'.pdf'; }
+  function docFileName(n, ext){
+    var e = (String(ext||'').match(/HWP|ZIP|PDF|XLSX?|DOCX?/i)||['PDF'])[0].toLowerCase();
+    return String(n).replace(/^\[[^\]]*\]\s*/,'').replace(/\([^)]*\)/g,'').replace(/\s*(증빙|사본|서식)\s*$/,'').replace(/[\/·]/g,' ').trim().replace(/\s+/g,'_')+'.'+e;
+  }
   var _docSeq;
   function docRowHTML(d){
     var stt = docStatus(d), bd = DOC_BADGE[stt]||DOC_BADGE.missing, idx = _docSeq++;
     // 제출완료·보완요청 → 제출 파일명 노출(없으면 서류명에서 목업 파일명 생성) · 미제출 → 파일 없음
-    var fname = d.file || (stt==='missing' ? '' : docFileName(d.name));
+    var fname = d.file || (stt==='missing' ? '' : docFileName(d.name, d.ext));
     var fileCell = fname
       ? '<a href="#" class="cd-file-link" data-file="'+esc(fname)+'" onclick="return false;" title="다운로드(mock)">'+esc(fname)+'</a>'
       : '<span class="cd-file-none">—</span>';
@@ -30,8 +36,12 @@ window.ContestDetail = (function () {
         + '<span class="cd-pick-file" aria-live="polite" hidden></span>'
         + '<button type="button" class="cd-pick-del" hidden aria-label="선택 취소">×</button>'
         + '</span>';
+    // 구비서류 셀 = apply 업로드 라벨 미러 : [tag] 서류명 (ext) + note(하위 증빙 안내, 개별 행 아님)
+    var nameCell = (d.tag?'<span class="cd-doc-tag">'+esc(d.tag)+'</span> ':'') + esc(d.name)
+      + (d.ext?' <span class="cd-doc-ext">'+esc(d.ext)+'</span>':'')
+      + (d.note?'<div class="cd-doc-note">'+esc(d.note)+'</div>':'');
     return '<tr class="cd-doc-row'+(stt==='supplement'?' cd-reject':'')+'" data-doc-row="'+idx+'" data-status="'+stt+'">'
-      + '<td>'+esc(d.name)+'</td>'
+      + '<td>'+nameCell+'</td>'
       + '<td>'+fileCell+'</td>'
       + '<td style="text-align:center;"><span class="'+bd[1]+'">'+bd[0]+'</span></td>'
       + '<td style="text-align:center;">'+pick+'</td></tr>';
@@ -50,20 +60,18 @@ window.ContestDetail = (function () {
   /* ── 목록 뷰 ── */
   function renderList(){
     var rows = cfg.apps.map(function(a){
-      var r = RESULT[a.result]||RESULT.progress;
       return '<tr class="cd-row" data-id="'+esc(a.appId)+'" tabindex="0">'
         + '<td class="no">'+esc(a.appId)+'</td>'
         + '<td class="l">'+esc(a.project)+'</td>'
         + '<td>'+esc(a.applyDate)+'</td>'
         + '<td><span class="cd-status-txt">'+esc(a.status)+'</span></td>'
-        + '<td><span class="cd-badge '+r[1]+'">'+r[0]+'</span></td>'
         + '</tr>';
     }).join('');
     root.innerHTML =
       '<p class="cd-list-meta">내 신청 <strong>'+cfg.apps.length+'</strong>건 · 행을 클릭하면 신청 건 상세로 이동합니다.</p>'
       + '<div class="table-wrap"><table class="cd-list-table"><thead><tr>'
-      + '<th>신청번호</th><th>사업명</th><th>신청일</th><th>현재 상태</th><th>결과</th>'
-      + '</tr></thead><tbody>'+ (rows || '<tr><td colspan="5" class="cd-empty">신청 내역이 없습니다.</td></tr>') +'</tbody></table></div>'
+      + '<th>신청번호</th><th>사업명</th><th>신청일</th><th>현재 상태</th>'
+      + '</tr></thead><tbody>'+ (rows || '<tr><td colspan="4" class="cd-empty">신청 내역이 없습니다.</td></tr>') +'</tbody></table></div>'
       + (cfg.applyHref ? '<div class="alert alert-info mt-6"><div class="alert-icon"></div><div class="alert-body"><strong>안내</strong> 본 화면은 신청 진행상태 조회용입니다. 신규 신청은 <a href="'+esc(cfg.applyHref)+'" style="color:var(--color-secondary-700,#1f5fa8);font-weight:600;">'+esc(cfg.applyName||'공모 신청')+'</a> 페이지를 이용하세요.</div></div>' : '');
     Array.prototype.forEach.call(root.querySelectorAll('.cd-row'), function(tr){
       tr.addEventListener('click', function(){ go(tr.dataset.id); });
@@ -73,15 +81,15 @@ window.ContestDetail = (function () {
 
   /* ── 상세 뷰 ── */
   function renderDetail(a){
-    _docSeq = 0;
+    _docSeq = 0; _blk = 1;
     var r = RESULT[a.result]||RESULT.progress;
     var h = '';
     h += '<button type="button" class="cd-back" id="cdBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> 신청 목록으로</button>';
 
-    // 1. 식별 헤더 — app.badges 있으면 2축(심사·선정) 다중 배지, 없으면 단일 결과 배지
+    // 1. 식별 헤더 — 결과(진행중/완료) 배지 삭제 · 현재 상태는 하단 메타에 표기. app.badges(2축 심사·선정 명시 배지)만 있으면 유지
     var idBadges = (a.badges && a.badges.length)
       ? a.badges.map(function(b){ var t=RESULT[b.tone]||RESULT.progress; return '<span class="cd-badge '+t[1]+'">'+esc(b.text)+'</span>'; }).join(' ')
-      : badge(a.result);
+      : '';
     h += '<div class="cd-idhead"><div class="cd-idtop"><h2>'+esc(a.project)+'</h2>'+idBadges+'</div>'
       + '<div class="cd-idmeta"><span>신청번호 <span class="no">'+esc(a.appId)+'</span></span><span>신청일 '+esc(a.applyDate)+'</span><span>현재 상태 <span class="st">'+esc(a.status)+'</span></span></div></div>';
 
@@ -114,9 +122,34 @@ window.ContestDetail = (function () {
     }
     h += block(3, ap.title || '신청자(수행기관) 정보', appHtml);   // 제목 override 가능(없으면 기존)
 
-    // 4. ⟨사업별⟩ 신청 내용·대상
-    var b4 = a.block4||{title:'신청 내용 · 대상', rows:[]};
-    h += block(4, b4.title || '신청 내용 · 대상', dl(b4.rows||[]));
+    // 4. ⟨사업별⟩ 신청 내용·대상 (조건부 — block4.rows 있을 때만 · apply에 없는 페이지는 미노출)
+    if (a.block4 && a.block4.rows && a.block4.rows.length){
+      h += block(4, a.block4.title || '신청 내용 · 대상', dl(a.block4.rows));
+    }
+
+    // 4b. ⟨미러⟩ 추가 신청 섹션 — apply 섹션을 그대로(rows=키·값 / table=표 / memo=텍스트). 순서·라벨 apply 소스 기준
+    (a.sections||[]).forEach(function(s){
+      var inner;
+      if (s.table){
+        var size = s.table.pageSize || 5;   // 5행까지 노출 · 초과 시 페이지네이션
+        var th = '<tr>'+(s.table.head||[]).map(function(x){ return '<th>'+esc(x)+'</th>'; }).join('')+'</tr>';
+        var hasRows = s.table.rows && s.table.rows.length;
+        var tb = hasRows
+          ? s.table.rows.map(function(r,ri){ return '<tr data-r="'+ri+'"'+(ri>=size?' hidden':'')+'>'+r.map(function(c){ return '<td style="text-align:center;">'+esc(c)+'</td>'; }).join('')+'</tr>'; }).join('')
+          : '<tr><td colspan="'+((s.table.head||[]).length||1)+'" style="text-align:center;color:var(--text-tertiary);padding:16px;">'+esc(s.table.empty||'해당 없음')+'</td></tr>';
+        var pager = (hasRows && s.table.rows.length > size)
+          ? '<div class="cd-pager"><button type="button" class="cd-pg-prev" disabled>이전</button><span class="cd-pg-info">1 / '+Math.ceil(s.table.rows.length/size)+'</span><button type="button" class="cd-pg-next">다음</button></div>'
+          : '';
+        inner = '<div class="cd-sec-table" data-size="'+size+'" data-total="'+(hasRows?s.table.rows.length:0)+'">'
+          + '<div class="table-wrap"><table class="cd-tbl" style="font-size:12.5px;"><thead>'+th+'</thead><tbody>'+tb+'</tbody></table></div>'
+          + pager + '</div>';
+      } else if (s.memo!=null){
+        inner = '<div style="white-space:pre-wrap;line-height:1.7;color:var(--text-secondary);">'+esc(s.memo)+'</div>';
+      } else {
+        inner = dl(s.rows||[]);
+      }
+      h += block(0, s.title, inner);
+    });
 
     // 5. 진행 단계 — app.stages(실코드 스텝퍼) 우선 · 없으면 app.timeline(레거시) · 둘 다 없으면 생략
     if (a.stages && a.stages.length){
@@ -163,10 +196,7 @@ window.ContestDetail = (function () {
       h += block(6,'항목별 심사 현황', rvInner);
     }
 
-    // 6b. 공단 안내 (조건부 · 정보형 콜아웃) — KECO_CONT
-    if (a.kecoNote){
-      h += '<div class="alert alert-info" style="margin:16px 0;"><div class="alert-icon"></div><div class="alert-body"><strong>공단 안내</strong><br>'+esc(a.kecoNote)+'</div></div>';
-    }
+    // 6b. (삭제됨) 공단 안내(kecoNote) — 전 페이지 렌더 제거
 
     // 7. 보완요구사항 (조건부) — 지자체/담당자 메모만 (재업로드·제출은 하단 제출서류 표로 일원화)
     if (a.supplement){
@@ -181,7 +211,7 @@ window.ContestDetail = (function () {
         suppBody = '<div>'+esc(sp.reason)+'</div>';
       }
       if (sp.requester) suppBody += '<div style="margin-top:6px;font-size:13px;color:var(--text-secondary);">보완요청자 : '+esc(sp.requester)+'</div>';
-      h += '<div class="cd-callout supp"><h3>⚠ 보완요구사항</h3>' + suppBody + '</div>';
+      h += '<div class="cd-callout supp"><h3>'+esc(sp.title||'⚠ 보완요구사항')+'</h3>' + suppBody + '</div>';
     }
 
     // 7b. 공단 메모(PBLCRP_MEMO) · 사업 메모(BSNS_MEMO) — 각각 별도 표기 (조건부)
@@ -221,7 +251,7 @@ window.ContestDetail = (function () {
         + '<button type="button" class="btn btn-primary" id="cdDocSubmit" disabled aria-disabled="true">제출</button>'
         + '</div>';
     }
-    h += '<p class="cd-callcenter" style="text-align:center;color:var(--text-tertiary,#94a3b8);font-size:13px;margin-top:14px;">문의 · 누리집콜센터 <strong>1661-0970</strong></p>';
+    // (삭제됨) 문의 · 누리집콜센터 문구 — 하단 콜센터 라인 제거
 
     // 11. 개발 참고(DEV) 패널 — 상세 뷰에서만 · 기본 접힘 (app.devRef 우선 · 없으면 mount.devRef)
     h += renderDevRef(a.devRef || cfg.devRef);
@@ -230,11 +260,41 @@ window.ContestDetail = (function () {
     var back=document.getElementById('cdBack');
     if(back) back.addEventListener('click', function(){ setHash(''); renderList(); window.scrollTo({top:0,behavior:'smooth'}); });
     wireDocs();
+    wireSectionTables();
     void r; // (badge already used)
+  }
+
+  /* 섹션 표 페이지네이션 — 5행 초과 시 이전/다음 (구매보조금 신청번호 등) */
+  function wireSectionTables(){
+    Array.prototype.forEach.call(root.querySelectorAll('.cd-sec-table'), function(box){
+      var size=+box.getAttribute('data-size'), total=+box.getAttribute('data-total');
+      if(!(total>size)) return;
+      var pages=Math.ceil(total/size), page=1;
+      var rows=box.querySelectorAll('tbody tr[data-r]');
+      var info=box.querySelector('.cd-pg-info'), prev=box.querySelector('.cd-pg-prev'), next=box.querySelector('.cd-pg-next');
+      function draw(){
+        var start=(page-1)*size, end=start+size;
+        Array.prototype.forEach.call(rows, function(tr){ var i=+tr.getAttribute('data-r'); tr.hidden=!(i>=start && i<end); });
+        if(info) info.textContent=page+' / '+pages;
+        if(prev) prev.disabled=(page<=1);
+        if(next) next.disabled=(page>=pages);
+      }
+      if(prev) prev.addEventListener('click', function(){ if(page>1){ page--; draw(); } });
+      if(next) next.addEventListener('click', function(){ if(page<pages){ page++; draw(); } });
+      draw();
+    });
   }
 
   /* 제출서류 파일선택(mock) — 보완요청/미제출 행 파일 교체 + 최하단 제출 */
   function wireDocs(){
+    // 제출 파일명 = 다운로드 링크. 실서비스: ATCH 파일 다운로드 API 연결. 목업은 토스트로 동작 표기(정보성 부가설명 아님·동작 확인 피드백)
+    root.addEventListener('click', function(e){
+      var lnk = e.target.closest && e.target.closest('.cd-file-link');
+      if(!lnk) return;
+      e.preventDefault();
+      var msg='파일이 다운로드됩니다. (목업 — 실서비스: 실제 파일 다운로드)';
+      if(window.__toast) window.__toast(msg,'info');
+    });
     var picks = root.querySelectorAll('.cd-pick');
     var submit = document.getElementById('cdDocSubmit');
     function chosenRows(){ return root.querySelectorAll('.cd-doc-row[data-picked="1"]'); }
@@ -277,7 +337,9 @@ window.ContestDetail = (function () {
     sync();
   }
 
-  function block(n,title,inner){ return '<div class="cd-block"><h3><span class="n">'+n+'</span>'+esc(title)+'</h3>'+inner+'</div>'; }
+  // 블록 번호는 렌더 순서대로 자동 부여(가변 섹션 대응) — n 인자는 무시. 첫 block()=2 (idhead=1 암묵)
+  var _blk;
+  function block(n,title,inner){ _blk++; return '<div class="cd-block"><h3><span class="n">'+_blk+'</span>'+esc(title)+'</h3>'+inner+'</div>'; }
 
   /* 개발 참고(DEV) 접이식 패널 — 상태 코드·담당자 모델·DB 매핑. 실서비스 비노출·목록뷰 미표시. */
   function renderDevRef(dr){

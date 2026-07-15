@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260714a">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260715f">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -40,77 +40,142 @@
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260714a"></script>
+<script src="js/contest-detail.js?v=20260715f"></script>
 <script>
-/* [DEV] 상태 = PS_EV_VAN_APPLY.REQ_STATUS (REQ_STATUS3 = 제출완료/보완요청/보완완료/승인, 2=보완요청). 선정/미선정 축 없음
-   [DEV] result 배지 매핑: 제출완료·보완요청·보완완료→progress · 승인→done
-   [DEV] 담당자 입력값 = RES_CONT(보완/반려 사유). KECO_CONT 없음(전기승합 미사용)
-   [DEV] 충전사업자 = PS_EV_VAN_APPLY_CHG_BIZ(CHG_BIZ_NM·CHG_USER_NM; DB 복수구조·폼 단일)
-   [DEV] 구매보조금 연계 = BUS_APPLY_SEQ(콤마 복수 가능) · 첨부 = REQ_FILE_ID_1~8(+_CHK 보완지정) · 전부 더미. */
-ContestDetail.mount({
-  applyHref:'public-bus-apply.html', applyName:'전기승합차 공모 신청', supplementHref:'public-bus-apply.html',
-  devRef:{
-    states:[
-      {code:'제출완료', label:'공모 신청서 제출 완료', badge:'progress'},
-      {code:'보완요청 (2)', label:'담당 검토 → 보완 요청 · RES_CONT 세팅', badge:'progress'},
-      {code:'보완완료', label:'보완 재제출 완료', badge:'progress'},
-      {code:'승인', label:'심사 승인 (최종)', badge:'done'}
-    ],
-    manager:['RES_CONT — 보완/반려 사유 (상태 2·3·5에서 세팅)','KECO_CONT 없음 (전기승합 미사용)'],
-    db:[
-      ['PS_EV_VAN_APPLY.REQ_STATUS','상태값 · 코드군 REQ_STATUS3 (2=보완요청)'],
-      ['PS_EV_VAN_APPLY_CHG_BIZ','충전사업자(복수구조 · 폼 단일)'],
-      ['BUS_APPLY_SEQ','구매보조금 연계(콤마 복수 가능)'],
-      ['REQ_FILE_ID_1~8','제안 증빙 첨부'],
-      ['RES_CONT','보완/반려 사유']
-    ]
-  },
-  apps:[
-    { appId:'PB-2026-000451', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.18', status:'보완요청', result:'progress',
-      notice:{ name:'2026년 전기버스 보급사업 공모(1차)', no:'환경부공고 제2026-198호', org:'한국환경공단', period:'2026.03.20 ~ 2026.04.18', announce:'2026.05.06(예정)', scale:'평가 기준 충족 수행자 선정' },
-      applicant:{ title:'제안자 정보',
-        rows:[['주신청자(운수사업자)','한빛여객(주)'],['부신청자(운수사업자)','그린버스(주)'],['관할 지자체','경기도 성남시'],['신청연도','2026'],['신청차수','1차']],
-        contactRows:[['담당부서','운영지원팀'],['연락처','031-000-0000'],['이메일','apply@hanbit.co.kr']] },
-      block4:{ title:'제작·수입사 · 충전사업자 · 구매보조금', rows:[
-        ['제작·수입사','현대자동차(주)'],
-        ['제작사 담당자','김제작 · 02-111-2222 · prod@hyundai.com'],
-        ['충전사업자','에버온(주)'],
-        ['충전사업자 담당자','박충전 · 02-333-4444'],
-        ['구매보조금 신청번호','2026-BUS-000131, 2026-BUS-000148']
-      ]},
-      docs:[
-        {name:'별지 제1호 서식 공모 지원신청서',ok:true},
-        {name:'별지 제2호 서식 보급사업 계획서',ok:true},
-        {name:'상세 보급계획(엑셀)',status:'supplement'},
-        {name:'지자체 예산 각목명세서 사본',ok:true},
-        {name:'구매지원 신청 제출자료',ok:true},
-        {name:'[B유형] 충전시설 설치계획',status:'missing'}
-      ],
-      supplement:{ reason:'상세 보급계획(엑셀)의 노선·투입 대수 내역이 누락되었고, [B유형] 충전시설 설치계획의 위치도·용량 자료가 확인되지 않습니다. 해당 서류를 보완하여 재제출해 주세요.' } },
+/* [DEV] ★ 신청 정보·제출 서류는 public-bus-apply.html 신청폼을 1:1 미러 (섹션/항목/라벨/순서 동일 · 값만 더미)
+   [DEV] 상태 = PS_EV_VAN_APPLY.REQ_STATUS · REQ_STATUS3(전기승합) = 제출완료/보완요청/보완완료/검토완료/신청취소 (관리자 '수행자 선정 평가 신청관리' 실드롭다운 확정). '승인/선정/미선정' 표기 폐기
+   [DEV] 결과(진행중/완료) 축·컬럼 폐지 → 현재 상태만 노출. 관리자 선정여부 컬럼은 값 미사용('-') → 대민 미노출
+   [DEV] 담당자 입력값 = RES_CONT (보완요청·보완완료·신청취소에서 기록). KECO_CONT 없음(전기승합 미사용)
+   [DEV] 신청유형 A/B = 폼 카드 선택값 · 충전사업자 = PS_EV_VAN_APPLY_CHG_BIZ(DB 복수구조·폼 단일, B유형만) · 구매보조금 연계 = BUS_APPLY_SEQ(콤마 복수) · 첨부 = REQ_FILE_ID_1~8(+_CHK 보완지정). 전부 더미. */
+(function(){
+  // 제출 서류 = public-bus-apply '지원신청 첨부문서' 필드 1:1 미러 · 첨부6·7은 B유형 건에만
+  function busDocs(isB, states){
+    states=states||{};
+    var rows=[
+      { tag:'[첨부1]', name:'별지 제1호 서식 사업 공모 지원신청서(전기승합차)', ext:'(PDF)' },
+      { tag:'[첨부2]', name:'별지 제2호 서식 전기승합차 보급사업 계획서', ext:'(PDF)' },
+      { tag:'[첨부3]', name:'상세 보급계획', ext:'(엑셀 xls)' },
+      { tag:'[첨부4]', name:'지자체 예산 각목명세서 사본 등 제안서 평가를 위한 증명 서류 등', ext:'(PDF)' },
+      { tag:'[첨부5]', name:'구매지원 신청 시 제출자료(구매지원신청서, 구매계약서)', ext:'(ZIP)' }
+    ];
+    if(isB){
+      rows.push({ tag:'[첨부6]', name:'충전시설', ext:'[B유형]' });
+      rows.push({ tag:'[첨부7]', name:'충전시설 및 추가 증빙자료', ext:'[B유형 · 선택]' });
+    }
+    return rows.map(function(r){ r.status=states[r.name]||'done'; return r; });
+  }
+  function proposer(o){ return { title:'신청정보(제안자)', rows:[
+    ['신청유형', o.apType],['주신청자', o.mainApp],['주신청자ID', o.mainId],
+    ['부신청자ID 1', o.sub1||'—'],['부신청자ID 2', o.sub2||'—'],
+    ['지자체(광역)', o.sido],['지자체(기초)', o.gugun],
+    ['담당부서', o.dept],['연락처', o.tel],['이메일', o.email] ]}; }
+  function makerSec(o){ return { title:'제작수입사 정보', rows:[
+    ['제작수입사', o.maker],['담당실무자', o.person],['연락처', o.tel],['이메일', o.email],
+    ['사업자등록증', o.bizFile],['공모연도','2026년'] ]}; }
+  function chgSec(o){ return { title:'충전사업자 정보', rows:[
+    ['충전사업자', o.name],['담당실무자', o.person],['연락처', o.tel],['이메일', o.email] ]}; }
+  var PB_HEAD=['신청번호','신청지자체','신청지자체(상세)','제작수입사명','신청자명','모델명','신청대수','신청총금액(만원)','사업연도'];
+  function subsidySec(rows){ return { title:'구매보조금 신청번호', table:{ head:PB_HEAD, rows:rows, empty:'등록된 구매지원 신청번호가 없습니다.' }}; }
+  function memoSec(t){ return { title:'신청 메모', memo:t||'—' }; }
 
-    { appId:'PB-2026-000512', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.02', status:'승인', result:'done',
-      notice:{ name:'2026년 전기버스 보급사업 공모(2차)', no:'환경부공고 제2026-231호', org:'한국환경공단', period:'2026.04.25 ~ 2026.05.02', announce:'2026.06.02', scale:'평가 기준 충족 수행자 선정' },
-      applicant:{ title:'제안자 정보',
-        rows:[['주신청자(운수사업자)','미래운수(주)'],['부신청자(운수사업자)','—'],['관할 지자체','전라남도 순천시'],['신청연도','2026'],['신청차수','2차']],
-        contactRows:[['담당부서','기획실'],['연락처','061-111-2222'],['이메일','plan@mirae.co.kr']] },
-      block4:{ title:'제작·수입사 · 충전사업자 · 구매보조금', rows:[
-        ['제작·수입사','우진산전(주)'],
-        ['제작사 담당자','정제작 · 02-555-6666 · prod@wjis.co.kr'],
-        ['충전사업자','SK일렉링크(주)'],
-        ['충전사업자 담당자','한충전 · 02-777-8888'],
-        ['구매보조금 신청번호','2026-BUS-000199']
-      ]},
-      docs:[
-        {name:'별지 제1호 서식 공모 지원신청서',ok:true},
-        {name:'별지 제2호 서식 보급사업 계획서',ok:true},
-        {name:'상세 보급계획(엑셀)',ok:true},
-        {name:'지자체 예산 각목명세서 사본',ok:true},
-        {name:'구매지원 신청 제출자료',ok:true},
-        {name:'[B유형] 충전시설 설치계획',ok:true}
+  ContestDetail.mount({
+    applyHref:'public-bus-apply.html', applyName:'전기승합차 공모 신청', supplementHref:'public-bus-apply.html',
+    devRef:{
+      states:[
+        {code:'제출완료', label:'공모 신청서 제출 완료', badge:'progress'},
+        {code:'보완요청', label:'담당 검토 → 보완 요청 · RES_CONT 세팅', badge:'progress'},
+        {code:'보완완료', label:'보완 재제출 완료 · RES_CONT 기록', badge:'progress'},
+        {code:'검토완료', label:'심사 검토완료 (최종)', badge:'done'},
+        {code:'신청취소', label:'신청취소 · RES_CONT(취소사유) 기록'}
       ],
-      action:'승인되었습니다. 협약 체결 및 후속 절차 안내를 기다려 주세요.' }
-  ]
-});
+      manager:['RES_CONT — 보완/취소 사유 (보완요청·보완완료·신청취소에서 기록)','KECO_CONT 없음 (전기승합 미사용)','선정여부 컬럼 = 관리자 존재하나 값 미사용(-) → 대민 미노출'],
+      db:[
+        ['PS_EV_VAN_APPLY.REQ_STATUS','상태값 · 코드군 REQ_STATUS3 = 제출완료/보완요청/보완완료/검토완료/신청취소'],
+        ['PS_EV_VAN_APPLY_CHG_BIZ','충전사업자(복수구조 · 폼 단일 · B유형)'],
+        ['BUS_APPLY_SEQ','구매보조금 연계(콤마 복수 가능)'],
+        ['REQ_FILE_ID_1~8','지원신청 첨부문서'],
+        ['RES_CONT','보완/취소 사유']
+      ]
+    },
+    apps:[
+      // ① 보완요청 (B유형)
+      { appId:'PB-2026-000451', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.18', status:'보완요청',
+        notice:{ name:'2026년 전기버스 보급사업 공모(1차)', no:'환경부공고 제2026-198호', org:'한국환경공단', period:'2026.03.20 ~ 2026.04.18', announce:'2026.05.06(예정)', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ apType:'B유형 · 충전인프라 구축필요', mainApp:'지자체', mainId:'bus_applicant01', sub1:'grn_bus02', sido:'경기도', gugun:'성남시', dept:'교통정책과', tel:'031-000-0000', email:'apply@seongnam.go.kr' }),
+        sections:[
+          makerSec({ maker:'현대자동차', person:'김제작', tel:'02-111-2222', email:'prod@hyundai.com', bizFile:'현대자동차_사업자등록증.pdf' }),
+          chgSec({ name:'에버온(주)', person:'박충전', tel:'02-333-4444', email:'charge@everon.co.kr' }),
+          subsidySec([
+            ['2026-BUS-000131','전라남도','순천시','현대자동차','순천여객(주)','일렉시티','3','63,000','2026'],
+            ['2026-BUS-000148','전라남도','여수시','우진산전','여수교통(주)','아폴로1100','2','40,000','2026'],
+            ['2026-BUS-000155','경기도','수원시','현대자동차','수원버스(주)','일렉시티','5','105,000','2026'],
+            ['2026-BUS-000162','경기도','성남시','케이지모빌리티커머셜','성남시내버스','스마트110E','4','78,000','2026'],
+            ['2026-BUS-000170','서울특별시','강남구','범한자동차','강남운수(주)','E-STAR','2','42,000','2026'],
+            ['2026-BUS-000181','부산광역시','해운대구','피라인모터스','해운대버스','P-BUS','3','60,000','2026'],
+            ['2026-BUS-000199','경상북도','포항시','이엠코리아','포항시내버스','EM-CITY','1','21,000','2026']
+          ]),
+          memoSec('노선 전환 계획을 포함하여 신청합니다.')
+        ],
+        docs: busDocs(true, {'상세 보급계획':'supplement','충전시설':'missing'}),
+        supplement:{ reason:'상세 보급계획의 노선·투입 대수 내역이 누락되어 보완요청 상태이며, [B유형] 충전시설 자료는 미제출입니다. 해당 서류를 보완하여 재제출해 주세요.' } },
+
+      // ② 검토완료 (A유형)
+      { appId:'PB-2026-000512', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.02', status:'검토완료',
+        notice:{ name:'2026년 전기버스 보급사업 공모(2차)', no:'환경부공고 제2026-231호', org:'한국환경공단', period:'2026.04.25 ~ 2026.05.02', announce:'2026.06.02', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ apType:'A유형 · 충전인프라 기구축', mainApp:'지자체', mainId:'bus_applicant07', sido:'전라남도', gugun:'여수시', dept:'기획실', tel:'061-111-2222', email:'plan@yeosu.go.kr' }),
+        sections:[
+          makerSec({ maker:'우진산전', person:'정제작', tel:'02-555-6666', email:'prod@wjis.co.kr', bizFile:'우진산전_사업자등록증.pdf' }),
+          subsidySec([
+            ['2026-BUS-000148','전라남도','여수시','우진산전','여수교통(주)','아폴로1100','2','40,000','2026']
+          ]),
+          memoSec('—')
+        ],
+        docs: busDocs(false, {}) },
+
+      // ③ 신청취소 (A유형) — 취소 사유는 보완요구사항 영역에 표기
+      { appId:'PB-2026-000388', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.10', status:'신청취소',
+        notice:{ name:'2026년 전기버스 보급사업 공모(1차)', no:'환경부공고 제2026-198호', org:'한국환경공단', period:'2026.03.20 ~ 2026.04.18', announce:'2026.05.06(예정)', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ apType:'A유형 · 충전인프라 기구축', mainApp:'지자체', mainId:'bus_applicant03', sido:'부산광역시', gugun:'해운대구', dept:'대중교통과', tel:'051-000-1111', email:'bus@busan.go.kr' }),
+        sections:[
+          makerSec({ maker:'피라인모터스', person:'이제작', tel:'02-999-0000', email:'prod@piline.co.kr', bizFile:'피라인모터스_사업자등록증.pdf' }),
+          subsidySec([
+            ['2026-BUS-000181','부산광역시','해운대구','피라인모터스','해운대버스','P-BUS','3','60,000','2026']
+          ]),
+          memoSec('—')
+        ],
+        docs: busDocs(false, {}),
+        supplement:{ title:'신청취소 사유', reason:'신청 기관의 요청으로 본 신청이 취소되었습니다. (사유: 사업계획 변경에 따른 자진 취소) 재신청은 차기 공모 시 가능합니다.' } },
+
+      // ④ 제출완료 (A유형) — 심사 대기
+      { appId:'PB-2026-000603', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.05.05', status:'제출완료',
+        notice:{ name:'2026년 전기버스 보급사업 공모(2차)', no:'환경부공고 제2026-231호', org:'한국환경공단', period:'2026.04.25 ~ 2026.05.02', announce:'2026.06.02', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ apType:'A유형 · 충전인프라 기구축', mainApp:'지자체', mainId:'bus_applicant11', sido:'서울특별시', gugun:'강남구', dept:'교통행정과', tel:'02-200-3000', email:'transit@gangnam.go.kr' }),
+        sections:[
+          makerSec({ maker:'범한자동차', person:'최제작', tel:'02-444-5555', email:'prod@beomhan.co.kr', bizFile:'범한자동차_사업자등록증.pdf' }),
+          subsidySec([
+            ['2026-BUS-000170','서울특별시','강남구','범한자동차','강남운수(주)','E-STAR','2','42,000','2026']
+          ]),
+          memoSec('—')
+        ],
+        docs: busDocs(false, {}) },
+
+      // ⑤ 보완완료 (B유형) — 재제출 후 재검토
+      { appId:'PB-2026-000499', project:'전기승합차(법인·개인사업자) 공모', applyDate:'2026.04.22', status:'보완완료',
+        notice:{ name:'2026년 전기버스 보급사업 공모(1차)', no:'환경부공고 제2026-198호', org:'한국환경공단', period:'2026.03.20 ~ 2026.04.18', announce:'2026.05.06(예정)', scale:'평가 기준 충족 사업자 선정' },
+        applicant:proposer({ apType:'B유형 · 충전인프라 구축필요', mainApp:'지자체', mainId:'bus_applicant09', sub1:'co_bus05', sido:'경상북도', gugun:'포항시', dept:'대중교통과', tel:'054-000-2222', email:'bus@pohang.go.kr' }),
+        sections:[
+          makerSec({ maker:'이엠코리아', person:'한제작', tel:'02-666-7777', email:'prod@emk.co.kr', bizFile:'이엠코리아_사업자등록증.pdf' }),
+          chgSec({ name:'SK일렉링크(주)', person:'조충전', tel:'02-888-9999', email:'charge@skelnk.co.kr' }),
+          subsidySec([
+            ['2026-BUS-000199','경상북도','포항시','이엠코리아','포항시내버스','EM-CITY','1','21,000','2026']
+          ]),
+          memoSec('보완 요청 서류를 재제출하였습니다.')
+        ],
+        docs: busDocs(true, {}),
+        supplement:{ reason:'앞서 요청드린 상세 보급계획·[B유형] 충전시설 자료가 보완 완료되어 재검토를 진행 중입니다.' } }
+    ]
+  });
+})();
 </script>
 </body>
 </html>
