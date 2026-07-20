@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충전사업자 투명성지수 | 통합관리시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<style>
+  /* 조회 전용 표 — 장식 없음(막대·차트·색배지 미사용). 정렬 가능 헤더 표시만 최소로 */
+  .tx-tbl th{ cursor:pointer; user-select:none; }
+  .tx-tbl th .ar{ color:#94a3b8; font-weight:700; margin-left:3px; }
+  .tx-tbl th.sorted{ color:#1f2937; }
+  .tx-tbl td.num{ text-align:right; font-variant-numeric:tabular-nums; }
+  .tx-tbl td.c{ text-align:center; }
+  .tx-tbl tbody tr{ cursor:default; }
+  .tx-flags{ font-size:12px; color:#64748b; word-break:keep-all; }
+  .tx-none{ color:#cbd5e1; }
+  .tx-collect{ color:#64748b; }
+</style>
+</head>
+<body>
+<!-- [DEV] 통합관리시스템 > 통계 > 충전사업자 투명성지수 (신설 T1 · v0.30 7호)
+     설계 근거: EVAX/03. 설계/ev_충전사업자_투명성지수_설계_v0.1.md — §5 표 컬럼 · §6 담당자(admin) 모드 · 부록 A 원천 테이블
+     담당자 모드 = 전체 실명 · 전체 상세(주지표 6축 + 보조 + 이상플래그 7종 전부 노출) — 시민/사업자 모드의 익명화·마스킹 미적용.
+     ★수치 원천 = 대민과 동일한 js/tindex-data.js(window.__TINDEX_DATA) 재사용 — 관리자용 별도 더미 생성 금지(대민 ↔ 관리자 수치 불일치 방지). -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">충전사업자 투명성지수 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
+    <p class="adm-desc">사업자(BMNGID)별 정보제공 충실도 산출 결과를 조회합니다. (담당자 모드 — 전체 실명·전체 지표 상세)</p>
+
+    <div class="adm-card">
+      <div class="adm-filter">
+        <div class="adm-field"><label>등급</label>
+          <select id="fGrade"><option value="all">전체</option><option value="우수">우수</option><option value="보통">보통</option></select>
+        </div>
+        <div class="adm-field"><label>기준월 (STAN_YM)</label><select id="fYm"></select></div>
+        <div class="adm-field" style="flex:1;min-width:220px;"><label>사업자명</label><input type="text" id="fKw" placeholder="사업자명 검색"></div>
+        <button type="button" class="adm-btn primary" id="fSearch">조회</button>
+        <button type="button" class="adm-btn" id="fReset">초기화</button>
+      </div>
+    </div>
+
+    <div class="adm-meta">
+      <div>전체 <strong id="listCount">0</strong>개사 <span id="listNote" style="color:#94a3b8;"></span></div>
+      <div style="color:#94a3b8;">헤더 클릭 = 정렬 · 종합 100점(주지표 85 + 보조 15) · 등급은 주지표 단독 환산</div>
+    </div>
+
+    <table class="adm-tbl tx-tbl">
+      <thead><tr>
+        <th class="c" data-sort="rank"      style="width:56px;">순위</th>
+        <th        data-sort="name"         style="width:170px;">사업자명</th>
+        <th class="c" data-sort="grade"     style="width:72px;">등급</th>
+        <th        data-sort="ti"           style="width:112px;">투명성지수</th>
+        <th        data-sort="p_uptime"     style="width:96px;">통신가동(20)</th>
+        <th        data-sort="p_state"      style="width:96px;">상태정합(18)</th>
+        <th        data-sort="p_phys"       style="width:96px;">물리정합(15)</th>
+        <th        data-sort="p_link"       style="width:80px;">연계(12)</th>
+        <th        data-sort="p_price"      style="width:96px;">요금공시(12)</th>
+        <th        data-sort="p_trust"      style="width:84px;">신뢰(8)</th>
+        <th        data-sort="aux_sum"      style="width:84px;">보조(15)</th>
+        <th        data-sort="flagCount"    style="width:220px;">이상플래그</th>
+        <th class="c" data-sort="ym"        style="width:100px;">최종검증일</th>
+      </tr></thead>
+      <tbody id="listBody"></tbody>
+    </table>
+
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 산출 구조·원천 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>점수 구조</strong> : 종합 100 = <strong>주지표 85</strong>(통신가동 20 · 상태정합 18 · 물리정합 15 · 연계 12 · 요금공시 12 · 신뢰 8) + <strong>보조지표 15</strong>(규모 6 · 이용도 5 · 가격수준 4).</li>
+        <li><strong>등급 판정</strong> : <strong>주지표 단독</strong> 환산(주지표 ÷ 85 × 100) 후 <strong>≥ 70 우수 / &lt; 70 보통</strong> 2등급. <strong>보조지표는 등급에 영향 없음</strong> — 규모·이용도·가격이 등급을 흔들지 못하게 차단(설계 B안 취지). 보조는 종합점수·동점 우열에만 작용.</li>
+        <li><strong>정렬 기준</strong> : 종합점수 내림차순 → 동점 시 주지표 → 보조지표 → 충전기수 순(설계서 §4). 본 화면의 헤더 클릭 정렬은 조회 편의용이며 순위 컬럼값은 산출 시 확정된 순위.</li>
+        <li><strong>산출 주기·적재</strong> : <strong>월 1회 배치(STAN_YM 기준)</strong> — 충전기 단위 검증/집계(STAT_ID+CHGER_ID) → 사업자(BMNGID) 롤업 → 주지표6+보조3 산출 → 등급·순위 확정 → <strong>신규 테이블 TX_OPER_SCORE에 적재</strong>(사업자 × STAN_YM × 지표점수). 프런트는 산출 결과만 조회 — 화면에서 재계산하지 않음.</li>
+        <li><strong>신뢰(⑥) '수집중'</strong> : 정보불일치 민원 누적 기반 지표이나 <strong>민원·제보 테이블이 현행 미존재</strong> — 수집 이력이 없는 사업자는 점수 대신 '수집중' 표기(중립). 수집 원천 후보 = 질의응답 2단 분류('충전기' › 충전민원·충전요금) + 불편민원신고센터(충전소ID 보유). 연결 일정은 미확정(설계서 §10-3).</li>
+        <li><strong>이상플래그 7종</strong> : <code>state_anomaly</code>·<code>system_only</code>(→ ② 상태정합 감점) · <code>physics_error</code>·<code>short_session</code>(→ ③ 물리정합) · <code>api_inactive</code>·<code>double_slash</code>·<code>r1_usage</code>(→ ④ 연계). 담당자 모드는 7종 전부 노출(시민 모드 미노출).</li>
+        <li><strong>원천 테이블</strong> : EVCS_CHARGER(RECV_DATE·STATUS·CHGE_TOT_POW 등) · EVCS_CHARGER_STATUS(BMNGID·STAN_YM·ZCODE) · EVCS_CHARGER_FEE / EVCS_CHARGE_PRICE / APP_CHARGE_PRICE · EVCS_CHGE_NETLOG · EVCS_DAILY_CHGER_STAT · EVCS_CODE · EVCS_CHGE_TRADE(_INFO) · EV2_RAW_*. <strong>필드 단위 정의는 설계서 부록 A 참조</strong>(2026-07-20 EVUSER 스키마 실사 검증분).</li>
+        <li>⚠ <strong>EVCS_CHARGER_STATUS는 월별 스냅샷 누적</strong> — 집계 시 반드시 단일 전수월(STAN_YM) 필터. 미필터 시 수배 부풀림(2026-07 실측).</li>
+        <li>⚠ 상태코드 집합은 <strong>운영 EVCS_CODE 기준으로 확정</strong>할 것(검증계 라벨 신뢰 금지 원칙).</li>
+        <li><strong>기준월 셀렉트</strong> : 현재 산출 데이터가 <strong>단일 산출분 1회차</strong>뿐이라 옵션 1개. 월별 비교·추이는 TX_OPER_SCORE 적재 후 다월 누적되어야 가능(임의 과거월 더미 생성 금지).</li>
+        <li><strong>수치 원천</strong> : 대민 화면(data.html)과 <strong>동일한 js/tindex-data.js</strong>를 그대로 로드 — 관리자 전용 더미를 따로 만들지 않음(수치 불일치 방지).</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-ntp.js?v=20260720c"></script>
+<script src="js/tindex-data.js?v=20260624"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  AdminShell.mount({
+    system:'통합관리시스템',
+    gnb: window.ADMIN_MENU_NTP,
+    activeGnb:'통계',
+    activeHref:'admin-tindex.html'
+  });
+
+  var D = window.__TINDEX_DATA || {};
+  var OPS = (D.operators || []).slice();
+  // 최종검증일(STAN_YM) — 산출 배치 기준월. 데이터의 generated_at에서 파생(별도 더미 생성 금지)
+  var YM = (D.generated_at || '').slice(0,7) || '-';
+
+  // 신뢰(⑥)는 민원 누적 기반 — 수집 이력 없음(0)은 점수 대신 '수집중'(설계서 §2-1 ⑥)
+  function trustCell(o){
+    return (!o.p_trust) ? '<span class="tx-collect">수집중</span>' : num(o.p_trust);
+  }
+  function num(v){ return (v==null || v==='') ? '-' : (Math.round(v*10)/10).toFixed(1); }
+  function flagsOf(o){ return (o.flags||[]); }
+
+  var sortKey='rank', sortAsc=true;
+
+  function filtered(){
+    var g=$('fGrade').value, kw=($('fKw').value||'').trim().toLowerCase();
+    var rows = OPS.filter(function(o){
+      if(g!=='all' && o.grade!==g) return false;
+      if(kw && String(o.name||'').toLowerCase().indexOf(kw)<0) return false;
+      return true;
+    });
+    rows.sort(function(a,b){
+      var va, vb;
+      if(sortKey==='flagCount'){ va=flagsOf(a).length; vb=flagsOf(b).length; }
+      else if(sortKey==='ym'){ va=YM; vb=YM; }
+      else { va=a[sortKey]; vb=b[sortKey]; }
+      if(typeof va==='string' || typeof vb==='string'){
+        va=String(va==null?'':va); vb=String(vb==null?'':vb);
+        return sortAsc ? va.localeCompare(vb,'ko') : vb.localeCompare(va,'ko');
+      }
+      va = va==null?-1:va; vb = vb==null?-1:vb;
+      return sortAsc ? va-vb : vb-va;
+    });
+    return rows;
+  }
+
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listNote').textContent = '(전체 ' + (D.total_operators!=null? D.total_operators : OPS.length) + '개사 중 산출 완료분)';
+    $('listBody').innerHTML = rows.length ? rows.map(function(o){
+      var fl = flagsOf(o);
+      return '<tr>'
+        + '<td class="c num">'+esc(o.rank)+'</td>'
+        + '<td>'+esc(o.name)+'</td>'
+        + '<td class="c">'+esc(o.grade||'')+'</td>'
+        + '<td class="num">'+num(o.ti)+'</td>'
+        + '<td class="num">'+num(o.p_uptime)+'</td>'
+        + '<td class="num">'+num(o.p_state)+'</td>'
+        + '<td class="num">'+num(o.p_phys)+'</td>'
+        + '<td class="num">'+num(o.p_link)+'</td>'
+        + '<td class="num">'+num(o.p_price)+'</td>'
+        + '<td class="num">'+trustCell(o)+'</td>'
+        + '<td class="num">'+num(o.aux_sum)+'</td>'
+        + '<td class="tx-flags">'+(fl.length ? fl.map(esc).join(', ') : '<span class="tx-none">-</span>')+'</td>'
+        + '<td class="c">'+esc(YM)+'</td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="13"><div class="adm-empty">조건에 맞는 사업자가 없습니다.</div></td></tr>';
+
+    // 정렬 표시(화살표만 — 장식 없음)
+    document.querySelectorAll('.tx-tbl th[data-sort]').forEach(function(th){
+      var on = (th.dataset.sort===sortKey);
+      th.classList.toggle('sorted', on);
+      var ar = th.querySelector('.ar');
+      if(!ar){ ar=document.createElement('span'); ar.className='ar'; th.appendChild(ar); }
+      ar.textContent = on ? (sortAsc?'▲':'▼') : '';
+    });
+  }
+
+  document.querySelectorAll('.tx-tbl th[data-sort]').forEach(function(th){
+    th.addEventListener('click', function(){
+      var k=th.dataset.sort;
+      if(sortKey===k) sortAsc=!sortAsc;
+      // 숫자 지표는 내림차순(높은 점수 우선), 순위·이름은 오름차순부터
+      else { sortKey=k; sortAsc = (k==='rank' || k==='name' || k==='grade' || k==='ym'); }
+      render();
+    });
+  });
+
+  $('fYm').innerHTML = '<option>'+esc(YM)+'</option>';
+  ['fGrade','fYm'].forEach(function(id){ $(id).addEventListener('change', render); });
+  $('fKw').addEventListener('input', render);
+  $('fSearch').addEventListener('click', function(){ render(); __admToast('조회했습니다. (기준월 '+YM+')'); });
+  $('fReset').addEventListener('click', function(){ $('fGrade').value='all'; $('fKw').value=''; sortKey='rank'; sortAsc=true; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>

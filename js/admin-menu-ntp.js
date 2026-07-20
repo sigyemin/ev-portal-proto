@@ -85,7 +85,8 @@ window.ADMIN_MENU_NTP = [
     { label:'전기차 충전소 현황' },
     { label:'차종별 신규등록 현황' },
     { label:'구매보조금 현황' },
-    { label:'공개자료 다운로드 현황' }
+    { label:'공개자료 다운로드 현황' },
+    { label:'충전사업자 투명성지수', href:'admin-tindex.html', badge:'신설' }
   ]},
   { label:'통합결제', children:[
     { label:'결제 처리' },
