@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충전기 현황 | 충전인프라 시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<style>
+  /* 집계표 */
+  .st-tbl{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .st-tbl th,.st-tbl td{border:1px solid #e2e8f0;padding:9px 10px;text-align:right;}
+  .st-tbl th{background:#f8fafc;font-weight:700;color:#475569;text-align:center;white-space:nowrap;}
+  .st-tbl td:first-child{text-align:left;font-weight:700;color:#334155;}
+  .st-tbl tfoot td{background:#f8fafc;font-weight:800;color:#1f2937;}
+  .st-tbl .num{font-variant-numeric:tabular-nums;}
+  /* 밴드 색상 (대민 데이터통계 5밴드와 동일 구간) */
+  .band-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+  .bd-slow{background:#2C7BE5;} .bd-mid{background:#17A2B8;} .bd-fast50{background:#F5C542;}
+  .bd-fast100{background:#F08B33;} .bd-ultra{background:#E0483E;}
+  /* 막대 차트 */
+  .chart{margin-top:6px;}
+  .chart-row{display:flex;align-items:center;gap:10px;padding:6px 0;}
+  .chart-lb{width:150px;flex:0 0 150px;font-size:12.5px;font-weight:700;color:#475569;}
+  .chart-bar-wrap{flex:1;background:#f1f5f9;border-radius:6px;height:22px;overflow:hidden;}
+  .chart-bar{height:100%;border-radius:6px;transition:width .3s;}
+  .chart-val{width:96px;flex:0 0 96px;text-align:right;font-size:12.5px;font-weight:800;color:#1f2937;font-variant-numeric:tabular-nums;}
+</style>
+</head>
+<body>
+<!-- [DEV] 충전인프라 시스템 > 급속·분석(EVPLUS) > 통계 > 충전기 현황 (T2 · v0.30 5호)
+     근거 메뉴: 회의록/완속브랜드_충전인프라_메뉴IA_20260720.md §B-1 '3. 통계 > 충전기 현황'
+     출력 구간 = 대민 데이터통계 5밴드와 동일 구간 사용(js/charging-fee.js CAPS: 완속 30kW미만 / 중속 30~50 / 급속 50~100 / 급속 100~200 / 초급속 200이상) -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">충전기 현황</h1>
+    <p class="adm-desc">출력 구간별 충전기 보급 현황을 집계합니다. (급속·분석 EVPLUS &gt; 통계 · 간이 재현)</p>
+
+    <div class="adm-card">
+      <div class="adm-filter">
+        <div class="adm-field"><label>지역</label><select id="fRegion"></select></div>
+        <div class="adm-field"><label>기준월 (STAN_YM)</label><select id="fYm"></select></div>
+        <div class="adm-field"><label>사업 구분</label>
+          <select id="fBiz"><option value="all">전체</option><option>공공</option><option>민간</option></select>
+        </div>
+        <button type="button" class="adm-btn primary" id="fSearch">조회</button>
+        <button type="button" class="adm-btn" id="fReset">초기화</button>
+      </div>
+      <p style="font-size:12px;color:#c0392b;margin:10px 0 0;">※ EVCS_CHARGER_STATUS는 <strong>월별 스냅샷</strong>이므로 기준월(STAN_YM) 단일 지정이 필수입니다. (미지정 시 전월 누적 중복 집계)</p>
+    </div>
+
+    <!-- 집계표 -->
+    <div class="adm-card">
+      <h3 id="tblHead">출력 구간별 충전기 현황</h3>
+      <table class="st-tbl">
+        <thead><tr>
+          <th style="width:220px;">출력 구간</th>
+          <th style="width:120px;">충전소 수</th>
+          <th style="width:120px;">충전기 수</th>
+          <th style="width:110px;">비중</th>
+          <th style="width:130px;">전월 대비</th>
+        </tr></thead>
+        <tbody id="stBody"></tbody>
+        <tfoot id="stFoot"></tfoot>
+      </table>
+    </div>
+
+    <!-- 차트 -->
+    <div class="adm-card">
+      <h3>출력 구간별 충전기 수</h3>
+      <div class="chart" id="chart"></div>
+    </div>
+
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 집계 원천·기실측 함정 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>⚠ 기실측 함정</strong> : <strong>EVCS_CHARGER_STATUS는 월별 스냅샷 테이블(STAN_YM)</strong> — 집계 시 <strong>전수월 필터(단일 STAN_YM 지정) 필수</strong>. 미지정 시 모든 스냅샷월이 합산되어 실제의 수 배로 부풀려짐(기 실측에서 확인된 오류 패턴).</li>
+        <li><strong>출력 구간</strong> : 대민 데이터통계·충전요금 5밴드와 <strong>동일 구간</strong>(js/charging-fee.js CAPS) — 완속 30kW미만 / 중속 30~50kW미만 / 급속 50~100kW미만 / 급속 100~200kW미만 / 초급속 200kW이상. 관리자·대민 구간 정의 불일치 방지를 위해 원천 공유 필요.</li>
+        <li><strong>메뉴 원천</strong> : TNVP_MENU_MNG(SITE_GB_CD=EVPLUS) + TNVP_PRGRM_MNG 조인 — 근거 §B-1 '3. 통계'.</li>
+        <li>본 화면은 간이 재현(더미) — 실제 집계 쿼리·차트 라이브러리는 개발 단계에서 확정.</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-infra.js?v=20260720a"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+
+  AdminShell.mount({
+    system:'충전인프라 시스템',
+    siteTabs: window.ADMIN_MENU_INFRA,
+    activeSite:'evplus',
+    activeHref:'admin-infra-status.html'
+  });
+
+  // 출력 5밴드 — 대민 데이터통계와 동일 구간(js/charging-fee.js CAPS)
+  var BANDS = [
+    { key:'slow',    label:'완속',          range:'30kW 미만',      cls:'bd-slow' },
+    { key:'mid',     label:'중속',          range:'30~50kW 미만',   cls:'bd-mid' },
+    { key:'fast50',  label:'급속 100kW미만', range:'50~100kW 미만',  cls:'bd-fast50' },
+    { key:'fast100', label:'급속 100kW이상', range:'100~200kW 미만', cls:'bd-fast100' },
+    { key:'ultra',   label:'초급속',        range:'200kW 이상',     cls:'bd-ultra' }
+  ];
+  var REGIONS = ['전체','서울특별시','부산광역시','인천광역시','경기도','전라남도','경상북도'];
+  var YMS = ['2026-06','2026-05','2026-04','2026-03'];
+
+  // 더미 집계 (지역·기준월별 스냅샷)
+  var BASE = { slow:[128340, 5120], mid:[6420, 980], fast50:[18760, 6240], fast100:[9840, 3510], ultra:[2160, 890] };
+  function seedOf(region, ym){
+    var r = REGIONS.indexOf(region), y = YMS.indexOf(ym);
+    return { rf: (region==='전체') ? 1 : (0.06 + r*0.035), yf: 1 - y*0.028 };
+  }
+  function calc(){
+    var region=$('fRegion').value, ym=$('fYm').value, s=seedOf(region, ym);
+    return BANDS.map(function(b){
+      var chg = Math.round(BASE[b.key][0] * s.rf * s.yf);
+      var sta = Math.round(BASE[b.key][1] * s.rf * s.yf);
+      var prev = Math.round(BASE[b.key][0] * s.rf * (s.yf - 0.028));
+      return { b:b, sta:sta, chg:chg, diff: chg - prev };
+    });
+  }
+
+  function render(){
+    var rows = calc();
+    var totalChg = rows.reduce(function(a,r){ return a + r.chg; }, 0);
+    var totalSta = rows.reduce(function(a,r){ return a + r.sta; }, 0);
+    var totalDiff = rows.reduce(function(a,r){ return a + r.diff; }, 0);
+
+    $('tblHead').textContent = '출력 구간별 충전기 현황 — ' + $('fRegion').value + ' · ' + $('fYm').value.replace('-','.') + ' 기준';
+
+    $('stBody').innerHTML = rows.map(function(r){
+      var pct = totalChg ? (r.chg / totalChg * 100) : 0;
+      return '<tr>'
+        + '<td><span class="band-dot '+r.b.cls+'"></span>'+esc(r.b.label)+' <span style="font-weight:500;color:#94a3b8;">('+esc(r.b.range)+')</span></td>'
+        + '<td class="num">'+fmt(r.sta)+'</td>'
+        + '<td class="num">'+fmt(r.chg)+'</td>'
+        + '<td class="num">'+pct.toFixed(1)+'%</td>'
+        + '<td class="num" style="color:'+(r.diff>=0?'#0f7a44':'#c0392b')+';">'+(r.diff>=0?'+':'')+fmt(r.diff)+'</td>'
+        + '</tr>';
+    }).join('');
+
+    $('stFoot').innerHTML = '<tr><td>합계</td><td class="num">'+fmt(totalSta)+'</td><td class="num">'+fmt(totalChg)+'</td>'
+      + '<td class="num">100.0%</td><td class="num" style="color:'+(totalDiff>=0?'#0f7a44':'#c0392b')+';">'+(totalDiff>=0?'+':'')+fmt(totalDiff)+'</td></tr>';
+
+    var max = Math.max.apply(null, rows.map(function(r){ return r.chg; })) || 1;
+    var COLOR = { slow:'#2C7BE5', mid:'#17A2B8', fast50:'#F5C542', fast100:'#F08B33', ultra:'#E0483E' };
+    $('chart').innerHTML = rows.map(function(r){
+      return '<div class="chart-row">'
+        + '<div class="chart-lb">'+esc(r.b.label)+'</div>'
+        + '<div class="chart-bar-wrap"><div class="chart-bar" style="width:'+(r.chg/max*100).toFixed(1)+'%;background:'+COLOR[r.b.key]+';"></div></div>'
+        + '<div class="chart-val">'+fmt(r.chg)+' 기</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  $('fRegion').innerHTML = REGIONS.map(function(r){ return '<option>'+r+'</option>'; }).join('');
+  $('fYm').innerHTML = YMS.map(function(y){ return '<option>'+y+'</option>'; }).join('');
+  ['fRegion','fYm','fBiz'].forEach(function(id){ $(id).addEventListener('change', render); });
+  $('fSearch').addEventListener('click', function(){ render(); __admToast('조회했습니다. (기준월 '+$('fYm').value+' 단일 스냅샷)'); });
+  $('fReset').addEventListener('click', function(){ $('fRegion').value='전체'; $('fYm').value=YMS[0]; $('fBiz').value='all'; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>

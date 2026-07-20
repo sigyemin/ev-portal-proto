@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EV 업무포털 | 업무지원시스템</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+</head>
+<body>
+<!-- [DEV] 업무포털 관문 (v0.30 1호) — 대민 GNB '업무지원시스템'(/proto/biz/index.html → biz-portal.html)에서 진입.
+     시스템 타일 6종. 미구현 시스템은 회색+'준비 중' — 추후 호에서 순차 연결 예정. 대민 partials 미사용. -->
+<main>
+  <div class="bp-hero">
+    <h1>EV 업무포털</h1>
+    <p>무공해차 통합누리집 업무지원시스템입니다. 담당 시스템을 선택하세요. (프로토타입 — 로그인·권한 더미)</p>
+  </div>
+
+  <div class="bp-grid">
+    <a class="bp-tile" href="admin-board-qna.html">
+      <span class="ic">🗂</span>
+      <h3>통합관리시스템</h3>
+      <p>게시판·민원·회원 관리<br>질의응답(건의사항) 관리 신설</p>
+    </a>
+    <a class="bp-tile" href="admin-ps-option.html">
+      <span class="ic">🚗</span>
+      <h3>구매보조금 지원시스템</h3>
+      <p>전기·수소차 구매보조금<br>접수·심사·지급 관리</p>
+    </a>
+    <a class="bp-tile" href="admin-ssd-contest.html?tab=busi">
+      <span class="ic">🔌</span>
+      <h3>완속·브랜드 시스템</h3>
+      <p>완속충전시설·브랜드 사업<br>공모·설치·정산 관리</p>
+    </a>
+    <a class="bp-tile" href="admin-infra-status.html">
+      <span class="ic">⚡</span>
+      <h3>충전인프라 시스템</h3>
+      <p>충전기 운영정보·고장·통계<br>인프라 현황 관리</p>
+    </a>
+    <a class="bp-tile" href="admin-cp-vhcrate.html">
+      <span class="ic">🏛</span>
+      <h3>정책지원 시스템</h3>
+      <p>의무구매임차제 · 보급목표제<br>· 표지발급</p>
+    </a>
+    <a class="bp-tile" href="index.html">
+      <span class="ic">🌐</span>
+      <h3>대민 누리집</h3>
+      <p>무공해차 통합누리집<br>(대민 화면으로 이동)</p>
+    </a>
+  </div>
+</main>
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script>AdminShell.mount({ system:'' });</script>
+</body>
+</html>

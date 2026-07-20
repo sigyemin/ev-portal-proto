@@ -59,17 +59,14 @@
 
         <div class="board-toolbar">
           <div class="board-toolbar-filters">
+            <!-- [DEV] 카테고리 = 신설 대분류(major)+소분류(minor) 2단 코드그룹(js/qna-categories.js 단일 원천) · SFR-021+콜센터 분류표 확정안. 민원 현황 조회와 동일 코드 공유 -->
             <div class="form-group">
-            <label class="form-label" data-i18n="qna.aria.cat">카테고리 선택</label>
-            <select class="form-select" id="qnaCat" aria-label="카테고리 선택" data-i18n-aria="qna.aria.cat">
-              <option value="all" data-i18n="qna.f.allcat">전체 카테고리</option>
-              <!-- [DEV] 카테고리 = EVUSER QNAGBN 코드그룹(5슬롯) · SFR-021 재편(완속/급속 → 설치 통합) · 콜센터 상담 분류표 확정 시 라벨 조정 -->
-              <option value="account" data-i18n="qna.cat.account">회원가입·계정</option>
-              <option value="subsidy" data-i18n="qna.cat.subsidy">구매보조금</option>
-              <option value="op" data-i18n="qna.cat.op">충전기 운영·회원카드/결제</option>
-              <option value="install" data-i18n="qna.cat.install">충전시설 설치·설치보조금</option>
-              <option value="etc" data-i18n="qna.cat.etc">기타</option>
-            </select>
+            <label class="form-label">대분류</label>
+            <select class="form-select" id="qnaMajor" aria-label="대분류 선택"></select>
+          </div>
+            <div class="form-group">
+            <label class="form-label">소분류</label>
+            <select class="form-select" id="qnaMinor" aria-label="소분류 선택"></select>
           </div>
             <div class="form-group">
             <label class="form-label" data-i18n="qna.aria.state">답변 상태 선택</label>
@@ -105,71 +102,82 @@
             </tr>
           </thead>
           <tbody id="qnaList">
-            <tr class="qna-row" data-state="done" data-cat="subsidy" data-no="2340" data-author="김민서" data-views="1342" style="cursor:pointer;">
-              <td class="num">2340</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.subsidy">구매보조금</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q1.title">전기차 개인 구매 후 신청 가능한 보조금 종류가 어떻게 되나요?</b></div></td>
+            <!-- data-major/data-minor = js/qna-categories.js 코드 · 카테고리 배지는 JS가 "대분류 › 소분류"로 채움 -->
+            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2340" data-author="김민서" data-views="1342" style="cursor:pointer;">
+              <td class="num">2340</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>전기차 개인 구매 후 신청 가능한 보조금 종류가 어떻게 되나요?</b></div></td>
               <td class="writer">김민서</td><td class="date">2026.04.22</td><td class="num views">1,342</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row is-secret" data-state="done" data-cat="install" data-no="2339" data-author="박준호" data-views="980" data-secret="1" style="cursor:pointer;">
-              <td class="num">2339</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.install">충전시설 설치·설치보조금</span></td>
-              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b data-i18n="qna.q2.title">공용 완속 충전기 직접 설치 신청 시 제출 서류 목록을 알려 주세요.</b></div></td>
+            <tr class="qna-row is-secret" data-state="done" data-major="charger" data-minor="subsidy" data-no="2339" data-author="박준호" data-views="980" data-secret="1" style="cursor:pointer;">
+              <td class="num">2339</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b>공용 완속 충전기 직접 설치 신청 시 제출 서류 목록을 알려 주세요.</b></div></td>
               <td class="writer">박준호</td><td class="date">2026.04.21</td><td class="num views">980</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="subsidy" data-no="2338" data-author="이서연" data-views="756" style="cursor:pointer;">
-              <td class="num">2338</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.subsidy">구매보조금</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q3.title">수소차 취득세 감면 한도가 2026년에 변경되었나요?</b></div></td>
+            <tr class="qna-row" data-state="done" data-major="h2" data-minor="subsidy" data-no="2338" data-author="이서연" data-views="756" style="cursor:pointer;">
+              <td class="num">2338</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>수소차 취득세 감면 한도가 2026년에 변경되었나요?</b></div></td>
               <td class="writer">이서연</td><td class="date">2026.04.20</td><td class="num views">756</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row" data-state="pending" data-cat="etc" data-no="2337" data-author="정한별" data-views="210" style="cursor:pointer;">
-              <td class="num">2337</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.etc">기타</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q4.title">K-EV100 참여 선언 후 실질 이행 평가는 어떻게 이루어지나요?</b></div></td>
+            <tr class="qna-row" data-state="pending" data-major="etc" data-minor="etc" data-no="2337" data-author="정한별" data-views="210" style="cursor:pointer;">
+              <td class="num">2337</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>K-EV100 참여 선언 후 실질 이행 평가는 어떻게 이루어지나요?</b></div></td>
               <td class="writer">정한별</td><td class="date">2026.04.19</td><td class="num views">210</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="op" data-no="2336" data-author="최도윤" data-views="1120" style="cursor:pointer;">
-              <td class="num">2336</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.op">충전기 운영·회원카드/결제</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q5.title">통합카드 분실 신고 후 재발급 소요 기간이 얼마나 되나요?</b></div></td>
+            <tr class="qna-row" data-state="done" data-major="charger" data-minor="card" data-no="2336" data-author="최도윤" data-views="1120" style="cursor:pointer;">
+              <td class="num">2336</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>통합카드 분실 신고 후 재발급 소요 기간이 얼마나 되나요?</b></div></td>
               <td class="writer">최도윤</td><td class="date">2026.04.18</td><td class="num views">1,120</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="subsidy" data-no="2335" data-author="강하은" data-views="640" style="cursor:pointer;">
-              <td class="num">2335</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.subsidy">구매보조금</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q6.title">보조금 접수 후 지급까지 실제 소요 기간이 어떻게 되나요?</b></div></td>
+            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2335" data-author="강하은" data-views="640" style="cursor:pointer;">
+              <td class="num">2335</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>보조금 접수 후 지급까지 실제 소요 기간이 어떻게 되나요?</b></div></td>
               <td class="writer">강하은</td><td class="date">2026.04.17</td><td class="num views">640</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row is-secret" data-state="pending" data-cat="install" data-no="2334" data-author="윤지후" data-views="305" data-secret="1" style="cursor:pointer;">
-              <td class="num">2334</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.install">충전시설 설치·설치보조금</span></td>
-              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b data-i18n="qna.q7.title">전기이륜차 충전시설 공모에서 소상공인 우대 점수가 몇 점인가요?</b></div></td>
+            <tr class="qna-row is-secret" data-state="pending" data-major="charger" data-minor="subsidy" data-no="2334" data-author="윤지후" data-views="305" data-secret="1" style="cursor:pointer;">
+              <td class="num">2334</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b>전기이륜차 충전시설 공모에서 소상공인 우대 점수가 몇 점인가요?</b></div></td>
               <td class="writer">윤지후</td><td class="date">2026.04.16</td><td class="num views">305</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="account" data-no="2333" data-author="장예린" data-views="88" style="cursor:pointer;">
-              <td class="num">2333</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.account">회원가입·계정</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q8.title">마이페이지에서 비밀번호 변경 시 오류가 발생합니다.</b></div></td>
+            <tr class="qna-row" data-state="done" data-major="account" data-minor="login" data-no="2333" data-author="장예린" data-views="88" style="cursor:pointer;">
+              <td class="num">2333</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>마이페이지에서 비밀번호 변경 시 오류가 발생합니다.</b></div></td>
               <td class="writer">장예린</td><td class="date">2026.04.15</td><td class="num views">88</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="subsidy" data-no="2332" data-author="한소율" data-views="512" style="cursor:pointer;">
-              <td class="num">2332</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.subsidy">구매보조금</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q9.title">전기차 공채 매입 면제를 받으려면 어디에서 신청해야 하나요?</b></div></td>
+            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2332" data-author="한소율" data-views="512" style="cursor:pointer;">
+              <td class="num">2332</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>전기차 공채 매입 면제를 받으려면 어디에서 신청해야 하나요?</b></div></td>
               <td class="writer">한소율</td><td class="date">2026.04.14</td><td class="num views">512</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="op" data-no="2331" data-author="오태경" data-views="430" style="cursor:pointer;">
-              <td class="num">2331</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.op">충전기 운영·회원카드/결제</span></td>
-              <td><div class="title-cell"><b data-i18n="qna.q10.title">초급속 충전기(350kW)는 어떤 차량에서 사용이 가능한가요?</b></div></td>
+            <tr class="qna-row" data-state="done" data-major="charger" data-minor="op" data-no="2331" data-author="오태경" data-views="430" style="cursor:pointer;">
+              <td class="num">2331</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>초급속 충전기(350kW)는 어떤 차량에서 사용이 가능한가요?</b></div></td>
               <td class="writer">오태경</td><td class="date">2026.04.13</td><td class="num views">430</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <!-- SFR-021 재편 신설 카테고리 더미(①회원가입·계정 / ②구매보조금 / ⑤기타) — 답변완료·대기 혼합 -->
-            <tr class="qna-row" data-state="pending" data-cat="account" data-no="2330" data-author="서지안" data-views="47" style="cursor:pointer;">
-              <td class="num">2330</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.account">회원가입·계정</span></td>
+            <!-- 신설 카테고리 더미 (회원.계정 회원가입 1·로그인 1 포함) -->
+            <tr class="qna-row" data-state="pending" data-major="account" data-minor="auth" data-no="2330" data-author="서지안" data-views="47" style="cursor:pointer;">
+              <td class="num">2330</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
               <td><div class="title-cell"><b>회원가입 시 휴대폰 본인인증이 반복해서 실패합니다. 확인 부탁드립니다.</b></div></td>
               <td class="writer">서지안</td><td class="date">2026.04.12</td><td class="num views">47</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
             </tr>
-            <tr class="qna-row" data-state="pending" data-cat="subsidy" data-no="2329" data-author="문하준" data-views="203" style="cursor:pointer;">
-              <td class="num">2329</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.subsidy">구매보조금</span></td>
+            <tr class="qna-row" data-state="pending" data-major="ev" data-minor="subsidy" data-no="2329" data-author="문하준" data-views="203" style="cursor:pointer;">
+              <td class="num">2329</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
               <td><div class="title-cell"><b>구매보조금 신청 자격(중위소득 기준) 확인 방법이 궁금합니다.</b></div></td>
               <td class="writer">문하준</td><td class="date">2026.04.11</td><td class="num views">203</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
             </tr>
-            <tr class="qna-row" data-state="done" data-cat="etc" data-no="2328" data-author="배시우" data-views="61" style="cursor:pointer;">
-              <td class="num">2328</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.etc">기타</span></td>
+            <tr class="qna-row" data-state="done" data-major="etc" data-minor="etc" data-no="2328" data-author="배시우" data-views="61" style="cursor:pointer;">
+              <td class="num">2328</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
               <td><div class="title-cell"><b>누리집에서 엑셀 다운로드가 되지 않습니다. 브라우저 확인 부탁드립니다.</b></div></td>
               <td class="writer">배시우</td><td class="date">2026.04.10</td><td class="num views">61</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
+            </tr>
+            <tr class="qna-row" data-state="pending" data-major="account" data-minor="signup" data-no="2327" data-author="남도현" data-views="33" style="cursor:pointer;">
+              <td class="num">2327</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>회원가입 절차 중 이메일 인증 메일이 오지 않습니다.</b></div></td>
+              <td class="writer">남도현</td><td class="date">2026.04.09</td><td class="num views">33</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
+            </tr>
+            <tr class="qna-row" data-state="done" data-major="account" data-minor="login" data-no="2326" data-author="조은서" data-views="52" style="cursor:pointer;">
+              <td class="num">2326</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
+              <td><div class="title-cell"><b>로그인 시 계정 잠금이 반복됩니다. 해제 방법을 알려 주세요.</b></div></td>
+              <td class="writer">조은서</td><td class="date">2026.04.08</td><td class="num views">52</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
           </tbody>
         </table>
@@ -201,13 +209,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="qna-row" data-state="done" data-cat="subsidy" data-no="2201" data-author="홍길동" data-views="342" style="cursor:pointer;">
-              <td class="num">2201</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.subsidy">구매보조금</span></td>
+            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2201" data-author="홍길동" data-views="342" style="cursor:pointer;">
+              <td class="num">2201</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
               <td><div class="title-cell"><b data-i18n="qna.mine.q1.title">구매 후 지방비 지급이 지연되는데, 확인 가능한 방법이 있나요?</b></div></td>
               <td class="writer">홍길동</td><td class="date">2026.04.02</td><td class="num views">342</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
             </tr>
-            <tr class="qna-row is-secret" data-state="pending" data-cat="etc" data-no="2180" data-author="홍길동" data-views="120" data-secret="1" style="cursor:pointer;">
-              <td class="num">2180</td><td class="cat"><span class="qna-cat-chip" data-i18n="qna.cat.etc">기타</span></td>
+            <tr class="qna-row is-secret" data-state="pending" data-major="etc" data-minor="etc" data-no="2180" data-author="홍길동" data-views="120" data-secret="1" style="cursor:pointer;">
+              <td class="num">2180</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
               <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b data-i18n="qna.mine.q2.title">K-EV100 참여 기업에 대한 ESG 가점 세부 내용이 궁금합니다.</b></div></td>
               <td class="writer">홍길동</td><td class="date">2026.03.28</td><td class="num views">120</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
             </tr>
@@ -274,25 +282,40 @@
 </div>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/i18n-inquiry.js?v=20260709a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/board-standard.js"></script>
+<script src="js/qna-categories.js?v=20260716a"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
 (function(){
-  // 전체 목록 필터링
-  const cat = document.getElementById('qnaCat');
+  // 전체 목록 필터링 — 대분류/소분류 2단(js/qna-categories.js 단일 원천)
+  const QC = window.QNA_CAT;
+  const major = document.getElementById('qnaMajor');
+  const minor = document.getElementById('qnaMinor');
   const state = document.getElementById('qnaState');
   const search = document.getElementById('qnaSearch');
   const reset = document.getElementById('qnaReset');
   const items = document.querySelectorAll('#qnaList .qna-row');
 
-  // [DEV] 카테고리 = EVUSER QNAGBN 코드그룹(5슬롯) · SFR-021 재편(회원가입·계정/구매보조금/충전기운영·회원카드결제/충전시설설치·설치보조금/기타)
-  //       완속·급속 분리 슬롯은 설치로 통합. 각 행 data-cat = 5슬롯 키(account/subsidy/op/install/etc)로 직접 지정(런타임 정규화 제거).
-  //       담당자 답변은 카테고리별 담당 배정(현행 운영 방식 유지, 운영자 일괄 아님). 최종 라벨은 콜센터 상담 분류표 확정 시 조정.
+  // 카테고리 배지 = "대분류 › 소분류" (전 탭) · 단일 원천 라벨로 채움
+  document.querySelectorAll('.qna-cat-chip[data-cat-chip]').forEach(function(chip){
+    const tr = chip.closest('.qna-row');
+    if (tr) chip.textContent = QC.badge(tr.dataset.major, tr.dataset.minor);
+  });
+
+  // 대분류 select
+  if (major) major.innerHTML = QC.majorOptions('전체 대분류');
+  // 소분류 select (대분류 선택에 연동)
+  function fillMinor(mk){
+    if (!minor) return;
+    minor.innerHTML = (mk === 'all') ? '<option value="all">전체 소분류</option>' : QC.minorOptions(mk, '전체 소분류');
+    minor.disabled = (mk === 'all');
+  }
+  fillMinor('all');
 
   const totalCountEl = document.getElementById('qnaTotalCount');
   const visibleCountEl = document.getElementById('qnaVisibleCount');
@@ -300,23 +323,25 @@
 
   function apply() {
     const kw = (search.value || '').trim().toLowerCase();
-    const c = cat.value, s = state.value;
+    const mk = major ? major.value : 'all', nk = minor ? minor.value : 'all', s = state.value;
     let visible = 0;
     items.forEach(it => {
       const titleEl = it.querySelector('.title-cell');
       const textOk = !kw || (titleEl && titleEl.textContent.toLowerCase().includes(kw));
-      const catOk = c === 'all' || it.dataset.cat === c;
+      const majorOk = mk === 'all' || it.dataset.major === mk;
+      const minorOk = nk === 'all' || (it.dataset.major === mk && it.dataset.minor === nk);
       const stateOk = s === 'all' || it.dataset.state === s;
-      const ok = textOk && catOk && stateOk;
+      const ok = textOk && majorOk && minorOk && stateOk;
       it.style.display = ok ? '' : 'none';
       if (ok) visible++;
     });
     if (visibleCountEl) visibleCountEl.textContent = visible;
   }
-  cat && cat.addEventListener('change', apply);
+  major && major.addEventListener('change', function(){ fillMinor(major.value); apply(); });
+  minor && minor.addEventListener('change', apply);
   state && state.addEventListener('change', apply);
   search && search.addEventListener('input', apply);
-  reset && reset.addEventListener('click', () => { cat.value = 'all'; state.value = 'all'; search.value = ''; apply(); });
+  reset && reset.addEventListener('click', () => { if(major) major.value='all'; fillMinor('all'); state.value = 'all'; search.value = ''; apply(); });
 
   // 질문 클릭 → 질문 상세 페이지 이동 (전체 목록 + 내 질문)
   function goDetail(el){

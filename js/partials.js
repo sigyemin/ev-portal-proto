@@ -352,7 +352,7 @@
 
           <!-- 6. 업무지원시스템 (v0.16: 상단 유틸바 → GNB 1뎁스 · 정보 자료실 우측 · 새 창) -->
           <li class="nav-external">
-            <a href="/proto/biz/index.html" target="_blank" rel="noopener" data-i18n-aria="nav.external.aria" aria-label="업무지원시스템 (새 창)">
+            <a href="biz-portal.html" target="_blank" rel="noopener" data-i18n-aria="nav.external.aria" aria-label="업무지원시스템 (새 창)">
               <span data-i18n="nav.external">업무지원시스템</span>
               <span class="nav-external-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H3 V13 H13 V10"/><polyline points="9 3 13 3 13 7"/><line x1="13" y1="3" x2="7" y2="9"/></svg></span>
             </a>

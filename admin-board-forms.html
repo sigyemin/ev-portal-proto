@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>서식다운로드 관리 | 통합관리시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+</head>
+<body>
+<!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 서식다운로드 (신설 T1 · v0.30 2호)
+     IA 위치 = 질의응답(건의사항) 다음 순번(회의록/통합관리시스템_메뉴IA_20260716.md §개편 앵커).
+     AS-IS boardMng 공용 패턴(boardList/Edit 공용 + 게시판 구분 파라미터) 재현 — 게시판 구분='서식다운로드' 고정. -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">서식다운로드 관리 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
+    <p class="adm-desc">대민 누리집 서식다운로드 게시판의 서식 게시물을 관리합니다. (신설 게시판 — AS-IS boardMng 공용 패턴)</p>
+
+    <!-- 목록 화면 -->
+    <div id="listWrap">
+      <div class="adm-card">
+        <div class="adm-filter">
+          <div class="adm-field"><label>분류</label>
+            <select id="fCat"><option value="all">전체 분류</option></select>
+          </div>
+          <div class="adm-field"><label>공개여부</label>
+            <select id="fOpen"><option value="all">전체</option><option value="open">공개</option><option value="secret">비공개</option></select>
+          </div>
+          <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="제목 검색"></div>
+          <button type="button" class="adm-btn primary" id="fSearch">검색</button>
+          <button type="button" class="adm-btn" id="fReset">초기화</button>
+        </div>
+      </div>
+
+      <div class="adm-meta">
+        <div>전체 <strong id="listCount">0</strong>건</div>
+        <button type="button" class="adm-btn primary" id="btnNew">서식 등록</button>
+      </div>
+      <table class="adm-tbl">
+        <thead><tr>
+          <th class="c" style="width:56px;">번호</th>
+          <th class="c" style="width:110px;">분류</th>
+          <th>제목</th>
+          <th style="width:300px;">서식파일</th>
+          <th class="c" style="width:84px;">공개여부</th>
+          <th class="c" style="width:100px;">작성일</th>
+        </tr></thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 등록/수정 화면 (AS-IS boardEdit 공용 패턴) -->
+    <div id="editWrap" hidden>
+      <div class="adm-card">
+        <h3 id="editHead">서식 등록</h3>
+        <div class="adm-detail">
+          <dl>
+            <dt>게시판 구분</dt><dd class="wide"><input type="text" value="서식다운로드" readonly style="height:34px;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#f1f5f9;color:#64748b;font-size:13px;width:220px;"></dd>
+            <dt>분류 <span style="color:#c0392b;">*</span></dt><dd class="wide"><select id="eCat" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;min-width:220px;"></select></dd>
+            <dt>제목 <span style="color:#c0392b;">*</span></dt><dd class="wide"><input type="text" id="eTitle" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:100%;" placeholder="서식 제목"></dd>
+            <dt>내용</dt><dd class="wide"><textarea id="eBody" style="width:100%;min-height:90px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;" placeholder="서식 안내 내용"></textarea></dd>
+            <dt>공지글</dt><dd><label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="eNotice"> 공지글로 등록</label></dd>
+            <dt>공개여부</dt><dd>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 공개</label>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 비공개</label>
+            </dd>
+            <dt>서식파일 <span style="color:#c0392b;">*</span></dt><dd class="wide">
+              <input type="file" id="eFiles" multiple style="font-size:13px;">
+              <div id="eFileList" style="margin-top:6px;font-size:12.5px;color:#475569;"></div>
+              <div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 필수 · 복수 파일 첨부 가능 (HWP·PDF·XLSX 등)</div>
+            </dd>
+          </dl>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
+          <button type="button" class="adm-btn" id="eBack">목록으로</button>
+          <button type="button" class="adm-btn primary" id="eSave">저장(mock)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 개발 참고 -->
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 신설 게시판·분류 코드 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>신설 게시판</strong> : 서식다운로드 — AS-IS BLBD(게시판 마스터)+ARTC(게시물) 공용 구조에 게시판 구분 신설. TNCM_MENU에도 신규 메뉴 등록 필요(시스템관리 &gt; 게시판 관리, 질의응답 다음 순번).</li>
+        <li><strong>분류 코드 신설(신설안)</strong> : 보조금 신청 / 공모·평가 / 회원카드 / 기타 4종 — EVCS_CODE_DETAIL 신규 코드그룹(개발 협의 필요).</li>
+        <li><strong>데이터 원천 공유</strong> : 대민 누리집 서식다운로드 페이지(정보 자료실)와 동일 게시판 데이터 사용 — 관리자 등록·수정이 대민에 그대로 노출.</li>
+        <li><strong>AS-IS 공용 패턴</strong> : boardList(구분·처리상태·작성일·검색어 필터) / boardEdit(게시판 구분·구분(카테고리)·제목·내용·공지글·공개여부·첨부파일) 재현 — 게시판 구분='서식다운로드' 고정 파라미터.</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-ntp.js?v=20260716a"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // 셸 마운트 — 통합관리시스템 전체 메뉴(TNCM_MENU D0002 실사)
+  AdminShell.mount({
+    system:'통합관리시스템',
+    gnb: window.ADMIN_MENU_NTP,
+    activeGnb:'시스템관리',
+    activeHref:'admin-board-forms.html'
+  });
+
+  // 분류(신설안) 4종 — [DEV] 분류 코드 신설(EVCS_CODE_DETAIL 신규 코드그룹)
+  var CATS = [
+    { key:'subsidy', label:'보조금 신청' },
+    { key:'contest', label:'공모·평가' },
+    { key:'card', label:'회원카드' },
+    { key:'etc', label:'기타' }
+  ];
+  function catLabel(k){ for (var i=0;i<CATS.length;i++) if (CATS[i].key===k) return CATS[i].label; return k; }
+
+  /* ── 더미 8건 — 분류별 2건 ── */
+  var DATA = [
+    { no:8, cat:'subsidy', title:'전기자동차 구매보조금 지원신청서 서식', files:['전기차_보조금_지원신청서.hwp','작성예시.pdf'], open:true, date:'2026-07-10' },
+    { no:7, cat:'subsidy', title:'수소전기차 구매보조금 지원신청서 서식', files:['수소차_보조금_지원신청서.hwp'], open:true, date:'2026-07-08' },
+    { no:6, cat:'contest', title:'수행자 선정 평가 신청서(별지 제1호) 서식', files:['평가_신청서_별지1호.hwp','평가_신청_자료_양식.hwp'], open:true, date:'2026-07-05' },
+    { no:5, cat:'contest', title:'전기승합차 공모 지원신청서(별지 제1·2호) 서식', files:['공모_지원신청서_별지1호.hwp','보급사업_계획서_별지2호.hwp','상세_보급계획_양식.xlsx'], open:true, date:'2026-07-03' },
+    { no:4, cat:'card', title:'회원카드 발급 신청서 서식', files:['회원카드_발급신청서.hwp'], open:true, date:'2026-06-28' },
+    { no:3, cat:'card', title:'회원카드 재발급·해지 신청서 서식', files:['회원카드_재발급해지신청서.hwp'], open:true, date:'2026-06-25' },
+    { no:2, cat:'etc', title:'개인정보 수집·이용 동의서 표준 서식', files:['개인정보_동의서_표준.hwp'], open:true, date:'2026-06-20' },
+    { no:1, cat:'etc', title:'위임장 표준 서식 (구버전 — 내부 확인용)', files:['위임장_표준.hwp'], open:false, date:'2026-06-15' }
+  ];
+
+  // 분류 필터·등록폼 select 옵션
+  $('fCat').innerHTML = '<option value="all">전체 분류</option>' + CATS.map(function(c){ return '<option value="'+c.key+'">'+c.label+'</option>'; }).join('');
+  $('eCat').innerHTML = '<option value="">분류 선택</option>' + CATS.map(function(c){ return '<option value="'+c.key+'">'+c.label+'</option>'; }).join('');
+
+  /* ── 목록 ── */
+  function filtered(){
+    var ck=$('fCat').value, op=$('fOpen').value, kw=($('fKw').value||'').trim().toLowerCase();
+    return DATA.filter(function(d){
+      if (ck!=='all' && d.cat!==ck) return false;
+      if (op!=='all' && ((op==='open')!==d.open)) return false;
+      if (kw && d.title.toLowerCase().indexOf(kw)<0) return false;
+      return true;
+    });
+  }
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listBody').innerHTML = rows.length ? rows.map(function(d){
+      var files = d.files.map(function(f){ return '<a href="#" class="form-file" data-f="'+esc(f)+'" style="color:#1559c2;text-decoration:underline;text-underline-offset:2px;">'+esc(f)+'</a>'; }).join(' · ');
+      return '<tr data-no="'+d.no+'">'
+        + '<td class="c num">'+d.no+'</td>'
+        + '<td class="c"><span class="adm-cat">'+esc(catLabel(d.cat))+'</span></td>'
+        + '<td>'+esc(d.title)+'</td>'
+        + '<td>'+files+'</td>'
+        + '<td class="c">'+(d.open?'<span class="adm-badge b-open">공개</span>':'<span class="adm-badge b-secret">비공개</span>')+'</td>'
+        + '<td class="c num">'+d.date.replace(/-/g,'.')+'</td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="6"><div class="adm-empty">조건에 맞는 서식이 없습니다.</div></td></tr>';
+  }
+  $('fCat').addEventListener('change', render);
+  $('fOpen').addEventListener('change', render);
+  $('fKw').addEventListener('input', render);
+  $('fSearch').addEventListener('click', render);
+  $('fReset').addEventListener('click', function(){ $('fCat').value='all'; $('fOpen').value='all'; $('fKw').value=''; render(); });
+
+  // 파일명 = 다운로드 링크(mock 토스트) · 행 클릭 = 수정 화면
+  $('listBody').addEventListener('click', function(e){
+    var lnk = e.target.closest('.form-file');
+    if (lnk){ e.preventDefault(); e.stopPropagation(); __admToast('"'+lnk.dataset.f+'" 파일이 다운로드됩니다. (프로토타입)'); return; }
+    var tr = e.target.closest('tr[data-no]'); if (tr) openEdit(+tr.dataset.no);
+  });
+
+  /* ── 등록/수정 (boardEdit 공용 패턴 · 게시판 구분 고정) ── */
+  function openEdit(no){
+    var d = no!=null ? DATA.filter(function(x){ return x.no===no; })[0] : null;
+    $('editHead').textContent = d ? '서식 수정' : '서식 등록';
+    $('eCat').value = d ? d.cat : '';
+    $('eTitle').value = d ? d.title : '';
+    $('eBody').value = d ? '(더미 내용) ' + d.title : '';
+    $('eNotice').checked = false;
+    document.querySelector('input[name=eOpen][value='+((d && !d.open)?'secret':'open')+']').checked = true;
+    $('eFiles').value = '';
+    $('eFileList').innerHTML = d ? '기존 첨부 : ' + d.files.map(esc).join(' · ') : '';
+    $('listWrap').hidden = true; $('editWrap').hidden = false;
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  $('btnNew').addEventListener('click', function(){ openEdit(null); });
+  $('eBack').addEventListener('click', function(){ $('editWrap').hidden = true; $('listWrap').hidden = false; });
+  $('eFiles').addEventListener('change', function(){
+    var names = Array.prototype.map.call(this.files, function(f){ return f.name; });
+    if (names.length) $('eFileList').innerHTML = '선택된 파일 : ' + names.map(esc).join(' · ');
+  });
+  $('eSave').addEventListener('click', function(){
+    if (!$('eCat').value){ __admToast('분류를 선택해 주세요.'); return; }
+    if (!$('eTitle').value.trim()){ __admToast('제목을 입력해 주세요.'); return; }
+    var isNew = $('editHead').textContent === '서식 등록';
+    if (isNew && !$('eFiles').files.length){ __admToast('서식파일을 1개 이상 첨부해 주세요. (필수)'); return; }
+    __admToast('저장되었습니다. (프로토타입 — 실제 저장되지 않습니다)');
+    $('editWrap').hidden = true; $('listWrap').hidden = false;
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

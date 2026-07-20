@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260716d">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260720c">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -35,16 +35,17 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260716d"></script>
+<script src="js/contest-detail.js?v=20260720c"></script>
 <script>
 /* [DEV] 상태 = PS_FORKLIFT_APPLY.REQ_STATUS (REQ_STATUS3 = 제출완료/보완요청/보완완료/승인, 2=보완요청). 선정/미선정 축 없음
    [DEV] result 배지 매핑: 제출완료·보완요청·보완완료→progress · 승인→done
    [DEV] 담당자 입력값 = RES_CONT(보완요청 사유). KECO_CONT·사업자유형·차종·충전사업자·구매보조금 연계 전부 없음
+   [DEV] 신청취소(REQ_STATUS3 4)는 관리자 지정 전용 상태 — 대민 취소 기능 없음. 대민 실기능은 신청 삭제만 가능(상태≠4 조건). 조회 표시는 유지
    [DEV] 첨부 = REQ_FILE_ID_1~8 · 처리정보 = UPD_DT(최종 처리일시)·UPD_ID(최종 처리자) · 전부 더미. */
 (function(){
   function docs8(cert, supp, miss){
@@ -54,7 +55,6 @@
   var CERT='무공해건설기계 인증 서류';
   ContestDetail.mount({
     applyHref:'public-construction-apply.html', applyName:'전기지게차 공모 신청', supplementHref:'public-construction-apply.html',
-    cancel:{ label:'신청 취소', to:'신청취소' },   // 제출완료·보완요청·보완완료 구간만 노출(app.cancelable)
     devRef:{
       states:[
         {code:'제출완료', label:'참여 지원신청서 제출 완료', badge:'progress'},
@@ -71,7 +71,7 @@
       ]
     },
     apps:[
-      { appId:'PC-2026-000188', project:'무공해 건설기계(지게차) 보급사업', applyDate:'2026.04.10', status:'보완요청', cancelable:true, result:'progress',
+      { appId:'PC-2026-000188', project:'무공해 건설기계(지게차) 보급사업', applyDate:'2026.04.10', status:'보완요청', result:'progress',
         notice:{ name:'2026년 무공해 건설기계(지게차) 보급사업 공모', no:'환경부공고 제2026-176호', org:'한국환경공단', period:'2026.03.15 ~ 2026.04.10', announce:'2026.05.15(예정)', scale:'평가 기준 충족 신청기관 선정' },
         applicant:{ title:'업체 정보',
           rows:[['업체명','대한물류(주)'],['대표자','정대표'],['법인등록번호','110111-2233445'],['사업자등록번호','220-88-11223'],['주소','경기도 평택시 산단로 000 (2층)'],['연락처','031-777-8888']] },

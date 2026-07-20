@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>질의응답(건의사항) 관리 | 통합관리시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+</head>
+<body>
+<!-- [DEV] 통합관리시스템 > 게시판 관리 > 질의응답(건의사항) 관리 — AS-IS ev_adm appBoardMng(목록/appBoardView·Reply 상세) 재현 + 개편(v0.30 1호)
+     개편: ① 분류 = 대분류/소분류 2단(신설 코드, QNAGBN 5슬롯 대체 · js/qna-categories.js 단일 원천 — 대민 게시판/민원현황과 동일 코드그룹)
+           ② 상단 분류별 건수 현황판 5분류(A~E) 1줄 → 대분류 7종 확장  ③ 분류별 담당 자동 매핑 표시 -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">질의응답(건의사항) 관리</h1>
+    <p class="adm-desc">대민 누리집 질의응답(건의사항) 게시판의 질문·답변을 관리합니다. 분류를 클릭하면 해당 대분류로 필터됩니다.</p>
+
+    <!-- 분류별 건수 현황판 (대분류 7종 × 건수 — AS-IS 5분류 1줄 → 개편 확장) -->
+    <div class="adm-card">
+      <h3>분류별 건수 현황</h3>
+      <div class="adm-stats" id="statBoard"></div>
+    </div>
+
+    <!-- 목록 화면 -->
+    <div id="listWrap">
+      <!-- 검색 필터 -->
+      <div class="adm-card">
+        <div class="adm-filter">
+          <div class="adm-field"><label>답변구분(대분류)</label><select id="fMajor"></select></div>
+          <div class="adm-field"><label>답변구분(소분류)</label><select id="fMinor" disabled></select></div>
+          <div class="adm-field"><label>답변처리상태</label>
+            <select id="fState"><option value="all">전체</option><option value="wait">답변대기</option><option value="done">답변완료</option></select>
+          </div>
+          <div class="adm-field"><label>작성일</label>
+            <div class="adm-dates"><input type="date" id="fFrom" aria-label="시작일"><span class="tilde">~</span><input type="date" id="fTo" aria-label="종료일"></div>
+          </div>
+          <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="제목·작성자 검색"></div>
+          <button type="button" class="adm-btn primary" id="fSearch">검색</button>
+          <button type="button" class="adm-btn" id="fReset">초기화</button>
+        </div>
+      </div>
+
+      <div class="adm-meta"><div>전체 <strong id="listCount">0</strong>건</div><div>행을 클릭하면 상세·답변 화면으로 이동합니다</div></div>
+      <table class="adm-tbl">
+        <thead><tr>
+          <th class="c" style="width:56px;">번호</th>
+          <th style="width:190px;">분류</th>
+          <th class="c" style="width:84px;">공개여부</th>
+          <th>제목</th>
+          <th class="c" style="width:100px;">답변처리상태</th>
+          <th class="c" style="width:120px;">담당자</th>
+          <th class="c" style="width:100px;">작성일</th>
+        </tr></thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 상세 화면 (행 클릭) — AS-IS appBoardView/Reply 필드 재현 -->
+    <div id="detailWrap" hidden>
+      <div class="adm-card">
+        <h3 id="dTitleHead">게시물 상세</h3>
+        <div class="adm-detail">
+          <dl>
+            <dt>구분</dt><dd id="dCat"></dd>
+            <dt>공개여부</dt><dd id="dSecret"></dd>
+            <dt>제목</dt><dd class="wide" id="dTitle"></dd>
+            <dt>작성자</dt><dd id="dAuthor"></dd>
+            <dt>작성일</dt><dd id="dDate"></dd>
+            <dt>연락처</dt><dd id="dPhone"></dd>
+            <dt>첨부</dt><dd id="dAttach"></dd>
+          </dl>
+        </div>
+        <div class="adm-body-box" id="dBody"></div>
+
+        <!-- 답변 영역 (AS-IS appBoardReply: 담당자·답변일·답변내용·처리현황) -->
+        <div class="adm-answer">
+          <div class="hd">
+            <div><strong>답변</strong> · 담당자 <strong id="aHandler"></strong> <span class="adm-assign" id="aAssign"></span></div>
+            <div style="color:#64748b;">답변일 <span id="aDate">—</span> · 처리현황
+              <select id="aState" style="height:28px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;margin-left:4px;">
+                <option value="wait">답변대기</option><option value="done">답변완료</option>
+              </select>
+            </div>
+          </div>
+          <textarea id="aBody" placeholder="답변 내용을 입력하세요."></textarea>
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">
+            <button type="button" class="adm-btn" id="dBack">목록으로</button>
+            <button type="button" class="adm-btn primary" id="aSave">답변 저장(mock)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 개발 참고 -->
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 분류 코드·담당 매핑 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>분류 코드 신설</strong> : 대분류(major) + 소분류(minor) 2컬럼 — 기존 QNAGBN 단일 5슬롯 대체(2단 수용 불가 → 코드 신설, 개발 협의 필요).</li>
+        <li><strong>단일 원천</strong> : js/qna-categories.js — 대민 질의응답 게시판(inquiry-qna·qna-write)·민원 처리 현황 조회(inquiry-status)와 동일 코드그룹 공유(변경 시 자동 일치).</li>
+        <li><strong>분류별 담당 자동 매핑</strong> : 대분류 → 담당팀 매핑 테이블 필요(예: 회원.계정→유지보수팀). 현행 카테고리별 담당 배정 운영 방식 유지(운영자 일괄 아님).</li>
+        <li><strong>AS-IS</strong> : ev_adm appBoardMng(목록·5분류 건수 1줄) / appBoardView·appBoardReply(구분·제목·작성자·작성일·연락처·공개여부·내용·첨부 + 담당자·답변일·답변내용·처리현황). 근거 = SFR-021 + 콜센터 상담 분류표(2026-07-15 확정).</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-ntp.js?v=20260716a"></script>
+<script src="js/qna-categories.js?v=20260716a"></script>
+<script>
+(function(){
+  'use strict';
+  var QC = window.QNA_CAT;
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // 셸 마운트 — 통합관리시스템 전체 메뉴(TNCM_MENU D0002 실사 · js/admin-menu-ntp.js)
+  AdminShell.mount({
+    system:'통합관리시스템',
+    gnb: window.ADMIN_MENU_NTP,
+    activeGnb:'시스템관리',
+    activeHref:'admin-board-qna.html'
+  });
+
+  // 분류별 담당 자동 매핑(더미) — [DEV] 대분류→담당팀 매핑 테이블 필요
+  var ASSIGNEE = { ev:'보조금운영팀', lev:'저공해차지원팀', h2:'수소인프라팀', charger:'충전인프라팀', mandate:'정책지원팀', account:'유지보수팀', etc:'콜센터 운영팀' };
+
+  /* ── 더미 12건 — 전 대분류 최소 1건 · 회원.계정 2건 ── */
+  var DATA = [
+    { no:2340, major:'ev', minor:'subsidy', secret:false, title:'전기차 개인 구매 후 신청 가능한 보조금 종류가 어떻게 되나요?', state:'done', date:'2026-04-22', author:'김민서', phone:'010-12**-56**', attach:'', answer:{ date:'2026-04-22', body:'국비·지방비·세제감면·공채매입면제 안내드립니다. 상세 내용은 대민 답변 본문 참조.' } },
+    { no:2339, major:'ev', minor:'sys', secret:true, title:'보조금 신청 화면에서 지역 선택 시 오류가 발생합니다.', state:'wait', date:'2026-04-21', author:'박준호', phone:'010-98**-11**', attach:'오류화면.png', answer:null },
+    { no:2338, major:'lev', minor:'lookup', secret:false, title:'저공해차 확인은 어디에서 하나요? 차량번호로 조회가 안 됩니다.', state:'done', date:'2026-04-20', author:'이서연', phone:'010-55**-22**', attach:'', answer:{ date:'2026-04-21', body:'무공해차 통합누리집 저공해차 확인 메뉴에서 차량등록번호로 조회 가능합니다. 신규 등록 차량은 반영까지 2~3일 소요됩니다.' } },
+    { no:2337, major:'lev', minor:'badge', secret:false, title:'저공해차 표지 발급 권한은 어느 기관에 있나요?', state:'wait', date:'2026-04-19', author:'정한별', phone:'010-77**-33**', attach:'', answer:null },
+    { no:2336, major:'h2', minor:'subsidy', secret:false, title:'수소차 구매보조금 신청 절차가 전기차와 다른가요?', state:'done', date:'2026-04-18', author:'최도윤', phone:'010-44**-88**', attach:'', answer:{ date:'2026-04-19', body:'신청 절차는 동일하며 보조금 단가·지원물량이 별도 관리됩니다. 지자체 공고를 확인해 주세요.' } },
+    { no:2335, major:'charger', minor:'fee', secret:false, title:'급속충전 요금이 회원가로 적용되지 않았습니다.', state:'wait', date:'2026-04-17', author:'강하은', phone:'010-66**-99**', attach:'결제내역.jpg', answer:null },
+    { no:2334, major:'charger', minor:'card', secret:true, title:'회원카드 재발급 신청 후 진행 상태를 알고 싶습니다.', state:'done', date:'2026-04-16', author:'윤지후', phone:'010-22**-44**', attach:'', answer:{ date:'2026-04-17', body:'재발급 카드는 4/16 출고되었으며 영업일 3~5일 내 수령 예정입니다.' } },
+    { no:2333, major:'charger', minor:'op', secret:false, title:'아파트 완속충전기가 2주째 고장 상태입니다. 조치 부탁드립니다.', state:'done', date:'2026-04-15', author:'장예린', phone:'010-33**-77**', attach:'현장사진.jpg', answer:{ date:'2026-04-16', body:'운영사에 점검을 요청했으며 4/18 수리 예정입니다. 지연 시 재안내드리겠습니다.' } },
+    { no:2332, major:'mandate', minor:'site', secret:false, title:'의무구매임차제 실적 입력 화면 위치를 모르겠습니다.', state:'wait', date:'2026-04-14', author:'한소율', phone:'010-88**-55**', attach:'', answer:null },
+    { no:2331, major:'account', minor:'signup', secret:false, title:'회원가입 절차 중 이메일 인증 메일이 오지 않습니다.', state:'wait', date:'2026-04-13', author:'남도현', phone:'010-11**-22**', attach:'', answer:null },
+    { no:2330, major:'account', minor:'login', secret:false, title:'로그인 시 계정 잠금이 반복됩니다. 해제 방법을 알려 주세요.', state:'done', date:'2026-04-12', author:'조은서', phone:'010-99**-33**', attach:'', answer:{ date:'2026-04-13', body:'연속 5회 실패 시 30분 잠금 정책이 적용됩니다. 임시 잠금을 해제했으니 비밀번호 재설정 후 이용해 주세요.' } },
+    { no:2329, major:'etc', minor:'etc', secret:false, title:'K-EV100 참여 선언 후 실질 이행 평가는 어떻게 이루어지나요?', state:'done', date:'2026-04-11', author:'배시우', phone:'010-55**-66**', attach:'', answer:{ date:'2026-04-12', body:'참여 기업의 연차별 전환 실적을 기준으로 평가하며, 세부 기준은 K-EV100 안내 페이지에 게시되어 있습니다.' } }
+  ];
+
+  /* ── 현황판 (대분류 7종 × 건수 — 클릭 시 대분류 필터) ── */
+  function renderStats(){
+    var counts = {}; DATA.forEach(function(d){ counts[d.major] = (counts[d.major]||0) + 1; });
+    $('statBoard').innerHTML = QC.majors().map(function(m){
+      return '<div class="adm-stat'+(($('fMajor')&&$('fMajor').value===m.key)?' active':'')+'" data-major="'+m.key+'"><div class="lb">'+esc(m.label)+'</div><div class="ct">'+(counts[m.key]||0)+'<span class="u">건</span></div></div>';
+    }).join('');
+  }
+  $('statBoard').addEventListener('click', function(e){
+    var t = e.target.closest('.adm-stat'); if(!t) return;
+    var mk = t.dataset.major;
+    $('fMajor').value = ($('fMajor').value === mk) ? 'all' : mk;   // 재클릭 = 해제
+    fillMinor($('fMajor').value);
+    renderStats(); render();
+  });
+
+  /* ── 필터 (대분류→소분류 연동 · js/qna-categories.js 그대로) ── */
+  $('fMajor').innerHTML = QC.majorOptions('전체 대분류');
+  function fillMinor(mk){
+    var m = $('fMinor');
+    m.innerHTML = (mk==='all') ? '<option value="all">전체 소분류</option>' : QC.minorOptions(mk, '전체 소분류');
+    m.disabled = (mk==='all');
+  }
+  fillMinor('all');
+  $('fMajor').addEventListener('change', function(){ fillMinor(this.value); renderStats(); render(); });
+  $('fMinor').addEventListener('change', render);
+  $('fState').addEventListener('change', render);
+  $('fFrom').addEventListener('change', render);
+  $('fTo').addEventListener('change', render);
+  $('fKw').addEventListener('input', render);
+  $('fSearch').addEventListener('click', render);
+  $('fReset').addEventListener('click', function(){
+    $('fMajor').value='all'; fillMinor('all'); $('fState').value='all';
+    $('fFrom').value=''; $('fTo').value=''; $('fKw').value='';
+    renderStats(); render();
+  });
+
+  /* ── 목록 ── */
+  function filtered(){
+    var mk=$('fMajor').value, nk=$('fMinor').value, st=$('fState').value,
+        from=$('fFrom').value, to=$('fTo').value, kw=($('fKw').value||'').trim().toLowerCase();
+    return DATA.filter(function(d){
+      if (mk!=='all' && d.major!==mk) return false;
+      if (nk!=='all' && !(d.major===mk && d.minor===nk)) return false;
+      if (st!=='all' && d.state!==st) return false;
+      if (from && d.date < from) return false;
+      if (to && d.date > to) return false;
+      if (kw && (d.title + d.author).toLowerCase().indexOf(kw) < 0) return false;
+      return true;
+    });
+  }
+  function stateBadge(s){ return s==='done' ? '<span class="adm-badge b-done">답변완료</span>' : '<span class="adm-badge b-wait">답변대기</span>'; }
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listBody').innerHTML = rows.length ? rows.map(function(d){
+      return '<tr data-no="'+d.no+'">'
+        + '<td class="c num">'+d.no+'</td>'
+        + '<td><span class="adm-cat">'+esc(QC.badge(d.major, d.minor))+'</span></td>'
+        + '<td class="c">'+(d.secret?'<span class="adm-badge b-secret">비공개</span>':'<span class="adm-badge b-open">공개</span>')+'</td>'
+        + '<td>'+esc(d.title)+'</td>'
+        + '<td class="c">'+stateBadge(d.state)+'</td>'
+        + '<td class="c">'+esc(ASSIGNEE[d.major]||'—')+'</td>'
+        + '<td class="c num">'+d.date.replace(/-/g,'.')+'</td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="7"><div class="adm-empty">조건에 맞는 게시물이 없습니다.</div></td></tr>';
+  }
+
+  /* ── 상세 (AS-IS appBoardView/Reply 필드) ── */
+  function openDetail(no){
+    var d = DATA.filter(function(x){ return x.no===no; })[0]; if(!d) return;
+    $('dCat').textContent = QC.badge(d.major, d.minor);
+    $('dSecret').innerHTML = d.secret ? '<span class="adm-badge b-secret">비공개</span>' : '<span class="adm-badge b-open">공개</span>';
+    $('dTitle').textContent = d.title;
+    $('dAuthor').textContent = d.author;
+    $('dDate').textContent = d.date.replace(/-/g,'.');
+    $('dPhone').textContent = d.phone;
+    $('dAttach').textContent = d.attach || '없음';
+    $('dBody').textContent = '(더미 본문) ' + d.title;
+    // 답변 영역 — 담당자 = 분류별 자동 매핑
+    $('aHandler').textContent = ASSIGNEE[d.major] || '—';
+    $('aAssign').textContent = QC.majorLabel(d.major) + ' → ' + (ASSIGNEE[d.major]||'—') + ' 자동 배정';
+    $('aDate').textContent = d.answer ? d.answer.date.replace(/-/g,'.') : '—';
+    $('aState').value = d.state;
+    $('aBody').value = d.answer ? d.answer.body : '';
+    $('listWrap').hidden = true; $('detailWrap').hidden = false;
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  $('listBody').addEventListener('click', function(e){
+    var tr = e.target.closest('tr[data-no]'); if (tr) openDetail(+tr.dataset.no);
+  });
+  $('dBack').addEventListener('click', function(){ $('detailWrap').hidden = true; $('listWrap').hidden = false; });
+  $('aSave').addEventListener('click', function(){ __admToast('답변이 저장되었습니다. (프로토타입 — 실제 저장되지 않습니다)'); });
+
+  renderStats(); render();
+})();
+</script>
+</body>
+</html>

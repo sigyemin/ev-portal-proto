@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260716d">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260720c">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -35,18 +35,18 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260716d"></script>
+<script src="js/contest-detail.js?v=20260720c"></script>
 <script>
 /* [DEV] ★ 신청 정보·제출 서류는 public-ev-apply.html 신청폼을 1:1 미러 (항목/라벨/순서 동일 · 값만 더미)
-   [DEV] 상태 = PS_EVALUATION_APPLY.REQ_STATUS · REQ_STATUS3 = 제출완료/보완요청/보완완료/신청취소(4)/검토완료 (근거: 관리자 실드롭다운. '승인'은 구버전 표기 → 검토완료). 선정/미선정 축 없음
-   [DEV] 관리자 필터 드롭다운만 4종(코드4 신청취소 필터 옵션 제외) — 데이터·대민 목록 표시는 5종 전체
-   [DEV] 신청취소 버튼 = 제출완료·보완요청·보완완료 구간만 노출(화면 기획값) → 클릭 시 REQ_STATUS3 4(신청취소). 실서비스 허용 구간은 담당 부서 정책 확인 필요
-   [DEV] 담당자 입력값 = RES_CONT(보완요청·보완완료·신청취소 사유) · 공단안내(KECO_CONT) 렌더 삭제됨
+   [DEV] 상태 = PS_EVALUATION_APPLY.REQ_STATUS · ★코드그룹 REQ_STATUS4(0·4·11 제외 노출) — 제출완료/보완요청/보완완료/검토완료 4종. REQ_STATUS3(전기승합·지게차·이륜용)과 별개 코드그룹
+   [DEV] 수행자평가에는 신청취소 상태 없음 (2026-07-20 운영 실화면+소스 전수 확인). '승인'은 구버전 표기 → 검토완료. 선정/미선정 축 없음
+   [DEV] 대민에서 상태를 취소로 바꾸는 기능 없음 — REQ_STATUS='4' 세팅 UPDATE 0건. 대민 실기능은 신청 삭제뿐 → 취소 버튼 미제공
+   [DEV] 담당자 입력값 = RES_CONT(보완요청·보완완료 사유) · 공단안내(KECO_CONT) 렌더 삭제됨
    [DEV] 사업자유형 = 신청폼 라디오(국내 제작사/수입사) 선택값 · 평가 대상 차종 = 신청폼 select(승용/승합/화물) 단일 선택값
    [DEV] 제출 서류 = 신청폼 업로드 필드 단위 : 신청서(PDF)/신청자료(HWP)/붙임자료(ZIP, 하위 증빙4종 안내)/증빙자료 13종(각 ZIP 1행). REQ_FILE_ID_1~16. 전부 더미. */
 (function(){
@@ -80,25 +80,23 @@
   }
   ContestDetail.mount({
     applyHref:'public-ev-apply.html', applyName:'전기자동차 수행자 선정 평가 신청', supplementHref:'public-ev-apply.html',
-    cancel:{ label:'신청 취소', to:'신청취소' },   // 취소 가능 구간(제출완료~보완완료)은 app.cancelable=true
     devRef:{
       states:[
-        {code:'제출완료 (1)', label:'평가 신청서 제출 완료', badge:'progress'},
-        {code:'보완요청 (2)', label:'담당 검토 → 보완 요청 · RES_CONT 세팅', badge:'progress'},
-        {code:'보완완료 (3)', label:'보완 재제출 완료', badge:'progress'},
-        {code:'신청취소 (4)', label:'신청자 취소 (제출~보완완료 구간) · 관리자 필터 옵션 제외'},
-        {code:'검토완료 (5)', label:'평가 검토완료 (최종)', badge:'done'}
+        {code:'제출완료', label:'평가 신청서 제출 완료', badge:'progress'},
+        {code:'보완요청', label:'담당 검토 → 보완 요청 · RES_CONT 세팅', badge:'progress'},
+        {code:'보완완료', label:'보완 재제출 완료', badge:'progress'},
+        {code:'검토완료', label:'평가 검토완료 (최종)', badge:'done'}
       ],
-      manager:['RES_CONT — 보완요청 사유 (담당자 입력)','KECO_CONT — 공단 안내 문구'],
+      manager:['RES_CONT — 보완요청 사유 (담당자 입력)','KECO_CONT — 공단 안내 문구','대민 취소 기능 없음 — 대민은 신청 삭제만 가능'],
       db:[
-        ['PS_EVALUATION_APPLY.REQ_STATUS','상태값 · 코드군 EVCS_CODE_DETAIL REQ_STATUS3 (2=보완요청 확정, 1/3/4 추정)'],
+        ['PS_EVALUATION_APPLY.REQ_STATUS','상태값 · ★코드그룹 REQ_STATUS4(0·4·11 제외 노출) = 제출완료/보완요청/보완완료/검토완료 4종 · REQ_STATUS3(타 공모용)과 별개'],
         ['CAR_TY_YN1~3 / BSNM_TY_YN1~4','평가 대상 차종(복수) / 사업자 유형'],
         ['REQ_FILE_ID_1~16','평가 증빙 첨부'],
         ['RES_CONT / KECO_CONT','보완요청 사유 / 공단 안내']
       ]
     },
     apps:[
-      { appId:'PEV-2026-000771', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.22', status:'보완요청', cancelable:true,
+      { appId:'PEV-2026-000771', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.22', status:'보완요청',
         notice:{ name:'2026년 전기자동차 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20(예정)', scale:'평가 기준 충족 수행자 선정' },
         applicant:{ title:'신청 정보', rows:[
           ['사업자명','그린모빌리티(주)'],['대표자명','김대표'],['사업자등록번호','123-45-67890'],
@@ -119,7 +117,7 @@
         ] },
         docs: docsApply({}) },
 
-      { appId:'PEV-2026-000803', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.25', status:'제출완료', cancelable:true,
+      { appId:'PEV-2026-000803', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.25', status:'제출완료',
         notice:{ name:'2026년 전기자동차 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20(예정)', scale:'평가 기준 충족 수행자 선정' },
         applicant:{ title:'신청 정보', rows:[
           ['사업자명','한빛모터스(주)'],['대표자명','정대표'],['사업자등록번호','128-81-55021'],
@@ -129,7 +127,7 @@
         ] },
         docs: docsApply({}) },
 
-      { appId:'PEV-2026-000758', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.20', status:'보완완료', cancelable:true,
+      { appId:'PEV-2026-000758', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.20', status:'보완완료',
         notice:{ name:'2026년 전기자동차 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20(예정)', scale:'평가 기준 충족 수행자 선정' },
         applicant:{ title:'신청 정보', rows:[
           ['사업자명','에코드라이브(주)'],['대표자명','오대표'],['사업자등록번호','214-88-19003'],
@@ -138,18 +136,7 @@
           ['담당자 성명','박담당'],['담당자 연락처','010-6666-7777'],['담당자 이메일','cert@ecodrive.co.kr']
         ] },
         docs: docsApply({}),
-        supplement:{ reason:'앞서 요청한 보완 서류(연구개발인프라·정비망 증빙)가 재제출되어 재검토를 진행 중입니다.' } },
-
-      { appId:'PEV-2026-000689', project:'전기자동차 보급사업 수행자 선정 평가', applyDate:'2026.04.15', status:'신청취소',
-        notice:{ name:'2026년 전기자동차 보급사업 수행자 선정 평가 공고', no:'환경부공고 제2026-215호', org:'한국환경공단', period:'2026.04.01 ~ 2026.04.22', announce:'2026.05.20', scale:'평가 기준 충족 수행자 선정' },
-        applicant:{ title:'신청 정보', rows:[
-          ['사업자명','미래이브이(주)'],['대표자명','강대표'],['사업자등록번호','312-81-77440'],
-          ['법인등록번호','110111-7744000'],['본사 소재지','경상남도 창원시 성산구 000'],['국내 사업장 수','3개'],
-          ['사업자 유형','국내 제작사'],['평가 대상 차종','승용'],
-          ['담당자 성명','윤담당'],['담당자 연락처','010-8888-9999'],['담당자 이메일','apply@miraeev.co.kr']
-        ] },
-        docs: docsApply({}),
-        supplement:{ title:'신청취소 사유', reason:'신청 기관의 요청으로 본 신청이 취소되었습니다. (사유: 평가 대상 모델 변경에 따른 자진 취소) 재신청은 차기 평가 시 가능합니다.' } }
+        supplement:{ reason:'앞서 요청한 보완 서류(연구개발인프라·정비망 증빙)가 재제출되어 재검토를 진행 중입니다.' } }
     ]
   });
 })();

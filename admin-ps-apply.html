@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>신청관리(지자체) | 구매보조금 지원시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<style>
+  .step-chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:800;white-space:nowrap;background:#eef2f6;color:#54616e;}
+  .step-chip.s-pay{background:#e7f0fe;color:#1559c2;}
+  .step-chip.s-done{background:#dff5e8;color:#19a76d;}
+  .step-chip.s-cancel{background:#fdecec;color:#c0392b;}
+  .step-chip.s-supp{background:#fff3e0;color:#b45309;}
+</style>
+</head>
+<body>
+<!-- [DEV] 구매보조금 지원시스템 > 신청관리 > 신청관리(지자체) (T2 · 전기자동차 기준 · v0.30 3호)
+     AS-IS localApplyInfo — 지자체 담당자 16단계 처리 목록 간이 재현(근거=회의록/공모·평가신청·보조금_상태값_정리_20260715.md §3-1 16단계 그대로).
+     [개편 A4] 상태 필터에 취소 5종(910~950) 세부 포함. 대민취소 뱃지는 폐기 — 대민 취소 기능 미존재(관리자/수행기관 지정 전용). -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">신청관리(지자체)</h1>
+    <p class="adm-desc">지자체 담당자 기준 구매보조금 신청 건을 16단계 처리 상태로 관리합니다. (전기자동차 기준 · AS-IS localApplyInfo 간이 재현)</p>
+
+    <div class="adm-card">
+      <div class="adm-filter">
+        <div class="adm-field"><label>지자체</label>
+          <select id="fLocal"><option value="all">전체 지자체</option><option>서울특별시</option><option>경기도 수원시</option><option>전라남도 순천시</option><option>경상북도 포항시</option></select>
+        </div>
+        <div class="adm-field"><label>상태 (16단계 · <span style="color:#c0392b;">취소 5종 포함</span>)</label>
+          <select id="fStep"></select>
+        </div>
+        <div class="adm-field"><label>신청일</label>
+          <div class="adm-dates"><input type="date" id="fFrom" aria-label="시작일"><span class="tilde">~</span><input type="date" id="fTo" aria-label="종료일"></div>
+        </div>
+        <div class="adm-field"><label>신청번호</label><input type="text" id="fNo" placeholder="신청번호"></div>
+        <button type="button" class="adm-btn primary" id="fSearch">검색</button>
+        <button type="button" class="adm-btn" id="fReset">초기화</button>
+      </div>
+    </div>
+
+    <div class="adm-meta"><div>전체 <strong id="listCount">0</strong>건</div><div>취소 세부 5종(910·920·930·940·950) 필터 <span style="color:#94a3b8;">([개편 A4])</span></div></div>
+    <table class="adm-tbl">
+      <thead><tr>
+        <th style="width:150px;">신청번호</th>
+        <th class="c" style="width:90px;">신청자</th>
+        <th style="width:200px;">차종모델</th>
+        <th style="width:190px;">현재 단계</th>
+        <th class="c" style="width:100px;">신청일</th>
+        <th class="c" style="width:90px;">처리</th>
+      </tr></thead>
+      <tbody id="listBody"></tbody>
+    </table>
+
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 16단계·신청취소 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>16단계</strong> = PS_APPLY.APP_STEP 지자체 담당자 처리 기준(상태값 정리 2026-07-15 §3-1 그대로): 사전검토(101,102)·검토보류(103)·보완요청/완료(승인전 110/111)·보완요청/완료(승인후 110/102,111 · PRE_APP_STEP 유무로 구분)·자격부여(120)·지원가능확인(121)·대상자선정(130)·지급신청(201,202)·지급보완요청(210)·지급보완완료(211)·지급대기(203)·지급완료(220)·최종완료(501)·취소(910~950).</li>
+        <li><strong>[개편 A4]</strong> : 상태 필터에 취소 세부 5종(지원취소 910·신청포기 920·출고지연취소 930·승인불가 940·취소 950) 포함. ★대민취소 뱃지 폐기(2026-07-20 운영 실화면+소스 확인) — 대민에서 상태를 취소로 바꾸는 기능 없음. 취소 상태는 전부 관리자/수행기관 지정.</li>
+        <li><strong>대민 노출</strong> : 16단계는 대민에 그대로 노출하지 않음 — 5단계 트랙(신청접수/자격심사/지원대상선정/지급신청/지급완료) + 보완 오버레이 + 종료(취소·반려)로 흡수.</li>
+        <li><strong>AS-IS</strong> : ps/apply/localApplyInfo (신청관리 &gt; 신청관리(지자체)). 전기자동차 기준(타 차종 car_type 변주).</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-ps.js?v=20260716a"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  AdminShell.mount({
+    system:'구매보조금 지원시스템',
+    gnb: window.ADMIN_MENU_PS,
+    activeGnb:'전기자동차',
+    activeHref:'admin-ps-apply.html'
+  });
+
+  // 16단계 (상태값 정리 §3-1 그대로) — key = 단계번호
+  var STEPS = [
+    { k:1,  label:'사전검토',            code:'101,102' },
+    { k:2,  label:'검토보류',            code:'103' },
+    { k:3,  label:'보완요청(승인전)',    code:'110', cls:'s-supp' },
+    { k:4,  label:'보완완료(승인전)',    code:'111', cls:'s-supp' },
+    { k:5,  label:'보완요청(승인후)',    code:'110', cls:'s-supp' },
+    { k:6,  label:'보완완료(승인후)',    code:'102,111', cls:'s-supp' },
+    { k:7,  label:'자격부여',            code:'120' },
+    { k:8,  label:'지원가능확인',        code:'121' },
+    { k:9,  label:'대상자선정',          code:'130' },
+    { k:10, label:'지급신청',            code:'201,202', cls:'s-pay' },
+    { k:11, label:'지급보완요청',        code:'210', cls:'s-supp' },
+    { k:12, label:'지급보완완료',        code:'211', cls:'s-supp' },
+    { k:13, label:'지급대기',            code:'203', cls:'s-pay' },
+    { k:14, label:'지급완료',            code:'220', cls:'s-done' },
+    { k:15, label:'최종완료',            code:'501', cls:'s-done' }
+  ];
+  // 16단계 = 취소 (세부 5종 910~950 — [개편 A4] 필터에 세부 포함)
+  var CANCELS = [
+    { k:'910', label:'지원취소(910)' },
+    { k:'920', label:'신청포기(920)' },
+    { k:'930', label:'출고지연취소(930)' },
+    { k:'940', label:'승인불가(940)' },
+    { k:'950', label:'취소(950)' }
+  ];
+  function stepLabel(d){
+    if (d.step === 16){ var c = CANCELS.filter(function(x){ return x.k===d.cancel; })[0]; return '취소 · ' + (c ? c.label : d.cancel); }
+    var s = STEPS.filter(function(x){ return x.k===d.step; })[0]; return s ? s.label : d.step;
+  }
+  function stepCls(d){
+    if (d.step === 16) return 's-cancel';
+    var s = STEPS.filter(function(x){ return x.k===d.step; })[0]; return (s && s.cls) || '';
+  }
+
+  // 상태 필터 select — 16단계 + 취소 세부 5종 optgroup
+  $('fStep').innerHTML = '<option value="all">전체 상태</option>'
+    + STEPS.map(function(s){ return '<option value="s'+s.k+'">'+s.k+'. '+s.label+'</option>'; }).join('')
+    + '<optgroup label="16. 취소 — 세부 5종 (910~950) [개편 A4]">'
+    + CANCELS.map(function(c){ return '<option value="c'+c.k+'">'+c.label+'</option>'; }).join('')
+    + '</optgroup>';
+
+  /* ── 더미 15건 — 단계 분포 다양 · 취소 2건 ── */
+  var DATA = [
+    { no:'PS-2026-104501', name:'김민서', model:'아이오닉5 롱레인지', local:'서울특별시',   step:1,  date:'2026-06-28' },
+    { no:'PS-2026-104488', name:'박준호', model:'EV6 스탠다드',       local:'경기도 수원시', step:2,  date:'2026-06-27' },
+    { no:'PS-2026-104472', name:'이서연', model:'코나 일렉트릭',      local:'서울특별시',   step:3,  date:'2026-06-25' },
+    { no:'PS-2026-104455', name:'정한별', model:'토레스 EVX',         local:'전라남도 순천시', step:4,  date:'2026-06-24' },
+    { no:'PS-2026-104430', name:'최도윤', model:'모델Y RWD',          local:'경기도 수원시', step:5,  date:'2026-06-22' },
+    { no:'PS-2026-104417', name:'강하은', model:'니로 EV',            local:'경상북도 포항시', step:6,  date:'2026-06-20' },
+    { no:'PS-2026-104399', name:'윤지후', model:'아이오닉6',          local:'서울특별시',   step:7,  date:'2026-06-18' },
+    { no:'PS-2026-104372', name:'장예린', model:'레이 EV',            local:'전라남도 순천시', step:8,  date:'2026-06-15' },
+    { no:'PS-2026-104344', name:'한소율', model:'폴스타4',            local:'경기도 수원시', step:9,  date:'2026-06-12' },
+    { no:'PS-2026-104310', name:'오태경', model:'EV3 롱레인지',       local:'서울특별시',   step:10, date:'2026-06-08' },
+    { no:'PS-2026-104287', name:'남도현', model:'캐스퍼 일렉트릭',    local:'경상북도 포항시', step:11, date:'2026-06-05' },
+    { no:'PS-2026-104260', name:'조은서', model:'ID.4',               local:'경기도 수원시', step:13, date:'2026-06-02' },
+    { no:'PS-2026-104233', name:'배시우', model:'아이오닉5 N',        local:'서울특별시',   step:14, date:'2026-05-28' },
+    { no:'PS-2026-104201', name:'문하준', model:'EV9',                local:'전라남도 순천시', step:16, cancel:'920' ,  date:'2026-05-25' },
+    { no:'PS-2026-104188', name:'서지안', model:'코나 일렉트릭',      local:'경상북도 포항시', step:16, cancel:'910' , date:'2026-05-22' }
+  ];
+
+  function filtered(){
+    var lc=$('fLocal').value, st=$('fStep').value, from=$('fFrom').value, to=$('fTo').value, no=($('fNo').value||'').trim();
+    return DATA.filter(function(d){
+      if (lc!=='all' && d.local!==lc) return false;
+      if (st!=='all'){
+        if (st.charAt(0)==='s' && d.step !== +st.slice(1)) return false;
+        if (st.charAt(0)==='c' && !(d.step===16 && d.cancel===st.slice(1))) return false;
+      }
+      if (from && d.date < from) return false;
+      if (to && d.date > to) return false;
+      if (no && d.no.indexOf(no)<0) return false;
+      return true;
+    });
+  }
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listBody').innerHTML = rows.length ? rows.map(function(d){
+      return '<tr>'
+        + '<td class="num">'+esc(d.no)+'</td>'
+        + '<td class="c">'+esc(d.name)+'</td>'
+        + '<td>'+esc(d.model)+'<div style="font-size:11.5px;color:#94a3b8;">'+esc(d.local)+'</div></td>'
+        + '<td><span class="step-chip '+stepCls(d)+'">'+esc(stepLabel(d))+'</span>'+'</td>'
+        + '<td class="c num">'+d.date.replace(/-/g,'.')+'</td>'
+        + '<td class="c"><button type="button" class="adm-btn" style="height:28px;padding:0 10px;font-size:12px;" onclick="__admToast(\'처리 화면은 추후 호에서 연결됩니다. (프로토타입)\')">처리</button></td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="6"><div class="adm-empty">조건에 맞는 신청 건이 없습니다.</div></td></tr>';
+  }
+  ['fLocal','fStep','fFrom','fTo'].forEach(function(id){ $(id).addEventListener('change', render); });
+  $('fNo').addEventListener('input', render);
+  $('fSearch').addEventListener('click', render);
+  $('fReset').addEventListener('click', function(){ $('fLocal').value='all'; $('fStep').value='all'; $('fFrom').value=''; $('fTo').value=''; $('fNo').value=''; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>

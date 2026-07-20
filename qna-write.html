@@ -45,17 +45,14 @@
       <div class="card">
         <form data-validate id="qnaWriteForm">
           <div class="grid grid-2 gap-4">
+            <!-- [DEV] 질문 구분 = 신설 대분류(major)+소분류(minor) 2단(js/qna-categories.js 단일 원천) · inquiry-qna 필터·민원 현황 조회와 동일 코드 -->
             <div class="form-group">
-              <label class="form-label">질문 구분 <span class="required">*</span></label>
-              <select class="form-select" id="qwCat" required>
-                <option value="">선택</option>
-                <!-- [DEV] QNAGBN 코드그룹(5슬롯) · SFR-021 재편 — inquiry-qna 필터와 동일. 완속/급속 → 설치 통합 -->
-                <option value="account">회원가입·계정</option>
-                <option value="subsidy">구매보조금</option>
-                <option value="op">충전기 운영·회원카드/결제</option>
-                <option value="install">충전시설 설치·설치보조금</option>
-                <option value="etc">기타</option>
-              </select>
+              <label class="form-label">질문 구분(대분류) <span class="required">*</span></label>
+              <select class="form-select" id="qwMajor" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">질문 구분(소분류) <span class="required">*</span></label>
+              <select class="form-select" id="qwMinor" required disabled></select>
             </div>
             <div class="form-group">
               <label class="form-label">작성자</label>
@@ -94,10 +91,11 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
+<script src="js/qna-categories.js?v=20260716a"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
 (function(){
@@ -111,9 +109,28 @@
   try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.name) writer = u.name; } catch(e){}
   var wEl = document.getElementById('qwWriter'); if (wEl) wEl.textContent = writer;
 
-  // 진입 파라미터 프리필(카테고리·제목)
+  // 질문 구분 대분류/소분류 2단(연동) — js/qna-categories.js 단일 원천
+  var QC = window.QNA_CAT;
+  var qMajor = document.getElementById('qwMajor'), qMinor = document.getElementById('qwMinor');
+  if (qMajor) qMajor.innerHTML = '<option value="">대분류 선택</option>' + QC.majors().map(function(m){ return '<option value="'+m.key+'">'+m.label+'</option>'; }).join('');
+  function fillMinor(mk){
+    if (!qMinor) return;
+    if (!mk) { qMinor.innerHTML = '<option value="">대분류를 먼저 선택</option>'; qMinor.disabled = true; return; }
+    qMinor.innerHTML = '<option value="">소분류 선택</option>' + QC.subs(mk).map(function(s){ return '<option value="'+s.key+'">'+s.label+'</option>'; }).join('');
+    qMinor.disabled = false;
+  }
+  fillMinor('');
+  if (qMajor) qMajor.addEventListener('change', function(){ fillMinor(qMajor.value); });
+
+  // 진입 파라미터 프리필(카테고리 "대분류 › 소분류"·제목)
   var p = new URLSearchParams(location.search);
-  var cat = p.get('cat'); if (cat) { var cs = document.getElementById('qwCat'); if (cs) { for (var i=0;i<cs.options.length;i++){ if (cs.options[i].text===cat){ cs.selectedIndex=i; break; } } } }
+  var cat = p.get('cat');
+  if (cat && qMajor) {
+    var parts = cat.split('›').map(function(s){ return s.trim(); });
+    var m = QC.majors().filter(function(x){ return x.label===parts[0]; })[0];
+    if (m) { qMajor.value = m.key; fillMinor(m.key);
+      if (parts[1]) { var sub = QC.subs(m.key).filter(function(x){ return x.label===parts[1]; })[0]; if (sub) qMinor.value = sub.key; } }
+  }
   var subject = p.get('subject'); if (subject) { var t = document.getElementById('qwTitle'); if (t) t.value = subject; }
 
   document.getElementById('qnaWriteForm').addEventListener('submit', function(e){

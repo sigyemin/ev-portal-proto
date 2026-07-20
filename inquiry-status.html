@@ -125,6 +125,8 @@
             <div class="flt-field"><label>상태</label><div class="ms-dd" data-ms="status"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">상태 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
             <div class="flt-field"><label>유형</label><div class="ms-dd" data-ms="type"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">유형 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
             <div class="flt-field"><label>세부 유형</label><div class="ms-dd" data-ms="sub"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">세부 유형 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
+            <!-- 소분류: 유형=질의응답 + 세부유형(대분류) 선택 시에만 활성 -->
+            <div class="flt-field"><label>소분류</label><div class="ms-dd" data-ms="minor"><button type="button" class="ms-dd-btn"><span class="ms-dd-label">소분류 전체</span><svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-dd-panel" hidden></div></div></div>
             <div class="flt-field"><label>기간(접수일)</label>
               <select id="fltPeriod">
                 <option value="all">전체 기간</option>
@@ -194,11 +196,12 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/i18n-inquiry.js?v=20260520"></script>
 <script src="js/main.js?v=20260520"></script>
+<script src="js/qna-categories.js?v=20260716a"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
 /* ===== 민원 처리 현황 — 게시판형 + 다중필터 + 상세(공지 상세 패턴) ===== */
@@ -215,17 +218,21 @@
     { k:'data', label:'요청자료' }, { k:'h2help', label:'수소충전소 Help Desk' }
   ];
   var TYPE_LABEL = {}; TYPES.forEach(function(t){ TYPE_LABEL[t.k]=t.label; });
+  // [DEV] 세부유형 = 게시판 카테고리. 질의응답(qna)만 세부유형=대분류(js/qna-categories.js) + 소분류(minor) 2단 · 그 외 게시판은 단일
   var SUBS = {
     complaint:['충전기 고장','결제 오류','AS·콜센터 지연','기타'],
     report:['부당수령','허위설치','중복수령','운영의무 위반'],
     discount:['회원할인 미적용','로밍협약요금 미적용','심야할인 미적용'],
-    qna:['보조금','충전','세제','기타'],
+    qna:(window.QNA_CATS||[]).map(function(c){ return c.label; }),   // 대분류 라벨
     data:['통계자료','정책자료','기타'],
     h2help:['고장신고','운영문의','안전점검']
   };
+  var QC = window.QNA_CAT;   // 소분류 원천
   var STATUS = { received:'접수', progress:'처리중', done:'완료(정상)', rejected:'완료(처리불가)' };
   var STATUS_ORDER = { received:0, progress:1, done:2, rejected:3 };
   function statusLabel(it){ return it.statusLabel || STATUS[it.status]; }
+  // 세부유형 표기 — 질의응답만 "대분류 › 소분류", 그 외 게시판은 단일(무변화)
+  function subText(it){ return it.type==='qna' ? (it.sub + (it.minor ? ' › ' + it.minor : '')) : (it.sub || '–'); }
 
   /* ── 데이터(mock) ── */
   var ITEMS = [
@@ -235,14 +242,18 @@
     { no:'CV-2026-000987', type:'complaint', sub:'기타', title:'모바일 환경에서 첨부 파일 업로드 실패', status:'rejected', received:'2026.03.15 20:05', done:'2026.03.17 10:30', handler:'김도현 주무관', content:'모바일(안드로이드)에서 민원 접수 시 사진 첨부가 계속 실패합니다. iOS·PC는 정상입니다.', result:'제출 환경에서 오류를 재현하지 못했고 추가 정보 요청에 회신이 없어 사실관계 확인이 불가하여 처리불가로 종결합니다. 재발 시 화면 캡처와 함께 재접수해 주세요.' },
     { no:'DC-2026-000210', type:'discount', sub:'회원할인 미적용', title:'회원 할인이 적용되지 않았습니다', status:'progress', received:'2026.06.15 13:11', done:'', handler:'정민재 주무관', content:'회원카드로 결제했는데 회원 할인가가 아닌 일반 단가로 청구되었습니다. 차액 환급 요청합니다. (카드 …4567)', result:'사업자 측 단가 적용 오류 확인 중입니다. 확인 후 차액 환급 처리하겠습니다.', resultAt:'2026.06.16 09:40' },
     { no:'DC-2026-000198', type:'discount', sub:'심야할인 미적용', title:'심야 할인이 적용되지 않았습니다', status:'done', received:'2026.05.20 23:55', done:'2026.05.23 16:00', handler:'정민재 주무관', content:'23시 이후 충전인데 심야 할인이 빠진 것 같습니다.', result:'심야 할인 미반영 확인되어 차액 1,820원 환급 완료했습니다.' },
-    { no:'QA-2026-002201', type:'qna', sub:'보조금', title:'구매 후 지방비 지급이 지연되는데, 확인 가능한 방법이 있나요?', status:'done', received:'2026.04.02 09:10', done:'2026.04.05 16:20', handler:'박서연 주무관', content:'전기차 구매 후 국비는 지급되었으나 지방비가 한 달 넘게 입금되지 않았습니다. 확인 방법을 알고 싶습니다.', result:'지자체 예산 집행 일정상 지연된 건으로, 4월 5일자 지급 처리 완료되었습니다. 입금까지 영업일 2~3일 소요될 수 있습니다.' },
-    { no:'QA-2026-002180', type:'qna', sub:'충전', title:'회원카드 등록 방법이 궁금합니다', status:'done', received:'2026.03.28 14:02', done:'2026.03.29 10:15', handler:'이정훈 주무관', content:'회원카드 신규 발급 후 차량번호 등록은 어디서 하나요?', result:'회원카드 관리 > 내 회원카드 > 정보수정에서 차량번호를 등록할 수 있습니다.' },
+    { no:'QA-2026-002201', type:'qna', sub:'전기차', minor:'보조금 신청', title:'구매 후 지방비 지급이 지연되는데, 확인 가능한 방법이 있나요?', status:'done', received:'2026.04.02 09:10', done:'2026.04.05 16:20', handler:'박서연 주무관', content:'전기차 구매 후 국비는 지급되었으나 지방비가 한 달 넘게 입금되지 않았습니다. 확인 방법을 알고 싶습니다.', result:'지자체 예산 집행 일정상 지연된 건으로, 4월 5일자 지급 처리 완료되었습니다. 입금까지 영업일 2~3일 소요될 수 있습니다.' },
+    { no:'QA-2026-002180', type:'qna', sub:'충전기', minor:'회원카드 및 결제', title:'회원카드 등록 방법이 궁금합니다', status:'done', received:'2026.03.28 14:02', done:'2026.03.29 10:15', handler:'이정훈 주무관', content:'회원카드 신규 발급 후 차량번호 등록은 어디서 하나요?', result:'회원카드 관리 > 내 회원카드 > 정보수정에서 차량번호를 등록할 수 있습니다.' },
+    { no:'QA-2026-002250', type:'qna', sub:'회원.계정', minor:'로그인', title:'로그인 시 계정 잠금이 반복되어 접속이 안 됩니다', status:'progress', received:'2026.06.18 09:35', done:'', handler:'김도현 주무관', content:'비밀번호를 정확히 입력해도 로그인 시 계정 잠금이 반복됩니다. 잠금 해제 방법을 알고 싶습니다.', result:'로그인 보안정책(연속 실패 잠금) 관련 확인 중이며, 임시 잠금 해제 후 재설정 절차를 안내드리겠습니다.', resultAt:'2026.06.18 14:10' },
     { no:'DATA-2026-000045', type:'data', sub:'통계자료', title:'지자체별 충전기 보급 통계 자료 요청', status:'done', statusLabel:'완료', received:'2026.05.12 10:30', done:'2026.05.15 17:00', handler:'데이터정책팀', content:'2024~2026년 지자체별 공공 급속/완속 충전기 보급 현황 통계를 요청합니다. (연구 목적)', result:'요청하신 통계는 공개자료실에 게시했습니다. 자료 링크를 회신 메일로 안내드렸습니다.' },
     { no:'H2-2026-000077', type:'h2help', sub:'고장신고', title:'○○ 수소충전소 결제 단말 오류', status:'progress', received:'2026.06.24 08:50', done:'', handler:'수소인프라팀', content:'○○ 수소충전소에서 카드 결제 단말이 인식되지 않습니다. 현장 점검 요청합니다.', result:'운영사에 현장 점검 요청 접수했습니다. 처리 결과를 안내드리겠습니다.', resultAt:'2026.06.24 13:20' }
   ];
 
   /* ── 상태(전역) ── */
-  var sel = { status:new Set(), type:new Set(), sub:new Set() };
+  var sel = { status:new Set(), type:new Set(), sub:new Set(), minor:new Set() };
+  // 소분류 활성 조건 = 유형에 질의응답 포함 + 세부유형(대분류) 선택
+  function qMajorsSelected(){ return Array.from(sel.sub).filter(function(l){ return (SUBS.qna||[]).indexOf(l)>=0; }); }
+  function minorActive(){ return sel.type.has('qna') && qMajorsSelected().length>0; }
   var period = 'all', dateFrom = '', dateTo = '', query = '';
   var sortKey = null, sortDir = 0; // sortDir: 0 기본(최신순) · 1 내림 · 2 올림
   function sortVal(it, key){
@@ -255,10 +266,14 @@
   }
 
   /* ── 다중선택 드롭다운 ── */
-  function msName(key){ return key==='status'?'상태':key==='type'?'유형':'세부 유형'; }
+  function msName(key){ return key==='status'?'상태':key==='type'?'유형':key==='minor'?'소분류':'세부 유형'; }
   function msOptions(key){
     if (key==='status') return Object.keys(STATUS).map(function(k){ return { v:k, t:STATUS[k] }; });
     if (key==='type') return TYPES.map(function(t){ return { v:t.k, t:t.label }; });
+    if (key==='minor'){ // 질의응답 + 선택 대분류의 소분류 합집합 (비활성 시 빈 목록)
+      if (!minorActive()) return [];
+      return QC.subLabelsForMajorLabels(qMajorsSelected()).map(function(s){ return { v:s, t:s }; });
+    }
     // sub: 선택된 유형들의 세부유형 합집합 (없으면 전체 유형의 합집합)
     var types = sel.type.size ? Array.from(sel.type) : TYPES.map(function(t){return t.k;});
     var set = []; var seen = {};
@@ -275,8 +290,13 @@
   }
   function renderMsPanel(key){
     var dd = document.querySelector('.ms-dd[data-ms="' + key + '"]');
-    var panel = dd.querySelector('.ms-dd-panel');
+    var panel = dd.querySelector('.ms-dd-panel'), btn = dd.querySelector('.ms-dd-btn');
     var opts = msOptions(key);
+    if (key==='minor'){   // 소분류: 비활성 시 버튼 disabled + 안내
+      var active = minorActive();
+      btn.disabled = !active; dd.style.opacity = active ? '' : '.5';
+      if (!active){ sel.minor.clear(); panel.innerHTML = '<div class="ms-dd-empty">유형=질의응답 + 대분류 선택 시 사용</div>'; dd.querySelector('.ms-dd-label').textContent = '소분류 전체'; return; }
+    }
     if (!opts.length) { panel.innerHTML = '<div class="ms-dd-empty">유형을 먼저 선택하세요</div>'; return; }
     panel.innerHTML = '<label class="ms-dd-item all"><input type="checkbox" data-all> <span>전체</span></label>'
       + opts.map(function(o){ return '<label class="ms-dd-item"><input type="checkbox" value="'+esc(o.v)+'"'+(sel[key].has(o.v)?' checked':'')+'> <span>'+esc(o.t)+'</span></label>'; }).join('');
@@ -304,10 +324,14 @@
         var allCb = panel.querySelector('[data-all]'); if (allCb) allCb.checked = sel[key].size === 0;
       }
       if (key === 'type') { // 유형 변경 → 세부유형 옵션 재구성(선택 초기화)
-        // 선택된 유형에 없는 세부유형 제거
         var valid = {}; msOptions('sub').forEach(function(o){ valid[o.v]=1; });
         Array.from(sel.sub).forEach(function(s){ if(!valid[s]) sel.sub.delete(s); });
         renderMsPanel('sub');
+      }
+      if (key === 'type' || key === 'sub') { // 소분류 활성/옵션 재구성 + 무효 선택 제거
+        var vm = {}; msOptions('minor').forEach(function(o){ vm[o.v]=1; });
+        Array.from(sel.minor).forEach(function(s){ if(!vm[s]) sel.minor.delete(s); });
+        renderMsPanel('minor');
       }
       render();
     });
@@ -334,6 +358,7 @@
       if (sel.status.size && !sel.status.has(it.status)) return false;
       if (sel.type.size && !sel.type.has(it.type)) return false;
       if (sel.sub.size && !sel.sub.has(it.sub)) return false;
+      if (sel.minor.size && it.type==='qna' && !sel.minor.has(it.minor)) return false;   // 소분류(질의응답만)
       if (!inPeriod(it)) return false;
       if (query) {
         var hay = (it.title + ' ' + it.no + ' ' + (it.content||'')).toLowerCase();
@@ -363,7 +388,7 @@
       return '<tr data-no="' + esc(it.no) + '">'
         + '<td class="num">' + (n - i) + '</td>'
         + '<td class="cat"><span class="mi-type-chip ty-' + it.type + '">' + esc(TYPE_LABEL[it.type]) + '</span></td>'
-        + '<td class="cat"><span class="mi-sub">' + esc(it.sub || '–') + '</span></td>'
+        + '<td class="cat"><span class="mi-sub">' + esc(subText(it)) + '</span></td>'
         + '<td><div class="title-cell">' + esc(it.title) + ' <span style="color:var(--text-tertiary);font-size:11.5px;">' + esc(it.no) + '</span></div></td>'
         + '<td class="cat"><span class="stt ' + cls + '">' + esc(statusLabel(it)) + '</span></td>'
         + '<td class="date">' + esc((it.received||'').slice(0,10)) + '</td>'
@@ -387,9 +412,9 @@
       + '</div>';
   }
   function renderMinwon(it){
-    $('dChips').innerHTML = '<span class="stt stt-'+it.status+'">'+esc(statusLabel(it))+'</span>' + KIND_CHIP + esc(TYPE_LABEL[it.type]) + '</span>' + KIND_CHIP + esc(it.sub) + '</span>';
+    $('dChips').innerHTML = '<span class="stt stt-'+it.status+'">'+esc(statusLabel(it))+'</span>' + KIND_CHIP + esc(TYPE_LABEL[it.type]) + '</span>' + KIND_CHIP + esc(subText(it)) + '</span>';
     $('dTitle').textContent = it.title;
-    $('dMeta').innerHTML = metaDl('접수번호', it.no) + metaDl('유형', TYPE_LABEL[it.type]) + metaDl('세부 유형', it.sub)
+    $('dMeta').innerHTML = metaDl('접수번호', it.no) + metaDl('유형', TYPE_LABEL[it.type]) + metaDl('세부 유형', subText(it))
       + metaDl('접수일', it.received) + metaDl('처리상태', statusLabel(it)) + (it.handler ? metaDl('처리자', it.handler) : '');
     var art = '<h3>처리 진행</h3>' + timelineHtml(it);
     if (it.content) art += '<h3>'+(it.type==='qna'?'문의 내용':it.type==='data'?'요청 내용':'신고 내용')+'</h3><p style="font-size:14px;line-height:1.85;color:var(--text-secondary);">'+esc(it.content)+'</p>';
@@ -425,7 +450,7 @@
   }
 
   function init(){
-    setupMs('status'); setupMs('type'); setupMs('sub');
+    setupMs('status'); setupMs('type'); setupMs('sub'); setupMs('minor');
     $('fltPeriod').addEventListener('change', function(){ period = this.value; $('fltDateWrap').hidden = (period !== 'custom'); render(); });
     $('fltFrom').addEventListener('change', function(){ dateFrom = this.value; render(); });
     $('fltTo').addEventListener('change', function(){ dateTo = this.value; render(); });
@@ -450,11 +475,11 @@
     });
 
     $('fltReset').addEventListener('click', function(){
-      sel.status.clear(); sel.type.clear(); sel.sub.clear();
+      sel.status.clear(); sel.type.clear(); sel.sub.clear(); sel.minor.clear();
       period='all'; dateFrom=''; dateTo=''; query=''; sortKey=null; sortDir=0;
       $('fltPeriod').value='all'; $('fltDateWrap').hidden=true; $('fltFrom').value=''; $('fltTo').value=''; $('fltSearch').value='';
       clearSortInd();
-      renderMsPanel('status'); renderMsPanel('type'); renderMsPanel('sub');
+      renderMsPanel('status'); renderMsPanel('type'); renderMsPanel('sub'); renderMsPanel('minor');
       render();
     });
     $('miBody').addEventListener('click', function(e){ var tr = e.target.closest('tr[data-no]'); if (tr) openDetail(tr.dataset.no); });

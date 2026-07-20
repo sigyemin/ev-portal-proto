@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/contest-detail.css?v=20260716d">
+<link rel="stylesheet" href="css/contest-detail.css?v=20260720c">
 <style>
   /* 실단계 2단계 스텝퍼 (SC_DIRECT_APPLY / SC_APPLY) */
   .cd-stages { display:flex; flex-direction:column; gap:20px; margin-top:4px; }
@@ -51,15 +51,16 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
-<script src="js/contest-detail.js?v=20260716d"></script>
+<script src="js/contest-detail.js?v=20260720c"></script>
 <script>
 /* [DEV] 직접신청 상태 = SC_DIRECT_APPLY.APP_STEP(코드군 DIRECT_APP_STEP): 100 대기 / 200 승인(사업수행기관 배정) / 101 거절 / 102 차순위 이관 / 401 최종거절 / 201 승인취소 / 300 관리자취소
    [DEV] 설치·지급 = SC_APPLY.APP_STEP: 130 접수승인 / 140 착공 / 150 공사완료 / 217 현장점검완료 / 221 지급확인 / 501 완료 · 보완요청 110(신청)·215(현장)·315(지급)
+   [DEV] 신청포기(920)는 관리자/수행기관 처리 상태 — 대민 '신청 포기' 버튼 없음(대민에서 상태 변경 기능 미존재)
    [DEV] 담당자 입력값 = 답변메모 · 지자체메모(현행분석 근거). 전부 더미. 5단계 허구 타임라인·문의처 제거. */
 (function(){
   // 실단계 스텝 마스터 (state는 앱별로 지정)
@@ -86,7 +87,6 @@
   ]; }
   ContestDetail.mount({
     applyHref:'charging-install-slow.html', applyName:'공용 완속충전시설 직접신청', supplementHref:'charging-install-slow.html',
-    cancel:{ label:'신청 포기', to:'신청포기' },   // 완속=실코드 920(신청포기) · 배정 확정 전(대기) 단계만 노출(app.cancelable)
     devRef:{
       stateGroups:[
         { title:'① 직접신청 · 배정 — SC_DIRECT_APPLY.APP_STEP (DIRECT_APP_STEP)', states:[
@@ -111,7 +111,7 @@
     },
     apps:[
       // ① 배정 단계 — 대기(100)
-      { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'대기 (100)', cancelable:true,
+      { appId:'CIS-2026-002455', project:'공용 완속충전시설 직접신청', applyDate:'2026.04.28', status:'대기 (100)',
         notice:{ name:'2026년 공용 완속충전시설 직접설치 지원 안내', no:'환경부공고 제2026-088호', org:'한국환경공단', period:'상시 접수', announce:'접수 후 30일 이내 검토', scale:'설치비 지원(기당 상한)' },
         applicant:applicantSec({ name:'김주민', tel:'032-111-2222', phone:'010-1111-2222', rel:'건물(부지)소유자 (입주자대표회의·관리단 포함)', site:'한빛아파트' }),
         sections:[

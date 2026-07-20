@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지원조건 | 구매보조금 지원시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<style>
+  /* 지원조건 폼 — AS-IS psOptionForm 그리드 */
+  .ps-grid{display:grid;grid-template-columns:150px 1fr 150px 1fr;border-top:2px solid #334155;}
+  .ps-grid>.lab{background:#f8fafc;padding:9px 12px;font-weight:700;color:#475569;font-size:13px;border-bottom:1px solid #eef2f6;display:flex;align-items:center;}
+  .ps-grid>.val{padding:8px 12px;border-bottom:1px solid #eef2f6;font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ps-grid>.val.wide{grid-column:2 / -1;}
+  .ps-grid input[type=text],.ps-grid input[type=number],.ps-grid input[type=month],.ps-grid select{height:32px;border:1px solid #cbd5e1;border-radius:7px;padding:0 9px;font-size:13px;font-family:inherit;background:#fff;}
+  .ps-grid input[type=number]{width:90px;}
+  .ps-grid textarea{width:100%;min-height:56px;border:1px solid #cbd5e1;border-radius:7px;padding:7px 9px;font-size:13px;font-family:inherit;resize:vertical;}
+  .ps-radio{display:inline-flex;align-items:center;gap:5px;font-size:13px;white-space:nowrap;margin-right:10px;}
+  /* 접수방법 표 */
+  .ps-choice{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px;}
+  .ps-choice th,.ps-choice td{border:1px solid #e2e8f0;padding:7px 9px;}
+  .ps-choice th{background:#f8fafc;font-weight:700;color:#475569;white-space:nowrap;}
+  .ps-choice select{height:32px;border:1px solid #cbd5e1;border-radius:7px;padding:0 8px;font-size:12.5px;font-family:inherit;width:100%;background:#fff;}
+  .ps-choice input{height:32px;border:1px solid #cbd5e1;border-radius:7px;padding:0 8px;font-size:12.5px;font-family:inherit;width:100%;}
+  /* [개편 A3] 다음 공고 예정 — 하이라이트 */
+  .ps-next{border:2px solid #1559c2;background:#f2f7ff;border-radius:12px;padding:16px 18px;margin-top:16px;}
+  .ps-next h3{margin:0 0 10px;font-size:14.5px;color:#1559c2;display:flex;align-items:center;gap:8px;}
+  .ps-next h3 .rev{display:inline-block;background:#1559c2;color:#fff;border-radius:5px;padding:1px 8px;font-size:10.5px;font-weight:800;}
+</style>
+</head>
+<body>
+<!-- [DEV] 구매보조금 지원시스템 > 사업관리 > 지원조건 (T1 · 전기자동차 기준 · v0.30 3호)
+     AS-IS psOptionForm.jsp 필드 재현(근거=회의록/구매보조금시스템_메뉴IA_20260716.md §T1) +
+     [개편 A3] '다음 공고 예정' 구조화 섹션 신설(현행 비고 ETC 자유입력 대체 · 8유형 분석 2026-07-14 근거). -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">지원조건</h1>
+    <p class="adm-desc">지자체별 구매보조금 지원조건(PS_OPTION)을 입력·관리합니다. (전기자동차 기준 · AS-IS psOptionForm 재현)</p>
+
+    <div class="adm-card">
+      <div class="ps-grid">
+        <div class="lab">기준년도</div><div class="val"><select id="pYear"><option>2026</option><option>2025</option></select></div>
+        <div class="lab">지자체</div><div class="val"><select id="pLocal"><option>서울특별시</option><option>부산광역시</option><option>경기도 수원시</option><option>전라남도 순천시</option><option>경상북도 포항시</option></select></div>
+
+        <div class="lab">지방비 지원여부</div><div class="val"><label class="ps-radio"><input type="radio" name="pLocalYn" checked> 지원</label><label class="ps-radio"><input type="radio" name="pLocalYn"> 미지원</label></div>
+        <div class="lab">지방비 추가지원</div><div class="val"><label class="ps-radio"><input type="radio" name="pAddLocal"> 있음</label><label class="ps-radio"><input type="radio" name="pAddLocal" checked> 없음</label></div>
+        <div class="lab">추가 지원여부</div><div class="val wide"><label class="ps-radio"><input type="radio" name="pAdd"> 있음</label><label class="ps-radio"><input type="radio" name="pAdd" checked> 없음</label></div>
+
+        <div class="lab">제한여부</div><div class="val"><label class="ps-radio"><input type="radio" name="pLimitYn" checked> 제한</label><label class="ps-radio"><input type="radio" name="pLimitYn"> 제한없음</label></div>
+        <div class="lab">제한 대수</div><div class="val"><input type="number" value="2"> 대</div>
+        <div class="lab">세대 제한 최대 대수</div><div class="val"><input type="number" value="2"> 대</div>
+        <div class="lab">개인 제한여부 / 최대 대수</div><div class="val"><label class="ps-radio"><input type="radio" name="pIndYn" checked> 제한</label><label class="ps-radio"><input type="radio" name="pIndYn"> 없음</label><input type="number" value="1"> 대</div>
+        <div class="lab">개인사업자 제한여부 / 최대 대수</div><div class="val"><label class="ps-radio"><input type="radio" name="pBizYn" checked> 제한</label><label class="ps-radio"><input type="radio" name="pBizYn"> 없음</label><input type="number" value="2"> 대</div>
+        <div class="lab">단체 제한 최대 대수</div><div class="val"><input type="number" value="10"> 대</div>
+
+        <div class="lab">우선비대상</div><div class="val wide"><label class="ps-radio"><input type="checkbox" checked> 법인·기관 우선순위 비대상 처리</label></div>
+      </div>
+
+      <!-- 승용·승합·화물별 접수방법 (일반/우선 × CHOICE_CD 6종 + 기타 입력 CHOICE_ETC 6필드) -->
+      <h3 style="font-size:14px;font-weight:800;margin:18px 0 4px;">접수방법 <span style="font-size:12px;color:#64748b;font-weight:600;">— 승용·승합·화물 × 일반/우선 (CHOICE_CD 6종 + 기타 입력)</span></h3>
+      <table class="ps-choice">
+        <thead><tr><th style="width:90px;">차종</th><th style="width:70px;">구분</th><th>접수방법 (CHOICE_CD)</th><th>기타 입력 (CHOICE_ETC)</th></tr></thead>
+        <tbody id="choiceBody"></tbody>
+      </table>
+
+      <!-- 안내문구 4종 -->
+      <div class="ps-grid" style="margin-top:18px;">
+        <div class="lab">안내문구</div><div class="val wide"><textarea>2026년 전기자동차 구매보조금 지원사업 안내문구(더미)</textarea></div>
+        <div class="lab">신청서 지원 마감 안내문구</div><div class="val wide"><textarea>접수 마감 시 대민 화면에 노출되는 안내문구(더미)</textarea></div>
+        <div class="lab">신청첨부 안내문구</div><div class="val wide"><textarea>신청서 첨부서류 안내문구(더미)</textarea></div>
+        <div class="lab">지급첨부 안내문구</div><div class="val wide"><textarea>지급신청 첨부서류 안내문구(더미)</textarea></div>
+      </div>
+
+      <!-- 문의처 3필드 -->
+      <div class="ps-grid" style="margin-top:18px;">
+        <div class="lab">지자체 문의처</div><div class="val"><input type="text" value="02-120" style="width:160px;"></div>
+        <div class="lab">부서명</div><div class="val"><input type="text" value="기후환경본부 대기정책과" style="width:220px;"></div>
+        <div class="lab">문의처 상세</div><div class="val wide"><input type="text" value="평일 09:00~18:00 (점심 12~13시 제외)" style="width:100%;"></div>
+      </div>
+
+      <!-- [개편 A3] 다음 공고 예정 — 구조화 신설 (현행 비고 ETC 자유입력 대체) -->
+      <div class="ps-next">
+        <h3><span class="rev">개편 A3</span>다음 공고 예정 <span style="font-size:12px;color:#64748b;font-weight:600;">— 신설 구조화 필드 (현행 비고(ETC) 자유입력 대체)</span></h3>
+        <div class="ps-grid" style="border-top:1px solid #cfe0f7;">
+          <div class="lab">예정 여부</div>
+          <div class="val"><label class="ps-radio"><input type="radio" name="nextYn" id="nextY" checked> 예정 있음</label><label class="ps-radio"><input type="radio" name="nextYn" id="nextN"> 없음(미정)</label></div>
+          <div class="lab">예정 시기</div>
+          <div class="val"><input type="month" id="nextMonth" value="2026-09"><label class="ps-radio" style="margin-left:6px;"><input type="checkbox" id="nextTbd"> 시기 미정</label></div>
+          <div class="lab">대민 안내문구 <span style="font-weight:500;color:#94a3b8;">(선택)</span></div>
+          <div class="val wide"><textarea id="nextMsg" placeholder="예: 3차 공고는 9월 중 예정입니다. 예산 소진 상황에 따라 변동될 수 있습니다.">3차 공고는 9월 중 예정입니다. (더미)</textarea></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+        <button type="button" class="adm-btn" onclick="__admToast('변경사항이 취소되었습니다. (프로토타입)')">취소</button>
+        <button type="button" class="adm-btn primary" onclick="__admToast('지원조건이 저장되었습니다. 변경이력(PS_OPTION_HIS) 기록. (프로토타입)')">저장(mock)</button>
+      </div>
+    </div>
+
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — PS_OPTION·다음 공고 예정 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>[개편 A3] 다음 공고 예정</strong> : PS_OPTION에 구조화 컬럼 추가(예정 여부·예정 시기·대민 안내문구) — 현행 비고(ETC) 자유입력 8유형 분석(2026-07-14) 근거. 변경이력은 <strong>PS_OPTION_HIS(insertOptionHis) 현행 기존재</strong> 활용 — 신규 이력 테이블 불필요.</li>
+        <li><strong>대민 원천 공유</strong> : 대민 지자체별 보조금 현황의 '다음 공고 예정' 노출과 동일 원천 — 관리자 입력이 대민에 그대로 반영.</li>
+        <li><strong>접수방법</strong> : CHOICE_CD 실코드 6종(출고등록순/접수순/접수순(초과시추첨)/접수순(초과시출고등록순)/추첨/기타) · 기타 선택 시 CHOICE_ETC 계열 6필드(승용·승합·화물 × 일반/우선) 입력.</li>
+        <li><strong>AS-IS</strong> : psOptionForm.jsp (사업관리 &gt; 지원조건) — 본 화면 필드는 §T1 실사 목록 그대로. 전기자동차 기준(타 차종 변주는 car_type 파라미터).</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-ps.js?v=20260716a"></script>
+<script>
+(function(){
+  'use strict';
+  AdminShell.mount({
+    system:'구매보조금 지원시스템',
+    gnb: window.ADMIN_MENU_PS,
+    activeGnb:'전기자동차',
+    activeHref:'admin-ps-option.html'
+  });
+
+  // 접수방법 6행 (승용·승합·화물 × 일반/우선) — CHOICE_CD 6종 + 기타 입력(CHOICE_ETC)
+  var CHOICE = ['출고등록순','접수순','접수순(초과시추첨)','접수순(초과시출고등록순)','추첨','기타'];
+  var rows = [
+    ['승용','일반','접수순'], ['승용','우선','출고등록순'],
+    ['승합','일반','출고등록순'], ['승합','우선','출고등록순'],
+    ['화물','일반','접수순(초과시추첨)'], ['화물','우선','기타']
+  ];
+  document.getElementById('choiceBody').innerHTML = rows.map(function(r, i){
+    var opts = CHOICE.map(function(c){ return '<option'+(c===r[2]?' selected':'')+'>'+c+'</option>'; }).join('');
+    var etc = (r[2]==='기타') ? '취약계층·소상공인 우선 후 접수순 (더미)' : '';
+    return '<tr><td style="font-weight:700;">'+r[0]+'</td><td>'+r[1]+'</td>'
+      + '<td><select data-ch="'+i+'">'+opts+'</select></td>'
+      + '<td><input type="text" data-etc="'+i+'" value="'+etc+'" placeholder="기타 선택 시 입력"'+(r[2]==='기타'?'':' disabled')+'></td></tr>';
+  }).join('');
+  // 기타 선택 시에만 CHOICE_ETC 활성
+  document.getElementById('choiceBody').addEventListener('change', function(e){
+    var sel = e.target.closest('select[data-ch]'); if(!sel) return;
+    var etc = document.querySelector('input[data-etc="'+sel.dataset.ch+'"]');
+    etc.disabled = sel.value !== '기타';
+    if (etc.disabled) etc.value = '';
+  });
+
+  // [개편 A3] 예정 여부/시기 연동
+  var nextY=document.getElementById('nextY'), nextN=document.getElementById('nextN'),
+      nextMonth=document.getElementById('nextMonth'), nextTbd=document.getElementById('nextTbd'), nextMsg=document.getElementById('nextMsg');
+  function syncNext(){
+    var on = nextY.checked;
+    nextMonth.disabled = !on || nextTbd.checked;
+    nextTbd.disabled = !on;
+    nextMsg.disabled = !on;
+  }
+  nextY.addEventListener('change', syncNext); nextN.addEventListener('change', syncNext);
+  nextTbd.addEventListener('change', syncNext);
+  syncNext();
+})();
+</script>
+</body>
+</html>

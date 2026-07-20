@@ -78,9 +78,6 @@
 .cd-submit-bar .btn[disabled],.cd-submit-bar .btn[aria-disabled="true"]{opacity:.5;cursor:not-allowed;}
 .cd-submit-btns{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
 /* 신청취소/신청포기 — ghost-danger 보조 버튼 */
-.cd-btn-cancel{border:1px solid var(--color-danger,#c0392b);background:#fff;color:var(--color-danger,#c0392b);font-weight:700;}
-.cd-btn-cancel:hover:not([disabled]){background:#fdeded;}
-.cd-btn-cancel[disabled]{opacity:.5;cursor:not-allowed;}
 /* 섹션 표 페이지네이션 (구매보조금 신청번호 등 · 5행 초과 시) */
 .cd-pager{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:12px;}
 .cd-pager button{border:1px solid var(--border-light);background:#fff;border-radius:7px;height:32px;padding:0 14px;font-size:12.5px;font-weight:700;color:var(--text-secondary);cursor:pointer;}

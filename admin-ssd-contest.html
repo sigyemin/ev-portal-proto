@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공모신청 관리 | 완속·브랜드 시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<style>
+  /* 공모 3종 탭 */
+  .ct-tabs{display:flex;gap:4px;border-bottom:2px solid #e2e8f0;margin-bottom:16px;}
+  .ct-tabs button{appearance:none;border:0;background:transparent;font-family:inherit;font-size:14px;font-weight:700;color:#94a3b8;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .ct-tabs button:hover{color:#475569;}
+  .ct-tabs button.active{color:#0f7a44;border-bottom-color:#0f7a44;}
+  /* 상태 칩 */
+  .st{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:800;white-space:nowrap;}
+  .st-new{background:#f1f5f9;color:#94a3b8;} .st-ing{background:#e7f0fe;color:#1559c2;}
+  .st-supp{background:#fff3e0;color:#b45309;} .st-re{background:#f1ecfb;color:#6b3fb0;}
+  .st-done{background:#dff5e8;color:#19a76d;} .st-rej{background:#fdecec;color:#c0392b;}
+  .st-sel{background:#e6f6ee;color:#0f7a44;} .st-nosel{background:#eceef1;color:#5f6b7a;}
+  /* 보완 누적 이력 */
+  .supp-log{border:1px solid #e2e8f0;border-radius:10px;background:#fbfcfe;padding:10px 14px;margin-top:6px;}
+  .supp-log li{list-style:none;padding:6px 0;border-bottom:1px dashed #e2e8f0;font-size:13px;color:#475569;}
+  .supp-log li:last-child{border-bottom:0;}
+  .supp-log .dt{font-weight:800;color:#1f2937;font-variant-numeric:tabular-nums;}
+  /* 항목별 심사 CHK */
+  .chk-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px;}
+  .chk-tbl th,.chk-tbl td{border:1px solid #e2e8f0;padding:7px 9px;}
+  .chk-tbl th{background:#f8fafc;font-weight:700;color:#475569;}
+  .chk-tbl tr.rej td{background:#fef2f2;}
+  .chk-y{color:#19a76d;font-weight:800;} .chk-n{color:#c0392b;font-weight:800;}
+</style>
+</head>
+<body>
+<!-- [DEV] 완속·브랜드 시스템 > 공모신청 관리 (v0.30 4호)
+     근거 메뉴: 회의록/완속브랜드_충전인프라_메뉴IA_20260720.md §A 공모신청 관리 3종
+       · 사업수행기관 공모신청 관리(fcBusiApplyList) · 브랜드사업 공모신청 관리(fcBsnsApplyList) · BSS 공모신청 관리(bssApplyList)
+     상태값 근거: 회의록/공모·평가신청·보조금_상태값_정리_20260715.md §1-2·1-3·1-4 (임의 상태 금지) -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">공모신청 관리</h1>
+    <p class="adm-desc">완속·브랜드 시스템의 공모 신청 건을 심사·관리합니다. (AS-IS fcBusiApplyList / fcBsnsApplyList / bssApplyList)</p>
+
+    <div class="ct-tabs" id="ctTabs">
+      <button type="button" data-tab="busi" class="active">사업수행기관 공모</button>
+      <button type="button" data-tab="brand">브랜드사업 공모</button>
+      <button type="button" data-tab="bss">BSS 공모</button>
+    </div>
+
+    <!-- 목록 -->
+    <div id="listWrap">
+      <div class="adm-card">
+        <div class="adm-filter">
+          <div class="adm-field"><label>진행상태</label><select id="fState"></select></div>
+          <div class="adm-field" id="wrapGb"><label>공모구분</label><select id="fGb"></select></div>
+          <div class="adm-field" id="wrapSel" hidden><label>선정여부</label>
+            <select id="fSel"><option value="all">전체</option><option value="Y">선정</option><option value="N">미선정</option><option value="-">선정 전</option></select>
+          </div>
+          <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="접수번호·사업자명 검색"></div>
+          <button type="button" class="adm-btn primary" id="fSearch">검색</button>
+          <button type="button" class="adm-btn" id="fReset">초기화</button>
+        </div>
+      </div>
+
+      <div class="adm-meta"><div>전체 <strong id="listCount">0</strong>건</div><div id="listHint">행을 클릭하면 상세로 이동합니다</div></div>
+      <table class="adm-tbl">
+        <thead id="listHead"></thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 상세 -->
+    <div id="detailWrap" hidden>
+      <div class="adm-card">
+        <h3 id="dHead">신청 상세</h3>
+        <div class="adm-detail"><dl id="dInfo"></dl></div>
+        <div id="dExtra"></div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;" id="dActions"></div>
+      </div>
+    </div>
+
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 공모 3종 상태값 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>사업수행기관 공모</strong> : BRND_BSNS_STS — RS-01 신규 / RS-02 신청중 / RS-03 보완요청 / RS-04 재등록 / RS-05 검토완료. <strong>RS-01(신규)은 제출 전 상태라 대민 미노출</strong>(관리자 5종 · 대민 4종). 담당자 입력 = 보완내용 누적이력(SPLEMNT_CNTS, 날짜별 append) + 공단 메모(PBLCRP_MEMO) + 사업 메모(BSNS_MEMO).</li>
+        <li><strong>브랜드사업 공모</strong> : APPR_STS — I 제출완료 / S 보완완료 / Y 승인 / N 반려 (T 임시저장은 목록 제외). <strong>선정 별도 축 SLCTN_YN(Y 선정 / N 미선정, '-'=선정 전)</strong>. 항목별 심사 = 신청 항목·첨부(27종)마다 승인/반려 CHK — 첨부 반려 = 대민 제출상태 '보완요청'. 담당자 메모 = APPR_MEMO.</li>
+        <li><strong>BSS 공모</strong> : APPR_STS 동일 4종 — <strong>선정 축 없음(SLCTN_YN 부재, 승인이 최종)</strong>. 항목별 CHK·APPR_MEMO 동일.</li>
+        <li><strong>메뉴 원천</strong> : TNSM_BRND_MENU(메뉴+화면등록부 겸용). ⚠ 완속 직접신청(sc/directApply·sc/mgr — 매트릭스 A5) 메뉴는 이 테이블에 없음 — 하드코딩/별도 사이트 추정, 개발팀 확인 대상.</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-ssd.js?v=20260720a"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  var qs = new URLSearchParams(location.search);
+  var tab = qs.get('tab') || 'busi';
+
+  AdminShell.mount({
+    system:'완속·브랜드 시스템',
+    activeHref:'admin-ssd-contest.html?tab=' + tab,
+    roles:[
+      { key:'admin', label:'관리자(공단)', side: window.ADMIN_MENU_SSD },
+      { key:'biz',   label:'사업자',       side: window.ADMIN_MENU_SSD_BIZ }
+    ]
+  });
+
+  /* ── 상태 사전 (상태값 정리 §1-2·1-3·1-4 그대로 — 임의 상태 금지) ── */
+  // 사업수행기관: BRND_BSNS_STS RS-01~05 (RS-01 신규 = 제출 전, 대민 미노출)
+  var BUSI_STS = [
+    { k:'RS-01', label:'신규',     cls:'st-new',  civil:false },
+    { k:'RS-02', label:'신청중',   cls:'st-ing',  civil:true },
+    { k:'RS-03', label:'보완요청', cls:'st-supp', civil:true },
+    { k:'RS-04', label:'재등록',   cls:'st-re',   civil:true },
+    { k:'RS-05', label:'검토완료', cls:'st-done', civil:true }
+  ];
+  // 브랜드·BSS: APPR_STS I/S/Y/N
+  var APPR_STS = [
+    { k:'I', label:'제출완료', cls:'st-ing' },
+    { k:'S', label:'보완완료', cls:'st-re' },
+    { k:'Y', label:'승인',     cls:'st-done' },
+    { k:'N', label:'반려',     cls:'st-rej' }
+  ];
+  function stsOf(list, k){ for (var i=0;i<list.length;i++) if (list[i].k===k) return list[i]; return { label:k, cls:'' }; }
+  function chip(s){ return '<span class="st '+s.cls+'">'+esc(s.label)+'</span>'; }
+
+  /* ── 더미: 공모별 5건 (상태 분포) ── */
+  var GB = ['급속','완속','스마트제어'];   // 공모구분 (BRND_CHRGR_GB F/S/C)
+  var DATA = {
+    busi:[
+      { no:'FB-2026-0031', biz:'에코차지(주)',     gb:'급속',      sts:'RS-03', date:'2026-04-15', ap:'운영사',
+        logs:[{d:'2026.04.20',t:'보완요청',c:'콜센터·정산시스템 구축 여부 증빙 미비'},{d:'2026.04.24',t:'보완요청',c:'기 운영 충전시설 요금 납부 현황 자료 최신본 재제출 요청'}],
+        pb:'제출 증빙 2건 보완 필요. 재등록(RS-04) 후 검토 재개 예정.', bs:'콜센터 위탁계약서 사본 포함 시 인정 가능.' },
+      { no:'FB-2026-0044', biz:'그린차지(주)',     gb:'완속',      sts:'RS-02', date:'2026-04-16', ap:'운영사', logs:[], pb:'', bs:'' },
+      { no:'FB-2026-0052', biz:'충전기제조(주)',   gb:'완속',      sts:'RS-04', date:'2026-04-13', ap:'제조사',
+        logs:[{d:'2026.04.18',t:'보완요청',c:'제안서 평가 요약본 서식 불일치'},{d:'2026.04.25',t:'재등록',c:'보완 서류 재제출 완료 · 검토 대기'}],
+        pb:'재등록 확인. 정량평가 재검토 진행.', bs:'' },
+      { no:'FB-2026-0067', biz:'스마트EV충전(주)', gb:'스마트제어', sts:'RS-05', date:'2026-04-12', ap:'제조사',
+        logs:[], pb:'제출 서류 검토 완료. 후속 절차 안내 예정.', bs:'' },
+      { no:'FB-2026-0078', biz:'한빛충전(주)',     gb:'급속',      sts:'RS-01', date:'2026-04-26', ap:'운영사', logs:[], pb:'', bs:'' }
+    ],
+    brand:[
+      { no:'BR-2026-0045', biz:'부산에코모빌리티(주)', region:'부산', sts:'I', sel:'-', date:'2026-01-30',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','반려'],['급속 설치 개소','반려'],['완속 설치 개소','승인']],
+        memo:'대표제안사 지정·급속 설치 개소 산출 근거 미확인. 첨부 2건 보완 요청.' },
+      { no:'BR-2026-0052', biz:'광주모빌리티(주)',   region:'광주', sts:'S', sel:'-', date:'2026-01-29',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['급속 설치 개소','승인'],['완속 설치 개소','승인']],
+        memo:'보완 서류 재제출 확인. 재심사 진행 중.' },
+      { no:'BR-2026-0061', biz:'대전그린모빌리티(주)', region:'대전', sts:'Y', sel:'Y', date:'2026-01-28',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['급속 설치 개소','승인'],['완속 설치 개소','승인']],
+        memo:'전 항목·첨부 승인. 선정 사업자 확정.' },
+      { no:'BR-2026-0078', biz:'인천모빌리티(주)',   region:'인천', sts:'Y', sel:'N', date:'2026-01-26',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['급속 설치 개소','승인'],['완속 설치 개소','승인']],
+        memo:'심사 승인. 지역 배정 물량 초과로 미선정.' },
+      { no:'BR-2026-0070', biz:'울산충전솔루션(주)', region:'울산', sts:'N', sel:'-', date:'2026-01-27',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['급속 설치 개소','반려'],['완속 설치 개소','승인']],
+        memo:'정량평가 산술평균 선정 기준(80점) 미달로 반려.' }
+    ],
+    bss:[
+      { no:'BS-2026-0112', biz:'대전스왑모빌리티(주)', region:'대전', sts:'I', date:'2026-02-05',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['출자비율 합계','승인'],['BSS 설치 수량','반려']],
+        memo:'BSS 설치 수량 현장 근거(현장조사 보고서)·KS인증서 미확인. 첨부 2건 보완 요청.' },
+      { no:'BS-2026-0105', biz:'인천스왑스테이션(주)', region:'인천', sts:'S', date:'2026-02-03',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['출자비율 합계','승인'],['BSS 설치 수량','승인']],
+        memo:'보완 서류 재제출 확인. 재심사 진행 중.' },
+      { no:'BS-2026-0098', biz:'부산이브이스왑(주)',   region:'부산', sts:'Y', date:'2026-02-01',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['출자비율 합계','승인'],['BSS 설치 수량','승인']],
+        memo:'전 항목·첨부 승인. 승인이 최종 결과(선정 축 없음).' },
+      { no:'BS-2026-0120', biz:'광주라이드스왑(주)',   region:'광주', sts:'N', date:'2026-02-04',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['출자비율 합계','승인'],['BSS 설치 수량','반려']],
+        memo:'정량평가 선정 기준 미달로 반려.' },
+      { no:'BS-2026-0131', biz:'수원스왑모빌리티(주)', region:'수원', sts:'I', date:'2026-02-06',
+        chk:[['사업명','승인'],['접수기관','승인'],['컨소시엄 여부','승인'],['대표제안사','승인'],['출자비율 합계','승인'],['BSS 설치 수량','승인']],
+        memo:'' }
+    ]
+  };
+
+  /* ── 탭 전환 ── */
+  function isBusi(){ return tab==='busi'; }
+  function stsList(){ return isBusi() ? BUSI_STS : APPR_STS; }
+
+  function syncTabUI(){
+    document.querySelectorAll('#ctTabs button').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===tab); });
+    // 상태 필터
+    $('fState').innerHTML = '<option value="all">전체 상태</option>'
+      + stsList().map(function(s){ return '<option value="'+s.k+'">'+s.label+(isBusi()&&!s.civil?' (대민 미노출)':'')+'</option>'; }).join('');
+    // 공모구분: 사업수행기관만
+    $('wrapGb').hidden = !isBusi();
+    if (isBusi()) $('fGb').innerHTML = '<option value="all">전체 구분</option>' + GB.map(function(g){ return '<option>'+g+'</option>'; }).join('');
+    // 선정여부: 브랜드만 (BSS 선정 축 없음)
+    $('wrapSel').hidden = (tab!=='brand');
+    $('fSel').value='all'; $('fState').value='all'; $('fKw').value='';
+    // 표 헤더
+    $('listHead').innerHTML = isBusi()
+      ? '<tr><th style="width:140px;">접수번호</th><th>사업자명</th><th class="c" style="width:110px;">공모구분</th><th class="c" style="width:120px;">진행상태</th><th class="c" style="width:100px;">신청일</th></tr>'
+      : (tab==='brand'
+        ? '<tr><th style="width:140px;">접수번호</th><th>사업자명</th><th class="c" style="width:80px;">지역</th><th class="c" style="width:100px;">심사 상태</th><th class="c" style="width:90px;">선정여부</th><th class="c" style="width:100px;">신청일</th></tr>'
+        : '<tr><th style="width:140px;">접수번호</th><th>사업자명</th><th class="c" style="width:80px;">지역</th><th class="c" style="width:100px;">심사 상태</th><th class="c" style="width:100px;">신청일</th></tr>');
+    $('listHint').textContent = (tab==='bss') ? '행 클릭 = 상세 · BSS는 선정 축 없음(승인이 최종)' : '행을 클릭하면 상세로 이동합니다';
+    $('detailWrap').hidden = true; $('listWrap').hidden = false;
+  }
+
+  /* ── 목록 ── */
+  function filtered(){
+    var rows = DATA[tab] || [];
+    var st=$('fState').value, gb=isBusi()?$('fGb').value:'all', sl=(tab==='brand')?$('fSel').value:'all', kw=($('fKw').value||'').trim().toLowerCase();
+    return rows.filter(function(d){
+      if (st!=='all' && d.sts!==st) return false;
+      if (gb!=='all' && d.gb!==gb) return false;
+      if (sl!=='all' && (d.sel||'-')!==sl) return false;
+      if (kw && (d.no+d.biz).toLowerCase().indexOf(kw)<0) return false;
+      return true;
+    });
+  }
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listBody').innerHTML = rows.length ? rows.map(function(d){
+      var s = chip(stsOf(stsList(), d.sts));
+      if (isBusi()){
+        return '<tr data-no="'+esc(d.no)+'"><td class="num">'+esc(d.no)+'</td><td>'+esc(d.biz)+'<div style="font-size:11.5px;color:#94a3b8;">'+esc(d.ap)+'</div></td>'
+          + '<td class="c">'+esc(d.gb)+'</td><td class="c">'+s+'</td><td class="c num">'+d.date.replace(/-/g,'.')+'</td></tr>';
+      }
+      var selCell = (tab==='brand')
+        ? '<td class="c">'+(d.sel==='Y'?'<span class="st st-sel">선정</span>':(d.sel==='N'?'<span class="st st-nosel">미선정</span>':'<span style="color:#94a3b8;">선정 전</span>'))+'</td>' : '';
+      return '<tr data-no="'+esc(d.no)+'"><td class="num">'+esc(d.no)+'</td><td>'+esc(d.biz)+'</td><td class="c">'+esc(d.region)+'</td>'
+        + '<td class="c">'+s+'</td>'+selCell+'<td class="c num">'+d.date.replace(/-/g,'.')+'</td></tr>';
+    }).join('') : '<tr><td colspan="6"><div class="adm-empty">조건에 맞는 신청 건이 없습니다.</div></td></tr>';
+  }
+
+  /* ── 상세 ── */
+  function dl(pairs){ return pairs.map(function(p){ return '<dt>'+esc(p[0])+'</dt><dd'+(p[2]?' class="wide"':'')+'>'+p[1]+'</dd>'; }).join(''); }
+  function openDetail(no){
+    var d = (DATA[tab]||[]).filter(function(x){ return x.no===no; })[0]; if(!d) return;
+    $('dHead').textContent = d.biz + ' — 신청 상세';
+    var extra = '', actions = '';
+
+    if (isBusi()){
+      $('dInfo').innerHTML = dl([
+        ['접수번호', esc(d.no)], ['사업자명', esc(d.biz)],
+        ['공모구분', esc(d.gb)], ['신청 구분', esc(d.ap)],
+        ['진행상태', chip(stsOf(BUSI_STS, d.sts))], ['신청일', d.date.replace(/-/g,'.')]
+      ]);
+      // 보완내용 누적 이력 (SPLEMNT_CNTS 패턴 — 날짜별 append)
+      extra += '<h3 style="font-size:14px;font-weight:800;margin:18px 0 4px;">보완내용 누적 이력 <span style="font-size:12px;color:#64748b;font-weight:600;">— SPLEMNT_CNTS (날짜별 append)</span></h3>';
+      extra += d.logs.length
+        ? '<ul class="supp-log">' + d.logs.map(function(l){ return '<li><span class="dt">'+esc(l.d)+'</span> '+esc(l.t)+' : '+esc(l.c)+'</li>'; }).join('') + '</ul>'
+        : '<div class="supp-log" style="color:#94a3b8;font-size:13px;">누적된 보완 이력이 없습니다.</div>';
+      extra += '<div style="margin-top:12px;"><label style="font-size:12.5px;font-weight:700;color:#475569;">보완내용 추가 입력</label>'
+        + '<textarea id="suppNew" style="width:100%;min-height:60px;margin-top:4px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;" placeholder="보완요청 내용을 입력하면 이력에 날짜와 함께 추가됩니다."></textarea></div>';
+      extra += '<h3 style="font-size:14px;font-weight:800;margin:18px 0 4px;">담당자 메모</h3>'
+        + '<div class="adm-detail"><dl>'
+        + '<dt>공단 메모</dt><dd class="wide"><textarea style="width:100%;min-height:50px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;">'+esc(d.pb)+'</textarea></dd>'
+        + '<dt>사업 메모</dt><dd class="wide"><textarea style="width:100%;min-height:50px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;">'+esc(d.bs)+'</textarea></dd>'
+        + '</dl></div>';
+      actions = '<button type="button" class="adm-btn" id="dBack">목록으로</button>'
+        + '<button type="button" class="adm-btn" id="btnSupp" style="border-color:#b45309;color:#b45309;">보완요청 (RS-03)</button>'
+        + '<button type="button" class="adm-btn primary" id="btnDone">검토완료 (RS-05)</button>';
+    } else {
+      var pairs = [
+        ['접수번호', esc(d.no)], ['사업자명', esc(d.biz)],
+        ['지역', esc(d.region)], ['심사 상태', chip(stsOf(APPR_STS, d.sts))]
+      ];
+      if (tab==='brand') pairs.push(['선정여부', d.sel==='Y'?'<span class="st st-sel">선정</span>':(d.sel==='N'?'<span class="st st-nosel">미선정</span>':'<span style="color:#94a3b8;">선정 전 (SLCTN_YN = -)</span>')]);
+      else pairs.push(['선정여부', '<span style="color:#94a3b8;">해당 없음 — BSS는 선정 축 없음(승인이 최종)</span>']);
+      pairs.push(['신청일', d.date.replace(/-/g,'.')]);
+      $('dInfo').innerHTML = dl(pairs);
+      // 항목별 승인/반려 (CHK) 간이 재현
+      extra += '<h3 style="font-size:14px;font-weight:800;margin:18px 0 4px;">항목별 심사 (CHK) <span style="font-size:12px;color:#64748b;font-weight:600;">— 항목·첨부마다 승인/반려 · 첨부 반려 = 대민 제출상태 \'보완요청\'</span></h3>';
+      extra += '<table class="chk-tbl"><thead><tr><th>심사 항목</th><th class="c" style="width:90px;">심사</th></tr></thead><tbody>'
+        + d.chk.map(function(c){
+          var ok = c[1]==='승인';
+          return '<tr'+(ok?'':' class="rej"')+'><td>'+esc(c[0])+'</td><td style="text-align:center;" class="'+(ok?'chk-y':'chk-n')+'">'+esc(c[1])+'</td></tr>';
+        }).join('') + '</tbody></table>';
+      extra += '<h3 style="font-size:14px;font-weight:800;margin:18px 0 4px;">담당자 종합 메모 <span style="font-size:12px;color:#64748b;font-weight:600;">— APPR_MEMO</span></h3>'
+        + '<textarea style="width:100%;min-height:60px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;">'+esc(d.memo)+'</textarea>';
+      actions = '<button type="button" class="adm-btn" id="dBack">목록으로</button>'
+        + '<button type="button" class="adm-btn primary" onclick="__admToast(\'심사 결과가 저장되었습니다. (프로토타입)\')">심사 저장(mock)</button>';
+    }
+
+    $('dExtra').innerHTML = extra;
+    $('dActions').innerHTML = actions;
+    $('listWrap').hidden = true; $('detailWrap').hidden = false;
+    window.scrollTo({ top:0, behavior:'smooth' });
+
+    $('dBack').addEventListener('click', function(){ $('detailWrap').hidden = true; $('listWrap').hidden = false; });
+    var bs = $('btnSupp'), bd = $('btnDone');
+    if (bs) bs.addEventListener('click', function(){
+      var txt = ($('suppNew').value||'').trim();
+      if (!txt){ __admToast('보완요청 내용을 입력해 주세요.'); return; }
+      // SPLEMNT_CNTS 패턴: "YYYY.MM.DD 보완요청: 내용" append
+      d.logs.push({ d:'2026.07.20', t:'보완요청', c:txt });
+      d.sts = 'RS-03';
+      __admToast('보완요청(RS-03)으로 변경되었습니다. 보완 이력에 추가됨. (프로토타입)');
+      openDetail(no); render();
+    });
+    if (bd) bd.addEventListener('click', function(){
+      d.sts = 'RS-05';
+      __admToast('검토완료(RS-05)로 변경되었습니다. (프로토타입)');
+      openDetail(no); render();
+    });
+  }
+
+  /* ── 이벤트 ── */
+  $('ctTabs').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-tab]'); if(!b) return;
+    tab = b.dataset.tab;
+    history.replaceState(null,'','admin-ssd-contest.html?tab='+tab);
+    syncTabUI(); render();
+  });
+  $('listBody').addEventListener('click', function(e){
+    var tr = e.target.closest('tr[data-no]'); if (tr) openDetail(tr.dataset.no);
+  });
+  ['fState','fGb','fSel'].forEach(function(id){ $(id).addEventListener('change', render); });
+  $('fKw').addEventListener('input', render);
+  $('fSearch').addEventListener('click', render);
+  $('fReset').addEventListener('click', function(){ syncTabUI(); render(); });
+
+  syncTabUI(); render();
+})();
+</script>
+</body>
+</html>

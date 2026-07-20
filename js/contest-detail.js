@@ -250,15 +250,15 @@ window.ContestDetail = (function () {
         + (ag.guide?'<div style="margin-top:6px;">'+esc(ag.guide)+'</div>':'')+'</div>';
     }
 
-    // 10. 최하단 액션 (조건부) — 제출(보완요청/미제출 서류 1건↑) · 신청취소(취소 가능 페이지 & 취소 가능 단계)
+    // 10. 최하단 액션 (조건부) — 제출(보완요청/미제출 서류 1건↑)
+    // [DEV] 신청취소·신청포기 버튼 제거됨(2026-07-20 운영 실화면+소스 전수 확인) — 대민에서 상태를 취소/포기로 바꾸는 기능 없음.
+    //       신청취소(REQ_STATUS 4)·신청포기(920)는 관리자/수행기관 지정 전용 상태. 대민 실기능은 신청 삭제뿐.
     var _canSubmit = (a.docs||[]).concat(a.review&&a.review.docs?a.review.docs:[]).some(function(d){ var s=docStatus(d); return s==='supplement'||(d.ok===false)||s==='missing'; });
-    var _canCancel = !!(cfg.cancel && a.cancelable);   // 취소 가능 구간(제출완료~보완완료 등)은 apps 데이터에서 지정
-    if (_canSubmit || _canCancel){
+    if (_canSubmit){
       h += '<div class="cd-submit-bar">'
         + '<p class="cd-submit-hint" id="cdSubmitMsg" role="status" aria-live="polite" hidden></p>'
         + '<div class="cd-submit-btns">'
-        +   (_canCancel ? '<button type="button" class="btn cd-btn-cancel" id="cdCancelBtn">'+esc((cfg.cancel&&cfg.cancel.label)||'신청 취소')+'</button>' : '')
-        +   (_canSubmit ? '<button type="button" class="btn btn-primary" id="cdDocSubmit" disabled aria-disabled="true">제출</button>' : '')
+        +   '<button type="button" class="btn btn-primary" id="cdDocSubmit" disabled aria-disabled="true">제출</button>'
         + '</div>'
         + '</div>';
     }
@@ -345,22 +345,7 @@ window.ContestDetail = (function () {
       if(msg){ msg.hidden=false; msg.textContent='✓ 제출되었습니다. 담당자 검토 후 안내드립니다.'; }
       submit.disabled=true; submit.setAttribute('aria-disabled','true'); submit.textContent='제출 완료';
     });
-    // 신청취소(mock) — 확인 다이얼로그 → 현재 상태 갱신 + 파일선택/제출 비활성 + 인라인 확인(자동소멸 금지)
-    var cancelBtn = document.getElementById('cdCancelBtn');
-    if(cancelBtn) cancelBtn.addEventListener('click', function(){
-      if(!window.confirm('신청을 취소하면 되돌릴 수 없습니다. 취소하시겠습니까?')) return;
-      var toStatus = (cfg.cancel && cfg.cancel.to) || '신청취소';
-      var st = root.querySelector('.cd-idmeta .st'); if(st) st.textContent = toStatus;
-      Array.prototype.forEach.call(root.querySelectorAll('.cd-pick'), function(pk){
-        pk.style.opacity='.4'; pk.style.pointerEvents='none';
-        var i=pk.querySelector('.cd-pick-input'); if(i) i.disabled=true;
-      });
-      Array.prototype.forEach.call(root.querySelectorAll('.cd-doc-row[data-picked="1"]'), function(r){ r.removeAttribute('data-picked'); });
-      if(submit){ submit.disabled=true; submit.setAttribute('aria-disabled','true'); }
-      var msg2 = document.getElementById('cdSubmitMsg');
-      if(msg2){ msg2.hidden=false; msg2.textContent='신청이 취소되었습니다.'; }
-      cancelBtn.disabled=true; cancelBtn.textContent = (toStatus.indexOf('포기')>=0 ? '신청 포기됨' : '신청 취소됨');
-    });
+    // (삭제됨) 신청취소·신청포기 핸들러 — 대민 취소 기능 없음. 상태 변경은 관리자 지정 전용.
     sync();
   }
 

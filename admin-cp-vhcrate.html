@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>구매임차 전체비율 | 정책지원 시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<style>
+  .rt-tbl{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .rt-tbl th,.rt-tbl td{border:1px solid #e2e8f0;padding:9px 10px;text-align:right;}
+  .rt-tbl th{background:#f8fafc;font-weight:700;color:#475569;text-align:center;white-space:nowrap;}
+  .rt-tbl td:first-child{text-align:left;font-weight:700;color:#334155;}
+  .rt-tbl td.c{text-align:center;}
+  .rt-tbl tfoot td{background:#f8fafc;font-weight:800;color:#1f2937;}
+  .rt-tbl .num{font-variant-numeric:tabular-nums;}
+  .rt-tbl tr.miss td{background:#fff8f8;}
+  .ok{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:800;background:#dff5e8;color:#19a76d;}
+  .no{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:800;background:#fdecec;color:#c0392b;}
+  .gtype{display:inline-block;padding:1px 8px;border-radius:5px;font-size:11px;font-weight:700;background:#eef2f7;color:#46566a;margin-left:6px;vertical-align:middle;}
+  /* 산정식 미정 안내 */
+  .tbd{border:2px dashed #b45309;background:#fffaf2;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12.5px;color:#7c4a06;line-height:1.7;}
+  .tbd strong{color:#b45309;}
+</style>
+</head>
+<body>
+<!-- [DEV] 정책지원 시스템 > 의무구매임차제(D0003) > 자동차 구매·임차 실적 > 구매임차 전체비율 (T2 · v0.30 6호)
+     근거 메뉴: 회의록/구매보조금시스템_메뉴IA_20260716.md §부록 D0003 '자동차 구매·임차 실적'
+     ⚠ 달성여부 = 의무비율 100% 기준(주어진 값). 세부 산정식(대상 대수 정의·저공해차 인정 배수·제외차량·이월 등)은 미정 — 개발 협의 대상(임의 창작 금지). -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">구매임차 전체비율</h1>
+    <p class="adm-desc">기관별 무공해차 의무구매·임차 이행 비율을 전체 조회합니다. (의무구매임차제 &gt; 자동차 구매·임차 실적 · 간이 재현)</p>
+
+    <div class="adm-card">
+      <div class="adm-filter">
+        <div class="adm-field"><label>기준년도</label><select id="fYear"></select></div>
+        <div class="adm-field"><label>기관 유형</label>
+          <select id="fType"><option value="all">전체</option><option>국가기관</option><option>지자체</option><option>공공기관</option></select>
+        </div>
+        <div class="adm-field"><label>달성여부</label>
+          <select id="fOk"><option value="all">전체</option><option value="y">달성</option><option value="n">미달</option></select>
+        </div>
+        <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="기관명 검색"></div>
+        <button type="button" class="adm-btn primary" id="fSearch">조회</button>
+        <button type="button" class="adm-btn" id="fReset">초기화</button>
+      </div>
+    </div>
+
+    <div class="adm-meta"><div>전체 <strong id="listCount">0</strong>건</div><div>의무비율 <strong>100%</strong> 기준 달성여부 판정</div></div>
+    <table class="rt-tbl">
+      <thead><tr>
+        <th style="width:260px;">기관명</th>
+        <th style="width:150px;">의무구매 대상 대수</th>
+        <th style="width:150px;">무공해차 구매·임차</th>
+        <th style="width:110px;">비율(%)</th>
+        <th style="width:110px;">달성여부</th>
+      </tr></thead>
+      <tbody id="listBody"></tbody>
+      <tfoot id="listFoot"></tfoot>
+    </table>
+
+    <div class="tbd">
+      <strong>※ 산정식 미정(개발 협의 대상)</strong> — 본 화면의 비율은 <em>무공해차 구매·임차 ÷ 의무구매 대상 대수</em> 단순 비로 표시한 <strong>프로토타입 값</strong>입니다.
+      실제 산정식(의무구매 대상 대수 정의, 저공해차 종별 인정 배수, 제외자동차 반영 시점, 미달분 이월·차감 규칙 등)은 확정되지 않았으므로 개발 협의 후 반영해야 합니다.
+    </div>
+
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 산정식·원천 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>⚠ 달성여부 판정</strong> : 의무비율 <strong>100% 기준</strong>(주어진 값)으로만 판정. <strong>세부 산정식은 미정 — 개발 협의 필요</strong>. 임의 산식 창작 금지: 대상 대수 정의(신규 구매+임차 범위), 저공해차 1·2·3종 인정 배수, 제외자동차 승인분 반영 시점, 미달분 이월·차감 규칙 미확정.</li>
+        <li><strong>연관 화면</strong> : 같은 메뉴군의 '구매임차 비율'(기관 단건)·'차종별 구매임차 현황/전체현황'·'제외자동차 승인관리'와 산정 기준을 공유해야 함 — 화면별 산식 불일치 방지.</li>
+        <li><strong>메뉴 원천</strong> : PS_MENU D0003(의무구매임차제) &gt; 자동차 구매·임차 실적 — 근거 회의록/구매보조금시스템_메뉴IA_20260716.md §부록.</li>
+        <li>본 화면은 간이 재현(더미 12건) — 실제 집계 쿼리는 개발 단계에서 확정.</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260720b"></script>
+<script src="js/admin-menu-policy.js?v=20260720a"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+
+  AdminShell.mount({
+    system:'정책지원 시스템',
+    siteTabs: window.ADMIN_MENU_POLICY,
+    activeSite:'cp',
+    activeHref:'admin-cp-vhcrate.html'
+  });
+
+  var YEARS = ['2026','2025','2024'];
+
+  /* ── 더미 12건 — 달성/미달 혼합 ── */
+  var DATA = [
+    { org:'환경부',               type:'국가기관', target:120, ev:132 },
+    { org:'국토교통부',           type:'국가기관', target:210, ev:184 },
+    { org:'산업통상자원부',       type:'국가기관', target:96,  ev:101 },
+    { org:'서울특별시',           type:'지자체',   target:480, ev:512 },
+    { org:'부산광역시',           type:'지자체',   target:310, ev:268 },
+    { org:'경기도',               type:'지자체',   target:640, ev:655 },
+    { org:'전라남도',             type:'지자체',   target:180, ev:143 },
+    { org:'경상북도',             type:'지자체',   target:205, ev:205 },
+    { org:'한국환경공단',         type:'공공기관', target:88,  ev:97 },
+    { org:'한국전력공사',         type:'공공기관', target:540, ev:471 },
+    { org:'한국도로공사',         type:'공공기관', target:265, ev:280 },
+    { org:'한국토지주택공사',     type:'공공기관', target:322, ev:298 }
+  ];
+  // 비율 = 무공해차 ÷ 대상 (프로토타입 단순 비 — 실제 산정식 미정)
+  function rate(d){ return d.target ? (d.ev / d.target * 100) : 0; }
+  function isOk(d){ return rate(d) >= 100; }
+
+  function filtered(){
+    var ty=$('fType').value, ok=$('fOk').value, kw=($('fKw').value||'').trim().toLowerCase();
+    return DATA.filter(function(d){
+      if (ty!=='all' && d.type!==ty) return false;
+      if (ok!=='all' && ((ok==='y') !== isOk(d))) return false;
+      if (kw && d.org.toLowerCase().indexOf(kw)<0) return false;
+      return true;
+    });
+  }
+
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listBody').innerHTML = rows.length ? rows.map(function(d){
+      var r = rate(d), ok = isOk(d);
+      return '<tr'+(ok?'':' class="miss"')+'>'
+        + '<td>'+esc(d.org)+'<span class="gtype">'+esc(d.type)+'</span></td>'
+        + '<td class="num">'+fmt(d.target)+'</td>'
+        + '<td class="num">'+fmt(d.ev)+'</td>'
+        + '<td class="num">'+r.toFixed(1)+'</td>'
+        + '<td class="c">'+(ok?'<span class="ok">달성</span>':'<span class="no">미달</span>')+'</td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="5"><div class="adm-empty">조건에 맞는 기관이 없습니다.</div></td></tr>';
+
+    var tt = rows.reduce(function(a,d){ return a + d.target; }, 0);
+    var te = rows.reduce(function(a,d){ return a + d.ev; }, 0);
+    var tr = tt ? (te / tt * 100) : 0;
+    var okCnt = rows.filter(isOk).length;
+    $('listFoot').innerHTML = rows.length
+      ? '<tr><td>합계 · 달성 '+okCnt+' / '+rows.length+'개 기관</td><td class="num">'+fmt(tt)+'</td><td class="num">'+fmt(te)+'</td>'
+        + '<td class="num">'+tr.toFixed(1)+'</td><td class="c">'+(tr>=100?'<span class="ok">달성</span>':'<span class="no">미달</span>')+'</td></tr>'
+      : '';
+  }
+
+  $('fYear').innerHTML = YEARS.map(function(y){ return '<option>'+y+'</option>'; }).join('');
+  ['fYear','fType','fOk'].forEach(function(id){ $(id).addEventListener('change', render); });
+  $('fKw').addEventListener('input', render);
+  $('fSearch').addEventListener('click', function(){ render(); __admToast('조회했습니다. (기준년도 '+$('fYear').value+')'); });
+  $('fReset').addEventListener('click', function(){ $('fYear').value=YEARS[0]; $('fType').value='all'; $('fOk').value='all'; $('fKw').value=''; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>

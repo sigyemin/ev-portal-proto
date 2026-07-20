@@ -131,8 +131,7 @@
 .map-legend-bar .mlb-bolt{ color:var(--color-primary-600); font-size:12px; letter-spacing:-1.5px; }
 .map-legend-bar .mlb-band{ display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:18px; padding:0 6px; border-radius:5px; background:var(--color-gray-100); color:var(--text-secondary); font-size:10.5px; font-weight:800; }
 
-/* ── 멀티 마커(동일 좌표 복수 충전소) ×N 뱃지 ── */
-.map-pin.mk .mp-multi-badge{ position:absolute; top:-8px; right:-8px; background:#111827; color:#fff; font-size:10px; font-weight:800; line-height:1; padding:2px 5px; border-radius:999px; border:1.5px solid #fff; }
+/* ── 멀티 마커(동일 좌표 복수 충전소) — 숫자 = 충전소 개수 ── */
 .map-pin.mk.is-multi{ box-shadow:0 4px 12px rgba(17,24,39,.35), 0 0 0 3px rgba(255,255,255,.9), 6px 6px 0 -1px rgba(148,163,184,.5); }  /* 겹친 카드 느낌 */
 
 /* ── 위치 목록(1뎁스) ── */
@@ -148,6 +147,9 @@
 .loc-item .li-dot.st-available{ background:var(--mk-available); } .loc-item .li-dot.st-busy{ background:var(--mk-busy); }
 .loc-item .li-dot.st-unavailable{ background:var(--mk-unavailable); } .loc-item .li-dot.st-unknown{ background:var(--mk-unknown); }
 .loc-item .li-dot.st-restricted{ background:var(--mk-restricted); } .loc-item .li-dot.st-h2{ background:var(--mk-busy); }
+.loc-item .li-badge{ display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:999px; background:var(--color-gray-100,#f1f5f9); color:var(--text-secondary); font-size:11.5px; font-weight:700; }
+.loc-item .li-sep{ color:var(--color-gray-300); }
+.loc-item .li-av{ color:var(--color-gray-400); }
 .loc-item .li-arrow{ position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:20px; color:var(--color-gray-400); }
 
 /* ── 충전기 목록(대용량 대응) ── */
@@ -156,12 +158,16 @@
 /* 충전기 상태색 = 마커 단일 토큰(--mk-*) 참조. 사용가능 그린 / 사용중 파랑 / 불가 그레이900 */
 .chg-row.st-avail{ border-left-color:var(--mk-available); }
 .chg-row.st-busy{ border-left-color:var(--mk-busy); }
-.chg-row.st-fault{ border-left-color:var(--mk-unavailable); background:var(--color-gray-50); }
+.chg-row.st-check{ border-left-color:var(--mk-unavailable); background:var(--color-gray-50); }
+.chg-row.st-stop{ border-left-color:var(--mk-unavailable); background:var(--color-gray-50); }
+.chg-row.st-comm{ border-left-color:var(--mk-unknown); background:#fffbf0; }
+.chg-row.st-unknown{ border-left-color:var(--mk-unknown); background:#fffbf0; }
 .chg-row .cr-id{ font-weight:800; color:var(--text-secondary); font-variant-numeric:tabular-nums; min-width:30px; }
 .chg-row .cr-band{ font-weight:800; }
 .chg-row .cr-conn{ color:var(--text-secondary); font-weight:600; }
 .chg-row .cr-state{ margin-left:auto; font-weight:700; font-size:11.5px; color:var(--text-secondary); }
-.chg-row.st-fault .cr-state{ color:var(--mk-unavailable); }
+.chg-row.st-check .cr-state, .chg-row.st-stop .cr-state{ color:var(--mk-unavailable); }
+.chg-row.st-comm .cr-state, .chg-row.st-unknown .cr-state{ color:var(--mk-unknown); }
 .chg-row .cr-loc{ flex-basis:100%; text-align:left; margin-top:2px; padding:0; border:none; background:none; cursor:pointer; font-size:11.5px; color:var(--color-primary-700); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
 .chg-row .cr-loc.open{ white-space:normal; overflow:visible; }
 .chg-more{ width:100%; margin-top:8px; padding:9px; border:1px dashed var(--border-medium); background:var(--color-gray-50); border-radius:8px; font-size:12.5px; font-weight:700; color:var(--text-secondary); cursor:pointer; }
@@ -655,7 +661,7 @@
               </span>
             </div>
 
-            <!-- 마커/클러스터 = JS 렌더 (LOD별 상세도) — 개별 마커=충전기 대수, 클러스터=대수 합계 -->
+            <!-- 마커/클러스터 = JS 렌더 (LOD별 상세도) — ★숫자=충전소 개수(클러스터=그룹 내 충전소 수 · 단일 핀=1) · 대표상태는 충전기 배열에서 파생(calcStationStatus) -->
             <!-- [DEV] 클러스터는 지도 라이브러리 자동 거리 클러스터 + VWorld는 클러스터 내장이 약함 → Supercluster 등 별도 라이브러리 검토 필요 -->
             <div class="map-clusters lod-status" id="mapMarkers"></div>
 
@@ -871,9 +877,15 @@
 <details class="dev-note" style="max-width:1160px;margin:24px auto 0;border:1px dashed var(--color-primary-300,#8fc9a8);border-radius:12px;background:#f6faf7;">
   <summary style="cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--color-primary-700);">🛠 개발 참고 — 충전소 지도/마커 데이터 매핑</summary>
   <div style="padding:2px 18px 18px;font-size:12.5px;color:var(--text-secondary);line-height:1.7;">
-    <p>· <b>마커 숫자 = 충전기 전체 대수</b>(사용가능 대수 아님). <b>운영종료·폐쇄</b>(DB 상태값) 충전소는 조회에서 제외 → 지도에 미표시.</p>
+    <p>· <b>★마커 숫자 = 충전소 개수</b>(2026-07-20 확정 — 충전기 대수 아님). 클러스터·멀티마커 숫자 = 그룹 내 충전소 수 · <b>단일 충전소 핀도 '1' 표시</b>(모든 마커에 충전소 개수 노출) · <b>충전기 대수는 우측 슬라이드에서만</b> 표시. <b>운영종료·폐쇄</b>(DB 상태값) 충전소는 조회에서 제외 → 지도에 미표시.</p>
+    <p>· <b>★충전소 대표상태 = 저장값이 아니라 소속 충전기 상태에서 파생</b>(§4-5 · AS-IS <code>evMap.js:80~96</code>). 산식 = 소속 충전기 중 <b>우선순위 최상위 1개</b> 채택 —
+       <b>사용가능 &gt; 충전중 &gt; 점검중 &gt; 통신미연결 &gt; 상태미확인 &gt; 운영중지</b>. '전부 일치' 방식 아님(1기라도 사용가능이면 충전소는 사용가능).
+       <b>사용가능 + 충전소 이용자제한 플래그 → 이용자제한 override</b>. 프로토타입은 <code>calcStationStatus(충전소ID)</code> 공용 함수 1개로 일원화 —
+       <b>마커·멀티 리스트·상세·다운로드가 전부 같은 함수 결과</b>를 쓰므로 마커 ↔ 슬라이드 모순이 구조적으로 발생하지 않음.
+       더미도 대표상태를 하드코딩하지 않고 충전기 상태 구성(<code>mix</code>)만 정의 — <b>개발 시에도 대표상태 컬럼을 저장·이원 계산하지 말 것</b>.</p>
+    <p>· <b>멀티마커(최종 LOD 전용)</b> = 좌표 소수 4자리 반올림(≈10m) 근접 그룹에 충전소 2개 이상 → 클릭 시 슬라이드 <b>1뎁스 충전소 선택 리스트</b>(충전소명·CPO·대표상태 배지·충전기 N기) → 행 클릭 시 <b>2뎁스 상세</b>(← 목록 복귀). 충전소 1개 마커는 상세 직행. <b>표시 계층 병합만 — 충전소 코드 데이터 병합 금지</b>(구역 분리·명의별 등록 혼재).</p>
     <p>· <b>좌표</b> = <code>LAT/LNG</code>(예: 수소 <code>H2_STATION.LAT/LNG</code>, 전기 충전소 마스터의 위경도). 실시간 개별 충전기 상태는 로딩 과다로 지도 미노출 → <b>우측 슬라이드 전용</b>.</p>
-    <p>· <b>클러스터</b> = 실서비스는 지도 라이브러리(네이버/카카오)의 <b>as-is 자동 거리 클러스터</b>(줌 축소 시 합침·확대 시 분할, 명시적 행정티어 없음). 클러스터 마커 = 대수 합계.</p>
+    <p>· <b>클러스터</b> = 실서비스는 지도 라이브러리(네이버/카카오)의 <b>as-is 자동 거리 클러스터</b>(줌 축소 시 합침·확대 시 분할, 명시적 행정티어 없음). 클러스터 마커 = ★충전소 개수 합계(대수 아님).</p>
     <p>· <b>연동</b>: 필터(급속·사업자·회원카드 등) 조작 → 마커/클러스터 즉시 갱신 · 검색(주소·충전소명·지역) → 지도 이동+줌 · '내 주변' 리스트 ↔ 지도(같은 필터·데이터, 항목 클릭 → 마커 하이라이트+슬라이드). 본 프로토타입은 실지도 없어 mock 연동으로 시연.</p>
     <p>· <b>즐겨찾기</b>(자주 쓰는 충전소)는 로그인 회원별 → 본 페이지 '자주 쓰는 충전소' 뷰로 일원화(구 mypage-favorites 흡수). 비로그인 진입 시 로그인 유도.</p>
   </div>
@@ -909,8 +921,8 @@
     <!-- 실시간 상태 요약 (충전기 목록 집계) -->
     <div class="sc-grid" style="grid-template-columns:repeat(3,1fr);gap:10px;">
       <div class="sc-tile ev"><div class="sc-label">이용가능</div><div class="sc-val" id="sdAvail">0</div><div class="sc-sub">대기 없음</div></div>
-      <div class="sc-tile"><div class="sc-label">사용중</div><div class="sc-val" id="sdBusy">0</div><div class="sc-sub">충전 진행</div></div>
-      <div class="sc-tile"><div class="sc-label">불가</div><div class="sc-val" id="sdFault" style="color:var(--mk-unavailable);">0</div><div class="sc-sub">고장·점검</div></div>
+      <div class="sc-tile"><div class="sc-label">충전중</div><div class="sc-val" id="sdBusy">0</div><div class="sc-sub">충전 진행</div></div>
+      <div class="sc-tile"><div class="sc-label">그 외</div><div class="sc-val" id="sdFault" style="color:var(--mk-unavailable);">0</div><div class="sc-sub">점검·통신·중지</div></div>
     </div>
 
     <!-- 충전기 현황 — 목록형(기본 8개 + 더보기, 최대 97기 대응) -->
@@ -1015,7 +1027,7 @@
 
 <div id="footer-slot"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="js/partials.js?v=20260703a"></script>
+<script src="js/partials.js?v=20260716a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260703a"></script>
 <script src="js/i18n-charging.js?v=20260709b"></script>
@@ -1056,6 +1068,7 @@
   const backdrop = document.getElementById('sdBackdrop');
   const closeBtn = document.getElementById('sdClose');
 
+  // [DEV] avail(이용가능 대수)는 표시에 미사용 — 이용가능 수는 chargersOf() 배열에서 집계(파생 일원화)
   const STATIONS = {
     s1: { name: 'GS칼텍스 강남 직영', addr: '서울 강남구 테헤란로 152 · 1층 주차장', brand: 'GS칼텍스', type: 'ev', avail: 4 },
     s2: { name: '스타광장 수소충전소', addr: '서울 강남구 선릉로 428 · 지상 2층', brand: '하이넷', type: 'h2', avail: 2 },
@@ -1080,31 +1093,53 @@
       {id:'03',band:'fast',conn:'NACS',state:'busy',loc:'지상 주차장 B3'},
       {id:'04',band:'ultra',conn:'DC콤보',state:'avail',loc:'지하 1층 급속존'},
       {id:'05',band:'fast',conn:'차데모',state:'avail',loc:''},
-      {id:'06',band:'fast',conn:'DC콤보',state:'fault',loc:'지하 1층 급속존'}
+      {id:'06',band:'fast',conn:'DC콤보',state:'check',loc:'지하 1층 급속존'}
     ]
   };
   function bandOfKw(k){ return k<30?'slow':k<50?'mid':k<100?'fast':k<200?'fastp':'ultra'; }
+
+  /* ══ 충전소 대표상태 = 소속 충전기 상태에서 파생 (§4-5 · AS-IS evMap.js:80~96) ══════════════
+     [DEV] ★대표상태는 저장(하드코딩) 값이 아니다 — 아래 우선순위로 충전기 배열에서 매 렌더 계산.
+       우선순위(최상위 1개 채택) : 사용가능 > 충전중 > 점검중 > 통신미연결 > 상태미확인 > 운영중지
+       '전부 일치' 방식 아님 — 1기라도 사용가능이면 충전소는 사용가능.
+       사용가능 + 충전소 이용자제한 플래그(restricted) → '이용자제한' override.
+       마커·멀티 리스트·상세·다운로드가 전부 이 함수 하나를 사용(계산 이원화 금지). */
+  var CHG_PRIORITY = ['avail','busy','check','comm','unknown','stop'];
+  var CHG_TO_MK    = { avail:'available', busy:'busy', check:'unavailable', comm:'unknown', unknown:'unknown', stop:'unavailable' };
+  function markerOf(id){ return MARKERS.filter(function(m){ return m.id===id; })[0]; }
+  function calcStationStatus(id){
+    var mk = markerOf(id);
+    if(mk && mk.type==='h2') return null;              // 수소는 영업상태 2종 별도 축(§4-5) — 파생 대상 아님
+    var list = chargersOf(id), top = null;
+    for(var i=0;i<CHG_PRIORITY.length;i++){
+      var s = CHG_PRIORITY[i];
+      if(list.some(function(c){ return c.state===s; })){ top = s; break; }
+    }
+    var st = top ? CHG_TO_MK[top] : 'unknown';         // 충전기 0기 = 상태미확인
+    if(st==='available' && mk && mk.restricted) st = 'restricted';
+    return st;
+  }
+  function chgCount(m){ return (m.type==='h2') ? m.count : chargersOf(m.id).length; }   // 충전기 대수도 배열에서 파생
+
   function chargersOf(stationId){
     if(CHARGERS[stationId]) return CHARGERS[stationId];
-    // 기본 생성: 마커 count = 총 대수 · avail = 이용가능 · 1 사용중 · 1 고장(대수>2)
-    var mk=MARKERS.filter(function(m){return m.id===stationId;})[0];
-    var st=STATIONS[stationId]||{}; var total=mk?mk.count:(st.avail||6); var band=mk?mk.band:'slow';
-    var conn = band==='slow'?'AC완속':(band==='ultra'?'DC콤보':'DC콤보');
-    var availN=Math.min(st.avail!=null?st.avail:total, total);
-    var arr=[];
-    // 상세위치 입력률 낮게(약 17%) — 6기당 1개꼴
-    var locs=['지하 1층 A열','지상 방문자 주차','기둥 P-7 옆'];
-    for(var i=1;i<=total;i++){
-      var state = i<=availN ? 'avail' : (i===availN+1 && total>2 ? 'busy' : (i===total && total>3 ? 'fault' : 'avail'));
-      arr.push({ id:(i<10?'0'+i:''+i), band:band, conn:conn, state:state, loc:(i%6===1? locs[(i/6|0)%locs.length] : '') });
-    }
+    // mix(상태별 대수) → 충전기 배열 생성. 마커 상태는 이 배열에서 다시 파생되므로 모순이 생길 수 없음
+    var mk = markerOf(stationId) || {};
+    var band = mk.band || 'slow';
+    var conn = band==='slow' ? 'AC완속' : 'DC콤보';
+    var locs = ['지하 1층 A열','지상 방문자 주차','기둥 P-7 옆'];   // 상세위치 입력률 낮게(약 17%) — 6기당 1개꼴
+    var arr = [], n = 0;
+    function push(state){ n++; arr.push({ id:(n<10?'0'+n:''+n), band:band, conn:conn, state:state, loc:(n%6===1? locs[(n/6|0)%locs.length] : '') }); }
+    if(mk.mix){ CHG_PRIORITY.forEach(function(s){ for(var k=0;k<(mk.mix[s]||0);k++) push(s); }); }
+    else { for(var i=0;i<(mk.count||6);i++) push('avail'); }        // 폴백(수소·미정의)
     CHARGERS[stationId]=arr; return arr;
   }
 
   var __curStation = null, __locBackKey = null;   // __locBackKey: 위치 목록에서 진입 시 복귀 키
   var BAND_LBL = { slow:'완속', mid:'중속', fast:'급속', fastp:'급속+', ultra:'초급속' };
   var BAND_CLR = { slow:'#2C7BE5', mid:'#0D9488', fast:'#CA9A00', fastp:'#F97316', ultra:'#EF4444' };
-  var CHG_STATE = { avail:'이용가능', busy:'사용중', fault:'불가(고장·점검)' };
+  // 충전기 상태 6종 = 대표상태 산정 우선순위와 동일 축(CHG_PRIORITY)
+  var CHG_STATE = { avail:'이용가능', busy:'충전중', check:'점검중', comm:'통신미연결', unknown:'상태미확인', stop:'운영중지' };
   var __chgExpanded = false;
 
   // 충전기 목록 렌더 — 기본 8개 + '전체 N기 보기' 더보기/접기 · 상세위치 Disclosure
@@ -1113,7 +1148,7 @@
     var list=chargersOf(stationId);
     var av=list.filter(function(c){return c.state==='avail';}).length;
     var bs=list.filter(function(c){return c.state==='busy';}).length;
-    var ft=list.filter(function(c){return c.state==='fault';}).length;
+    var ft=list.length - av - bs;   // 나머지 전부(점검중·통신미연결·상태미확인·운영중지) — 3타일 합계 = 총 대수
     var e;
     if((e=document.getElementById('sdAvail'))) e.textContent=av;
     if((e=document.getElementById('sdBusy'))) e.textContent=bs;
@@ -1183,9 +1218,14 @@
     document.getElementById('sdLocList').innerHTML = members.map(function(m){
       var s=STATIONS[m.id]||{}; var chg=chargersOf(m.id);
       var av=chg.filter(function(c){return c.state==='avail';}).length;
+      // 행 = 충전소명 · CPO명 · 대표상태 배지 · 충전기 N기 (대표상태 = §4-5 우선순위 집계 결과 = 마커 상태값)
+      var stKey = (m.type==='h2') ? 'h2' : calcStationStatus(m.id);
+      var stLbl = (m.type==='h2') ? (H2_STATUS[m.h2status]||'') : (MK_STATUS_LABEL[stKey]||'');
       return '<button type="button" class="loc-item" data-loc-station="'+m.id+'">'
         + '<div class="li-name">'+esc(s.name||m.id)+'</div>'
-        + '<div class="li-meta"><span class="li-dot st-'+ (m.type==='h2'?('h2'):(m.status)) +'"></span>'+esc(s.brand||'')+' · 충전기 '+m.count+'기 · 이용가능 '+av+'</div>'
+        + '<div class="li-meta">'+esc(s.brand||'')
+        +   '<span class="li-badge st-'+stKey+'"><span class="li-dot st-'+stKey+'"></span>'+esc(stLbl)+'</span>'
+        +   '<span class="li-sep">·</span>충전기 '+chgCount(m)+'기 <span class="li-av">(이용가능 '+av+')</span></div>'
         + '<span class="li-arrow">›</span></button>';
     }).join('');
     drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden','false');
@@ -1238,6 +1278,11 @@
     drawer.classList.remove('open');
     backdrop.classList.remove('open');
     drawer.setAttribute('aria-hidden', 'true');
+    // 멀티 마커 리스트 상태 초기화 — 다음 열림이 이전 목록 컨텍스트를 물고 오지 않도록
+    __locBackKey = null;
+    var lb=document.getElementById('sdBodyLoc'); if(lb) lb.hidden = true;
+    var bk=document.getElementById('sdBack');    if(bk) bk.hidden = true;
+    var ll=document.getElementById('sdLocList'); if(ll) ll.innerHTML = '';
   }
 
   document.querySelectorAll('.station-card').forEach(card => {
@@ -1245,7 +1290,7 @@
       document.querySelectorAll('.station-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       const id = card.dataset.station;
-      if (id) { openDrawer(id); if (window.__highlightMarker) window.__highlightMarker(id); }
+      if (id) { openDrawer(id, null); if (window.__highlightMarker) window.__highlightMarker(id); }
     });
   });
 
@@ -1253,7 +1298,7 @@
     pin.addEventListener('click', () => {
       document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
       pin.classList.add('active');
-      openDrawer(pin.dataset.station);
+      openDrawer(pin.dataset.station, null);
     });
   });
 
@@ -1343,19 +1388,29 @@
   // [DEV] 수소 마커 = AS-IS 노출 정책 계승 — 상태 2종(영업중/영업마감)만. H2_CHARGER.CHGER_STAT·MASK_STAT 실존하나
   //   실시간 상태 확장(충전가능/충전중/통신이상)은 향후 정책 결정 사항으로 보류. H₂ 아이콘·출력 표기 없음.
   var H2_STATUS = { open:'영업중', closed:'영업마감' };
+  // 전기 대표 상태 5종 라벨 — 마커 툴팁·멀티 리스트 배지·다운로드 공용(§4-5 우선순위 집계 결과값)
+  var MK_STATUS_LABEL = { available:'사용가능', busy:'사용중', unavailable:'사용불가', unknown:'상태미확인', restricted:'이용자제한' };
+  // ★전기 충전소에는 status(대표상태)를 두지 않는다 — mix(충전기 상태 구성)에서 calcStationStatus()로 파생.
+  //   하드코딩·계산 이원화가 마커 ↔ 슬라이드 모순의 원인이므로 저장값 금지(§4-5). 이용자제한만 충전소 플래그(restricted).
+  //   mix 키 = 충전기 상태 6종(우선순위 순): avail 사용가능 · busy 충전중 · check 점검중 · comm 통신미연결 · unknown 상태미확인 · stop 운영중지
   var MARKERS = [
-    // 전기 = 핀 몸통 색(상태 5종) × 핀 내 번개 색(출력 5밴드=충전소 max)
-    {id:'s1',top:30,left:25,count:4, type:'ev', status:'available',   band:'fast',  cpo:{abbr:'환경부', name:'기후에너지환경부'}},
-    {id:'s3',top:45,left:32,count:6, type:'ev', status:'busy',        band:'ultra', cpo:{abbr:'SK',   name:'SK일렉링크'}},
-    {id:'s4',top:50,left:45,count:4, type:'ev', status:'restricted',  band:'slow',  cpo:{abbr:'에버온', name:'에버온'}},
-    {id:'s6',top:42,left:58,count:18,type:'ev', status:'unknown',     band:'fastp', cpo:{abbr:'GS',   name:'GS차지비'}},
-    {id:'s7',top:55,left:65,count:8, type:'ev', status:'unavailable', band:'mid',   cpo:{abbr:'에버온', name:'에버온'}},
-    // 60기급 대단지 완속 (더보기 시연) — 상세위치 입력률 낮음(17%)
-    {id:'big1',top:66,left:36,count:60,type:'ev', status:'available', band:'slow', cpo:{abbr:'환경부', name:'기후에너지환경부'}, lat:37.5502, lng:127.0503},
-    // 드림타워 사례: 같은 좌표 3개 코드(A/B/C구역, 105기) → 멀티 마커
-    {id:'d1',top:38,left:50,count:40,type:'ev', status:'available',   band:'ultra', cpo:{abbr:'대영채비', name:'대영채비'}, lat:37.52110, lng:127.03350},
-    {id:'d2',top:38,left:50,count:35,type:'ev', status:'busy',        band:'fastp', cpo:{abbr:'SK',    name:'SK일렉링크'}, lat:37.52112, lng:127.03352},
-    {id:'d3',top:38,left:50,count:30,type:'ev', status:'available',   band:'fast',  cpo:{abbr:'GS',    name:'GS차지비'},   lat:37.52108, lng:127.03349},
+    // 전기 = 핀 몸통 색(상태 5종·파생) × 핀 내 번개 색(출력 5밴드=충전소 max)
+    // s1 = CHARGERS에 개별 더미 명시(상세위치 시연) → mix 없이 배열 그대로 사용 · 파생 결과 '사용가능'
+    {id:'s1',top:30,left:25, type:'ev', band:'fast',  cpo:{abbr:'환경부', name:'기후에너지환경부'}},
+    // 사용중 = 사용가능 0대 + 충전중 1대 이상
+    {id:'s3',top:45,left:32, type:'ev', band:'ultra', mix:{busy:5, check:1}, cpo:{abbr:'SK',   name:'SK일렉링크'}},
+    // 이용자제한 = 사용가능 1대 이상 + 충전소 제한 플래그(override) — 충전기가 다 죽은 상태와 조합 금지
+    {id:'s4',top:50,left:45, type:'ev', band:'slow',  mix:{avail:2, busy:1}, restricted:true, cpo:{abbr:'에버온', name:'에버온'}},
+    // 상태미확인 = 통신미연결·미확인만 구성
+    {id:'s6',top:42,left:58, type:'ev', band:'fastp', mix:{comm:10, unknown:8}, cpo:{abbr:'GS',   name:'GS차지비'}},
+    // 사용불가 = 사용가능·충전중 0대 + 점검중 1대 이상(운영중지 혼재)
+    {id:'s7',top:55,left:65, type:'ev', band:'mid',   mix:{check:6, stop:2}, cpo:{abbr:'에버온', name:'에버온'}},
+    // 60기급 대단지 완속 (더보기 시연) — 상세위치 입력률 낮음(17%) · 파생 '사용가능'
+    {id:'big1',top:66,left:36,type:'ev', band:'slow', mix:{avail:47, busy:9, check:3, stop:1}, cpo:{abbr:'환경부', name:'기후에너지환경부'}, lat:37.5502, lng:127.0503},
+    // 드림타워 사례: 같은 좌표 3개 코드(A/B/C구역) → 멀티 마커 · A 사용가능 / B 사용중 / C 사용가능
+    {id:'d1',top:38,left:50, type:'ev', band:'ultra', mix:{avail:28, busy:10, check:2}, cpo:{abbr:'대영채비', name:'대영채비'}, lat:37.52110, lng:127.03350},
+    {id:'d2',top:38,left:50, type:'ev', band:'fastp', mix:{busy:33, check:2},           cpo:{abbr:'SK',    name:'SK일렉링크'}, lat:37.52112, lng:127.03352},
+    {id:'d3',top:38,left:50, type:'ev', band:'fast',  mix:{avail:22, busy:6, comm:2},   cpo:{abbr:'GS',    name:'GS차지비'},   lat:37.52108, lng:127.03349},
     // 수소 = AS-IS 계승: 상태 2종(영업중/영업마감)만 · 출력·압력·가격 마커 미표시
     {id:'s2',top:35,left:40,count:2, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}},
     {id:'s5',top:58,left:55,count:2, type:'h2', h2status:'closed', cpo:{abbr:'코하이젠', name:'코하이젠'}},
@@ -1373,7 +1428,8 @@
       if(used[i]) return; used[i]=1; var grp=[p];
       pts.forEach(function(q,j){ if(!used[j] && dist(p,q)<=thr){ used[j]=1; grp.push(q); } });
       out.push({ members:grp,
-        count:grp.reduce(function(a,g){return a+g.count;},0),
+        stations:grp.length,                                            // ★마커 숫자 = 충전소 개수(2026-07-20 확정)
+        count:grp.reduce(function(a,g){return a+chgCount(g);},0),           // 충전기 대수 합계 — 마커 미표시(슬라이드 전용)
         top:grp.reduce(function(a,g){return a+g.top;},0)/grp.length,
         left:grp.reduce(function(a,g){return a+g.left;},0)/grp.length });
     });
@@ -1383,7 +1439,7 @@
   function pinHTML(m){
     var isH2 = (m.type==='h2');
     // 상태: 전기=핀 몸통 색 5종(st-*) · 수소=2종(h2st-*). 출력: 전기=번개 글리프 색 5밴드 / 수소=출력 표기 없음(H₂만)
-    var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+m.status);
+    var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+calcStationStatus(m.id));   // ★대표상태 = 충전기 배열에서 파생
     // 출력(번개색)은 '확대(cpo) 줌' 전용 — 중간 줌은 상태색 핀만. 수소는 H₂ 아이콘 상시.
     var inner = isH2
       ? '<span class="mp-bolts">H₂</span>'
@@ -1392,20 +1448,21 @@
     var nameLbl = m.cpo ? '<span class="mp-name">'+esc(m.cpo.name)+'</span>' : '';                      // 호버·선택 시 CPO명
     // 툴팁: 전기=밴드명+범위(색각이상 보완) / 수소=영업 상태
     var outTxt = isH2 ? (H2_STATUS[m.h2status]||'') : (BAND_LABEL[m.band]+' '+BAND_RANGE[m.band].replace('&lt;','<'));
-    var title = (m.cpo? esc(m.cpo.name)+' · ':'') + (outTxt? outTxt+' · ':'') + '충전기 '+m.count+'기';
+    // ★모든 전기 마커에 충전소 개수 표시 — 단일 충전소도 '1'(2026-07-20 지시). 충전기 대수는 슬라이드에서만
+    var title = (m.cpo? esc(m.cpo.name)+' · ':'') + (outTxt? outTxt+' · ':'') + '충전소 1개소';
     return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+'" data-station="'+m.id+'" title="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
-      + inner + '<span class="mp-count">'+m.count+'</span>' + cpoMark + nameLbl + '</button>';
+      + inner + '<span class="mp-count">1</span>' + cpoMark + nameLbl + '</button>';
   }
   function renderMap(){
     if(!mapWrap) return;
     mapWrap.className = 'map-clusters lod-'+__lod;
     var pts = MARKERS.filter(function(m){ return m.type === __currentMode; });
     if(__lod === 'cluster'){
-      // 축소 → 클러스터만(숫자만, AS-IS 동일). 크기는 숫자 자릿수에 따라 자연 확장. 단독 지점도 카운트 원으로 집계
+      // 축소 → 클러스터만(숫자만, AS-IS 동일). ★숫자 = 그룹 내 충전소 개수(충전기 대수 아님). 단독 지점도 카운트 원으로 집계
       var groups = clusterBy(pts, 42);
       mapWrap.innerHTML = groups.map(function(g){
-        var sz=36 + String(g.count).length*10;   // 자릿수 기반 크기(1자 46 · 2자 56 · 3자 66)
-        return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="충전기 '+g.count+'기 · 클릭 시 확대"><span class="mc-count">'+g.count+'</span></button>';
+        var sz=36 + String(g.stations).length*10;   // 자릿수 기반 크기(1자 46 · 2자 56 · 3자 66)
+        return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="충전소 '+g.stations+'개소 · 클릭 시 확대"><span class="mc-count">'+g.stations+'</span></button>';
       }).join('');
     } else {
       // 중간=상태핀 / 확대=핀 확대+CPO 마크 · 동일 좌표(≈10m) 복수 코드는 멀티 마커 1개로 묶고 ×N 뱃지
@@ -1422,16 +1479,14 @@
       }
     }
   }
-  // 멀티 마커(동일 좌표 복수 충전소) — ×N 뱃지, 대표 상태색은 첫 코드 기준
+  // 멀티 마커(동일 좌표 복수 충전소) — ★숫자 = 충전소 개수, 대표 상태색은 첫 코드 기준
   function multiMarkerHTML(grp, key){
     var m = grp[0], isH2 = (m.type==='h2');
-    var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+m.status);
-    var total = grp.reduce(function(a,g){return a+g.count;},0);
+    var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+calcStationStatus(m.id));   // ★대표상태 = 충전기 배열에서 파생
     var inner = isH2 ? '<span class="mp-bolts">H₂</span>' : (__lod==='cpo' ? '<span class="mp-bolt" style="color:'+BAND_COLOR[m.band]+';">⚡</span>' : '');
-    var title = grp.length+'개 충전소 · 총 '+total+'기 · 클릭 시 목록';
+    var title = '충전소 '+grp.length+'개소 · 클릭 시 목록';
     return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+' is-multi" data-multi="'+esc(key)+'" title="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
-      + inner + '<span class="mp-count">'+total+'</span>'
-      + '<span class="mp-multi-badge">×'+grp.length+'</span></button>';
+      + inner + '<span class="mp-count">'+grp.length+'</span></button>';
   }
   // 좌표 그룹의 멤버 stationId 배열
   function multiMembers(key){ return MARKERS.filter(function(m){ return coordKey(m)===key && m.type===__currentMode; }); }
@@ -1462,7 +1517,7 @@
       // 확대(최종): 단일 핀 → 하이라이트 + 우측 슬라이드(바로 상세)
       __activeStation = b.dataset.station;
       mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); });
-      b.classList.add('active'); openDrawer(b.dataset.station);
+      b.classList.add('active'); openDrawer(b.dataset.station, null);   // 단일 마커 = 상세 직행(목록 컨텍스트 없음)
     }
   });
   // 더블클릭 → 한 단계 축소 복귀 (지도 배경 더블클릭 포함)
@@ -1502,8 +1557,8 @@
       var chg = chargersOf(m.id);
       var av = chg.filter(function(c){ return c.state==='avail'; }).length;
       var band = (m.type==='h2') ? '수소' : (BAND_LABEL[m.band]+' '+BAND_RANGE[m.band].replace('&lt;','<'));
-      var stTxt = (m.type==='h2') ? (H2_STATUS[m.h2status]||'') : ({available:'사용가능',busy:'사용중',unavailable:'사용불가',unknown:'상태미확인',restricted:'이용자제한'}[m.status]||'');
-      aoa.push([ i+1, s.name||m.id, s.brand||'', s.addr||'', m.count, av, band, stTxt ]);
+      var stTxt = (m.type==='h2') ? (H2_STATUS[m.h2status]||'') : (MK_STATUS_LABEL[calcStationStatus(m.id)]||'');
+      aoa.push([ i+1, s.name||m.id, s.brand||'', s.addr||'', chgCount(m), av, band, stTxt ]);
     });
     var wb = XLSX.utils.book_new();
     var ws = XLSX.utils.aoa_to_sheet(aoa);
