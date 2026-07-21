@@ -6,7 +6,7 @@
 <title>충전소 찾기 | 충전소·요금 정보 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260622">
 <link rel="stylesheet" href="css/charging.css">
-<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260709c">
+<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260721a">
 <style>
 /* 충전소 찾기 전용 로컬 스타일 */
 [hidden] { display: none !important; }
@@ -112,7 +112,9 @@
 .map-pin .mp-count{ font-size:12px; font-weight:800; line-height:1.05; }
 .map-pin .mp-cpo{ position:absolute; top:calc(100% + 3px); left:50%; transform:translateX(-50%); background:#fff; color:var(--text-primary); font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.15); white-space:nowrap; }
 .map-pin .mp-name{ position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:var(--text-primary); color:#fff; font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity var(--t-fast); z-index:12; }
-.map-pin.mk:hover .mp-name, .map-pin.mk.active .mp-name{ opacity:1; }
+/* [ISS-012] 사업자명은 하단 상시 라벨 대신 호버/포커스 툴팁으로만 노출 — 키보드/터치 접근 위해 포커스에서도 동일 표시 */
+.map-pin.mk:hover .mp-name, .map-pin.mk.active .mp-name, .map-pin.mk:focus-visible .mp-name{ opacity:1; }
+.map-pin.mk:focus-visible, .map-cluster.mk:focus-visible{ outline:3px solid #1a73e8; outline-offset:3px; z-index:13; }
 /* LOD: 확대(cpo) → 핀 확대 */
 #mapMarkers.lod-cpo .map-pin.mk{ min-width:46px; height:46px; }
 .map-clusters.lod-cpo .map-pin .mp-count{ font-size:14px; }
@@ -891,6 +893,7 @@
     <p>· <b>멀티마커(최종 LOD 전용)</b> = 좌표 소수 4자리 반올림(≈10m) 근접 그룹에 충전소 2개 이상 → 클릭 시 슬라이드 <b>1뎁스 충전소 선택 리스트</b>(충전소명·CPO·대표상태 배지·충전기 N기) → 행 클릭 시 <b>2뎁스 상세</b>(← 목록 복귀). 충전소 1개 마커는 상세 직행. <b>표시 계층 병합만 — 충전소 코드 데이터 병합 금지</b>(구역 분리·명의별 등록 혼재).</p>
     <p>· <b>좌표</b> = <code>LAT/LNG</code>(예: 수소 <code>H2_STATION.LAT/LNG</code>, 전기 충전소 마스터의 위경도). 실시간 개별 충전기 상태는 로딩 과다로 지도 미노출 → <b>우측 슬라이드 전용</b>.</p>
     <p>· <b>클러스터</b> = 실서비스는 지도 라이브러리(네이버/카카오)의 <b>as-is 자동 거리 클러스터</b>(줌 축소 시 합침·확대 시 분할, 명시적 행정티어 없음). 클러스터 마커 = ★충전소 개수 합계(대수 아님).</p>
+    <p>· <b>마커 라벨·툴팁·접근성</b>(ISS-012 확정): 사업자명은 <b>하단 상시 라벨을 두지 않고 마우스 호버 시에만 툴팁</b>으로 노출(전기·수소 동일). 호버 전용 정보는 키보드·터치에서 접근 불가하므로 마커를 <b>포커스 가능(button)+포커스 시 동일 툴팁 표시</b>하고 <code>aria-label</code>(사업자명·출력·충전소 개수)로 스크린리더 접근 보장. 멀티마커는 운영기관이 여러 곳이라 툴팁·aria에 전체 나열(임의 1곳 선택 안 함). <b>실지도 SDK(네이버/카카오/VWorld) 연동 시에도 동일 요건</b> — 마커 오버레이 툴팁을 호버·포커스 양쪽에서 띄우고, SDK 마커에 접근성 이름(aria-label 등)을 부여할 것(모형은 프로토타입 수준 시연).</p>
     <p>· <b>연동</b>: 필터(급속·사업자·회원카드 등) 조작 → 마커/클러스터 즉시 갱신 · 검색(주소·충전소명·지역) → 지도 이동+줌 · '내 주변' 리스트 ↔ 지도(같은 필터·데이터, 항목 클릭 → 마커 하이라이트+슬라이드). 본 프로토타입은 실지도 없어 mock 연동으로 시연.</p>
     <p>· <b>즐겨찾기</b>(자주 쓰는 충전소)는 로그인 회원별 → 본 페이지 '자주 쓰는 충전소' 뷰로 일원화(구 mypage-favorites 흡수). 비로그인 진입 시 로그인 유도.</p>
   </div>
@@ -965,7 +968,7 @@
     <!-- 참고사항(비고) -->
     <div class="sd-section">
       <h4>참고사항 (비고)</h4>
-      <div class="sd-note">지하 1층 주차장 진입 후 좌측 충전 구역. 충전 중 주차요금 무료. 대형 화물차 진입 불가.</div>
+      <div class="sd-note" id="sdEtc">지하 1층 주차장 진입 후 좌측 충전 구역. 충전 중 주차요금 무료. 대형 화물차 진입 불가.</div>
     </div>
 
     <!-- 시설 정보 -->
@@ -1009,7 +1012,7 @@
     <!-- 참고사항(비고) -->
     <div class="sd-section">
       <h4>참고사항 (비고)</h4>
-      <div class="sd-note">충전 전 방문 예약 권장. 상용(버스) 충전은 별도 디스펜서 이용. 충전소 사정에 따라 운영시간이 변동될 수 있습니다.</div>
+      <div class="sd-note" id="sdEtcH2">충전 전 방문 예약 권장. 상용(버스) 충전은 별도 디스펜서 이용. 충전소 사정에 따라 운영시간이 변동될 수 있습니다.</div>
     </div>
 
     <!-- 시설 정보 (전기차와 동일 구성) -->
@@ -1032,12 +1035,12 @@
 
 <div id="footer-slot"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="js/partials.js?v=20260716a"></script>
+<script src="js/partials.js?v=20260721a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260703a"></script>
-<script src="js/i18n-charging.js?v=20260709b"></script>
+<script src="js/i18n-common.js?v=20260721a"></script>
+<script src="js/i18n-charging.js?v=20260721b"></script>
 <script src="js/main.js?v=20260520"></script>
-<script src="js/fee-disclaimer.js?v=20260709c"></script>
+<script src="js/fee-disclaimer.js?v=20260721a"></script>
 <script>
 // URL 해시 기반 초기 탭
 (function(){
@@ -1074,24 +1077,28 @@
   const closeBtn = document.getElementById('sdClose');
 
   // [DEV] avail(이용가능 대수)는 표시에 미사용 — 이용가능 수는 chargersOf() 배열에서 집계(파생 일원화)
-  /* [DEV] 충전소 정보 3필드 = 공공 충전소 개방 API 표준 필드 대응 —
-       parkingFree(주차료 무료 여부, Y/N) · useTime(이용가능시간 문자열, '24시간 이용가능' 등) · 이용자 제한 여부(Y=제한/N=개방)
-     ★이용자 제한은 STATIONS에 저장하지 않고 마커 restricted 플래그 하나만 원천으로 사용 — 카드 뱃지·마커 '이용자제한' 상태·상세 '이용자 제한' 섹션이 같은 값에서 파생(불일치 구조적 차단). */
+  /* [DEV] 충전소 정보 필드 원천 확정(2026-07-20) — EVCS_STATION
+       · 주차요금  = EVCS_STATION.PARKING_FREE (0 무료 / 1 유료) → 프로토 parkingFree(true=무료)
+       · 운영시간  = EVCS_STATION.USE_TIME (문자열 — '24시간 이용가능' / '06:00~24:00' 등 자유 서술)
+       · 비고      = EVCS_STATION.ETC (200자 상한 · 실측 최장 90자) → 상세 '참고사항(비고)'에 말줄임 없이 전문 노출
+       · 이용자제한 = ★원천 확인 중 — 프로토는 마커 restricted 플래그 하나만 사용(EVCS_STATION 대응 컬럼 미확정, 개발 협의 대상)
+     ★이용자 제한은 STATIONS에 저장하지 않고 마커 restricted 플래그 단일 원천에서 파생 — 카드 뱃지·마커 '이용자제한' 상태·상세 '이용자 제한' 섹션이 같은 값(불일치 구조적 차단).
+     ★뱃지 ↔ 비고 모순 금지: parkingFree=무료면 ETC도 무료 조건, 유료면 요금 조건을 서술(더미도 이 규칙으로 작성). */
   const STATIONS = {
-    s1: { parkingFree:false, useTime:'24시간 이용가능',name: 'GS칼텍스 강남 직영', addr: '서울 강남구 테헤란로 152 · 1층 주차장', brand: 'GS칼텍스', type: 'ev', avail: 4 },
-    s2: { parkingFree:true,  useTime:'08:00~20:00',   name: '스타광장 수소충전소', addr: '서울 강남구 선릉로 428 · 지상 2층', brand: '하이넷', type: 'h2', avail: 2 },
-    s3: { parkingFree:true,  useTime:'24시간 이용가능',name: '환경부 강남구청 공공', addr: '서울 강남구 학동로 426 · 공영주차장 B1', brand: '환경부', type: 'ev', avail: 6 },
-    s4: { parkingFree:false, useTime:'06:00~24:00',   name: '대치역 SK시그넷 초급속', addr: '서울 강남구 삼성로 427 · 대치역 2번 출구', brand: 'SK시그넷', type: 'ev', avail: 2 },
-    s5: { parkingFree:true,  useTime:'07:00~22:00',   name: '양재IC 현대 수소충전소', addr: '서울 서초구 남부순환로 2688', brand: '현대모비스', type: 'h2', avail: 0 },
-    s6: { parkingFree:true,  useTime:'24시간 이용가능',name: '서초동 EV Infra 완속', addr: '서울 서초구 서초대로 396 · 지하주차장', brand: 'EV Infra', type: 'ev', avail: 18 },
-    s7: { parkingFree:false, useTime:'10:30~22:00',   name: '롯데월드몰 파워큐브', addr: '서울 송파구 올림픽로 300 · 지하 3층', brand: '파워큐브', type: 'ev', avail: 8 },
-    s8: { parkingFree:true,  useTime:'09:00~18:00',   name: '잠실 코하이젠 수소충전소', addr: '서울 송파구 올림픽로 35길 124', brand: '코하이젠', type: 'h2', avail: 1 },
+    s1: { etc:'최초 30분 무료, 이후 30분 1000원. 전기차 충전 시 1시간 무료 후 주차요금 50% 할인 적용. 지하 1층 좌측 충전 구역.', parkingFree:false, useTime:'24시간 이용가능',name: 'GS칼텍스 강남 직영', addr: '서울 강남구 테헤란로 152 · 1층 주차장', brand: 'GS칼텍스', type: 'ev', avail: 4 },
+    s2: { etc:'수소 충전은 08시~20시에만 가능하며 주차요금은 무료입니다. 충전 전 잔압 확인 후 순차 진입해 주세요.', parkingFree:true,  useTime:'08:00~20:00',   name: '스타광장 수소충전소', addr: '서울 강남구 선릉로 428 · 지상 2층', brand: '하이넷', type: 'h2', avail: 2 },
+    s3: { etc:'공영주차장 내 충전 구역으로 충전 중 주차요금은 전액 무료입니다. 충전 종료 후 10분 이내 출차해 주세요.', parkingFree:true,  useTime:'24시간 이용가능',name: '환경부 강남구청 공공', addr: '서울 강남구 학동로 426 · 공영주차장 B1', brand: '환경부', type: 'ev', avail: 6 },
+    s4: { etc:'역사 부설주차장으로 06시~24시에만 개방되며 인근 상가 이용 고객 전용입니다. 주차요금 10분 400원, 충전 차량 1시간 무료.', parkingFree:false, useTime:'06:00~24:00',   name: '대치역 SK시그넷 초급속', addr: '서울 강남구 삼성로 427 · 대치역 2번 출구', brand: 'SK시그넷', type: 'ev', avail: 2 },
+    s5: { etc:'충전소 이용은 07시~22시이며 주차요금은 무료입니다. 상용(버스) 차량은 별도 디스펜서를 이용해 주세요.', parkingFree:true,  useTime:'07:00~22:00',   name: '양재IC 현대 수소충전소', addr: '서울 서초구 남부순환로 2688', brand: '현대모비스', type: 'h2', avail: 0 },
+    s6: { etc:'입주 세대와 방문 차량 모두 이용 가능하며 주차요금은 무료입니다. 지하 2~3층 기둥 번호 P-7 인근 충전 구역.', parkingFree:true,  useTime:'24시간 이용가능',name: '서초동 EV Infra 완속', addr: '서울 서초구 서초대로 396 · 지하주차장', brand: 'EV Infra', type: 'ev', avail: 18 },
+    s7: { etc:'쇼핑몰 영업시간 내에만 이용 가능하며 영업 종료 후에는 주차장이 폐쇄됩니다. 주차요금은 30분당 1500원이고 충전 이용 차량은 1시간 무료입니다. 지하 3층.', parkingFree:false, useTime:'10:30~22:00',   name: '롯데월드몰 파워큐브', addr: '서울 송파구 올림픽로 300 · 지하 3층', brand: '파워큐브', type: 'ev', avail: 8 },
+    s8: { etc:'09시~18시 운영이며 주차요금은 무료입니다. 일요일·공휴일은 운영하지 않으니 방문 전 확인 바랍니다.', parkingFree:true,  useTime:'09:00~18:00',   name: '잠실 코하이젠 수소충전소', addr: '서울 송파구 올림픽로 35길 124', brand: '코하이젠', type: 'h2', avail: 1 },
     // 60기급 대단지 완속 (더보기 시연)
-    big1: { parkingFree:true,  useTime:'24시간 이용가능',name: '행복드림아파트 완속 충전소', addr: '서울 성동구 왕십리로 222 · 지하주차장 전역', brand: '기후에너지환경부', type: 'ev', avail: 47 },
+    big1: { etc:'단지 입주민 전용 충전소로 방문 차량은 이용이 제한됩니다. 주차요금 무료, 완속 충전 특성상 장시간 점유는 자제해 주세요.', parkingFree:true,  useTime:'24시간 이용가능',name: '행복드림아파트 완속 충전소', addr: '서울 성동구 왕십리로 222 · 지하주차장 전역', brand: '기후에너지환경부', type: 'ev', avail: 47 },
     // 드림타워 사례 — 같은 좌표 3개 코드(구역별)
-    d1: { parkingFree:false, useTime:'24시간 이용가능',name: '드림타워 충전소 A구역(지하1층)', addr: '서울 강남구 논현로 508 · 지하 1층', brand: '대영채비', type: 'ev', avail: 28 },
-    d2: { parkingFree:false, useTime:'06:00~23:00',   name: '드림타워 충전소 B구역(지하2층)', addr: '서울 강남구 논현로 508 · 지하 2층', brand: 'SK일렉링크', type: 'ev', avail: 12 },
-    d3: { parkingFree:true,  useTime:'24시간 이용가능',name: '드림타워 충전소 C구역(지상)', addr: '서울 강남구 논현로 508 · 지상 주차타워', brand: 'GS차지비', type: 'ev', avail: 22 }
+    d1: { etc:'지하 1층 충전 구역이며 주차요금은 10분당 500원, 충전 중에는 최대 2시간까지 할인이 적용됩니다. 차량 높이 2.1m 초과 차량은 진입할 수 없습니다.', parkingFree:false, useTime:'24시간 이용가능',name: '드림타워 충전소 A구역(지하1층)', addr: '서울 강남구 논현로 508 · 지하 1층', brand: '대영채비', type: 'ev', avail: 28 },
+    d2: { etc:'심야(23시~06시)에는 차단기 운영으로 진입이 제한됩니다. 주차요금 30분 1000원, 전기차는 충전 시간에 한해 무료.', parkingFree:false, useTime:'06:00~23:00',   name: '드림타워 충전소 B구역(지하2층)', addr: '서울 강남구 논현로 508 · 지하 2층', brand: 'SK일렉링크', type: 'ev', avail: 12 },
+    d3: { etc:'지상 주차타워 3층 충전 구역이며 주차요금은 무료입니다. 타워 높이 제한 1.9m, 대형 SUV는 진입이 어렵습니다.', parkingFree:true,  useTime:'24시간 이용가능',name: '드림타워 충전소 C구역(지상)', addr: '서울 강남구 논현로 508 · 지상 주차타워', brand: 'GS차지비', type: 'ev', avail: 22 }
   };
   // 충전기 목록 (mock) — 없으면 station.avail·마커 count 기반 기본 생성. [DEV] R_CHARGER: #ID(2자리·상한99) · CHGE_OUTPUT(밴드) · CONNECTOR · 상태 · POSITION_DESC(상세위치, 입력률 17%·최대 99자)
   // [DEV] kw = R_CHARGER.CHGE_OUTPUT(정격 출력) — ★밴드는 저장하지 않고 kw에서 파생(bandOfKw) : kW ↔ 밴드 라벨 모순 차단
@@ -1172,7 +1179,8 @@
      [DEV] 카드의 충전기 대수·5밴드 수량은 충전기 배열(CHGE_OUTPUT)에서 매번 계산 — HTML에 하드코딩하지 않음
        (마커 대표상태 calcStationStatus 일원화와 동일 원칙: 저장·이원 계산이 모순의 원인).
        삭제됨: '최대출력 NNkW'·'타입 DC콤보·차데모' 행(밴드 수량 행이 대체) · 시설구분 뱃지(상업/공공/근린생활 — 필터에만 존재).
-       뱃지 3종 = 주차요금(parkingFree) · 운영시간(useTime) · 이용자제한(마커 restricted 파생). */
+       뱃지 3종 = 주차요금(EVCS_STATION.PARKING_FREE) · 운영시간(USE_TIME) · 이용자제한(원천 확인 중 — 마커 restricted 파생).
+       뱃지 값은 상세 '시설 정보'·'이용자 제한'·'참고사항(비고, ETC)' 서술과 모순 없이 일치해야 함. */
   function bandsHTML(id){
     var c = bandCounts(id), parts = [];
     BAND_ORDER.forEach(function(b){ if(c[b] > 0) parts.push('<span class="bd"><b>'+BAND_LBL[b]+'</b><span class="n">'+c[b]+'</span></span>'); });
@@ -1276,8 +1284,11 @@
       if(rs) rs.innerHTML = mkS.restricted
         ? '<span class="rt">이용 제한 (입주민·관계자 전용)</span>'
         : '<span class="rt">개방형 (누구나 이용 가능)</span>';
+      // 참고사항(비고) = EVCS_STATION.ETC — 200자 상한(실측 최장 90자) → 말줄임 없이 전문 노출
+      var ec = document.getElementById('sdEtc'); if(ec) ec.textContent = data.etc || '등록된 비고가 없습니다.';
     } else {
       var oh = document.getElementById('sdOperH2'); if (oh) oh.textContent = data.brand;
+      var ec2 = document.getElementById('sdEtcH2'); if(ec2) ec2.textContent = data.etc || '등록된 비고가 없습니다.';
     }
     refreshDrawerFav();
     drawer.classList.add('open');
@@ -1528,14 +1539,15 @@
     var inner = isH2
       ? '<span class="mp-bolts">H₂</span>'
       : (__lod==='cpo' ? '<span class="mp-bolt" style="color:'+BAND_COLOR[maxBandOf(m.id)]+';">⚡</span>' : '');
-    var cpoMark = (__lod==='cpo' && m.cpo) ? '<span class="mp-cpo">'+esc(m.cpo.abbr)+'</span>' : '';   // 확대 줌에서만 CPO 약칭 노출
-    var nameLbl = m.cpo ? '<span class="mp-name">'+esc(m.cpo.name)+'</span>' : '';                      // 호버·선택 시 CPO명
+    // ★사업자명 하단 라벨(mp-cpo) 제거 — 호버/포커스 시 툴팁(.mp-name)으로만 표시(ISS-012 확정). 전기·수소 동일.
+    var nameLbl = m.cpo ? '<span class="mp-name" aria-hidden="true">'+esc(m.cpo.name)+'</span>' : '';     // 호버·포커스 시 CPO명 툴팁(시각)
     // 툴팁: 전기=밴드명+범위(색각이상 보완) / 수소=영업 상태
     var outTxt = isH2 ? (H2_STATUS[m.h2status]||'') : (function(b){ return BAND_LABEL[b]+' '+BAND_RANGE[b].replace('&lt;','<'); })(maxBandOf(m.id));
     // ★모든 전기 마커에 충전소 개수 표시 — 단일 충전소도 '1'(2026-07-20 지시). 충전기 대수는 슬라이드에서만
     var title = (m.cpo? esc(m.cpo.name)+' · ':'') + (outTxt? outTxt+' · ':'') + '충전소 1개소';
-    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+'" data-station="'+m.id+'" title="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
-      + inner + '<span class="mp-count">1</span>' + cpoMark + nameLbl + '</button>';
+    // aria-label = 키보드·스크린리더 접근(호버 전용 정보 보완). mp-count/mp-name은 aria-hidden(중복 낭독 방지)
+    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+'" data-station="'+m.id+'" title="'+title+'" aria-label="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
+      + inner + '<span class="mp-count" aria-hidden="true">1</span>' + nameLbl + '</button>';
   }
   function renderMap(){
     if(!mapWrap) return;
@@ -1546,7 +1558,8 @@
       var groups = clusterBy(pts, 42);
       mapWrap.innerHTML = groups.map(function(g){
         var sz=36 + String(g.stations).length*10;   // 자릿수 기반 크기(1자 46 · 2자 56 · 3자 66)
-        return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="충전소 '+g.stations+'개소 · 클릭 시 확대"><span class="mc-count">'+g.stations+'</span></button>';
+        var cTitle='충전소 '+g.stations+'개소 · 클릭 시 확대';
+        return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="'+cTitle+'" aria-label="'+cTitle+'"><span class="mc-count" aria-hidden="true">'+g.stations+'</span></button>';
       }).join('');
     } else {
       // 중간=상태핀 / 확대=핀 확대+CPO 마크 · 동일 좌표(≈10m) 복수 코드는 멀티 마커 1개로 묶고 ×N 뱃지
@@ -1568,9 +1581,15 @@
     var m = grp[0], isH2 = (m.type==='h2');
     var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+calcStationStatus(m.id));   // ★대표상태 = 충전기 배열에서 파생
     var inner = isH2 ? '<span class="mp-bolts">H₂</span>' : (__lod==='cpo' ? '<span class="mp-bolt" style="color:'+BAND_COLOR[maxBandOf(m.id)]+';">⚡</span>' : '');
-    var title = '충전소 '+grp.length+'개소 · 클릭 시 목록';
-    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+' is-multi" data-multi="'+esc(key)+'" title="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
-      + inner + '<span class="mp-count">'+grp.length+'</span></button>';
+    // ★하단 사업자명 라벨 제거 — 호버/포커스 툴팁으로만(ISS-012 확정). 멀티는 운영기관이 여러 곳일 수 있어 툴팁·aria에 전체 나열
+    var opNames = {};
+    grp.forEach(function(g){ if(g.cpo) opNames[g.cpo.name] = g.cpo.name; });
+    var opKeys = Object.keys(opNames);
+    var opText = opKeys.length===1 ? opKeys[0] : opKeys.join(' · ');   // 운영기관 목록(호버 툴팁·aria용)
+    var nameLbl = opKeys.length ? '<span class="mp-name" aria-hidden="true">'+esc(opText)+'</span>' : '';   // 호버·포커스 시 운영기관 전체(시각)
+    var title = '충전소 '+grp.length+'개소' + (opKeys.length ? ' · 운영 '+esc(opText) : '') + ' · 클릭 시 목록';
+    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+' is-multi" data-multi="'+esc(key)+'" title="'+title+'" aria-label="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
+      + inner + '<span class="mp-count" aria-hidden="true">'+grp.length+'</span>' + nameLbl + '</button>';
   }
   // 좌표 그룹의 멤버 stationId 배열
   function multiMembers(key){ return MARKERS.filter(function(m){ return coordKey(m)===key && m.type===__currentMode; }); }

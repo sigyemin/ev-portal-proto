@@ -38,8 +38,7 @@
         { t: '전기차 충전요금 안내', t_en: 'EV Charging Fees', d: '사업자별 충전 단가와 요금체계를 확인하세요.', d_en: 'Check charging rates and fee plans by operator.', href: 'charging-fee.html?tab=ev', emoji: '⚡' },
         { t: '수소차 충전요금 안내', t_en: 'H2 Charging Fees', d: '수소차 충전 단가와 지역별 요금 정보를 확인하세요.', d_en: 'Check hydrogen charging rates and regional fees.', href: 'charging-fee-h2.html', emoji: '💧' },
         { t: '운영 현황 안내', t_en: 'Operation Status', d: '수소충전소 운영·정비 현황을 안내해 드립니다.', d_en: 'See hydrogen station operation and maintenance status.', href: 'charging-help.html', emoji: '🛠️' },
-        { t: '충전 사업자 운영 현황', t_en: 'Operator Status', d: '충전사업자 신뢰도·운영 현황을 확인하세요.', d_en: 'Check operator reliability and operation status.', href: 'data.html#tindex', emoji: '📊' },
-        { t: '충전 인프라 현황', t_en: 'Infra Status', d: '충전소 설치 현황·가동률 등 인프라 통계를 확인하세요.', d_en: 'See station counts, uptime and other infra stats.', href: 'data.html#infra', emoji: '📈' },
+        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
         { t: '환수금 안내·계산기', t_en: 'Recovery Calculator', d: '잔여 의무기간을 기준으로 예상 보조금 환수금을 계산하세요.', d_en: 'Estimate subsidy recovery based on remaining duty period.', href: 'subsidy-refund.html', emoji: '↩️' },
         { t: 'AI 맞춤 상담', t_en: 'AI Assistant', d: '궁금한 점을 AI 헬프데스크에 자연어로 물어보세요.', d_en: 'Ask the AI help desk anything in plain language.', href: 'index.html?ai=personal#aiSectionAnchor', emoji: '🤖' }
       ]
@@ -57,7 +56,7 @@
         { t: '이륜차 수행자 평가신청', t_en: 'E-Bike Supplier Eval.', d: '전기이륜차 보급사업 수행자 선정 평가를 신청하세요.', d_en: 'Apply for e-motorbike supply supplier evaluation.', href: 'public-moto.html', emoji: '🛵' },
         { t: '지역별 무공해차 전환 브랜드 사업 공모 신청', t_en: 'Charging Brand Call', d: '지역과 연계한 충전 브랜드 사업 공모에 신청하세요.', d_en: 'Apply to the regional EV transition brand project call.', href: 'charging-install-brand.html', emoji: '🏷️' },
         { t: '이륜차 BSS 공모신청', t_en: 'E-Bike BSS Call', d: '전기이륜차 배터리 교환(BSS) 충전시설 공모에 신청하세요.', d_en: 'Apply to the e-motorbike battery-swap (BSS) open call.', href: 'charging-install-moto.html', emoji: '🔋' },
-        { t: '충전 사업자 운영 현황', t_en: 'Operator Status', d: '충전사업자 신뢰도·운영 현황을 확인하세요.', d_en: 'Check operator reliability and operation status.', href: 'data.html#tindex', emoji: '📊' }
+        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' }
       ]
     },
     gov: {
@@ -71,7 +70,7 @@
         { t: '무공해 건설기계 공모', t_en: 'ZEV Equipment Call', d: '무공해 건설기계(전기지게차) 공모를 신청·관리하세요.', d_en: 'Apply to and manage the ZEV equipment open call.', href: 'public-construction.html', emoji: '🚜' },
         { t: '참여기업 현황', t_en: 'Participants', d: 'K-EV100 기업 무공해차 전환 참여 현황을 확인하세요.', d_en: 'See companies participating in the K-EV100 transition.', href: 'kev100-companies.html', emoji: '🏢' },
         { t: '공용 완속충전 시설 신청', t_en: 'Public Slow Charger', d: '공공시설 공용 완속충전기 설치를 신청하세요.', d_en: 'Apply to install public slow chargers at public sites.', href: 'charging-install-slow.html', emoji: '🏗️' },
-        { t: '충전 사업자 운영 현황', t_en: 'Operator Status', d: '충전사업자 신뢰도·운영 현황을 확인하세요.', d_en: 'Check operator reliability and operation status.', href: 'data.html#tindex', emoji: '📊' },
+        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
         { t: '공지사항', t_en: 'Notices', d: '공모·보급사업 관련 공지와 공고를 확인하세요.', d_en: 'See notices and announcements on programs and open calls.', href: 'notice-list.html', emoji: '📢' },
         { t: '요청자료', t_en: 'Requested Materials', d: '지자체·공공기관 대상 요청·공유 자료를 확인하세요.', d_en: 'Find materials shared with governments and public bodies.', href: 'info-request.html', emoji: '📂' },
         { t: 'AI 맞춤 상담', t_en: 'AI Assistant', d: '담당 업무 관련 궁금한 점을 AI 헬프데스크에 물어보세요.', d_en: 'Ask the AI help desk about your administrative tasks.', href: 'index.html?ai=personal#aiSectionAnchor', emoji: '🤖' }

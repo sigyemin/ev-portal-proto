@@ -1,58 +1,62 @@
 /* ============================================================================
-   EV 업무포털 — 관리자 공통 셸 (v0.30 신설)
-   대민 partials(GNB/푸터)·style.css 미사용 — 별도 시스템. 와이어프레임 톤(심플 테이블 중심).
+   admin-shell.css — 관리자 셸 보정 시트 (v0.30 7호 · admin-pub.css 위에 얹음)
+   admin-pub.css(공식 퍼블)가 리셋·폰트·:root·헤더·GNB·드롭다운·유틸·LNB 기본을 제공.
+   이 시트는 그 위에서 (1) pub 헤더를 관리자 유동 레이아웃에 맞게 보정 (2) 좌측 사이드·
+   본문 표·필터·뱃지·카드·관문 타일을 pub 톤(#5d87ff)으로 리스킨. 중복(리셋/폰트) 없음.
+   ★로드 순서: admin-pub.css → admin-shell.css
    ============================================================================ */
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
-body{font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;background:#f4f6f9;color:#1f2937;font-size:14px;line-height:1.6;}
-a{color:inherit;text-decoration:none;}
-button{font-family:inherit;}
 
-/* ── 상단바 ── */
-.adm-top{display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 22px;background:#1f2b3a;color:#fff;position:sticky;top:0;z-index:100;}
-.adm-top .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15.5px;letter-spacing:-0.02em;}
-.adm-top .brand .logo{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;background:#2dbd7f;color:#fff;font-size:12.5px;font-weight:900;}
-.adm-top .sysname{margin-left:12px;padding:3px 11px;border-radius:999px;background:rgba(255,255,255,.12);font-size:12.5px;font-weight:700;color:#d9e2ec;}
-.adm-top .user{display:flex;align-items:center;gap:10px;font-size:13px;color:#cbd5e1;}
-.adm-top .user .logout{color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.35);padding:4px 12px;border-radius:7px;font-size:12.5px;}
-.adm-top .user .logout:hover{background:rgba(255,255,255,.12);}
+/* 본문 폰트 — 제목/표는 Pretendard 우선(pub LNB와 동일 톤) */
+.adm-main{font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;color:#1f2937;}
 
-/* ── GNB (LV1 · 시스템별) ── */
-.adm-gnb{display:flex;flex-wrap:wrap;gap:2px;background:#273649;padding:0 16px;position:sticky;top:54px;z-index:99;}
-.adm-gnb button{appearance:none;border:0;background:transparent;color:#aab8c9;font-size:13.5px;font-weight:700;padding:11px 14px;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;}
-.adm-gnb button:hover{color:#fff;}
-.adm-gnb button.active{color:#fff;border-bottom-color:#2dbd7f;}
+/* ── pub 헤더를 관리자 유동 폭에 맞춰 보정 ──
+   pub 원본은 min-width:1724px 고정폭 데모용 — 관리자 본문(.adm-wrap)은 유동이라 폭을 풀어 정합 */
+#admShellHeader .header,
+#admShellHeader .header__inner,
+#admShellHeader .nav-gnb{ min-width:0; }
+/* [ISS-011] 헤더 높이 112px 예약 — header-wrapper가 position:absolute라 height:auto면 헤더가 0px로 붕괴해
+   절대배치 헤더가 본문 최상단(페이지 타이틀)을 덮음. 112px 고정으로 본문 오프셋 확보(adm-wrap/adm-side와 동일 기준). */
+#admShellHeader .header{ height:112px; }
+#admShellHeader .header__inner{ padding-left:16px; padding-right:16px; }
+/* [ISS-011] 메가패널: 뷰포트 밖으로 넘치지 않게 높이 제한 + 컬럼 내부 스크롤.
+   열리면 8개 .submenu가 가장 긴 컬럼(최대 88항목)에 맞춰 무제한으로 늘어나 화면 전체를 덮던 문제 보정. */
+#admShellHeader .header--open .gnb .submenu{ max-height:calc(100vh - 124px); overflow-y:auto; overflow-x:hidden; }
+/* 메가패널 흰 배경(::before)도 제한된 패널 높이만큼만 덮도록(헤더 112px 아래) */
+#admShellHeader .header--open .header__nav::before{ top:112px; height:calc(100vh - 124px); bottom:auto; min-height:0; }
 
-/* ── 레이아웃(사이드 + 본문) ── */
-.adm-wrap{display:flex;min-height:calc(100vh - 54px);align-items:stretch;}
-.adm-side{width:222px;flex:0 0 222px;background:#fff;border-right:1px solid #e2e8f0;padding:16px 10px;max-height:calc(100vh - 96px);overflow-y:auto;position:sticky;top:96px;align-self:flex-start;}
-.adm-side .new-badge{display:inline-block;padding:1px 7px;border-radius:999px;background:#e7f0fe;color:#1559c2;font-size:10px;font-weight:800;vertical-align:middle;margin-left:4px;}
-/* 역할 전환 토글 (관리자↔사업자 · BUSI_MENU Y/N) — 사이드 내부 상단 */
-.adm-role{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:4px 2px 12px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;}
-.adm-role .lb{font-size:11.5px;font-weight:800;color:#94a3b8;letter-spacing:.04em;width:100%;padding:0 10px 6px;}
-.adm-role button{flex:1;min-width:0;appearance:none;border:1px solid #cbd5e1;background:#fff;color:#64748b;font-size:12.5px;font-weight:700;padding:7px 8px;border-radius:7px;cursor:pointer;font-family:inherit;white-space:nowrap;}
-.adm-role button:hover{background:#f8fafc;}
-.adm-role button.active{background:#e7f6ee;border-color:#0f7a44;color:#0f7a44;}
-.adm-side .grp{font-size:11.5px;font-weight:800;color:#94a3b8;letter-spacing:.04em;padding:12px 12px 6px;}
-.adm-side a{display:block;padding:9px 12px;border-radius:8px;font-size:13.5px;color:#334155;font-weight:600;margin:1px 0;}
-.adm-side a:hover{background:#f1f5f9;}
-.adm-side a.active{background:#e7f6ee;color:#0f7a44;font-weight:800;}
-.adm-side a.stub{color:#a8b3c0;cursor:default;}
-.adm-side a.stub:hover{background:transparent;}
-.adm-side a.stub .soon{font-size:10px;font-weight:700;color:#c2ccd6;margin-left:4px;}
+/* ── 레이아웃(사이드 + 본문) — 헤더 112px 오프셋 ── */
+.adm-wrap{display:flex;min-height:calc(100vh - 112px);align-items:stretch;}
+.adm-side{width:230px;flex:0 0 230px;background:#fff;border-right:1px solid #e6e9f0;padding:16px 10px;max-height:calc(100vh - 112px);overflow-y:auto;position:sticky;top:112px;align-self:flex-start;font-family:'Pretendard','Noto Sans KR',sans-serif;}
+.adm-side .new-badge{display:inline-block;padding:1px 7px;border-radius:999px;background:#eaf0ff;color:#3a5ccc;font-size:10px;font-weight:800;vertical-align:middle;margin-left:4px;}
+.adm-side .grp{font-size:11.5px;font-weight:800;color:#8a93a6;letter-spacing:.04em;padding:12px 12px 6px;}
+.adm-side a{display:block;padding:9px 12px;border-radius:8px;font-size:13.5px;color:#334155;font-weight:600;margin:1px 0;word-break:keep-all;}
+.adm-side a:hover{background:#f3f7ff;color:#5d87ff;}
+.adm-side a.active{background:#f3f7ff;color:#5d87ff;font-weight:800;box-shadow:inset 3px 0 0 #5d87ff;}
+.adm-side a.stub{color:#aab2c0;cursor:default;}
+.adm-side a.stub:hover{background:transparent;color:#aab2c0;}
+.adm-side a.stub .soon{font-size:10px;font-weight:700;color:#c6cedb;margin-left:4px;}
+
+/* 역할 전환 토글 (관리자↔사업자 · 권한전환 유틸과 연동) — 사이드 내부 상단 */
+.adm-role{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:4px 2px 12px;margin-bottom:8px;border-bottom:1px solid #e6e9f0;}
+.adm-role .lb{font-size:11.5px;font-weight:800;color:#8a93a6;letter-spacing:.04em;width:100%;padding:0 10px 6px;}
+.adm-role button{flex:1;min-width:0;appearance:none;border:1px solid #cfd6e4;background:#fff;color:#64748b;font-size:12.5px;font-weight:700;padding:7px 8px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.adm-role button:hover{background:#f3f7ff;}
+.adm-role button.active{background:#f3f7ff;border-color:#5d87ff;color:#5d87ff;}
+
+/* ── 본문 헤더 ── */
 .adm-main{flex:1;min-width:0;padding:24px 28px 60px;}
-.adm-h1{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin:0 0 4px;}
+.adm-h1{font-size:22px;font-weight:800;letter-spacing:-0.03em;margin:0 0 4px;color:#0f172b;}
 .adm-desc{font-size:13px;color:#64748b;margin:0 0 18px;}
 
 /* ── 카드 ── */
-.adm-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin-bottom:16px;}
+.adm-card{background:#fff;border:1px solid #e6e9f0;border-radius:12px;padding:18px;margin-bottom:16px;}
 .adm-card h3{font-size:14.5px;font-weight:800;margin:0 0 12px;}
 
 /* ── 분류별 건수 현황판 ── */
 .adm-stats{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
-.adm-stat{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:.12s;}
-.adm-stat:hover{border-color:#9fd6bb;}
-.adm-stat.active{border-color:#0f7a44;background:#e7f6ee;}
+.adm-stat{background:#fff;border:1px solid #e6e9f0;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:.12s;}
+.adm-stat:hover{border-color:#a9c0ff;}
+.adm-stat.active{border-color:#5d87ff;background:#f3f7ff;}
 .adm-stat .lb{font-size:12px;font-weight:700;color:#64748b;white-space:nowrap;}
 .adm-stat .ct{font-size:21px;font-weight:800;color:#1f2937;margin-top:2px;}
 .adm-stat .ct .u{font-size:12px;font-weight:700;color:#94a3b8;}
@@ -62,53 +66,55 @@ button{font-family:inherit;}
 .adm-filter{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;}
 .adm-field{display:flex;flex-direction:column;gap:4px;}
 .adm-field label{font-size:12px;font-weight:700;color:#64748b;}
-.adm-field select,.adm-field input{height:36px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;background:#fff;}
+.adm-field select,.adm-field input{height:36px;width:auto;border:1px solid #cfd6e4;border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;background-color:#fff;color:#334155;}
+.adm-field select{padding-right:26px;}
+.adm-field select:focus,.adm-field input:focus{outline:none;border-color:#5d87ff;box-shadow:0 0 0 3px rgba(93,135,255,.15);}
 .adm-field select:disabled{background:#f1f5f9;color:#94a3b8;}
 .adm-dates{display:flex;align-items:center;gap:6px;}
 .adm-dates .tilde{color:#94a3b8;}
-.adm-btn{height:36px;padding:0 16px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;font-size:13px;font-weight:700;color:#334155;cursor:pointer;}
-.adm-btn:hover{background:#f8fafc;}
-.adm-btn.primary{background:#0f7a44;border-color:#0f7a44;color:#fff;}
-.adm-btn.primary:hover{background:#0c6337;}
+.adm-btn{height:36px;padding:0 16px;border:1px solid #cfd6e4;background:#fff;border-radius:8px;font-size:13px;font-weight:700;color:#334155;cursor:pointer;font-family:inherit;}
+.adm-btn:hover{background:#f3f7ff;border-color:#a9c0ff;}
+.adm-btn.primary{background:#5d87ff;border-color:#5d87ff;color:#fff;}
+.adm-btn.primary:hover{background:#4a76f5;}
 
 /* ── 테이블 ── */
 .adm-meta{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#64748b;margin:0 0 8px;}
-.adm-tbl{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;}
-.adm-tbl th{background:#f8fafc;border-top:2px solid #334155;border-bottom:1px solid #e2e8f0;padding:9px 10px;text-align:left;font-weight:700;color:#475569;white-space:nowrap;}
+.adm-tbl{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;line-height:1.5;}
+.adm-tbl th{background:#f5f8ff;border-top:2px solid #5d87ff;border-bottom:1px solid #e6e9f0;padding:9px 10px;text-align:left;font-weight:700;color:#3f4b60;white-space:nowrap;}
 .adm-tbl td{border-bottom:1px solid #eef2f6;padding:10px;color:#334155;vertical-align:middle;}
 .adm-tbl tbody tr{cursor:pointer;}
-.adm-tbl tbody tr:hover{background:#f8fafc;}
+.adm-tbl tbody tr:hover{background:#f7faff;}
 .adm-tbl .c{text-align:center;} .adm-tbl .num{font-variant-numeric:tabular-nums;}
 .adm-empty{padding:36px;text-align:center;color:#94a3b8;font-size:13.5px;}
 
 /* ── 배지 ── */
 .adm-badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:800;white-space:nowrap;}
 .b-wait{background:#fff3e0;color:#b45309;}
-.b-done{background:#dff5e8;color:#19a76d;}
+.b-done{background:#e7f6ee;color:#19a76d;}
 .b-open{background:#eef2f6;color:#54616e;}
 .b-secret{background:#fdecec;color:#c0392b;}
-.adm-cat{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:700;background:#eef2f7;color:#46566a;white-space:nowrap;}
+.adm-cat{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:700;background:#eef3ff;color:#3f4b60;white-space:nowrap;}
 
 /* ── 상세 ── */
-.adm-detail dl{display:grid;grid-template-columns:110px 1fr 110px 1fr;margin:0;border-top:2px solid #334155;}
-.adm-detail dt{background:#f8fafc;padding:10px 12px;font-weight:700;color:#475569;font-size:13px;border-bottom:1px solid #eef2f6;}
+.adm-detail dl{display:grid;grid-template-columns:110px 1fr 110px 1fr;margin:0;border-top:2px solid #5d87ff;}
+.adm-detail dt{background:#f5f8ff;padding:10px 12px;font-weight:700;color:#3f4b60;font-size:13px;border-bottom:1px solid #eef2f6;}
 .adm-detail dd{margin:0;padding:10px 12px;font-size:13.5px;border-bottom:1px solid #eef2f6;}
 .adm-detail dd.wide{grid-column:2 / -1;}
-.adm-body-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.8;color:#334155;margin-top:8px;white-space:pre-wrap;}
-.adm-answer{background:#f2faf6;border:1px solid #bfe6d2;border-radius:10px;padding:16px;margin-top:14px;}
+.adm-body-box{background:#f7faff;border:1px solid #e6e9f0;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.8;color:#334155;margin-top:8px;white-space:pre-wrap;}
+.adm-answer{background:#f3f7ff;border:1px solid #cdd9ff;border-radius:10px;padding:16px;margin-top:14px;}
 .adm-answer .hd{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:13px;}
-.adm-answer textarea{width:100%;min-height:110px;border:1px solid #cbd5e1;border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;resize:vertical;background:#fff;}
-.adm-assign{display:inline-block;padding:3px 10px;border-radius:999px;background:#e7f0fe;color:#1559c2;font-size:12px;font-weight:800;}
+.adm-answer textarea{width:100%;min-height:110px;border:1px solid #cfd6e4;border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;resize:vertical;background:#fff;}
+.adm-assign{display:inline-block;padding:3px 10px;border-radius:999px;background:#eaf0ff;color:#3a5ccc;font-size:12px;font-weight:800;}
 
-/* ── 업무포털 관문 타일 ── */
+/* ── 업무포털 관문 타일(biz-portal) ── */
 .bp-hero{max-width:1020px;margin:44px auto 6px;padding:0 20px;}
-.bp-hero h1{font-size:24px;font-weight:800;letter-spacing:-0.02em;margin:0 0 6px;}
+.bp-hero h1{font-size:26px;font-weight:800;letter-spacing:-0.03em;margin:0 0 6px;color:#0f172b;font-family:'Pretendard','Noto Sans KR',sans-serif;}
 .bp-hero p{font-size:13.5px;color:#64748b;margin:0;}
 .bp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1020px;margin:26px auto 60px;padding:0 20px;}
-.bp-tile{position:relative;display:block;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:24px 22px 20px;transition:.15s;}
-.bp-tile:hover{border-color:#0f7a44;box-shadow:0 8px 24px rgba(15,122,68,.10);transform:translateY(-2px);}
-.bp-tile .ic{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#e7f6ee;color:#0f7a44;font-size:18px;margin-bottom:12px;}
-.bp-tile h3{font-size:16px;font-weight:800;margin:0 0 6px;letter-spacing:-0.02em;}
+.bp-tile{position:relative;display:block;background:#fff;border:1px solid #e6e9f0;border-radius:14px;padding:24px 22px 20px;transition:.15s;font-family:'Pretendard','Noto Sans KR',sans-serif;}
+.bp-tile:hover{border-color:#5d87ff;box-shadow:0 8px 24px rgba(93,135,255,.14);transform:translateY(-2px);}
+.bp-tile .ic{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#f3f7ff;color:#5d87ff;font-size:18px;margin-bottom:12px;}
+.bp-tile h3{font-size:16px;font-weight:800;margin:0 0 6px;letter-spacing:-0.02em;color:#0f172b;}
 .bp-tile p{font-size:12.5px;color:#64748b;margin:0;line-height:1.65;}
 .bp-tile.disabled{background:#f1f5f9;pointer-events:none;}
 .bp-tile.disabled h3,.bp-tile.disabled p{color:#a8b3c0;}
@@ -118,8 +124,18 @@ button{font-family:inherit;}
 @media (max-width:600px){ .bp-grid{grid-template-columns:1fr;} }
 
 /* ── DEV 접이식 패널(관리자용) ── */
-.adm-dev{margin-top:26px;border:1px dashed #cbd5e1;border-radius:10px;background:#fbfcfe;}
+.adm-dev{margin-top:26px;border:1px dashed #cfd6e4;border-radius:10px;background:#f9fbff;}
 .adm-dev summary{cursor:pointer;padding:10px 14px;font-size:12.5px;font-weight:800;color:#64748b;}
-.adm-dev summary .tag{display:inline-block;background:#c0392b;color:#fff;border-radius:5px;padding:1px 7px;font-size:10.5px;margin-right:7px;}
+.adm-dev summary .tag{display:inline-block;background:#5d87ff;color:#fff;border-radius:5px;padding:1px 7px;font-size:10.5px;margin-right:7px;}
 .adm-dev .bd{padding:4px 16px 14px;font-size:12.5px;color:#475569;line-height:1.8;}
 .adm-dev .bd li{margin:3px 0;}
+
+/* ── GNB submenu 보정 — 그룹 라벨(3뎁스)·현재 항목·stub ── */
+#admShellHeader .gnb .submenu{padding:16px 0;}
+#admShellHeader .gnb .submenu__grouplabel{font-size:12px;font-weight:800;color:#5d87ff;padding:10px 20px 4px;text-align:center;letter-spacing:-0.02em;}
+#admShellHeader .gnb .submenu__link--stub{color:#9aa4b4;cursor:default;}
+#admShellHeader .gnb .submenu__link--stub:hover{color:#9aa4b4;font-weight:normal;letter-spacing:-0.75px;}
+#admShellHeader .gnb .submenu .new-badge{display:inline-block;padding:0 6px;border-radius:999px;background:#eaf0ff;color:#3a5ccc;font-size:10px;font-weight:800;margin-left:3px;}
+/* GNB 현재 페이지 소속 표시 */
+#admShellHeader .gnb__item--current > .gnb__link{position:relative;}
+#admShellHeader .gnb__item--current > .gnb__link::after{content:"";position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:22px;height:3px;border-radius:2px;background:#fff;}

@@ -139,8 +139,8 @@
   })();
 
   // ── 사업자별 충전 요금 매트릭스 데이터 ────────────────────────────────
-  // 사업자명·BID·충전기 수: tindex/data_v3.json 실데이터(159개사 중 TOP 22)
-  // 요금 데이터: 투명성지수 FEE_TABLE 2026-04-21 공시 기준 추정치
+  // 사업자명·BID·충전기 수: 환경부 전기차충전소 DB 등록 CPO 중 TOP 22 (시연용 더미)
+  // 요금 데이터: 사업자 공시 요금 2026-04-21 기준 추정치 (더미)
   const MATRIX = {
     basic: [
       { bid:'ME', name:'기후에너지환경부',     type:'공공', cc:9800,  ti:76.7, grade:'우수',     s35:null,  s7:null,  s11:null,  mid:null,  f50:324.4, f100:347.2, u200:347.2, u350:347.2, nmr:347.2, note:'회원·비회원 동일' },
@@ -347,7 +347,7 @@
         ${cells}</tr>`;
     }).join('');
 
-    const memNote = isMem ? '회원 요금 기준 (원/kWh) · 투명성지수 FEE_TABLE 2026-04-21'
+    const memNote = isMem ? '회원 요금 기준 (원/kWh) · 사업자 공시 요금'
                           : '비회원(미가입) 기준 · 완속은 회원 요금 동일, 급속·초급속은 단일요금';
     wrap.innerHTML = `<table class="data-table" style="border:none;min-width:720px;border-collapse:collapse;overflow:visible;">
       <thead><tr style="height:44px;">
@@ -1050,10 +1050,11 @@
       if (hourLabel && hourInput) hourLabel.textContent = `${parseInt(hourInput.value, 10)}시`;
 
       const R = calcRate();
-      // 로밍/회원 라벨 없이 '1회 충전 예상 비용'만 표기 (안내가 배지는 별도 span이라 유지)
+      // A 명칭(ISS-020): 결과 라벨 = '예상 금액'(안내가/추정 구분). i18n 값 사용, 안내가 배지는 별도 span이라 유지
+      const _simLbl = (window.__i18n && window.__i18n.t) ? window.__i18n.t('charging.fee.sim.result.lbl') : '1회 충전 예상 금액';
       const _lblText = document.getElementById('simLblText');
-      if (_lblText) _lblText.textContent = '1회 충전 예상 비용';
-      else if (lblEl) lblEl.textContent = '1회 충전 예상 비용';
+      if (_lblText) _lblText.textContent = _simLbl;
+      else if (lblEl) lblEl.textContent = _simLbl;
 
       const flowEl = document.getElementById('simRateFlow');
       const helpEl = document.getElementById('simRateHelp');
@@ -1306,7 +1307,7 @@ function openOpModal(bid) {
   if (!op) return;
 
   document.getElementById('op-modal-name').textContent = op.name;
-  document.getElementById('op-modal-bid').textContent  = op.bid + ' · 투명성지수 공시 요금';
+  document.getElementById('op-modal-bid').textContent  = op.bid + ' · 사업자 공시 요금';
   document.getElementById('op-modal-type').textContent = op.type;
 
   const CAPS_DEF = [

@@ -9,7 +9,7 @@
        - 모든 '추가 국비'는 지자체 지방비율(lamt_rate)로 국비:지방비 분배
            지방비 = roundByUnit(추가액, rate, rate+100, 1000),  국비 = 추가액 − 지방비
            제주는 add_lamt_rate(별도) 적용
-       - 국비 상한: 승용 970만 · 화물 2,000만 · 버스 9,000만 · 수소 2,250만
+       - 국비 상한: [F4] 전기차 상한(승용970·화물2,000·승합9,000만) 미적용(AS-IS 실코드 주석처리 계승) · 수소 승용 2,250만만 유지
    · 기본 단가(국비/지방비)·지자체 옵션은 프로토 mock. 계산식·분배·상한·배타규칙은 소스와 1:1.
    ──────────────────────────────────────────────────────────────────────── */
 (function () {
@@ -17,6 +17,21 @@
 
   var WON = 10000; // 만원 → 원
   var YEAR = '2026'; // 계산 기준연도 (소스 $('#s_year').val()) — year별 분기 보존
+
+  /* ═══ [DEV] ISS-015·016 정합 반영 상태 (근거: 회의록/보조금계산기_실로직_대조검증_20260721.md) ═══
+     ✅ F1 구매자 유형 분기 — 개인 P / 개인사업자 B / 법인·기관 G (§4-1 매트릭스 compute·UI 이중)
+     ✅ F2 결과 4분할(국비/지방비/전환국비/전환지방비/합계) — pack() 반환
+        ※ AS-IS 모의계산 결과 = 6분할(기본국비/추가국비/전환국비/기본지방비/추가지방비/전환지방비). 대민 4분할은 국비=기본+추가·지방비=기본+추가로 합산 표기(전환은 별도 2행)
+     ✅ F4 국비 상한(승용970·화물2,000·승합9,000만) 제거 — AS-IS 실코드 주석처리(미작동) 계승. 수소 승용 2,250만만 유지
+     ✅ F8 화물 농업인·택배 요율 = 10%(2026 실코드 ×10/100). 차상위·소상공인 30% 유지
+     ✅ F9 전환지원금 기준단가 차종별 — 승용 500만 / 화물 경형 650만 / 화물 소형 850만(stdUnit). 화물 경형/소형은 cls 판정, 경형 명시 없으면 소형 대표값 → 모델 규격 정합 확인 필요
+     ✅ F3 사회계층 유형 select(운영 실화면 확정 8종: 국가유공자/장애인/다자녀가구/다문화가족/기초생활수급자/소상공인/1차산업 종사자/기타 등) — 승용만 활성, 다자녀가구→자녀수 하위(정액 통합), 화물·승합은 유형 select 미노출
+        · 2026 사회계층 지방비 = 전국 0원(PS_OPTION 플래그만 Y) → 다자녀가구·소상공인 특칙만 금액 반영. SOCIAL_ADD_EX(kind6 소상공인 제외) 규칙은 여전히 데모 미적용(확인 필요)
+     ✅ F5 단가 실값 — 전환지방비 30만(예외 4159=33만 1곳)·사회계층 지방비 0·노후경유 폐차 지방비 기본 0(운영 3곳뿐: 130만/30만/30만)·전환국비100만·택시250만 전국 균일
+        · 초소형 화물 추가 국비 SSML_EV_GAMT = 지자체별(서울 50만) 대표값 미적용, 확인 필요
+     🔶 F6 이륜·건설기계 가산 = AS-IS 계산 분기 부재 → 데모(UI '미정—개발 협의' 배너)
+     ⏸ F7 리스렌탈 180만(환경공단)·보급목표이행보조금·다대수 폐차 조합 — 대민 계산기 범위 제외
+     ═══════════════════════════════════════════════════════════════════════════════════════════ */
 
   /* ── roundByUnit (소스 8879): Math.round(totAmt*rate/denum/unit)*unit ── */
   function roundByUnit(totAmt, rate, denum, unit) {
@@ -102,21 +117,33 @@
   /* ── 2026 단가 상수(데모, 2026 지침 값) ──
      실제로는 PS_OPTION/PS_MODEL_LOCAL DB. 여기선 지침 공개값 사용. (단위: 원) */
   var UNIT = {
-    TAXI_GAMT: 2500000,        // 전기택시 국비 250만 (소스 taxi_gamt)
+    TAXI_GAMT: 2500000,        // 전기택시 국비 250만 (전국 균일 · 소스 taxi_gamt)
     TAXI_LAMT: 0,              // 지자체 택시 추가 지방비(데모 0)
     BMS: 200000,              // BMS 업데이트 불가차 폐차 후 신차 +20만
-    MULTI: { 2: 1000000, 3: 2000000, 4: 3000000 }, // 다자녀 2/3/4
-    EXCHANGE3_GAMT: 1000000,   // 전환지원금 국비 100만 (exchange_3year_gamt_total)
-    EXCHANGE3_LAMT: 500000,    // 전환지원금 지방비 단가 50만 (exchange_3year_lamt)
-    EXCHANGE_ADD_LAMT: 500000, // 노후경유차 폐차 지방비 50만 (exchange_add_lamt)
+    MULTI: { 2: 1000000, 3: 2000000, 4: 3000000 }, // 다자녀 2자녀100/3자녀200/4자녀이상300만
+    EXCHANGE3_GAMT: 1000000,   // 전환지원금 국비 100만 (전국 균일 · exchange_3year_gamt_total)
+    EXCHANGE3_LAMT: 300000,    // [F5] 전환지원금 지방비 단가 30만 — 2026 PS_OPTION 실사 161/162 지자체 균일 30만(예외 4159=33만 1곳)
+    EXCHANGE_ADD_LAMT: 0,      // [F5] 노후경유차 폐차 지방비 기본 0 — 2026 운영 3곳뿐(4479=130만·4688·4729 각 30만). 선택지 유지·기본 효과 0
     EXT_JEJU: 500000,          // 제주 도외반출 +50만 (ext_add_lamt_jeju)
-    SOCIAL_ADD_LAMT: 600000,   // 사회계층 추가 지방비 60만 (social_add_lamt)
-    SSML_EV_GAMT: 0,           // 초소형 화물 지자체 추가 국비(데모 0)
-    STD_5M: 5000000,          // 전환지원금 기준 차종국비 500만
+    SOCIAL_ADD_LAMT: 0,        // [F5] 사회계층 지방비 = 전국 0 — 2026 PS_OPTION 플래그(SOCIAL_ADD_YN)만 'Y', 예산·별도지급 금액 전부 0원(데모 60만 제거)
+    SSML_EV_GAMT: 0,           // 초소형 화물 지자체 추가 국비(데모 0) — [F5] 지자체별(서울 50만) · 대표값 미적용, 확인 필요
+    // [F9] 전환지원금 기준단가 = 차종별: 전기승용 500만(:4319) / 전기화물 경형 650만(:5791) / 전기화물 소형 850만(:5793)
+    STD_RIDE: 5000000,         // 승용 500만
+    STD_TRUCK_LGT: 6500000,    // 화물 경형 650만
+    STD_TRUCK_SML: 8500000,    // 화물 소형 850만
     // 어린이 통학차량용(school_bus) — 소스 init: year>=2024는 0으로 세팅(별도 모델 처리)
     SCHOOL_BUS_GAMT: 0,        // school_bus_gamt (≤2023 정액 국비; 2026=0)
     SCHOOL_BUS_LAMT: 0         // school_bus_lamt (≤2023 정액 지방비; 2026=0)
   };
+  /* [F9] 전환지원금 기준단가 판정 — 승용 500만 / 화물 경형 650만 / 화물 소형 850만.
+     화물 모델 데이터에 경형/소형 구분이 규격(cls)뿐이라 cls로 판정. '경형' 명시 없으면 소형(850만) 대표값 적용 → [DEV] 확인 필요 */
+  function stdUnit(mt, cls) {
+    if (mt === 'TRUCKLGT' || mt === 'TRUCKSML' || mt === 'TRUCKSSML') {
+      if (/경형/.test(cls || '')) return UNIT.STD_TRUCK_LGT;      // 화물 경형 650만
+      return UNIT.STD_TRUCK_SML;                                  // 화물 소형(초소형 포함) 850만 · 미판정=소형 대표값(확인 필요)
+    }
+    return UNIT.STD_RIDE;                                         // 승용 등 500만
+  }
   /* 국비 상한(원) */
   var CAP = { ride: 9700000, truck: 20000000, bus: 90000000, h2: 22500000 };
 
@@ -124,9 +151,11 @@
   var H2 = { TAXI_GAMT: 1000000, TAXI_LAMT: 0, TRUCK_ADD_LAMT: 2000000 };
 
   /* ───────────────────────── 계산 엔진 ─────────────────────────
-     입력: { type, reqKind('P'|'G'), biz, gamt(만원), conv(만원), cls,
+     입력: { type, reqKind('P'개인|'B'개인사업자|'G'법인·기관), biz, gamt(만원), conv(만원), cls,
              region:{lamt,rate,addRate,jeju}, cnt, c:{...옵션} }
-     반환: { nat, loc, total } (만원)
+     반환(만원): { natBase,natAdd,chngG, locBase,locAdd,chngL, nat,loc,total } — 4분할(F2) + 기존 nat/loc/total 유지
+     ★구매자 유형 매트릭스(§4-1): 차상위·청년·다자녀·전환 = P만 / 택시 = (G&&중기Y)‖B /
+       BMS·노후경유·사회계층·농업인·택배·소상공인 = 유형 무관 / 화물 차상위 30% = P만
      ──────────────────────────────────────────────────────────── */
   function compute(p) {
     var type = p.type, mt = modelType(type, p.cls);
@@ -168,10 +197,10 @@
       if (c.taxi && ((reqKind === 'G' && c.taxiBusi) || reqKind === 'B')) sp(UNIT.TAXI_GAMT);
       // 다자녀(개인·비사업자) 정액 100/200/300만 — 택시와 배타
       if (c.multiChild && reqKind === 'P' && !biz && !c.taxi) sp(UNIT.MULTI[c.multiChild] || 0);
-      // 전환지원금(개인): 차종국비≥500만 → 100만 전액, 미만 → 100만×국비/500만(만원반올림)
+      // 전환지원금(개인): 차종국비≥기준단가 → 100만 전액, 미만 → 100만×국비/기준단가(만원반올림). [F9] 승용 기준단가 500만
       if (c.exchange3 && reqKind === 'P') {
-        var tot = UNIT.EXCHANGE3_GAMT;
-        chngGamt = (gamt >= UNIT.STD_5M) ? tot : Math.round(tot * gamt / UNIT.STD_5M / WON) * WON;
+        var tot = UNIT.EXCHANGE3_GAMT, std = stdUnit(mt, p.cls);
+        chngGamt = (gamt >= std) ? tot : Math.round(tot * gamt / std / WON) * WON;
         chngLamt = Math.round(chngGamt * UNIT.EXCHANGE3_LAMT / tot / WON) * WON;
       }
       return assemble(gamt, lamt, addGamt, addLamt, addLamt1, chngGamt, chngLamt, cnt, CAP.ride);
@@ -190,17 +219,17 @@
     }
 
     /* ===== 전기화물 경/소/초소형 TRUCKLGT/SML/SSML (calAmt 4707~/5547~) =====
-       2026 확정 분기(단일대 기준): 차상위(개인)·소상공인(kind6) 30% / 농업인(farmng) 30% /
-       택배·화물(hdry) 30% / 초소형 지자체추가국비(ssml). ※row-iteration(다대 폐차조합)은 단일대로 단순화 — 정밀 포팅 task3 */
+       2026 확정 분기(단일대 기준): 차상위(개인)·소상공인(kind6) 30% / [F8]농업인(farmng) 10% /
+       [F8]택배·화물(hdry) 10% / 초소형 지자체추가국비(ssml). ※row-iteration(다대 폐차조합)은 단일대로 단순화 — 정밀 포팅 task3 */
     if (mt === 'TRUCKLGT' || mt === 'TRUCKSML' || mt === 'TRUCKSSML') {
-      if ((c.poverty && reqKind === 'P') || c.social === 'small') sp(gamt * 30 / 100); // 차상위/소상공인 30%
-      if (c.farmng) sp(gamt * 30 / 100); // 농업인 30%
-      if (c.parcel) sp(gamt * 30 / 100); // 택배·물류(hdry) 30%
+      if ((c.poverty && reqKind === 'P') || c.social === 'small') sp(gamt * 30 / 100); // 차상위/소상공인 30%(실코드 확정)
+      if (c.farmng) sp(gamt * 10 / 100); // [F8] 농업인 10% (2026 실코드 ×10/100 · :4819~)
+      if (c.parcel) sp(gamt * 10 / 100); // [F8] 택배·물류(hdry) 10% (2026 실코드 ×10/100 · :4838~)
       if (mt === 'TRUCKSSML' && UNIT.SSML_EV_GAMT) addGamt += UNIT.SSML_EV_GAMT;
-      // 전환지원금(개인·화물) — 승용과 동일 산식
+      // 전환지원금(개인·화물) — [F9] 화물 기준단가 = 경형 650만/소형 850만(cls 판정)
       if (c.exchange3 && reqKind === 'P') {
-        var tot2 = UNIT.EXCHANGE3_GAMT;
-        chngGamt = (gamt >= UNIT.STD_5M) ? tot2 : Math.round(tot2 * gamt / UNIT.STD_5M / WON) * WON;
+        var tot2 = UNIT.EXCHANGE3_GAMT, std2 = stdUnit(mt, p.cls);
+        chngGamt = (gamt >= std2) ? tot2 : Math.round(tot2 * gamt / std2 / WON) * WON;
         chngLamt = Math.round(chngGamt * UNIT.EXCHANGE3_LAMT / tot2 / WON) * WON;
       }
       return assemble(gamt, lamt, addGamt, addLamt, addLamt1, chngGamt, chngLamt, cnt, CAP.truck);
@@ -222,21 +251,30 @@
     return assemble(gamt, lamt, addGamt, addLamt, addLamt1, 0, 0, cnt, 0);
   }
 
-  /* 총액 조립 (calAmt 6602~6631): 국비/지방비 합산, 상한 적용 */
-  function assemble(gamt, lamt, addGamt, addLamt, addLamt1, chngGamt, chngLamt, cnt, capGamt) {
-    // 국비 상한: 기본+추가 국비 1대 합이 상한 초과 시 캡 (소스는 항목별이나 데모는 합계 기준)
-    if (capGamt > 0 && (gamt + addGamt) > capGamt) addGamt = Math.max(0, capGamt - gamt);
+  /* [F2] 결과 4분할 패킹 — 입력은 '원', 반환은 '만원'.
+     반환 필드: natBase/natAdd(기본/추가 국비) · chngG(전환국비) · locBase/locAdd(기본/추가 지방비) · chngL(전환지방비)
+              · nat/loc/total(기존 계약 유지 = 회귀 방지: nat=natBase+natAdd+chngG, loc=locBase+locAdd+chngL) */
+  function pack(natBase, natAdd, chngG, locBase, locAdd, chngL) {
+    var nat = natBase + natAdd + chngG, loc = locBase + locAdd + chngL;
+    return {
+      natBase: natBase / WON, natAdd: natAdd / WON, chngG: chngG / WON,
+      locBase: locBase / WON, locAdd: locAdd / WON, chngL: chngL / WON,
+      nat: nat / WON, loc: loc / WON, total: (nat + loc) / WON
+    };
+  }
 
+  /* 총액 조립 (calAmt 6602~6631): 국비/지방비 합산.
+     [F4] 국비 상한(승용 970·화물 2,000·승합 9,000만) 제거 — 사용자 확정(2026-07-21): 지침상 상한은 존재하나
+          AS-IS 실코드는 적용부 전부 주석처리(미작동, :4090)이므로 실코드 계승으로 미적용. 수소 승용 2,250만 상한은
+          실코드에 살아있어 computeH2에서 유지. capGamt 인자는 하위호환 위해 남기되 미사용. */
+  function assemble(gamt, lamt, addGamt, addLamt, addLamt1, chngGamt, chngLamt, cnt, capGamt) {
     var req_gamt = gamt * cnt;                 // 기본 국비
-    var req_add_gamt = addGamt * cnt;          // 추가 국비
+    var req_add_gamt = addGamt * cnt;          // 추가 국비(분배 후, 전환 제외)
     var req_chng_add_gamt = chngGamt * cnt;    // 전환지원금 국비
     var req_lamt = lamt * cnt;                 // 기본 지방비
     var req_add_lamt = (addLamt1 * cnt) + (addLamt * cnt); // 추가 지방비(폐차 대당 + 일반 대당)
     var req_chng_add_lamt = chngLamt * cnt;    // 전환지원금 지방비
-
-    var nat = req_gamt + req_add_gamt + req_chng_add_gamt;       // tot_gamt
-    var loc = req_lamt + req_add_lamt + req_chng_add_lamt;       // tot_lamt
-    return { nat: nat / WON, loc: loc / WON, total: (nat + loc) / WON };
+    return pack(req_gamt, req_add_gamt, req_chng_add_gamt, req_lamt, req_add_lamt, req_chng_add_lamt);
   }
 
   /* ===== 어린이 통학차량용 버스 school_bus_yn 분기 (소스 calAmt 6511~6526) =====
@@ -276,9 +314,8 @@
     if (c.dieselScrap) addLamt1 += UNIT.EXCHANGE_ADD_LAMT;       // exchange 폐차 지방비(대당)
     if (c.social === 'low' || c.social === 'small') addLamt += UNIT.SOCIAL_ADD_LAMT; // 사회계층(소상공인 kind6 제외 규칙 데모 미적용)
     if (c.taxi) addLamt += H2.TAXI_LAMT;          // 택시 지방비
-    var nat = gamt * cnt;
-    var loc = (lamt + addLamt) * cnt + (addLamt1 * cnt); // req_add_lamt = add_lamt1*exCarCnt + add_lamt*cnt
-    return { nat: nat / WON, loc: loc / WON, total: (nat + loc) / WON };
+    // 수소는 %추가국비·분배·전환지원금 없음(소스 else 분기) → natAdd/chngG/chngL = 0
+    return pack(gamt * cnt, 0, 0, lamt * cnt, (addLamt * cnt) + (addLamt1 * cnt), 0);
   }
 
   /* ===== 전기이륜 MOTOR (car_type 21) =====
@@ -292,8 +329,8 @@
     if (c.delivery) addLamt += 200000;        // 배달용(데모 20만)
     if (c.scrapMoto) addGamt += (p.conv || 0) * WON; // 폐차 후 구매 등급별 추가국비(모델 conv)
     // 특정 지자체(4122) 70/30 분배: getLocalAmt 3717~ — 데모 미적용(지자체코드 없음)
-    var nat = (gamt + addGamt) * cnt, loc = (lamt + addLamt) * cnt;
-    return { nat: nat / WON, loc: loc / WON, total: (nat + loc) / WON };
+    // [F6] ★AS-IS calAmt에 이륜 계산 분기 부재 — 위 가산(사회계층 30만·배달 20만·폐차 conv)은 전부 데모(근거 없음, 개발 협의)
+    return pack(gamt * cnt, addGamt * cnt, 0, lamt * cnt, addLamt * cnt, 0);
   }
 
   /* ===== 전기건설기계 EXCVT =====
@@ -304,8 +341,8 @@
     var addLamt = 0;
     if (c.social === 'low' || c.social === 'small') addLamt += UNIT.SOCIAL_ADD_LAMT;
     if (c.dieselScrap) addLamt += UNIT.EXCHANGE_ADD_LAMT;
-    var nat = gamt * cnt, loc = (lamt + addLamt) * cnt;
-    return { nat: nat / WON, loc: loc / WON, total: (nat + loc) / WON };
+    // [F6] ★AS-IS calAmt에 건설기계 계산 분기 부재 — 위 가산(사회계층 60만·폐차 50만 지방비)은 전부 데모(근거 없음, 개발 협의)
+    return pack(gamt * cnt, 0, 0, lamt * cnt, addLamt * cnt, 0);
   }
 
   /* ─────────────── 차종별 가산옵션 UI 정의 ───────────────
@@ -313,19 +350,20 @@
      set 의 키가 compute()의 c.* 로 전달됨. */
   var COND = {
     ev_car: [
-      { key: 'poverty', label: '차상위·취약계층 (개인)', opts: [{ t: '해당 없음' }, { t: '차상위 이하 (국비 +20%)', set: { poverty: true } }] },
-      { key: 'young', label: '청년·생애최초 (개인 만19~34)', opts: [{ t: '해당 없음' }, { t: '생애최초+청년 (국비 +20%)', set: { firstBuyYoung: true } }] },
-      { key: 'multi', label: '다자녀 가구 (개인·비사업자)', opts: [{ t: '해당 없음' }, { t: '2자녀 (+100만)', set: { multiChild: 2 } }, { t: '3자녀 (+200만)', set: { multiChild: 3 } }, { t: '4자녀 이상 (+300만)', set: { multiChild: 4 } }] },
-      { key: 'taxi', label: '전기택시 (법인·중기)', opts: [{ t: '해당 없음' }, { t: '전기택시 (+250만)', set: { taxi: true, taxiBusi: true } }] },
+      { key: 'poverty', label: '차상위·취약계층 (개인)', opts: [{ t: '해당 없음' }, { t: '차상위 이하 (국비 +20%)', set: { poverty: true }, req: ['P'] }] },
+      { key: 'young', label: '청년·생애최초 (개인 만19~34)', opts: [{ t: '해당 없음' }, { t: '생애최초+청년 (국비 +20%)', set: { firstBuyYoung: true }, req: ['P'] }] },
+      // [F3] 사회계층 여부+유형 select(8종) — 다자녀가구 선택 시 자녀수 하위 노출(기존 '다자녀' 항목 통합). 운영 실화면 확정
+      { key: 'social', label: '사회계층 여부', custom: 'social' },
+      { key: 'taxi', label: '전기택시', opts: [{ t: '해당 없음' }, { t: '전기택시 (+250만)', set: { taxi: true }, req: ['B', 'G'] }] },
       { key: 'bms', label: 'BMS 미지원차 폐차 후 신차', opts: [{ t: '해당 없음' }, { t: '해당 (+20만)', set: { bms: true } }] },
-      { key: 'ex3', label: '전환지원금 (개인·내연 3년경과 교체)', opts: [{ t: '해당 없음' }, { t: '노후 내연기관 폐차/교체 (+100만 한도)', set: { exchange3: true } }] },
+      { key: 'ex3', label: '전환지원금 (개인·내연 3년경과 교체)', opts: [{ t: '해당 없음' }, { t: '노후 내연기관 폐차/교체 (+100만 한도)', set: { exchange3: true }, req: ['P'] }] },
       { key: 'scrap', label: '노후경유차 폐차 (지방비)', opts: [{ t: '해당 없음' }, { t: '노후경유 폐차', set: { dieselScrap: true } }] }
     ],
     ev_truck: [
-      { key: 'poverty', label: '차상위·소상공인', opts: [{ t: '해당 없음' }, { t: '차상위 이하 (개인, 국비 +30%)', set: { poverty: true } }, { t: '소상공인 (국비 +30%)', set: { social: 'small' } }] },
-      { key: 'farm', label: '농업인', opts: [{ t: '해당 없음' }, { t: '농업인 (국비 +30%)', set: { farmng: true } }] },
-      { key: 'parcel', label: '택배·물류 사용', opts: [{ t: '해당 없음' }, { t: '택배·물류 (국비 +30%)', set: { parcel: true } }] },
-      { key: 'ex3', label: '전환지원금 (개인·내연 3년경과 교체)', opts: [{ t: '해당 없음' }, { t: '노후 내연기관 폐차/교체 (+100만 한도)', set: { exchange3: true } }] }
+      { key: 'poverty', label: '차상위·소상공인', opts: [{ t: '해당 없음' }, { t: '차상위 이하 (개인, 국비 +30%)', set: { poverty: true }, req: ['P'] }, { t: '소상공인 (국비 +30%)', set: { social: 'small' } }] },
+      { key: 'farm', label: '농업인', opts: [{ t: '해당 없음' }, { t: '농업인 (국비 +10%)', set: { farmng: true } }] },
+      { key: 'parcel', label: '택배·물류 사용', opts: [{ t: '해당 없음' }, { t: '택배·물류 (국비 +10%)', set: { parcel: true } }] },
+      { key: 'ex3', label: '전환지원금 (개인·내연 3년경과 교체)', opts: [{ t: '해당 없음' }, { t: '노후 내연기관 폐차/교체 (+100만 한도)', set: { exchange3: true }, req: ['P'] }] }
     ],
     ev_bus: [
       { key: 'schoolbus', label: '어린이 통학차량용 (전기 어린이 승합)', opts: [{ t: '일반 승합' }, { t: '어린이 통학차량용 (2026: 어린이 전용 모델 선택)', set: { schoolBus: true } }] },
@@ -403,21 +441,113 @@
         var conds = COND[t] || [];
         var clsRow = '<div class="calc-field" data-cls-row style="display:none;"><label>규격 (모델 선택 시 자동)</label>' +
           '<input class="calc-select" data-cls-display readonly placeholder="모델을 선택하세요"></div>';
+        // [F1] 법인·기관 택시 중소기업 여부 하위선택(승용만, 기본 숨김)
+        var smeField = (t === 'ev_car')
+          ? '<div class="calc-field" data-taxi-sme style="display:none;"><label>중소기업 여부 (법인·기관 택시)</label>' +
+            '<select class="calc-select" data-taxi-sme-sel><option value="1">중소기업 (250만 지원 대상)</option><option value="0">중소기업 아님 (미지원)</option></select></div>'
+          : '';
         condBox.innerHTML = clsRow + conds.map(function (cd) {
+          if (cd.custom === 'social') return socialBlockHTML();   // [F3] 사회계층 여부+유형 8종+자녀수 하위
           var opts = cd.opts.map(function (o, i) {
             return '<option value="' + i + '">' + o.t + '</option>';
           }).join('');
           return '<div class="calc-field"><label>' + cd.label + '</label>' +
-            '<select class="calc-select" data-cond="' + cd.key + '">' + opts + '</select></div>';
-        }).join('');
+            '<select class="calc-select" data-cond="' + cd.key + '">' + opts + '</select>' +
+            '<div class="calc-cond-note" data-cond-note="' + cd.key + '" style="display:none;font-size:11.5px;color:#c0392b;margin-top:3px;"></div></div>';
+        }).join('') + smeField;
+        // COND select 변경 시 재게이팅(택시↔다자녀·청년 배타 즉시 반영)
+        condBox.querySelectorAll('[data-cond]').forEach(function (s) { s.addEventListener('change', applyGating); });
+        wireSocial();
       }
       updateClsDisplay();
+      applyGating();
     }
 
     var getType = chipGroup('type', 'data-type', renderType);
-    var getBuyer = chipGroup('buyer', 'data-buyer');
+    var getBuyer = chipGroup('buyer', 'data-buyer', function () { applyGating(); });
 
     function setText(sel, v) { var el = root.querySelector(sel); if (el) el.textContent = v; }
+
+    /* ── [F1] 구매자 유형 게이팅 (§4-1 매트릭스 UI 적용 — 계산과 이중) ── */
+    function buyerReq(buyer) { return buyer === 'biz' ? 'B' : (buyer === 'org' ? 'G' : 'P'); }
+    function buyerAllows(opt, kind) { return !opt.req || opt.req.indexOf(kind) >= 0; }
+    function reasonFor(opt) {
+      if (opt.set && opt.set.taxi) return '개인 구매 택시는 지원 제외';
+      return '개인(P) 전용 가산 — 개인사업자·법인·기관 제외';
+    }
+    function applyGating() {
+      if (!condBox) return;
+      var kind = buyerReq(getBuyer());
+      var conds = COND[getType()] || [];
+      var byKey = {}; conds.forEach(function (cd) { byKey[cd.key] = cd; });
+      // 현재 '택시' 선택 여부(활성 상태에서만)
+      var taxiOn = false;
+      condBox.querySelectorAll('[data-cond]').forEach(function (s) {
+        var def = byKey[s.getAttribute('data-cond')]; if (!def || s.disabled) return;
+        var opt = def.opts[parseInt(s.value || '0', 10)];
+        if (opt && opt.set && opt.set.taxi) taxiOn = true;
+      });
+      condBox.querySelectorAll('[data-cond]').forEach(function (s) {
+        var key = s.getAttribute('data-cond'), def = byKey[key]; if (!def) return;
+        var enabledCount = 0, reason = '';
+        for (var i = 1; i < def.opts.length; i++) {
+          var opt = def.opts[i];
+          var okReq = buyerAllows(opt, kind);
+          var excl = taxiOn && opt.set && (opt.set.firstBuyYoung || opt.set.multiChild);
+          var enabled = okReq && !excl;
+          if (s.options[i]) s.options[i].disabled = !enabled;
+          if (enabled) enabledCount++;
+          else if (!reason) reason = excl ? '전기택시와 중복 지원 불가' : reasonFor(opt);
+        }
+        // 현재 선택이 비활성화되면 '해당 없음'으로 되돌림(잔존값 계산 방지)
+        if (s.options[s.selectedIndex] && s.options[s.selectedIndex].disabled) s.value = '0';
+        var noteEl = condBox.querySelector('[data-cond-note="' + key + '"]');
+        if (enabledCount === 0) { s.disabled = true; if (noteEl) { noteEl.textContent = reason || '이 구매자 유형은 해당 없음'; noteEl.style.display = ''; } }
+        else { s.disabled = false; if (noteEl) noteEl.style.display = 'none'; }
+      });
+      // 법인·기관 택시 → 중소기업 하위선택 노출
+      var sme = root.querySelector('[data-taxi-sme]');
+      if (sme) sme.style.display = (kind === 'G' && taxiOn) ? '' : 'none';
+      // [F3] 사회계층 블록 게이팅 — 다자녀가구(정액 국비)는 P만·택시와 배타. 나머지 유형은 유형 무관(단, 금액 0)
+      var typeSel = root.querySelector('[data-social-type]');
+      if (typeSel) {
+        var mcOpt = typeSel.querySelector('option[value="multichild"]');
+        var mcEnabled = (kind === 'P') && !taxiOn;
+        if (mcOpt) mcOpt.disabled = !mcEnabled;
+        var snote = root.querySelector('[data-social-note]');
+        if (typeSel.value === 'multichild' && !mcEnabled) {   // 비활성인데 선택돼 있으면 유형 해제
+          typeSel.value = '';
+          var cw = root.querySelector('[data-social-child-wrap]'); if (cw) cw.style.display = 'none';
+        }
+        if (snote) {
+          if (!mcEnabled) { snote.textContent = taxiOn ? '다자녀가구는 전기택시와 중복 지원 불가' : '다자녀가구 국비 정액은 개인(P)만 지원'; snote.style.display = ''; }
+          else snote.style.display = 'none';
+        }
+      }
+    }
+
+    /* [F3] 사회계층 여부+유형(8종)+자녀수 하위 (전기승용 전용) */
+    function socialBlockHTML() {
+      var types = [['gov', '국가유공자'], ['disabled', '장애인'], ['multichild', '다자녀가구'], ['multicultural', '다문화가족'], ['basic', '기초생활수급자'], ['small', '소상공인'], ['primary', '1차산업 종사자'], ['etc', '기타 등']];
+      var opts = '<option value="">유형 선택</option>' + types.map(function (t) { return '<option value="' + t[0] + '">' + t[1] + '</option>'; }).join('');
+      return '<div class="calc-field" data-social-block><label>사회계층 여부</label>' +
+        '<select class="calc-select" data-social-yn><option value="0">해당 없음</option><option value="1">해당 (유형 선택)</option></select>' +
+        '<div data-social-type-wrap style="display:none;margin-top:8px;">' +
+        '<select class="calc-select" data-social-type>' + opts + '</select>' +
+        '<div class="calc-cond-note" data-social-note style="display:none;font-size:11.5px;color:#c0392b;margin-top:3px;"></div>' +
+        '<div data-social-child-wrap style="display:none;margin-top:8px;"><label style="font-size:12px;">자녀 수</label>' +
+        '<select class="calc-select" data-social-child><option value="2">2자녀 (+100만)</option><option value="3">3자녀 (+200만)</option><option value="4">4자녀 이상 (+300만)</option></select></div>' +
+        '<p style="font-size:11.5px;color:#8a93a0;margin-top:4px;">※ 2026 사회계층 지방비 추가지원은 전국 0원(항목 표시용) — <b>다자녀가구·소상공인 특칙만</b> 금액에 반영됩니다.</p>' +
+        '</div></div>';
+    }
+    function wireSocial() {
+      var yn = root.querySelector('[data-social-yn]'); if (!yn) return;
+      var wrap = root.querySelector('[data-social-type-wrap]');
+      var typeSel = root.querySelector('[data-social-type]');
+      var childWrap = root.querySelector('[data-social-child-wrap]');
+      yn.addEventListener('change', function () { if (wrap) wrap.style.display = (yn.value === '1') ? '' : 'none'; applyGating(); });
+      if (typeSel) typeSel.addEventListener('change', function () { if (childWrap) childWrap.style.display = (typeSel.value === 'multichild') ? '' : 'none'; applyGating(); });
+    }
 
     if (run) run.addEventListener('click', function () {
       var type = getType();
@@ -435,25 +565,41 @@
         return;
       }
 
-      // buyer → reqKind / biz
+      // [F1] buyer → reqKind : 개인(personal)=P · 개인사업자(biz)=B · 단체(org)=G
       var buyer = getBuyer();
-      var reqKind = (buyer === 'org') ? 'G' : 'P';
+      var reqKind = (buyer === 'biz') ? 'B' : (buyer === 'org' ? 'G' : 'P');
       var biz = (buyer === 'biz');
 
-      // 조건부 옵션 → c 객체
+      // 조건부 옵션 → c 객체 (비활성(disabled) 옵션은 계산에도 미반영 — UI 게이팅과 이중)
       var conds = COND[type] || [];
       var c = {};
       if (condBox) condBox.querySelectorAll('[data-cond]').forEach(function (s) {
+        if (s.disabled) return;                               // 비활성 select 무시
         var key = s.getAttribute('data-cond');
         var def = conds.find(function (x) { return x.key === key; });
         if (!def) return;
-        var sel = def.opts[parseInt(s.value || '0', 10)] || def.opts[0];
+        var idx = parseInt(s.value || '0', 10);
+        var sel = def.opts[idx] || def.opts[0];
+        if (idx > 0 && sel && !buyerAllows(sel, reqKind)) return; // 선택값이 유형에 미허용이면 무시(잔존값 방지)
         if (sel && sel.set) Object.keys(sel.set).forEach(function (k) { c[k] = sel.set[k]; });
       });
+      // [F1] 법인·기관 택시 → 중소기업 하위선택으로 taxiBusi 결정 (개인사업자 B는 중기 무관)
+      var smeSel = root.querySelector('[data-taxi-sme-sel]');
+      if (reqKind === 'G' && c.taxi && smeSel) c.taxiBusi = (smeSel.value === '1');
+      // [F3] 사회계층 블록 → c 반영: 다자녀가구+자녀수 → multiChild(정액, P만은 compute·게이팅이 보장) / 소상공인 → social(승용은 지방비 0=무효과, 트리거만) / 그 외 유형 → 0
+      var socYn = root.querySelector('[data-social-yn]');
+      if (socYn && socYn.value === '1') {
+        var socType = root.querySelector('[data-social-type]');
+        var st = socType ? socType.value : '';
+        if (st === 'multichild') {
+          var childSel = root.querySelector('[data-social-child]');
+          c.multiChild = childSel ? parseInt(childSel.value || '0', 10) : 0;
+        } else if (st === 'small') { c.social = 'small'; }
+      }
       // 제주 도외반출(데모: 노후경유 폐차 선택 시 자동 가정)
       if (reg.jeju && c.dieselScrap) c.jejuExport = true;
 
-      // 배타규칙: 택시 + 다자녀 동시 불가 / 법인택시 → 다자녀·청년 불가
+      // 배타규칙: 택시 + 다자녀·청년 동시 불가 (계산 배타 — UI 배타와 이중, 소스 :469)
       if (c.taxi) { c.multiChild = 0; c.firstBuyYoung = false; }
 
       var res = compute({
@@ -461,13 +607,21 @@
         region: reg, cnt: 1, c: c
       });
 
-      // 표기는 만원 정수로 반올림(시나리오 num() 호환) — 내부 계산은 천원 정밀 유지
-      var dNat = Math.round(res.nat), dLoc = Math.round(res.loc), dTotal = dNat + dLoc;
-      var extra = dTotal - gamt - reg.lamt;
-      setText('[data-res-nat]', fmt(dNat) + '만원');
-      setText('[data-res-local]', fmt(dLoc) + '만원');
-      setText('[data-res-extra]', (extra >= 0 ? '+' : '') + fmt(extra) + '만원');
-      setText('[data-res-total]', fmt(dTotal));
+      // [F2] 결과 4분할(만원 정수 반올림) — 합계 = 4항목 합(총액 일치 보장)
+      var rNat = Math.round(res.natBase + res.natAdd);   // 국비(전환 제외)
+      var rLoc = Math.round(res.locBase + res.locAdd);   // 지방비(전환 제외)
+      var rChngG = Math.round(res.chngG);                // 전환지원금 국비
+      var rChngL = Math.round(res.chngL);                // 전환지원금 지방비
+      var rTotal = rNat + rLoc + rChngG + rChngL;        // 합계
+      var hasChng = (rChngG + rChngL) > 0;
+      setText('[data-res-nat]', fmt(rNat) + '만원');
+      setText('[data-res-local]', fmt(rLoc) + '만원');
+      setText('[data-res-chng-nat]', hasChng ? (fmt(rChngG) + '만원') : '—');
+      setText('[data-res-chng-local]', hasChng ? (fmt(rChngL) + '만원') : '—');
+      var chCap = root.querySelector('[data-res-chng-caption]'); if (chCap) chCap.style.display = hasChng ? 'none' : '';
+      setText('[data-res-total]', fmt(rTotal));
+      // 백호환: subsidy-info 시나리오가 읽는 data-res-extra = 전환지원금 합계(국비+지방비)
+      setText('[data-res-extra]', (hasChng ? '+' : '') + fmt(rChngG + rChngL) + '만원');
       if (result) result.classList.add('show');
       // 예상액 스트립 최초 등장 1회만 펄스(세션 내 재계산 시 재펄스 없음)
       if (window.FeeDisclaimer) window.FeeDisclaimer.pulse(document.getElementById('feeStripCalc'), 'subsidy-calc');

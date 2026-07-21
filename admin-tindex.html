@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>충전사업자 투명성지수 | 통합관리시스템 | EV 업무포털</title>
-<link rel="stylesheet" href="css/admin-shell.css?v=20260720b">
+<link rel="stylesheet" href="css/admin-pub.css?v=20260721a">
+<link rel="stylesheet" href="css/admin-shell.css?v=20260721b">
 <style>
   /* 조회 전용 표 — 장식 없음(막대·차트·색배지 미사용). 정렬 가능 헤더 표시만 최소로 */
   .tx-tbl th{ cursor:pointer; user-select:none; }
@@ -19,15 +20,15 @@
 </style>
 </head>
 <body>
-<!-- [DEV] 통합관리시스템 > 통계 > 충전사업자 투명성지수 (신설 T1 · v0.30 7호)
+<!-- [DEV] 통합관리시스템 > 통계 > 충전사업자 투명성지수 (신설 T1 · v0.30 7호 · 공단관리자 전용 — 권한 코드 미정·개발 협의)
      설계 근거: EVAX/03. 설계/ev_충전사업자_투명성지수_설계_v0.1.md — §5 표 컬럼 · §6 담당자(admin) 모드 · 부록 A 원천 테이블
      담당자 모드 = 전체 실명 · 전체 상세(주지표 6축 + 보조 + 이상플래그 7종 전부 노출) — 시민/사업자 모드의 익명화·마스킹 미적용.
      ★수치 원천 = 대민과 동일한 js/tindex-data.js(window.__TINDEX_DATA) 재사용 — 관리자용 별도 더미 생성 금지(대민 ↔ 관리자 수치 불일치 방지). -->
 <div class="adm-wrap">
   <aside class="adm-side" id="admSide"></aside>
   <main class="adm-main">
-    <h1 class="adm-h1">충전사업자 투명성지수 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
-    <p class="adm-desc">사업자(BMNGID)별 정보제공 충실도 산출 결과를 조회합니다. (담당자 모드 — 전체 실명·전체 지표 상세)</p>
+    <h1 class="adm-h1">충전사업자 투명성지수 <span class="new-badge" style="vertical-align:middle;">신설</span> <span class="adm-badge b-secret" style="vertical-align:middle;">공단관리자 전용</span></h1>
+    <p class="adm-desc">사업자(BMNGID)별 정보제공 충실도 산출 결과를 조회합니다. (담당자 모드 — 전체 실명·전체 지표 상세 · 대민 비공개)</p>
 
     <div class="adm-card">
       <div class="adm-filter">
@@ -41,11 +42,21 @@
       </div>
     </div>
 
+    <!-- 등급 기준 안내 — 설계서 §1 점수 구조 · §4 등급 판정 그대로(임의 수정 금지) -->
+    <div class="adm-card">
+      <h3>등급 기준 안내</h3>
+      <div class="adm-body-box" style="margin-top:0;">종합 투명성지수(100) = 주지표(85) + 보조지표(15)
+· 등급 판정 : <strong>주지표 85점을 100점 환산(주지표 ÷ 85 × 100) → 환산 70점 이상 우수 / 70점 미만 보통</strong> (2등급 · 보조지표는 등급에 영향 없음)
+· 종합점수 : 주지표 + 보조지표 — 목록 정렬·표시용
+· 보조지표(규모 6 · 이용도 5 · 가격수준 4) : 같은 등급 안에서의 순위·동점 우열에만 작용</div>
+    </div>
+
     <div class="adm-meta">
       <div>전체 <strong id="listCount">0</strong>개사 <span id="listNote" style="color:#94a3b8;"></span></div>
       <div style="color:#94a3b8;">헤더 클릭 = 정렬 · 종합 100점(주지표 85 + 보조 15) · 등급은 주지표 단독 환산</div>
     </div>
 
+    <div style="overflow-x:auto;">
     <table class="adm-tbl tx-tbl">
       <thead><tr>
         <th class="c" data-sort="rank"      style="width:56px;">순위</th>
@@ -64,10 +75,13 @@
       </tr></thead>
       <tbody id="listBody"></tbody>
     </table>
+    </div>
 
     <details class="adm-dev">
       <summary><span class="tag">DEV</span>개발 참고 — 산출 구조·원천 (실서비스 비노출)</summary>
       <div class="bd"><ul>
+        <li><strong>권한(공단관리자 전용)</strong> : 본 화면은 <strong>통합관리시스템 로그인 + 공단관리자 권한 체크 필수 · 대민(누리집) 노출 금지</strong>. 정책 결정으로 투명성지수는 대민에서 제거되어 관리자 전용으로 이관됨. <strong>권한 코드는 미정 — 개발 협의 필요</strong>(TNCM 권한그룹/권한 체계 내 코드 확정 전까지 임의 코드 부여 금지).</li>
+        <li><strong>메뉴 등록</strong> : 통합관리시스템 &gt; 통계 그룹 말미에 신설 배치(통계·데이터 성격 그룹) — <strong>TNCM_MENU(D0002) 신규 메뉴 등록 필요</strong>. 최종 메뉴 위치·순번은 개발 협의로 확정.</li>
         <li><strong>점수 구조</strong> : 종합 100 = <strong>주지표 85</strong>(통신가동 20 · 상태정합 18 · 물리정합 15 · 연계 12 · 요금공시 12 · 신뢰 8) + <strong>보조지표 15</strong>(규모 6 · 이용도 5 · 가격수준 4).</li>
         <li><strong>등급 판정</strong> : <strong>주지표 단독</strong> 환산(주지표 ÷ 85 × 100) 후 <strong>≥ 70 우수 / &lt; 70 보통</strong> 2등급. <strong>보조지표는 등급에 영향 없음</strong> — 규모·이용도·가격이 등급을 흔들지 못하게 차단(설계 B안 취지). 보조는 종합점수·동점 우열에만 작용.</li>
         <li><strong>정렬 기준</strong> : 종합점수 내림차순 → 동점 시 주지표 → 보조지표 → 충전기수 순(설계서 §4). 본 화면의 헤더 클릭 정렬은 조회 편의용이며 순위 컬럼값은 산출 시 확정된 순위.</li>
@@ -84,8 +98,8 @@
   </main>
 </div>
 
-<script src="js/admin-shell.js?v=20260720b"></script>
-<script src="js/admin-menu-ntp.js?v=20260720c"></script>
+<script src="js/admin-shell.js?v=20260721b"></script>
+<script src="js/admin-menu-ntp.js?v=20260721a"></script>
 <script src="js/tindex-data.js?v=20260624"></script>
 <script>
 (function(){

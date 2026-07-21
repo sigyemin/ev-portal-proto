@@ -5,13 +5,7 @@
   if (!window.__i18n || !window.__i18n.register) return;
   window.__i18n.register({
 
-    /* === [v0.09] 사업자별 운영 현황(임시) 인라인 섹션 정적 헤더 === */
-    'data.tindex.eyebrow':   { ko: '충전사업자 투명성지수 v4', en: 'Charging Infrastructure Transparency Index v3' },
-    'data.tindex.title':     { ko: '충전사업자 투명성지수', en: 'Operator Operation Status (Temporary)' },
-    'data.tindex.role.aria': { ko: '역할 선택', en: 'Select role' },
-    'data.tindex.role.public':{ ko: '사용자', en: 'User' },
-    'data.tindex.role.cpo':  { ko: '사업자', en: 'Operator' },
-    'data.tindex.role.admin':{ ko: '담당자', en: 'Administrator' },
+    /* [정리] 투명성지수(data.tindex.*) 대민 제거 — 관리자(admin-tindex.html) 전용 이관 */
 
     /* === 공통 breadcrumb === */
     'data.bc.current':         { ko: '데이터·통계',         en: 'Data & Stats' },
@@ -28,9 +22,7 @@
     'data.kpi.chgr':           { ko: '전국 충전기',           en: 'Nationwide Chargers' },
     'data.unit.unitsfac':      { ko: '기',                en: ' units' },
     'data.kpi.chgr.delta':     { ko: '▲ 4,280 / 주',       en: '▲ 4,280 / week' },
-    'data.kpi.ops':            { ko: '충전 사업자',           en: 'Charging Operators' },
     'data.unit.firms':         { ko: '개사',                en: ' firms' },
-    'data.kpi.ops.delta':      { ko: '투명성지수 공개',         en: 'Transparency Index Published' },
     'data.kpi.h2':             { ko: '수소충전소',            en: 'Hydrogen Stations' },
     'data.unit.stations':      { ko: '개소',                en: ' stations' },
     'data.kpi.h2.delta':       { ko: '▲ +6 / 분기',         en: '▲ +6 / quarter' },
@@ -41,58 +33,35 @@
     'data.unit.trillion':      { ko: '조원',                en: ' KRW T' },
     'data.kpi.sub.delta':      { ko: '예산 대비 66% 소진',      en: '66% of budget used' },
 
-    /* 대시보드 4개 카드 */
-    'data.dc1.h4':             { ko: '충전사업자 투명성지수',
-                                 en: 'Charging Operator Transparency Index' },
-    'data.dc1.p':              { ko: '전국 159개 충전 사업자가 공개하는 요금·운영 정보의 충실도(정보충실도)를 중심으로 평가한 지수입니다. 정보충실도(주 지표)에 보조 지표를 더해 우수·보통 2등급으로 구분합니다.',
-                                 en: 'An index centered on how faithfully the 159 nationwide charging operators disclose their fee and operation information (information fidelity). A supplementary indicator is added to the primary information-fidelity indicator to classify operators into two grades: Excellent and Average.' },
-    'data.dc1.date':           { ko: '2026.04.20 업데이트',     en: 'Updated 2026.04.20' },
-    'data.dc1.link':           { ko: '159개사 →',             en: '159 firms →' },
+    /* 대시보드 카드 (투명성지수 카드 제거 → 보급·인프라·보조금·K-EV100) */
     'data.dc2.h4':             { ko: '무공해차 보급 현황',        en: 'ZEV Adoption Status' },
-    'data.dc2.p':              { ko: '연도별·지역별·차종별 누적 보급 현황과 월간 신규 등록 추이를 제공합니다.',
-                                 en: 'Cumulative adoption by year, region, and vehicle type, plus monthly new-registration trends.' },
+    'data.dc2.p':              { ko: '시·도별 무공해차 누적 등록 현황을 봅니다.',
+                                 en: 'Cumulative zero-emission vehicle registrations by region.' },
     'data.dc2.date':           { ko: '2026.04.23 업데이트',     en: 'Updated 2026.04.23' },
     'data.dc2.link':           { ko: '17개 시·도 →',          en: '17 Provinces →' },
     'data.dc3.h4':             { ko: '충전 인프라 현황',         en: 'Charging Infrastructure' },
-    'data.dc3.p':              { ko: '완속·급속·초급속 충전기 설치 및 가동률, 지역별 분포, 운영사별 비중을 시각화합니다.',
-                                 en: 'Installation and uptime of AC/DC/ultra-fast chargers, regional distribution, and operator share visualized.' },
-    'data.dc3.date':           { ko: '실시간 갱신',            en: 'Real-Time' },
+    'data.dc3.p':              { ko: '완속·중속·급속·초급속 출력 5밴드별 충전기 보급 현황을 확인합니다.',
+                                 en: 'Charger counts across the five output bands (slow to ultra-fast).' },
+    'data.dc3.date':           { ko: '월 갱신',               en: 'Monthly' },
     'data.dc3.link':           { ko: '59.6만 기 →',          en: '596k units →' },
+    'data.dcsb.h4':            { ko: '보조금 집행 현황',         en: 'Subsidy Disbursement' },
+    'data.dcsb.p':             { ko: '전년·올해 집행액과 예산 소진률, 시·도별 소진율로 신청 타이밍을 가늠합니다.',
+                                 en: 'Prior/current-year disbursement, budget use rate, and regional spend rate to judge application timing.' },
+    'data.dcsb.date':          { ko: '월 갱신',               en: 'Monthly' },
+    'data.dcsb.link':          { ko: '17개 시·도 →',          en: '17 Provinces →' },
     'data.dc4.h4':             { ko: 'K-EV100 전환 현황',       en: 'K-EV100 Conversion Status' },
     'data.dc4.p':              { ko: '참여 기업 524개사의 업무용 차량 무공해 전환 비율 및 업종별 성과를 추적합니다.',
                                  en: 'Tracks ZEV conversion ratios and industry-specific performance of 524 participating companies.' },
     'data.dc4.date':           { ko: '분기 갱신',             en: 'Quarterly' },
     'data.dc4.link':           { ko: '524사 →',             en: '524 firms →' },
 
-    /* T-INDEX 랭킹 */
-    'data.tx.h3':              { ko: '충전사업자 투명성지수',
-                                 en: 'Charging Operator Transparency Index' },
-    'data.tx.p':               { ko: '주지표 85(통신가동20·상태정합18·물리정합15·연계12·요금공시12·신뢰8) + 보조지표 15. 등급은 주지표 환산값으로만 판정',
-                                 en: 'Primary 85 (Comm Uptime 20 · Status 18 · Physics 15 · Linkage 12 · Fee Disclosure 12 · Trust 8) + Supplementary 15. Grade is determined by the scaled primary score only.' },
-    'data.tx.f.search':        { ko: '검색',                 en: 'Search' },
-    'data.tx.f.searchph':      { ko: '사업자명 검색',           en: 'Search operator' },
-    'data.tx.sum.good':        { ko: '우수',                 en: 'Excellent' },
-    'data.tx.sum.normal':      { ko: '보통',                 en: 'Average' },
-    'data.tx.f.allgrade':      { ko: '전체 등급',             en: 'All Grades' },
-    'data.tx.f.good':          { ko: '🟢 우수 (62개사)',        en: '🟢 Excellent (62 firms)' },
-    'data.tx.f.normal':        { ko: '🟡 보통 (97개사)',       en: '🟡 Average (97 firms)' },   // [재설계] 우수 62 + 보통 97 = 159, 개선필요 폐지(보통 편입)
-    'data.tx.f.idx':           { ko: '지수 순',               en: 'By Index' },
-    'data.tx.f.count':         { ko: '충전기 수 순',            en: 'By Charger Count' },
-    'data.tx.f.alpha':         { ko: '가나다 순',              en: 'Alphabetical' },
-    'data.tx.th.rank':         { ko: '순위',                en: 'Rank' },
-    'data.tx.th.firm':         { ko: '사업자명',              en: 'Operator' },
-    'data.tx.th.cnt':          { ko: '충전기',                en: 'Chargers' },
-    'data.tx.th.idx':          { ko: '투명성지수',             en: 'Transparency Index' },
-    'data.tx.th.grade':        { ko: '등급',                en: 'Grade' },
-    'data.tx.th.price':        { ko: '통신가동',            en: 'Comm Uptime' },
-    'data.tx.th.ops':          { ko: '상태정합',            en: 'Status' },
-    'data.tx.th.infra':        { ko: '물리정합',            en: 'Physics' },
-    'data.tx.th.trust':        { ko: '신뢰',                 en: 'Trust' },
-    'data.tx.source':          { ko: '자료 출처 · 투명성지수 2026.04.20 · 환경부 전기차충전소 DB + 공공 API + 사업자 공시',
-                                 en: 'Source · Transparency Index 2026.04.20 · MoE EV Charging Station DB + Public API + Operator Disclosure' },
-    'data.tx.excel':           { ko: '엑셀 다운로드',           en: 'Download Excel' },
+    /* [정리] 투명성지수 랭킹(data.tx.*) 대민 제거 — 관리자(admin-tindex.html) 전용 이관 */
 
-    /* 지역별 보급 */
+    /* 인사이트 차트 공통 — '표로 보기' 토글 */
+    'data.tbl.show':           { ko: '표로 보기',             en: 'Show table' },
+    'data.tbl.hide':           { ko: '표 숨기기',             en: 'Hide table' },
+
+    /* 지역별 보급 (R1) */
     'data.sp.h3':              { ko: '지역별 무공해차 보급 현황',
                                  en: 'ZEV Adoption by Region' },
     'data.sp.p':               { ko: '시·도별 무공해차 누적 등록 현황 · 차종 선택 조회 · 2026년 3월 말 기준',
@@ -109,6 +78,10 @@
     'data.sp.excel':           { ko: '엑셀 다운로드',           en: 'Download Excel' },
     'data.sp.th.sido':         { ko: '시·도',                en: 'Region' },
     'data.sp.th.pct':          { ko: '구성비',                en: 'Share' },
+    'data.sp.th.ratio':        { ko: '충전기 1기당',           en: 'Per charger' },
+    'data.sp.cap':             { ko: '지역별 무공해차 보급 현황 — 시·도, 보급 대수, 구성비',
+                                 en: 'ZEV adoption by region — region, registrations, share' },
+    'data.refresh.month':      { ko: '월 갱신',               en: 'Updated monthly' },
     'data.sp.f.h2':            { ko: '수소차',               en: 'FCEV' },
     'data.sp.f.y26':           { ko: '2026년 누적',           en: '2026 Cumulative' },
     'data.sp.f.y25':           { ko: '2025년',              en: '2025' },
@@ -139,6 +112,25 @@
     'data.sb.l.last':          { ko: '전년도 집행액',           en: 'Last Year Disbursed' },
     'data.sb.l.cur':           { ko: '올해 집행액',            en: 'This Year Disbursed' },
     'data.sb.l.rate':          { ko: '예산 대비 소진률',          en: 'Budget Utilization' },
+    /* R2 — 시·도별 예산 소진율 */
+    'data.sb.chartcap':        { ko: '시·도별 예산 소진율 — 소진율이 높을수록 조기 마감 가능성이 큽니다. (가나다순)',
+                                 en: 'Budget spend rate by region — a higher rate means an earlier likely cutoff. (Alphabetical)' },
+    'data.sb.cap':             { ko: '시·도별 보조금 예산 소진율 — 시·도, 소진율(%), 상태',
+                                 en: 'Regional subsidy budget spend rate — region, spend rate (%), status' },
+    'data.sb.th.rate':         { ko: '소진율(%)',             en: 'Spend rate (%)' },
+    'data.sb.th.state':        { ko: '상태',                 en: 'Status' },
+    'data.sb.locallink':       { ko: '우리 지역 차량별 보조금 보기 →', en: 'See vehicle subsidies in my region →' },
+
+    /* R5 — 수소 커버리지 */
+    'data.h2.h3':              { ko: '수소충전소 커버리지',        en: 'Hydrogen Station Coverage' },
+    'data.h2.p':               { ko: '시·도별 수소충전소 개소와 충전소 1개소당 수소차 대수 · 수소차 구매 전 지역 충전 여건 확인용',
+                                 en: 'Hydrogen stations per region and FCEVs per station · to check local refueling conditions before buying an FCEV' },
+    'data.h2.chartcap':        { ko: '막대 = 수소충전소 개소, 괄호 = 충전소 1개소당 수소차 대수. 「충전소 없음」 지역은 수소차 구매 시 인근 지역 충전 필요.',
+                                 en: 'Bars = hydrogen stations; parentheses = FCEVs per station. Regions marked “No station” require refueling in a neighboring region.' },
+    'data.h2.cap':             { ko: '시·도별 수소충전소 커버리지 — 시·도, 수소충전소 개소, 충전소 1개소당 수소차 대수',
+                                 en: 'Hydrogen station coverage by region — region, hydrogen stations, FCEVs per station' },
+    'data.h2.th.stations':     { ko: '수소충전소(개소)',         en: 'Stations' },
+    'data.h2.th.per':          { ko: '1개소당 수소차(대)',        en: 'FCEVs per station' },
 
     /* K-EV100 */
     'data.kv.h3':              { ko: 'K-EV100 전환 현황',       en: 'K-EV100 Conversion Status' },
@@ -162,12 +154,7 @@
     'data.op.refresh.5min':    { ko: '5분 주기',              en: 'Every 5 min' },
     'data.op.refresh.qrt':     { ko: '분기 갱신',             en: 'Quarterly' },
     'data.op.refresh.420':     { ko: '2026.04.20 갱신',       en: 'Updated 2026.04.20' },
-    /* 5개 항목 */
-    'data.op.i1.h4':           { ko: '충전사업자 투명성지수 전체 데이터 (159개사)',
-                                 en: 'Full Charging Operator Transparency Index Data (159 firms)' },
-    'data.op.i1.p':            { ko: '사업자별 지수·등급·충전기 수·지역별 분포·세부 점수 원본 DB',
-                                 en: 'Raw DB of index, grade, charger count, regional distribution, and detailed scores per operator' },
-    'data.op.i1.label':        { ko: '투명성지수 전체 데이터.csv',  en: 'Transparency Index Full Data.csv' },
+    /* 공개 데이터 항목 — [정리] i1 '투명성지수 전체 데이터' 제거(대민 투명성지수 이관). data.op.*는 현재 대민 HTML 미참조(죽은 키) */
     'data.op.i2.h4':           { ko: '무공해차 등록 현황 (2015~2026, 전국 17개 시·도)',
                                  en: 'ZEV Registrations (2015–2026, 17 Provinces)' },
     'data.op.i2.p':            { ko: '월별·지역별·차종별 신규 등록 + 누적 보급 대수',

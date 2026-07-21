@@ -29,17 +29,28 @@
     'charging.fee.sim.lead':  { ko: '주행거리·충전 패턴을 입력하면 월 예상 충전비와 사업자별 최적 요금제를 계산합니다.',
                                 en: 'Enter your driving distance and charging pattern to estimate monthly cost and find the best operator rate plan.' },
 
-    /* 안내가 디스클레이머 3층 (fee-disclaimer) */
-    'charging.fee.disc.anno':    { ko: '(안내가)', en: '(Est.)' },
+    /* 안내가 디스클레이머 3층 (fee-disclaimer) — ISS-020 문안 강화(A 명칭·로밍 명시) */
+    'charging.fee.disc.anno':    { ko: '(안내요금·참고용)', en: '(guide price)' },
     'charging.fee.disc.badge':   { ko: '안내가', en: 'Estimate' },
-    'charging.fee.disc.strip':   { ko: '안내용 요금입니다. 실제 결제 금액은 현장 단가·프로모션·로밍 여부에 따라 다를 수 있습니다.',
-                                   en: 'These are reference rates. Actual charges may differ depending on on-site pricing, promotions, and roaming.' },
-    'charging.fee.disc.caption': { ko: '※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다',
-                                   en: '※ Displayed rates are estimates and may differ from the actual amount charged' },
-    'charging.fee.disc.toast':   { ko: '현장 단가·사업자 프로모션·로밍 할증·멤버십에 따라 실제 결제 금액이 달라질 수 있습니다.',
-                                   en: 'The actual amount charged may vary with on-site pricing, operator promotions, roaming surcharges, and membership.' },
-    'charging.fee.disc.captionSlide': { ko: '※ 안내가 — 실제 결제 금액과 다를 수 있습니다',
-                                   en: '※ Estimate — may differ from the actual amount charged' },
+    'charging.fee.disc.strip':   { ko: '예상 금액입니다 — 실제 결제금액은 사업자·시간대·할인·로밍에 따라 다를 수 있습니다.',
+                                   en: 'This is an estimate — the amount you actually pay varies by operator, time of day, discounts and roaming.' },
+    'charging.fee.disc.caption': { ko: '안내요금(참고용) — 사업자·시간대·할인·로밍에 따라 실제 결제금액이 다를 수 있습니다',
+                                   en: 'Guide price (reference only) — the actual amount charged varies by operator, time of day, discounts and roaming' },
+    'charging.fee.disc.toast':   { ko: '사업자·시간대·할인·로밍에 따라 실제 결제금액이 다릅니다.',
+                                   en: 'The amount you actually pay varies by operator, time of day, discounts and roaming.' },
+    'charging.fee.disc.captionSlide': { ko: '안내요금(참고용) — 실결제와 다를 수 있음',
+                                   en: 'Guide price (reference only) — actual payment may differ' },
+
+    /* [C] 상단 고지 띠 + 축약 배지 + 로밍 강조 (ISS-020) */
+    'charging.fee.notice.title':  { ko: '안내요금(참고용)', en: 'Reference price (guide only)' },
+    'charging.fee.notice.main':   { ko: '표시된 요금은 참고용입니다 — 사업자·시간대·할인·로밍에 따라 실제 결제금액이 다를 수 있습니다.',
+                                    en: 'The price shown is a guide only — the amount you actually pay can differ by operator, time of day, discounts and roaming.' },
+    'charging.fee.notice.roam':   { ko: '특히 타 사업자(로밍) 충전 시 요금이 크게 다를 수 있습니다.',
+                                    en: 'In particular, charging at another operator (roaming) can cost significantly more.' },
+    'charging.fee.notice.mini':   { ko: '안내요금 — 실결제와 다를 수 있음', en: 'Guide price — actual payment may differ' },
+    'charging.fee.notice.reopen': { ko: '요금 고지 다시 보기', en: 'Show fee notice again' },
+    'charging.fee.notice.close':  { ko: '고지 닫기', en: 'Close notice' },
+    'charging.fee.notice.roambadge': { ko: '로밍 = 안내↔실결제 차이 최대', en: 'Roaming = largest guide-vs-actual gap' },
 
     /* charging-card.html */
     'charging.card.title':    { ko: '회원카드 관리', en: 'Member Card Management' },
@@ -110,7 +121,6 @@
     'charging.fee.tab.ev':        { ko: '전기차 충전요금', en: 'EV Charging Fees' },
     'charging.fee.tab.matrix':    { ko: '요금매트릭스', en: 'Fee Matrix' },
     'charging.fee.tab.sim':       { ko: '내 충전요금 시뮬레이터', en: 'My Fee Simulator' },
-    'charging.fee.btn.tindex':    { ko: '충전사업자 투명성지수', en: 'CPO Transparency Index' },
     'charging.fee.btn.tariff':    { ko: '시간대별 충전요금', en: 'Time-of-Use Fees' },
     'charging.fee.aria.tariff':   { ko: '시간대별 충전요금 모달 열기', en: 'Open time-of-use fee modal' },
     'charging.fee.aria.menu':     { ko: '요금 메뉴', en: 'Fee menu' },
@@ -132,21 +142,18 @@
     'charging.help.tab.status':   { ko: '운영 현황 안내', en: 'Operation Status' },
 
     /* charging-fee.html — KPI 카드 */
-    'charging.fee.kpi.tindex.label':  { ko: '투명성지수 등재 사업자', en: 'Transparency Index Operators' },
-    'charging.fee.kpi.tindex.unit':   { ko: '개사', en: ' ops' },
-    'charging.fee.kpi.tindex.note':   { ko: '우수 62 · 보통 97', en: 'Excellent 19 · Average 109 · Needs improvement 31' },
     'charging.fee.kpi.total.label':   { ko: '전국 충전기 합계', en: 'Total Chargers Nationwide' },
     'charging.fee.kpi.total.unit':    { ko: '기', en: '' },
-    'charging.fee.kpi.total.note':    { ko: 'tindex/data_v3.json 2026-04 기준', en: 'tindex/data_v3.json (as of Apr 2026)' },
+    'charging.fee.kpi.total.note':    { ko: '2026-04 기준 (더미)', en: 'As of Apr 2026 (dummy)' },
     'charging.fee.kpi.public.label':  { ko: '기후에너지환경부 공공 급속', en: 'MCEE Public Fast Charger' },
     'charging.fee.kpi.public.unit':   { ko: '원/kWh', en: ' KRW/kWh' },
     'charging.fee.kpi.public.note':   { ko: '50kW 미만 · 100kW이상 347.2원', en: 'Under 50kW · 100kW+ 347.2 KRW' },
     'charging.fee.kpi.private.label': { ko: '민간 급속 평균', en: 'Private Fast Charger Avg.' },
-    'charging.fee.kpi.private.note':  { ko: '투명성지수 등재 9개사 fast_m 평균', en: 'Average of 9 Transparency Index operators (fast_m)' },
+    'charging.fee.kpi.private.note':  { ko: '요금 공시 9개사 급속 평균', en: 'Average of 9 fee-disclosing operators (fast_m)' },
 
     /* charging-fee.html — 검색 폼 */
     'charging.fee.search.title':   { ko: '전기충전소 요금 검색', en: 'EV Station Fee Search' },
-    'charging.fee.search.meta':    { ko: '전국 596,368기 · 투명성지수 갱신 5분 주기 · 22개 사업자 등재', en: '596,368 stations nationwide · Transparency Index refresh every 5 minutes · 22 operators listed' },
+    'charging.fee.search.meta':    { ko: '전국 596,368기 · 요금 공시 22개 사업자', en: '596,368 stations nationwide · 22 fee-disclosing operators' },
     'charging.fee.search.sido':    { ko: '시·도', en: 'Province / City' },
     'charging.fee.search.operator':{ ko: '사업자', en: 'Operator' },
     'charging.fee.search.speed':   { ko: '출력', en: 'Output' },
@@ -226,7 +233,7 @@
     'charging.fee.roaming.tier.slow':   { ko: '완속 7kW', en: 'Slow 7kW' },
     'charging.fee.roaming.tier.ultra':  { ko: '초급속 100kW+', en: 'Ultra-fast 100kW+' },
     'charging.fee.roaming.unit':        { ko: '(단위: 원/kWh)', en: '(Unit: KRW/kWh)' },
-    'charging.fee.roaming.legend.lead': { ko: '※ 투명성지수 FEE_TABLE 공시 기준 (2026-04-21) · 할증 수준:', en: '※ Per Transparency Index FEE_TABLE disclosure (2026-04-21) · Surcharge tier:' },
+    'charging.fee.roaming.legend.lead': { ko: '※ 사업자 공시 요금 기준 (2026-04-21) · 할증 수준:', en: '※ Per operator fee disclosure (2026-04-21) · Surcharge tier:' },
     'charging.fee.roaming.legend.own':  { ko: '자사 요금 (기본)', en: 'Same operator (base)' },
     'charging.fee.roaming.legend.t1':   { ko: '+1~50원', en: '+1–50 KRW' },
     'charging.fee.roaming.legend.t2':   { ko: '+51~100원', en: '+51–100 KRW' },
@@ -386,7 +393,7 @@
 
     /* === 충전요금 - op-modal (사업자 요금 상세 모달) === */
     'charging.fee.opmodal.close.aria':    { ko: '모달 닫기',                       en: 'Close modal' },
-    'charging.fee.opmodal.source':        { ko: '출처: 투명성지수 FEE_TABLE 2026-04-21', en: 'Source: Transparency Index FEE_TABLE 2026-04-21' },
+    'charging.fee.opmodal.source':        { ko: '출처: 사업자 공시 요금 2026-04-21', en: 'Source: operator fee disclosure 2026-04-21' },
     'charging.fee.opmodal.close':         { ko: '닫기',                             en: 'Close' },
 
     /* === 충전요금 - 시간대별 충전요금 모달 === */
@@ -1388,7 +1395,7 @@
                                             en: '* When you select a model, the charge amount is automatically set to 95% of the battery capacity' },
     'charging.fee.sim.kwh.aria':          { ko: '충전량 (kWh)',                      en: 'Charge amount (kWh)' },
 
-    'charging.fee.sim.result.lbl':        { ko: '예상 충전요금',                     en: 'Estimated Charging Cost' },
+    'charging.fee.sim.result.lbl':        { ko: '1회 충전 예상 금액',                en: 'Estimated cost per charge' },
     'charging.fee.sim.result.condtitle':  { ko: '계산 조건',                         en: 'Calculation Conditions' },
     'charging.fee.sim.tou.none':          { ko: '이 사업자는 계절시간제가 적용되지 않습니다.',
                                             en: 'This operator does not apply seasonal time-of-use pricing.' },

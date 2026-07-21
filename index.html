@@ -242,7 +242,7 @@
   <section class="m02-calc" aria-labelledby="m02-calc-title">
     <div class="main03-container">
       <div class="m02-sec-head"><h2 id="m02-calc-title"><span class="ev-dot">e</span> <span data-i18n="hm.calc.title">구매 보조금 계산기</span></h2></div>
-      <!-- 보조금 계산기 (공용 위젯 js/subsidy-calc.js?v=20260626c · 보조금 안내·계산기 페이지와 동일) · 전체 폭 -->
+      <!-- 보조금 계산기 (공용 위젯 js/subsidy-calc.js?v=20260721c · 보조금 안내·계산기 페이지와 동일) · 전체 폭 -->
       <div class="calc-card subsidy-calc calc-card-full" data-subsidy-calc>
           <h2 class="calc-card-head">📝 보조금 계산기</h2>
           <div class="calc-field">
@@ -282,10 +282,14 @@
           <div data-calc-conditions></div>
           <button type="button" class="calc-run" data-calc-run>📊 계산하기</button>
           <div class="calc-result" data-calc-result>
-            <div class="calc-res-total"><span style="font-weight:800;">총 예상 보조금</span><span><b data-res-total>0</b> 만원</span></div>
-            <div class="calc-res-row"><span>국고 보조금</span><span data-res-nat>0만원</span></div>
-            <div class="calc-res-row"><span>지방 보조금</span><span data-res-local>0만원</span></div>
-            <div class="calc-res-row"><span>추가지원 합계 (국비+지방비)</span><span data-res-extra>0만원</span></div>
+            <div class="calc-res-total"><span style="font-weight:800;">총 예상 보조금 (합계)</span><span><b data-res-total>0</b> 만원</span></div>
+            <!-- [F2] 결과 4분할 — subsidy-local 전환지원금 컬럼명과 동일 라벨 -->
+            <div class="calc-res-row"><span>국비</span><span data-res-nat>0만원</span></div>
+            <div class="calc-res-row"><span>지방비</span><span data-res-local>0만원</span></div>
+            <div class="calc-res-row"><span>전환지원금 국비</span><span data-res-chng-nat>—</span></div>
+            <div class="calc-res-row"><span>전환지원금 지방비</span><span data-res-chng-local>—</span></div>
+            <p data-res-chng-caption style="font-size:11.5px;color:#8a93a0;margin:4px 0 0;">전환지원금은 노후 내연기관 폐차·전환(개인) 시에만 지원됩니다. — 현재 조건은 <strong>전환 요건 미해당</strong></p>
+            <span data-res-extra hidden>0만원</span>
             <p style="font-size:12px;color:#8a93a0;margin-top:10px;">※ 데모용 추정치입니다. 실제 보조금은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</p>
           </div>
           <a href="subsidy-info.html" class="btn btn-primary" style="display:block;width:100%;text-align:center;margin-top:14px;">자세한 보조금 안내·계산기 →</a>
@@ -561,50 +565,22 @@
 
 <div id="footer-slot"></div>
 
-<script src="js/partials.js?v=20260716a"></script>
+<script src="js/partials.js?v=20260721a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260703a"></script>
+<script src="js/i18n-common.js?v=20260721a"></script>
 <script src="js/i18n-home.js?v=20260608"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script src="js/home-v2.js?v=20260608"></script>
 <script src="js/home-main02.js?v=20260703c"></script>
-<script src="js/persona-cards.js?v=20260630a"></script>
+<script src="js/persona-cards.js?v=20260721b"></script>
 <script src="js/fee-compare.js?v=20260613"></script>
 <script src="js/news-data.js?v=20260613"></script>
 <script src="js/home-news.js?v=20260613"></script>
-<script src="js/subsidy-calc.js?v=20260626c"></script>
+<script src="js/subsidy-calc.js?v=20260721c"></script>
 <script src="js/ai-helpdesk-v2.js?v=20260609"></script>
 
-<script>
-/* [요청 반영] 메인페이지 진입 시 AI 헬프데스크 영역이 바로 보이도록 초기 스크롤 위치를 조정합니다. */
-(function () {
-  if ('scrollRestoration' in window.history) {
-    window.history.scrollRestoration = 'manual';
-  }
-
-  function scrollToAiHelpdesk() {
-    var target = document.getElementById('aiSectionAnchor');
-    if (!target) return;
-
-    // 다른 앵커로 직접 진입한 경우에는 기존 앵커 이동을 방해하지 않음
-    if (window.location.hash && window.location.hash !== '#aiSectionAnchor') return;
-
-    var header = document.querySelector('.site-header');
-    var headerHeight = header ? header.getBoundingClientRect().height : 0;
-    var top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-    window.scrollTo({ top: Math.max(0, Math.round(top)), left: 0, behavior: 'auto' });
-  }
-
-  window.addEventListener('load', function () {
-    requestAnimationFrame(function () {
-      scrollToAiHelpdesk();
-      // 헤더/팝업/언어팩 렌더 후 레이아웃 보정용 1회 재실행
-      window.setTimeout(scrollToAiHelpdesk, 80);
-    });
-  });
-})();
-</script>
+<!-- [삭제 2026-07-21] 메인 진입 시 AI 헬프데스크 초기 스크롤 — 진입 시 자동 스크롤 제거 지시로 폐기 -->
 
 <script>
 /* [요청 반영] 하단 CTA 배너 QR 코드 — 스캔 시 통합지도(전기+수소) 페이지로 이동.
