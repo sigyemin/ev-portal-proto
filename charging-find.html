@@ -705,14 +705,12 @@
             <!-- 수소: AS-IS 계승 상태 2종(영업중/영업마감) · 출력·압력·가격 미표시 -->
             <div class="mlb-scroll" id="legendH2" data-legend="h2" hidden>
               <div class="mlb-group">
-                <span class="mlb-title">수소 상태</span>
+                <span class="mlb-title">수소충전소 상태</span>
                 <span class="mlb-item"><span class="mlb-dot" style="background:var(--mk-busy);"></span>영업중</span>
                 <span class="mlb-item"><span class="mlb-dot" style="background:#64748B;"></span>영업마감</span>
               </div>
               <span class="mlb-sep"></span>
               <div class="mlb-group">
-                <span class="mlb-title">유형</span>
-                <span class="mlb-item"><span class="mlb-h2">H₂</span>수소충전소</span>
                 <span class="mlb-item" style="color:var(--text-tertiary);font-weight:500;">※ 압력·가격은 목록·상세 참조</span>
               </div>
             </div>
@@ -886,7 +884,7 @@
   <div style="padding:2px 18px 18px;font-size:12.5px;color:var(--text-secondary);line-height:1.7;">
     <p>· <b>★마커 숫자 = 충전소 개수</b>(2026-07-20 확정 — 충전기 대수 아님). 클러스터·멀티마커 숫자 = 그룹 내 충전소 수 · <b>단일 충전소 핀도 '1' 표시</b>(모든 마커에 충전소 개수 노출) · <b>충전기 대수는 우측 슬라이드에서만</b> 표시. <b>운영종료·폐쇄</b>(DB 상태값) 충전소는 조회에서 제외 → 지도에 미표시.</p>
     <p>· <b>★충전소 대표상태 = 저장값이 아니라 소속 충전기 상태에서 파생</b>(§4-5 · AS-IS <code>evMap.js:80~96</code>). 산식 = 소속 충전기 중 <b>우선순위 최상위 1개</b> 채택 —
-       <b>사용가능 &gt; 충전중 &gt; 점검중 &gt; 통신미연결 &gt; 상태미확인 &gt; 운영중지</b>. '전부 일치' 방식 아님(1기라도 사용가능이면 충전소는 사용가능).
+       <b>avail &gt; busy &gt; check &gt; comm &gt; unknown &gt; stop</b>. '전부 일치' 방식 아님(1기라도 사용가능이면 충전소는 사용가능).
        <b>사용가능 + 충전소 이용자제한 플래그 → 이용자제한 override</b>. 프로토타입은 <code>calcStationStatus(충전소ID)</code> 공용 함수 1개로 일원화 —
        <b>마커·멀티 리스트·상세·다운로드가 전부 같은 함수 결과</b>를 쓰므로 마커 ↔ 슬라이드 모순이 구조적으로 발생하지 않음.
        더미도 대표상태를 하드코딩하지 않고 충전기 상태 구성(<code>mix</code>)만 정의 — <b>개발 시에도 대표상태 컬럼을 저장·이원 계산하지 말 것</b>.</p>
@@ -928,9 +926,9 @@
   <div class="sd-body" id="sdBodyEv">
     <!-- 실시간 상태 요약 (충전기 목록 집계) -->
     <div class="sc-grid" style="grid-template-columns:repeat(3,1fr);gap:10px;">
-      <div class="sc-tile ev"><div class="sc-label">이용가능</div><div class="sc-val" id="sdAvail">0</div><div class="sc-sub">대기 없음</div></div>
-      <div class="sc-tile"><div class="sc-label">충전중</div><div class="sc-val" id="sdBusy">0</div><div class="sc-sub">충전 진행</div></div>
-      <div class="sc-tile"><div class="sc-label">그 외</div><div class="sc-val" id="sdFault" style="color:var(--mk-unavailable);">0</div><div class="sc-sub">점검·통신·중지</div></div>
+      <div class="sc-tile ev"><div class="sc-label">사용가능</div><div class="sc-val" id="sdAvail">0</div><div class="sc-sub">대기 없음</div></div>
+      <div class="sc-tile"><div class="sc-label">사용중</div><div class="sc-val" id="sdBusy">0</div><div class="sc-sub">충전 진행</div></div>
+      <div class="sc-tile"><div class="sc-label">그 외</div><div class="sc-val" id="sdFault" style="color:var(--mk-unavailable);">0</div><div class="sc-sub">사용불가·상태미확인·이용자제한</div></div>
     </div>
 
     <!-- 충전기 현황 — 목록형(기본 8개 + 더보기, 최대 97기 대응) -->
@@ -939,7 +937,7 @@
       <h4>충전기 현황 <span id="sdChgTotal" style="font-size:12px;color:var(--color-gray-500);font-weight:600;">(0기)</span></h4>
       <div class="chg-list" id="sdChargerList"></div>
       <button type="button" class="chg-more" id="sdChgMore" hidden></button>
-      <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · 상태: <span style="color:var(--mk-available);">이용가능</span>·<span style="color:var(--mk-busy);">사용중</span>·<span style="color:var(--mk-unavailable);">불가</span></p>
+      <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · 상태: <span style="color:var(--mk-available);">사용가능</span>·<span style="color:var(--mk-busy);">사용중</span>·<span style="color:var(--mk-unavailable);">사용불가</span>·<span style="color:var(--mk-unknown);">상태미확인</span>·<span style="color:var(--mk-restricted);">이용자제한</span></p>
     </div>
 
     <!-- 충전 요금 -->
@@ -1035,7 +1033,7 @@
 
 <div id="footer-slot"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="js/partials.js?v=20260721a"></script>
+<script src="js/partials.js?v=20260721c"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260721a"></script>
 <script src="js/i18n-charging.js?v=20260721b"></script>
@@ -1127,7 +1125,7 @@
 
   /* ══ 충전소 대표상태 = 소속 충전기 상태에서 파생 (§4-5 · AS-IS evMap.js:80~96) ══════════════
      [DEV] ★대표상태는 저장(하드코딩) 값이 아니다 — 아래 우선순위로 충전기 배열에서 매 렌더 계산.
-       우선순위(최상위 1개 채택) : 사용가능 > 충전중 > 점검중 > 통신미연결 > 상태미확인 > 운영중지
+       우선순위(최상위 1개 채택) : avail > busy > check > comm > unknown > stop
        '전부 일치' 방식 아님 — 1기라도 사용가능이면 충전소는 사용가능.
        사용가능 + 충전소 이용자제한 플래그(restricted) → '이용자제한' override.
        마커·멀티 리스트·상세·다운로드가 전부 이 함수 하나를 사용(계산 이원화 금지). */
@@ -1221,8 +1219,9 @@
   var __curStation = null, __locBackKey = null;   // __locBackKey: 위치 목록에서 진입 시 복귀 키
   var BAND_LBL = { slow:'완속', mid:'중속', fast:'급속', fastp:'급속+', ultra:'초급속' };
   var BAND_CLR = { slow:'#2C7BE5', mid:'#0D9488', fast:'#CA9A00', fastp:'#F97316', ultra:'#EF4444' };
-  // 충전기 상태 6종 = 대표상태 산정 우선순위와 동일 축(CHG_PRIORITY)
-  var CHG_STATE = { avail:'이용가능', busy:'충전중', check:'점검중', comm:'통신미연결', unknown:'상태미확인', stop:'운영중지' };
+  // 충전기 상태 키 6종(로직·우선순위 축 CHG_PRIORITY 불변) — 표시 라벨은 표준 5종으로 매핑(ISS-030):
+  //   check·stop → 사용불가 · comm·unknown → 상태미확인 (키·우선순위 로직은 불변)
+  var CHG_STATE = { avail:'사용가능', busy:'사용중', check:'사용불가', comm:'상태미확인', unknown:'상태미확인', stop:'사용불가' };
   var __chgExpanded = false;
 
   // 충전기 목록 렌더 — 기본 8개 + '전체 N기 보기' 더보기/접기 · 상세위치 Disclosure
@@ -1231,7 +1230,7 @@
     var list=chargersOf(stationId);
     var av=list.filter(function(c){return c.state==='avail';}).length;
     var bs=list.filter(function(c){return c.state==='busy';}).length;
-    var ft=list.length - av - bs;   // 나머지 전부(점검중·통신미연결·상태미확인·운영중지) — 3타일 합계 = 총 대수
+    var ft=list.length - av - bs;   // 나머지 전부(check·comm·unknown·stop = 사용불가·상태미확인) — 3타일 합계 = 총 대수
     var e;
     if((e=document.getElementById('sdAvail'))) e.textContent=av;
     if((e=document.getElementById('sdBusy'))) e.textContent=bs;
@@ -1320,7 +1319,7 @@
         + '<div class="li-name">'+esc(s.name||m.id)+'</div>'
         + '<div class="li-meta">'+esc(s.brand||'')
         +   '<span class="li-badge st-'+stKey+'"><span class="li-dot st-'+stKey+'"></span>'+esc(stLbl)+'</span>'
-        +   '<span class="li-sep">·</span>충전기 '+chgCount(m)+'기 <span class="li-av">(이용가능 '+av+')</span></div>'
+        +   '<span class="li-sep">·</span>충전기 '+chgCount(m)+'기 <span class="li-av">(사용가능 '+av+')</span></div>'
         + '<span class="li-arrow">›</span></button>';
     }).join('');
     drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden','false');
@@ -1481,24 +1480,24 @@
   var BAND_RANGE = { slow:'&lt;30kW', mid:'30~50kW', fast:'50~100kW', fastp:'100~200kW', ultra:'≥200kW' };
   var BAND_COLOR = { slow:'#2C7BE5', mid:'#0D9488', fast:'#FACC15', fastp:'#F97316', ultra:'#EF4444' }; // 완속 파랑·중속 청록·급속 노랑·급속+ 주황·초급속 빨강
   // [DEV] 수소 마커 = AS-IS 노출 정책 계승 — 상태 2종(영업중/영업마감)만. H2_CHARGER.CHGER_STAT·MASK_STAT 실존하나
-  //   실시간 상태 확장(충전가능/충전중/통신이상)은 향후 정책 결정 사항으로 보류. H₂ 아이콘·출력 표기 없음.
+  //   실시간 상태 확장은 향후 정책 결정 사항으로 보류. H₂ 아이콘·출력 표기 없음.
   var H2_STATUS = { open:'영업중', closed:'영업마감' };
   // 전기 대표 상태 5종 라벨 — 마커 툴팁·멀티 리스트 배지·다운로드 공용(§4-5 우선순위 집계 결과값)
   var MK_STATUS_LABEL = { available:'사용가능', busy:'사용중', unavailable:'사용불가', unknown:'상태미확인', restricted:'이용자제한' };
   // ★전기 충전소에는 status(대표상태)를 두지 않는다 — mix(충전기 상태 구성)에서 calcStationStatus()로 파생.
   //   하드코딩·계산 이원화가 마커 ↔ 슬라이드 모순의 원인이므로 저장값 금지(§4-5). 이용자제한만 충전소 플래그(restricted).
-  //   mix 키 = 충전기 상태 6종(우선순위 순): avail 사용가능 · busy 충전중 · check 점검중 · comm 통신미연결 · unknown 상태미확인 · stop 운영중지
+  //   mix 키 = 충전기 상태 6종(우선순위 순): avail·busy·check·comm·unknown·stop (표시 라벨은 5종 매핑: busy→사용중, check/stop→사용불가, comm/unknown→상태미확인)
   var MARKERS = [
     // 전기 = 핀 몸통 색(상태 5종·파생) × 핀 내 번개 색(출력 5밴드=충전소 max)
     // s1 = CHARGERS에 개별 더미 명시(상세위치 시연) → mix 없이 배열 그대로 사용 · 파생 결과 '사용가능'
     {id:'s1',top:30,left:25, type:'ev', cpo:{abbr:'환경부', name:'기후에너지환경부'}},
-    // 사용중 = 사용가능 0대 + 충전중 1대 이상
+    // 사용중 = avail 0대 + busy 1대 이상
     {id:'s3',top:45,left:32, type:'ev', mix:{busy:10, check:2}, kws:[[50,2],[7,10]], cpo:{abbr:'SK',   name:'SK일렉링크'}},
     // 이용자제한 = 사용가능 1대 이상 + 충전소 제한 플래그(override) — 충전기가 다 죽은 상태와 조합 금지
     {id:'s4',top:50,left:45, type:'ev', mix:{avail:2, busy:2}, kws:[[350,2],[200,2]], restricted:true, cpo:{abbr:'에버온', name:'에버온'}},
-    // 상태미확인 = 통신미연결·미확인만 구성
+    // 상태미확인 = comm·unknown만 구성
     {id:'s6',top:42,left:58, type:'ev', mix:{comm:14, unknown:10}, kws:[[7,18],[11,6]], cpo:{abbr:'GS',   name:'GS차지비'}},
-    // 사용불가 = 사용가능·충전중 0대 + 점검중 1대 이상(운영중지 혼재)
+    // 사용불가 = avail·busy 0대 + check 1대 이상(stop 혼재)
     {id:'s7',top:55,left:65, type:'ev', mix:{check:10, stop:4}, kws:[[100,4],[50,4],[7,6]], cpo:{abbr:'에버온', name:'에버온'}},
     // 60기급 대단지 완속 (더보기 시연) — 상세위치 입력률 낮음(17%) · 파생 '사용가능'
     {id:'big1',top:66,left:36,type:'ev', mix:{avail:47, busy:9, check:3, stop:1}, kws:[[7,52],[11,6],[50,2]], restricted:true, cpo:{abbr:'환경부', name:'기후에너지환경부'}, lat:37.5502, lng:127.0503},
@@ -1653,7 +1652,7 @@
   if(__xlsxBtn) __xlsxBtn.addEventListener('click', function(){
     if(typeof XLSX === 'undefined'){ if(window.__toast) window.__toast('엑셀 라이브러리 로딩 중입니다. 잠시 후 다시 시도해 주세요.','info'); return; }
     var rows = MARKERS.filter(function(m){ return m.type === __currentMode; });
-    var head = ['번호','충전소명','운영기관','주소','충전기 수','이용가능','최고 출력밴드','상태'];
+    var head = ['번호','충전소명','운영기관','주소','충전기 수','사용가능','최고 출력밴드','상태'];
     var disc = ['※ 표시 요금·상태는 안내용이며 실제와 다를 수 있습니다'];   // 첫 행 안내가 문구
     var aoa = [disc, head];
     rows.forEach(function(m, i){

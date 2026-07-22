@@ -38,6 +38,13 @@
   .ds-legend .lg{display:inline-flex;align-items:center;gap:6px;}
   .ds-legend .sw{width:16px;height:12px;display:inline-block;border-radius:2px;flex:none;}
   .ds-legend .sw-hatch{background:repeating-linear-gradient(45deg,#1aad6c 0 2px,#0e7a4d 2px 4px);}
+  /* ④ 5밴드 세그먼트 툴팁(hover/포커스) */
+  .if-tip{position:fixed;z-index:60;background:#1f2937;color:#fff;font-size:12px;font-weight:600;padding:6px 10px;border-radius:6px;pointer-events:none;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.22);transform:translate(-50%,-118%);opacity:0;transition:opacity .1s ease;}
+  .if-tip.show{opacity:1;}
+  .if-tip[hidden]{display:none;}
+  #ifFastChart rect[data-tip]{cursor:pointer;}
+  #ifFastChart rect[data-tip]:focus-visible{outline:2px solid #0f5132;outline-offset:1px;}
+  @media (prefers-reduced-motion: reduce){ .if-tip{transition:none;} }
   .ds-legend .sw-line{width:20px;height:0;border-top:2.5px solid #0f5132;}
   .ds-legend .sw-dash{width:20px;height:0;border-top:2px dashed #C0392B;}
   .ds-legend .sw-area{background:repeating-linear-gradient(90deg,rgba(26,173,108,.28) 0 3px,rgba(26,173,108,.12) 3px 6px);border:1px solid #0f5132;}
@@ -69,6 +76,22 @@
   .kv-firms{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px;}
   .kv-firms li{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:1px solid var(--border-light,#e2e8f0);border-radius:999px;background:#fff;font-size:13px;font-weight:600;color:var(--text-primary,#1f2937);}
   .kv-firms li .kv-ini{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--color-primary-50,#eaf7f0);color:var(--color-primary-700,#1a7a4f);font-weight:800;font-size:12px;flex:none;}
+
+  /* ── 상단 KPI = 카드 + 그 아래 별도 '이동' 버튼 네모칸(진짜 <a>·키보드·포커스링) ── */
+  .ds-kpi-cell{display:flex;flex-direction:column;gap:8px;}
+  .ds-kpi-cell > .ds-live-tile{flex:1 1 auto;}
+  .ds-nav-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;
+    padding:9px 12px;border-radius:8px;font-size:13px;font-weight:700;line-height:1.2;
+    background:var(--color-primary-50,#eaf7f0);color:var(--color-primary-700,#1a7a4f);
+    border:1px solid var(--color-primary-200,#bfe6d2);cursor:pointer;
+    transition:background .12s ease, border-color .12s ease;}
+  .ds-nav-btn:hover{background:var(--color-primary-100,#d5efe1);border-color:var(--color-primary-300,#8fd3b0);}
+  .ds-nav-btn:focus-visible{outline:2px solid var(--color-primary-600,#1D6F42);outline-offset:2px;}
+  .ds-nav-btn svg{flex:none;}
+  @media (prefers-reduced-motion: reduce){ .ds-nav-btn{transition:none;} }
+
+  /* 섹션 앵커 이동 시 고정 헤더에 타이틀 가려지지 않도록 오프셋(ISS-026 리뷰 #3) */
+  #supply, #infra, #h2, #subsidy, #k100{ scroll-margin-top: calc(var(--header-height, 72px) + 22px); }
   .ds-table-toggle > button{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--color-primary-700,#1a7a4f);background:var(--color-primary-50,#eaf7f0);border:1px solid var(--color-primary-200,#bfe6d2);border-radius:8px;padding:7px 13px;cursor:pointer;}
   .ds-chart-cap{font-size:12.5px;color:var(--text-secondary,#4b5563);margin:2px 0 6px;}
   @media (prefers-reduced-motion: reduce){ .ds-chart-bar{transition:none;} }
@@ -126,69 +149,58 @@
   <section class="section-sm">
     <div class="container container-wide">
 
-      <!-- 실시간 주요 지표 스트립 (오피넷 스타일) -->
+      <!-- 주요 지표 = 섹션 바로가기 네비 (ISS-026 · 각 지표 클릭 시 해당 현황 섹션으로 이동)
+           [DEV] 대표지수 매핑: ①무공해차 보급→#supply(보급률% = 전체 자동차 등록 대비 → 외부 원천 필요, 미정. 현재 누적 보급 대수 표기)
+                 ②전기 충전기 수→#infra ③수소충전소 수→#h2(별도 KPI) ④보조금 집행률(소진률)%→#subsidy ⑤K-EV100 참여기업 수→#k100.
+           헤드라인 값은 각 섹션 기존 값 재사용(신규 데이터 없음). KPI 행을 독립 블록으로 유지 → 추후 sticky scroll-spy 업그레이드 용이(각 섹션에 앵커 id 기부여). -->
       <div class="ds-live-strip">
         <div class="ds-live-head">
-          <h3><span class="ds-live-dot"></span><span data-i18n="data.live.h3">실시간 주요 지표</span></h3>
-          <span class="ds-live-timestamp" data-i18n="data.live.ts">2026.04.24 15:40 기준 · 5분 주기 자동 갱신</span>
+          <h3><span class="ds-live-dot"></span><span data-i18n="data.live.h3">주요 지표</span></h3>
+          <span class="ds-live-timestamp" data-i18n="data.live.ts">2026.04 기준</span>
         </div>
-        <div class="ds-live-grid">
-          <div class="ds-live-tile">
-            <div class="lt-label" data-i18n="data.kpi.zev">누적 무공해차</div>
-            <div class="lt-val"><span data-counter="1048620">0</span><span class="unit" data-i18n="data.unit.units">대</span></div>
-            <div class="lt-delta up" data-i18n="data.kpi.zev.delta">▲ 이번 달 +12,840</div>
+        <nav class="ds-live-grid" aria-label="주요 지표 바로가기">
+          <div class="ds-kpi-cell">
+            <div class="ds-live-tile">
+              <div class="lt-label" data-i18n="data.kpi.zev">누적 무공해차 보급</div>
+              <div class="lt-val"><span data-counter="1048620">0</span><span class="unit" data-i18n="data.unit.units">대</span></div>
+              <div class="lt-delta up" data-i18n="data.kpi.zev.delta">▲ 이번 달 +12,840</div>
+            </div>
+            <a class="ds-nav-btn" href="#supply"><span class="nb-txt">보급 현황 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
           </div>
-          <div class="ds-live-tile">
-            <div class="lt-label" data-i18n="data.kpi.chgr">전국 충전기</div>
-            <div class="lt-val"><span data-counter="596368">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div>
-            <div class="lt-delta up" data-i18n="data.kpi.chgr.delta">▲ 4,280 / 주</div>
+          <div class="ds-kpi-cell">
+            <div class="ds-live-tile">
+              <div class="lt-label" data-i18n="data.kpi.chgr">전국 전기 충전기</div>
+              <div class="lt-val"><span data-counter="596368">0</span><span class="unit" data-i18n="data.unit.unitsfac">기</span></div>
+              <div class="lt-delta up" data-i18n="data.kpi.chgr.delta">▲ 4,280 / 주</div>
+            </div>
+            <a class="ds-nav-btn" href="#infra"><span class="nb-txt">충전 인프라 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
           </div>
-          <div class="lt-label" style="display:none;"></div>
-          <!-- [DEV] 수소충전소 = H2_STATION 등록 개소(운영상태 컬럼 없음 → '등록' 기준). H2_CHARGER.MASK_STAT는 충전기 실시간 상태로 별개 / 더미 -->
-          <div class="ds-live-tile">
-            <div class="lt-label" data-i18n="data.kpi.h2">수소충전소</div>
-            <div class="lt-val"><span data-counter="145">0</span><span class="unit" data-i18n="data.unit.stations">개소</span></div>
-            <div class="lt-delta up" data-i18n="data.kpi.h2.delta">▲ +6 / 분기</div>
+          <!-- [DEV] 수소충전소 = H2_STATION 등록 개소(운영상태 컬럼 없음 → '등록' 기준) · 별도 KPI(수소 섹션 연결) / 더미 -->
+          <div class="ds-kpi-cell">
+            <div class="ds-live-tile">
+              <div class="lt-label" data-i18n="data.kpi.h2">수소충전소</div>
+              <div class="lt-val"><span data-counter="145">0</span><span class="unit" data-i18n="data.unit.stations">개소</span></div>
+              <div class="lt-delta up" data-i18n="data.kpi.h2.delta">▲ +6 / 분기</div>
+            </div>
+            <a class="ds-nav-btn" href="#h2"><span class="nb-txt">수소충전소 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
           </div>
-          <div class="ds-live-tile">
-            <div class="lt-label" data-i18n="data.kpi.kev">K-EV100 참여</div>
-            <div class="lt-val"><span data-counter="524">0</span><span class="unit" data-i18n="data.unit.firms">개사</span></div>
-            <div class="lt-delta up" data-i18n="data.kpi.kev.delta">▲ +18 / 월</div>
+          <div class="ds-kpi-cell">
+            <div class="ds-live-tile">
+              <div class="lt-label" id="kpiSubLbl">보조금 집행률</div>
+              <div class="lt-val"><span data-counter="66">0</span><span class="unit">%</span></div>
+              <div class="lt-delta up" id="kpiSubDelta">올해 1.84조원 집행</div>
+            </div>
+            <a class="ds-nav-btn" href="#subsidy"><span class="nb-txt">집행 현황 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
           </div>
-          <div class="ds-live-tile">
-            <div class="lt-label" data-i18n="data.kpi.sub">올해 집행 보조금</div>
-            <div class="lt-val"><span data-counter="1.84">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div>
-            <div class="lt-delta up" data-i18n="data.kpi.sub.delta">예산 대비 66% 소진</div>
+          <div class="ds-kpi-cell">
+            <div class="ds-live-tile">
+              <div class="lt-label" data-i18n="data.kpi.kev">K-EV100 참여기업</div>
+              <div class="lt-val"><span data-counter="524">0</span><span class="unit" data-i18n="data.unit.firms">개사</span></div>
+              <div class="lt-delta up" data-i18n="data.kpi.kev.delta">▲ +18 / 월</div>
+            </div>
+            <a class="ds-nav-btn" href="#k100"><span class="nb-txt">K-EV100 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
           </div>
-        </div>
-      </div>
-
-      <!-- 대시보드 메뉴 (투명성지수 카드 제거 → 보급·인프라·보조금·K-EV100 4카드로 재구성) -->
-      <div class="ds-dashboards" id="dashboard" data-reveal>
-        <a href="#supply" class="ds-dash-card scheme-blue">
-          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-          <h4 data-i18n="data.dc2.h4">무공해차 보급 현황</h4>
-          <p data-i18n="data.dc2.p">시·도별 무공해차 누적 등록 현황을 봅니다.</p>
-          <div class="dc-meta"><span data-i18n="data.dc2.date">2026.04.23 업데이트</span><span style="color:var(--color-primary-700);" data-i18n="data.dc2.link">17개 시·도 →</span></div>
-        </a>
-        <a href="#infra" class="ds-dash-card scheme-orange">
-          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <h4 data-i18n="data.dc3.h4">충전 인프라 현황</h4>
-          <p data-i18n="data.dc3.p">완속·중속·급속·초급속 출력 5밴드별 충전기 보급 현황을 확인합니다.</p>
-          <div class="dc-meta"><span data-i18n="data.dc3.date">월 갱신</span><span style="color:var(--color-primary-700);" data-i18n="data.dc3.link">59.6만 기 →</span></div>
-        </a>
-        <a href="#subsidy" class="ds-dash-card">
-          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/></svg></div>
-          <h4 data-i18n="data.dcsb.h4">보조금 집행 현황</h4>
-          <p data-i18n="data.dcsb.p">전년·올해 집행액과 예산 소진률을 확인합니다. 지역·월별 예산 잔여율은 보급 현황에서 봅니다.</p>
-          <div class="dc-meta"><span data-i18n="data.dcsb.date">월 갱신</span><span style="color:var(--color-primary-700);" data-i18n="data.dcsb.link">17개 시·도 →</span></div>
-        </a>
-        <a href="#k100" class="ds-dash-card scheme-purple">
-          <div class="dc-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></div>
-          <h4 data-i18n="data.dc4.h4">K-EV100 전환 현황</h4>
-          <p data-i18n="data.dc4.p">참여 기업 524개사의 업무용 차량 무공해 전환 비율 및 업종별 성과를 추적합니다.</p>
-          <div class="dc-meta"><span data-i18n="data.dc4.date">분기 갱신</span><span style="color:var(--color-primary-700);" data-i18n="data.dc4.link">524사 →</span></div>
-        </a>
+        </nav>
       </div>
 
       <!-- 지역별 무공해차 보급 현황 (C+D 재설계 · R1 폐기·R2 흡수 — 개편안 §2-5) -->
@@ -210,7 +222,6 @@
         <div class="ds-ranking-head">
           <div>
             <h3 data-i18n="data.sp.h3">지역별 무공해차 보급 현황</h3>
-            <p id="spLead">지금 사면 유리한가 — 예산 잔여율과 신규 보급 추이로 신청 타이밍을 봅니다. (무공해차 = 전기+수소)</p>
             <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="data.refresh.month">월 갱신</span></span>
           </div>
           <div class="ds-ranking-filter">
@@ -237,13 +248,10 @@
 
         <!-- C 본체 — 예산잔여율(라인) + 신규 보급(막대) 콤보 -->
         <div class="ds-combo-head"><h4 id="cTitle">예산 잔여율 · 신규 보급 추이 (월별)</h4></div>
-        <p class="ds-chart-cap" id="cCap"></p>
         <div class="ds-legend" id="cLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="cChart" role="img" aria-label="예산 잔여율과 신규 보급 콤보 차트"></div>
-        <div class="ds-table-toggle">
-          <button type="button" id="cTableBtn" aria-expanded="false" aria-controls="cTableWrap"><span data-i18n="data.tbl.show">표로 보기</span></button>
-        </div>
-        <div id="cTableWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <!-- 동등 데이터 표(sr-only) — 차트 role=img+aria-label의 접근성 대체(KWCAG) · 시각 토글 제거(ISS-026 리뷰) -->
+        <div id="cTableWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="cTableCap">예산 잔여율·신규 보급 월별 표 — 월, 예산 잔여율(%), 신규 보급(대)</caption>
             <thead><tr>
@@ -257,13 +265,9 @@
 
         <!-- D 보조 — 연도별 누적 S커브 + 연도별 신규 막대 -->
         <div class="ds-combo-head"><h4 id="dTitle">연도별 누적 보급 추이</h4></div>
-        <p class="ds-chart-cap" id="dCap"></p>
         <div class="ds-legend" id="dLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="dChart" role="img" aria-label="연도별 누적 보급과 연도별 신규 보급 콤보 차트"></div>
-        <div class="ds-table-toggle">
-          <button type="button" id="dTableBtn" aria-expanded="false" aria-controls="dTableWrap"><span data-i18n="data.tbl.show">표로 보기</span></button>
-        </div>
-        <div id="dTableWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="dTableWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="dTableCap">연도별 누적·신규 보급 표 — 연도, 누적 보급(대), 신규 보급(대)</caption>
             <thead><tr>
@@ -275,13 +279,8 @@
           </table>
         </div>
 
-        <!-- 지역 비교: 보급 대수·구성비 (동등 데이터 표 겸용 — 존치) -->
-        <div class="ds-combo-head"><h4 id="spTableTitle">시·도별 보급 대수·구성비</h4></div>
-        <p class="ds-chart-cap" id="spTableCap">선택한 차종 기준 · 17개 시·도 누적 보급 대수와 구성비. (헤더 클릭 정렬)</p>
-        <div class="ds-table-toggle">
-          <button type="button" id="supplyTableBtn" aria-expanded="false" aria-controls="supplyTableWrap"><span data-i18n="data.tbl.show">표로 보기</span></button>
-        </div>
-        <div id="supplyTableWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <!-- 지역 비교: 보급 대수·구성비 — 시각 표/토글 제거(ISS-026 리뷰), 데이터는 sr-only 표로 접근성 유지 -->
+        <div id="supplyTableWrap" class="sr-only">
           <table class="data-table" id="supplyTable" style="box-shadow:none;">
             <caption class="sr-only" data-i18n="data.sp.cap">지역별 무공해차 보급 현황 — 시·도, 보급 대수, 구성비</caption>
             <thead>
@@ -301,7 +300,6 @@
         <div class="ds-ranking-head">
           <div>
             <h3 data-i18n="data.if.h3">충전 인프라 현황</h3>
-            <p data-i18n="data.if.p">출력 구간별 충전기 보급 현황 (2026.04 기준)</p>
             <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="data.refresh.month">월 갱신</span></span>
           </div>
         </div>
@@ -325,12 +323,10 @@
 
         <!-- ② 시간대별 붐빔·한산 -->
         <div class="ds-combo-head"><h4 id="ifTimeTitle">시간대별 붐빔·한산 (24시간 이용 패턴)</h4></div>
-        <p class="ds-chart-cap" id="ifTimeCap"></p>
         <div class="ds-legend" id="ifTimeLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="ifTimeChart" role="img" aria-label="시간대별 충전 이용 패턴 차트"></div>
         <p class="ds-live-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="charging-find.html"><span id="ifTimeLinkTxt">실시간 혼잡·빈자리는 충전소 찾기에서 →</span></a></p>
-        <div class="ds-table-toggle"><button type="button" id="ifTimeTblBtn" aria-expanded="false" aria-controls="ifTimeTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button></div>
-        <div id="ifTimeTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="ifTimeTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="ifTimeTblCap">시간대별 충전 이용 밀도 — 시간대, 이용 밀도(상대 %)</caption>
             <thead><tr><th scope="col" id="ifTimeThHour">시간대</th><th scope="col" class="num" style="text-align:right;" id="ifTimeThVal">이용 밀도(상대)</th></tr></thead>
@@ -339,15 +335,13 @@
         </div>
 
         <!-- ③ 사업자별 보급 커버리지 (수량 = 선택지 폭) -->
-        <div class="ds-combo-head"><h4 id="ifCpoTitle">사업자별 충전기 보급 커버리지</h4></div>
-        <p class="ds-chart-cap" id="ifCpoCap"></p>
+        <div class="ds-combo-head"><h4 id="ifCpoTitle">사업자별 충전기 보유 현황</h4></div>
         <div class="ds-ranking-filter" style="margin:2px 0 8px;">
           <div class="dsf-grp"><label class="dsf-label" for="ifCpoRegion" id="ifCpoRegionLabel">지역</label><select id="ifCpoRegion"></select></div>
         </div>
-        <div class="ds-chart" id="ifCpoChart" role="img" aria-label="사업자별 충전기 수 막대그래프"></div>
+        <div class="ds-svg-wrap" id="ifCpoChart" role="img" aria-label="사업자별 충전기 보유 현황 막대그래프"></div>
         <p class="ds-live-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="charging-find.html"><span id="ifCpoLinkTxt">지도에서 사업자별 충전소 위치 보기 →</span></a></p>
-        <div class="ds-table-toggle"><button type="button" id="ifCpoTblBtn" aria-expanded="false" aria-controls="ifCpoTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button></div>
-        <div id="ifCpoTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="ifCpoTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="ifCpoTblCap">사업자별 충전기 수 — 사업자, 충전기 수</caption>
             <thead><tr><th scope="col" id="ifCpoThName">사업자</th><th scope="col" class="num" style="text-align:right;" id="ifCpoThCnt">충전기 수(기)</th></tr></thead>
@@ -355,28 +349,26 @@
           </table>
         </div>
 
-        <!-- ④ 우리 지역 급속 충전 여건 -->
+        <!-- ④ 지역별 충전기 출력 구성(완속·급속·초급속) -->
         <div class="ds-combo-head"><h4 id="ifFastTitle">우리 지역 급속 충전 여건</h4></div>
-        <p class="ds-chart-cap" id="ifFastCap"></p>
-        <div class="ds-chart" id="ifFastChart" role="img" aria-label="지역별 급속 충전기 비중 막대그래프"></div>
+        <div class="ds-legend" id="ifFastLegend" aria-hidden="true"></div>
+        <div class="ds-svg-wrap" id="ifFastChart" role="img" aria-label="지역별 충전기 출력 5밴드 막대그래프"></div>
+        <div class="if-tip" id="ifFastTip" role="status" hidden></div>
         <p class="ds-live-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="charging-find.html"><span id="ifFastLinkTxt">우리 동네 급속 충전소 위치·실시간 상태 보기 →</span></a></p>
-        <div class="ds-table-toggle"><button type="button" id="ifFastTblBtn" aria-expanded="false" aria-controls="ifFastTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button></div>
-        <div id="ifFastTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="ifFastTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
-            <caption class="sr-only" id="ifFastTblCap">지역별 급속 충전 여건 — 시·도, 급속 충전기 수, 급속 비중(%)</caption>
-            <thead><tr><th scope="col" id="ifFastThSido">시·도</th><th scope="col" class="num" style="text-align:right;" id="ifFastThCnt">급속(≥50kW) 수</th><th scope="col" class="num" style="text-align:right;" id="ifFastThPct">급속 비중(%)</th></tr></thead>
+            <caption class="sr-only" id="ifFastTblCap">지역별 충전기 출력 5밴드 — 시·도, 완속, 중속, 급속, 급속+, 초급속, 합계 충전기 수</caption>
+            <thead><tr><th scope="col" id="ifFastThSido">시·도</th><th scope="col" class="num" style="text-align:right;" id="ifFastThSlow">완속(기)</th><th scope="col" class="num" style="text-align:right;" id="ifFastThMid">중속(기)</th><th scope="col" class="num" style="text-align:right;" id="ifFastThRapid">급속(기)</th><th scope="col" class="num" style="text-align:right;" id="ifFastThPlus">급속+(기)</th><th scope="col" class="num" style="text-align:right;" id="ifFastThUltra">초급속(기)</th><th scope="col" class="num" style="text-align:right;" id="ifFastThTotal">합계(기)</th></tr></thead>
             <tbody id="ifFastRows"></tbody>
           </table>
         </div>
 
         <!-- ⑤ 충전기 설치 성장 추세 (soft) -->
         <div class="ds-combo-head"><h4 id="ifGrowTitle">충전기 설치 성장 추세</h4></div>
-        <p class="ds-chart-cap" id="ifGrowCap"></p>
         <div class="ds-legend" id="ifGrowLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="ifGrowChart" role="img" aria-label="연도별 충전기 설치 수와 누적 콤보 차트"></div>
         <p class="ds-live-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="charging-find.html"><span id="ifGrowLinkTxt">지금 이용 가능한 충전소는 충전소 찾기에서 →</span></a></p>
-        <div class="ds-table-toggle"><button type="button" id="ifGrowTblBtn" aria-expanded="false" aria-controls="ifGrowTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button></div>
-        <div id="ifGrowTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="ifGrowTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="ifGrowTblCap">연도별 충전기 설치 — 연도, 연간 설치 수, 누적 충전기 수</caption>
             <thead><tr><th scope="col" id="ifGrowThYear">연도</th><th scope="col" class="num" style="text-align:right;" id="ifGrowThNew">연간 설치(기)</th><th scope="col" class="num" style="text-align:right;" id="ifGrowThCum">누적(기)</th></tr></thead>
@@ -395,19 +387,16 @@
         <div class="ds-ranking-head">
           <div>
             <h3 id="h2Title">수소 충전 인프라</h3>
-            <p id="h2Lead">수소차 구매 전 — 우리 지역 수소충전소 유무·개소와 인프라 확충 추세를 확인합니다.</p>
             <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="data.refresh.month">월 갱신</span></span>
           </div>
         </div>
 
         <!-- H1 — 지역별 수소충전소 유무·개소 + 공백지역 -->
         <div class="ds-combo-head"><h4 id="h2MapTitle">지역별 수소충전소 유무·개소</h4></div>
-        <p class="ds-chart-cap" id="h2MapCap"></p>
         <div class="ds-legend" id="h2MapLegend" aria-hidden="true"></div>
-        <div class="h2-map" id="h2Map" role="img" aria-label="시·도별 수소충전소 분포 지도"></div>
+        <div class="ds-svg-wrap" id="h2Map" role="img" aria-label="시·도별 수소충전소 개소 막대그래프"></div>
         <p class="ds-live-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="charging-find.html"><span id="h2MapLinkTxt">실시간 수소충전소 가동 상태는 충전소 찾기에서 →</span></a></p>
-        <div class="ds-table-toggle"><button type="button" id="h2MapTblBtn" aria-expanded="false" aria-controls="h2MapTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button></div>
-        <div id="h2MapTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="h2MapTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="h2MapTblCap">시·도별 수소충전소 — 시·도, 수소충전소 개소, 최근접 충전소</caption>
             <thead><tr><th scope="col" id="h2MapThSido">시·도</th><th scope="col" class="num" style="text-align:right;" id="h2MapThCnt">수소충전소(개소)</th><th scope="col" id="h2MapThNear">최근접 충전소</th></tr></thead>
@@ -417,12 +406,10 @@
 
         <!-- H3 — 연도별 수소 인프라 확충 추세 -->
         <div class="ds-combo-head"><h4 id="h2GrowTitle">연도별 수소 인프라 확충 추세</h4></div>
-        <p class="ds-chart-cap" id="h2GrowCap"></p>
         <div class="ds-legend" id="h2GrowLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="h2GrowChart" role="img" aria-label="연도별 수소충전소 수와 수소차 등록 콤보 차트"></div>
         <p class="ds-live-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="charging-find.html"><span id="h2GrowLinkTxt">지금 이용 가능한 수소충전소는 충전소 찾기에서 →</span></a></p>
-        <div class="ds-table-toggle"><button type="button" id="h2GrowTblBtn" aria-expanded="false" aria-controls="h2GrowTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button></div>
-        <div id="h2GrowTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="h2GrowTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="h2GrowTblCap">연도별 수소 인프라 — 연도, 수소충전소 개소, 수소차 등록(대)</caption>
             <thead><tr><th scope="col" id="h2GrowThYear">연도</th><th scope="col" class="num" style="text-align:right;" id="h2GrowThSt">수소충전소(개소)</th><th scope="col" class="num" style="text-align:right;" id="h2GrowThCar">수소차 등록(대)</th></tr></thead>
@@ -436,7 +423,6 @@
         <div class="ds-ranking-head">
           <div>
             <h3 data-i18n="data.sb.h3">보조금 집행 현황</h3>
-            <p data-i18n="data.sb.p">2026년 누적 · 17개 시·도 · 243개 지자체 합계</p>
             <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="data.refresh.month">월 갱신</span></span>
           </div>
         </div>
@@ -446,31 +432,8 @@
           <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.rate">예산 대비 소진률</div><div class="stat-value"><span data-counter="66">0</span><span class="unit">%</span></div></div>
         </div>
 
-        <!-- [DEV] R2(시·도별 소진율 막대)는 #supply C(예산 잔여율=1−소진율)로 흡수·일원화(개편안 §2-5). 소진율 '수준'은 #supply(C+D) 담당 — 이 섹션은 반복 금지. -->
-
-        <!-- #4 전년 대비 집행 속도 (ISS-024 · '수준' 아닌 '속도(전년 동기 대비)') -->
-        <!-- [DEV] #4 전년 동기 대비 누적 집행 속도 = PS_BUDGET(공고예산)+PS_APPLY 지급분(PAY_DAY 월누적). 올해 YEAR vs 전년 YEAR 동월까지 누적 비교(psStat statMonthly/statPeriod). 접수 건수 축은 접수일자 확인 필요 → 지급일(PAY_DAY) 기준 권장. 신선도 검증계 한정·운영DB 정상. 소진율 절대수준은 표기하지 않음(#supply 담당). 인라인 SVG·수치 더미. -->
-        <div class="ds-combo-head"><h4 id="sbSpeedTitle">전년 대비 집행 속도</h4></div>
-        <p class="ds-chart-cap" id="sbSpeedCap"></p>
-        <div class="sb-speed-card up" id="sbSpeedCard" role="status"></div>
-        <div class="ds-legend" id="sbSpeedLegend" aria-hidden="true"></div>
-        <div class="ds-svg-wrap" id="sbSpeedChart" role="img" aria-label="전년 대비 보조금 집행 속도 라인 차트"></div>
-        <div class="ds-table-toggle">
-          <button type="button" id="sbSpeedTblBtn" aria-expanded="false" aria-controls="sbSpeedTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button>
-        </div>
-        <div id="sbSpeedTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
-          <table class="data-table" style="box-shadow:none;">
-            <caption class="sr-only" id="sbSpeedTblCap">월별 누적 집행액 — 월, 올해, 전년 동기</caption>
-            <thead><tr><th scope="col" id="sbSpeedThMonth">월</th><th scope="col" class="num" style="text-align:right;" id="sbSpeedThCur">올해 누적(조원)</th><th scope="col" class="num" style="text-align:right;" id="sbSpeedThPrev">전년 동기 누적(조원)</th></tr></thead>
-            <tbody id="sbSpeedRows"></tbody>
-          </table>
-        </div>
-
-        <!-- #2 계산기·지원대상 전환 CTA (새 데이터 없음 — 진입점 연결만) -->
-        <div class="sb-cta">
-          <a href="subsidy-info.html" class="btn btn-primary" id="sbCtaCalc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="12" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="12" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg><span>내 예상 보조금 계산하기</span></a>
-          <a href="subsidy-target.html" class="btn btn-secondary" id="sbCtaTarget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>지원 대상·신청 절차 보기</span></a>
-        </div>
+        <!-- [DEV] R2(시·도별 소진율 막대)는 #supply C(예산 잔여율=1−소진율)로 흡수·일원화(개편안 §2-5). 소진율 '수준'은 #supply(C+D) 담당.
+             [ISS-026 2차] '전년 대비 집행 속도'(라인+증감카드) 영역 및 계산기/지원대상 CTA 2버튼 삭제(사용자 확정) — 3카드 + 하단 2링크 유지. -->
         <p class="mt-4" style="font-size:13px;display:flex;gap:8px;flex-wrap:wrap;">
           <a href="#supply" class="btn btn-secondary btn-sm" style="text-decoration:none;"><span id="sbBurnLink">지역·월별 예산 잔여율 보기 →</span></a>
           <a href="subsidy-local.html" class="btn btn-secondary btn-sm" style="text-decoration:none;"><span data-i18n="data.sb.locallink">우리 지역 차량별 보조금 보기 →</span></a>
@@ -485,30 +448,21 @@
         <div class="ds-ranking-head">
           <div>
             <h3 id="kvTitle">K-EV100 전환 현황</h3>
-            <p id="kvLead">기업들도 무공해차로 전환 중 — 참여 기업과 도입 대수가 매년 늘고 있습니다.</p>
             <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span id="kvRefresh">연 갱신</span></span>
           </div>
         </div>
 
         <!-- 연도별 참여 기업(막대) + 전환 대수(선) -->
-        <p class="ds-chart-cap" id="kvCap"></p>
         <div class="ds-legend" id="kvLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="kvChart" role="img" aria-label="연도별 K-EV100 참여 기업 수와 전환 대수 콤보 차트"></div>
-        <div class="ds-table-toggle">
-          <button type="button" id="kvTblBtn" aria-expanded="false" aria-controls="kvTblWrap"><span data-i18n="data.tbl.show">표로 보기</span></button>
-        </div>
-        <div id="kvTblWrap" hidden style="overflow-x:auto;margin-top:10px;">
+        <div id="kvTblWrap" class="sr-only">
           <table class="data-table" style="box-shadow:none;">
             <caption class="sr-only" id="kvTblCap">연도별 K-EV100 — 연도, 참여 기업 수, 전환 대수</caption>
             <thead><tr><th scope="col" id="kvThYear">연도</th><th scope="col" class="num" style="text-align:right;" id="kvThFirms">참여 기업(개사)</th><th scope="col" class="num" style="text-align:right;" id="kvThCars">전환 대수(대)</th></tr></thead>
             <tbody id="kvRows"></tbody>
           </table>
         </div>
-
-        <!-- 대표 참여 기업 명단(참여 사실만 · 순위 아님) -->
-        <div class="ds-combo-head"><h4 id="kvFirmsTitle">대표 참여 기업</h4></div>
-        <p class="ds-chart-cap" id="kvFirmsCap">무공해차 전환에 참여 중인 기업입니다. (가나다순 · 참여 사실만 표기)</p>
-        <ul class="kv-firms" id="kvFirms" aria-label="대표 참여 기업 명단"></ul>
+        <!-- [ISS-026 2차] '대표 참여 기업' 칩 목록 삭제(사용자 확정) — 연도별 전환 추세 그래프만 유지 -->
       </div>
 
     </div>
@@ -518,7 +472,7 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260721a"></script>
+<script src="js/partials.js?v=20260721c"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260721a"></script>
 <script src="js/i18n-data.js?v=20260721b"></script>
@@ -808,18 +762,18 @@ function h2NearText(s){ const n=H2_NEAREST[s]; if(!n) return _isEn()?'—':'—'
 // H1 — 타일 지도 + 개소 + 공백지역 강조(색+패턴+텍스트) + 동등 표
 function renderH2Map(){
   const host=document.getElementById('h2Map'); if(!host) return;
-  const sidos=Object.keys(H2_STATIONS);
-  host.innerHTML=sidos.map(s=>{
-    const st=H2_STATIONS[s], zero=st===0, pos=H2_POS[s]||[7,6];
-    const ctTxt = zero ? (_isEn()?'None':'없음') : `${st}${_isEn()?'':'개소'}`;
-    const title = zero ? `${_trRegion(s)}: ${_isEn()?'no station':'수소충전소 없음'} (${h2NearText(s)})` : `${_trRegion(s)}: ${st}${_isEn()?' sites':'개소'}`;
-    return `<div class="h2-tile ${zero?'none':'has'}" style="grid-row:${pos[0]};grid-column:${pos[1]};" title="${title}"><span class="nm">${h2Short(s)}</span><span class="ct">${ctTxt}</span></div>`;
-  }).join('');
-  const zeros=sidos.filter(s=>H2_STATIONS[s]===0);
-  const sum=sidos.reduce((a,s)=>a+H2_STATIONS[s],0);
+  const rows=Object.keys(H2_STATIONS).map(s=>({ sido:s, st:H2_STATIONS[s] })).sort((a,b)=> b.st - a.st);
+  const max=Math.max.apply(null, rows.map(r=>r.st).concat([1]));
+  // 지역별 수소충전소 개소 가로 막대(④와 동일 폼) · 0개소 = 빨강 + '없음'(색+텍스트 병용)
+  host.innerHTML=svgHBars({
+    max, labelW:_isEn()?116:92, labelClip:_isEn()?15:10,
+    rows: rows.map(r=>({ label:_trRegion(r.sido), segs:[{v:r.st, fill:'#1aad6c'}], zero:r.st===0, valText: r.st===0 ? (_isEn()?'None':'없음') : (r.st+(_isEn()?'':'개소')) }))
+  });
+  const zeros=rows.filter(r=>r.st===0).map(r=>r.sido);
+  const sum=rows.reduce((a,r)=>a+r.st,0);
   host.setAttribute('aria-label', _isEn()
-    ? `Hydrogen station distribution by region. Total ${sum} sites. Regions with no station (${zeros.length}): ${zeros.length?zeros.map(s=>_trRegion(s)).join(', '):'none'}. See the data table for details.`
-    : `시·도별 수소충전소 분포. 총 ${sum}개소. 충전소 없는 지역 ${zeros.length}곳: ${zeros.length?zeros.map(s=>_trRegion(s)).join(', '):'없음'}. 상세는 데이터 표 참조.`);
+    ? `Hydrogen stations by region, bar chart. Total ${sum} sites. Regions with no station (${zeros.length}): ${zeros.length?zeros.map(s=>_trRegion(s)).join(', '):'none'}. See the data table for details.`
+    : `시·도별 수소충전소 개소 막대그래프. 총 ${sum}개소. 충전소 없는 지역 ${zeros.length}곳: ${zeros.length?zeros.map(s=>_trRegion(s)).join(', '):'없음'}. 상세는 데이터 표 참조.`);
   const cap=document.getElementById('h2MapCap');
   if(cap){
     const z=zeros[0];
@@ -828,11 +782,11 @@ function renderH2Map(){
       : `전국 수소충전소 ${sum}개소 · 공백 지역 ${zeros.length}곳${z?` (예: ${h2Short(z)} 없음 — 최근접 ${h2NearText(z)})`:''}. 수소차 구매 전 충전 동선을 확인하세요.`;
   }
   const el=document.getElementById('h2MapLegend');
-  if(el) el.innerHTML=`<span class="lg"><span class="sw" style="background:#eaf7f0;border:1px solid #bfe6d2;"></span>${_isEn()?'Has station(s)':'충전소 있음'}</span><span class="lg"><span class="sw" style="background:repeating-linear-gradient(45deg,#FDE2E1 0 4px,#f7c9c6 4px 8px);border:1px solid #C0392B;"></span>${_isEn()?'No station':'충전소 없음'}</span>`;
+  if(el) el.innerHTML=`<span class="lg"><span class="sw" style="background:#1aad6c;"></span>${_isEn()?'Stations (count)':'수소충전소 개소'}</span><span class="lg"><span class="sw" style="background:#fff;border-left:3px solid #C0392B;"></span>${_isEn()?'No station':'충전소 없음(0개소)'}</span>`;
   const tb=document.getElementById('h2MapRows');
-  if(tb) tb.innerHTML=sidos.slice().sort((a,b)=>H2_STATIONS[b]-H2_STATIONS[a]).map(s=>{
-    const st=H2_STATIONS[s], zero=st===0;
-    return `<tr><td style="font-weight:700;">${_trRegion(s)}</td><td class="num" style="text-align:right;">${zero?(_isEn()?'None':'없음'):st}</td><td>${zero?h2NearText(s):(_isEn()?'in region':'지역 내 보유')}</td></tr>`;
+  if(tb) tb.innerHTML=rows.map(r=>{
+    const st=r.st, zero=st===0;
+    return `<tr><td style="font-weight:700;">${_trRegion(r.sido)}</td><td class="num" style="text-align:right;">${zero?(_isEn()?'None':'없음'):st}</td><td>${zero?h2NearText(r.sido):(_isEn()?'in region':'지역 내 보유')}</td></tr>`;
   }).join('');
 }
 
@@ -888,6 +842,27 @@ function svgArea(cfg){
   const defs=`<defs><pattern id="areaHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><rect width="6" height="6" fill="rgba(26,173,108,0.10)"/><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(15,81,50,0.32)" stroke-width="1.4"/></pattern></defs>`;
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" style="height:auto;">${defs}${g}</svg>`;
 }
+// 일반 가로 막대 빌더(ISS-026 2차 · 트랙 채우기 없음) — 단일/누적 세그먼트 지원
+function clipLbl(s,n){ s=String(s==null?'':s); return s.length>n ? s.slice(0,n-1)+'…' : s; }
+function svgHBars(cfg){
+  const W=680, rowH=25, padT=6, padB=6, L=cfg.labelW||104, R=W-72;
+  const n=cfg.rows.length, H=padT+padB+n*rowH;
+  const scale=v=>(Math.max(0,v)/(cfg.max||1))*(R-L);
+  let g='<line x1="'+L+'" y1="'+padT+'" x2="'+L+'" y2="'+(H-padB)+'" stroke="#cbd5e1" stroke-width="1" aria-hidden="true"/>';
+  cfg.rows.forEach((r,i)=>{
+    const y=padT+i*rowH, bh=14, by=y+(rowH-bh)/2;
+    g+=`<text x="${L-8}" y="${(by+bh-3).toFixed(1)}" text-anchor="end" font-size="11.5" fill="#334155" aria-hidden="true">${clipLbl(r.label,cfg.labelClip||12)}</text>`;
+    let cx=L;
+    (r.segs||[]).forEach(s=>{ const w=scale(s.v); if(w>0.3){
+      if(s.tip){ g+=`<rect x="${cx.toFixed(1)}" y="${by}" width="${w.toFixed(1)}" height="${bh}" fill="${s.fill}" tabindex="0" role="img" aria-label="${s.tip}" data-tip="${s.tip}"><title>${s.tip}</title></rect>`; }
+      else { g+=`<rect x="${cx.toFixed(1)}" y="${by}" width="${w.toFixed(1)}" height="${bh}" fill="${s.fill}"/>`; }
+      cx+=w; } });
+    if(r.zero){ g+=`<rect x="${L}" y="${by}" width="3" height="${bh}" fill="#C0392B"/>`; cx=L+3; }
+    g+=`<text x="${(cx+7).toFixed(1)}" y="${(by+bh-3).toFixed(1)}" font-size="11" font-weight="${r.zero?'700':'400'}" fill="${r.zero?'#9B2C2C':'#475569'}" aria-hidden="true">${r.valText}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" style="height:auto;">${cfg.defs||''}${g}</svg>`;
+}
+
 function renderInfraTime(){
   const host=document.getElementById('ifTimeChart'); if(!host) return;
   const vals=IF_HOURLY, avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length), peakH=vals.indexOf(Math.max.apply(null,vals));
@@ -918,39 +893,81 @@ function renderInfraCpo(){
   const region=ifCpoState.region, rows=cpoRows(region);
   const max=Math.max.apply(null, rows.map(r=>r.cnt).concat([1]));
   const nm=n=>_isEn()?(CPO_EN[n]||n):n;
-  host.innerHTML=rows.map(r=>{ const w=Math.max(3,r.cnt/max*100); return `<div class="ds-chart-row"><span class="dcl" title="${nm(r.name)}">${nm(r.name)}</span><span class="ds-chart-track"><span class="ds-chart-bar" style="width:${w}%"></span></span><span class="ds-chart-val">${_num(r.cnt)}${_isEn()?'':'기'}</span></div>`; }).join('');
+  // 일반 가로 막대(단일 계열 — 색만으로 계열 구분하지 않음, 길이=수량)
+  host.innerHTML=svgHBars({
+    max, labelW:_isEn()?150:118, labelClip:_isEn()?20:12,
+    rows: rows.map(r=>({ label:nm(r.name), segs:[{v:r.cnt, fill:'#1aad6c'}], valText:_num(r.cnt)+(_isEn()?'':'기') }))
+  });
   const rn=region==='전국'?(_isEn()?'National':'전국'):_trRegion(region), top=rows[0];
   host.setAttribute('aria-label', _isEn()
     ? `${rn} charger count by operator bar chart. ${nm(top.name)} has the most at ${_num(top.cnt)}. By charger count — how wide your choice is.`
-    : `${rn} 사업자별 충전기 수 막대그래프. ${nm(top.name)}가 ${_num(top.cnt)}기로 가장 많음. 충전기 수(선택지 폭) 기준.`);
-  const cap=document.getElementById('ifCpoCap');
-  if(cap) cap.textContent=_isEn()
-    ? `${rn}: operators with more chargers give you a wider choice. Getting that operator's card/membership is handy. (By charger count.)`
-    : `${rn} — 충전기가 많은 사업자일수록 이용 선택지가 넓습니다. 자주 가는 지역에 많은 사업자 회원카드·멤버십을 챙기면 편리합니다. (충전기 수 기준)`;
+    : `${rn} 사업자별 충전기 보유 현황 막대그래프. ${nm(top.name)}가 ${_num(top.cnt)}기로 가장 많음. 충전기 수(선택지 폭) 기준.`);
+  const ttl=document.getElementById('ifCpoTitle'); if(ttl) ttl.textContent=_isEn()?'Charger count by operator':'사업자별 충전기 보유 현황';
   const tb=document.getElementById('ifCpoRows');
   if(tb) tb.innerHTML=rows.map(r=>`<tr><td style="font-weight:700;">${nm(r.name)}</td><td class="num" style="text-align:right;">${_num(r.cnt)}${_isEn()?'':'기'}</td></tr>`).join('');
 }
 
-// ④ 지역별 급속(≥50kW) 수·비중
+// ④ 지역별 × 출력 5밴드(완속<30 / 중속30~50 / 급속50~100 / 급속+100~200 / 초급속≥200) 충전기 수 — 누적 막대(색+해칭 패턴)
+//    ★밴드 정의 = charging-fee 페이지 5밴드와 동일. 원천 = CHGE_OUTPUT(EVCS_CHARGER_INFO/STATUS) 5구간. 값 더미.
 const FAST_PCT={ '경기도':16,'서울특별시':14,'인천광역시':18,'부산광역시':19,'제주특별자치도':27,'경상남도':20,'대구광역시':18,'충청남도':22,'경상북도':24,'강원특별자치도':26,'전라남도':25,'충청북도':21,'대전광역시':17,'전북특별자치도':23,'광주광역시':16,'울산광역시':19,'세종특별자치시':15 };
 const CHG_TOTAL=596368, NAT_FAST=58000+32000+14368;
+// 5밴드 색(연→진 그린 램프) — 중속·급속+는 해칭 패턴 병용(색 단독 금지)
+const IF_BANDS=[
+  { key:'slow',  ko:'완속 (30kW 미만)',   en:'Slow (<30kW)',       fill:'#C6EBD9', sw:'#C6EBD9' },
+  { key:'mid',   ko:'중속 (30~50kW)',     en:'Mid (30-50kW)',      fill:'url(#hbMid)',  sw:'repeating-linear-gradient(45deg,#86D6AE 0 3px,#4fae86 3px 5px)' },
+  { key:'rapid', ko:'급속 (50~100kW)',    en:'Rapid (50-100kW)',   fill:'#34B37D', sw:'#34B37D' },
+  { key:'plus',  ko:'급속+ (100~200kW)',  en:'Rapid+ (100-200kW)', fill:'url(#hbPlus)', sw:'repeating-linear-gradient(135deg,#1A8F5F 0 3px,#0d6b45 3px 5px)' },
+  { key:'ultra', ko:'초급속 (200kW 이상)', en:'Ultra (200kW+)',     fill:'#0B5C3B', sw:'#0B5C3B' }
+];
 function fastRows(){
-  return Object.keys(FAST_PCT).map(s=>{ const total=Math.round(CHG_TOTAL*(SUPPLY_TOT[s]||0)/NAT_CUM); return { sido:s, cnt:Math.round(total*FAST_PCT[s]/100), pct:FAST_PCT[s] }; }).sort((a,b)=>b.pct-a.pct);
+  return Object.keys(FAST_PCT).map(s=>{
+    const total=Math.round(CHG_TOTAL*(SUPPLY_TOT[s]||0)/NAT_CUM);
+    const fast=Math.round(total*FAST_PCT[s]/100);                 // ≥50kW
+    const ultra=Math.round(fast*0.15), plus=Math.round(fast*0.30), rapid=fast-ultra-plus;   // 초급속/급속+/급속
+    const below=total-fast, mid=Math.round(below*0.13), slow=below-mid;                       // 중속/완속
+    return { sido:s, slow, mid, rapid, plus, ultra, total, fastPct:FAST_PCT[s] };
+  }).sort((a,b)=> b.total - a.total);
 }
 function renderInfraFast(){
   const host=document.getElementById('ifFastChart'); if(!host) return;
-  const rows=fastRows(), max=Math.max.apply(null, rows.map(r=>r.pct).concat([1]));
-  host.innerHTML=rows.map(r=>{ const w=Math.max(3,r.pct/max*100); return `<div class="ds-chart-row"><span class="dcl">${_trRegion(r.sido)}</span><span class="ds-chart-track"><span class="ds-chart-bar" style="width:${w}%"></span></span><span class="ds-chart-val">${r.pct}% <span class="sub">(${_num(r.cnt)}${_isEn()?'':'기'})</span></span></div>`; }).join('');
+  const rows=fastRows(), max=Math.max.apply(null, rows.map(r=>r.total).concat([1]));
+  const defs='<defs>'
+    +'<pattern id="hbMid" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="#86D6AE"/><line x1="0" y1="0" x2="0" y2="5" stroke="#3f9d76" stroke-width="2.2"/></pattern>'
+    +'<pattern id="hbPlus" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><rect width="5" height="5" fill="#1A8F5F"/><line x1="0" y1="0" x2="0" y2="5" stroke="#0a5738" stroke-width="2.2"/></pattern>'
+    +'</defs>';
+  host.innerHTML=svgHBars({
+    max, labelW:_isEn()?116:92, labelClip:_isEn()?15:10, defs,
+    rows: rows.map(r=>({
+      label:_trRegion(r.sido),
+      segs: IF_BANDS.map(b=>{
+        const v=r[b.key], pct = r.total? Math.round(v/r.total*1000)/10 : 0;
+        return { v, fill:b.fill, tip: `${_trRegion(r.sido)} · ${_isEn()?b.en:b.ko} · ${_num(v)}${_isEn()?'':'기'} (${pct}%)` };
+      }),
+      valText:_num(r.total)+(_isEn()?'':'기')
+    }))
+  });
+  // 세그먼트 hover/포커스 시 툴팁(밴드명·개수·비중) — 시각 툴팁 + rect aria-label(SR)
+  var tip=document.getElementById('ifFastTip');
+  if(tip){
+    var showTip=function(el){ tip.textContent=el.getAttribute('data-tip'); tip.hidden=false; var rc=el.getBoundingClientRect(); tip.style.left=(rc.left+rc.width/2)+'px'; tip.style.top=rc.top+'px'; tip.classList.add('show'); };
+    var hideTip=function(){ tip.classList.remove('show'); tip.hidden=true; };
+    [].slice.call(host.querySelectorAll('rect[data-tip]')).forEach(function(el){
+      el.addEventListener('mouseenter', function(){ showTip(el); });
+      el.addEventListener('mouseleave', hideTip);
+      el.addEventListener('focus', function(){ showTip(el); });
+      el.addEventListener('blur', hideTip);
+    });
+  }
   const natPct=Math.round(NAT_FAST/CHG_TOTAL*100), top=rows[0];
   host.setAttribute('aria-label', _isEn()
-    ? `Fast charger (50kW+) share by region bar chart. National average ${natPct}%. ${_trRegion(top.sido)} highest at ${top.pct}%.`
-    : `지역별 급속(50kW 이상) 충전기 비중 막대그래프. 전국 평균 ${natPct}%. ${top.sido} ${top.pct}%로 가장 높음.`);
-  const cap=document.getElementById('ifFastCap');
-  if(cap) cap.textContent=_isEn()
-    ? `Share of fast chargers (50kW+) by region — check whether your area is ready for quick top-ups. National average about ${natPct}%.`
-    : `지역별 급속(50kW 이상) 충전기 수·비중 — 급할 때 빠른 충전이 되는 지역인지 확인하세요. 전국 평균 약 ${natPct}%.`;
+    ? `Chargers by region and output band (slow <30, mid 30-50, rapid 50-100, rapid+ 100-200, ultra 200kW+), stacked bars. National fast (50kW+) share ${natPct}%. ${_trRegion(top.sido)} has the most chargers. Hover or focus a segment for its count; full band counts in the data table.`
+    : `지역별 출력 5밴드(완속<30·중속30~50·급속50~100·급속+100~200·초급속≥200 kW) 누적 막대그래프. 전국 급속(≥50kW) 비중 ${natPct}%. ${top.sido} 충전기 최다. 세그먼트에 마우스·포커스 시 개수 표시, 밴드별 전체 개수는 데이터 표 참조.`);
   const tb=document.getElementById('ifFastRows');
-  if(tb) tb.innerHTML=rows.map(r=>`<tr><td style="font-weight:700;">${_trRegion(r.sido)}</td><td class="num" style="text-align:right;">${_num(r.cnt)}</td><td class="num" style="text-align:right;">${r.pct}%</td></tr>`).join('');
+  if(tb) tb.innerHTML=rows.map(r=>`<tr><td style="font-weight:700;">${_trRegion(r.sido)}</td>`
+    + IF_BANDS.map(b=>`<td class="num" style="text-align:right;">${_num(r[b.key])}</td>`).join('')
+    + `<td class="num" style="text-align:right;font-weight:700;">${_num(r.total)}</td></tr>`).join('');
+  const el=document.getElementById('ifFastLegend');
+  if(el) el.innerHTML=IF_BANDS.map(b=>`<span class="lg"><span class="sw" style="background:${b.sw};border:1px solid #4a8f6d;"></span>${_isEn()?b.en:b.ko}</span>`).join('');
 }
 
 // ⑤ 연도별 설치 추세 (막대+누적 선) — svgCombo 재사용
@@ -983,13 +1000,13 @@ function renderInfraGrow(){
 function setInfraStatics(){
   const t=(id,ko,en)=>{ const e=document.getElementById(id); if(e) e.textContent=_isEn()?en:ko; };
   t('ifTimeTitle','시간대별 붐빔·한산 (24시간 이용 패턴)','Busy vs quiet by hour (24-hour usage)');
-  t('ifCpoTitle','사업자별 충전기 보급 커버리지','Charger coverage by operator');
+  t('ifCpoTitle','사업자별 충전기 보유 현황','Charger count by operator');
   t('ifCpoRegionLabel','지역','Region');
   t('ifFastTitle','우리 지역 급속 충전 여건','Fast-charging readiness in your area');
   t('ifGrowTitle','충전기 설치 성장 추세','Charger installation growth');
   t('ifTimeThHour','시간대','Hour'); t('ifTimeThVal','이용 밀도(상대)','Usage density (rel.)');
   t('ifCpoThName','사업자','Operator'); t('ifCpoThCnt','충전기 수(기)','Chargers (units)');
-  t('ifFastThSido','시·도','Region'); t('ifFastThCnt','급속(≥50kW) 수','Fast (50kW+) count'); t('ifFastThPct','급속 비중(%)','Fast share (%)');
+  t('ifFastThSido','시·도','Region'); t('ifFastThSlow','완속(기)','Slow (units)'); t('ifFastThMid','중속(기)','Mid (units)'); t('ifFastThRapid','급속(기)','Rapid (units)'); t('ifFastThPlus','급속+(기)','Rapid+ (units)'); t('ifFastThUltra','초급속(기)','Ultra (units)'); t('ifFastThTotal','합계(기)','Total (units)');
   t('ifGrowThYear','연도','Year'); t('ifGrowThNew','연간 설치(기)','Yearly installs'); t('ifGrowThCum','누적(기)','Cumulative');
   t('ifTimeLinkTxt','실시간 혼잡·빈자리는 충전소 찾기에서 →','Live congestion & availability in Find a Charger →');
   t('ifCpoLinkTxt','지도에서 사업자별 충전소 위치 보기 →','See operator locations on the map →');
@@ -1006,67 +1023,10 @@ function renderInfraAll(){ setInfraStatics(); fillCpoRegions(); renderInfraTime(
   const rg=document.getElementById('ifCpoRegion'); if(rg) rg.addEventListener('change',()=>{ ifCpoState.region=rg.value; renderInfraCpo(); });
 })();
 
-/* ══════════ #subsidy #4 전년 대비 집행 속도 (ISS-024) — 더미 ══════════ */
-const SB_LAST=9;   // 올해 데이터 최신월(더미)
-const SB_PREV_CUM=[0.19,0.39,0.61,0.85,1.08,1.30,1.47,1.55,1.61,2.05,2.43,2.78];  // 전년(2025) 1~12월 누적 집행(조원)
-const SB_CUR_CUM =[0.25,0.51,0.79,1.07,1.33,1.51,1.66,1.76,1.84,null,null,null];   // 올해(2026) 1~9월 누적(조원)
-// 인라인 SVG 2-라인 빌더(실선/점선 = 색+패턴 병용)
-function svgLines(cfg){
-  const W=720,H=228,L=52,R=700,T=22,B=186;
-  const n=cfg.cats.length, band=(R-L)/(n-1);
-  const x=i=>L+band*i, y=v=>B-(Math.max(0,v)/cfg.yMax)*(B-T);
-  let g='';
-  cfg.ticks.forEach(t=>{ const yy=y(t); g+=`<line x1="${L}" y1="${yy.toFixed(1)}" x2="${R}" y2="${yy.toFixed(1)}" stroke="#e8edf2" aria-hidden="true"/><text x="${L-7}" y="${(yy+4).toFixed(1)}" text-anchor="end" font-size="11" fill="#475569" aria-hidden="true">${cfg.yFmt(t)}</text>`; });
-  cfg.series.forEach(s=>{
-    const pts=s.vals.map((v,i)=> v==null?null:`${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(' ');
-    g+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" ${s.dashed?'stroke-dasharray="6 4"':''} stroke-linejoin="round" aria-hidden="true"/>`;
-    s.vals.forEach((v,i)=>{ if(v!=null) g+=`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.6" fill="${s.color}" aria-hidden="true"/>`; });
-  });
-  cfg.cats.forEach((c,i)=>{ g+=`<text x="${x(i).toFixed(1)}" y="${B+16}" text-anchor="middle" font-size="10.5" fill="#334155" aria-hidden="true">${c}</text>`; });
-  g+=`<text x="${L}" y="14" font-size="10.5" fill="#64748b" aria-hidden="true">${cfg.leftUnit}</text>`;
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" style="height:auto;">${g}</svg>`;
-}
-function renderSubsidySpeed(){
-  const host=document.getElementById('sbSpeedChart'); if(!host) return;
-  const cats=MONTHS(), yFmt=t=>_isEn()?`${t}T`:`${t}조`;
-  host.innerHTML=svgLines({
-    cats, yMax:3, ticks:[0,1,2,3], yFmt, leftUnit:_isEn()?'Cumulative (T KRW)':'누적(조원)',
-    series:[
-      { vals:SB_CUR_CUM, color:'#0f5132', dashed:false },
-      { vals:SB_PREV_CUM, color:'#64748b', dashed:true }
-    ]
-  });
-  const cur=SB_CUR_CUM[SB_LAST-1], prev=SB_PREV_CUM[SB_LAST-1];
-  const pct=Math.round((cur-prev)/prev*1000)/10, faster=cur>=prev;
-  const mLabel=_isEn()?`month ${SB_LAST}`:`${SB_LAST}월`;
-  host.setAttribute('aria-label', _isEn()
-    ? `Cumulative subsidy spend by month. This year (solid) vs same period last year (dashed). By ${mLabel}, this year ${cur} trillion won vs last year ${prev} — ${Math.abs(pct)}% ${faster?'faster':'slower'}.`
-    : `월별 누적 보조금 집행액 라인. 올해(실선)와 전년 동기(점선) 비교. ${mLabel} 기준 올해 ${cur}조원, 전년 ${prev}조원 — 전년 동기 대비 ${Math.abs(pct)}% ${faster?'빠름':'느림'}.`);
-  const card=document.getElementById('sbSpeedCard');
-  if(card){
-    card.className='sb-speed-card '+(faster?'up':'down');
-    card.innerHTML=`<span class="ar" aria-hidden="true">${faster?'▲':'▼'}</span><span>${_isEn()?`${Math.abs(pct)}% ${faster?'faster':'slower'} than last year`:`전년 동기 대비 ${Math.abs(pct)}% ${faster?'빠름':'느림'}`}</span><span class="sub">${_isEn()?`(by ${mLabel}: ${cur}T vs ${prev}T)`:`(${mLabel} 누적 올해 ${cur}조 vs 전년 ${prev}조)`}</span>`;
-  }
-  const cap=document.getElementById('sbSpeedCap');
-  if(cap) cap.textContent=_isEn()
-    ? `Compares the pace of spend against the same period last year. If this year is faster than last, applying sooner is safer.`
-    : `예산 집행 '속도'를 전년 같은 기간과 비교합니다. 올해가 작년 이맘때보다 빠르면 신청을 서두르는 편이 안전합니다.`;
-  const tb=document.getElementById('sbSpeedRows');
-  if(tb) tb.innerHTML=cats.map((c,i)=>`<tr><td style="font-weight:700;">${c}</td><td class="num" style="text-align:right;">${SB_CUR_CUM[i]==null?'—':SB_CUR_CUM[i]+(_isEn()?'':'조')}</td><td class="num" style="text-align:right;">${SB_PREV_CUM[i]+(_isEn()?'':'조')}</td></tr>`).join('');
-  const el=document.getElementById('sbSpeedLegend');
-  if(el) el.innerHTML=`<span class="lg"><span class="sw sw-line"></span>${_isEn()?'This year (cumulative)':'올해 누적'}</span><span class="lg"><span class="sw" style="width:20px;height:0;border-top:2px dashed #64748b;"></span>${_isEn()?'Same period last year':'전년 동기'}</span>`;
-  const t=(id,ko,en)=>{ const e=document.getElementById(id); if(e) e.textContent=_isEn()?en:ko; };
-  t('sbSpeedTitle','전년 대비 집행 속도','Spend pace vs last year');
-  t('sbSpeedThMonth','월','Month'); t('sbSpeedThCur','올해 누적(조원)','This year (T KRW)'); t('sbSpeedThPrev','전년 동기 누적(조원)','Last year (T KRW)');
-  const calc=document.querySelector('#sbCtaCalc span'); if(calc) calc.textContent=_isEn()?'Estimate my subsidy':'내 예상 보조금 계산하기';
-  const tgt=document.querySelector('#sbCtaTarget span'); if(tgt) tgt.textContent=_isEn()?'Eligibility & how to apply':'지원 대상·신청 절차 보기';
-}
 
 /* ══════════ K-EV100(#k100) A안 그래프화 (ISS-025) — 전부 더미 ══════════ */
 const K_FIRMS=[42,88,150,235,330,430,490,524];         // 연도별 참여 기업 수(2019~2026)
 const K_CARS =[1200,4800,11000,20000,31000,44000,57000,68000];  // 연도별 전환(도입) 누적 대수
-const K_FIRM_NAMES_KO=['가온물류','그린모빌리티','누리텔레콤','대한유통','동해물산','미래에너지','세종제약','아름드리식품','청우건설','한빛전자'];  // 더미명(가나다순)
-const K_FIRM_NAMES_EN=['Gaon Logistics','Green Mobility','Nuri Telecom','Daehan Retail','Donghae Corp','Mirae Energy','Sejong Pharma','Areumdri Foods','Cheongwoo E&C','Hanbit Electronics'];
 function renderK100(){
   const host=document.getElementById('kvChart'); if(!host) return;
   const cats=D_YEARS.map(String);
@@ -1083,18 +1043,11 @@ function renderK100(){
   if(tb) tb.innerHTML=D_YEARS.map((y,i)=>`<tr><td style="font-weight:700;">${y}${_isEn()?'':'년'}</td><td class="num" style="text-align:right;">${_num(K_FIRMS[i])}</td><td class="num" style="text-align:right;">${_num(K_CARS[i])}</td></tr>`).join('');
   const el=document.getElementById('kvLegend');
   if(el) el.innerHTML=`<span class="lg"><span class="sw sw-line"></span>${_isEn()?'Adopted vehicles (cum., left)':'전환 대수 (누적, 좌축)'}</span><span class="lg"><span class="sw sw-hatch"></span>${_isEn()?'Participating firms (right)':'참여 기업 (개사, 우축)'}</span>`;
-  const names=_isEn()?K_FIRM_NAMES_EN:K_FIRM_NAMES_KO;
-  const fl=document.getElementById('kvFirms');
-  if(fl) fl.innerHTML=names.map(n=>`<li><span class="kv-ini" aria-hidden="true">${esc2(n.trim().charAt(0))}</span>${esc2(n)}</li>`).join('');
   const t=(id,ko,en)=>{ const e=document.getElementById(id); if(e) e.textContent=_isEn()?en:ko; };
   t('kvTitle','K-EV100 전환 현황','K-EV100 conversion status');
-  t('kvLead','기업들도 무공해차로 전환 중 — 참여 기업과 도입 대수가 매년 늘고 있습니다.','Companies are switching to zero-emission too — participating firms and adopted vehicles grow every year.');
   t('kvRefresh','연 갱신','Yearly update');
-  t('kvFirmsTitle','대표 참여 기업','Representative participating firms');
-  t('kvFirmsCap','무공해차 전환에 참여 중인 기업입니다. (가나다순 · 참여 사실만 표기)','Firms taking part in zero-emission conversion. (Alphabetical · participation only)');
   t('kvThYear','연도','Year'); t('kvThFirms','참여 기업(개사)','Firms'); t('kvThCars','전환 대수(대)','Vehicles');
 }
-function esc2(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
 // ── '표로 보기' 토글 (aria-expanded 동기화) ──
 function wireTableToggle(btnId){
@@ -1117,7 +1070,6 @@ wireTableToggle('ifFastTblBtn');
 wireTableToggle('ifGrowTblBtn');
 wireTableToggle('h2MapTblBtn');
 wireTableToggle('h2GrowTblBtn');
-wireTableToggle('sbSpeedTblBtn');
 wireTableToggle('kvTblBtn');
 // [DEV] 엑셀 = 차종별 등록 집계(EV_CAR·H2_CAR) 시도 롤업 · SheetJS · 더미
 function spSupplyExcel(){
@@ -1142,11 +1094,44 @@ function spSupplyExcel(){
 renderSupplyAll();
 renderInfraAll();
 renderH2All();
-renderSubsidySpeed();
 renderK100();
+// ── 상단 KPI = 카드 아래 별도 '이동' 버튼 (ISS-026 리뷰) — 진짜 <a>·키보드·포커스·reduced-motion 스무스 스크롤 ──
+(function kpiNav(){
+  const btns = [].slice.call(document.querySelectorAll('.ds-nav-btn'));
+  if (!btns.length) return;
+  const reduce = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NAV = {
+    '#supply':  { aria:{ko:'무공해차 보급 현황으로 이동', en:'Go to zero-emission adoption'},        txt:{ko:'보급 현황 보기',   en:'View adoption'} },
+    '#infra':   { aria:{ko:'전기 충전 인프라로 이동',       en:'Go to EV charging infrastructure'},   txt:{ko:'충전 인프라 보기', en:'View infrastructure'} },
+    '#h2':      { aria:{ko:'수소충전소 현황으로 이동',       en:'Go to hydrogen stations'},           txt:{ko:'수소충전소 보기', en:'View H2 stations'} },
+    '#subsidy': { aria:{ko:'보조금 집행 현황으로 이동',      en:'Go to subsidy execution'},           txt:{ko:'집행 현황 보기',   en:'View execution'} },
+    '#k100':    { aria:{ko:'K-EV100 참여 현황으로 이동',     en:'Go to K-EV100 participation'},        txt:{ko:'K-EV100 보기',    en:'View K-EV100'} }
+  };
+  btns.forEach(a => a.addEventListener('click', function(e){
+    const id = a.getAttribute('href'); if (!id || id.charAt(0) !== '#') return;
+    const t = document.querySelector(id); if (!t) return;
+    e.preventDefault();
+    t.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth', block: 'start' });   // scroll-margin-top으로 타이틀 노출
+    if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex','-1');   // 키보드·스크린리더 위치 이동
+    t.focus({ preventScroll: true });
+    try { history.replaceState(null, '', id); } catch(_){}
+  }));
+  function setNav(){
+    btns.forEach(a => {
+      const m = NAV[a.getAttribute('href')]; if (!m) return;
+      a.setAttribute('aria-label', _isEn()?m.aria.en:m.aria.ko);
+      const tx = a.querySelector('.nb-txt'); if (tx) tx.textContent = _isEn()?m.txt.en:m.txt.ko;
+    });
+    const sub = document.getElementById('kpiSubLbl'); if (sub) sub.textContent = _isEn()?'Subsidy execution rate':'보조금 집행률';
+    const subD = document.getElementById('kpiSubDelta'); if (subD) subD.textContent = _isEn()?'₩1.84T executed this year':'올해 1.84조원 집행';
+  }
+  setNav();
+  window.addEventListener('langChange', setNav);
+})();
+
 // 언어 전환 시 동적 데이터 재렌더
 window.addEventListener('langChange', () => {
-  try { renderSupplyAll(); renderInfraAll(); renderH2All(); renderSubsidySpeed(); renderK100(); } catch(e){}
+  try { renderSupplyAll(); renderInfraAll(); renderH2All(); renderK100(); } catch(e){}
 });
 </script>
 </body>

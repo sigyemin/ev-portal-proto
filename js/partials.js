@@ -198,7 +198,6 @@
                     <ul>
                       <li><a href="charging-card.html?tab=mycard" data-i18n="mega.charging.card.list">내 회원카드</a></li>
                       <li><a href="charging-card.html?tab=history" data-i18n="mega.charging.card.history">충전요금 조회</a></li>
-                      <li><a href="charging-card.html?tab=point" data-i18n="mega.charging.card.point">충전 포인트</a></li>
                     </ul>
                   </div>
                   <div class="mega-col">
@@ -380,7 +379,7 @@
     { tKey: 'nav.charging', cols: [
       { tKey: 'mega.charging.find', items: [['통합 지도 (전기+수소)','charging-find.html?tab=map','mega.charging.find.map'],['내 주변 충전소','charging-find.html?tab=near','mega.charging.find.near']] },
       { tKey: 'mega.charging.fee', items: [['전기차 충전요금 안내','charging-fee.html?tab=ev','mega.charging.fee.ev'],['수소차 충전요금 안내','charging-fee-h2.html','mega.charging.fee.h2'],['내 충전요금 시뮬레이터','charging-fee-simulator.html','mega.charging.fee.sim']] },
-      { tKey: 'mega.charging.card', items: [['내 회원카드','charging-card.html?tab=mycard','mega.charging.card.list'],['충전요금 조회','charging-card.html?tab=history','mega.charging.card.history'],['충전 포인트','charging-card.html?tab=point','mega.charging.card.point']] },
+      { tKey: 'mega.charging.card', items: [['내 회원카드','charging-card.html?tab=mycard','mega.charging.card.list'],['충전요금 조회','charging-card.html?tab=history','mega.charging.card.history']] },
       { tKey: 'mega.charging.install', items: [['공용 완속충전시설 직접신청','charging-install-slow.html','mega.charging.install.slow'],['공용 완속/급속·중속 충전시설 운영사·제조사 공모 신청','charging-install-contest.html','mega.charging.install.contest'],['지역별 무공해차 전환 브랜드 사업 공모 신청','charging-install-brand.html','mega.charging.install.brand'],['지역별 무공해차 전환 브랜드 사업 (BSS) 공모 신청','charging-install-moto.html','mega.charging.install.moto'],['완속충전기 제품 안내','charging-install-products.html','mega.charging.install.products']] },
       { tKey: 'mega.charging.h2', items: [['수소충전소 장애 신고','charging-help.html?tab=report','mega.charging.h2.report'],['운영 현황 안내','charging-help.html?tab=status','mega.charging.h2.status']] },
     ]},
