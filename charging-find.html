@@ -386,9 +386,9 @@
 
             <!-- 전기차 전용 -->
             <div class="form-group ev-only" style="margin:0; flex:1 1 150px;">
-              <label class="form-label" for="cf-category">충전소 분류</label>
+              <label class="form-label" for="cf-category">충전기 출력</label>
               <select class="form-select" id="cf-category">
-                <option>전체</option><option>공공시설</option><option>주차시설</option><option>휴게시설</option><option>관광시설</option><option>상업시설</option><option>차량정비시설</option><option>공동주택시설</option><option>근린생활시설</option><option>교육문화시설</option><option>기타시설</option>
+                <option value="all">전체</option><option value="slow">완속 (30kW 미만)</option><option value="mid">중속 (30~50kW)</option><option value="fast">급속 (50~100kW)</option><option value="fastp">급속+ (100~200kW)</option><option value="ultra">초급속 (200kW 이상)</option>
               </select>
             </div>
             <div class="form-group ev-only" style="margin:0; flex:1 1 150px;">
@@ -749,9 +749,9 @@
             </div>
             <!-- 전기차 필터 -->
             <div class="form-group near-ev-only">
-              <label class="form-label">충전소 분류</label>
+              <label class="form-label">충전기 출력</label>
               <select class="form-select">
-                <option>전체</option><option>공공시설</option><option>주차시설</option><option>휴게시설</option><option>관광시설</option><option>상업시설</option><option>차량정비시설</option><option>공동주택시설</option><option>근린생활시설</option><option>교육문화시설</option><option>기타시설</option>
+                <option value="all">전체</option><option value="slow">완속 (30kW 미만)</option><option value="mid">중속 (30~50kW)</option><option value="fast">급속 (50~100kW)</option><option value="fastp">급속+ (100~200kW)</option><option value="ultra">초급속 (200kW 이상)</option>
               </select>
             </div>
             <div class="form-group near-ev-only">
@@ -1068,6 +1068,10 @@
       setTimeout(() => { const g = opSel.closest('.form-group'); if (g) g.style.outline = ''; }, 2400);
     }
   }
+
+  // 충전기 출력 필터(ISS-030) — 선택 밴드로 지도 마커 실시간 필터 · 전기 전용(수소는 압력 필터 별도)
+  var catSel = document.getElementById('cf-category');
+  if (catSel) catSel.addEventListener('change', function(){ __outBand = this.value || 'all'; renderMap(); });
 
   // 충전소 상세 드로어
   const drawer = document.getElementById('stationDrawer');
@@ -1472,6 +1476,9 @@
   //  [DEV] 마커 상태 = EVCS_CHARGER_STATUS(5종), 출력 티어 = CHGE_OUTPUT, CPO = BID/R_BUSI.BNM(약칭 폴백).
   //  LOD: 축소=클러스터만 / 중간=상태색 핀(CPO 생략) / 확대=핀 확대+CPO 마크. VWorld는 클러스터 내장 약함 → Supercluster 검토.
   var __currentMode = 'ev', __lod = 'status';   // 'cluster' | 'status' | 'cpo'
+  var __outBand = 'all';   // 충전기 출력 필터(ISS-030): all·slow·mid·fast·fastp·ultra (bandOfKw 키 동일) · 전기 전용
+  // 선택 밴드의 충전기를 1기라도 보유한 충전소만 통과(수소는 출력 개념 없어 필터 무관 — 항상 통과)
+  function stationHasBand(id){ return chargersOf(id).some(function(c){ return c.band===__outBand; }); }
   var LODS = ['cluster', 'status', 'cpo'];
   // [DEV] 출력 = EVCS_CHARGER_STATUS.CHGE_OUTPUT 5밴드 집계(충전소 max) · 사이트 전역 5밴드 표준 정합.
   //   AS-IS 4티어(50kW·완속/100/200/350)는 완속·급속 혼합 구간이라 미계승 → 5밴드로 구간 정련.
@@ -1551,7 +1558,7 @@
   function renderMap(){
     if(!mapWrap) return;
     mapWrap.className = 'map-clusters lod-'+__lod;
-    var pts = MARKERS.filter(function(m){ return m.type === __currentMode; });
+    var pts = MARKERS.filter(function(m){ return m.type === __currentMode && (m.type==='h2' || __outBand==='all' || stationHasBand(m.id)); });
     if(__lod === 'cluster'){
       // 축소 → 클러스터만(숫자만, AS-IS 동일). ★숫자 = 그룹 내 충전소 개수(충전기 대수 아님). 단독 지점도 카운트 원으로 집계
       var groups = clusterBy(pts, 42);
