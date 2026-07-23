@@ -62,8 +62,8 @@
     'data.tbl.hide':           { ko: '표 숨기기',             en: 'Hide table' },
 
     /* 지역별 보급 (R1) */
-    'data.sp.h3':              { ko: '지역별 무공해차 보급 현황',
-                                 en: 'ZEV Adoption by Region' },
+    'data.sp.h3':              { ko: '지역별 무공해차 보조금 지원 현황',
+                                 en: 'ZEV Subsidy Support by Region' },
     'data.sp.p':               { ko: '시·도별 무공해차 누적 등록 현황 · 차종 선택 조회 · 2026년 3월 말 기준',
                                  en: 'Cumulative ZEV registrations by region · filter by vehicle type · as of end-March 2026' },
     'data.refresh.5min':       { ko: '5분 주기 갱신',           en: 'Updated every 5 min' },
@@ -79,8 +79,8 @@
     'data.sp.th.sido':         { ko: '시·도',                en: 'Region' },
     'data.sp.th.pct':          { ko: '구성비',                en: 'Share' },
     'data.sp.th.ratio':        { ko: '충전기 1기당',           en: 'Per charger' },
-    'data.sp.cap':             { ko: '지역별 무공해차 보급 현황 — 시·도, 보급 대수, 구성비',
-                                 en: 'ZEV adoption by region — region, registrations, share' },
+    'data.sp.cap':             { ko: '지역별 무공해차 보조금 지원 현황 — 시·도, 지원 대수, 구성비',
+                                 en: 'ZEV subsidy support by region — region, subsidized, share' },
     'data.refresh.month':      { ko: '월 갱신',               en: 'Updated monthly' },
     'data.sp.f.h2':            { ko: '수소차',               en: 'FCEV' },
     'data.sp.f.y26':           { ko: '2026년 누적',           en: '2026 Cumulative' },

@@ -735,6 +735,12 @@
         .fd-demo-seg button[aria-pressed="true"]{background:#F59E0B;color:#fff;border-color:#F59E0B;}
         .fd-demo-seg button:focus-visible{outline:2px solid #B45309;outline-offset:2px;}
         .fd-demo-desc{flex-basis:100%;font-size:12px;color:#92400E;margin-top:2px;}
+        /* [ISS-028] '안내가' 배지 = 펼침/접힘 토글 · 상태 아이콘 강조 */
+        .fee-badge::after{ content:'⌄'; margin-left:5px; font-size:14px; font-weight:900; line-height:1; display:inline-block; transition:transform .15s ease; }
+        .fee-badge[aria-expanded="true"]::after{ transform:translateY(-1px) rotate(0deg); }
+        .fee-badge[aria-expanded="false"]::after{ transform:rotate(-90deg); }   /* 접힘 = ▸(펼치기) */
+        .fee-badge[aria-expanded="true"]{ background:#FDE68A; border-color:#F59E0B; box-shadow:0 0 0 2px rgba(245,158,11,.28); }
+        @media (prefers-reduced-motion: reduce){ .fee-badge::after{ transition:none; } }
         .fd-disc{margin:0 0 16px;border:1px solid #FDE68A;border-left:4px solid #F59E0B;background:#FFFBEB;border-radius:10px;padding:12px 16px;color:#92400E;}
         .fd-disc[hidden]{display:none;}
         .fd-disc-row{display:flex;align-items:flex-start;gap:10px;}
@@ -1799,11 +1805,12 @@
   var seg=document.getElementById('fdSeg'), desc=document.getElementById('fdDesc');
   var mV2=document.getElementById('fdModalV2'), mV4=document.getElementById('fdModalV4');
   if(!seg||!zone) return;
+  var V3KEY='evax.feeV3Confirmed';   // V3 블러 '방문 1회' 세션 기억
   var reduce=function(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
   var DESC={
-    '1':'가격 리스트의 노랑 ‘안내가’ 배지가 기본 펼쳐진 상태(고지 노출) · 클릭하면 배지로 접힘(다시 펼침 가능)',
+    '1':'가격 리스트의 노랑 ‘안내가’ 배지가 기본 펼쳐진 상태(고지 노출) · 배지의 펼침/접힘 아이콘(⌄) 클릭으로 토글',
     '2':'페이지(버전) 진입 시 안내 팝업(모달)',
-    '3':'디스클로저 펼침 + 요금 금액 블러 · 확인 버튼 클릭 시 해제',
+    '3':'요금 금액 블러 · 확인 1회로 이 방문(세션) 동안 해제 유지 · 데모에선 V3 재선택 시 다시 보기(리셋)',
     '4':'진입 시 확인(체크+성명) 취득 후 진행 · 확인 전 금액 차단'
   };
   var INERT=['header-slot','footer-slot','main'];
@@ -1821,9 +1828,9 @@
     if(mode==='collapse'){
       b.textContent='배지로 접기';
       b.addEventListener('click', function(){ showDisc(false); badge.focus(); });
-    } else {   // confirm(V3)
+    } else {   // confirm(V3) — 확인 1회로 이 방문(세션) 동안 블러 해제 유지(sessionStorage 기억)
       b.className+=' primary'; b.textContent='확인하고 금액 보기';
-      b.addEventListener('click', function(){ setBlur(false); b.disabled=true; b.textContent='확인됨 — 금액 표시'; });
+      b.addEventListener('click', function(){ setBlur(false); b.disabled=true; b.textContent='확인됨 — 이 방문 동안 유지'; try{ sessionStorage.setItem(V3KEY,'1'); }catch(e){} });
     }
     actions.appendChild(b);
   }
@@ -1874,7 +1881,8 @@
     desc.textContent=DESC[n]||'';
     if(n==='1'){ setFeeBadges(true); }                          // 리스트 '안내가' 디스클로저 기본 펼침(상단 대표 배너 없음)
     else if(n==='2'){ openModal(mV2); }
-    else if(n==='3'){ setDiscMode('confirm'); showDisc(true); setBlur(true); }
+    else if(n==='3'){ try{ sessionStorage.removeItem(V3KEY); }catch(e){}  // 데모: V3 재선택 = 리셋(다시 보기)
+                      setDiscMode('confirm'); showDisc(true); setBlur(true); }
     else if(n==='4'){ chk.checked=false; nm.value=''; v4valid(); setBlur(true); openModal(mV4); }
   }
   seg.addEventListener('click', function(e){ var b=e.target.closest && e.target.closest('button[data-ver]'); if(b) applyVer(b.dataset.ver); });

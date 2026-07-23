@@ -20,7 +20,7 @@
   /* 결제구분 배지 (PAY_KIND) */
   .pay-chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 9px;white-space:nowrap;}
   .pk-pre{background:#e7f0fe;color:#1559c2;} .pk-post{background:#fef0e0;color:#a25b00;}
-  .pk-easy{background:#e6f6ee;color:#0f7a44;} .pk-point{background:#f1ecfb;color:#6b3fb0;} .pk-field{background:#eef2f6;color:#54616e;}
+  .pk-easy{background:#e6f6ee;color:#0f7a44;} .pk-field{background:#eef2f6;color:#54616e;}
   #histBody tr,#pointBody tr{cursor:pointer;}
   /* 명세서 영수증(상세) */
   .rcpt-kv{display:grid;grid-template-columns:132px 1fr;gap:8px 12px;font-size:13.5px;margin-top:4px;}
@@ -114,7 +114,6 @@
   .cfq-table td{text-align:center;vertical-align:middle;}
   .cfq-table td.cfq-l{text-align:left;font-weight:600;color:var(--text-primary);}
   .cfq-table .cfq-dt{font-size:12px;color:var(--text-secondary);white-space:nowrap;}
-  .cfq-table .cfq-pt{color:var(--text-tertiary);}
   .cfq-free{color:#b5600a;font-weight:700;}
   .cfq-dash{color:var(--text-tertiary);}
   .cfq-none{padding:30px;text-align:center;color:var(--text-tertiary);}
@@ -297,7 +296,7 @@
           <table class="cch-list">
             <thead>
               <tr>
-                <th style="width:44px;text-align:center;"><input type="checkbox" id="ccSelectAll" aria-label="일괄등록 대상 전체 선택"></th><th>NO</th><th>회원카드번호</th><th>카드유형</th><th>차량번호</th><th>결제카드</th><th>포인트결제</th><th>카드상태</th><th>관리</th>
+                <th style="width:44px;text-align:center;"><input type="checkbox" id="ccSelectAll" aria-label="일괄등록 대상 전체 선택"></th><th>NO</th><th>회원카드번호</th><th>카드유형</th><th>차량번호</th><th>결제카드</th><th>카드상태</th><th>관리</th>
               </tr>
             </thead>
             <tbody id="ccListBody"><!-- rendered --></tbody>
@@ -431,9 +430,9 @@
               <dt>이용내역(세션) 원천</dt>
               <dd><code>EVCS_CHGE_TRADE_INFO</code>(공단) <b>∪</b> <code>R_TRADE_INFO</code>(로밍/타CPO) — 기존 app_payment_sqlmap의 <code>UNION ALL</code>. 로밍: <code>BID</code>(이용사업자)≠<code>TBID</code>(충전기소유), 충전소명=<code>R_STATION.CNAME</code>·사업자명=<code>R_BUSI.BNM</code>.</dd>
               <dt>세션 컬럼</dt>
-              <dd><code>STAT_ID/CHGER_ID</code>, <code>CHGE_STRT/END_DATE</code>, <code>CHGE_TOT_TIME</code>, <code>CHGE_TOT_POW</code>(kWh), <code>POW_FEE</code>(충전요금), <code>MON</code>(결제금액), <code>CARD_AUTH_NO</code>(승인번호=영수증), <code>POINT</code>(이용포인트), <code>CHGER_PAY_YN</code>(<code>'N'</code>=무료).</dd>
+              <dd><code>STAT_ID/CHGER_ID</code>, <code>CHGE_STRT/END_DATE</code>, <code>CHGE_TOT_TIME</code>, <code>CHGE_TOT_POW</code>(kWh), <code>POW_FEE</code>(충전요금), <code>MON</code>(결제금액), <code>CARD_AUTH_NO</code>(승인번호=영수증), <code>CHGER_PAY_YN</code>(<code>'N'</code>=무료).</dd>
               <dt>영수증 필드 매핑</dt>
-              <dd><b>충전기</b> <code>CHGER_ID</code> · 출력값=정격출력(kW, <code>EVCS_CHARGER</code>) · 타입=<code>CHGE_TYPE_CD</code>(01 DC차데모/02 AC완속/03 DC+AC3상)·로밍 <code>R_CHARGER.CTYPE</code>. <b>일시/양</b> <code>CHGE_STRT_DATE</code>·<code>CHGE_END_DATE</code>·<code>CHGE_TOT_POW</code>. <b>금액</b> <code>POW_FEE</code>·<code>MON</code>·<code>POINT</code> — <b>실단가=POW_FEE/CHGE_TOT_POW</b>(할인 반영, 시간대 정가는 <code>EVCS_CHARGE_PRICE.PRICE_00~23</code>). <b>결제</b> <code>PAY_KIND</code>(대부분 4간편)·카드사 <code>BILL_CARD_CD</code>·끝4 <code>BILL_CARD_NUM</code>·승인번호 <code>CARD_AUTH_NO</code>(마스킹 없이 전체). <b>회원카드</b> <code>CARD_NO</code>(DB ARIA256 암호화·표시는 끝4)·<code>CARD_TYPE</code>(실물/모바일/회원번호/EV등록, 실코드 <code>EVCS_CODE_DETAIL 'CARD_TYPE'</code> 확인). ※충전사업자명=충전기 <b>소유</b> 사업자(<code>R_BUSI.BNM</code>/공단), <b>카드 발급소속(공단) 아님</b>.</dd>
+              <dd><b>충전기</b> <code>CHGER_ID</code> · 출력값=정격출력(kW, <code>EVCS_CHARGER</code>) · 타입=<code>CHGE_TYPE_CD</code>(01 DC차데모/02 AC완속/03 DC+AC3상)·로밍 <code>R_CHARGER.CTYPE</code>. <b>일시/양</b> <code>CHGE_STRT_DATE</code>·<code>CHGE_END_DATE</code>·<code>CHGE_TOT_POW</code>. <b>금액</b> <code>POW_FEE</code>·<code>MON</code> — <b>실단가=POW_FEE/CHGE_TOT_POW</b>(할인 반영, 시간대 정가는 <code>EVCS_CHARGE_PRICE.PRICE_00~23</code>). <b>결제</b> <code>PAY_KIND</code>(대부분 4간편)·카드사 <code>BILL_CARD_CD</code>·끝4 <code>BILL_CARD_NUM</code>·승인번호 <code>CARD_AUTH_NO</code>(마스킹 없이 전체). <b>회원카드</b> <code>CARD_NO</code>(DB ARIA256 암호화·표시는 끝4)·<code>CARD_TYPE</code>(실물/모바일/회원번호/EV등록, 실코드 <code>EVCS_CODE_DETAIL 'CARD_TYPE'</code> 확인). ※충전사업자명=충전기 <b>소유</b> 사업자(<code>R_BUSI.BNM</code>/공단), <b>카드 발급소속(공단) 아님</b>.</dd>
               <dt>할인 · 부가세</dt>
               <dd>거래에 할인 컬럼 없음 — 요금제 할인(<code>EVCS_REMOTE_PRICE_PLAN.DISCOUNT_PRICE</code>)은 <code>POW_FEE</code>에 이미 반영. BC그린카드 할인=카드사 대금청구 시(거래 밖). <b>영수증 할인·부가세 라인 없음</b>(총액 표기).</dd>
               <dt>결제방식·결과</dt>
@@ -445,9 +444,7 @@
               <dt>월별 명세서(PDF) 설계</dt>
               <dd><b>신규 설계</b> — 기존 ev.or.kr에 충전요금 명세서 다운로드 없음(nportal 미추출로 참조 서식 없음). 명세서=<b>결제 확정분 증빙</b>(세션 상세 리스트 없음, 상세는 엑셀). <b>후불 근거</b> <code>EVCS_AFTER_PAYMENT</code>(MON·PAY_GUBUN 월회차·PAY_YN 자동결제 성공여부·PAY_DATE) + 로밍 <code>R_BTRADE_DATA</code>(YMON·MON·<code>PAYEX</code> 결제제외)·<code>R_BTRADE_SCH</code>(월 스케줄)·<code>R_BTRADE_TOTAL</code>. 합계=PAYEX/미결제 제외. <b>“결제 완료”=배치 자동결제(승인) 성공</b>(PAY_YN) — 사용자 카드대금 납부는 카드사 소관(우리 아님, ‘납부여부’로 표기하지 않음). <b>선불</b>=<code>EVCS_PRE_PAYMENT</code> + 사용 세션 차감, 잔여=입금−사용.</dd>
               <dt>CPO별 집계 · 제외 원칙</dt>
-              <dd>집계=충전기 <b>소유</b> 사업자(공단 EVCS / 로밍 <code>R_TRADE_INFO.TBID</code>→<code>R_BUSI.BNM</code>) 소계, <b>카드 발급소속(공단) 미표기</b>. <b>제외</b>: 결제실패·대기·취소·무료는 명세서 제외(상태로 이용내역/엑셀에서 확인). 부가세 분리 없음(총액)·포인트 정산 제외. 다운로드=인쇄뷰+window.print(사용자 ‘PDF로 저장’) / 정적 예시 PDF(<code>assets/statement-sample-*</code>).</dd>
-              <dt>포인트 (정산 제외)</dt>
-              <dd>명세 제외. 상세·잔액=<code>EVCS_POINT</code>(<code>POINT_TOTAL/USED/REST</code>)·<code>EVCS_POINT_DTL</code>(<code>POINT_USE_CD</code> 1적립·2사용·3사용취소·4적립취소) = <b>별도 포인트 페이지</b>.</dd>
+              <dd>집계=충전기 <b>소유</b> 사업자(공단 EVCS / 로밍 <code>R_TRADE_INFO.TBID</code>→<code>R_BUSI.BNM</code>) 소계, <b>카드 발급소속(공단) 미표기</b>. <b>제외</b>: 결제실패·대기·취소·무료는 명세서 제외(상태로 이용내역/엑셀에서 확인). 부가세 분리 없음(총액). 다운로드=인쇄뷰+window.print(사용자 ‘PDF로 저장’) / 정적 예시 PDF(<code>assets/statement-sample-*</code>).</dd>
               <dt>결제수단/빌키</dt>
               <dd><code>EVCS_SMART_CARD_PAYMENT</code>(<code>BILL_KEY</code>·<code>BILL_CARD_CD</code>·<code>BILL_CARD_NUM</code>끝4자리·<code>PAY_YN</code>). 빌키 발급=PG(이니시스/NICE/KICC). 카드신청(협회 대행)≠결제라인 자동생성 — 간편결제 등록 별도 스텝. <b>화면엔 카드사+끝4자리만</b>(빌키 원문 노출 금지).</dd>
               <dt>확정성</dt>
@@ -546,49 +543,49 @@
       applyDate:'2024-03-05', issueDate:'2024-03-12', carNoApply:'12가 3456',
       reason:'신규(신차)', issueMethod:'등기배송', shipZip:'03175', shipAddr:'서울특별시 종로구 세종대로 209', reqName:'홍길동',
       issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'****-****-****-1234', cardCorp:'신한카드', pointPay:true, kepco:false, payFail:false,
+      payCard:'****-****-****-1234', cardCorp:'신한카드', kepco:false, payFail:false,
       stepDates:['2024-03-05','2024-03-08','2024-03-10','2024-03-12'] },
     // 2) 발급중 (수령완료 전 0003 발송단계, 플래그 N)
     { cardNo:'EVCD-2026-0456-7788', cardType:'실물카드', carNo:'34나 5678', carNm:'EV6',
       applyDate:'2026-06-16', issueDate:'—', carNoApply:'34나 5678',
       reason:'신규(중고)', issueMethod:'등기배송', shipZip:'06236', shipAddr:'서울특별시 강남구 테헤란로 152', reqName:'홍길동',
       issueStatCd:'0003', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'', cardCorp:'', pointPay:false, kepco:false, payFail:false,
+      payCard:'', cardCorp:'', kepco:false, payFail:false,
       stepDates:['2026-06-16','2026-06-18','2026-06-20','—'] },
     // 3) 미납정지 ★신규 (paymentYn=Y, 수령완료) — 이용불가
     { cardNo:'EVCD-2025-0789-0011', cardType:'모바일카드', carNo:'78라 9012', carNm:'레이 EV',
       applyDate:'2025-09-01', issueDate:'2025-09-01', carNoApply:'78라 9012',
       reason:'신규(신차)', issueMethod:'모바일 즉시발급', shipZip:'—', shipAddr:'모바일 EV이음앱(NFC)', reqName:'홍길동',
       issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'Y', stopYn:'N',
-      payCard:'****-****-****-9012', cardCorp:'국민카드', pointPay:true, kepco:false, payFail:true,
+      payCard:'****-****-****-9012', cardCorp:'국민카드', kepco:false, payFail:true,
       stepDates:['2025-09-01','2025-09-01','2025-09-01','2025-09-01'] },
     // 4) 일시정지 (stopYn=Y) — 이용불가
     { cardNo:'EVCD-2024-0640-1188', cardType:'실물카드', carNo:'56버 2200', carNm:'니로 EV',
       applyDate:'2024-11-02', issueDate:'2024-11-09', carNoApply:'56버 2200',
       reason:'신규(신차)', issueMethod:'등기배송', shipZip:'34123', shipAddr:'대전광역시 유성구 대학로 99', reqName:'홍길동',
       issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'Y',
-      payCard:'****-****-****-4455', cardCorp:'삼성카드', pointPay:false, kepco:false, payFail:false,
+      payCard:'****-****-****-4455', cardCorp:'삼성카드', kepco:false, payFail:false,
       stepDates:['2024-11-02','2024-11-05','2024-11-07','2024-11-09'] },
     // 5) 우선순위 검증: loss=Y & payment=Y & stop=Y (동시) → '분실'이 최우선으로 판정되어야 함
     { cardNo:'EVCD-2023-0321-6543', cardType:'실물카드', carNo:'11주 7788', carNm:'아이오닉5',
       applyDate:'2023-02-14', issueDate:'2023-02-21', carNoApply:'11주 7788',
       reason:'신규(중고)', issueMethod:'등기배송', shipZip:'48058', shipAddr:'부산광역시 해운대구 센텀중앙로 55', reqName:'홍길동',
       issueStatCd:'0004', delYn:'N', lossYn:'Y', paymentYn:'Y', stopYn:'Y',
-      payCard:'****-****-****-6677', cardCorp:'현대카드', pointPay:true, kepco:false, payFail:false,
+      payCard:'****-****-****-6677', cardCorp:'현대카드', kepco:false, payFail:false,
       stepDates:['2023-02-14','2023-02-17','2023-02-19','2023-02-21'] },
     // 6) EV등록(한전) 정상 — 일괄등록 제외 대상(kepco)
     { cardNo:'EVCD-2023-0555-3322', cardType:'실물카드(EV등록)', carNo:'90마 1357', carNm:'코나 일렉트릭',
       applyDate:'2023-05-10', issueDate:'2023-05-18', carNoApply:'90마 1357',
       reason:'기타', issueMethod:'등기배송', shipZip:'13529', shipAddr:'경기도 성남시 분당구 판교로 242', reqName:'홍길동',
       issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', pointPay:false, kepco:true, payFail:false,
+      payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', kepco:true, payFail:false,
       stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] },
     // 7) 해지 (delYn=Y) — 종료. 최우선 판정
     { cardNo:'EVCD-2022-0910-2001', cardType:'실물카드', carNo:'42고 3030', carNm:'봉고3 EV',
       applyDate:'2022-08-03', issueDate:'2022-08-11', carNoApply:'42고 3030',
       reason:'기타', issueMethod:'등기배송', shipZip:'21554', shipAddr:'인천광역시 남동구 정각로 29', reqName:'홍길동',
       issueStatCd:'0004', delYn:'Y', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'', cardCorp:'', pointPay:false, kepco:false, payFail:false,
+      payCard:'', cardCorp:'', kepco:false, payFail:false,
       stepDates:['2022-08-03','2022-08-06','2022-08-08','2022-08-11'] }
   ];
 
@@ -613,7 +610,7 @@
     var cnt = document.getElementById('mcCount'); if (cnt) cnt.textContent = rows.length;
     if (!CARDS.length) { wrap.style.display='none'; empty.style.display='block'; return; }
     wrap.style.display=''; empty.style.display='none';
-    if (!rows.length) { body.innerHTML = '<tr><td colspan="9" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 회원카드가 없습니다.</td></tr>'; return; }
+    if (!rows.length) { body.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 회원카드가 없습니다.</td></tr>'; return; }
     body.innerHTML = rows.map(function (c, di) {
       var i = CARDS.indexOf(c);
       var key = resolveStatus(c);
@@ -651,7 +648,6 @@
         + '<td>'+c.cardType+'</td>'
         + '<td><span class="carno">'+c.carNo+'</span><br><small style="color:var(--text-tertiary);">'+c.carNm+'</small></td>'
         + '<td>'+payHtml+'</td>'
-        + '<td>'+(c.pointPay ? '<span class="st-chip st-normal">사용</span>' : '<span style="color:var(--text-tertiary);">미사용</span>')+'</td>'
         + '<td>'+statCell+'</td>'
         + '<td><div class="cch-acts">'+acts.join('')+'</div></td>'
         + '</tr>';
@@ -837,8 +833,7 @@
 </script>
 <script>
 /* ===== 충전요금 조회 — [후불][선불] 통합(이용내역+명세서) + 영수증 =====
-   소스: 세션 = EVCS_CHGE_TRADE_INFO(공단) ∪ R_TRADE_INFO(로밍). 명세=EVCS_AFTER_PAYMENT(후불)/EVCS_PRE_PAYMENT(선불).
-   포인트는 정산 제외(참고 컬럼만) → 상세는 별도 포인트 페이지. 상세 매핑은 페이지 하단 '개발 참고' 패널 참조. */
+   소스: 세션 = EVCS_CHGE_TRADE_INFO(공단) ∪ R_TRADE_INFO(로밍). 명세=EVCS_AFTER_PAYMENT(후불)/EVCS_PRE_PAYMENT(선불). */
 (function(){
   function $(id){ return document.getElementById(id); }
   function toast(m,t){ if(window.__toast) window.__toast(m, t||'info'); }
@@ -877,7 +872,7 @@
   function hasRcpt(r){ return !r.free && r.authNo && (r.status==='완료'||r.mode==='pre'); }
 
   /* ── 표준 정렬(헤더 클릭) ── */
-  var poSort={key:'',dir:1}, prSort={key:'',dir:1}, poiSort={key:'',dir:1};
+  var poSort={key:'',dir:1}, prSort={key:'',dir:1};
   var PO_PAGE_SIZE=5, poPage=1, poLastSig=null;
   var PR_PAGE_SIZE=5, prPage=1, prLastSig=null;
   var NUMKEY={seq:1,kwh:1,charge:1,payAmt:1,used:1,balAfter:1,amt:1};
@@ -904,19 +899,18 @@
   /* ── 후불 세션(mock): 공단+로밍 통합. payKind 실질 대부분 간편결제. free=CHGER_PAY_YN N ── */
   var POST=[
     // 완료(공단) — 결제완료. 영수증 O
-    {seq:1,busi:'환경부(KECO)',roaming:false,station:'환경부 강남구청',addr:'서울특별시 강남구 학동로 지하 426',chargerId:'ME-0451',output:100,speed:'급속',ctype:'DC차데모',card:'…4567',car:'12가 3456',start:'2026.06.22 08:15',end:'2026.06.22 08:57',startTs:'2026-06-22 08:15:07',endTs:'2026-06-22 08:57:38',dur:'0:42:31',kwh:24.5,unit:347.0,charge:8502,payKind:'신용카드',cardCorp:'신한카드',cardLast4:'1234',cardType:'실물카드',payAmt:8502,status:'완료',payDt:'2026.06.22 08:58',authNo:'30012345',point:0,free:false},
+    {seq:1,busi:'환경부(KECO)',roaming:false,station:'환경부 강남구청',addr:'서울특별시 강남구 학동로 지하 426',chargerId:'ME-0451',output:100,speed:'급속',ctype:'DC차데모',card:'…4567',car:'12가 3456',start:'2026.06.22 08:15',end:'2026.06.22 08:57',startTs:'2026-06-22 08:15:07',endTs:'2026-06-22 08:57:38',dur:'0:42:31',kwh:24.5,unit:347.0,charge:8502,payKind:'신용카드',cardCorp:'신한카드',cardLast4:'1234',cardType:'실물카드',payAmt:8502,status:'완료',payDt:'2026.06.22 08:58',authNo:'30012345',free:false},
     // 충전중(공단, CHRG_STAT=2) — 종료·결제 미정
-    {seq:2,busi:'환경부(KECO)',roaming:false,station:'환경부 세종청사',chargerId:'ME-0512',card:'…4567',car:'12가 3456',start:'2026.06.22 09:40',end:'충전 중',dur:'0:12:05',kwh:8.6,unit:347.0,charge:null,payKind:'-',payAmt:null,status:'충전중',payDt:'—',authNo:'',point:0,free:false},
-    // 완료(로밍 GS) — 포인트 사용 참고
-    {seq:3,busi:'GS차지비',roaming:true,station:'GS차지비 강남',addr:'서울특별시 강남구 테헤란로 152',chargerId:'PI-1188',output:200,speed:'급속',ctype:'DC+AC3상(콤보)',card:'…4567',car:'12가 3456',start:'2026.06.17 14:08',end:'2026.06.17 14:47',startTs:'2026-06-17 14:08:11',endTs:'2026-06-17 14:47:31',dur:'0:38:20',kwh:45.6,unit:392.0,charge:19244,payKind:'간편결제',cardCorp:'',cardLast4:'',cardType:'모바일카드',payAmt:19244,status:'완료',payDt:'2026.06.17 14:48',authNo:'30012347',point:500,free:false},
+    {seq:2,busi:'환경부(KECO)',roaming:false,station:'환경부 세종청사',chargerId:'ME-0512',card:'…4567',car:'12가 3456',start:'2026.06.22 09:40',end:'충전 중',dur:'0:12:05',kwh:8.6,unit:347.0,charge:null,payKind:'-',payAmt:null,status:'충전중',payDt:'—',authNo:'',free:false},
+    {seq:3,busi:'GS차지비',roaming:true,station:'GS차지비 강남',addr:'서울특별시 강남구 테헤란로 152',chargerId:'PI-1188',output:200,speed:'급속',ctype:'DC+AC3상(콤보)',card:'…4567',car:'12가 3456',start:'2026.06.17 14:08',end:'2026.06.17 14:47',startTs:'2026-06-17 14:08:11',endTs:'2026-06-17 14:47:31',dur:'0:38:20',kwh:45.6,unit:392.0,charge:19244,payKind:'간편결제',cardCorp:'',cardLast4:'',cardType:'모바일카드',payAmt:19244,status:'완료',payDt:'2026.06.17 14:48',authNo:'30012347',free:false},
     // 결제실패(로밍 SK) — 사유 툴팁
-    {seq:4,busi:'SK일렉링크',roaming:true,station:'SK시그넷 대치',chargerId:'ST-0922',card:'…7788',car:'34나 5678',start:'2026.06.14 19:33',end:'2026.06.14 19:47',dur:'0:13:52',kwh:12.4,unit:392.0,charge:4860,payKind:'간편결제',payAmt:0,status:'결제실패',failReason:'빌키(자동결제 수단) 미등록 — 결제라인 미생성',payDt:'—',authNo:'',point:0,free:false},
+    {seq:4,busi:'SK일렉링크',roaming:true,station:'SK시그넷 대치',chargerId:'ST-0922',card:'…7788',car:'34나 5678',start:'2026.06.14 19:33',end:'2026.06.14 19:47',dur:'0:13:52',kwh:12.4,unit:392.0,charge:4860,payKind:'간편결제',payAmt:0,status:'결제실패',failReason:'빌키(자동결제 수단) 미등록 — 결제라인 미생성',payDt:'—',authNo:'',free:false},
     // 무료(공단, FREE_YN=Y / CHGER_PAY_YN=N)
-    {seq:5,busi:'환경부(KECO)',roaming:false,station:'환경부 양재 (무료개방)',chargerId:'ME-0210',card:'…7788',car:'34나 5678',start:'2026.06.07 13:20',end:'2026.06.07 13:39',dur:'0:19:10',kwh:15.1,unit:0,charge:0,payKind:'-',payAmt:0,status:'무료',payDt:'-',authNo:'',point:0,free:true},
+    {seq:5,busi:'환경부(KECO)',roaming:false,station:'환경부 양재 (무료개방)',chargerId:'ME-0210',card:'…7788',car:'34나 5678',start:'2026.06.07 13:20',end:'2026.06.07 13:39',dur:'0:19:10',kwh:15.1,unit:0,charge:0,payKind:'-',payAmt:0,status:'무료',payDt:'-',authNo:'',free:true},
     // 결제대기(공단, 미결제 PAY_RSLT=1)
-    {seq:6,busi:'환경부(KECO)',roaming:false,station:'환경부 선릉',chargerId:'ME-0777',card:'…7788',car:'34나 5678',start:'2026.06.03 09:05',end:'2026.06.03 09:25',dur:'0:19:44',kwh:20.0,unit:347.0,charge:5240,payKind:'간편결제',payAmt:0,status:'결제대기',payDt:'—',authNo:'',point:0,free:false},
+    {seq:6,busi:'환경부(KECO)',roaming:false,station:'환경부 선릉',chargerId:'ME-0777',card:'…7788',car:'34나 5678',start:'2026.06.03 09:05',end:'2026.06.03 09:25',dur:'0:19:44',kwh:20.0,unit:347.0,charge:5240,payKind:'간편결제',payAmt:0,status:'결제대기',payDt:'—',authNo:'',free:false},
     // 취소(로밍, PAY_RESULT=5 환불)
-    {seq:7,busi:'GS차지비',roaming:true,station:'차지비 서초',chargerId:'PI-0345',card:'…4567',car:'12가 3456',start:'2026.06.01 07:50',end:'2026.06.01 08:22',dur:'0:31:40',kwh:14.2,unit:240.0,charge:3408,payKind:'간편결제',payAmt:0,status:'취소',payDt:'2026.06.01 09:10',authNo:'',point:0,free:false}
+    {seq:7,busi:'GS차지비',roaming:true,station:'차지비 서초',chargerId:'PI-0345',card:'…4567',car:'12가 3456',start:'2026.06.01 07:50',end:'2026.06.01 08:22',dur:'0:31:40',kwh:14.2,unit:240.0,charge:3408,payKind:'간편결제',payAmt:0,status:'취소',payDt:'2026.06.01 09:10',authNo:'',free:false}
   ];
   POST.forEach(function(r){ r.mode='post'; });
   // 월 추이(mock, 최근 6개월 총 이용금액) — 마지막(당월)은 POST 합계로 동기화
@@ -1200,39 +1194,6 @@
     initSeg(); initMonthNav(); wireSort('#poTable thead',poSort,renderPost); wireSort('#prTable thead',prSort,renderPre); renderPost(); renderPre();
   }
 
-  /* ── 충전 포인트 ── */
-  var POINT=[
-    {type:'적립',amt:170,date:'2026.06.22',exp:'~2028.06.21',station:'환경부 강남구청',time:'08:15'},
-    {type:'적립',amt:47,date:'2026.06.19',exp:'~2028.06.18',station:'자택 (한전 심야)',time:'23:42'},
-    {type:'적립',amt:126,date:'2026.06.17',exp:'~2028.06.16',station:'GS차지비 강남',time:'14:08'},
-    {type:'적립',amt:395,date:'2026.06.14',exp:'~2028.06.13',station:'SK시그넷 대치',time:'19:33'},
-    {type:'사용',amt:-3000,date:'2026.05.28',exp:'-',station:'차지비 서초 (포인트 결제)',time:'16:40'},
-    {type:'이벤트',amt:5000,date:'2026.05.15',exp:'~2028.05.14',station:'신규가입 축하',time:'-'}
-  ];
-  function pVal(id){ var e=$(id); return e?e.value:''; }
-  function pointRows(){
-    var ty=pVal('pType'), q=(pVal('pSearch')||'').trim().toLowerCase();
-    return POINT.filter(function(r){ if(ty&&r.type!==ty)return false; if(q&&r.station.toLowerCase().indexOf(q)<0)return false; return true; });
-  }
-  function renderPoint(){
-    if(!$('pointBody')) return;
-    var rows=sortRows(pointRows(),poiSort); markSort('#pTable thead',poiSort);
-    $('pCount').textContent=rows.length;
-    $('pointBody').innerHTML = rows.length ? rows.map(function(r){
-      var amtC = r.amt<0 ? 'var(--color-danger)' : 'var(--color-primary-700)';
-      var amtT = (r.amt>0?'+':'') + won(r.amt) + 'P';
-      return '<tr><td>'+r.type+'</td>'
-        +'<td class="num" style="color:'+amtC+';">'+amtT+'</td><td>'+r.date+'</td><td>'+r.exp+'</td><td>'+r.station+'</td><td>'+r.time+'</td></tr>';
-    }).join('') : '<tr><td colspan="6" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 내역이 없습니다.</td></tr>';
-  }
-  if($('pointBody')){
-    ['pType','pPeriod'].forEach(function(id){ var e=$(id); if(e) e.addEventListener('change',renderPoint); });
-    var ps=$('pSearch'); if(ps) ps.addEventListener('input',renderPoint);
-    var pr=$('pReset'); if(pr) pr.addEventListener('click',function(){ $('pType').value=''; $('pPeriod').value='3m'; $('pSearch').value=''; renderPoint(); });
-    var px=$('pExcel'); if(px) px.addEventListener('click',function(){ toast(pointRows().length+'건을 Excel로 저장합니다.','success'); });
-    wireSort('#pTable thead',poiSort,renderPoint);
-    renderPoint();
-  }
 })();
 </script>
 <script>
