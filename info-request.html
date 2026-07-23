@@ -16,6 +16,10 @@
   .req-status.ing{background:#e6f0fb;color:#1f5fa8}
   .req-status.approve{background:#e1f5ee;color:#0f6e56}
   .req-status.reject{background:#fcebeb;color:#a32d2d}
+  /* [ISS-064] REQ_STATUS=1 '신청' — 등록 직후 기본상태(대기 계열, 승인/반려와 구분) */
+  .req-status.wait{background:#fff4e5;color:#a76a00}
+  /* [ISS-064] REQ_CATE 요청구분 뱃지 — 상태(채움)와 구분되게 외곽선형 */
+  .req-cate{display:inline-block;padding:2px 9px;border-radius:14px;font-size:12px;font-weight:700;white-space:nowrap;background:#fff;border:1px solid var(--border-medium,#cfd6e4);color:var(--text-secondary,#4b5563)}
   .req-note{color:var(--text-secondary,#5a6675);font-size:13.5px;margin:0 0 18px}
 </style>
 </head>
@@ -45,13 +49,23 @@
       <div class="board-toolbar">
         <div class="board-toolbar-filters">
           <div class="form-group">
-            <label class="form-label">처리 상태</label>
+            <label class="form-label" for="rqCate">요청 구분</label>
+            <select class="form-select" id="rqCate" aria-label="요청 구분">
+              <option value="all">전체 구분</option>
+              <option value="1">충전기</option>
+              <option value="2">보조금</option>
+              <option value="3">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="rqStatus">처리 상태</label>
             <select class="form-select" id="rqStatus" aria-label="처리 상태">
               <option value="all">전체 상태</option>
-              <option value="approve">승인</option>
-              <option value="reject">반려</option>
-              <option value="ing">처리중</option>
-              <option value="done">처리완료</option>
+              <option value="1">신청</option>
+              <option value="2">승인</option>
+              <option value="3">반려</option>
+              <option value="4">처리중</option>
+              <option value="5">처리완료</option>
             </select>
           </div>
           <div class="board-search">
@@ -77,6 +91,7 @@
         <thead>
           <tr>
             <th class="num">번호</th>
+            <th class="cat">구분</th>
             <th class="cat">상태</th>
             <th>제목</th>
             <th class="date">작성자</th>
@@ -95,6 +110,17 @@
         <p>다른 검색 조건으로 다시 시도해 주세요.</p>
       </div>
 
+      <!-- ★[DEV] 요청자료 원천 (2026-07-23 DB 실측) -->
+      <details class="dev-note" style="margin-top:28px;border:1px dashed var(--color-primary-300,#8fc9a8);border-radius:12px;background:#f6faf7;">
+        <summary style="cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--color-primary-700);list-style:none;">🛠 개발 참고 — 요청자료 원천·코드값</summary>
+        <div style="padding:0 16px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary);">
+          <p style="margin:0 0 6px;">요청자료 원천 = <code>EVCS_REQUEST_DATA</code></p>
+          <p style="margin:0 0 6px;">요청구분 = <code>REQ_CATE</code> (<b>1</b>충전기 · <b>2</b>보조금 · <b>3</b>기타)</p>
+          <p style="margin:0 0 6px;">처리상태 = <code>REQ_STATUS</code> (<b>1</b>신청 · <b>2</b>승인 · <b>3</b>반려 · <b>4</b>처리중 · <b>5</b>처리완료) — <b>1 신청 = 등록 직후 기본값</b></p>
+          <p style="margin:0;">코드 = <code>EVCS_CODE_DETAIL</code> (계층은 <code>UP_CODE</code>, <code>USE_YN</code> 없음, 정렬 <code>SORT_ORDR</code>)</p>
+        </div>
+      </details>
+
     </div>
   </section>
 </main>
@@ -108,37 +134,46 @@
 <script>
 (function () {
   var ATTACH = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-gray-600);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>';
-  var STATUS = { approve:['승인','approve'], reject:['반려','reject'], ing:['처리중','ing'], done:['처리완료','done'] };
-  // 데모용 요청자료 목록 (지자체 요청 → 처리 현황/회신)
+  // [ISS-064] 처리상태 = EVCS_REQUEST_DATA.REQ_STATUS 실값 5종(1신청·2승인·3반려·4처리중·5처리완료)
+  //           '1 신청'은 등록 직후 기본 상태 → 미처리 건 전체가 이 값(누락 시 신규 요청이 목록에서 필터링 안 됨)
+  var STATUS = { '1':['신청','wait'], '2':['승인','approve'], '3':['반려','reject'], '4':['처리중','ing'], '5':['처리완료','done'] };
+  // [ISS-064] 요청구분 = EVCS_REQUEST_DATA.REQ_CATE 실값 3종(1충전기·2보조금·3기타)
+  var CATE = { '1':'충전기', '2':'보조금', '3':'기타' };
+  // 데모용 요청자료 목록 (지자체 요청 → 처리 현황/회신) · status/cate는 DB 코드값
   var ITEMS = [
-    { no:128, status:'done',    title:'2026년 1분기 지자체별 보조금 집행 실적 자료 요청',   writer:'경기도청',     date:'2026.04.18', reply:true },
-    { no:127, status:'ing',     title:'관내 공용 충전기 가동률 원자료(raw) 제공 요청',       writer:'서울특별시',   date:'2026.04.15', reply:false },
-    { no:126, status:'approve', title:'전기버스 보급 현황 통계 자료 요청(차종·연도별)',      writer:'부산광역시',   date:'2026.04.10', reply:false },
-    { no:125, status:'done',    title:'무공해차 등록 대수 지역별 추이 데이터 요청',          writer:'대전광역시',   date:'2026.04.02', reply:true },
-    { no:124, status:'reject',  title:'개인 충전 이용내역 상세 자료 요청',                   writer:'인천광역시',   date:'2026.03.28', reply:false },
-    { no:123, status:'done',    title:'지자체 보조금 잔여 예산 현황 자료 요청',              writer:'강원특별자치도', date:'2026.03.20', reply:true }
+    { no:130, cate:'1', status:'1', title:'공용 급속충전기 설치 현황 자료 요청(시군구별)',   writer:'세종특별자치시', date:'2026.04.22', reply:false },
+    { no:129, cate:'2', status:'1', title:'2026년 상반기 보조금 신청 접수 현황 자료 요청',   writer:'광주광역시',   date:'2026.04.20', reply:false },
+    { no:128, cate:'2', status:'5', title:'2026년 1분기 지자체별 보조금 집행 실적 자료 요청',   writer:'경기도청',     date:'2026.04.18', reply:true },
+    { no:127, cate:'1', status:'4', title:'관내 공용 충전기 가동률 원자료(raw) 제공 요청',       writer:'서울특별시',   date:'2026.04.15', reply:false },
+    { no:126, cate:'3', status:'2', title:'전기버스 보급 현황 통계 자료 요청(차종·연도별)',      writer:'부산광역시',   date:'2026.04.10', reply:false },
+    { no:125, cate:'3', status:'5', title:'무공해차 등록 대수 지역별 추이 데이터 요청',          writer:'대전광역시',   date:'2026.04.02', reply:true },
+    { no:124, cate:'1', status:'3', title:'개인 충전 이용내역 상세 자료 요청',                   writer:'인천광역시',   date:'2026.03.28', reply:false },
+    { no:123, cate:'2', status:'5', title:'지자체 보조금 잔여 예산 현황 자료 요청',              writer:'강원특별자치도', date:'2026.03.20', reply:true }
   ];
 
   var body = document.getElementById('rqBody');
   var count = document.getElementById('rqCount');
   var empty = document.getElementById('rqEmpty');
-  var statusSel = document.getElementById('rqStatus'), fieldSel = document.getElementById('rqField'),
+  var cateSel = document.getElementById('rqCate'),
+      statusSel = document.getElementById('rqStatus'), fieldSel = document.getElementById('rqField'),
       search = document.getElementById('rqSearch'), searchBtn = document.getElementById('rqSearchBtn'),
       reset = document.getElementById('rqReset'), writeBtn = document.getElementById('rqWrite');
 
   function render() {
     var kw = (search.value || '').trim().toLowerCase();
-    var st = statusSel.value, field = fieldSel.value;
+    var ct = cateSel.value, st = statusSel.value, field = fieldSel.value;
     var list = ITEMS.filter(function (it) {
+      var okCt = ct === 'all' || it.cate === ct;
       var okSt = st === 'all' || it.status === st;
       var hay = (field === 'writer' ? it.writer : (it.title + it.writer)).toLowerCase();
       var okKw = !kw || hay.indexOf(kw) >= 0;
-      return okSt && okKw;
+      return okCt && okSt && okKw;
     });
     body.innerHTML = list.map(function (it) {
       var s = STATUS[it.status];
       return '<tr>' +
         '<td class="num">' + it.no + '</td>' +
+        '<td class="cat"><span class="req-cate">' + (CATE[it.cate] || '-') + '</span></td>' +
         '<td class="cat"><span class="req-status ' + s[1] + '">' + s[0] + '</span></td>' +
         '<td><div class="title-cell">' + it.title + '</div></td>' +
         '<td class="date">' + it.writer + '</td>' +
@@ -149,10 +184,10 @@
     count.textContent = list.length;
     empty.style.display = list.length ? 'none' : 'block';
   }
-  [statusSel, fieldSel].forEach(function (el) { el.addEventListener('change', render); });
+  [cateSel, statusSel, fieldSel].forEach(function (el) { el.addEventListener('change', render); });
   search.addEventListener('input', render);
   searchBtn.addEventListener('click', render);
-  reset.addEventListener('click', function () { statusSel.value = 'all'; fieldSel.value = 'title'; search.value = ''; render(); });
+  reset.addEventListener('click', function () { cateSel.value = 'all'; statusSel.value = 'all'; fieldSel.value = 'title'; search.value = ''; render(); });
   writeBtn.addEventListener('click', function () {
     location.href = 'request-write.html';
   });

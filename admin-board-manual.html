@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>사용자매뉴얼 관리 | 통합관리시스템 | EV 업무포털</title>
 <link rel="stylesheet" href="css/admin-pub.css?v=20260721a">
-<link rel="stylesheet" href="css/admin-shell.css?v=20260721b">
+<link rel="stylesheet" href="css/admin-shell.css?v=20260723b">
 </head>
 <body>
 <!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 사용자매뉴얼 (신설 · v0.30 3호 · ISS-039)
@@ -64,7 +64,7 @@
             <dt>카테고리 <span style="color:#c0392b;">*</span></dt><dd class="wide"><select id="eCat" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;min-width:220px;"></select></dd>
             <dt>매뉴얼명 <span style="color:#c0392b;">*</span></dt><dd class="wide"><input type="text" id="eTitle" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:100%;" placeholder="예: 통합누리집 사용자 매뉴얼 v2.4"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 개정이력은 제목의 버전 표기로 갈음합니다 (예: v2.4)</div></dd>
             <dt>설명</dt><dd class="wide"><textarea id="eBody" style="width:100%;min-height:90px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;" placeholder="대민 목록에 보조 설명으로 노출됩니다. (선택)"></textarea></dd>
-            <dt>작성자</dt><dd><input type="text" id="eWriter" value="한국환경공단" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:220px;"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 대민 목록 '작성자' 컬럼에 표시되는 이름</div></dd>
+            <dt>작성자</dt><dd><input type="text" id="eWriter" readonly style="height:34px;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#f1f5f9;color:#64748b;font-size:13px;width:220px;"><span id="eWriterId" style="margin-left:8px;font-size:12px;color:#94a3b8;"></span><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 로그인 계정에서 자동 기입됩니다 (직접 입력 불가) · 대민 목록 '작성자' 컬럼에 표시</div></dd>
             <dt>공개여부</dt><dd>
               <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 공개</label>
               <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 비공개</label>
@@ -89,7 +89,7 @@
       <summary><span class="tag">DEV</span>개발 참고 — 신설 게시판·카테고리 코드그룹 (실서비스 비노출)</summary>
       <div class="bd"><ul>
         <li><strong>신설 게시판</strong> : 사용자매뉴얼 — <strong>APP_BLBD에 신규 행(BLBD_ID 신규 채번)</strong>. 탭별 별도 게시판 확정(대민 자료실 4탭 구성과 무관 · 관리자에선 독립 항목). TNCM_MENU에도 신규 메뉴 등록 필요(시스템관리 &gt; 게시판 관리, 서식다운로드 다음 순번).</li>
-        <li><strong>게시물</strong> : <strong>APP_ARTC</strong> 공통 — ARTC_ID/BLBD_ID · <strong>분류코드</strong>(카테고리) · 제목(매뉴얼명) · 내용(설명) · <strong>NM(게시물작성자 — 대민 '작성자' 컬럼 원천, 표시명)</strong> · <strong>INS_ID(등록자 계정 — 관리자 '작성자ID')</strong> · 공개여부 · 등록일/수정일 · 게시순서. 삭제는 DLT_YN.</li>
+        <li><strong>게시물</strong> : <strong>APP_ARTC</strong> 공통 — ARTC_ID/BLBD_ID · <strong>분류코드</strong>(카테고리) · 제목(매뉴얼명) · 내용(설명) · <strong>NM(게시물작성자 — 대민 '작성자' 컬럼 원천, 표시명)</strong> · <strong>INS_ID(등록자 계정 — 관리자 '작성자ID')</strong> · 공개여부 · 등록일/수정일 · 게시순서. 삭제는 DLT_YN.<br>★<strong>작성자는 관리자 직접입력이 아님</strong> — <strong>로그인 세션에서 자동 기입</strong>(NM = 로그인 사용자명, INS_ID = 로그인 계정ID). 등록 폼은 readonly. 수정 시에는 최초 등록자를 유지한다(수정자로 덮어쓰지 않음 — 필요 시 UPD_ID 별도 관리).</li>
         <li><strong>첨부</strong> : <strong>ATCH / ATCH_JFILE</strong> — ATCH_ID · ATCH_NM(파일명) · <strong>ATCH_SZ(용량 — 대민 '용량' 컬럼 원천)</strong> · ATCH_TYP · <strong>TGRT_ID = ARTC_ID</strong>. 다중 첨부.</li>
         <li><strong>★카테고리 = 신설 코드그룹으로 DB 관리</strong>(하드코딩 금지) : 포털 이용 / 보조금 신청 / 공모 신청 / 충전기 설치·운영 / 회원·카드 5종. 코드ID·채번은 개발 재량(질의응답 신설 코드그룹과 동일 체계 권고). <strong>FAQ 분류 하드코딩(ARTC.SMLCLS10 + 라벨이 faq.jsp에 박힘) 안티패턴 회피</strong> — 관리자에서 분류 추가·변경 가능해야 함.</li>
         <li><strong>개정이력</strong> : 별도 버전·이력 컬럼 없이 <strong>제목의 버전 표기</strong>(예: "…매뉴얼 v2.4")로 갈음.</li>
@@ -116,6 +116,11 @@
     activeGnb:'시스템관리',
     activeHref:'admin-board-manual.html'
   });
+
+  /* ★로그인 계정 — 작성자는 관리자 직접입력이 아니라 이 세션 정보에서 자동 기입.
+     [DEV] 실서비스는 로그인 세션에서 조회: ARTC.NM(게시물작성자·표시명) = 로그인 사용자명 / ARTC.INS_ID(등록자) = 로그인 계정ID.
+           프로토는 셸에 세션 사용자 객체가 없어 아래 상수로 대체(값은 대민 실화면 '작성자'와 정합). */
+  var LOGIN_USER = { name:'한국환경공단', id:'admin_keco' };
 
   /* 카테고리 5종 — ★사용자 확정(대민 화면 실값). 임의 수정 금지.
      [DEV] 하드코딩 아님 — 신설 코드그룹(DB) 조회 결과를 채우는 자리(프로토는 더미 상수) */
@@ -199,7 +204,9 @@
     $('eCat').value = d ? d.cat : '';
     $('eTitle').value = d ? d.title : '';
     $('eBody').value = d ? '(더미 설명) ' + d.title : '';
-    $('eWriter').value = d ? d.writer : '한국환경공단';
+    // 작성자 = 신규는 로그인 계정 자동 기입 / 수정은 최초 등록자 유지(재작성자로 덮어쓰지 않음)
+    $('eWriter').value = d ? d.writer : LOGIN_USER.name;
+    $('eWriterId').textContent = '(' + (d ? d.wid : LOGIN_USER.id) + ')';
     document.querySelector('input[name=eOpen][value='+((d && !d.open)?'secret':'open')+']').checked = true;
     $('eOrder').value = 0;
     $('eFiles').value = '';

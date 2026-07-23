@@ -18,11 +18,14 @@
    절대배치 헤더가 본문 최상단(페이지 타이틀)을 덮음. 112px 고정으로 본문 오프셋 확보(adm-wrap/adm-side와 동일 기준). */
 #admShellHeader .header{ height:112px; }
 #admShellHeader .header__inner{ padding-left:16px; padding-right:16px; }
-/* [ISS-011] 메가패널: 뷰포트 밖으로 넘치지 않게 높이 제한 + 컬럼 내부 스크롤.
-   열리면 8개 .submenu가 가장 긴 컬럼(최대 88항목)에 맞춰 무제한으로 늘어나 화면 전체를 덮던 문제 보정. */
+/* [ISS-011] 메가패널 안전장치 — 컬럼이 길어질 때만 뷰포트 초과를 막는 '캡'.
+   항목이 적으면 캡이 걸리지 않아 콘텐츠 높이로 자연 축소된다(고정 높이 아님). */
 #admShellHeader .header--open .gnb .submenu{ max-height:calc(100vh - 124px); overflow-y:auto; overflow-x:hidden; }
-/* 메가패널 흰 배경(::before)도 제한된 패널 높이만큼만 덮도록(헤더 112px 아래) */
-#admShellHeader .header--open .header__nav::before{ top:112px; height:calc(100vh - 124px); bottom:auto; min-height:0; }
+/* [ISS-062] 메가패널 흰 배경(::before) = ★콘텐츠 높이 기준.
+   기존 height:calc(100vh - 124px)는 메뉴가 짧아도 배경을 뷰포트 높이로 강제해(1440×900에서 콘텐츠 460px인데 배경 776px)
+   본문을 과도하게 덮었다. 100vh 계열 고정 높이를 버리고 패널(.header__nav) 실제 높이에 맞춘다.
+   top:112px = 헤더 높이 오프셋 유지(ISS-011의 '절대배치 헤더가 본문 타이틀을 덮는' 문제 재발 방지). */
+#admShellHeader .header--open .header__nav::before{ top:112px; height:calc(100% - 111px); bottom:auto; min-height:0; }
 
 /* ── 레이아웃(사이드 + 본문) — 헤더 112px 오프셋 ── */
 .adm-wrap{display:flex;min-height:calc(100vh - 112px);align-items:stretch;}

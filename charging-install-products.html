@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="css/screens-v2.css">
 <style>
 /* charging-install-products — 제품 카탈로그 개편 (v0.17) · 공통 컴포넌트(.info-side-card/.chip/.badge/.btn/.modal) 재사용 */
-.view-toggle { display:inline-flex; gap:6px; }
 .prod-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
 @media (max-width:900px){ .prod-grid{ grid-template-columns:repeat(2,1fr);} }
 @media (max-width:600px){ .prod-grid{ grid-template-columns:1fr;} }
@@ -27,7 +26,6 @@
 .prod-actions { display:flex; gap:8px; margin-top:auto; padding-top:16px; }
 .prod-actions .btn { flex:1; }
 .prod-actions .btn-icononly { flex:0 0 auto; min-width:42px; }
-.maker-card .btn { width:100%; }
 /* 상세 모달 */
 .pd-top { display:flex; gap:18px; margin-bottom:18px; }
 .pd-thumb { flex:0 0 130px; height:130px; background:var(--color-gray-100); border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
@@ -65,14 +63,8 @@
   <section class="section-sm">
     <div class="container container-wide">
 
-      <!-- 보기 전환: 제품별 / 업체별 -->
-      <div class="flex-between mb-4" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
-        <div class="view-toggle" role="tablist" aria-label="보기 전환">
-          <button class="chip chip-active" type="button" role="tab" aria-selected="true" data-view="product">제품별 보기</button>
-          <button class="chip" type="button" role="tab" aria-selected="false" data-view="maker">업체별 보기</button>
-        </div>
-        <span class="text-muted" id="resultCount" style="font-size:13px;" aria-live="polite"></span>
-      </div>
+      <!-- [ISS-054] 보기 전환 탭 2종 삭제 — 제품 목록 단일 뷰로 통일. 제조사 정보는 제품 상세 모달(대표전화·홈페이지)에서 확인
+           [ISS-055] 결과 카운트 표시 영역(컨테이너 포함) 삭제 — 빈 여백 방지. 카운트는 필터바 아래 sr-only로 이동(아래 참조) -->
 
       <!-- 필터 -->
       <div class="filter-bar" id="filterBar">
@@ -95,6 +87,9 @@
         <button class="btn btn-primary" type="button" id="fSearch" data-i18n="charging.install.products.btn.search">검색</button>
         <button class="btn btn-secondary" type="button" id="fReset">초기화</button>
       </div>
+
+      <!-- [ISS-055] 결과 건수 = 시각적 비노출(sr-only) · 필터 변경 시 스크린리더에 결과 수 안내(aria-live) -->
+      <span id="resultCount" class="sr-only" aria-live="polite"></span>
 
       <!-- 렌더 영역 -->
       <div class="prod-grid mt-4" id="catalogGrid"></div>
@@ -157,13 +152,12 @@
     { id:'sks-11t', model:'TowerPlus 11kW', maker:'sks', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'405(W)×1420(H)×215(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:334, pMin:306, pMax:351, rate:180, notes:['멀티 커넥터(2구)','전력분배형 지원'], addons:['캐노피 (30만원)'] }
   ];
 
-  var state = { view:'product', type:'all', power:'all', pay:'all', maker:'' };
+  var state = { type:'all', power:'all', pay:'all', maker:'' };
   var byId = {}; products.forEach(function(p){ byId[p.id]=p; });
 
   var grid = document.getElementById('catalogGrid');
   var empty = document.getElementById('emptyMsg');
   var countEl = document.getElementById('resultCount');
-  var filterBar = document.getElementById('filterBar');
 
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function thumb(p, cls){ return '<div class="'+cls+'"><img src="assets/chargers/'+p.id+'.png" alt="'+esc(p.model)+' 제품 사진" onerror="this.remove()"><span class="ph" aria-hidden="true">🔌</span></div>'; }
@@ -173,7 +167,7 @@
     var m = makers[p.maker];
     return '<div class="info-side-card prod-card">'
       + thumb(p,'prod-thumb')
-      + '<h4>'+esc(p.model)+' <span class="chip chip-info" style="font-weight:600;">'+p.cap+'kW</span></h4>'
+      + '<h4>'+esc(p.model)+'</h4>'   // [ISS-055] kW 뱃지 제거 — 모델명·정격용량 행과 3중 중복이라 뱃지만 삭제
       + '<p class="prod-maker">'+esc(m.name)+'</p>'
       + '<dl class="prod-spec">'
         + '<dt>출력</dt><dd>'+esc(p.power)+'</dd>'
@@ -184,22 +178,6 @@
       + '<div class="prod-actions">'
         + '<button class="btn btn-primary" type="button" data-detail="'+p.id+'">상세 보기</button>'
         + '<a class="btn btn-secondary btn-icononly" href="'+esc(m.home)+'" target="_blank" rel="noopener" aria-label="'+esc(m.name)+' 홈페이지 바로가기" title="홈페이지 바로가기">↗</a>'
-      + '</div>'
-    + '</div>';
-  }
-
-  function makerCard(key){
-    var m = makers[key];
-    var list = products.filter(function(p){ return p.maker===key; });
-    return '<div class="info-side-card maker-card">'
-      + '<h4 style="margin-bottom:6px;">'+esc(m.name)+'</h4>'
-      + '<p class="prod-maker">스마트완속 '+list.length+'종 · 대표전화 '+esc(m.phone)+'</p>'
-      + '<dl class="prod-spec" style="margin-bottom:14px;">'
-        + '<dt>취급 모델</dt><dd>'+list.map(function(p){ return esc(p.model); }).join(', ')+'</dd>'
-      + '</dl>'
-      + '<div class="prod-actions" style="flex-direction:column;gap:8px;padding-top:4px;">'
-        + '<button class="btn btn-primary" type="button" data-maker-products="'+key+'">제품 '+list.length+'종 보기</button>'
-        + '<a class="btn btn-secondary" href="'+esc(m.home)+'" target="_blank" rel="noopener">홈페이지 바로가기 ↗</a>'
       + '</div>'
     + '</div>';
   }
@@ -218,19 +196,10 @@
   }
 
   function render(){
-    var isProduct = state.view==='product';
-    filterBar.style.display = isProduct ? '' : 'none';
-    if(isProduct){
-      var list = applyFilters(products);
-      grid.innerHTML = list.map(productCard).join('');
-      empty.style.display = list.length ? 'none' : '';
-      countEl.textContent = '충전기 '+list.length+'종';
-    } else {
-      var keys = Object.keys(makers);
-      grid.innerHTML = keys.map(makerCard).join('');
-      empty.style.display = 'none';
-      countEl.textContent = '등록 업체 '+keys.length+'곳';
-    }
+    var list = applyFilters(products);
+    grid.innerHTML = list.map(productCard).join('');
+    empty.style.display = list.length ? 'none' : '';
+    countEl.textContent = '충전기 '+list.length+'종';
   }
 
   function openDetail(id){
@@ -267,27 +236,6 @@
   grid.addEventListener('click', function(e){
     var d = e.target.closest('[data-detail]');
     if(d){ openDetail(d.getAttribute('data-detail')); return; }
-    var mp = e.target.closest('[data-maker-products]');
-    if(mp){
-      var key = mp.getAttribute('data-maker-products');
-      state.view='product'; state.maker=makers[key].name;
-      document.getElementById('fMaker').value = makers[key].name;
-      document.querySelectorAll('.view-toggle .chip').forEach(function(c){
-        var on = c.getAttribute('data-view')==='product';
-        c.classList.toggle('chip-active', on); c.setAttribute('aria-selected', on?'true':'false');
-      });
-      render();
-      document.getElementById('filterBar').scrollIntoView({behavior:'smooth', block:'start'});
-    }
-  });
-
-  document.querySelector('.view-toggle').addEventListener('click', function(e){
-    var b = e.target.closest('.chip'); if(!b) return;
-    state.view = b.getAttribute('data-view');
-    document.querySelectorAll('.view-toggle .chip').forEach(function(c){
-      var on = c===b; c.classList.toggle('chip-active', on); c.setAttribute('aria-selected', on?'true':'false');
-    });
-    render();
   });
 
   document.getElementById('fType').addEventListener('change', function(e){ state.type=e.target.value; render(); });

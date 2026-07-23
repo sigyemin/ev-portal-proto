@@ -40,14 +40,17 @@
         <form data-validate id="reqWriteForm">
           <div class="grid grid-2 gap-4">
             <div class="form-group">
-              <label class="form-label">요청 구분 <span class="required">*</span></label>
+              <label class="form-label" for="rwCat">요청 구분 <span class="required">*</span></label>
+              <!-- [ISS-064] value = EVCS_REQUEST_DATA.REQ_CATE 실값(1충전기·2보조금·3기타) — 라벨 유지, value만 코드값으로 교체 -->
               <select class="form-select" id="rwCat" required>
                 <option value="">선택</option>
-                <option value="charger">충전기</option>
-                <option value="subsidy">보조금</option>
-                <option value="etc">기타</option>
+                <option value="1">충전기</option>
+                <option value="2">보조금</option>
+                <option value="3">기타</option>
               </select>
             </div>
+            <!-- [DEV] 요청기관: EVCS_REQUEST_DATA에 대응 컬럼 없음(2026-07-23 실측).
+                 처리방향 발주처 판단 대기 — 제거/컬럼신설/회원 소속기관 대체 중 택일. (판단 전까지 삭제 금지) -->
             <div class="form-group">
               <label class="form-label">요청기관</label>
               <div class="qw-writer"><span class="nm" id="rwOrg">서울특별시</span></div>
@@ -78,6 +81,18 @@
             <button type="submit" class="btn btn-primary btn-lg" style="flex:1;">등록</button>
           </div>
         </form>
+
+        <!-- ★[DEV] 요청자료 원천 (2026-07-23 DB 실측) -->
+        <details class="dev-note" style="margin-top:28px;border:1px dashed var(--color-primary-300,#8fc9a8);border-radius:12px;background:#f6faf7;">
+          <summary style="cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--color-primary-700);list-style:none;">🛠 개발 참고 — 요청자료 원천·코드값</summary>
+          <div style="padding:0 16px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary);">
+            <p style="margin:0 0 6px;">요청자료 원천 = <code>EVCS_REQUEST_DATA</code> (실컬럼 14종)</p>
+            <p style="margin:0 0 6px;">요청구분 = <code>REQ_CATE</code> (<b>1</b>충전기 · <b>2</b>보조금 · <b>3</b>기타)</p>
+            <p style="margin:0 0 6px;">처리상태 = <code>REQ_STATUS</code> (<b>1</b>신청 · <b>2</b>승인 · <b>3</b>반려 · <b>4</b>처리중 · <b>5</b>처리완료) — 등록 시 <b>1 신청</b>으로 생성</p>
+            <p style="margin:0 0 6px;">코드 = <code>EVCS_CODE_DETAIL</code> (계층은 <code>UP_CODE</code>, <code>USE_YN</code> 없음, 정렬 <code>SORT_ORDR</code>)</p>
+            <p style="margin:0;color:#a76a00;"><b>미해결</b> — ‘요청기관’은 <code>EVCS_REQUEST_DATA</code>에 <b>대응 컬럼 없음</b>. 제거/컬럼신설/회원 소속기관 대체 중 발주처 판단 대기.</p>
+          </div>
+        </details>
       </div>
     </div>
   </section>

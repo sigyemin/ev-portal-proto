@@ -245,9 +245,10 @@
     'faq.sg.s5':              { ko: 'K-EV100 참여',          en: 'K-EV100 Participation' },
     'faq.cat.all':            { ko: '전체',                 en: 'All' },
     /* SMLCLS10 코드그룹 분류 (4종) + 지킴이(신규) */
-    'faq.cat.use':            { ko: '충전소이용',            en: 'Charging Station Use' },
+    /* [ISS-063] AS-IS(ARTC.SMLCLS10) 대민 화면 표기 그대로 — 순서: 완속충전기 설치지원 사업 → 충전소 이용 → 수소충전소 인프라 사업 */
+    'faq.cat.use':            { ko: '충전소 이용',           en: 'Charging Station Use' },
     'faq.cat.slow':           { ko: '완속충전기 설치지원 사업', en: 'Slow Charger Installation Support' },
-    'faq.cat.h2':             { ko: '수소충전기 인프라 사업',   en: 'Hydrogen Charging Infrastructure' },
+    'faq.cat.h2':             { ko: '수소충전소 인프라 사업',   en: 'Hydrogen Station Infrastructure' },
     'faq.cat.keeper':         { ko: '지킴이',                en: 'Guardian' },
     /* (구) 임의 분류 — 미사용, 호환용 보존 */
     'faq.cat.subsidy':        { ko: '보조금',                en: 'Subsidy' },
