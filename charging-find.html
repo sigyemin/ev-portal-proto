@@ -181,9 +181,9 @@
 .chg-row .cr-fee{ flex-basis:100%; display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-top:3px; font-size:11.5px; }
 .chg-row .cr-fee-val{ font-weight:800; color:var(--text-primary); font-variant-numeric:tabular-nums; }
 .chg-row .cr-fee-badge{ display:inline-flex; align-items:center; gap:3px; padding:1px 7px; border-radius:999px; font-weight:800; font-size:10.5px; }
-.chg-row .cr-fee-badge.rt{ background:#E7F6EE; color:#166534; border:1px solid #A7DFC0; }        /* 실시간 = 초록 */
-.chg-row .cr-fee-badge.std{ background:#EEF2F7; color:#3F4E63; border:1px solid #C6D2E1; }       /* 표준요금 = 슬레이트(색+아이콘+텍스트 병용) */
-.chg-row .cr-fee-badge svg{ width:10px; height:10px; flex:none; }
+.cr-fee-badge.rt{ background:#E7F6EE; color:#166534; border:1px solid #A7DFC0; }        /* 실시간 = 초록 */
+.cr-fee-badge.std{ background:#EEF2F7; color:#3F4E63; border:1px solid #C6D2E1; }       /* 표준요금 = 슬레이트(색+아이콘+텍스트 병용) */
+.cr-fee-badge svg{ width:10px; height:10px; flex:none; }
 .chg-fee-note{ font-size:11px; color:var(--text-tertiary); margin-top:8px; line-height:1.5; display:flex; gap:5px; align-items:flex-start; }
 .chg-fee-note svg{ flex:none; margin-top:1px; }
 /* [ISS-030] 지금시각 기준 적용 단가 = 접기/펼치기 디스클로저 */
@@ -192,10 +192,42 @@
 .sd-fee-toggle[aria-expanded="true"] .sd-fee-chev{ transform:rotate(180deg); }
 .sd-fee-toggle:focus-visible{ outline:2px solid var(--color-primary-600,#0f7a44); outline-offset:2px; border-radius:4px; }
 @media (prefers-reduced-motion: reduce){ .sd-fee-toggle .sd-fee-chev{ transition:none; } }
-.sd-fee-link{ display:inline-flex; align-items:center; gap:4px; margin:8px 0 2px; font-size:12px; font-weight:700; color:var(--color-primary-700,#0f7a44); text-decoration:none; }
-.sd-fee-link:hover, .sd-fee-link:focus-visible{ text-decoration:underline; }
-.chg-more{ width:100%; margin-top:8px; padding:9px; border:1px dashed var(--border-medium); background:var(--color-gray-50); border-radius:8px; font-size:12.5px; font-weight:700; color:var(--text-secondary); cursor:pointer; }
+/* 이동 버튼(아웃라인) — .btn.btn-secondary.btn-sm 기본 스타일 사용, 아이콘 간격만 보정 */
+.sd-fee-link{ display:inline-flex; align-items:center; gap:6px; text-decoration:none; }
+.chg-more{ width:100%; margin-top:8px; padding:9px; border:1px dashed var(--border-medium); background:var(--color-gray-50); border-radius:8px; font-size:12.5px; font-weight:700; color:var(--text-secondary); cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:5px; }
 .chg-more:hover{ background:var(--color-gray-100); color:var(--color-primary-700); }
+.chg-more:focus-visible{ outline:2px solid var(--color-primary-600,#0f7a44); outline-offset:2px; }
+/* ══ [ISS-030] 충전기 현황 = 표(table) ══════════════════════════════════════════ */
+.chg-table-wrap{ overflow-x:auto; }
+.chg-table{ width:100%; border-collapse:collapse; font-size:12px; }
+.chg-table th, .chg-table td{ padding:7px 6px; border-bottom:1px solid var(--border-light); text-align:left; vertical-align:middle; }
+.chg-table thead th{ background:var(--color-gray-50); font-size:11px; font-weight:800; color:var(--text-secondary); white-space:nowrap; border-bottom:1.5px solid var(--border-medium); }
+.chg-table thead th .th-sub{ display:block; font-weight:600; font-size:10px; color:var(--text-tertiary); }
+.chg-table tbody tr{ border-left:3px solid transparent; }
+.chg-table tbody tr.st-avail{ border-left-color:var(--mk-available); }
+.chg-table tbody tr.st-busy{ border-left-color:var(--mk-busy); }
+.chg-table tbody tr.st-check, .chg-table tbody tr.st-stop{ border-left-color:var(--mk-unavailable); background:var(--color-gray-50); }
+.chg-table tbody tr.st-comm, .chg-table tbody tr.st-unknown{ border-left-color:var(--mk-unknown); background:#fffbf0; }
+.chg-table .ct-id{ width:30px; font-weight:800; color:var(--text-tertiary); font-variant-numeric:tabular-nums; }
+.chg-table .ct-band b{ display:block; font-weight:800; }
+.chg-table .ct-band .ct-kw{ display:block; font-size:10.5px; color:var(--text-tertiary); font-variant-numeric:tabular-nums; }
+.chg-table .ct-fee .ct-price{ display:block; font-weight:800; font-variant-numeric:tabular-nums; margin-bottom:2px; }
+.chg-table .ct-fee .cr-fee-badge{ display:inline-flex; align-items:center; gap:3px; padding:1px 6px; border-radius:999px; font-weight:800; font-size:10px; }
+.chg-table .ct-fee .cr-fee-badge svg{ width:9px; height:9px; flex:none; }
+.chg-table .ct-state .st-badge{ display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:800; white-space:nowrap; }
+.st-badge.b-avail{ background:#E7F6EE; color:#166534; }
+.st-badge.b-busy{ background:#E8F0FD; color:#1B4D8F; }
+.st-badge.b-unavail{ background:#EEF1F5; color:#1E293B; }
+.st-badge.b-unknown{ background:#FEF6E7; color:#92400E; }
+.chg-table .ct-state .ct-upd{ display:block; margin-top:3px; font-size:10px; color:var(--text-tertiary); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.chg-table .ct-loc{ font-size:11px; color:var(--text-secondary); }
+/* 타입 셀 — 커넥터 이미지 팝오버(호버 + ★포커스 동시 지원). 자산 등록된 타입만 버튼화 */
+.ct-conn-btn{ position:relative; padding:0; border:none; background:none; font:inherit; color:inherit; cursor:help; border-bottom:1px dotted var(--border-medium); }
+.ct-conn-btn:focus-visible{ outline:2px solid var(--color-primary-600,#0f7a44); outline-offset:2px; }
+.ct-conn-pop{ position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#fff; border:1px solid var(--border-light); border-radius:8px; box-shadow:0 6px 20px rgba(15,23,42,.16); padding:6px; opacity:0; visibility:hidden; transition:opacity var(--t-fast); z-index:20; }
+.ct-conn-pop img{ display:block; width:84px; height:auto; }
+.ct-conn-pop .ct-conn-cap{ display:block; margin-top:3px; font-size:10px; font-weight:700; text-align:center; color:var(--text-secondary); }
+.ct-conn-btn:hover .ct-conn-pop, .ct-conn-btn:focus .ct-conn-pop, .ct-conn-btn:focus-visible .ct-conn-pop{ opacity:1; visibility:visible; }
 
 /* 표준 다운로드 버튼(charging-fee ev-download-btn xlsx 규격) */
 .ev-download-btn{ display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:#fff; border:1px solid var(--border-light); border-radius:var(--radius-sm); font-size:13.5px; font-weight:var(--fw-semibold); color:var(--text-primary); cursor:pointer; transition:all var(--t-fast); }
@@ -355,7 +387,31 @@
   .finder-layout { grid-template-columns: 1fr; }
   .finder-map { height: 480px; }
 }
+
+/* ══ [ISS-040] 실지도(Leaflet + OSM) ══════════════════════════════════════
+   [DEV] 프로토 시연용 Leaflet+OSM(무키). 실서비스는 네이버지도/카카오맵 SDK로 교체(키 발급·도메인 등록 필요).
+         Leaflet CDN·OSM 타일이라 인터넷 필요 — 사내망 차단 시 L 미정의 → 기존 mock 지도(placeholder+오버레이 핀)로 자동 폴백. */
+.cf-leaflet{ position:absolute; inset:0; z-index:1; }
+.finder-map.leaflet-on .map-placeholder,
+.finder-map.leaflet-on .map-clusters{ display:none; }          /* 실지도 활성 시 mock 레이어 숨김 */
+/* 커스텀 오버레이 컨트롤은 Leaflet 페인(200~700)·컨트롤(800~1000) 위로 */
+.finder-map .map-lod, .finder-map .map-controls, .finder-map .map-basemap{ z-index:1100; }
+/* divIcon 래퍼 = 0×0 앵커점. 내부 핀이 절대배치+translate로 좌표에 정렬(Leaflet이 래퍼에 transform 적용) */
+.leaflet-marker-icon.evx-marker{ width:0; height:0; margin:0; background:none; border:none; }
+.evx-marker .map-pin{ position:absolute; left:0; top:0; transform:translate(-50%,-100%); }
+.evx-marker .map-pin:hover{ transform:translate(-50%,-100%) scale(1.15); }
+.evx-marker .map-pin.active{ transform:translate(-50%,-100%) scale(1.25); }
+.evx-marker .map-cluster{ position:absolute; left:0; top:0; transform:translate(-50%,-50%); }
+.evx-marker .map-cluster:hover{ transform:translate(-50%,-50%) scale(1.08); }
+/* 내 위치 */
+.evx-marker .evx-me-dot{ position:absolute; left:0; top:0; transform:translate(-50%,-50%); display:block; width:16px; height:16px; border-radius:50%; background:#2C7BE5; border:3px solid #fff; box-shadow:0 0 0 6px rgba(44,123,229,.22); }
+.leaflet-container{ font-family:inherit; background:#F1F5F9; }
+.leaflet-container a.leaflet-popup-close-button{ font-family:inherit; }
+/* 위성(미지원) 버튼 */
+.map-basemap button[disabled]{ opacity:.5; cursor:not-allowed; }
 </style>
+<!-- [ISS-040] Leaflet(무키) — 실서비스 교체 시 이 2줄 + initLeaflet()만 네이버/카카오 SDK로 대체 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -624,14 +680,18 @@
           <div class="finder-map-col" style="display:flex;flex-direction:column;min-width:0;">
           <div class="finder-map">
             <!-- [ISS-030] 지도 위 전기/수소 탭 제거 — 전환은 상단 검색영역 세그먼트 토글이 유일 소스 -->
-            <!-- 일반/위성 토글 -->
-            <div style="position:absolute; top:16px; right:64px; z-index:10; display:flex; background:#fff; border-radius:8px; box-shadow:0 4px 16px rgba(15,23,42,.1); overflow:hidden; border:1px solid var(--border-light);">
-              <button type="button" style="padding:7px 14px; border:none; background:var(--color-primary-500); color:#fff; font-size:13px; font-weight:700; cursor:pointer;">일반</button>
-              <button type="button" style="padding:7px 14px; border:none; background:#fff; color:var(--color-gray-700); font-size:13px; font-weight:600; cursor:pointer;">위성</button>
+            <!-- 일반/위성 토글 — [ISS-040] OSM 무료 타일은 위성 레이어가 없어 '위성' 비활성. 실서비스(네이버/카카오)에서 위성 지원 -->
+            <div class="map-basemap" style="position:absolute; top:16px; right:64px; display:flex; background:#fff; border-radius:8px; box-shadow:0 4px 16px rgba(15,23,42,.1); overflow:hidden; border:1px solid var(--border-light);">
+              <button type="button" aria-pressed="true" style="padding:7px 14px; border:none; background:var(--color-primary-500); color:#fff; font-size:13px; font-weight:700; cursor:pointer;">일반</button>
+              <button type="button" id="cfSat" disabled aria-disabled="true" title="위성 지도는 실서비스(네이버·카카오) 전환 시 제공됩니다 — OSM 무료 타일 미지원" style="padding:7px 14px; border:none; background:#fff; color:var(--color-gray-700); font-size:13px; font-weight:600; cursor:pointer;">위성</button>
             </div>
-            <!-- [DEV] 지도 = AS-IS와 동일하게 VWorld 사용(네이버/카카오는 대안). 마커 상태 = EVCS_CHARGER_STATUS 상태코드 5종
-                 (사용가능/사용중/사용불가/상태미확인/이용자제한), 출력 티어 = CHGE_OUTPUT(50kW·완속/100/200/350),
+            <!-- [DEV] 지도 = ★프로토 시연용 Leaflet + OpenStreetMap(무키, ISS-040). 실서비스는 네이버지도/카카오맵 SDK로 교체 — 키 발급·도메인 등록 필요.
+                 마커·클러스터·상세패널 연동 구조는 그대로 이식 가능(좌표·divIcon만 SDK 규격으로 교체). 공공데이터포털 충전소 API 연동은 별도 과제.
+                 ★외부 의존: Leaflet CDN(unpkg) + OSM 타일 → 인터넷 필요. 사내망 차단 시 L 미정의 → 기존 mock 지도(placeholder+오버레이 핀)로 자동 폴백.
+                 ★위성: OSM 무료 타일에 위성 레이어 없음 → '위성' 버튼 비활성. 실서비스에서 지원.
+                 마커 상태 = EVCS_CHARGER_STATUS 상태코드 5종(사용가능/사용중/사용불가/상태미확인/이용자제한), 출력 티어 = CHGE_OUTPUT(50kW·완속/100/200/350),
                  CPO = BID / R_BUSI.BNM(약칭 폴백). CPO 마크는 확대 줌에서만 노출(LOD — 시인성·타일 부하). -->
+            <div class="cf-leaflet" id="cfLeaflet" role="application" aria-label="충전소 지도 — 지도는 보조 수단이며, 모든 충전소 정보는 좌측 목록과 상세 패널로 확인할 수 있습니다"></div>
             <div class="map-placeholder">
               <div style="text-align:center;">
                 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -917,8 +977,11 @@
     <!-- [DEV] R_CHARGER: #ID(2자리·상한99) · CHGE_OUTPUT(밴드) · CONNECTOR · 상태 · POSITION_DESC(상세위치, 입력률 17%·최대 99자, Disclosure 펼침) -->
     <div class="sd-section">
       <h4>충전기 현황 <span id="sdChgTotal" style="font-size:12px;color:var(--color-gray-500);font-weight:600;">(0기)</span></h4>
-      <div class="chg-list" id="sdChargerList"></div>
-      <button type="button" class="chg-more" id="sdChgMore" hidden></button>
+      <!-- [ISS-030] 카드 리스트 → 표(table). 순서 = 표 → [+ 더보기] → 안내멘트(요금 disclaimer · 밴드/상태) -->
+      <div class="chg-table-wrap" id="sdChargerList"></div>
+      <button type="button" class="chg-more" id="sdChgMore" hidden aria-expanded="false" aria-controls="sdChargerList"></button>
+      <!-- 실시간 요금도 회원·할인·로밍에 따라 실결제와 다를 수 있음(참고) — ISS-020/028 정합 -->
+      <p class="chg-fee-note"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>충전기별 <b>실시간 요금</b>은 공시 회원가 기준 참고값입니다. 회원·할인·시간대·로밍에 따라 실제 결제금액과 다를 수 있습니다. 실시간 미제공 충전기는 <b>사업자 표준요금</b>(계절시간제·지금 시각 기준)을 표시합니다.</span></p>
       <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · 상태: <span style="color:var(--mk-available);">사용가능</span>·<span style="color:var(--mk-busy);">사용중</span>·<span style="color:var(--mk-unavailable);">사용불가</span>·<span style="color:var(--mk-unknown);">상태미확인</span>·<span style="color:var(--mk-restricted);">이용자제한</span></p>
     </div>
 
@@ -930,9 +993,9 @@
     <div class="sd-section">
       <h4>사업자 표준 요금 안내 <span style="font-size:11.5px;font-weight:600;color:var(--text-tertiary);">회원가 기준</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h4>
       <!-- [ISS-030] 계절시간제(계시제) 표준 요금 = 각 충전기가 이미 실시간/표준요금을 표시하므로 전체 밴드표는 디스클로저로 접어둠(디폴트 접힘) · sdNowFee = 지금 시각 기준 라벨 -->
-      <button type="button" class="sd-fee-toggle" id="sdNowFeeBtn" aria-expanded="false" aria-controls="sdBandTable">
-        <span class="sd-fee-basis" id="sdNowFee" style="margin:0;"></span>
-        <svg class="sd-fee-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      <!-- [ISS-030] 단가 표 토글 = '더보기' 버튼 UI로 통일(.chg-more) -->
+      <button type="button" class="chg-more" id="sdNowFeeBtn" aria-expanded="false" aria-controls="sdBandTable">
+        <span id="sdNowFee"></span>
       </button>
       <dl class="sd-kv" id="sdBandTable" hidden>
         <dt>완속 (&lt;30kW)</dt><dd>292원/kWh</dd>
@@ -940,7 +1003,8 @@
         <dt>급속+ (100~200kW)</dt><dd>390원/kWh</dd>
         <dt>초급속 (≥200kW)</dt><dd>433원/kWh</dd>
       </dl>
-      <a href="charging-fee.html" class="sd-fee-link">자세한 계절시간제 요금은 충전요금 안내에서 <span aria-hidden="true">→</span></a>
+      <!-- [ISS-030] 이동 링크 = 아웃라인 버튼 UI 통일(data.html ds-navlink와 동일 규격) -->
+      <p style="margin-top:10px;"><a href="charging-fee.html" class="btn btn-secondary btn-sm sd-fee-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>자세한 계절시간제 요금은 충전요금 안내에서 →</span></a></p>
       <div class="fee-caption-sm" data-i18n="charging.fee.disc.captionSlide">※ 안내가 — 실제 결제 금액과 다를 수 있습니다</div>
     </div>
 
@@ -1015,6 +1079,7 @@
 
 <div id="footer-slot"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/partials.js?v=20260721c"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260721a"></script>
@@ -1219,17 +1284,18 @@
     if(parseInt(c.id,10)%3===0) return null;                       // 데모: 일부 충전기 실시간 미제공(혼재 노출)
     return (RT_BAND_PRICE[c.band]||300) + (parseInt(c.id,10)%5)*2; // 실시간 단가(소폭 변동)
   }
+  // 표 '요금' 셀 = 위 단가 / 아래 실시간·표준요금 배지(색 단독 금지 → 아이콘+텍스트 병용)
   function chargerFeeHTML(c){
     var rt=chargerRt(c);
     if(rt!=null){
-      return '<span class="cr-fee" role="group" aria-label="실시간 요금 '+rt+'원 퍼 킬로와트시">'
-        + '<span class="cr-fee-val">'+rt+'원/kWh</span>'
+      return '<span role="group" aria-label="실시간 요금 '+rt+'원 퍼 킬로와트시">'
+        + '<span class="ct-price">'+rt+'원</span>'
         + '<span class="cr-fee-badge rt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>실시간</span></span>';
     }
-    // 실시간 미제공 → 그 충전기 출력밴드의 사업자 표준요금(하단 '지금시각 기준 적용 단가'와 동일 소스) 인라인 표시
+    // 실시간 미제공 → 그 충전기 출력밴드의 사업자 표준요금(하단 '지금시각 기준 적용 단가'와 동일 소스)
     var std=RT_BAND_PRICE[c.band]||300;
-    return '<span class="cr-fee" role="group" aria-label="사업자 표준요금 '+std+'원 퍼 킬로와트시">'
-      + '<span class="cr-fee-val">'+std+'원/kWh</span>'
+    return '<span role="group" aria-label="사업자 표준요금 '+std+'원 퍼 킬로와트시">'
+      + '<span class="ct-price">'+std+'원</span>'
       + '<span class="cr-fee-badge std"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>표준요금</span></span>';
   }
 
@@ -1237,8 +1303,10 @@
   var _DOW=['일','월','화','수','목','금','토'];
   function renderNowFee(){
     var el=document.getElementById('sdNowFee'); if(!el) return;
+    var btn=document.getElementById('sdNowFeeBtn');
+    var open = btn && btn.getAttribute('aria-expanded')==='true';
     var d=new Date(), m=d.getMonth()+1, dow=d.getDay(), h=d.getHours();
-    el.textContent = '지금 시각('+m+'월 '+_DOW[dow]+'요일 '+h+'시) 기준 적용 단가';
+    el.textContent = '지금 시각('+m+'월 '+_DOW[dow]+'요일 '+h+'시) 기준 적용 단가 ' + (open ? '접기 ▲' : '보기 ▼');
   }
   // [ISS-030] 지금시각 기준 적용 단가 표 = 접기/펼치기 디스클로저(디폴트 접힘) · 각 충전기가 자기 요금을 표시하므로 전체 밴드표는 상세로 접음
   (function(){
@@ -1247,6 +1315,7 @@
       var open=btn.getAttribute('aria-expanded')==='true';
       btn.setAttribute('aria-expanded', open?'false':'true');
       var tbl=document.getElementById('sdBandTable'); if(tbl) tbl.hidden=open;
+      renderNowFee();   // 라벨 보기 ▼ / 접기 ▲ 동기화
     });
   })();
 
@@ -1262,24 +1331,70 @@
     if((e=document.getElementById('sdFault'))) e.textContent=ft;
     if((e=document.getElementById('sdChgTotal'))) e.textContent='('+list.length+'기)';
     var shown = __chgExpanded ? list.length : Math.min(8, list.length);
-    host.innerHTML = list.slice(0,shown).map(function(c){
-      var loc = c.loc ? '<button type="button" class="cr-loc" data-loc-toggle title="'+esc(c.loc)+'">📍 '+esc(c.loc)+'</button>' : '';
-      return '<div class="chg-row st-'+c.state+'">'
-        + '<span class="cr-id">#'+c.id+'</span>'
-        + '<span class="cr-band" style="color:'+BAND_CLR[c.band]+';">'+BAND_LBL[c.band]+'</span>'
-        + (c.kw!=null ? '<span class="cr-kw">'+c.kw+'kW</span>' : '')   // CHGE_OUTPUT 원값 — 밴드 라벨은 이 값에서 파생
-        + '<span class="cr-conn">'+esc(c.conn)+'</span>'
-        + '<span class="cr-state">'+CHG_STATE[c.state]+'</span>'
-        + chargerFeeHTML(c)
-        + loc + '</div>';
+    var rows = list.slice(0,shown).map(function(c){
+      return '<tr class="st-'+c.state+'">'
+        + '<th scope="row" class="ct-id">'+esc(c.id)+'</th>'
+        + '<td class="ct-band"><b style="color:'+BAND_CLR[c.band]+';">'+BAND_LBL[c.band]+'</b>'
+          + (c.kw!=null ? '<span class="ct-kw">('+c.kw+'kW)</span>' : '') + '</td>'   // CHGE_OUTPUT 원값 — 밴드 라벨은 이 값에서 파생
+        + '<td class="ct-type">'+connCellHTML(c)+'</td>'
+        + '<td class="ct-fee">'+chargerFeeHTML(c)+'</td>'
+        + '<td class="ct-state">'+stateCellHTML(c)+'</td>'
+        + '<td class="ct-loc">'+(c.loc ? esc(c.loc) : '<span style="color:var(--text-tertiary);">-</span>')+'</td>'
+        + '</tr>';
     }).join('');
-    // 실시간 요금도 회원·할인·로밍에 따라 실결제와 다를 수 있음(참고) — ISS-020/028 정합
-    host.insertAdjacentHTML('beforeend', '<p class="chg-fee-note"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>충전기별 <b>실시간 요금</b>은 공시 회원가 기준 참고값입니다. 회원·할인·시간대·로밍에 따라 실제 결제금액과 다를 수 있습니다. 실시간 미제공 충전기는 <b>사업자 표준요금</b>(계절시간제·지금 시각 기준)을 표시합니다.</span></p>');
+    host.innerHTML =
+      '<table class="chg-table">'
+      + '<caption class="sr-only">충전기 현황 — 번호, 구분(출력 밴드·kW), 타입(커넥터), 요금(원/kWh), 상태 및 갱신일시, 위치</caption>'
+      + '<thead><tr>'
+      +   '<th scope="col">#</th>'
+      +   '<th scope="col">구분</th>'
+      +   '<th scope="col">타입</th>'
+      +   '<th scope="col">요금</th>'
+      +   '<th scope="col">상태<span class="th-sub">갱신일시</span></th>'
+      +   '<th scope="col">위치</th>'
+      + '</tr></thead><tbody>' + rows + '</tbody></table>';
     var more=document.getElementById('sdChgMore');
     if(more){
-      if(list.length>8){ more.hidden=false; more.textContent = __chgExpanded ? '접기 ▲' : ('전체 '+list.length+'기 보기 ▼'); }
-      else more.hidden=true;
+      if(list.length>8){
+        more.hidden=false;
+        more.textContent = __chgExpanded ? '접기 ▲' : ('전체 '+list.length+'기 보기 ▼');
+        more.setAttribute('aria-expanded', __chgExpanded ? 'true' : 'false');
+      } else { more.hidden=true; more.setAttribute('aria-expanded','false'); }
     }
+  }
+  /* ── 표 셀 빌더 ─────────────────────────────────────────────────────────────
+     [DEV] ★커넥터 타입 이미지 자산 필요 — 프로토타입에 커넥터 이미지 없음(2026-07-23 전수 확인).
+        자산 확보 시 아래 CONNECTOR_IMG에 '타입명':'경로'만 등록하면 표 '타입' 셀에 호버·포커스 팝오버로 자동 노출.
+        등록되지 않은 타입은 이미지 없이 텍스트만 표시(현재 전 타입 해당). */
+  var CONNECTOR_IMG = { /* 예: 'DC콤보':'assets/connectors/dc-combo.png', 'AC완속':'', 'NACS':'', '차데모':'' */ };
+  function connCellHTML(c){
+    var src = CONNECTOR_IMG[c.conn];
+    if(!src) return esc(c.conn);                        // 자산 없는 타입 = 텍스트만(미표시 허용)
+    // 호버 전용 금지 → 포커스에서도 표시(button + :focus). 이미지 alt 제공
+    return '<button type="button" class="ct-conn-btn" aria-label="'+esc(c.conn)+' 커넥터 형상 보기">'+esc(c.conn)
+      + '<span class="ct-conn-pop" role="tooltip"><img src="'+esc(src)+'" alt="'+esc(c.conn)+' 커넥터 형상">'
+      + '<span class="ct-conn-cap">'+esc(c.conn)+'</span></span></button>';
+  }
+  // 상태 배지(색+텍스트 병용) + API 갱신일시. 사용중은 경과시간 접두("14시간30분 사용중")
+  var STATE_BADGE = { avail:'b-avail', busy:'b-busy', check:'b-unavail', stop:'b-unavail', comm:'b-unknown', unknown:'b-unknown' };
+  // [DEV] 더미 — 실서비스는 충전 시작시각(실시간 상태 API)에서 경과시간 산출
+  function chargeElapsed(c){
+    var n = parseInt(c.id,10)||1, mins = ((n*97) % 1020) + 5;
+    var h = Math.floor(mins/60), m = mins%60;
+    return (h ? h+'시간' : '') + m + '분';
+  }
+  // [DEV] 더미 — 실서비스는 상태 API 수신시각(EVCS_CHARGER_STATUS 갱신시각). 통신미연결·미확인은 오래된 시각으로 표기
+  function chgUpdatedAt(c){
+    var n = parseInt(c.id,10)||1, stale = (c.state==='comm' || c.state==='unknown');
+    var d = new Date(Date.now() - (stale ? (26+n)*3600000 : (n*7+3)*60000));
+    var p = function(v){ return v<10 ? '0'+v : ''+v; };
+    return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+  function stateCellHTML(c){
+    var label = CHG_STATE[c.state];                                   // ★확정 5종 용어(구표기 이용가능/충전중/점검중 금지)
+    var txt = (c.state==='busy') ? (chargeElapsed(c)+' '+label) : label;
+    return '<span class="st-badge '+(STATE_BADGE[c.state]||'b-unknown')+'">'+esc(txt)+'</span>'
+      + '<span class="ct-upd">'+chgUpdatedAt(c)+'</span>';
   }
 
   function openDrawer(stationId, fromLocKey) {
@@ -1475,7 +1590,9 @@
   });
   var favChk = document.getElementById('cfFavOnly');
   if (favChk) favChk.addEventListener('change', function () { __favOnly = this.checked; applyListFilter(); if (typeof renderMap === 'function') renderMap(); });
-  setMode('ev');
+  // [ISS-030] URL ?mode=h2 진입 시 수소충전소 탭으로 열기(data.html 수소 링크 등) · 그 외 기본 전기(ev)
+  var _mode = new URL(location.href).searchParams.get('mode');
+  setMode(_mode === 'h2' ? 'h2' : 'ev');
 
   // 내 주변 충전소 — 전기/수소 전환 (내 차 종류)
   function showNearEl(e, show) {
@@ -1520,18 +1637,20 @@
   // ★전기 충전소에는 status(대표상태)를 두지 않는다 — mix(충전기 상태 구성)에서 calcStationStatus()로 파생.
   //   하드코딩·계산 이원화가 마커 ↔ 슬라이드 모순의 원인이므로 저장값 금지(§4-5). 이용자제한만 충전소 플래그(restricted).
   //   mix 키 = 충전기 상태 6종(우선순위 순): avail·busy·check·comm·unknown·stop (표시 라벨은 5종 매핑: busy→사용중, check/stop→사용불가, comm/unknown→상태미확인)
+  // [DEV][ISS-040] lat/lng = ★더미 좌표(서울 강남·서초 일대 임의 배치) — 실서비스는 EVCS_STATION 등록 위경도 사용.
+  //   top/left(%)는 Leaflet 미로드(사내망 차단) 시 mock 지도 폴백 전용으로 유지 — 실지도에서는 lat/lng만 사용.
   var MARKERS = [
     // 전기 = 핀 몸통 색(상태 5종·파생) × 핀 내 번개 색(출력 5밴드=충전소 max)
     // s1 = CHARGERS에 개별 더미 명시(상세위치 시연) → mix 없이 배열 그대로 사용 · 파생 결과 '사용가능'
-    {id:'s1',top:30,left:25, type:'ev', cpo:{abbr:'환경부', name:'기후에너지환경부'}},
+    {id:'s1',top:30,left:25, type:'ev', cpo:{abbr:'환경부', name:'기후에너지환경부'}, lat:37.50060, lng:127.03640},
     // 사용중 = avail 0대 + busy 1대 이상
-    {id:'s3',top:45,left:32, type:'ev', mix:{busy:10, check:2}, kws:[[50,2],[7,10]], cpo:{abbr:'SK',   name:'SK일렉링크'}},
+    {id:'s3',top:45,left:32, type:'ev', mix:{busy:10, check:2}, kws:[[50,2],[7,10]], cpo:{abbr:'SK',   name:'SK일렉링크'}, lat:37.49540, lng:127.02800},
     // 이용자제한 = 사용가능 1대 이상 + 충전소 제한 플래그(override) — 충전기가 다 죽은 상태와 조합 금지
-    {id:'s4',top:50,left:45, type:'ev', mix:{avail:2, busy:2}, kws:[[350,2],[200,2]], restricted:true, cpo:{abbr:'에버온', name:'에버온'}},
+    {id:'s4',top:50,left:45, type:'ev', mix:{avail:2, busy:2}, kws:[[350,2],[200,2]], restricted:true, cpo:{abbr:'에버온', name:'에버온'}, lat:37.50450, lng:127.04900},
     // 상태미확인 = comm·unknown만 구성
-    {id:'s6',top:42,left:58, type:'ev', mix:{comm:14, unknown:10}, kws:[[7,18],[11,6]], cpo:{abbr:'GS',   name:'GS차지비'}},
+    {id:'s6',top:42,left:58, type:'ev', mix:{comm:14, unknown:10}, kws:[[7,18],[11,6]], cpo:{abbr:'GS',   name:'GS차지비'}, lat:37.49790, lng:127.02760},
     // 사용불가 = avail·busy 0대 + check 1대 이상(stop 혼재)
-    {id:'s7',top:55,left:65, type:'ev', mix:{check:10, stop:4}, kws:[[100,4],[50,4],[7,6]], cpo:{abbr:'에버온', name:'에버온'}},
+    {id:'s7',top:55,left:65, type:'ev', mix:{check:10, stop:4}, kws:[[100,4],[50,4],[7,6]], cpo:{abbr:'에버온', name:'에버온'}, lat:37.50880, lng:127.06300},
     // 60기급 대단지 완속 (더보기 시연) — 상세위치 입력률 낮음(17%) · 파생 '사용가능'
     {id:'big1',top:66,left:36,type:'ev', mix:{avail:47, busy:9, check:3, stop:1}, kws:[[7,52],[11,6],[50,2]], restricted:true, cpo:{abbr:'환경부', name:'기후에너지환경부'}, lat:37.5502, lng:127.0503},
     // 드림타워 사례: 같은 좌표 3개 코드(A/B/C구역) → 멀티 마커 · A 사용가능 / B 사용중 / C 사용가능
@@ -1539,9 +1658,9 @@
     {id:'d2',top:38,left:50, type:'ev', mix:{busy:33, check:2},           kws:[[100,15],[50,10],[7,10]],        cpo:{abbr:'SK',    name:'SK일렉링크'}, lat:37.52112, lng:127.03352},
     {id:'d3',top:38,left:50, type:'ev', mix:{avail:22, busy:6, comm:2},   kws:[[50,12],[30,6],[7,12]],          cpo:{abbr:'GS',    name:'GS차지비'},   lat:37.52108, lng:127.03349},
     // 수소 = AS-IS 계승: 상태 2종(영업중/영업마감)만 · 출력·압력·가격 마커 미표시
-    {id:'s2',top:35,left:40,count:2, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}},
-    {id:'s5',top:58,left:55,count:2, type:'h2', h2status:'closed', cpo:{abbr:'코하이젠', name:'코하이젠'}},
-    {id:'s8',top:60,left:72,count:1, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}}
+    {id:'s2',top:35,left:40,count:2, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}, lat:37.48800, lng:127.03000},
+    {id:'s5',top:58,left:55,count:2, type:'h2', h2status:'closed', cpo:{abbr:'코하이젠', name:'코하이젠'}, lat:37.51700, lng:127.04700},
+    {id:'s8',top:60,left:72,count:1, type:'h2', h2status:'open',   cpo:{abbr:'하이넷', name:'하이넷(수소에너지네트워크)'}, lat:37.47700, lng:127.04500}
   ];
   // [DEV] 멀티 마커 판정 = lat/lng 소수 4자리 반올림 그룹(≈10m 근접) — 같은 단지 CPO별 등록 좌표 미세차 흡수.
   //   실서비스는 지도 라이브러리 클러스터 최소반경으로 대체 가능. lat/lng 없는 더미는 id로 단독 그룹.
@@ -1563,7 +1682,8 @@
     return out;
   }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-  function pinHTML(m){
+  // posStyle: mock 지도 = top/left(%) 인라인 · 실지도(Leaflet) = '' (divIcon 래퍼가 좌표 배치)
+  function pinHTML(m, posStyle){
     var isH2 = (m.type==='h2');
     // 상태: 전기=핀 몸통 색 5종(st-*) · 수소=2종(h2st-*). 출력: 전기=번개 글리프 색 5밴드 / 수소=출력 표기 없음(H₂만)
     var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+calcStationStatus(m.id));   // ★대표상태 = 충전기 배열에서 파생
@@ -1578,20 +1698,24 @@
     // ★모든 전기 마커에 충전소 개수 표시 — 단일 충전소도 '1'(2026-07-20 지시). 충전기 대수는 슬라이드에서만
     var title = (m.cpo? esc(m.cpo.name)+' · ':'') + (outTxt? outTxt+' · ':'') + '충전소 1개소';
     // aria-label = 키보드·스크린리더 접근(호버 전용 정보 보완). mp-count/mp-name은 aria-hidden(중복 낭독 방지)
-    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+'" data-station="'+m.id+'" title="'+title+'" aria-label="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
+    var st = (posStyle!=null) ? posStyle : ('top:'+m.top+'%;left:'+m.left+'%;');
+    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+'" data-station="'+m.id+'" title="'+title+'" aria-label="'+title+'" style="'+st+'">'
       + inner + '<span class="mp-count" aria-hidden="true">1</span>' + nameLbl + '</button>';
   }
+  // 현재 모드·필터(출력밴드·즐겨찾기)에 걸린 마커 — mock/실지도 공용
+  function filteredPts(){
+    return MARKERS.filter(function(m){ return m.type === __currentMode && (m.type==='h2' || __outBand==='all' || stationHasBand(m.id)) && (!__favOnly || !!FAVS[m.id]); });
+  }
   function renderMap(){
+    if(__leafletOn){ renderMapLeaflet(); return; }   // [ISS-040] 실지도 활성 시 Leaflet 렌더로 위임
     if(!mapWrap) return;
     mapWrap.className = 'map-clusters lod-'+__lod;
-    var pts = MARKERS.filter(function(m){ return m.type === __currentMode && (m.type==='h2' || __outBand==='all' || stationHasBand(m.id)) && (!__favOnly || !!FAVS[m.id]); });
+    var pts = filteredPts();
     if(__lod === 'cluster'){
       // 축소 → 클러스터만(숫자만, AS-IS 동일). ★숫자 = 그룹 내 충전소 개수(충전기 대수 아님). 단독 지점도 카운트 원으로 집계
       var groups = clusterBy(pts, 42);
       mapWrap.innerHTML = groups.map(function(g){
-        var sz=36 + String(g.stations).length*10;   // 자릿수 기반 크기(1자 46 · 2자 56 · 3자 66)
-        var cTitle='충전소 '+g.stations+'개소 · 클릭 시 확대';
-        return '<button type="button" class="map-cluster mk" data-cluster="1" style="top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;" title="'+cTitle+'" aria-label="'+cTitle+'"><span class="mc-count" aria-hidden="true">'+g.stations+'</span></button>';
+        return clusterHTML(g.stations, 'top:'+g.top.toFixed(1)+'%;left:'+g.left.toFixed(1)+'%;');
       }).join('');
     } else {
       // 중간=상태핀 / 확대=핀 확대+CPO 마크 · 동일 좌표(≈10m) 복수 코드는 멀티 마커 1개로 묶고 ×N 뱃지
@@ -1609,7 +1733,7 @@
     }
   }
   // 멀티 마커(동일 좌표 복수 충전소) — ★숫자 = 충전소 개수, 대표 상태색은 첫 코드 기준
-  function multiMarkerHTML(grp, key){
+  function multiMarkerHTML(grp, key, posStyle){
     var m = grp[0], isH2 = (m.type==='h2');
     var statusCls = isH2 ? ('h2st-'+m.h2status) : ('st-'+calcStationStatus(m.id));   // ★대표상태 = 충전기 배열에서 파생
     var inner = isH2 ? '<span class="mp-bolts">H₂</span>' : (__lod==='cpo' ? '<span class="mp-bolt" style="color:'+BAND_COLOR[maxBandOf(m.id)]+';">⚡</span>' : '');
@@ -1620,23 +1744,34 @@
     var opText = opKeys.length===1 ? opKeys[0] : opKeys.join(' · ');   // 운영기관 목록(호버 툴팁·aria용)
     var nameLbl = opKeys.length ? '<span class="mp-name" aria-hidden="true">'+esc(opText)+'</span>' : '';   // 호버·포커스 시 운영기관 전체(시각)
     var title = '충전소 '+grp.length+'개소' + (opKeys.length ? ' · 운영 '+esc(opText) : '') + ' · 클릭 시 목록';
-    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+' is-multi" data-multi="'+esc(key)+'" title="'+title+'" aria-label="'+title+'" style="top:'+m.top+'%;left:'+m.left+'%;">'
+    var st = (posStyle!=null) ? posStyle : ('top:'+m.top+'%;left:'+m.left+'%;');
+    return '<button type="button" class="map-pin mk '+statusCls+' type-'+m.type+' is-multi" data-multi="'+esc(key)+'" title="'+title+'" aria-label="'+title+'" style="'+st+'">'
       + inner + '<span class="mp-count" aria-hidden="true">'+grp.length+'</span>' + nameLbl + '</button>';
+  }
+  // 클러스터 마크업 공용(mock=top/left · 실지도=divIcon)
+  function clusterHTML(stations, posStyle){
+    var sz = 36 + String(stations).length*10;
+    var cTitle = '충전소 '+stations+'개소 · 클릭 시 확대';
+    return '<button type="button" class="map-cluster mk" data-cluster="1" style="'+(posStyle||'')+'width:'+sz+'px;height:'+sz+'px;" title="'+cTitle+'" aria-label="'+cTitle+'"><span class="mc-count" aria-hidden="true">'+stations+'</span></button>';
   }
   // 좌표 그룹의 멤버 stationId 배열
   function multiMembers(key){ return MARKERS.filter(function(m){ return coordKey(m)===key && m.type===__currentMode; }); }
   // LOD 토글 (축소/중간/확대) 동기화
+  function syncLodBtns(){ document.querySelectorAll('.map-lod .mt-step').forEach(function(x){ x.classList.toggle('active', x.dataset.lod===__lod); }); }
   function setLod(lod){
-    __lod = lod;
-    document.querySelectorAll('.map-lod .mt-step').forEach(function(x){ x.classList.toggle('active', x.dataset.lod===lod); });
-    renderMap();
+    // [ISS-040] 실지도: 상세도 = 지도 줌 레벨. setZoom → zoomend에서 __lod 동기화·재렌더
+    if(__leafletOn && __map){ __map.setView(__map.getCenter(), LOD_ZOOM[lod], {animate:false}); return; }
+    __lod = lod; syncLodBtns(); renderMap();
   }
   document.querySelectorAll('.map-lod .mt-step').forEach(function(b){
     b.addEventListener('click', function(){ setLod(b.dataset.lod); });
   });
   // [DEV] 실서비스 = 지도 라이브러리 클러스터 클릭 줌인(자동 분리) 표준 동작. mock = LOD 3단(광역 클러스터→상태핀→확대핀) 클릭 전환.
   var __activeStation = null;   // 확대 진행 시 선택 핀 하이라이트 연속성
-  function stepLod(dir){ var i=LODS.indexOf(__lod); i=Math.max(0,Math.min(LODS.length-1,i+dir)); setLod(LODS[i]); }
+  function stepLod(dir){
+    if(__leafletOn && __map){ __map.setView(__map.getCenter(), __map.getZoom()+(dir>0?1:-1), {animate:false}); return; }   // 실지도 = 실제 줌
+    var i=LODS.indexOf(__lod); i=Math.max(0,Math.min(LODS.length-1,i+dir)); setLod(LODS[i]);
+  }
   // 클릭 위임 — LOD 단계 게이트: 최종(cpo)에서만 드로어, 그 전엔 단계 확대(+ 선택 핀 하이라이트 유지)
   if(mapWrap) mapWrap.addEventListener('click', function(e){
     var b=e.target.closest('.mk'); if(!b) return;
@@ -1657,7 +1792,7 @@
   });
   // 더블클릭 → 한 단계 축소 복귀 (지도 배경 더블클릭 포함)
   var __finderMap = document.querySelector('.finder-map');
-  if(__finderMap) __finderMap.addEventListener('dblclick', function(){ stepLod(-1); });
+  if(__finderMap) __finderMap.addEventListener('dblclick', function(){ if(__leafletOn) return; stepLod(-1); });   // 실지도는 Leaflet 기본 더블클릭 줌 사용
   // 지도 +/- 컨트롤 → LOD 3단 순회(축소↔중간↔확대)
   var __z = document.querySelectorAll('.map-controls button');
   if(__z[0]) __z[0].addEventListener('click', function(){ stepLod(1); });   // 확대
@@ -1671,12 +1806,121 @@
   if(__sb) __sb.addEventListener('keydown', function(e){ if(e.key==='Enter'){ setLod('cpo'); if(window.__toast) window.__toast('검색 위치로 지도를 이동합니다. (mock)','info'); } });
   // 리스트 항목 → 지도 최종 단계(cpo) 동기화 + 해당 마커 하이라이트 (리스트에서 고른 경우 지도도 최종 단계로 맞춤)
   window.__highlightMarker = function(id){
-    if(!mapWrap) return;
     __activeStation = id;
+    if(__leafletOn && __map){
+      // 실지도: 해당 좌표로 이동+확대(이동 후 moveend/zoomend에서 재렌더 · active 재적용)
+      var mm = MARKERS.filter(function(x){ return x.id===id; })[0];
+      var ll = mm && latlngOf(mm);
+      if(ll) __map.setView(ll, Math.max(__map.getZoom(), LOD_ZOOM.cpo), {animate:false}); else renderMapLeaflet();
+      return;
+    }
+    if(!mapWrap) return;
     if(__lod !== 'cpo') setLod('cpo');   // 리스트 클릭은 LOD 무관 → 확대 단계로 동기화(재렌더 시 active 재적용)
     var m=mapWrap.querySelector('[data-station="'+id+'"]');
     if(m){ mapWrap.querySelectorAll('.mk').forEach(function(x){ x.classList.remove('active'); }); m.classList.add('active'); }
   };
+
+  /* ══ [ISS-040] 실지도 엔진 — Leaflet + OpenStreetMap(무키) ════════════════════════════
+     [DEV] 프로토 시연용. 실서비스는 네이버지도/카카오맵 SDK로 교체 — 키 발급·도메인 등록 필요.
+           마커·클러스터·상세패널 연동 구조는 그대로 이식 가능(교체 지점 = initLeaflet / addDivMarker / renderMapLeaflet 3곳).
+           공공데이터포털 충전소 API 연동은 별도 과제. 좌표는 더미(MARKERS.lat/lng).
+           ★인터넷 필요(unpkg CDN·OSM 타일). 사내망 차단 시 L 미정의 → 아래 initLeaflet()이 false 반환하고 기존 mock 지도 그대로 동작. */
+  var __map=null, __mkLayer=null, __meMarker=null, __leafletOn=false;
+  var LOD_ZOOM = { cluster:11, status:13, cpo:16 };                    // 상세도 3단 ↔ 지도 줌 레벨
+  function zoomToLod(z){ return z>=15 ? 'cpo' : (z>=12 ? 'status' : 'cluster'); }
+  function latlngOf(m){ return (m && m.lat!=null && m.lng!=null) ? [m.lat, m.lng] : null; }
+
+  function initLeaflet(){
+    if(typeof L === 'undefined') return false;                        // CDN 미로드 → mock 유지
+    var host = document.getElementById('cfLeaflet'); if(!host) return false;
+    try{
+      // zoomAnimation:false — 페이지 전역 transition 억제(reduced-motion 등) 환경에서 Leaflet 줌 애니메이션의
+      // transitionend가 발생하지 않아 setZoom이 무시되는 문제 회피(줌은 항상 즉시 반영). 접근성 관점에서도 안전.
+      __map = L.map(host, { zoomControl:false, center:[37.5010,127.0396], zoom:LOD_ZOOM.status, zoomAnimation:false, fadeAnimation:false, markerZoomAnimation:false });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom:19, minZoom:6, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(__map);
+      __mkLayer = L.layerGroup().addTo(__map);
+    }catch(e){ return false; }
+    __leafletOn = true;
+    window.__cfMap = __map;                                           // 디버그·연동 훅(실서비스 교체 시 동일 이름 유지 권장)
+    if(__finderMap) __finderMap.classList.add('leaflet-on');
+    __lod = zoomToLod(__map.getZoom()); syncLodBtns();
+    __map.on('zoomend', function(){
+      var lod = zoomToLod(__map.getZoom());
+      if(lod !== __lod){ __lod = lod; syncLodBtns(); }                // 줌 → 상세도 버튼 동기화
+      renderMapLeaflet();
+    });
+    __map.on('moveend', renderMapLeaflet);
+    setTimeout(function(){ if(__map) __map.invalidateSize(); }, 250); // 레이아웃 확정 후 타일 재계산
+    return true;
+  }
+
+  // divIcon 마커 — html은 mock과 동일 마크업 재사용(posStyle=''). keyboard:false = 내부 <button>이 단일 탭 스톱
+  function addDivMarker(latlng, html, onClick){
+    var mk = L.marker(latlng, { icon:L.divIcon({ className:'evx-marker', html:html, iconSize:null }), keyboard:false, riseOnHover:true }).addTo(__mkLayer);
+    if(onClick) mk.on('click', onClick);
+    return mk;
+  }
+  // 겹침 클러스터 — 현재 줌의 화면 픽셀 거리 기준(별도 라이브러리 없이 구현). 숫자 = 충전소 개수 합
+  function clusterUnitsPx(units, thrPx){
+    var pxs = units.map(function(u){ return __map.latLngToContainerPoint(u.latlng); });
+    var used={}, out=[];
+    units.forEach(function(u,i){
+      if(used[i]) return; used[i]=1; var grp=[u];
+      units.forEach(function(v,j){
+        if(used[j]) return;
+        var dx=pxs[i].x-pxs[j].x, dy=pxs[i].y-pxs[j].y;
+        if(Math.sqrt(dx*dx+dy*dy) <= thrPx){ used[j]=1; grp.push(v); }
+      });
+      var la=0, ln=0; grp.forEach(function(g){ la+=g.latlng[0]; ln+=g.latlng[1]; });
+      out.push({ units:grp, latlng:[la/grp.length, ln/grp.length], stations:grp.reduce(function(a,g){ return a+g.grp.length; },0) });
+    });
+    return out;
+  }
+  function renderMapLeaflet(){
+    if(!__map || !__mkLayer) return;
+    __mkLayer.clearLayers();
+    var pts = filteredPts();
+    // 1) 동일 좌표(≈10m) 복수 코드 = 멀티 마커 1개 (기존 2뎁스 개념 유지)
+    var byCoord={}, order=[];
+    pts.forEach(function(m){ var k=coordKey(m); if(!byCoord[k]){ byCoord[k]=[]; order.push(k); } byCoord[k].push(m); });
+    var units = order.map(function(k){ var g=byCoord[k], ll=latlngOf(g[0]); return ll ? {key:k, grp:g, latlng:ll} : null; }).filter(Boolean);
+    // 2) 화면상 겹치면 클러스터로 합침(축소 단계는 더 넓게)
+    var thr = (__lod==='cluster') ? 90 : 46;
+    clusterUnitsPx(units, thr).forEach(function(g){
+      if(g.units.length > 1){
+        addDivMarker(g.latlng, clusterHTML(g.stations, ''), function(){ __map.setView(g.latlng, Math.min(19, __map.getZoom()+2), {animate:false}); });
+        return;
+      }
+      var u = g.units[0];
+      if(u.grp.length > 1){
+        addDivMarker(u.latlng, multiMarkerHTML(u.grp, u.key, ''), function(){ openLocationList(u.key); });   // 멀티 → 이 위치의 충전소 목록
+      } else {
+        var m = u.grp[0];
+        var mk = addDivMarker(u.latlng, pinHTML(m, ''), function(){ __activeStation = m.id; renderMapLeaflet(); openDrawer(m.id, null); });
+        if(m.id === __activeStation){ var el=mk.getElement(); var pin=el && el.querySelector('.map-pin'); if(pin) pin.classList.add('active'); }
+      }
+    });
+  }
+  // 내 위치(geolocation) — HTTPS·localhost에서 동작
+  function locateMe(){
+    if(!navigator.geolocation){ if(window.__toast) window.__toast('이 브라우저는 위치 정보를 지원하지 않습니다.','warning'); return; }
+    navigator.geolocation.getCurrentPosition(function(p){
+      var ll=[p.coords.latitude, p.coords.longitude];
+      if(__leafletOn && __map){
+        if(__meMarker) __map.removeLayer(__meMarker);
+        __meMarker = L.marker(ll, { icon:L.divIcon({ className:'evx-marker', html:'<i class="evx-me-dot" aria-hidden="true"></i>', iconSize:null }), keyboard:false, interactive:false, title:'내 위치' }).addTo(__map);
+        __map.setView(ll, LOD_ZOOM.cpo);
+      }
+      if(window.__toast) window.__toast('현재 위치로 지도를 이동했습니다.','success');
+    }, function(){
+      if(window.__toast) window.__toast('위치 권한이 거부되었거나 위치를 가져오지 못했습니다. (HTTPS·localhost에서 동작)','warning');
+    }, { enableHighAccuracy:true, timeout:8000 });
+  }
+  if(__z[2]) __z[2].addEventListener('click', locateMe);   // ⊙ 내 위치
+
+  initLeaflet();   // 실패(오프라인·CDN 차단) 시 false → 기존 mock 지도 그대로
   renderMap();
   enhanceCards();   // 목록·즐겨찾기·내 주변 카드 스펙/뱃지를 파생값으로 갱신(MARKERS 정의 이후에 호출할 것)
 
