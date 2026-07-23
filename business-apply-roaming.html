@@ -106,10 +106,6 @@
         <div class="bf-block mode-add" style="display:none;">
           <div class="bf-grid">
             <label class="bf-row bf-row-full"><span class="bf-lab">신청 로밍사업자 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>선택</option><option>SK일렉링크</option><option>차지비</option><option>에버온</option><option>파워큐브</option><option>한국전기차충전서비스</option></select></label>
-            <label class="bf-row bf-row-full"><span class="bf-lab">증빙자료 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_proof">파일선택</button><input type="file" id="f_proof" hidden></span>
-              <p class="bf-attach-note" style="margin:6px 0 0;">※ 재직증명서 첨부</p>
-            </label>
             <label class="bf-row bf-row-full"><span class="bf-lab">비고</span><input type="text" placeholder="비고"></label>
             <label class="bf-row"><span class="bf-lab">진행상태</span><input type="text" value="신청 전" readonly></label>
           </div>
@@ -149,21 +145,6 @@
         </div>
 
         <div class="bf-block">
-          <h3 class="bf-h">첨부 서류</h3>
-          <div class="bf-grid" style="gap:14px;">
-            <label class="bf-row bf-row-full"><span class="bf-lab">사업자등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_busi">파일첨부</button><input type="file" id="f_busi" hidden></span>
-            </label>
-            <label class="bf-row bf-row-full"><span class="bf-lab">사업자 로고 이미지 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_logo">파일첨부</button><input type="file" id="f_logo" hidden></span>
-            </label>
-            <label class="bf-row bf-row-full"><span class="bf-lab">사업자 서명 이미지 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_sign">파일첨부</button><input type="file" id="f_sign" hidden></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="bf-block">
           <h3 class="bf-h">계좌(정산) 정보</h3>
           <div class="bf-grid">
             <label class="bf-row"><span class="bf-lab">기관ID <em style="color:var(--color-danger,#e11d48);">*</em></span>
@@ -181,9 +162,6 @@
             </label>
             <label class="bf-row"><span class="bf-lab">예금주 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
             <label class="bf-row"><span class="bf-lab">계좌번호 <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" class="num-only" placeholder="숫자만 입력" required></label>
-            <label class="bf-row bf-row-full"><span class="bf-lab">계좌 사본 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_acnt">파일첨부</button><input type="file" id="f_acnt" hidden></span>
-            </label>
           </div>
         </div>
 
@@ -268,18 +246,7 @@
           <div class="bf-grid">
             <label class="bf-row bf-row-full"><span class="bf-lab">전기신사업 등록번호 <em style="color:var(--color-danger,#e11d48);">*</em></span>
               <span class="bf-inline"><span>제</span><input type="text" class="num-only" style="width:140px;" required><span>호</span><button type="button" class="bf-mini-btn" id="elecCheck">등록확인</button></span>
-            </label>
-            <label class="bf-row bf-row-full"><span class="bf-lab">전기신사업 등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row"><span class="bf-file-name">선택된 파일 없음</span><button type="button" class="bf-mini-btn bf-file-btn" data-target="f_elec">파일첨부</button><input type="file" id="f_elec" hidden></span>
-            </label>
-            <label class="bf-row bf-row-full"><span class="bf-lab">충전기 목록 <em style="color:var(--color-danger,#e11d48);">*</em></span>
-              <span class="bf-file-row">
-                <span class="bf-file-name">선택된 파일 없음</span>
-                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_chgr">파일첨부</button>
-                <button type="button" class="bf-mini-btn" id="chgrTemplate">충전기 목록 양식 다운로드</button>
-                <button type="button" class="bf-mini-btn" id="chgrVerify">충전기목록 파일검증</button>
-                <input type="file" id="f_chgr" hidden>
-              </span>
+              <p class="bf-attach-note" style="margin:6px 0 0;">※ 전기신사업 등록증은 하단 첨부문서에서 첨부해 주세요.</p>
             </label>
             <label class="bf-row bf-row-full"><span class="bf-lab">기관관리자 ID</span><input type="text" value="" readonly></label>
             <label class="bf-row bf-row-full"><span class="bf-lab">비고</span><input type="text" placeholder="비고"></label>
@@ -287,6 +254,68 @@
           </div>
         </div>
         </div><!-- /mode-new -->
+
+        <!-- [ISS-051] 첨부문서 — 폼 중간에 흩어져 있던 파일 첨부 7개를 하단 한 곳으로 통합(하단 동적 목록 블록은 삭제).
+             ★행별 표시 조건은 원래 위치와 동일: 첨부1(증빙자료)=mode-add 전용 / 첨부2~7=mode-new 전용.
+             ★id 유지 필수 — f_elec(elecCheck 등록확인), f_chgr(chgrTemplate·chgrVerify)가 참조.
+             컴포넌트는 기존 .bf-file-row / .bf-mini-btn.bf-file-btn 재사용(신규 컴포넌트 없음). -->
+        <div class="bf-block" id="attachDocs">
+          <h3 class="bf-h">첨부문서</h3>
+          <div class="bf-grid" style="gap:14px;">
+            <label class="bf-row bf-row-full mode-add"><span class="bf-lab">첨부1. 증빙자료 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_proof" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_proof" aria-describedby="fn_f_proof">파일선택</button>
+                <input type="file" id="f_proof" hidden aria-required="true">
+              </span>
+              <p class="bf-attach-note" style="margin:6px 0 0;">※ 재직증명서 첨부</p>
+            </label>
+            <label class="bf-row bf-row-full mode-new"><span class="bf-lab">첨부2. 사업자등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_busi" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_busi" aria-describedby="fn_f_busi">파일선택</button>
+                <input type="file" id="f_busi" hidden aria-required="true">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full mode-new"><span class="bf-lab">첨부3. 사업자 로고 이미지 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_logo" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_logo" aria-describedby="fn_f_logo">파일선택</button>
+                <input type="file" id="f_logo" hidden aria-required="true">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full mode-new"><span class="bf-lab">첨부4. 사업자 서명 이미지 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_sign" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_sign" aria-describedby="fn_f_sign">파일선택</button>
+                <input type="file" id="f_sign" hidden aria-required="true">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full mode-new"><span class="bf-lab">첨부5. 계좌 사본 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_acnt" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_acnt" aria-describedby="fn_f_acnt">파일선택</button>
+                <input type="file" id="f_acnt" hidden aria-required="true">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full mode-new"><span class="bf-lab">첨부6. 전기신사업 등록증 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_elec" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_elec" aria-describedby="fn_f_elec">파일선택</button>
+                <input type="file" id="f_elec" hidden aria-required="true">
+              </span>
+            </label>
+            <label class="bf-row bf-row-full mode-new"><span class="bf-lab">첨부7. 충전기 목록 <em style="color:var(--color-danger,#e11d48);">*</em></span>
+              <span class="bf-file-row">
+                <span class="bf-file-name" id="fn_f_chgr" aria-live="polite">선택된 파일 없음</span>
+                <button type="button" class="bf-mini-btn bf-file-btn" data-target="f_chgr" aria-describedby="fn_f_chgr">파일선택</button>
+                <button type="button" class="bf-mini-btn" id="chgrTemplate">충전기 목록 양식 다운로드</button>
+                <button type="button" class="bf-mini-btn" id="chgrVerify">충전기목록 파일검증</button>
+                <input type="file" id="f_chgr" hidden aria-required="true">
+              </span>
+            </label>
+          </div>
+        </div>
 
         <div class="bf-foot">
           <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
@@ -322,9 +351,9 @@
 </div>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260721c"></script>
+<script src="js/partials.js?v=20260723a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260721a"></script>
+<script src="js/i18n-common.js?v=20260723a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -434,26 +463,6 @@
   function fileRequired(inp){ var r=fileRow(inp); return !!(r && r.querySelector('.bf-lab em')); }
   function fileLabel(inp){ var r=fileRow(inp), l=r&&r.querySelector('.bf-lab'); var t=l?l.textContent:(inp.id||'첨부'); return t.replace(/[*\s]+$/,'').trim(); }
 
-  var statusBlock = document.createElement('div');
-  statusBlock.className = 'bf-block';
-  statusBlock.innerHTML = '<h3 class="bf-h">첨부 현황</h3><ul id="attachStatus" style="list-style:none;margin:0;padding:0;"></ul>';
-  var foot = document.querySelector('.bf-foot');
-  if(foot && foot.parentNode) foot.parentNode.insertBefore(statusBlock, foot);
-  var statusUl = document.getElementById('attachStatus');
-
-  function renderStatus(){
-    if(!statusUl) return;
-    statusUl.innerHTML = fileInputs.filter(fileVisible).map(function(inp){
-      var has = inp.files && inp.files.length, req = fileRequired(inp);
-      var color = has ? 'var(--color-primary-600,#16a34a)' : (req ? 'var(--color-danger,#e11d48)' : 'var(--text-tertiary,#94a3b8)');
-      var mark = has ? '첨부완료' : (req ? '미첨부 (필수)' : '미첨부');
-      return '<li style="display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13.5px;border-bottom:1px solid var(--border-light);padding:8px 2px;"><span>'+fileLabel(inp)+(req?' <em style="color:var(--color-danger,#e11d48);">*</em>':'')+'</span><span style="font-weight:600;color:'+color+';text-align:right;">'+mark+(has?' · '+inp.files[0].name:'')+'</span></li>';
-    }).join('');
-  }
-  fileInputs.forEach(function(inp){ inp.addEventListener('change', renderStatus); });
-  Array.prototype.forEach.call(document.querySelectorAll('input[name=member_kind]'), function(r){ r.addEventListener('change', renderStatus); });
-  renderStatus();
-
   // 제출 시 필수 첨부 검증
   var submitBtn = document.querySelector('button[type=submit]');
   if(submitBtn) submitBtn.addEventListener('click', function(e){
@@ -461,8 +470,8 @@
     if(missing.length){
       e.preventDefault();
       toast('필수 첨부서류가 누락되었습니다: '+missing.map(fileLabel).join(', '), 'error');
-      renderStatus();
-      statusBlock.scrollIntoView({behavior:'smooth', block:'center'});
+      var docs = document.getElementById('attachDocs');
+      if(docs) docs.scrollIntoView({behavior:'smooth', block:'center'});
     } else {
       e.preventDefault();
       toast('신청서가 접수되었습니다. 접수 결과는 등록하신 연락처로 안내됩니다.', 'success');

@@ -163,9 +163,9 @@
 </div>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260721c"></script>
+<script src="js/partials.js?v=20260723a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260721a"></script>
+<script src="js/i18n-common.js?v=20260723a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -229,26 +229,9 @@
 })();
 </script>
 <script>
-/* 첨부 서류 목록/필수검증 (business-apply 전파 — roaming #3 패턴) */
-(function(){
-  function t(m,ty){ if(window.__toast) window.__toast(m, ty||'info'); }
-  var fileInputs = [].slice.call(document.querySelectorAll('input[type=file]'));
-  if(!fileInputs.length) return;
-  function row(i){ return i.closest('.bf-row'); }
-  function vis(i){ var r=row(i); return !!(r && r.offsetParent!==null); }
-  function req(i){ var r=row(i); return !!(r && r.querySelector('.bf-lab em')); }
-  function lab(i){ var r=row(i), l=r&&r.querySelector('.bf-lab'); var x=l?l.textContent:(i.id||'첨부'); return x.replace(/[*\s]+$/,'').trim(); }
-  var block=document.createElement('div'); block.className='bf-block';
-  block.innerHTML='<h3 class="bf-h">첨부 현황</h3><ul id="attachStatus" style="list-style:none;margin:0;padding:0;"></ul>';
-  var foot=document.querySelector('.bf-foot'); if(foot&&foot.parentNode) foot.parentNode.insertBefore(block, foot);
-  var ul=document.getElementById('attachStatus');
-  function render(){ if(!ul)return; ul.innerHTML=fileInputs.filter(vis).map(function(i){ var has=i.files&&i.files.length, rq=req(i); var c=has?'var(--color-primary-600,#16a34a)':(rq?'var(--color-danger,#e11d48)':'var(--text-tertiary,#94a3b8)'); var m=has?'첨부완료':(rq?'미첨부 (필수)':'미첨부'); return '<li style="display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13.5px;border-bottom:1px solid var(--border-light);padding:8px 2px;"><span>'+lab(i)+(rq?' <em style="color:var(--color-danger,#e11d48);">*</em>':'')+'</span><span style="font-weight:600;color:'+c+';text-align:right;">'+m+(has?' · '+i.files[0].name:'')+'</span></li>'; }).join(''); }
-  fileInputs.forEach(function(i){ i.addEventListener('change', render); });
-  [].forEach.call(document.querySelectorAll('input[type=radio]'), function(r){ r.addEventListener('change', render); });
-  render();
-  var sb=document.querySelector('button[type=submit]');
-  if(sb) sb.addEventListener('click', function(e){ var miss=fileInputs.filter(function(i){ return vis(i)&&req(i)&&!(i.files&&i.files.length); }); if(miss.length){ e.preventDefault(); t('필수 첨부서류가 누락되었습니다: '+miss.map(lab).join(', '), 'error'); render(); block.scrollIntoView({behavior:'smooth',block:'center'}); } });
-})();
+/* [ISS-052] 첨부 목록/필수검증 블록 제거 — 이 화면은 파일 첨부 항목이 0개라 애초에 렌더되지 않는 죽은 코드였음.
+   첨부 항목이 추가되면 ISS-051(로밍) 표준 '첨부문서' 섹션 방식으로 신설할 것.
+   ※ .bf-file-btn 클릭 핸들러 / input[type=file] change 핸들러 / .bf-file-row·.bf-file-name CSS는 향후 대비로 존치. */
 </script>
 </body>
 </html>

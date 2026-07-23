@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사용자매뉴얼 관리 | 통합관리시스템 | EV 업무포털</title>
+<link rel="stylesheet" href="css/admin-pub.css?v=20260721a">
+<link rel="stylesheet" href="css/admin-shell.css?v=20260721b">
+</head>
+<body>
+<!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 사용자매뉴얼 (신설 · v0.30 3호 · ISS-039)
+     근거 = 회의록/통합관리_개발안내_03_사용자매뉴얼_20260722.md (2026-07-22 사용자 확정 6건).
+     확정: 게시판형(관리자 등록 → 대민 조회·다운로드) · 대민 화면은 이미 구현됨(info-library.html?tab=manual) → 관리자 등록·관리 화면만 신설.
+     IA = 관리자는 '게시판 관리' 하위에 게시판을 전부 나열(대민 자료실 4탭 구조와 무관하게 독립 항목). 서식다운로드 다음 순번.
+     AS-IS boardMng 공용 패턴(boardList/boardEdit + 게시판 구분 파라미터) 재현 — 게시판 구분='사용자매뉴얼' 고정. -->
+<div class="adm-wrap">
+  <aside class="adm-side" id="admSide"></aside>
+  <main class="adm-main">
+    <h1 class="adm-h1">사용자매뉴얼 관리 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
+    <p class="adm-desc">대민 누리집 자료실 &gt; 사용자 매뉴얼 탭에 노출되는 매뉴얼 게시물을 관리합니다. (신설 게시판 — AS-IS boardMng 공용 패턴)</p>
+
+    <!-- 목록 화면 -->
+    <div id="listWrap">
+      <div class="adm-card">
+        <div class="adm-filter">
+          <div class="adm-field"><label>카테고리</label>
+            <select id="fCat"><option value="all">전체 카테고리</option></select>
+          </div>
+          <div class="adm-field"><label>공개여부</label>
+            <select id="fOpen"><option value="all">전체</option><option value="open">공개</option><option value="secret">비공개</option></select>
+          </div>
+          <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="매뉴얼명 검색"></div>
+          <button type="button" class="adm-btn primary" id="fSearch">검색</button>
+          <button type="button" class="adm-btn" id="fReset">초기화</button>
+        </div>
+      </div>
+
+      <div class="adm-meta">
+        <div>전체 <strong id="listCount">0</strong>건</div>
+        <button type="button" class="adm-btn primary" id="btnNew">매뉴얼 등록</button>
+      </div>
+      <table class="adm-tbl">
+        <thead><tr>
+          <th class="c" style="width:56px;">번호</th>
+          <th class="c" style="width:120px;">카테고리</th>
+          <th>매뉴얼명</th>
+          <th style="width:280px;">첨부 (파일명 · 용량)</th>
+          <th class="c" style="width:84px;">공개여부</th>
+          <th class="c" style="width:120px;">작성자</th>
+          <th class="c" style="width:100px;">등록일</th>
+          <th class="c" style="width:86px;">다운로드수</th>
+        </tr></thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 등록/수정 화면 (AS-IS boardEdit 공용 패턴) -->
+    <div id="editWrap" hidden>
+      <div class="adm-card">
+        <h3 id="editHead">매뉴얼 등록</h3>
+        <div class="adm-detail">
+          <dl>
+            <dt>게시판 구분</dt><dd class="wide"><input type="text" value="사용자매뉴얼" readonly style="height:34px;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#f1f5f9;color:#64748b;font-size:13px;width:220px;"></dd>
+            <dt>카테고리 <span style="color:#c0392b;">*</span></dt><dd class="wide"><select id="eCat" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;min-width:220px;"></select></dd>
+            <dt>매뉴얼명 <span style="color:#c0392b;">*</span></dt><dd class="wide"><input type="text" id="eTitle" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:100%;" placeholder="예: 통합누리집 사용자 매뉴얼 v2.4"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 개정이력은 제목의 버전 표기로 갈음합니다 (예: v2.4)</div></dd>
+            <dt>설명</dt><dd class="wide"><textarea id="eBody" style="width:100%;min-height:90px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;" placeholder="대민 목록에 보조 설명으로 노출됩니다. (선택)"></textarea></dd>
+            <dt>작성자</dt><dd><input type="text" id="eWriter" value="한국환경공단" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:220px;"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 대민 목록 '작성자' 컬럼에 표시되는 이름</div></dd>
+            <dt>공개여부</dt><dd>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 공개</label>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 비공개</label>
+            </dd>
+            <dt>게시순서</dt><dd><input type="number" id="eOrder" value="0" min="0" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:110px;"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 값이 클수록 상단 노출 (0 = 등록일 순)</div></dd>
+            <dt>첨부파일 <span style="color:#c0392b;">*</span></dt><dd class="wide">
+              <input type="file" id="eFiles" multiple accept=".pdf,.xlsx,.xls,.hwp,.hwpx" style="font-size:13px;">
+              <div id="eFileList" style="margin-top:6px;font-size:12.5px;color:#475569;"></div>
+              <div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 필수 · 복수 파일 첨부 가능 (PDF·XLSX·XLS·HWP·HWPX) · 용량 상한은 기존 게시판 정책 준용</div>
+            </dd>
+          </dl>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
+          <button type="button" class="adm-btn" id="eBack">목록으로</button>
+          <button type="button" class="adm-btn primary" id="eSave">저장(mock)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 개발 참고 -->
+    <details class="adm-dev">
+      <summary><span class="tag">DEV</span>개발 참고 — 신설 게시판·카테고리 코드그룹 (실서비스 비노출)</summary>
+      <div class="bd"><ul>
+        <li><strong>신설 게시판</strong> : 사용자매뉴얼 — <strong>APP_BLBD에 신규 행(BLBD_ID 신규 채번)</strong>. 탭별 별도 게시판 확정(대민 자료실 4탭 구성과 무관 · 관리자에선 독립 항목). TNCM_MENU에도 신규 메뉴 등록 필요(시스템관리 &gt; 게시판 관리, 서식다운로드 다음 순번).</li>
+        <li><strong>게시물</strong> : <strong>APP_ARTC</strong> 공통 — ARTC_ID/BLBD_ID · <strong>분류코드</strong>(카테고리) · 제목(매뉴얼명) · 내용(설명) · <strong>NM(게시물작성자 — 대민 '작성자' 컬럼 원천, 표시명)</strong> · <strong>INS_ID(등록자 계정 — 관리자 '작성자ID')</strong> · 공개여부 · 등록일/수정일 · 게시순서. 삭제는 DLT_YN.</li>
+        <li><strong>첨부</strong> : <strong>ATCH / ATCH_JFILE</strong> — ATCH_ID · ATCH_NM(파일명) · <strong>ATCH_SZ(용량 — 대민 '용량' 컬럼 원천)</strong> · ATCH_TYP · <strong>TGRT_ID = ARTC_ID</strong>. 다중 첨부.</li>
+        <li><strong>★카테고리 = 신설 코드그룹으로 DB 관리</strong>(하드코딩 금지) : 포털 이용 / 보조금 신청 / 공모 신청 / 충전기 설치·운영 / 회원·카드 5종. 코드ID·채번은 개발 재량(질의응답 신설 코드그룹과 동일 체계 권고). <strong>FAQ 분류 하드코딩(ARTC.SMLCLS10 + 라벨이 faq.jsp에 박힘) 안티패턴 회피</strong> — 관리자에서 분류 추가·변경 가능해야 함.</li>
+        <li><strong>개정이력</strong> : 별도 버전·이력 컬럼 없이 <strong>제목의 버전 표기</strong>(예: "…매뉴얼 v2.4")로 갈음.</li>
+        <li><strong>다운로드수</strong> : <strong>카운트만 집계, 개인 식별 로깅 없음</strong>. 어떤 매뉴얼이 실제 수요 있는지 파악용. 공개자료 다운로드 통계 연계는 선택.</li>
+        <li><strong>데이터 원천 공유</strong> : 대민 누리집 자료실 &gt; 사용자 매뉴얼 탭(info-library.html?tab=manual)과 동일 게시판 데이터 — 공개여부 Y 등록 시 즉시 대민 노출(단일 원천).</li>
+        <li><strong>범위 주의</strong> : 업무포털(사업자·지자체)용 매뉴얼은 ev_ps <code>MenualController</code> 기존재 = <strong>별개 트랙</strong>(이번 범위 아님).</li>
+      </ul></div>
+    </details>
+  </main>
+</div>
+
+<script src="js/admin-shell.js?v=20260721b"></script>
+<script src="js/admin-menu-ntp.js?v=20260723a"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // 셸 마운트 — 통합관리시스템 전체 메뉴(TNCM_MENU D0002 실사)
+  AdminShell.mount({
+    system:'통합관리시스템',
+    gnb: window.ADMIN_MENU_NTP,
+    activeGnb:'시스템관리',
+    activeHref:'admin-board-manual.html'
+  });
+
+  /* 카테고리 5종 — ★사용자 확정(대민 화면 실값). 임의 수정 금지.
+     [DEV] 하드코딩 아님 — 신설 코드그룹(DB) 조회 결과를 채우는 자리(프로토는 더미 상수) */
+  var CATS = [
+    { key:'portal',  label:'포털 이용' },
+    { key:'subsidy', label:'보조금 신청' },
+    { key:'contest', label:'공모 신청' },
+    { key:'operate', label:'충전기 설치·운영' },
+    { key:'card',    label:'회원·카드' }
+  ];
+  function catLabel(k){ for (var i=0;i<CATS.length;i++) if (CATS[i].key===k) return CATS[i].label; return k; }
+
+  /* ── 더미 9건 ──────────────────────────────────────────────────────────────
+     1~6번 = ★대민 실화면(info-library.html?tab=manual) 6건과 1:1 정합
+             (매뉴얼명·카테고리·작성자·등록일·용량 동일). 공개여부 Y → 대민 노출분.
+     7~9번 = 비공개(개정 준비본) — 관리자에만 보이는 상태 시연. 제목 버전 표기 관례(§개정이력) 준용. */
+  var DATA = [
+    { no:18, cat:'portal',  title:'통합누리집 사용자 매뉴얼 v2.4',        files:[{n:'통합누리집 사용자 매뉴얼 v2.4.pdf', s:'8.2MB'}],        open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-04-10', dl:1284 },
+    { no:17, cat:'subsidy', title:'보조금 신청자 매뉴얼 (개인 구매용)',    files:[{n:'보조금 신청자 매뉴얼 (개인 구매용).pdf', s:'4.6MB'}],   open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-04-01', dl:2371 },
+    { no:16, cat:'contest', title:'법인·사업자 공모 참여 매뉴얼',          files:[{n:'법인·사업자 공모 참여 매뉴얼.pdf', s:'6.2MB'}],        open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-03-20', dl:642 },
+    { no:15, cat:'operate', title:'충전 사업자 설치·운영 매뉴얼',          files:[{n:'충전 사업자 설치·운영 매뉴얼.pdf', s:'9.8MB'}],        open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-03-12', dl:918 },
+    { no:14, cat:'card',    title:'충전 카드 이용 매뉴얼',                files:[{n:'충전 카드 이용 매뉴얼.pdf', s:'3.2MB'}],               open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-02-28', dl:1506 },
+    { no:13, cat:'portal',  title:'AI 헬프데스크 이용 가이드',            files:[{n:'AI 헬프데스크 이용 가이드.pdf', s:'2.4MB'}],           open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-02-15', dl:433 },
+    { no:12, cat:'portal',  title:'통합누리집 사용자 매뉴얼 v2.5 (개정 준비)', files:[{n:'통합누리집 사용자 매뉴얼 v2.5(검토본).pdf', s:'8.6MB'}], open:false, writer:'한국환경공단', wid:'admin_keco', date:'2026-07-15', dl:0 },
+    { no:11, cat:'subsidy', title:'보조금 신청자 매뉴얼 (개인 구매용) v3.1 (개정 준비)', files:[{n:'보조금 신청자 매뉴얼 v3.1(검토본).pdf', s:'4.9MB'}, {n:'개정 대비표.xlsx', s:'0.3MB'}], open:false, writer:'한국환경공단', wid:'admin_keco', date:'2026-07-08', dl:0 },
+    { no:10, cat:'card',    title:'충전 카드 이용 매뉴얼 v1.2 (개정 준비)', files:[{n:'충전 카드 이용 매뉴얼 v1.2(검토본).pdf', s:'3.4MB'}],  open:false, writer:'한국환경공단', wid:'admin_keco', date:'2026-06-30', dl:0 }
+  ];
+
+  // 카테고리 필터·등록폼 select 옵션 — [DEV] 실서비스는 코드그룹 조회 결과로 채움
+  $('fCat').innerHTML = '<option value="all">전체 카테고리</option>' + CATS.map(function(c){ return '<option value="'+c.key+'">'+c.label+'</option>'; }).join('');
+  $('eCat').innerHTML = '<option value="">카테고리 선택</option>' + CATS.map(function(c){ return '<option value="'+c.key+'">'+c.label+'</option>'; }).join('');
+
+  /* ── 목록 ── */
+  function filtered(){
+    var ck=$('fCat').value, op=$('fOpen').value, kw=($('fKw').value||'').trim().toLowerCase();
+    return DATA.filter(function(d){
+      if (ck!=='all' && d.cat!==ck) return false;
+      if (op!=='all' && ((op==='open')!==d.open)) return false;
+      if (kw && d.title.toLowerCase().indexOf(kw)<0) return false;
+      return true;
+    });
+  }
+  function render(){
+    var rows = filtered();
+    $('listCount').textContent = rows.length;
+    $('listBody').innerHTML = rows.length ? rows.map(function(d){
+      // 첨부 = 파일명 + 용량(ATCH_NM · ATCH_SZ) — 대민 '용량' 컬럼과 동일 원천
+      var files = d.files.map(function(f){
+        return '<a href="#" class="man-file" data-f="'+esc(f.n)+'" style="color:#1559c2;text-decoration:underline;text-underline-offset:2px;">'+esc(f.n)+'</a>'
+             + ' <span style="color:#94a3b8;">('+esc(f.s)+')</span>';
+      }).join('<br>');
+      return '<tr data-no="'+d.no+'">'
+        + '<td class="c num">'+d.no+'</td>'
+        + '<td class="c"><span class="adm-cat">'+esc(catLabel(d.cat))+'</span></td>'
+        + '<td>'+esc(d.title)+'</td>'
+        + '<td>'+files+'</td>'
+        + '<td class="c">'+(d.open?'<span class="adm-badge b-open">공개</span>':'<span class="adm-badge b-secret">비공개</span>')+'</td>'
+        + '<td class="c">'+esc(d.writer)+'<br><span style="color:#94a3b8;font-size:11.5px;">'+esc(d.wid)+'</span></td>'
+        + '<td class="c num">'+d.date.replace(/-/g,'.')+'</td>'
+        + '<td class="c num">'+d.dl.toLocaleString()+'</td>'
+        + '</tr>';
+    }).join('') : '<tr><td colspan="8"><div class="adm-empty">조건에 맞는 매뉴얼이 없습니다.</div></td></tr>';
+  }
+  $('fCat').addEventListener('change', render);
+  $('fOpen').addEventListener('change', render);
+  $('fKw').addEventListener('input', render);
+  $('fSearch').addEventListener('click', render);
+  $('fReset').addEventListener('click', function(){ $('fCat').value='all'; $('fOpen').value='all'; $('fKw').value=''; render(); });
+
+  // 파일명 = 다운로드 링크(mock 토스트) · 행 클릭 = 수정 화면
+  $('listBody').addEventListener('click', function(e){
+    var lnk = e.target.closest('.man-file');
+    if (lnk){ e.preventDefault(); e.stopPropagation(); __admToast('"'+lnk.dataset.f+'" 파일이 다운로드됩니다. (프로토타입)'); return; }
+    var tr = e.target.closest('tr[data-no]'); if (tr) openEdit(+tr.dataset.no);
+  });
+
+  /* ── 등록/수정 (boardEdit 공용 패턴 · 게시판 구분 고정) ── */
+  function openEdit(no){
+    var d = no!=null ? DATA.filter(function(x){ return x.no===no; })[0] : null;
+    $('editHead').textContent = d ? '매뉴얼 수정' : '매뉴얼 등록';
+    $('eCat').value = d ? d.cat : '';
+    $('eTitle').value = d ? d.title : '';
+    $('eBody').value = d ? '(더미 설명) ' + d.title : '';
+    $('eWriter').value = d ? d.writer : '한국환경공단';
+    document.querySelector('input[name=eOpen][value='+((d && !d.open)?'secret':'open')+']').checked = true;
+    $('eOrder').value = 0;
+    $('eFiles').value = '';
+    $('eFileList').innerHTML = d ? '기존 첨부 : ' + d.files.map(function(f){ return esc(f.n)+' ('+esc(f.s)+')'; }).join(' · ') : '';
+    $('listWrap').hidden = true; $('editWrap').hidden = false;
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  $('btnNew').addEventListener('click', function(){ openEdit(null); });
+  $('eBack').addEventListener('click', function(){ $('editWrap').hidden = true; $('listWrap').hidden = false; });
+  $('eFiles').addEventListener('change', function(){
+    var names = Array.prototype.map.call(this.files, function(f){ return f.name; });
+    if (names.length) $('eFileList').innerHTML = '선택된 파일 : ' + names.map(esc).join(' · ');
+  });
+  $('eSave').addEventListener('click', function(){
+    if (!$('eCat').value){ __admToast('카테고리를 선택해 주세요.'); return; }
+    if (!$('eTitle').value.trim()){ __admToast('매뉴얼명을 입력해 주세요.'); return; }
+    var isNew = $('editHead').textContent === '매뉴얼 등록';
+    if (isNew && !$('eFiles').files.length){ __admToast('첨부파일을 1개 이상 첨부해 주세요. (필수)'); return; }
+    __admToast('저장되었습니다. (프로토타입 — 실제 저장되지 않습니다)');
+    $('editWrap').hidden = true; $('listWrap').hidden = false;
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

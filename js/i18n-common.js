@@ -125,7 +125,6 @@
     'mega.data.supply':       { ko: '무공해차 보급 현황', en: 'ZEV Adoption Status' },
     'mega.data.infra':        { ko: '충전 인프라 현황',  en: 'Charging Infrastructure' },
     'mega.data.subsidy':      { ko: '보조금 집행 현황',  en: 'Subsidy Disbursement' },
-    'mega.data.k100':         { ko: 'K-EV100 전환 현황', en: 'K-EV100 Transition' },
     /* [정리] mega.data.tindex 제거 — 대민 메가메뉴 투명성지수 항목 삭제(관리자 이관) */
     'mega.data.trend.market': { ko: '무공해차 시장 동향', en: 'ZEV Market Trends' },
     'mega.data.trend.policy': { ko: '정책 추진 현황',    en: 'Policy Progress' },

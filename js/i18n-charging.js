@@ -108,7 +108,7 @@
     'charging.find.btn.csv.title': { ko: 'CSV 다운로드', en: 'CSV Download' },
     'charging.find.st.type.ev':    { ko: '전기', en: 'EV' },
     'charging.find.st.type.h2':    { ko: '수소', en: 'H2' },
-    'charging.find.map.api.title': { ko: '네이버지도 / 카카오맵 API 연동 영역', en: 'Naver Map / Kakao Map API Integration Area' },
+    'charging.find.map.api.title': { ko: '지도 연동 영역 (실서비스 = OpenLayers)', en: 'Map integration area (production: OpenLayers)' },
     'charging.find.map.api.desc':  { ko: '공공데이터포털 충전소 API + 지도 SDK 실시간 연동', en: 'Public Data Portal Charging Station API + Map SDK real-time integration' },
     'charging.find.map.zoomin':    { ko: '확대', en: 'Zoom In' },
     'charging.find.map.zoomout':   { ko: '축소', en: 'Zoom Out' },

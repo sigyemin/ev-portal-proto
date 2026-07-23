@@ -229,6 +229,10 @@
   .cc-lost-step{border:1px solid var(--border-light);border-radius:12px;padding:16px 18px;margin-top:12px;}
   .cc-lost-step.muted{opacity:.5;}
   .cc-lost-step .n{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--color-primary-600);color:#fff;font-weight:800;font-size:13px;align-items:center;justify-content:center;margin-right:8px;}
+  /* [ISS-042] 배송지 우편번호 찾기 — charging-card-apply.html(회원카드 신청) 컴포넌트 정의를 동일하게 이식(사이트 일관성) */
+  .cc-field { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
+  .cc-inline { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .cc-mini-btn { white-space:nowrap; padding:10px 16px; background:var(--color-gray-700); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -477,10 +481,10 @@
 
 <div id="stmtPrint" class="stmt-print" aria-hidden="true"></div>
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260721c"></script>
+<script src="js/partials.js?v=20260723a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260721a"></script>
-<script src="js/i18n-charging.js?v=20260721a"></script>
+<script src="js/i18n-common.js?v=20260723a"></script>
+<script src="js/i18n-charging.js?v=20260723a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -744,18 +748,34 @@
     var body = '<div style="display:flex;flex-direction:column;gap:14px;">'
       + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">연결 차량번호</label>'
       + '<input id="ccEditCar" class="form-input" type="text" value="'+c.carNo+'" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
-      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">배송지 우편번호</label>'
-      + '<input id="ccEditZip" class="form-input" type="text" value="'+c.shipZip+'" style="width:160px;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
-      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">배송지 주소</label>'
-      + '<input id="ccEditAddr" class="form-input" type="text" value="'+c.shipAddr+'" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
+      + '<div class="cc-field" style="margin-bottom:0;">'
+      +   '<label for="ccEditZip" style="font-size:13px;font-weight:700;">배송지 주소</label>'
+      +   '<div class="cc-inline">'
+      +     '<input id="ccEditZip" class="form-input" type="text" value="'+c.shipZip+'" placeholder="우편번호" readonly style="flex:0 0 140px;">'
+      +     '<button type="button" class="cc-mini-btn" id="ccEditZipBtn">우편번호찾기</button>'
+      +   '</div>'
+      +   '<input id="ccEditAddr" class="form-input" type="text" value="'+c.shipAddr+'" placeholder="기본주소" readonly style="margin-top:8px;" aria-label="기본주소">'
+      +   '<input id="ccEditAddrDetail" class="form-input" type="text" placeholder="상세주소 입력" style="margin-top:8px;" aria-label="상세주소">'
+      + '</div>'
       + '</div>';
     openModal('카드 정보수정', c.cardNo,
       body, '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccEditSave">저장</button>');
+    // [ISS-042] 우편번호 찾기 — 신청 페이지(charging-card-apply.html)와 동일한 더미 동작(토스트 + 예시 주소 채움)
+    var zipBtn = document.getElementById('ccEditZipBtn');
+    if (zipBtn) zipBtn.addEventListener('click', function () {
+      if (window.__toast) window.__toast('우편번호 찾기 창을 호출합니다.', 'info');
+      document.getElementById('ccEditZip').value = '22689';
+      document.getElementById('ccEditAddr').value = '인천광역시 서구 환경로 42';
+      var d = document.getElementById('ccEditAddrDetail'); if (d) d.focus();   // 다음 입력(상세주소)로 포커스 이동
+    });
     var saveBtn = document.getElementById('ccEditSave');
     if (saveBtn) saveBtn.addEventListener('click', function () {
       c.carNo = (document.getElementById('ccEditCar').value || c.carNo).trim();
       c.shipZip = (document.getElementById('ccEditZip').value || c.shipZip).trim();
-      c.shipAddr = (document.getElementById('ccEditAddr').value || c.shipAddr).trim();
+      // 기본주소 + 상세주소 → 기존 단일 필드(shipAddr)로 합성(데이터 구조 유지)
+      var base = (document.getElementById('ccEditAddr').value || '').trim();
+      var detail = (document.getElementById('ccEditAddrDetail').value || '').trim();
+      c.shipAddr = (base + (detail ? ' ' + detail : '')).trim() || c.shipAddr;
       render(); closeModal();
       toast('카드 정보가 수정되었습니다.', 'success');
     });

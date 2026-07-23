@@ -186,6 +186,18 @@
 .cr-fee-badge svg{ width:10px; height:10px; flex:none; }
 .chg-fee-note{ font-size:11px; color:var(--text-tertiary); margin-top:8px; line-height:1.5; display:flex; gap:5px; align-items:flex-start; }
 .chg-fee-note svg{ flex:none; margin-top:1px; }
+/* [ISS-045] 기후에너지환경부 회원카드 결제 요금 — 5밴드 가로 카드(기본 펼침) */
+.me-bands{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.me-band{ border:1px solid var(--border-light,#e2e8f0); border-radius:9px; padding:8px 6px; text-align:center; background:#fff; }
+.me-band .mb-name{ display:block; font-size:11.5px; font-weight:800; color:var(--text-secondary,#475569); }
+.me-band .mb-range{ display:block; font-size:9.5px; color:var(--text-tertiary,#64748b); margin-top:1px; white-space:nowrap; }
+.me-band .mb-price{ display:block; font-size:14px; font-weight:800; color:var(--text-primary); margin-top:5px; font-variant-numeric:tabular-nums; }
+/* ★보유 밴드 강조 — 테두리 2px·배경으로 구분(비색상 단서) + sr-only '이 충전소 보유 밴드' 낭독 */
+.me-band.has{ border-color:var(--color-primary-500,#1aad6c); border-width:2px; background:var(--color-primary-50,#eaf7f0); padding:7px 5px; }
+.me-band.has .mb-name, .me-band.has .mb-price{ color:var(--color-primary-800,#14532d); }
+/* 비강조도 명도대비 확보(회색 죽이지 않음) */
+.me-band:not(.has) .mb-price{ color:var(--text-secondary,#475569); }
+@media (max-width:520px){ .me-bands{ grid-template-columns:repeat(3,1fr); } }
 /* [ISS-030] 지금시각 기준 적용 단가 = 접기/펼치기 디스클로저 */
 .sd-fee-toggle{ display:inline-flex; align-items:center; gap:6px; margin-bottom:6px; padding:0; background:none; border:none; cursor:pointer; font-size:11.5px; font-weight:700; color:var(--text-secondary,#475569); font-family:inherit; }
 .sd-fee-toggle .sd-fee-chev{ transition:transform .18s ease; }
@@ -389,7 +401,8 @@
 }
 
 /* ══ [ISS-040] 실지도(Leaflet + OSM) ══════════════════════════════════════
-   [DEV] 프로토 시연용 Leaflet+OSM(무키). 실서비스는 네이버지도/카카오맵 SDK로 교체(키 발급·도메인 등록 필요).
+   [DEV] 프로토 시연용 Leaflet+OSM(무키). 실서비스 지도 라이브러리 = ★OpenLayers(퍼블리싱 표준 확정, 2026-07-23 workList 유의사항). 별도 API 키·도메인 등록 불필요.
+         프로토는 시연용 Leaflet+OSM으로 동등 기능 구현 — 마커/클러스터/팝업/반경검색을 OpenLayers 대응 API로 1:1 치환하면 됨.
          Leaflet CDN·OSM 타일이라 인터넷 필요 — 사내망 차단 시 L 미정의 → 기존 mock 지도(placeholder+오버레이 핀)로 자동 폴백. */
 .cf-leaflet{ position:absolute; inset:0; z-index:1; }
 .finder-map.leaflet-on .map-placeholder,
@@ -410,7 +423,7 @@
 /* 위성(미지원) 버튼 */
 .map-basemap button[disabled]{ opacity:.5; cursor:not-allowed; }
 </style>
-<!-- [ISS-040] Leaflet(무키) — 실서비스 교체 시 이 2줄 + initLeaflet()만 네이버/카카오 SDK로 대체 -->
+<!-- [ISS-040] Leaflet(무키) — 실서비스 교체 시 이 2줄 + initLeaflet()만 OpenLayers(퍼블 표준)로 대체 -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
@@ -680,22 +693,23 @@
           <div class="finder-map-col" style="display:flex;flex-direction:column;min-width:0;">
           <div class="finder-map">
             <!-- [ISS-030] 지도 위 전기/수소 탭 제거 — 전환은 상단 검색영역 세그먼트 토글이 유일 소스 -->
-            <!-- 일반/위성 토글 — [ISS-040] OSM 무료 타일은 위성 레이어가 없어 '위성' 비활성. 실서비스(네이버/카카오)에서 위성 지원 -->
+            <!-- 일반/위성 토글 — [ISS-040] OSM 무료 타일에 위성 레이어가 없어 '위성' 비활성. 실서비스는 배경지도(위성) 타일 소스 연동 시 제공 — OpenLayers는 렌더 라이브러리로 타일 소스는 별도 -->
             <div class="map-basemap" style="position:absolute; top:16px; right:64px; display:flex; background:#fff; border-radius:8px; box-shadow:0 4px 16px rgba(15,23,42,.1); overflow:hidden; border:1px solid var(--border-light);">
               <button type="button" aria-pressed="true" style="padding:7px 14px; border:none; background:var(--color-primary-500); color:#fff; font-size:13px; font-weight:700; cursor:pointer;">일반</button>
-              <button type="button" id="cfSat" disabled aria-disabled="true" title="위성 지도는 실서비스(네이버·카카오) 전환 시 제공됩니다 — OSM 무료 타일 미지원" style="padding:7px 14px; border:none; background:#fff; color:var(--color-gray-700); font-size:13px; font-weight:600; cursor:pointer;">위성</button>
+              <button type="button" id="cfSat" disabled aria-disabled="true" title="위성 지도는 실서비스 배경지도 연동 시 제공 예정입니다 — 프로토(OSM 무료 타일) 미지원" style="padding:7px 14px; border:none; background:#fff; color:var(--color-gray-700); font-size:13px; font-weight:600; cursor:pointer;">위성</button>
             </div>
-            <!-- [DEV] 지도 = ★프로토 시연용 Leaflet + OpenStreetMap(무키, ISS-040). 실서비스는 네이버지도/카카오맵 SDK로 교체 — 키 발급·도메인 등록 필요.
-                 마커·클러스터·상세패널 연동 구조는 그대로 이식 가능(좌표·divIcon만 SDK 규격으로 교체). 공공데이터포털 충전소 API 연동은 별도 과제.
+            <!-- [DEV] 지도 = ★프로토 시연용 Leaflet + OpenStreetMap(무키, ISS-040). 실서비스 지도 라이브러리 = ★OpenLayers(퍼블리싱 표준 확정, 2026-07-23 workList 유의사항). 별도 API 키·도메인 등록 불필요.
+         프로토는 시연용 Leaflet+OSM으로 동등 기능 구현 — 마커/클러스터/팝업/반경검색을 OpenLayers 대응 API로 1:1 치환하면 됨.
+                 마커·클러스터·상세패널 연동 구조는 그대로 이식 가능(좌표·divIcon만 OpenLayers 규격으로 교체). 공공데이터포털 충전소 API 연동은 별도 과제.
                  ★외부 의존: Leaflet CDN(unpkg) + OSM 타일 → 인터넷 필요. 사내망 차단 시 L 미정의 → 기존 mock 지도(placeholder+오버레이 핀)로 자동 폴백.
-                 ★위성: OSM 무료 타일에 위성 레이어 없음 → '위성' 버튼 비활성. 실서비스에서 지원.
+                 ★위성: OSM 무료 타일에 위성 레이어 없음 → '위성' 버튼 비활성. 실서비스 배경지도(위성) 타일 소스 연동 시 지원.
                  마커 상태 = EVCS_CHARGER_STATUS 상태코드 5종(사용가능/사용중/사용불가/상태미확인/이용자제한), 출력 티어 = CHGE_OUTPUT(50kW·완속/100/200/350),
                  CPO = BID / R_BUSI.BNM(약칭 폴백). CPO 마크는 확대 줌에서만 노출(LOD — 시인성·타일 부하). -->
             <div class="cf-leaflet" id="cfLeaflet" role="application" aria-label="충전소 지도 — 지도는 보조 수단이며, 모든 충전소 정보는 좌측 목록과 상세 패널로 확인할 수 있습니다"></div>
             <div class="map-placeholder">
               <div style="text-align:center;">
                 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <p style="margin-top:12px;font-weight:700;color:var(--color-primary-700);font-size:14px;" data-i18n="charging.find.map.api.title">VWorld / 네이버지도 / 카카오맵 API 연동 영역</p>
+                <p style="margin-top:12px;font-weight:700;color:var(--color-primary-700);font-size:14px;" data-i18n="charging.find.map.api.title">지도 연동 영역 (실서비스 = OpenLayers)</p>
                 <p style="font-size:12px;color:var(--text-tertiary);margin-top:4px;" data-i18n="charging.find.map.api.desc">공공데이터포털 충전소 API + 지도 SDK 실시간 연동</p>
               </div>
             </div>
@@ -711,7 +725,7 @@
             </div>
 
             <!-- 마커/클러스터 = JS 렌더 (LOD별 상세도) — ★숫자=충전소 개수(클러스터=그룹 내 충전소 수 · 단일 핀=1) · 대표상태는 충전기 배열에서 파생(calcStationStatus) -->
-            <!-- [DEV] 클러스터는 지도 라이브러리 자동 거리 클러스터 + VWorld는 클러스터 내장이 약함 → Supercluster 등 별도 라이브러리 검토 필요 -->
+            <!-- [DEV] 클러스터 = 지도 라이브러리의 자동 거리 클러스터. OpenLayers는 ol/source/Cluster 내장 → 별도 라이브러리 불요 -->
             <div class="map-clusters lod-status" id="mapMarkers"></div>
 
             <div class="map-controls">
@@ -932,8 +946,8 @@
        더미도 대표상태를 하드코딩하지 않고 충전기 상태 구성(<code>mix</code>)만 정의 — <b>개발 시에도 대표상태 컬럼을 저장·이원 계산하지 말 것</b>.</p>
     <p>· <b>멀티마커(최종 LOD 전용)</b> = 좌표 소수 4자리 반올림(≈10m) 근접 그룹에 충전소 2개 이상 → 클릭 시 슬라이드 <b>1뎁스 충전소 선택 리스트</b>(충전소명·CPO·대표상태 배지·충전기 N기) → 행 클릭 시 <b>2뎁스 상세</b>(← 목록 복귀). 충전소 1개 마커는 상세 직행. <b>표시 계층 병합만 — 충전소 코드 데이터 병합 금지</b>(구역 분리·명의별 등록 혼재).</p>
     <p>· <b>좌표</b> = <code>LAT/LNG</code>(예: 수소 <code>H2_STATION.LAT/LNG</code>, 전기 충전소 마스터의 위경도). 실시간 개별 충전기 상태는 로딩 과다로 지도 미노출 → <b>우측 슬라이드 전용</b>.</p>
-    <p>· <b>클러스터</b> = 실서비스는 지도 라이브러리(네이버/카카오)의 <b>as-is 자동 거리 클러스터</b>(줌 축소 시 합침·확대 시 분할, 명시적 행정티어 없음). 클러스터 마커 = ★충전소 개수 합계(대수 아님).</p>
-    <p>· <b>마커 라벨·툴팁·접근성</b>(ISS-012 확정): 사업자명은 <b>하단 상시 라벨을 두지 않고 마우스 호버 시에만 툴팁</b>으로 노출(전기·수소 동일). 호버 전용 정보는 키보드·터치에서 접근 불가하므로 마커를 <b>포커스 가능(button)+포커스 시 동일 툴팁 표시</b>하고 <code>aria-label</code>(사업자명·출력·충전소 개수)로 스크린리더 접근 보장. 멀티마커는 운영기관이 여러 곳이라 툴팁·aria에 전체 나열(임의 1곳 선택 안 함). <b>실지도 SDK(네이버/카카오/VWorld) 연동 시에도 동일 요건</b> — 마커 오버레이 툴팁을 호버·포커스 양쪽에서 띄우고, SDK 마커에 접근성 이름(aria-label 등)을 부여할 것(모형은 프로토타입 수준 시연).</p>
+    <p>· <b>클러스터</b> = 실서비스는 지도 라이브러리(<b>OpenLayers</b> ol/source/Cluster)의 <b>as-is 자동 거리 클러스터</b>(줌 축소 시 합침·확대 시 분할, 명시적 행정티어 없음). 클러스터 마커 = ★충전소 개수 합계(대수 아님).</p>
+    <p>· <b>마커 라벨·툴팁·접근성</b>(ISS-012 확정): 사업자명은 <b>하단 상시 라벨을 두지 않고 마우스 호버 시에만 툴팁</b>으로 노출(전기·수소 동일). 호버 전용 정보는 키보드·터치에서 접근 불가하므로 마커를 <b>포커스 가능(button)+포커스 시 동일 툴팁 표시</b>하고 <code>aria-label</code>(사업자명·출력·충전소 개수)로 스크린리더 접근 보장. 멀티마커는 운영기관이 여러 곳이라 툴팁·aria에 전체 나열(임의 1곳 선택 안 함). <b>실지도 라이브러리(OpenLayers) 연동 시에도 동일 요건</b> — 마커 오버레이 툴팁을 호버·포커스 양쪽에서 띄우고, SDK 마커에 접근성 이름(aria-label 등)을 부여할 것(모형은 프로토타입 수준 시연).</p>
     <p>· <b>연동</b>: 필터(급속·사업자·회원카드 등) 조작 → 마커/클러스터 즉시 갱신 · 검색(주소·충전소명·지역) → 지도 이동+줌 · '내 주변' 리스트 ↔ 지도(같은 필터·데이터, 항목 클릭 → 마커 하이라이트+슬라이드). 본 프로토타입은 실지도 없어 mock 연동으로 시연.</p>
     <p>· <b>즐겨찾기</b>(자주 쓰는 충전소)는 로그인 회원별 → 본 페이지 '자주 쓰는 충전소' 뷰로 일원화(구 mypage-favorites 흡수). 비로그인 진입 시 로그인 유도.</p>
   </div>
@@ -976,13 +990,22 @@
     <!-- 충전기 현황 — 목록형(기본 8개 + 더보기, 최대 97기 대응) -->
     <!-- [DEV] R_CHARGER: #ID(2자리·상한99) · CHGE_OUTPUT(밴드) · CONNECTOR · 상태 · POSITION_DESC(상세위치, 입력률 17%·최대 99자, Disclosure 펼침) -->
     <div class="sd-section">
-      <h4>충전기 현황 <span id="sdChgTotal" style="font-size:12px;color:var(--color-gray-500);font-weight:600;">(0기)</span></h4>
+      <h4>충전기 현황 <span id="sdChgTotal" style="font-size:12px;color:var(--color-gray-500);font-weight:600;">(0기)</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h4>
+      <!-- [DEV] 실구현 표 = ag-grid(퍼블리싱 표준, 최신). 프로토는 순수 <table> — 컬럼 정의·정렬·페이징을 ag-grid columnDefs로 이관.
       <!-- [ISS-030] 카드 리스트 → 표(table). 순서 = 표 → [+ 더보기] → 안내멘트(요금 disclaimer · 밴드/상태) -->
       <div class="chg-table-wrap" id="sdChargerList"></div>
       <button type="button" class="chg-more" id="sdChgMore" hidden aria-expanded="false" aria-controls="sdChargerList"></button>
       <!-- 실시간 요금도 회원·할인·로밍에 따라 실결제와 다를 수 있음(참고) — ISS-020/028 정합 -->
       <p class="chg-fee-note"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>충전기별 <b>실시간 요금</b>은 공시 회원가 기준 참고값입니다. 회원·할인·시간대·로밍에 따라 실제 결제금액과 다를 수 있습니다. 실시간 미제공 충전기는 <b>사업자 표준요금</b>(계절시간제·지금 시각 기준)을 표시합니다.</span></p>
       <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · 상태: <span style="color:var(--mk-available);">사용가능</span>·<span style="color:var(--mk-busy);">사용중</span>·<span style="color:var(--mk-unavailable);">사용불가</span>·<span style="color:var(--mk-unknown);">상태미확인</span>·<span style="color:var(--mk-restricted);">이용자제한</span></p>
+    </div>
+
+    <!-- [ISS-045] 기후에너지환경부 회원카드 결제 요금 — ★공표 요금(참고값 아님) → 안내가 뱃지·'실결제와 다를 수 있음' 문구 금지.
+         기후부 회원카드로 결제하면 어느 사업자 충전기를 이용해도 동일 적용(현행 ev.or.kr '로밍 충전요금'과 동일 개념).
+         수치 = js/me-public-rate.js 단일 소스(charging-fee.html 공표 5밴드와 동일) · 보유 밴드 강조는 충전기 배열(kW)에서 파생. 전기 전용(수소 미적용). -->
+    <div class="sd-section" id="sdMeRate">
+      <h4>기후에너지환경부 회원카드 결제 요금</h4>
+      <div class="me-bands" id="sdMeBands"></div>
     </div>
 
     <!-- 충전 요금 -->
@@ -1080,10 +1103,11 @@
 <div id="footer-slot"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="js/partials.js?v=20260721c"></script>
+<script src="js/me-public-rate.js?v=20260723a"></script><!-- [ISS-045] 기후부 공표 5밴드 단일 소스 -->
+<script src="js/partials.js?v=20260723a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260721a"></script>
-<script src="js/i18n-charging.js?v=20260721b"></script>
+<script src="js/i18n-common.js?v=20260723a"></script>
+<script src="js/i18n-charging.js?v=20260723a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/fee-disclaimer.js?v=20260721a"></script>
 <script>
@@ -1390,6 +1414,23 @@
     var p = function(v){ return v<10 ? '0'+v : ''+v; };
     return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
   }
+  /* [ISS-045] 기후에너지환경부 회원카드 결제 요금 — 5밴드 카드 + 해당 충전소 보유 밴드 강조
+     보유 밴드 = 충전기 배열의 kW에서 파생(하드코딩 금지) · 수치 = js/me-public-rate.js 단일 소스 */
+  function renderMeRate(stationId){
+    var host=document.getElementById('sdMeBands'); if(!host || !window.ME_PUBLIC_RATE) return;
+    var MEP=window.ME_PUBLIC_RATE;
+    var owned={};
+    chargersOf(stationId).forEach(function(c){ if(c.band) owned[c.band]=true; });   // ★표의 구분(kW)과 동일 파생
+    host.innerHTML = MEP.bands.map(function(b){
+      var has = !!owned[b.key];
+      return '<div class="me-band'+(has?' has':'')+'" role="group" aria-label="'+b.label+' '+b.range+' '+MEP.rate[b.key]+'원 퍼 킬로와트시'+(has?', 이 충전소 보유 밴드':'')+'">'
+        + '<span class="mb-name">'+b.label+'</span>'
+        + '<span class="mb-range">'+b.range+'</span>'
+        + '<span class="mb-price">'+MEP.rate[b.key].toFixed(1)+'</span>'
+        + (has ? '<span class="sr-only">이 충전소 보유 밴드</span>' : '')
+        + '</div>';
+    }).join('');
+  }
   function stateCellHTML(c){
     var label = CHG_STATE[c.state];                                   // ★확정 5종 용어(구표기 이용가능/충전중/점검중 금지)
     var txt = (c.state==='busy') ? (chargeElapsed(c)+' '+label) : label;
@@ -1429,6 +1470,7 @@
       // 참고사항(비고) = EVCS_STATION.ETC — 200자 상한(실측 최장 90자) → 말줄임 없이 전문 노출
       var ec = document.getElementById('sdEtc'); if(ec) ec.textContent = data.etc || '등록된 비고가 없습니다.';
       renderNowFee();   // [ISS-030] 계시제 '지금 시각 기준' 적용 구간
+      renderMeRate(stationId);   // [ISS-045] 기후부 회원카드 결제 요금(보유 밴드 강조) — 전기 전용
     } else {
       var oh = document.getElementById('sdOperH2'); if (oh) oh.textContent = data.brand;
       var ec2 = document.getElementById('sdEtcH2'); if(ec2) ec2.textContent = data.etc || '등록된 비고가 없습니다.';
@@ -1617,7 +1659,7 @@
 
   // ===== AS-IS 정합 마커 체계 (mock) — 상태 5종·출력 4티어·CPO LOD =====
   //  [DEV] 마커 상태 = EVCS_CHARGER_STATUS(5종), 출력 티어 = CHGE_OUTPUT, CPO = BID/R_BUSI.BNM(약칭 폴백).
-  //  LOD: 축소=클러스터만 / 중간=상태색 핀(CPO 생략) / 확대=핀 확대+CPO 마크. VWorld는 클러스터 내장 약함 → Supercluster 검토.
+  //  LOD: 축소=클러스터만 / 중간=상태색 핀(CPO 생략) / 확대=핀 확대+CPO 마크. OpenLayers는 ol/source/Cluster 내장.
   var __currentMode = 'ev', __lod = 'status';   // 'cluster' | 'status' | 'cpo'
   var __outBand = 'all';   // 충전기 출력 필터(ISS-030): all·slow·mid·fast·fastp·ultra (bandOfKw 키 동일) · 전기 전용
   // 선택 밴드의 충전기를 1기라도 보유한 충전소만 통과(수소는 출력 개념 없어 필터 무관 — 항상 통과)
@@ -1821,7 +1863,8 @@
   };
 
   /* ══ [ISS-040] 실지도 엔진 — Leaflet + OpenStreetMap(무키) ════════════════════════════
-     [DEV] 프로토 시연용. 실서비스는 네이버지도/카카오맵 SDK로 교체 — 키 발급·도메인 등록 필요.
+     [DEV] 프로토 시연용. 실서비스 지도 라이브러리 = ★OpenLayers(퍼블리싱 표준 확정, 2026-07-23 workList 유의사항). 별도 API 키·도메인 등록 불필요.
+           프로토는 시연용 Leaflet+OSM으로 동등 기능 구현 — 마커/클러스터/팝업/반경검색을 OpenLayers 대응 API로 1:1 치환하면 됨.
            마커·클러스터·상세패널 연동 구조는 그대로 이식 가능(교체 지점 = initLeaflet / addDivMarker / renderMapLeaflet 3곳).
            공공데이터포털 충전소 API 연동은 별도 과제. 좌표는 더미(MARKERS.lat/lng).
            ★인터넷 필요(unpkg CDN·OSM 타일). 사내망 차단 시 L 미정의 → 아래 initLeaflet()이 false 반환하고 기존 mock 지도 그대로 동작. */

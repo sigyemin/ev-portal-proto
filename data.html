@@ -85,10 +85,6 @@
   .sb-cta .btn{text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
   .sb-cta .btn svg{flex:none;}
 
-  /* ── #k100 대표 참여 기업 명단(로고 자산 없음 → 이니셜 타일 + 기업명 텍스트) ── */
-  .kv-firms{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px;}
-  .kv-firms li{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:1px solid var(--border-light,#e2e8f0);border-radius:999px;background:#fff;font-size:13px;font-weight:600;color:var(--text-primary,#1f2937);}
-  .kv-firms li .kv-ini{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--color-primary-50,#eaf7f0);color:var(--color-primary-700,#1a7a4f);font-weight:800;font-size:12px;flex:none;}
 
   /* ── 상단 KPI = 카드 + 그 아래 별도 '이동' 버튼 네모칸(진짜 <a>·키보드·포커스링) ── */
   .ds-kpi-cell{display:flex;flex-direction:column;gap:8px;}
@@ -104,7 +100,7 @@
   @media (prefers-reduced-motion: reduce){ .ds-nav-btn{transition:none;} }
 
   /* 섹션 앵커 이동 시 고정 헤더에 타이틀 가려지지 않도록 오프셋(ISS-026 리뷰 #3) */
-  #supply, #infra, #h2, #subsidy, #k100{ scroll-margin-top: calc(var(--header-height, 72px) + 22px); }
+  #supply, #infra, #h2, #subsidy{ scroll-margin-top: calc(var(--header-height, 72px) + 22px); }
   .ds-table-toggle > button{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--color-primary-700,#1a7a4f);background:var(--color-primary-50,#eaf7f0);border:1px solid var(--color-primary-200,#bfe6d2);border-radius:8px;padding:7px 13px;cursor:pointer;}
   .ds-chart-cap{font-size:12.5px;color:var(--text-secondary,#4b5563);margin:2px 0 6px;}
   @media (prefers-reduced-motion: reduce){ .ds-chart-bar{transition:none;} }
@@ -124,7 +120,6 @@
          - 누적 무공해차   = 지급 누적(PS_APPLY + H2_APPLY) · 등록원부(EV_CAR·H2_CAR) 아님 — 이 시스템은 보조금 지급만 관리 [ISS-006 정정 2026-07-22]
          - 전국 충전기     = EVCS_CHARGER_STATUS 등록 기수
          - 수소충전소      = H2_STATION 등록 개소 (운영상태 컬럼 없음 → '등록' 기준)
-         - K-EV100 참여    = 참여기업 수
          - 올해 집행 보조금 = 아래 '보조금 집행' 로직 참조
        ● 지역별 무공해차 보조금 지원 현황 (#supply · C+D 재설계 — R1 폐기·R2 흡수, 개편안 §2-5) [ISS-006 정정 2026-07-22: '보급'→'보조금 지원']
          - 무공해차 = 차종코드 한 체계 · 전기 전차종·이륜·건설 = PS_APPLY / 수소 = H2_APPLY 지급 기준 통일 [확정 2026-07-22]
@@ -155,7 +150,7 @@
         <span class="current" aria-current="page">데이터·통계</span>
       </nav>
       <h1 data-i18n="data.h1">데이터·통계</h1>
-      <p class="hero-lead" data-i18n-html="data.lead.html">무공해차 보급·충전 인프라·보조금 집행·K-EV100 전환 현황을 <strong>실시간 대시보드</strong>와 <strong>공개 데이터</strong>로 제공합니다.</p>
+      <p class="hero-lead" data-i18n-html="data.lead.html">무공해차 보급·충전 인프라·보조금 집행 현황을 <strong>실시간 대시보드</strong>와 <strong>공개 데이터</strong>로 제공합니다.</p>
     </div>
   </section>
 
@@ -164,7 +159,7 @@
 
       <!-- 주요 지표 = 섹션 바로가기 네비 (ISS-026 · 각 지표 클릭 시 해당 현황 섹션으로 이동)
            [DEV] 대표지수 매핑: ①무공해차 보조금 지원→#supply(현재 누적 지급 대수(PS_APPLY+H2_APPLY) 표기 · 보급률%는 전체 자동차 등록 대비 외부 원천 필요, 미정)
-                 ②전기 충전기 수→#infra ③수소충전소 수→#h2(별도 KPI) ④보조금 집행률(소진률)%→#subsidy ⑤K-EV100 참여기업 수→#k100.
+                 ②전기 충전기 수→#infra ③수소충전소 수→#h2(별도 KPI) ④보조금 집행률(소진률)%→#subsidy. (5번째 지표·섹션은 ISS-026 리뷰로 삭제 — KPI 4개)
            헤드라인 값은 각 섹션 기존 값 재사용(신규 데이터 없음). KPI 행을 독립 블록으로 유지 → 추후 sticky scroll-spy 업그레이드 용이(각 섹션에 앵커 id 기부여). -->
       <div class="ds-live-strip">
         <div class="ds-live-head">
@@ -200,22 +195,15 @@
           <div class="ds-kpi-cell">
             <div class="ds-live-tile">
               <div class="lt-label" id="kpiSubLbl">보조금 집행률</div>
-              <div class="lt-val"><span data-counter="66">0</span><span class="unit">%</span></div>
+              <div class="lt-val"><span data-counter="66.5">0</span><span class="unit">%</span></div>
               <div class="lt-delta up" id="kpiSubDelta">올해 1.84조원 집행</div>
             </div>
             <a class="ds-nav-btn" href="#subsidy"><span class="nb-txt">집행 현황 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
           </div>
-          <div class="ds-kpi-cell">
-            <div class="ds-live-tile">
-              <div class="lt-label" data-i18n="data.kpi.kev">K-EV100 참여기업</div>
-              <div class="lt-val"><span data-counter="524">0</span><span class="unit" data-i18n="data.unit.firms">개사</span></div>
-              <div class="lt-delta up" data-i18n="data.kpi.kev.delta">▲ +18 / 월</div>
-            </div>
-            <a class="ds-nav-btn" href="#k100"><span class="nb-txt">K-EV100 보기</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
-          </div>
         </nav>
       </div>
 
+      <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
       <!-- 지역별 무공해차 보조금 지원 현황 (C+D 재설계 · R1 폐기·R2 흡수 — 개편안 §2-5) -->
       <!-- [DEV] C = 예산잔여율(라인, 좌축%) + 보조금 지원(막대, 우축 대) 콤보 · 연도×지역×차종 → 월별 시계열.
            D = 연도별 누적 지원(선 S커브, 좌축) + 연도별 보조금 지원(막대, 우축) 이중축.
@@ -292,6 +280,7 @@
           </table>
         </div>
 
+        <!-- [DEV] 실구현 표 = ag-grid(퍼블리싱 표준, 최신). 프로토는 순수 <table> — 컬럼 정의·정렬·페이징을 ag-grid columnDefs로 이관. -->
         <!-- 지역 비교: 지원 대수·구성비 — 시각 표/토글 제거(ISS-026 리뷰), 데이터는 sr-only 표로 접근성 유지 -->
         <div id="supplyTableWrap" class="sr-only">
           <table class="data-table" id="supplyTable" style="box-shadow:none;">
@@ -334,8 +323,9 @@
              ⑤ 설치 추세 = EVCS_CHARGER_SETUP_HIS(설치 이력) 연도별 설치 집계(대안: STATUS STAN_YM 증가분)
              ★★경계선: (1) 사업자 품질/순위 금지 — ③은 충전기 '수'만  (2) 매크로 가이드(실시간 아님) — 각 인사이트 '실시간=충전소찾기' 링크 필수 -->
 
-        <!-- ② 시간대별 붐빔·한산 -->
-        <div class="ds-combo-head ds-combo-head-row"><h4 id="ifTimeTitle">시간대별 붐빔·한산 (24시간 이용 패턴)</h4><button type="button" class="ds-xlsx-btn" data-xlsx="ifTime" aria-label="시간대별 붐빔·한산 (24시간 이용 패턴) 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
+        <!-- ② 시간대별 이용 패턴 -->
+        <div class="ds-combo-head ds-combo-head-row"><h4 id="ifTimeTitle">시간대별 이용 패턴</h4><button type="button" class="ds-xlsx-btn" data-xlsx="ifTime" aria-label="시간대별 이용 패턴 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
         <div class="ds-legend" id="ifTimeLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="ifTimeChart" role="img" aria-label="시간대별 충전 이용 패턴 차트"></div>
         <p class="mt-4" style="font-size:13px;"><a href="charging-find.html" class="btn btn-secondary btn-sm ds-navlink"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="ifTimeLinkTxt">실시간 혼잡·빈자리는 충전소 찾기에서 →</span></a></p>
@@ -348,6 +338,7 @@
         </div>
 
         <!-- ③ 사업자별 보급 커버리지 (수량 = 선택지 폭) -->
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
         <div class="ds-combo-head ds-combo-head-row"><h4 id="ifCpoTitle">사업자별 충전기 보유 현황</h4><button type="button" class="ds-xlsx-btn" data-xlsx="ifCpo" aria-label="사업자별 충전기 보유 현황 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
         <div class="ds-ranking-filter" style="margin:2px 0 8px;">
           <div class="dsf-grp"><label class="dsf-label" for="ifCpoRegion" id="ifCpoRegionLabel">지역</label><select id="ifCpoRegion"></select></div>
@@ -369,6 +360,7 @@
         </div>
 
         <!-- ④ 지역별 충전기 출력 구성(완속·급속·초급속) -->
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
         <div class="ds-combo-head ds-combo-head-row"><h4 id="ifFastTitle">우리 지역 급속 충전 여건</h4><button type="button" class="ds-xlsx-btn" data-xlsx="ifFast" aria-label="우리 지역 급속 충전 여건 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
         <div class="ds-legend" id="ifFastLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="ifFastChart" role="img" aria-label="지역별 충전기 출력 5밴드 막대그래프"></div>
@@ -383,6 +375,7 @@
         </div>
 
         <!-- ⑤ 충전기 설치 성장 추세 (soft) -->
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
         <div class="ds-combo-head ds-combo-head-row"><h4 id="ifGrowTitle">충전기 설치 성장 추세</h4><button type="button" class="ds-xlsx-btn" data-xlsx="ifGrow" aria-label="충전기 설치 성장 추세 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
         <div class="ds-legend" id="ifGrowLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="ifGrowChart" role="img" aria-label="연도별 충전기 설치 수와 누적 콤보 차트"></div>
@@ -411,6 +404,7 @@
         </div>
 
         <!-- H1 — 지역별 수소충전소 유무·개소 + 공백지역 -->
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
         <div class="ds-combo-head ds-combo-head-row"><h4 id="h2MapTitle">지역별 수소충전소 유무·개소</h4><button type="button" class="ds-xlsx-btn" data-xlsx="h2Map" aria-label="지역별 수소충전소 유무·개소 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
         <div class="ds-legend" id="h2MapLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="h2Map" role="img" aria-label="시·도별 수소충전소 개소 막대그래프"></div>
@@ -424,6 +418,7 @@
         </div>
 
         <!-- H3 — 연도별 수소 인프라 확충 추세 -->
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
         <div class="ds-combo-head ds-combo-head-row"><h4 id="h2GrowTitle">연도별 수소 인프라 확충 추세</h4><button type="button" class="ds-xlsx-btn" data-xlsx="h2Grow" aria-label="연도별 수소 인프라 확충 추세 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
         <div class="ds-legend" id="h2GrowLegend" aria-hidden="true"></div>
         <div class="ds-svg-wrap" id="h2GrowChart" role="img" aria-label="연도별 수소충전소 수와 수소차 등록 콤보 차트"></div>
@@ -447,21 +442,20 @@
           <button type="button" class="ds-xlsx-btn" data-xlsx="sb" aria-label="보조금 집행현황 요약(KPI) 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button>
         </div>
         <div class="grid grid-3 mt-4" style="gap:14px;">
-          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.last">전년도 집행액</div><div class="stat-value"><span data-counter="2.78">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.cur">올해 집행액</div><div class="stat-value"><span data-counter="1.84">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.rate">예산 대비 소진률</div><div class="stat-value"><span data-counter="66">0</span><span class="unit">%</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.last">전년도 집행액</div><div class="stat-value"><span id="sbKpiLast" data-counter="2.05">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.cur">올해 집행액</div><div class="stat-value"><span id="sbKpiCur" data-counter="1.35">0</span><span class="unit" data-i18n="data.unit.trillion">조원</span></div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="data.sb.l.rate">예산 대비 소진률</div><div class="stat-value"><span id="sbKpiRate" data-counter="66.5">0</span><span class="unit">%</span></div></div>
         </div>
 
-        <!-- [ISS-035] 연도별 보조금 집행액(국비) 증가 막대 — 순수 집행액(연예산 배정 비교막대·소진률 게이지 제거, ISS-035 리뷰).
-             2026은 진행중(YTD)이라 감소 오해 방지 위해 톤(주황)·라벨로 구분. ★수치 더미 — 실값은 ISS-031 Q-E(PS_APPLY·H2_APPLY REQ_GAMT 국비, YEAR 축) 확정 시 교체. -->
+        <!-- [DEV] 실구현 차트 라이브러리 = ECharts 5.4.3(퍼블리싱 표준). 프로토는 자작 SVG — 데이터 배열·축·범례 정의를 ECharts option으로 이관. -->
+        <!-- [ISS-044] 연도별 보조금 집행액(국비) — 트랙 없는 단순 가로 막대 1줄/연도. x스케일 최대 = 최대 집행액(2.11).
+             2026은 YTD라 막대가 짧은 게 정상(주황 + '진행중' 라벨) — 별도 안내 멘트 없음.
+             ★차트·KPI 3카드·상단 KPI·툴팁·sr-only표·엑셀이 전부 SB_DATA 배열 1곳에서 파생. 원천 주석은 SB_DATA 위 [DEV] 참조. -->
         <div class="ds-chart mt-5">
-          <p class="ds-chart-cap"><b>연도별 보조금 집행액(국비)</b> <span style="color:var(--text-tertiary,#94a3b8);">(단위: 조원)</span> <span style="display:inline-block;margin-left:6px;padding:1px 9px;border-radius:999px;background:#e6f6ee;color:#0f7a44;font-size:11px;font-weight:800;vertical-align:middle;">▲ 최근 5년 지속 증가</span></p>
-          <div class="ds-chart-row"><div class="dcl">2022</div><div class="ds-chart-track"><div class="ds-chart-bar" style="width:74%;"></div></div><div class="ds-chart-val">2.05<span class="sub"> 조</span></div></div>
-          <div class="ds-chart-row"><div class="dcl">2023</div><div class="ds-chart-track"><div class="ds-chart-bar" style="width:87%;"></div></div><div class="ds-chart-val">2.42<span class="sub"> 조</span></div></div>
-          <div class="ds-chart-row"><div class="dcl">2024</div><div class="ds-chart-track"><div class="ds-chart-bar" style="width:94%;"></div></div><div class="ds-chart-val">2.61<span class="sub"> 조</span></div></div>
-          <div class="ds-chart-row"><div class="dcl">2025</div><div class="ds-chart-track"><div class="ds-chart-bar" style="width:100%;"></div></div><div class="ds-chart-val">2.78<span class="sub"> 조</span></div></div>
-          <div class="ds-chart-row"><div class="dcl">2026</div><div class="ds-chart-track"><div class="ds-chart-bar b-warn" style="width:66%;"></div></div><div class="ds-chart-val">1.84<span class="sub"> 조 · 진행중</span></div></div>
-          <p class="ds-chart-cap" style="margin-top:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#E8760A;vertical-align:middle;"></span> 2026 진행중(YTD) — 연말까지 집행 지속(감소 아님)</p>
+          <p class="ds-chart-cap"><b>연도별 보조금 집행액(국비)</b> <span style="color:var(--text-tertiary,#94a3b8);">(단위: 조원)</span></p>
+          <div id="sbYearRows"></div>
+          <div id="sbYearTbl" class="sr-only"></div>
+        </div>
         </div>
 
         <!-- [DEV] R2(시·도별 소진율 막대)는 #supply C(예산 잔여율=1−소진율)로 흡수·일원화(개편안 §2-5). 소진율 '수준'은 #supply(C+D) 담당.
@@ -472,31 +466,6 @@
         </p>
       </div>
 
-      <!-- K-EV100 전환 현황 (anchor) — A안 그래프화(ISS-025 · 3카드→연도 추세+대표기업) -->
-      <!-- [DEV] 연도별 참여 기업 수 = PS_KEV100/PS_KEV100_HIS(BUSI_NO·BUSI_NM·USE_YN, 연도 축은 _HIS).
-           연도별 전환(도입) 대수 = ★PS_KEV100 전환 컬럼 존재 여부 확인 필요 → 없으면 참여기업(BUSI_NO)의 PS_APPLY 승인 대수 집계(개발 협의).
-           대표 참여기업 = PS_KEV100.BUSI_NM(로고 자산 없음 → 명단 텍스트, 아래 명단은 전부 더미명). 기업별 성과 줄세우기·비교 없음(전체 집계 + 참여 사실만). 신선도 검증계 한정·운영DB 정상. 인라인 SVG·수치 더미. -->
-      <div class="ds-ranking-wrap mt-8" id="k100">
-        <div class="ds-ranking-head">
-          <div>
-            <h3 id="kvTitle">K-EV100 전환 현황</h3>
-            <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span id="kvRefresh">연 갱신</span></span>
-          </div>
-        </div>
-
-        <!-- 연도별 참여 기업(막대) + 전환 대수(선) -->
-        <div class="ds-combo-head ds-combo-head-row"><h4 id="kvChartTitle">연도별 참여 기업 · 전환 대수</h4><button type="button" class="ds-xlsx-btn" data-xlsx="kv" aria-label="연도별 참여 기업·전환 대수 데이터 엑셀 다운로드"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>엑셀</span></button></div>
-        <div class="ds-legend" id="kvLegend" aria-hidden="true"></div>
-        <div class="ds-svg-wrap" id="kvChart" role="img" aria-label="연도별 K-EV100 참여 기업 수와 전환 대수 콤보 차트"></div>
-        <div id="kvTblWrap" class="sr-only">
-          <table class="data-table" style="box-shadow:none;">
-            <caption class="sr-only" id="kvTblCap">연도별 K-EV100 — 연도, 참여 기업 수, 전환 대수</caption>
-            <thead><tr><th scope="col" id="kvThYear">연도</th><th scope="col" class="num" style="text-align:right;" id="kvThFirms">참여 기업(개사)</th><th scope="col" class="num" style="text-align:right;" id="kvThCars">전환 대수(대)</th></tr></thead>
-            <tbody id="kvRows"></tbody>
-          </table>
-        </div>
-        <!-- [ISS-026 2차] '대표 참여 기업' 칩 목록 삭제(사용자 확정) — 연도별 전환 추세 그래프만 유지 -->
-      </div>
 
     </div>
   </section>
@@ -505,10 +474,10 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260721c"></script>
+<script src="js/partials.js?v=20260723a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260721a"></script>
-<script src="js/i18n-data.js?v=20260722a"></script>
+<script src="js/i18n-common.js?v=20260723a"></script>
+<script src="js/i18n-data.js?v=20260723a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <!-- SheetJS: #supply 엑셀 다운로드에서 사용(유지). 투명성지수(tindex-data.js) 대민 로드는 제거 — 관리자(admin-tindex.html) 전용으로 이관 -->
@@ -580,6 +549,47 @@ function svgCombo(cfg){
   g+=`<text x="${R}" y="14" text-anchor="end" font-size="10.5" fill="#64748b" aria-hidden="true">${cfg.rightUnit}</text>`;
   const defs=`<defs><pattern id="${cfg.hatchId}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#1aad6c"/><line x1="0" y1="0" x2="0" y2="6" stroke="#0e7a4d" stroke-width="2.4"/></pattern></defs>`;
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" style="height:auto;">${defs}${g}</svg>`;
+}
+
+/* ══════════ [ISS-044] 보조금 집행 — ★단일 데이터 세트 ══════════════════════════
+   차트 막대 · KPI 3카드 · 상단 KPI · 툴팁/aria · sr-only 표 · 엑셀이 전부 이 배열에서 파생(하드코딩 분산 금지).
+   [DEV] 막대 = 연도별 집행액(국비). 과년도는 배정 전액 집행 전제로
+         PS_BUDGET + PS_BUDGET_MOTOR + H2_BUDGET (GAMT+ADD_GAMT+COM_GAMT) 실값 사용(2026-07-23).
+         정식 집행액 = PS_APPLY + H2_APPLY 의 REQ_GAMT — 산식은 유효하나 검증계 미적재로 운영DB 확인 필요.
+         2026은 YTD(진행중). ※PS_BUDGET에 YEAR='2000' 이상행 존재 — 집계 제외.
+   ※'최근 5년 지속 증가' 배지 없음 — 2023(1.91)→2024(1.40) 감소가 실제라 사실과 다름. */
+const SB_DATA = [
+  { y:2022, exec:1.53 },
+  { y:2023, exec:1.91 },
+  { y:2024, exec:1.40 },   // ★실제 감소 구간
+  { y:2025, exec:2.11 },
+  { y:2026, exec:1.35, ytd:true, alloc:2.03 }   // alloc = 소진율 산출용(2026 배정 실값)
+];
+const SB_MAXE = Math.max.apply(null, SB_DATA.map(d=>d.exec));   // x스케일 최대 = 최대 집행액
+const SB_CUR  = SB_DATA[SB_DATA.length-1];
+const SB_PREV = SB_DATA[SB_DATA.length-2];
+const SB_RATE = SB_CUR.exec / SB_CUR.alloc * 100;               // 올해 소진율 = 집행 ÷ 배정
+function renderSubsidyYears(){
+  const host=document.getElementById('sbYearRows'); if(!host) return;
+  host.innerHTML = SB_DATA.map(function(d){
+    const w=(d.exec/SB_MAXE*100).toFixed(1);
+    const tip=d.y+'년 집행 '+d.exec.toFixed(2)+'조원'+(d.ytd?' (진행중)':'');
+    return '<div class="ds-chart-row"><div class="dcl">'+d.y+'</div>'
+      + '<div class="ds-chart-track" title="'+tip+'" aria-label="'+tip+'">'
+        + '<div class="ds-chart-bar'+(d.ytd?' b-warn':'')+'" style="width:'+w+'%;"></div></div>'
+      + '<div class="ds-chart-val">'+d.exec.toFixed(2)+'<span class="sub"> 조'+(d.ytd?' · 진행중':'')+'</span></div></div>';
+  }).join('');
+  // 동등 데이터 표(sr-only) — 색·길이 단독 구분 금지(KWCAG)
+  const t=document.getElementById('sbYearTbl');
+  if(t) t.innerHTML = '<table><caption>연도별 보조금 집행액(국비) — 연도, 집행액(조원)</caption>'
+    + '<thead><tr><th scope="col">연도</th><th scope="col">집행액</th></tr></thead><tbody>'
+    + SB_DATA.map(function(d){ return '<tr><th scope="row">'+d.y+'</th><td>'+d.exec.toFixed(2)+'조원'+(d.ytd?' (진행중)':'')+'</td></tr>'; }).join('')
+    + '</tbody></table>';
+  // KPI 3카드 = 같은 배열에서 산출
+  const set=function(id,v){ const e=document.getElementById(id); if(e){ e.textContent=v; e.setAttribute('data-counter',v); } };
+  set('sbKpiLast', SB_PREV.exec.toFixed(2));
+  set('sbKpiCur',  SB_CUR.exec.toFixed(2));
+  set('sbKpiRate', SB_RATE.toFixed(1));
 }
 
 /* ── C·D 더미 데이터 (전부 더미 · 원천 정의는 [DEV] 주석) ── */
@@ -910,7 +920,7 @@ function renderInfraTime(){
   const tb=document.getElementById('ifTimeRows');
   if(tb) tb.innerHTML=vals.map((v,i)=>`<tr><td style="font-weight:700;">${i}${_isEn()?':00':'시'}</td><td class="num" style="text-align:right;">${v}${(i>=20&&i<=23)?` <span class="ds-chip danger">${_t({ko:'붐빔',en:'Busy'})}</span>`:(i>=2&&i<=5)?` <span class="ds-chip ease">${_t({ko:'한산',en:'Quiet'})}</span>`:''}</td></tr>`).join('');
   const el=document.getElementById('ifTimeLegend');
-  if(el) el.innerHTML=`<span class="lg"><span class="sw sw-area"></span>${_isEn()?'Usage density':'이용 밀도'}</span><span class="lg"><span class="sw" style="background:#FDE2E1;border:1px solid #C0392B;"></span>${_isEn()?'Evening busy (20-23)':'저녁 붐빔 (20~23시)'}</span>`;
+  if(el) el.innerHTML=`<span class="lg"><span class="sw sw-area"></span>${_isEn()?'Usage density':'이용 밀도'}</span><span class="lg"><span class="sw" style="background:#FDE2E1;border:1px solid #C0392B;"></span>${_isEn()?'Evening busy hours':'저녁 붐빔 시간대'}</span>`;
 }
 
 // ③ 사업자별 충전기 수 (수량 = 선택지 폭 · 사업자 평가 지표 아님) — 지역 필터 + 페이지네이션(100+ CPO)
@@ -1053,7 +1063,7 @@ function renderInfraGrow(){
 
 function setInfraStatics(){
   const t=(id,ko,en)=>{ const e=document.getElementById(id); if(e) e.textContent=_isEn()?en:ko; };
-  t('ifTimeTitle','시간대별 붐빔·한산 (24시간 이용 패턴)','Busy vs quiet by hour (24-hour usage)');
+  t('ifTimeTitle','시간대별 이용 패턴','Hourly usage pattern');
   t('ifCpoTitle','사업자별 충전기 보유 현황','Charger count by operator');
   t('ifCpoRegionLabel','지역','Region');
   t('ifFastTitle','우리 지역 급속 충전 여건','Fast-charging readiness in your area');
@@ -1079,32 +1089,6 @@ function renderInfraAll(){ setInfraStatics(); fillCpoRegions(); renderInfraTime(
   const next=document.getElementById('ifCpoNext'); if(next) next.addEventListener('click',()=>{ ifCpoState.page++; renderInfraCpo(); });
 })();
 
-
-/* ══════════ K-EV100(#k100) A안 그래프화 (ISS-025) — 전부 더미 ══════════ */
-const K_FIRMS=[42,88,150,235,330,430,490,524];         // 연도별 참여 기업 수(2019~2026)
-const K_CARS =[1200,4800,11000,20000,31000,44000,57000,68000];  // 연도별 전환(도입) 누적 대수
-function renderK100(){
-  const host=document.getElementById('kvChart'); if(!host) return;
-  const cats=D_YEARS.map(String);
-  const leftMax=niceMax(Math.max.apply(null,K_CARS.concat([1]))), rightMax=niceMax(Math.max.apply(null,K_FIRMS.concat([1])));
-  host.innerHTML=svgCombo({ cats, bars:K_FIRMS, line:K_CARS, leftMax, rightMax, leftTicks:axisTicks(leftMax,4), rightTicks:axisTicks(rightMax,4), leftFmt:fmtC, rightFmt:fmtC, leftUnit:_isEn()?'Adopted (cum.)':'전환대수(누적)', rightUnit:_isEn()?'Firms':'참여기업(개사)', threshold:null, markIdx:[], hatchId:'hatchK', lineColor:'#0f5132' });
-  host.setAttribute('aria-label', _isEn()
-    ? `K-EV100 participating firms (bars) and cumulative adopted zero-emission vehicles (line) by year. 2026: ${K_FIRMS[7]} firms, ${_num(K_CARS[7])} vehicles.`
-    : `연도별 K-EV100 참여 기업 수(막대)·전환 대수 누적(선) 콤보 차트. 2026년 참여 ${K_FIRMS[7]}개사, 전환 ${_num(K_CARS[7])}대.`);
-  const cap=document.getElementById('kvCap');
-  if(cap) cap.textContent=_isEn()
-    ? `Participating firms grew from ${K_FIRMS[0]} (2019) to ${K_FIRMS[7]} (2026), with about ${_num(K_CARS[7])} vehicles adopted — zero-emission is going mainstream among companies.`
-    : `참여 기업 2019년 ${K_FIRMS[0]}개사 → 2026년 ${K_FIRMS[7]}개사, 전환 누적 약 ${_num(K_CARS[7])}대 — 무공해차 전환은 기업의 대세, 매년 늘고 있습니다.`;
-  const tb=document.getElementById('kvRows');
-  if(tb) tb.innerHTML=D_YEARS.map((y,i)=>`<tr><td style="font-weight:700;">${y}${_isEn()?'':'년'}</td><td class="num" style="text-align:right;">${_num(K_FIRMS[i])}</td><td class="num" style="text-align:right;">${_num(K_CARS[i])}</td></tr>`).join('');
-  const el=document.getElementById('kvLegend');
-  if(el) el.innerHTML=`<span class="lg"><span class="sw sw-line"></span>${_isEn()?'Adopted vehicles (cum., left)':'전환 대수 (누적, 좌축)'}</span><span class="lg"><span class="sw sw-hatch"></span>${_isEn()?'Participating firms (right)':'참여 기업 (개사, 우축)'}</span>`;
-  const t=(id,ko,en)=>{ const e=document.getElementById(id); if(e) e.textContent=_isEn()?en:ko; };
-  t('kvTitle','K-EV100 전환 현황','K-EV100 conversion status');
-  t('kvRefresh','연 갱신','Yearly update');
-  t('kvThYear','연도','Year'); t('kvThFirms','참여 기업(개사)','Firms'); t('kvThCars','전환 대수(대)','Vehicles');
-}
-
 // ── '표로 보기' 토글 (aria-expanded 동기화) ──
 function wireTableToggle(btnId){
   const btn = document.getElementById(btnId); if (!btn) return;
@@ -1126,7 +1110,6 @@ wireTableToggle('ifFastTblBtn');
 wireTableToggle('ifGrowTblBtn');
 wireTableToggle('h2MapTblBtn');
 wireTableToggle('h2GrowTblBtn');
-wireTableToggle('kvTblBtn');
 // [DEV] 엑셀 = 차종별 보조금 지급 집계(PS_APPLY·H2_APPLY) 시도 롤업 · SheetJS · 더미 [ISS-006 정정: 등록→지급]
 function spSupplyExcel(){
   if (typeof XLSX === 'undefined') { if (window.__toast) window.__toast('엑셀 라이브러리를 불러오지 못했습니다.','warning'); return; }
@@ -1195,12 +1178,10 @@ var CHART_EXPORT = {
   // #h2 H3 연도별 확충 추세
   h2Grow: function(){ _xlsxDL('연도별_수소인프라_확충', ['연도','수소충전소(개소)','수소차 등록(대)'],
       D_YEARS.map(function(y,i){ return [y, H2_STATION_HIS[i], H2_CAR_YEAR[i]]; }), [{wch:8},{wch:16},{wch:16}]); },
-  // K-EV100 연도별 참여기업·전환대수
-  kv: function(){ _xlsxDL('KEV100_연도별_참여기업_전환대수', ['연도','참여 기업(개사)','전환 대수(대)'],
-      D_YEARS.map(function(y,i){ return [y, K_FIRMS[i], K_CARS[i]]; }), [{wch:8},{wch:16},{wch:14}]); },
   // 보조금 집행현황 = KPI 요약 시트(차트 없음)
-  sb: function(){ _xlsxDL('보조금_집행현황_요약(KPI)', ['항목','값'],
-      [['전년도 집행액','2.78조원'],['올해 집행액','1.84조원'],['예산 대비 소진률','66%']], [{wch:18},{wch:14}]); }
+  // [ISS-044] 연도별 집행액 — SB_DATA 배열 파생
+  sb: function(){ _xlsxDL('보조금_집행액_연도별', ['연도','집행액(조원)'],
+      SB_DATA.map(function(d){ return [d.ytd?(d.y+'(진행중)'):d.y, d.exec]; }), [{wch:14},{wch:14}]); }
 };
 document.addEventListener('click', function(e){
   var b = e.target.closest && e.target.closest('.ds-xlsx-btn'); if(!b) return;
@@ -1210,7 +1191,7 @@ document.addEventListener('click', function(e){
 renderSupplyAll();
 renderInfraAll();
 renderH2All();
-renderK100();
+renderSubsidyYears();   // [ISS-044] 보조금 연도별(차트+KPI+표) — SB_DATA 단일 세트
 // ── 상단 KPI = 카드 아래 별도 '이동' 버튼 (ISS-026 리뷰) — 진짜 <a>·키보드·포커스·reduced-motion 스무스 스크롤 ──
 (function kpiNav(){
   const btns = [].slice.call(document.querySelectorAll('.ds-nav-btn'));
@@ -1221,7 +1202,6 @@ renderK100();
     '#infra':   { aria:{ko:'전기 충전 인프라로 이동',       en:'Go to EV charging infrastructure'},   txt:{ko:'충전 인프라 보기', en:'View infrastructure'} },
     '#h2':      { aria:{ko:'수소충전소 현황으로 이동',       en:'Go to hydrogen stations'},           txt:{ko:'수소충전소 보기', en:'View H2 stations'} },
     '#subsidy': { aria:{ko:'보조금 집행 현황으로 이동',      en:'Go to subsidy execution'},           txt:{ko:'집행 현황 보기',   en:'View execution'} },
-    '#k100':    { aria:{ko:'K-EV100 참여 현황으로 이동',     en:'Go to K-EV100 participation'},        txt:{ko:'K-EV100 보기',    en:'View K-EV100'} }
   };
   btns.forEach(a => a.addEventListener('click', function(e){
     const id = a.getAttribute('href'); if (!id || id.charAt(0) !== '#') return;
@@ -1239,7 +1219,7 @@ renderK100();
       const tx = a.querySelector('.nb-txt'); if (tx) tx.textContent = _isEn()?m.txt.en:m.txt.ko;
     });
     const sub = document.getElementById('kpiSubLbl'); if (sub) sub.textContent = _isEn()?'Subsidy execution rate':'보조금 집행률';
-    const subD = document.getElementById('kpiSubDelta'); if (subD) subD.textContent = _isEn()?'₩1.84T executed this year':'올해 1.84조원 집행';
+    const subD = document.getElementById('kpiSubDelta'); if (subD) subD.textContent = _isEn()?('₩'+SB_CUR.exec+'T executed this year'):('올해 '+SB_CUR.exec+'조원 집행');
   }
   setNav();
   window.addEventListener('langChange', setNav);
@@ -1247,7 +1227,7 @@ renderK100();
 
 // 언어 전환 시 동적 데이터 재렌더
 window.addEventListener('langChange', () => {
-  try { renderSupplyAll(); renderInfraAll(); renderH2All(); renderK100(); } catch(e){}
+  try { renderSupplyAll(); renderInfraAll(); renderH2All(); renderSubsidyYears(); } catch(e){}
 });
 </script>
 </body>

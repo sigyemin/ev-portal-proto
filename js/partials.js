@@ -235,7 +235,6 @@
                       <li><a href="data.html#supply" data-i18n="mega.data.supply">무공해차 보급 현황</a></li>
                       <li><a href="data.html#infra" data-i18n="mega.data.infra">충전 인프라 현황</a></li>
                       <li><a href="data.html#subsidy" data-i18n="mega.data.subsidy">보조금 집행 현황</a></li>
-                      <li><a href="data.html#k100" data-i18n="mega.data.k100">K-EV100 전환 현황</a></li>
                     </ul>
                   </div>
                   <!-- [삭제] '시장·정책 동향' 컬럼 — 헤더/햄버거/사이트맵 제외. 원본 보존:
@@ -384,7 +383,7 @@
       { tKey: 'mega.charging.h2', items: [['수소충전소 장애 신고','charging-help.html?tab=report','mega.charging.h2.report'],['운영 현황 안내','charging-help.html?tab=status','mega.charging.h2.status']] },
     ]},
     { tKey: 'nav.data', cols: [
-      { tKey: 'mega.data.dashboard', items: [['무공해차 보급 현황','data.html#supply','mega.data.supply'],['충전 인프라 현황','data.html#infra','mega.data.infra'],['보조금 집행 현황','data.html#subsidy','mega.data.subsidy'],['K-EV100 전환 현황','data.html#k100','mega.data.k100']] },
+      { tKey: 'mega.data.dashboard', items: [['무공해차 보급 현황','data.html#supply','mega.data.supply'],['충전 인프라 현황','data.html#infra','mega.data.infra'],['보조금 집행 현황','data.html#subsidy','mega.data.subsidy']] },
       /* [삭제] '시장·정책 동향' 영역 — 헤더/햄버거/사이트맵 제외. 원본 보존: { tKey: 'mega.data.trend', items: [['무공해차 시장 동향','data.html#trend-market','mega.data.trend.market'],['정책 추진 현황','data.html#trend-policy','mega.data.trend.policy'],['지역별 보급 현황','data.html#trend-region','mega.data.trend.region']] }, */
       /* v0.12 IA 재편: 공개 데이터 컬럼 삭제(7) — 공개 데이터 목록은 소통지원>알림공지>공개자료로 통합(8). 원본 보존: { tKey: 'mega.data.open', items: [['공개 데이터 목록','data.html#open-data','mega.data.open.list'],['데이터 다운로드','data.html#open-data','mega.data.open.download']] }, */
     ]},

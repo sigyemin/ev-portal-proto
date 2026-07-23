@@ -12,8 +12,8 @@
 
     /* === data.html === */
     'data.h1':                 { ko: '데이터·통계',         en: 'Data & Stats' },
-    'data.lead.html':          { ko: '무공해차 보급·충전 인프라·보조금 집행·K-EV100 전환 현황을 <strong>실시간 대시보드</strong>와 <strong>공개 데이터</strong>로 제공합니다.',
-                                 en: 'ZEV adoption, charging infrastructure, subsidy disbursement, and K-EV100 conversion provided as a <strong>real-time dashboard</strong> and <strong>open data</strong>.' },
+    'data.lead.html':          { ko: '무공해차 보급·충전 인프라·보조금 집행 현황을 <strong>실시간 대시보드</strong>와 <strong>공개 데이터</strong>로 제공합니다.',
+                                 en: 'ZEV adoption, charging infrastructure, and subsidy disbursement provided as a <strong>real-time dashboard</strong> and <strong>open data</strong>.' },
     'data.live.h3':            { ko: '실시간 주요 지표',         en: 'Real-Time Key Indicators' },
     'data.live.ts':            { ko: '2026.04.24 15:40 기준 · 5분 주기 자동 갱신', en: 'As of 2026.04.24 15:40 · Auto-refresh every 5 min' },
     'data.kpi.zev':            { ko: '누적 무공해차',         en: 'Cumulative ZEVs' },
@@ -26,14 +26,12 @@
     'data.kpi.h2':             { ko: '수소충전소',            en: 'Hydrogen Stations' },
     'data.unit.stations':      { ko: '개소',                en: ' stations' },
     'data.kpi.h2.delta':       { ko: '▲ +6 / 분기',         en: '▲ +6 / quarter' },
-    'data.kpi.kev':            { ko: 'K-EV100 참여',         en: 'K-EV100 Participants' },
     'data.unit.firmscn':       { ko: '社',                 en: ' firms' },
-    'data.kpi.kev.delta':      { ko: '▲ +18 / 월',          en: '▲ +18 / month' },
     'data.kpi.sub':            { ko: '올해 집행 보조금',         en: 'Subsidy Disbursed YTD' },
     'data.unit.trillion':      { ko: '조원',                en: ' KRW T' },
     'data.kpi.sub.delta':      { ko: '예산 대비 66% 소진',      en: '66% of budget used' },
 
-    /* 대시보드 카드 (투명성지수 카드 제거 → 보급·인프라·보조금·K-EV100) */
+    /* 대시보드 카드 */
     'data.dc2.h4':             { ko: '무공해차 보급 현황',        en: 'ZEV Adoption Status' },
     'data.dc2.p':              { ko: '시·도별 무공해차 누적 등록 현황을 봅니다.',
                                  en: 'Cumulative zero-emission vehicle registrations by region.' },
@@ -49,11 +47,6 @@
                                  en: 'Prior/current-year disbursement, budget use rate, and regional spend rate to judge application timing.' },
     'data.dcsb.date':          { ko: '월 갱신',               en: 'Monthly' },
     'data.dcsb.link':          { ko: '17개 시·도 →',          en: '17 Provinces →' },
-    'data.dc4.h4':             { ko: 'K-EV100 전환 현황',       en: 'K-EV100 Conversion Status' },
-    'data.dc4.p':              { ko: '참여 기업 524개사의 업무용 차량 무공해 전환 비율 및 업종별 성과를 추적합니다.',
-                                 en: 'Tracks ZEV conversion ratios and industry-specific performance of 524 participating companies.' },
-    'data.dc4.date':           { ko: '분기 갱신',             en: 'Quarterly' },
-    'data.dc4.link':           { ko: '524사 →',             en: '524 firms →' },
 
     /* [정리] 투명성지수 랭킹(data.tx.*) 대민 제거 — 관리자(admin-tindex.html) 전용 이관 */
 
@@ -132,8 +125,6 @@
     'data.h2.th.stations':     { ko: '수소충전소(개소)',         en: 'Stations' },
     'data.h2.th.per':          { ko: '1개소당 수소차(대)',        en: 'FCEVs per station' },
 
-    /* K-EV100 */
-    'data.kv.h3':              { ko: 'K-EV100 전환 현황',       en: 'K-EV100 Conversion Status' },
     'data.kv.p':               { ko: '참여 기업 524개사 · 무공해차 전환 진행 현황',
                                  en: '524 participating companies · ZEV conversion progress' },
     'data.kv.l.firms':         { ko: '참여 기업',             en: 'Participants' },
@@ -170,11 +161,8 @@
     'data.op.i4.p':            { ko: '지자체별 배정·접수·지급 현황과 환수 통계',
                                  en: 'Allocation, intake, disbursement, and clawback statistics by municipality' },
     'data.op.i4.label':        { ko: '월간 보조금 집행 현황.csv',   en: 'Monthly Subsidy Disbursement.csv' },
-    'data.op.i5.h4':           { ko: 'K-EV100 참여 기업 전환 실적',
-                                 en: 'K-EV100 Participant Conversion Records' },
     'data.op.i5.p':            { ko: '524개사의 업종·규모별 보유 차량 및 무공해 전환 비율',
                                  en: 'Fleet and ZEV conversion ratios of 524 firms by industry and size' },
-    'data.op.i5.label':        { ko: 'K-EV100 전환 실적.xlsx',   en: 'K-EV100 Conversion Records.xlsx' },
 
     /* 시장·정책 동향 */
     'data.tr.h3':              { ko: '시장·정책 동향',          en: 'Market & Policy Trends' },
