@@ -24,8 +24,8 @@
           <div class="adm-field"><label>분류</label>
             <select id="fCat"><option value="all">전체 분류</option></select>
           </div>
-          <div class="adm-field"><label>공개여부</label>
-            <select id="fOpen"><option value="all">전체</option><option value="open">공개</option><option value="secret">비공개</option></select>
+          <div class="adm-field"><label>게시상태</label>
+            <select id="fOpen"><option value="all">전체</option><option value="open">노출</option><option value="secret">미노출</option></select>
           </div>
           <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="제목 검색"></div>
           <button type="button" class="adm-btn primary" id="fSearch">검색</button>
@@ -43,7 +43,7 @@
           <th class="c" style="width:110px;">분류</th>
           <th>제목</th>
           <th style="width:300px;">서식파일</th>
-          <th class="c" style="width:84px;">공개여부</th>
+          <th class="c" style="width:84px;">게시상태</th>
           <th class="c" style="width:100px;">작성일</th>
         </tr></thead>
         <tbody id="listBody"></tbody>
@@ -60,10 +60,9 @@
             <dt>분류 <span style="color:#c0392b;">*</span></dt><dd class="wide"><select id="eCat" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;min-width:220px;"></select></dd>
             <dt>제목 <span style="color:#c0392b;">*</span></dt><dd class="wide"><input type="text" id="eTitle" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:100%;" placeholder="서식 제목"></dd>
             <dt>내용</dt><dd class="wide"><textarea id="eBody" style="width:100%;min-height:90px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;" placeholder="서식 안내 내용"></textarea></dd>
-            <dt>공지글</dt><dd><label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="eNotice"> 공지글로 등록</label></dd>
-            <dt>공개여부</dt><dd>
-              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 공개</label>
-              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 비공개</label>
+            <dt>게시상태</dt><dd>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 노출</label>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 미노출</label>
             </dd>
             <dt>서식파일 <span style="color:#c0392b;">*</span></dt><dd class="wide">
               <input type="file" id="eFiles" multiple style="font-size:13px;">
@@ -84,9 +83,13 @@
       <summary><span class="tag">DEV</span>개발 참고 — 신설 게시판·분류 코드 (실서비스 비노출)</summary>
       <div class="bd"><ul>
         <li><strong>신설 게시판</strong> : 서식다운로드 — AS-IS BLBD(게시판 마스터)+ARTC(게시물) 공용 구조에 게시판 구분 신설. TNCM_MENU에도 신규 메뉴 등록 필요(시스템관리 &gt; 게시판 관리, 질의응답 다음 순번).</li>
-        <li><strong>분류 코드 신설(신설안)</strong> : 보조금 신청 / 공모·평가 / 회원카드 / 기타 4종 — EVCS_CODE_DETAIL 신규 코드그룹(개발 협의 필요).</li>
+        <li><strong>서식 분류 = 코드그룹 FORM_CATE(안) <strong>8종</strong>, 하드코딩 금지(FAQ 전철) · 코드값·채번 미정(개발 협의) · 순서 SORT_ORDR</li>
+        <li><strong>게시상태 = ARTC.OPEN_YN</strong> — <strong>노출/미노출</strong>. ★<strong>미노출은 대민에서만 제외되고 관리자 조회는 계속 유지</strong>(아무에게도 안 보이는 상태가 아님).</li>
+        <li><strong>비밀글(ARTC.SECRET)은 질의응답 전용</strong> — 본 게시판 미적용. 게시상태(OPEN_YN)와 혼동 금지.</li>
+        <li>★<strong>BLBD.OPEN_YN='Y' 필수</strong> — 'N'이면 boardEdit 등록화면에 노출여부 라디오가 렌더링되지 않아 노출 제어 자체가 불가(boardEdit.jsp:307~311). 전 게시판 'Y'.</li>
+        <li><strong>공지글 미사용</strong> — 공지사항 게시판 전용 기능(목록 상단 고정).</li>
         <li><strong>데이터 원천 공유</strong> : 대민 누리집 서식다운로드 페이지(정보 자료실)와 동일 게시판 데이터 사용 — 관리자 등록·수정이 대민에 그대로 노출.</li>
-        <li><strong>AS-IS 공용 패턴</strong> : boardList(구분·처리상태·작성일·검색어 필터) / boardEdit(게시판 구분·구분(카테고리)·제목·내용·공지글·공개여부·첨부파일) 재현 — 게시판 구분='서식다운로드' 고정 파라미터.</li>
+        <li><strong>AS-IS 공용 패턴</strong> : boardList(구분·처리상태·작성일·검색어 필터) / boardEdit(게시판 구분·구분(카테고리)·제목·내용·게시상태·첨부파일) 재현 — 게시판 구분='서식다운로드' 고정 파라미터.</li>
       </ul></div>
     </details>
   </main>
@@ -108,25 +111,31 @@
     activeHref:'admin-board-forms.html'
   });
 
-  // 분류(신설안) 4종 — [DEV] 분류 코드 신설(EVCS_CODE_DETAIL 신규 코드그룹)
+  /* [ISS-068] 서식 분류 = ★8종 통일(관리자·대민 동일 라벨·동일 순서·동일 key). '기타' 존치.
+     [DEV] 코드그룹 FORM_CATE(안) 신설로 관리 — 하드코딩 금지(FAQ 하드코딩 전철).
+           코드값·채번 미정(개발 협의), 라벨 8종 고정, 표기순서 SORT_ORDR. */
   var CATS = [
     { key:'subsidy', label:'보조금 신청' },
-    { key:'contest', label:'공모·평가' },
-    { key:'card', label:'회원카드' },
-    { key:'etc', label:'기타' }
+    { key:'contest', label:'공모 신청' },
+    { key:'biz',     label:'업무지원시스템 이용신청' },
+    { key:'install', label:'충전기 설치' },
+    { key:'minwon',  label:'민원·신고' },
+    { key:'card',    label:'회원·카드' },
+    { key:'kev',     label:'K-EV100' },
+    { key:'etc',     label:'기타' }
   ];
   function catLabel(k){ for (var i=0;i<CATS.length;i++) if (CATS[i].key===k) return CATS[i].label; return k; }
 
-  /* ── 더미 8건 — 분류별 2건 ── */
+  /* ── 더미 8건 — [ISS-068] 8종 분류 1건씩('기타' 존치) ── */
   var DATA = [
     { no:8, cat:'subsidy', title:'전기자동차 구매보조금 지원신청서 서식', files:['전기차_보조금_지원신청서.hwp','작성예시.pdf'], open:true, date:'2026-07-10' },
-    { no:7, cat:'subsidy', title:'수소전기차 구매보조금 지원신청서 서식', files:['수소차_보조금_지원신청서.hwp'], open:true, date:'2026-07-08' },
-    { no:6, cat:'contest', title:'수행자 선정 평가 신청서(별지 제1호) 서식', files:['평가_신청서_별지1호.hwp','평가_신청_자료_양식.hwp'], open:true, date:'2026-07-05' },
-    { no:5, cat:'contest', title:'전기승합차 공모 지원신청서(별지 제1·2호) 서식', files:['공모_지원신청서_별지1호.hwp','보급사업_계획서_별지2호.hwp','상세_보급계획_양식.xlsx'], open:true, date:'2026-07-03' },
-    { no:4, cat:'card', title:'회원카드 발급 신청서 서식', files:['회원카드_발급신청서.hwp'], open:true, date:'2026-06-28' },
-    { no:3, cat:'card', title:'회원카드 재발급·해지 신청서 서식', files:['회원카드_재발급해지신청서.hwp'], open:true, date:'2026-06-25' },
-    { no:2, cat:'etc', title:'개인정보 수집·이용 동의서 표준 서식', files:['개인정보_동의서_표준.hwp'], open:true, date:'2026-06-20' },
-    { no:1, cat:'etc', title:'위임장 표준 서식 (구버전 — 내부 확인용)', files:['위임장_표준.hwp'], open:false, date:'2026-06-15' }
+    { no:7, cat:'etc', title:'개인정보 수집·이용 동의서 표준 서식', files:['개인정보_동의서_표준.hwp'], open:true, date:'2026-07-08' },
+    { no:6, cat:'contest', title:'전기승합차 공모 지원신청서(별지 제1·2호) 서식', files:['공모_지원신청서_별지1호.hwp','보급사업_계획서_별지2호.hwp','상세_보급계획_양식.xlsx'], open:true, date:'2026-07-05' },
+    { no:5, cat:'biz', title:'업무지원시스템 이용신청서(로밍사업자) 서식', files:['업무지원시스템_이용신청서.hwp'], open:true, date:'2026-07-03' },
+    { no:4, cat:'install', title:'공용 완속충전시설 설치 신청서 서식', files:['완속충전시설_설치신청서.hwp'], open:true, date:'2026-06-28' },
+    { no:3, cat:'minwon', title:'충전기 불편민원 신고서 서식', files:['불편민원_신고서.hwp'], open:true, date:'2026-06-25' },
+    { no:2, cat:'card', title:'회원카드 발급·재발급 신청서 서식', files:['회원카드_발급신청서.hwp'], open:true, date:'2026-06-20' },
+    { no:1, cat:'kev', title:'K-EV100 참여 신청서 (구버전 — 내부 확인용)', files:['KEV100_참여신청서.hwp'], open:false, date:'2026-06-15' }
   ];
 
   // 분류 필터·등록폼 select 옵션
@@ -153,7 +162,7 @@
         + '<td class="c"><span class="adm-cat">'+esc(catLabel(d.cat))+'</span></td>'
         + '<td>'+esc(d.title)+'</td>'
         + '<td>'+files+'</td>'
-        + '<td class="c">'+(d.open?'<span class="adm-badge b-open">공개</span>':'<span class="adm-badge b-secret">비공개</span>')+'</td>'
+        + '<td class="c">'+(d.open?'<span class="adm-badge b-open">노출</span>':'<span class="adm-badge b-secret">미노출</span>')+'</td>'
         + '<td class="c num">'+d.date.replace(/-/g,'.')+'</td>'
         + '</tr>';
     }).join('') : '<tr><td colspan="6"><div class="adm-empty">조건에 맞는 서식이 없습니다.</div></td></tr>';
@@ -178,7 +187,6 @@
     $('eCat').value = d ? d.cat : '';
     $('eTitle').value = d ? d.title : '';
     $('eBody').value = d ? '(더미 내용) ' + d.title : '';
-    $('eNotice').checked = false;
     document.querySelector('input[name=eOpen][value='+((d && !d.open)?'secret':'open')+']').checked = true;
     $('eFiles').value = '';
     $('eFileList').innerHTML = d ? '기존 첨부 : ' + d.files.map(esc).join(' · ') : '';

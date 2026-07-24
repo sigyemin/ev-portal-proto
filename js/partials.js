@@ -160,10 +160,9 @@
                   <div class="mega-col">
                     <a href="kev100-about.html" class="mega-col-title"><span data-i18n="mega.purchase.kev100">K-EV100 (기업전환)</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
                     <ul>
+                      <!-- [ISS-069] 하위 4→2: 참여방법·절차(신청폼)·참여혜택 삭제(혜택은 소개로 흡수) · 신청은 외부(kev100.aea.or.kr) 이관 -->
                       <li><a href="kev100-about.html" data-i18n="mega.purchase.kev100.about">K-EV100 소개</a></li>
-                      <li><a href="kev100-process.html" data-i18n="mega.purchase.kev100.process">참여 방법·절차</a></li>
-                      <li><a href="kev100-companies.html" data-i18n="mega.purchase.kev100.companies">참여기업 현황</a></li>
-                      <li><a href="kev100-benefits.html" data-i18n="mega.purchase.kev100.benefits">참여 혜택·지원</a></li>
+                      <li><a href="kev100-companies.html" data-i18n="mega.purchase.kev100.companies">K-EV100 현황</a></li>
                     </ul>
                   </div>
                 </div>
@@ -211,10 +210,10 @@
                     </ul>
                   </div>
                   <div class="mega-col">
-                    <a href="charging-help.html?tab=report" class="mega-col-title"><span data-i18n="mega.charging.h2">수소충전소 Help Desk</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
+                    <!-- [ISS-067] 하위 2→1: '운영 현황 안내'(tab=status) 삭제 · '장애 신고'→'수소충전소 Help Desk'로 통일. 대제목 클릭=바로 report -->
+                    <a href="charging-help.html" class="mega-col-title"><span data-i18n="mega.charging.h2">수소충전소 Help Desk</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
                     <ul>
-                      <li><a href="charging-help.html?tab=report" data-i18n="mega.charging.h2.report">수소충전소 장애 신고</a></li>
-                      <li><a href="charging-help.html?tab=status" data-i18n="mega.charging.h2.status">운영 현황 안내</a></li>
+                      <li><a href="charging-help.html" data-i18n="mega.charging.h2.report">수소충전소 Help Desk</a></li>
                     </ul>
                   </div>
                 </div>
@@ -373,14 +372,14 @@
       { tKey: 'mega.purchase.subsidy', items: [['보조금 지원 대상·신청절차','subsidy-target.html','mega.purchase.subsidy.target'],['지자체별 보조금 현황','subsidy-region.html','mega.purchase.subsidy.region'],['지자체별 차종·모델 보조금','subsidy-local.html','mega.purchase.subsidy.local'],['보조금 지급대상 차종','subsidy-vehicles.html','mega.purchase.subsidy.vehicles'],['보조금 안내·계산기','subsidy-info.html','mega.purchase.subsidy.info'],['보조금 환수금 안내·계산기','subsidy-refund.html','mega.purchase.subsidy.refund']] },
       { tKey: 'mega.purchase.compare', items: [['차종 비교 도구','compare-tool.html','mega.purchase.compare.tool'],['내 차 저공해 등급 확인','tax-grade.html','mega.purchase.tax.grade'] /* v0.12 TCO 계산 삭제(6): ,['총소유비용(TCO) 계산','compare-tco.html','mega.purchase.compare.tco'] */] },
       { tKey: 'mega.purchase.public', items: [['전기자동차 수행자 선정 평가 신청','public-ev.html','mega.purchase.public.ev'],['전기승합차 공모 신청','public-bus.html','mega.purchase.public.bus'],['전기지게차 공모 신청','public-construction.html','mega.purchase.public.const'],['전기이륜차 수행자 선정 평가 신청','public-moto.html','mega.purchase.public.moto'],['지자체 문의처 안내','public-contact.html','mega.purchase.public.contact']] },
-      { tKey: 'mega.purchase.kev100', items: [['K-EV100 소개','kev100-about.html','mega.purchase.kev100.about'],['참여 방법·절차','kev100-process.html','mega.purchase.kev100.process'],['참여기업 현황','kev100-companies.html','mega.purchase.kev100.companies'],['참여 혜택·지원','kev100-benefits.html','mega.purchase.kev100.benefits']] },
+      { tKey: 'mega.purchase.kev100', items: [['K-EV100 소개','kev100-about.html','mega.purchase.kev100.about'],['K-EV100 현황','kev100-companies.html','mega.purchase.kev100.companies']] },   /* [ISS-069] 4→2 */
     ]},
     { tKey: 'nav.charging', cols: [
       { tKey: 'mega.charging.find', items: [['통합 지도 (전기+수소)','charging-find.html?tab=map','mega.charging.find.map'],['내 주변 충전소','charging-find.html?tab=near','mega.charging.find.near']] },
       { tKey: 'mega.charging.fee', items: [['전기차 충전요금 안내','charging-fee.html?tab=ev','mega.charging.fee.ev'],['수소차 충전요금 안내','charging-fee-h2.html','mega.charging.fee.h2'],['내 충전요금 시뮬레이터','charging-fee-simulator.html','mega.charging.fee.sim']] },
       { tKey: 'mega.charging.card', items: [['내 회원카드','charging-card.html?tab=mycard','mega.charging.card.list'],['충전요금 조회','charging-card.html?tab=history','mega.charging.card.history']] },
       { tKey: 'mega.charging.install', items: [['공용 완속충전시설 직접신청','charging-install-slow.html','mega.charging.install.slow'],['공용 완속/급속·중속 충전시설 운영사·제조사 공모 신청','charging-install-contest.html','mega.charging.install.contest'],['지역별 무공해차 전환 브랜드 사업 공모 신청','charging-install-brand.html','mega.charging.install.brand'],['지역별 무공해차 전환 브랜드 사업 (BSS) 공모 신청','charging-install-moto.html','mega.charging.install.moto'],['완속충전기 제품 안내','charging-install-products.html','mega.charging.install.products']] },
-      { tKey: 'mega.charging.h2', items: [['수소충전소 장애 신고','charging-help.html?tab=report','mega.charging.h2.report'],['운영 현황 안내','charging-help.html?tab=status','mega.charging.h2.status']] },
+      { tKey: 'mega.charging.h2', items: [['수소충전소 Help Desk','charging-help.html','mega.charging.h2.report']] },   /* [ISS-067] status 삭제 · report=Help Desk 통일 */
     ]},
     { tKey: 'nav.data', cols: [
       { tKey: 'mega.data.dashboard', items: [['무공해차 보급 현황','data.html#supply','mega.data.supply'],['충전 인프라 현황','data.html#infra','mega.data.infra'],['보조금 집행 현황','data.html#subsidy','mega.data.subsidy']] },

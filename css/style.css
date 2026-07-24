@@ -3081,3 +3081,9 @@ html[lang="en"] .sitemap-col li a {
 @media (max-width: 860px) {
   .ref-footer-top, .ref-footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
+
+/* ── [ISS-069정정] 차트 공용 툴팁 (js/chart-tooltip.js) ── */
+.chart-tip{position:absolute;z-index:2000;max-width:260px;padding:7px 11px;border-radius:8px;background:#111827;color:#fff;font-size:12.5px;font-weight:600;line-height:1.5;pointer-events:none;box-shadow:0 6px 20px rgba(15,23,42,.28);white-space:nowrap;}
+.chart-tip[hidden]{display:none;}
+[data-tip]{cursor:pointer;}
+[data-tip]:focus-visible{outline:2px solid var(--color-primary-600,#0f7a44);outline-offset:2px;}

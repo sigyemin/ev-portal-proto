@@ -138,8 +138,7 @@
     'charging.install.tab.products': { ko: '완속충전기 제품 안내', en: 'Slow Charger Products' },
 
     /* charging-help.html — 본문 */
-    'charging.help.tab.report':   { ko: '수소충전소 장애 신고', en: 'Report H2 Station Issue' },
-    'charging.help.tab.status':   { ko: '운영 현황 안내', en: 'Operation Status' },
+    /* [ISS-067] charging.help.tab.report / .status 삭제 — 탭 구조 폐지(단일 Help Desk) */
 
     /* charging-fee.html — KPI 카드 */
     'charging.fee.kpi.total.label':   { ko: '전국 충전기 합계', en: 'Total Chargers Nationwide' },
@@ -250,23 +249,15 @@
     /* charging-help.html — 본문 (스테퍼 + 문의 폼) */
     'charging.help.h2':              { ko: '수소충전소 Help Desk', en: 'H2 Station Help Desk' },
     'charging.help.stepper.aria':    { ko: '신청 단계', en: 'Application Steps' },
-    'charging.help.step.1':          { ko: '01. 개인정보 제공동의', en: '01. Privacy Consent' },
-    'charging.help.step.2':          { ko: '02. 본인인증', en: '02. Identity Verification' },
-    'charging.help.step.3':          { ko: '03. 정보입력', en: '03. Enter Information' },
-    'charging.help.step.4':          { ko: '04. 입력완료', en: '04. Submission Complete' },
+    /* [ISS-068] 동의+본인인증을 한 화면에서 처리 → 스텝 3단계로 통합(불편민원신고 등 3개 페이지 표준 동일). step.4 제거 */
+    'charging.help.step.1':          { ko: '01. 개인정보 제공동의 및 본인인증', en: '01. Privacy Consent & Identity Verification' },
+    'charging.help.step.2':          { ko: '02. 정보입력', en: '02. Enter Information' },
+    'charging.help.step.3':          { ko: '03. 입력완료', en: '03. Submission Complete' },
     'charging.help.section.title':   { ko: '문의내용 접수', en: 'Inquiry Submission' },
     'charging.help.section.required':{ ko: ' 는 필수 항목입니다.', en: ' indicates required fields.' },
     'charging.help.field.target':    { ko: '문의대상', en: 'Inquiry Subject' },
     'charging.help.opt.select':      { ko: '선택', en: 'Select' },
-    'charging.help.opt.newstation':  { ko: '수소충전소 신규 설치 검토', en: 'New H2 Station Installation Review' },
-    'charging.help.opt.changesite':  { ko: '기존 설치 부지 변경 문의', en: 'Existing Site Change Inquiry' },
-    'charging.help.opt.permit':      { ko: '운영 인허가 관련 문의', en: 'Operation Permit Inquiry' },
-    'charging.help.opt.etc':         { ko: '기타 문의', en: 'Other Inquiries' },
     'charging.help.field.applicant': { ko: '신청기관(자)', en: 'Applicant' },
-    'charging.help.opt.individual':  { ko: '개인', en: 'Individual' },
-    'charging.help.opt.local':       { ko: '지방자치단체', en: 'Local Government' },
-    'charging.help.opt.public':      { ko: '공공기관', en: 'Public Agency' },
-    'charging.help.opt.private':     { ko: '민간사업자', en: 'Private Operator' },
     'charging.help.field.name':      { ko: '이름', en: 'Name' },
     'charging.help.field.email':     { ko: '이메일', en: 'Email' },
     'charging.help.field.phone':     { ko: '연락처', en: 'Phone' },
@@ -609,6 +600,33 @@
     'charging.help.note3':                { ko: '※ 접수부터 완료까지 통상 처리기간은 5~15일 정도 소요되며, 신청 대상 내용에 따라 조정될 수 있습니다.',
                                             en: '* Processing typically takes 5–15 days from receipt to completion; may vary based on the request.' },
     'charging.help.btn.register':         { ko: '등록',                       en: 'Submit' },
+    /* [ISS-067] 4스텝 위저드 신규 문자열 */
+    'charging.help.notice.body':          { ko: '본 수소충전소 Help Desk에서는 수소충전소 신규 설치 검토·부지 변경·운영 인허가 등에 관한 문의를 접수하실 수 있습니다.<br>충전소 이용 중 고장·불편 신고는 해당 운영기관 고객센터로 접수해 주시기 바랍니다.',
+                                            en: 'The H2 Station Help Desk receives inquiries on new station installation reviews, site changes, operating permits, and more.<br>For breakdown or inconvenience reports during use, please contact the operator’s customer center.' },
+    'charging.help.consent':              { ko: '개인정보이용 제공 동의',       en: 'Consent to personal data use/provision' },
+    'charging.help.consent.req':          { ko: '[필수]',                     en: '[Required]' },
+    'charging.help.auth.lead':            { ko: '개인정보 제공에 동의하신 뒤, 휴대전화 인증으로 본인확인을 완료해 주세요.', en: 'After agreeing to the privacy consent, complete identity verification by phone.' },
+    'charging.help.auth.btn':             { ko: '휴대전화 인증하기',            en: 'Verify by phone' },
+    'charging.help.auth.note':            { ko: '※ 인증하신 이름·연락처·이메일은 문의 접수에 자동 반영됩니다.', en: '* Your verified name, phone, and email are auto-filled into the inquiry.' },
+    'charging.help.btn.next':             { ko: '다음',                       en: 'Next' },
+    'charging.help.btn.prev':             { ko: '이전',                       en: 'Previous' },
+    'charging.help.btn.mystatus':         { ko: '내 문의 조회',               en: 'My Inquiries' },
+    'charging.help.etc.applicant':        { ko: '신청기관(자)을 직접 입력해 주세요', en: 'Enter the organization' },
+    /* [ISS-067 보강] 문의대상 H2_INQRY_SE 4종 · 신청기관 H2_SE 5종 — 2026-07-24 AS-IS 실측 코드값 */
+    'charging.help.opt.t1':               { ko: '1. 직접발굴',                en: '1. Direct Development' },
+    'charging.help.opt.t2':               { ko: '2. 부지검토',                en: '2. Site Review' },
+    'charging.help.opt.t3':               { ko: '3. 연계지원',                en: '3. Linkage Support' },
+    'charging.help.opt.t4':               { ko: '4. 컨설팅',                  en: '4. Consulting' },
+    'charging.help.opt.a1':               { ko: '1. 부지소유자',              en: '1. Landowner' },
+    'charging.help.opt.a2':               { ko: '2. 구축사업자',              en: '2. Construction Operator' },
+    'charging.help.opt.a3':               { ko: '3. 환경청',                  en: '3. Regional Environmental Office' },
+    'charging.help.opt.a4':               { ko: '4. 지방자치단체',            en: '4. Local Government' },
+    'charging.help.opt.a5':               { ko: '5. 기타기관',                en: '5. Other Organization' },
+    'charging.help.done.title':           { ko: '수소충전소 Help Desk 문의가 접수되었습니다', en: 'Your H2 Station Help Desk inquiry has been received' },
+    'charging.help.done.rcno':            { ko: '접수 번호',                  en: 'Receipt No.' },
+    'charging.help.done.dt.target':       { ko: '문의대상',                   en: 'Inquiry Subject' },
+    'charging.help.done.dt.at':           { ko: '접수 일시',                  en: 'Received At' },
+    /* 접수증 '처리 예정' 행 삭제(2026-07-24) — 대응 키 제거 */
 
     /* === 충전소 찾기 (charging-find.html) === */
     'charging.find.tab.aria':             { ko: '검색 방식',                  en: 'Search method' },

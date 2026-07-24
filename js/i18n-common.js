@@ -96,9 +96,8 @@
     'mega.purchase.public.moto':      { ko: '전기이륜차 수행자 선정 평가 신청', en: 'E-Motorbike Supplier Evaluation' },
     'mega.purchase.public.contact':   { ko: '지자체 문의처 안내',       en: 'Regional Contacts' },
     'mega.purchase.kev100.about':     { ko: 'K-EV100 소개',             en: 'About K-EV100' },
-    'mega.purchase.kev100.process':   { ko: '참여 방법·절차',           en: 'Participation Process' },
-    'mega.purchase.kev100.companies': { ko: '참여기업 현황',            en: 'Participating Companies' },
-    'mega.purchase.kev100.benefits':  { ko: '참여 혜택·지원',           en: 'Benefits & Support' },
+    'mega.purchase.kev100.companies': { ko: 'K-EV100 현황',            en: 'K-EV100 Status' },
+    /* [ISS-069] .process/.benefits 키 삭제 — 메뉴 폐지(신청 외부 이관·혜택은 소개로 흡수) */
 
     /* 메가메뉴 Lv3 - 충전소·요금 */
     'mega.charging.find.map':       { ko: '통합 지도 (전기+수소)', en: 'Integrated Map (EV + H2)' },
@@ -118,8 +117,8 @@
     'mega.charging.install.brand':  { ko: '지역별 무공해차 전환 브랜드 사업 공모 신청', en: 'Charging Brand Project Open Call' },
     'mega.charging.install.moto':   { ko: '지역별 무공해차 전환 브랜드 사업 (BSS) 공모 신청', en: 'E-Motorbike BSS Open Call' },
     'mega.charging.install.products':{ ko: '완속충전기 제품 안내',  en: 'Slow Charger Products' },
-    'mega.charging.h2.report':      { ko: '수소충전소 장애 신고',   en: 'Report H2 Station Issue' },
-    'mega.charging.h2.status':      { ko: '운영 현황 안내',         en: 'Operation Status' },
+    'mega.charging.h2.report':      { ko: '수소충전소 Help Desk',   en: 'H2 Station Help Desk' },
+    /* [ISS-067] mega.charging.h2.status 삭제(운영 현황 안내 메뉴 제거) */
 
     /* 메가메뉴 Lv3 - 데이터·통계 */
     'mega.data.supply':       { ko: '무공해차 보급 현황', en: 'ZEV Adoption Status' },

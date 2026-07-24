@@ -426,6 +426,8 @@
     'info.forms.cat.complaint':   { ko: '민원·신고',                               en: 'Complaint/Report' },
     'info.forms.cat.member':      { ko: '회원·카드',                               en: 'Member/Card' },
     'info.forms.cat.kev100':      { ko: 'K-EV100',                               en: 'K-EV100' },
+    'info.forms.cat.biz':         { ko: '업무지원시스템 이용신청',                   en: 'Business Portal Access Request' },   /* [ISS-068] 8종 통일 신규 */
+    'info.forms.cat.etc':         { ko: '기타',                                   en: 'Other' },
     'info.forms.f.kw':            { ko: '키워드',                                 en: 'Keyword' },
     'info.forms.kw.ph':           { ko: '서식명 검색',                             en: 'Search form name' },
     'info.forms.btn.search':      { ko: '검색',                                   en: 'Search' },
@@ -758,6 +760,14 @@
     'info.lib.req.note':          { ko: '* 업무 절차는 승인/반려, 처리중, 처리완료이며 회신자료는 게시물에서 받아보실 수 있습니다.', en: '* The workflow is approve/reject, in progress, completed. Reply files are available in each post.' },
     'info.lib.req.status.aria':   { ko: '처리 상태',                               en: 'Status' },
     'info.lib.req.status.all':    { ko: '전체 상태',                               en: 'All statuses' },
+    /* [ISS-064] REQ_STATUS=1 '신청'(등록 직후 기본상태) + REQ_CATE 요청구분 3종 — DB 실값 정합 */
+    'info.lib.req.status.wait':   { ko: '신청',                                    en: 'Requested' },
+    'info.lib.req.cate.aria':     { ko: '요청 구분',                               en: 'Request type' },
+    'info.lib.req.cate.all':      { ko: '전체 구분',                               en: 'All types' },
+    'info.lib.req.cate.charger':  { ko: '충전기',                                  en: 'Charger' },
+    'info.lib.req.cate.subsidy':  { ko: '보조금',                                  en: 'Subsidy' },
+    'info.lib.req.cate.etc':      { ko: '기타',                                    en: 'Other' },
+    'info.lib.req.col.cate':      { ko: '구분',                                    en: 'Type' },
     'info.lib.req.status.approve':{ ko: '승인',                                    en: 'Approved' },
     'info.lib.req.status.reject': { ko: '반려',                                    en: 'Rejected' },
     'info.lib.req.status.ing':    { ko: '처리중',                                  en: 'In progress' },
@@ -841,6 +851,8 @@
     /* 서식다운로드 신설 분류 6종 추가분 */
     'info.lib.work.minwon':       { ko: '민원·신고',                               en: 'Complaint/Report' },
     'info.lib.work.card':         { ko: '회원·카드',                               en: 'Member/Card' },
+    'info.lib.work.biz':          { ko: '업무지원시스템 이용신청',                   en: 'Business Portal Access Request' },   /* [ISS-068] 8종 통일 신규 */
+    'info.lib.work.etc':          { ko: '기타',                                   en: 'Other' },
     'info.lib.work.complaint':    { ko: '민원·문의',                               en: 'Complaint/Inquiry' },
     'info.lib.form.ph':           { ko: '서식명, 작성자 검색',                      en: 'Search form name or author' },
     'info.lib.count.form':        { ko: '전체 <strong>42</strong>종 서식',          en: 'Total <strong>42</strong> forms' },

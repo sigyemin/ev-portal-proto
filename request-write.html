@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>자료 요청 등록 | 요청자료 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/style.css?v=20260724a">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/board.css">
 <link rel="stylesheet" href="css/inquiry.css">
@@ -49,13 +49,8 @@
                 <option value="3">기타</option>
               </select>
             </div>
-            <!-- [DEV] 요청기관: EVCS_REQUEST_DATA에 대응 컬럼 없음(2026-07-23 실측).
-                 처리방향 발주처 판단 대기 — 제거/컬럼신설/회원 소속기관 대체 중 택일. (판단 전까지 삭제 금지) -->
-            <div class="form-group">
-              <label class="form-label">요청기관</label>
-              <div class="qw-writer"><span class="nm" id="rwOrg">서울특별시</span></div>
-              <p class="form-help">행정전자서명(GPKI)으로 로그인한 소속 기관으로 등록됩니다.</p>
-            </div>
+            <!-- [ISS-070] '요청기관' 입력칸 삭제 — EVCS_REQUEST_DATA 14컬럼에 대응 컬럼이 없어 저장 위치가 없음(2026-07-23 실측).
+                 존치하려면 컬럼 신설이 필요한 신규 요구사항이라 프로토에서는 제거 확정(2026-07-24). -->
             <div class="form-group" style="grid-column: span 2;">
               <label class="form-label">제목 <span class="required">*</span></label>
               <input class="form-input" type="text" id="rwTitle" required placeholder="요청 자료의 핵심 내용을 한 문장으로 작성해 주세요 (최대 80자)" maxlength="80">
@@ -90,7 +85,7 @@
             <p style="margin:0 0 6px;">요청구분 = <code>REQ_CATE</code> (<b>1</b>충전기 · <b>2</b>보조금 · <b>3</b>기타)</p>
             <p style="margin:0 0 6px;">처리상태 = <code>REQ_STATUS</code> (<b>1</b>신청 · <b>2</b>승인 · <b>3</b>반려 · <b>4</b>처리중 · <b>5</b>처리완료) — 등록 시 <b>1 신청</b>으로 생성</p>
             <p style="margin:0 0 6px;">코드 = <code>EVCS_CODE_DETAIL</code> (계층은 <code>UP_CODE</code>, <code>USE_YN</code> 없음, 정렬 <code>SORT_ORDR</code>)</p>
-            <p style="margin:0;color:#a76a00;"><b>미해결</b> — ‘요청기관’은 <code>EVCS_REQUEST_DATA</code>에 <b>대응 컬럼 없음</b>. 제거/컬럼신설/회원 소속기관 대체 중 발주처 판단 대기.</p>
+            <p style="margin:0;"><b>‘요청기관’ 입력칸 제거됨</b>(2026-07-24 확정) — <code>EVCS_REQUEST_DATA</code>에 <b>대응 컬럼 없음</b>. 향후 필요 시 컬럼 신설 또는 회원 소속기관 대체가 전제.</p>
           </div>
         </details>
       </div>
@@ -99,9 +94,9 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260723a"></script>
+<script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260723a"></script>
+<script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
@@ -113,7 +108,6 @@
 
   var org = '서울특별시';
   try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.org) org = u.org; } catch(e){}
-  var oEl = document.getElementById('rwOrg'); if (oEl) oEl.textContent = org;
 
   document.getElementById('reqWriteForm').addEventListener('submit', function(e){
     e.preventDefault();

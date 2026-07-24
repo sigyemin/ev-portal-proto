@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>데이터·통계 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/style.css?v=20260724a">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/data.css">
 <style>
@@ -474,14 +474,15 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260723a"></script>
+<script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260723a"></script>
+<script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/i18n-data.js?v=20260723a"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <!-- SheetJS: #supply 엑셀 다운로드에서 사용(유지). 투명성지수(tindex-data.js) 대민 로드는 제거 — 관리자(admin-tindex.html) 전용으로 이관 -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="js/chart-tooltip.js?v=20260724a"></script><!-- [ISS-069정정] 차트 공용 툴팁 -->
 <script>
 // i18n helper for dynamic data
 const _dataLang = () => (window.__i18n && window.__i18n.getLang) ? window.__i18n.getLang() : 'ko';
@@ -539,11 +540,16 @@ function svgCombo(cfg){
   cfg.leftTicks.forEach(t=>{ const y=yL(t); g+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${R}" y2="${y.toFixed(1)}" stroke="#e8edf2" stroke-width="1" aria-hidden="true"/><text x="${L-7}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="11" fill="#475569" aria-hidden="true">${cfg.leftFmt(t)}</text>`; });
   cfg.rightTicks.forEach(t=>{ const y=yR(t); g+=`<text x="${R+7}" y="${(y+4).toFixed(1)}" text-anchor="start" font-size="11" fill="#475569" aria-hidden="true">${cfg.rightFmt(t)}</text>`; });
   const bw=Math.min(22, band*0.52);
-  cfg.bars.forEach((v,i)=>{ const x=(xC(i)-bw/2), y=yR(v); g+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${(B-y).toFixed(1)}" fill="url(#${cfg.hatchId})" stroke="#0e7a4d" stroke-width="0.75" aria-hidden="true"/>`; });
+  // [ISS-069정정] 막대에 툴팁(hover+키보드 포커스) — 문구 = 카테고리 · 값(+단위). sr-only 표는 별도 유지
+  cfg.bars.forEach((v,i)=>{ const x=(xC(i)-bw/2), y=yR(v);
+    const tip = (cfg.cats[i]!=null? cfg.cats[i]+" · " : "") + (cfg.rightFmt? cfg.rightFmt(v) : v) + (cfg.rightUnit? " "+cfg.rightUnit : "");
+    g+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${(B-y).toFixed(1)}" fill="url(#${cfg.hatchId})" stroke="#0e7a4d" stroke-width="0.75" tabindex="0" role="img" aria-label="${tip}" data-tip="${tip}"><title>${tip}</title></rect>`; });
   if(cfg.threshold!=null){ const y=yL(cfg.threshold); g+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${R}" y2="${y.toFixed(1)}" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="5 4" aria-hidden="true"/>`; }
   const pts=cfg.line.map((v,i)=>`${xC(i).toFixed(1)},${yL(v).toFixed(1)}`).join(' ');
   g+=`<polyline points="${pts}" fill="none" stroke="${cfg.lineColor}" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"/>`;
-  cfg.line.forEach((v,i)=>{ const mk=cfg.markIdx.indexOf(i)>=0; g+=`<circle cx="${xC(i).toFixed(1)}" cy="${yL(v).toFixed(1)}" r="${mk?4.5:3}" fill="${mk?'#C0392B':cfg.lineColor}" aria-hidden="true"/>`; });
+  cfg.line.forEach((v,i)=>{ const mk=cfg.markIdx.indexOf(i)>=0;
+    const tipL = (cfg.cats[i]!=null? cfg.cats[i]+" · " : "") + (cfg.leftFmt? cfg.leftFmt(v) : v) + (cfg.leftUnit? " "+cfg.leftUnit : "");
+    g+=`<circle cx="${xC(i).toFixed(1)}" cy="${yL(v).toFixed(1)}" r="${mk?4.5:3}" fill="${mk?'#C0392B':cfg.lineColor}" tabindex="0" role="img" aria-label="${tipL}" data-tip="${tipL}"><title>${tipL}</title></circle>`; });
   cfg.cats.forEach((c,i)=>{ g+=`<text x="${xC(i).toFixed(1)}" y="${B+16}" text-anchor="middle" font-size="11" fill="#334155" aria-hidden="true">${c}</text>`; });
   g+=`<text x="${L}" y="14" text-anchor="start" font-size="10.5" fill="#64748b" aria-hidden="true">${cfg.leftUnit}</text>`;
   g+=`<text x="${R}" y="14" text-anchor="end" font-size="10.5" fill="#64748b" aria-hidden="true">${cfg.rightUnit}</text>`;
@@ -575,7 +581,7 @@ function renderSubsidyYears(){
     const w=(d.exec/SB_MAXE*100).toFixed(1);
     const tip=d.y+'년 집행 '+d.exec.toFixed(2)+'조원'+(d.ytd?' (진행중)':'');
     return '<div class="ds-chart-row"><div class="dcl">'+d.y+'</div>'
-      + '<div class="ds-chart-track" title="'+tip+'" aria-label="'+tip+'">'
+      + '<div class="ds-chart-track" data-tip="'+tip+'" aria-label="'+tip+'">'
         + '<div class="ds-chart-bar'+(d.ytd?' b-warn':'')+'" style="width:'+w+'%;"></div></div>'
       + '<div class="ds-chart-val">'+d.exec.toFixed(2)+'<span class="sub"> 조'+(d.ytd?' · 진행중':'')+'</span></div></div>';
   }).join('');
@@ -1192,6 +1198,10 @@ renderSupplyAll();
 renderInfraAll();
 renderH2All();
 renderSubsidyYears();   // [ISS-044] 보조금 연도별(차트+KPI+표) — SB_DATA 단일 세트
+/* [ISS-069정정] 전 차트 툴팁 — 공용 컴포넌트(js/chart-tooltip.js). 인라인 SVG의 <title>/title을 data-tip으로 승격해
+   빌더 수정 없이 hover + 키보드 포커스 양쪽에서 수치 노출. sr-only 데이터표는 그대로 존치. */
+function wireChartTips(){ if(window.ChartTooltip){ ChartTooltip.promoteTitles(document); } }
+wireChartTips();
 // ── 상단 KPI = 카드 아래 별도 '이동' 버튼 (ISS-026 리뷰) — 진짜 <a>·키보드·포커스·reduced-motion 스무스 스크롤 ──
 (function kpiNav(){
   const btns = [].slice.call(document.querySelectorAll('.ds-nav-btn'));
@@ -1227,7 +1237,7 @@ renderSubsidyYears();   // [ISS-044] 보조금 연도별(차트+KPI+표) — SB_
 
 // 언어 전환 시 동적 데이터 재렌더
 window.addEventListener('langChange', () => {
-  try { renderSupplyAll(); renderInfraAll(); renderH2All(); renderSubsidyYears(); } catch(e){}
+  try { renderSupplyAll(); renderInfraAll(); renderH2All(); renderSubsidyYears(); wireChartTips(); } catch(e){}
 });
 </script>
 </body>

@@ -72,7 +72,7 @@
         { t: '공용 완속충전 시설 신청', t_en: 'Public Slow Charger', d: '공공시설 공용 완속충전기 설치를 신청하세요.', d_en: 'Apply to install public slow chargers at public sites.', href: 'charging-install-slow.html', emoji: '🏗️' },
         { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
         { t: '공지사항', t_en: 'Notices', d: '공모·보급사업 관련 공지와 공고를 확인하세요.', d_en: 'See notices and announcements on programs and open calls.', href: 'notice-list.html', emoji: '📢' },
-        { t: '요청자료', t_en: 'Requested Materials', d: '지자체·공공기관 대상 요청·공유 자료를 확인하세요.', d_en: 'Find materials shared with governments and public bodies.', href: 'info-request.html', emoji: '📂' },
+        { t: '요청자료', t_en: 'Requested Materials', d: '지자체·공공기관 대상 요청·공유 자료를 확인하세요.', d_en: 'Find materials shared with governments and public bodies.', href: 'info-library.html?tab=request', emoji: '📂' },
         { t: 'AI 맞춤 상담', t_en: 'AI Assistant', d: '담당 업무 관련 궁금한 점을 AI 헬프데스크에 물어보세요.', d_en: 'Ask the AI help desk about your administrative tasks.', href: 'index.html?ai=personal#aiSectionAnchor', emoji: '🤖' }
       ]
     }

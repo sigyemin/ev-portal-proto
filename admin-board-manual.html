@@ -26,8 +26,8 @@
           <div class="adm-field"><label>카테고리</label>
             <select id="fCat"><option value="all">전체 카테고리</option></select>
           </div>
-          <div class="adm-field"><label>공개여부</label>
-            <select id="fOpen"><option value="all">전체</option><option value="open">공개</option><option value="secret">비공개</option></select>
+          <div class="adm-field"><label>게시상태</label>
+            <select id="fOpen"><option value="all">전체</option><option value="open">노출</option><option value="secret">미노출</option></select>
           </div>
           <div class="adm-field" style="flex:1;min-width:200px;"><label>검색어</label><input type="text" id="fKw" placeholder="매뉴얼명 검색"></div>
           <button type="button" class="adm-btn primary" id="fSearch">검색</button>
@@ -45,7 +45,7 @@
           <th class="c" style="width:120px;">카테고리</th>
           <th>매뉴얼명</th>
           <th style="width:280px;">첨부 (파일명 · 용량)</th>
-          <th class="c" style="width:84px;">공개여부</th>
+          <th class="c" style="width:84px;">게시상태</th>
           <th class="c" style="width:120px;">작성자</th>
           <th class="c" style="width:100px;">등록일</th>
           <th class="c" style="width:86px;">다운로드수</th>
@@ -65,9 +65,9 @@
             <dt>매뉴얼명 <span style="color:#c0392b;">*</span></dt><dd class="wide"><input type="text" id="eTitle" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:100%;" placeholder="예: 통합누리집 사용자 매뉴얼 v2.4"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 개정이력은 제목의 버전 표기로 갈음합니다 (예: v2.4)</div></dd>
             <dt>설명</dt><dd class="wide"><textarea id="eBody" style="width:100%;min-height:90px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;" placeholder="대민 목록에 보조 설명으로 노출됩니다. (선택)"></textarea></dd>
             <dt>작성자</dt><dd><input type="text" id="eWriter" readonly style="height:34px;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#f1f5f9;color:#64748b;font-size:13px;width:220px;"><span id="eWriterId" style="margin-left:8px;font-size:12px;color:#94a3b8;"></span><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 로그인 계정에서 자동 기입됩니다 (직접 입력 불가) · 대민 목록 '작성자' 컬럼에 표시</div></dd>
-            <dt>공개여부</dt><dd>
-              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 공개</label>
-              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 비공개</label>
+            <dt>게시상태</dt><dd>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;margin-right:12px;"><input type="radio" name="eOpen" value="open" checked> 노출</label>
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;"><input type="radio" name="eOpen" value="secret"> 미노출</label>
             </dd>
             <dt>게시순서</dt><dd><input type="number" id="eOrder" value="0" min="0" style="height:34px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:13px;width:110px;"><div style="font-size:12px;color:#94a3b8;margin-top:4px;">※ 값이 클수록 상단 노출 (0 = 등록일 순)</div></dd>
             <dt>첨부파일 <span style="color:#c0392b;">*</span></dt><dd class="wide">
@@ -89,12 +89,13 @@
       <summary><span class="tag">DEV</span>개발 참고 — 신설 게시판·카테고리 코드그룹 (실서비스 비노출)</summary>
       <div class="bd"><ul>
         <li><strong>신설 게시판</strong> : 사용자매뉴얼 — <strong>APP_BLBD에 신규 행(BLBD_ID 신규 채번)</strong>. 탭별 별도 게시판 확정(대민 자료실 4탭 구성과 무관 · 관리자에선 독립 항목). TNCM_MENU에도 신규 메뉴 등록 필요(시스템관리 &gt; 게시판 관리, 서식다운로드 다음 순번).</li>
-        <li><strong>게시물</strong> : <strong>APP_ARTC</strong> 공통 — ARTC_ID/BLBD_ID · <strong>분류코드</strong>(카테고리) · 제목(매뉴얼명) · 내용(설명) · <strong>NM(게시물작성자 — 대민 '작성자' 컬럼 원천, 표시명)</strong> · <strong>INS_ID(등록자 계정 — 관리자 '작성자ID')</strong> · 공개여부 · 등록일/수정일 · 게시순서. 삭제는 DLT_YN.<br>★<strong>작성자는 관리자 직접입력이 아님</strong> — <strong>로그인 세션에서 자동 기입</strong>(NM = 로그인 사용자명, INS_ID = 로그인 계정ID). 등록 폼은 readonly. 수정 시에는 최초 등록자를 유지한다(수정자로 덮어쓰지 않음 — 필요 시 UPD_ID 별도 관리).</li>
+        <li><strong>게시물</strong> : <strong>APP_ARTC</strong> 공통 — ARTC_ID/BLBD_ID · <strong>분류코드</strong>(카테고리) · 제목(매뉴얼명) · 내용(설명) · <strong>NM(게시물작성자 — 대민 '작성자' 컬럼 원천, 표시명)</strong> · <strong>INS_ID(등록자 계정 — 관리자 '작성자ID')</strong> · 게시상태(노출/미노출) · 등록일/수정일 · 게시순서. 삭제는 DLT_YN.<br>★<strong>작성자는 관리자 직접입력이 아님</strong> — <strong>로그인 세션에서 자동 기입</strong>(NM = 로그인 사용자명, INS_ID = 로그인 계정ID). 등록 폼은 readonly. 수정 시에는 최초 등록자를 유지한다(수정자로 덮어쓰지 않음 — 필요 시 UPD_ID 별도 관리).</li>
         <li><strong>첨부</strong> : <strong>ATCH / ATCH_JFILE</strong> — ATCH_ID · ATCH_NM(파일명) · <strong>ATCH_SZ(용량 — 대민 '용량' 컬럼 원천)</strong> · ATCH_TYP · <strong>TGRT_ID = ARTC_ID</strong>. 다중 첨부.</li>
         <li><strong>★카테고리 = 신설 코드그룹으로 DB 관리</strong>(하드코딩 금지) : 포털 이용 / 보조금 신청 / 공모 신청 / 충전기 설치·운영 / 회원·카드 5종. 코드ID·채번은 개발 재량(질의응답 신설 코드그룹과 동일 체계 권고). <strong>FAQ 분류 하드코딩(ARTC.SMLCLS10 + 라벨이 faq.jsp에 박힘) 안티패턴 회피</strong> — 관리자에서 분류 추가·변경 가능해야 함.</li>
+        <li><strong>게시상태 = ARTC.OPEN_YN</strong> — <strong>노출/미노출</strong>. ★<strong>미노출은 대민에서만 제외되고 관리자 조회는 계속 유지</strong>. <strong>비밀글(ARTC.SECRET)은 질의응답 전용</strong>으로 본 게시판 미적용(혼동 금지). ★<strong>BLBD.OPEN_YN='Y' 필수</strong> — 'N'이면 boardEdit 노출여부 라디오가 미렌더되어 제어 불가(boardEdit.jsp:307~311). <strong>공지글 미사용</strong>(공지사항 게시판 전용).</li>
         <li><strong>개정이력</strong> : 별도 버전·이력 컬럼 없이 <strong>제목의 버전 표기</strong>(예: "…매뉴얼 v2.4")로 갈음.</li>
         <li><strong>다운로드수</strong> : <strong>카운트만 집계, 개인 식별 로깅 없음</strong>. 어떤 매뉴얼이 실제 수요 있는지 파악용. 공개자료 다운로드 통계 연계는 선택.</li>
-        <li><strong>데이터 원천 공유</strong> : 대민 누리집 자료실 &gt; 사용자 매뉴얼 탭(info-library.html?tab=manual)과 동일 게시판 데이터 — 공개여부 Y 등록 시 즉시 대민 노출(단일 원천).</li>
+        <li><strong>데이터 원천 공유</strong> : 대민 누리집 자료실 &gt; 사용자 매뉴얼 탭(info-library.html?tab=manual)과 동일 게시판 데이터 — 게시상태 '노출' 등록 시 즉시 대민 표출(단일 원천).</li>
         <li><strong>범위 주의</strong> : 업무포털(사업자·지자체)용 매뉴얼은 ev_ps <code>MenualController</code> 기존재 = <strong>별개 트랙</strong>(이번 범위 아님).</li>
       </ul></div>
     </details>
@@ -135,7 +136,7 @@
 
   /* ── 더미 9건 ──────────────────────────────────────────────────────────────
      1~6번 = ★대민 실화면(info-library.html?tab=manual) 6건과 1:1 정합
-             (매뉴얼명·카테고리·작성자·등록일·용량 동일). 공개여부 Y → 대민 노출분.
+             (매뉴얼명·카테고리·작성자·등록일·용량 동일). 게시상태 '노출' → 대민 표출분.
      7~9번 = 비공개(개정 준비본) — 관리자에만 보이는 상태 시연. 제목 버전 표기 관례(§개정이력) 준용. */
   var DATA = [
     { no:18, cat:'portal',  title:'통합누리집 사용자 매뉴얼 v2.4',        files:[{n:'통합누리집 사용자 매뉴얼 v2.4.pdf', s:'8.2MB'}],        open:true,  writer:'한국환경공단', wid:'admin_keco', date:'2026-04-10', dl:1284 },
@@ -177,7 +178,7 @@
         + '<td class="c"><span class="adm-cat">'+esc(catLabel(d.cat))+'</span></td>'
         + '<td>'+esc(d.title)+'</td>'
         + '<td>'+files+'</td>'
-        + '<td class="c">'+(d.open?'<span class="adm-badge b-open">공개</span>':'<span class="adm-badge b-secret">비공개</span>')+'</td>'
+        + '<td class="c">'+(d.open?'<span class="adm-badge b-open">노출</span>':'<span class="adm-badge b-secret">미노출</span>')+'</td>'
         + '<td class="c">'+esc(d.writer)+'<br><span style="color:#94a3b8;font-size:11.5px;">'+esc(d.wid)+'</span></td>'
         + '<td class="c num">'+d.date.replace(/-/g,'.')+'</td>'
         + '<td class="c num">'+d.dl.toLocaleString()+'</td>'

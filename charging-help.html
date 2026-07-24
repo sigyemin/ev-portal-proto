@@ -4,121 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>수소충전소 Help Desk | 충전소·요금 정보 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260622">
+<link rel="stylesheet" href="css/style.css?v=20260724a">
 <link rel="stylesheet" href="css/ai-floating.css">
 <link rel="stylesheet" href="css/charging.css">
+<link rel="stylesheet" href="css/auth.css"><!-- [ISS-067] .cf-auth-* 공용 본인인증 컴포넌트 재사용 -->
 <style>
-/* === 수소충전소 Help Desk — ASIS 정합 v2 === */
+/* === 수소충전소 Help Desk — ASIS 정합 위저드 v3 [ISS-067] · 스텝 표기 3단계 [ISS-068] === */
+[hidden] { display:none !important; }
 .h2hd-page { max-width: 1080px; margin: 0 auto; padding: 40px 24px 64px; }
 .h2hd-title { text-align: center; font-size: 28px; font-weight: 800; letter-spacing: -0.025em; color: #111; margin: 0 0 28px; }
 
-/* 4단계 stepper */
-.h2hd-stepper {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  flex-wrap: wrap; margin: 0 auto 40px;
-}
-.h2hd-step {
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 12px 28px; border-radius: 999px;
-  background: #FFFFFF; border: 1px solid #E5E8EE;
-  color: #111; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em;
-  min-width: 200px; text-align: center;
-}
+/* 3단계 stepper */
+.h2hd-stepper { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 0 auto 40px; }
+.h2hd-step { display: inline-flex; align-items: center; justify-content: center; padding: 12px 28px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E5E8EE; color: #6B7280; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; min-width: 200px; text-align: center; }
+.h2hd-step.done { color: #374151; border-color: #CBD5E1; }
 .h2hd-step.active { background: #EBF3FE; border-color: #B6D1F6; color: #2C5BB6; }
-.h2hd-step-arrow {
-  display: inline-flex; align-items: center; color: #B6BCC6;
-}
+.h2hd-step-arrow { display: inline-flex; align-items: center; color: #B6BCC6; }
 .h2hd-step-arrow svg { width: 18px; height: 18px; }
 
-/* 폼 섹션 */
-.h2hd-section-h {
-  font-size: 18px; font-weight: 700; color: #111;
-  letter-spacing: -0.02em; margin: 0 0 6px;
-}
-.h2hd-section-help {
-  font-size: 13px; color: #2C5BB6; text-align: right; margin: 0 0 12px;
-}
+/* STEP1 — 안내 카드 + 동의 + 본인인증(불편민원신고센터 패턴 이식) */
+.hd-notice { display:flex; align-items:center; gap:26px; border:1px solid #E5E8EE; border-radius:16px; padding:30px 36px; background:#fff; }
+.hd-notice-ico { width:104px; height:104px; flex:none; border-radius:50%; background:#F1F5F9; display:grid; place-items:center; color:#2C5BB6; }
+.hd-notice p { margin:0; font-size:15.5px; line-height:1.9; color:#374151; }
+.hd-consent { display:flex; align-items:center; gap:8px; justify-content:center; margin-top:22px; font-size:15px; font-weight:600; }
+.hd-consent .req { color:#2C5BB6; }
+.hd-auth-lead { text-align:center; margin:22px 0 14px; }
 
-/* 폼 표 — ASIS 행 단위 분할선 */
+/* 폼(STEP2) 섹션 */
+.h2hd-section-h { font-size: 18px; font-weight: 700; color: #111; letter-spacing: -0.02em; margin: 0 0 6px; }
+.h2hd-section-help { font-size: 13px; color: #2C5BB6; text-align: right; margin: 0 0 12px; }
 .h2hd-form { width: 100%; border-collapse: collapse; border-top: 1.5px solid #111; }
 .h2hd-form tr { border-bottom: 1px solid #E5E8EE; }
-.h2hd-form th, .h2hd-form td {
-  padding: 16px 20px; vertical-align: middle;
-  font-size: 14.5px; line-height: 1.6; letter-spacing: -0.01em;
-}
-.h2hd-form th {
-  width: 180px; text-align: left;
-  color: #111; font-weight: 600;
-}
+.h2hd-form th, .h2hd-form td { padding: 16px 20px; vertical-align: middle; font-size: 14.5px; line-height: 1.6; letter-spacing: -0.01em; }
+.h2hd-form th { width: 180px; text-align: left; color: #111; font-weight: 600; }
 .h2hd-form th .req { color: #2C5BB6; margin-left: 2px; }
 .h2hd-form td { color: #374151; }
-.h2hd-input,
-.h2hd-select,
-.h2hd-textarea {
-  width: 100%; padding: 10px 14px;
-  border: 1px solid #CBD5E1; border-radius: 6px;
-  background: #FFFFFF; color: #111;
-  font-size: 14px; font-family: inherit;
-}
-.h2hd-input:focus,
-.h2hd-select:focus,
-.h2hd-textarea:focus { border-color: #2C5BB6; outline: none; }
+.h2hd-input, .h2hd-select, .h2hd-textarea { width: 100%; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 6px; background: #FFFFFF; color: #111; font-size: 14px; font-family: inherit; }
+.h2hd-input:focus, .h2hd-select:focus, .h2hd-textarea:focus { border-color: #2C5BB6; outline: none; }
 .h2hd-input[readonly] { background: #F4F5F7; color: #6B7280; }
 .h2hd-select { max-width: 380px; }
-.h2hd-input-tel {
-  display: inline-grid; grid-template-columns: 110px auto 110px auto 110px;
-  gap: 8px; align-items: center;
-}
+.h2hd-etc { margin-top:8px; max-width:380px; }
+.h2hd-input-tel { display: inline-grid; grid-template-columns: 110px auto 110px auto 110px; gap: 8px; align-items: center; }
 .h2hd-input-tel .sep { color: #6B7280; }
 .h2hd-input-tel input { padding: 10px 12px; text-align: center; }
-.h2hd-addr {
-  display: flex; flex-direction: column; gap: 10px;
-}
+.h2hd-addr { display: flex; flex-direction: column; gap: 10px; }
 .h2hd-addr-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .h2hd-zip { width: 130px; }
-.h2hd-zip-btn {
-  padding: 10px 18px; background: #111827; color: #FFFFFF;
-  border: none; border-radius: 6px; font-size: 13.5px; font-weight: 600;
-  cursor: pointer;
-}
+.h2hd-zip-btn { padding: 10px 18px; background: #111827; color: #FFFFFF; border: none; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
 .h2hd-zip-btn:hover { background: #1F2937; }
 .h2hd-addr-label { width: 50px; color: #6B7280; font-size: 13px; }
 .h2hd-textarea-wrap { display: flex; flex-direction: column; gap: 6px; }
 .h2hd-byte-count { text-align: left; font-size: 12px; color: #6B7280; }
-.h2hd-file {
-  display: inline-flex; align-items: center; gap: 10px;
-}
-.h2hd-file-btn {
-  padding: 9px 16px; background: #111827; color: #FFFFFF;
-  border: none; border-radius: 6px; font-size: 13.5px; font-weight: 600;
-  cursor: pointer;
-}
-.h2hd-file-name {
-  padding: 9px 14px; background: #F4F5F7; border-radius: 6px;
-  color: #6B7280; font-size: 13.5px; min-width: 260px;
-}
-
-/* 안내 문구 */
-.h2hd-notes {
-  margin: 16px 0 28px; font-size: 13px; color: #2C5BB6; line-height: 1.85;
-}
+.h2hd-file { display: inline-flex; align-items: center; gap: 10px; }
+.h2hd-file-btn { padding: 9px 16px; background: #111827; color: #FFFFFF; border: none; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.h2hd-file-name { padding: 9px 14px; background: #F4F5F7; border-radius: 6px; color: #6B7280; font-size: 13.5px; min-width: 260px; }
+.h2hd-notes { margin: 16px 0 28px; font-size: 13px; color: #2C5BB6; line-height: 1.85; }
 .h2hd-notes p { margin: 0; }
 
-/* 등록 버튼 */
-.h2hd-submit-row { display: flex; justify-content: center; margin-top: 16px; }
-.h2hd-submit {
-  padding: 16px 60px; background: #0F1F3A; color: #FFFFFF;
-  border: none; border-radius: 8px;
-  font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
-  cursor: pointer;
-}
+/* 공통 하단 버튼 */
+.hd-foot { display: flex; justify-content: center; gap: 12px; margin-top: 28px; }
+.hd-foot .btn, .h2hd-submit { min-width: 200px; }
+.h2hd-submit { padding: 16px 44px; background: #0F1F3A; color: #FFFFFF; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; cursor: pointer; }
 .h2hd-submit:hover { background: #1A2B4D; }
+
+/* STEP3 — 접수 완료(공용 완료 UI 패턴 이식) */
+.hd-done { max-width:600px; margin:0 auto; text-align:center; }
+.hd-done-ico { width:84px; height:84px; border-radius:50%; background:var(--color-primary-50,#eefaf2); display:grid; place-items:center; margin:0 auto 16px; color:var(--color-primary-600,#16a34a); }
+.hd-done h2 { font-size:26px; letter-spacing:-0.02em; margin:0 0 10px; color:#111; }
+.hd-done .desc { color:#374151; font-size:14.5px; line-height:1.75; margin:0 0 22px; }
+.hd-receipt { border:1px solid #E5E8EE; border-radius:14px; padding:22px 24px; text-align:left; }
+.hd-receipt .rc-no { text-align:center; padding-bottom:16px; margin-bottom:16px; border-bottom:1px dashed #E5E8EE; }
+.hd-receipt .rc-no span { display:block; font-size:12px; color:var(--color-primary-700,#0f7a44); font-weight:700; letter-spacing:0.06em; }
+.hd-receipt .rc-no strong { font-size:24px; font-weight:800; color:var(--color-primary-700,#0f7a44); letter-spacing:-0.02em; }
+.hd-receipt dl { display:grid; grid-template-columns:120px 1fr; gap:10px 14px; margin:0; font-size:14px; }
+.hd-receipt dt { color:#6B7280; font-weight:600; }
+.hd-receipt dd { margin:0; color:#111; font-weight:600; }
 
 @media (max-width: 768px) {
   .h2hd-step { min-width: 0; padding: 10px 18px; font-size: 13px; flex: 1; }
   .h2hd-form th { width: 100px; padding: 12px 12px; font-size: 13px; }
   .h2hd-form td { padding: 12px 12px; font-size: 13px; }
   .h2hd-input-tel { grid-template-columns: 1fr auto 1fr auto 1fr; }
+  .hd-notice { flex-direction:column; text-align:center; padding:26px 22px; }
 }
 </style>
 </head>
@@ -132,7 +99,7 @@
     <div class="container container-wide">
       <nav class="breadcrumb" aria-label="경로">
         <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging-help.html?tab=report">수소충전소 Help Desk</a><span class="sep" aria-hidden="true">›</span>
+        <a href="charging-help.html">수소충전소 Help Desk</a><span class="sep" aria-hidden="true">›</span>
         <span class="current" aria-current="page">수소충전소 Help Desk</span>
       </nav>
       <h1 data-i18n="charging.help.title">수소충전소 Help Desk</h1>
@@ -144,178 +111,315 @@
 
       <h2 class="h2hd-title" data-i18n="charging.help.h2">수소충전소 Help Desk</h2>
 
-      <!-- 4단계 stepper -->
+      <!-- [ISS-068] 3단계 stepper — 01 개인정보 제공동의 및 본인인증 → 02 정보입력 → 03 입력완료
+           ※동의와 본인인증을 한 화면(패널1)에서 함께 처리하므로 한 스텝으로 표기(불편민원신고·부적정집행신고·할인미적용신고 3개 페이지 표준 동일). -->
       <div class="h2hd-stepper" role="list" data-i18n-aria="charging.help.stepper.aria" aria-label="신청 단계">
-        <span class="h2hd-step" role="listitem" data-i18n="charging.help.step.1">01. 개인정보 제공동의</span>
-        <span class="h2hd-step-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </span>
-        <span class="h2hd-step" role="listitem" data-i18n="charging.help.step.2">02. 본인인증</span>
-        <span class="h2hd-step-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </span>
-        <span class="h2hd-step active" role="listitem" aria-current="step" data-i18n="charging.help.step.3">03. 정보입력</span>
-        <span class="h2hd-step-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </span>
-        <span class="h2hd-step" role="listitem" data-i18n="charging.help.step.4">04. 입력완료</span>
+        <span class="h2hd-step active" role="listitem" data-step="1" data-i18n="charging.help.step.1">01. 개인정보 제공동의 및 본인인증</span>
+        <span class="h2hd-step-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span>
+        <span class="h2hd-step" role="listitem" data-step="2" data-i18n="charging.help.step.2">02. 정보입력</span>
+        <span class="h2hd-step-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span>
+        <span class="h2hd-step" role="listitem" data-step="3" data-i18n="charging.help.step.3">03. 입력완료</span>
       </div>
 
-      <!-- 문의내용 접수 -->
-      <div class="h2hd-section-h" data-i18n="charging.help.section.title">문의내용 접수</div>
-      <div class="h2hd-section-help"><span style="color:#2C5BB6;" aria-hidden="true">*</span><span data-i18n="charging.help.section.required"> 는 필수 항목입니다.</span></div>
+      <!-- ===== STEP 1. 개인정보 제공동의 및 본인인증 (한 화면 처리 · 불편민원신고센터 패턴 이식) ===== -->
+      <div data-panel="1">
+        <div class="hd-notice">
+          <div class="hd-notice-ico" aria-hidden="true">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
+          <p data-i18n-html="charging.help.notice.body">본 수소충전소 Help Desk에서는 수소충전소 신규 설치 검토·부지 변경·운영 인허가 등에 관한 문의를 접수하실 수 있습니다.<br>충전소 이용 중 고장·불편 신고는 해당 운영기관 고객센터로 접수해 주시기 바랍니다.</p>
+        </div>
+        <label class="hd-consent"><input type="checkbox" id="agree"> <span data-i18n="charging.help.consent">개인정보이용 제공 동의</span> <span class="req" data-i18n="charging.help.consent.req">[필수]</span></label>
 
-      <form id="h2hdForm" data-action="notify" data-action-label="시연 단계 화면입니다. 등록 동작은 추후 연동 예정입니다.">
-        <table class="h2hd-form">
-          <tbody>
-            <tr>
-              <th><span data-i18n="charging.help.field.target">문의대상</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <select class="h2hd-select" required>
-                  <option value="" data-i18n="charging.help.opt.select">선택</option>
-                  <option data-i18n="charging.help.opt.newstation">수소충전소 신규 설치 검토</option>
-                  <option data-i18n="charging.help.opt.changesite">기존 설치 부지 변경 문의</option>
-                  <option data-i18n="charging.help.opt.permit">운영 인허가 관련 문의</option>
-                  <option data-i18n="charging.help.opt.etc">기타 문의</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th><span data-i18n="charging.help.field.applicant">신청기관(자)</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <select class="h2hd-select" required>
-                  <option value="" data-i18n="charging.help.opt.select">선택</option>
-                  <option data-i18n="charging.help.opt.individual">개인</option>
-                  <option data-i18n="charging.help.opt.local">지방자치단체</option>
-                  <option data-i18n="charging.help.opt.public">공공기관</option>
-                  <option data-i18n="charging.help.opt.private">민간사업자</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th><span data-i18n="charging.help.field.name">이름</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <input type="text" class="h2hd-input" style="max-width: 220px;" placeholder="홍길동" readonly data-i18n-attr="placeholder:charging.help.placeholder.name">
-              </td>
-            </tr>
-            <tr>
-              <th><span data-i18n="charging.help.field.email">이메일</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <input type="email" class="h2hd-input" style="max-width: 380px;" placeholder="example@domain.com" required>
-              </td>
-            </tr>
-            <tr>
-              <th><span data-i18n="charging.help.field.phone">연락처</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <div class="h2hd-input-tel">
-                  <input type="tel" class="h2hd-input" maxlength="3" placeholder="010" required>
-                  <span class="sep" aria-hidden="true">-</span>
-                  <input type="tel" class="h2hd-input" maxlength="4" placeholder="0000" required>
-                  <span class="sep" aria-hidden="true">-</span>
-                  <input type="tel" class="h2hd-input" maxlength="4" placeholder="0000" required>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span data-i18n="charging.help.field.site">대상부지</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <div class="h2hd-addr">
-                  <div class="h2hd-addr-row">
-                    <input type="text" class="h2hd-input h2hd-zip" placeholder="" readonly>
-                    <button type="button" class="h2hd-zip-btn" data-i18n="charging.help.field.zip.btn">우편번호</button>
-                  </div>
-                  <div class="h2hd-addr-row">
-                    <span class="h2hd-addr-label" data-i18n="charging.help.field.addr">주소 :</span>
-                    <input type="text" class="h2hd-input" placeholder="" readonly style="flex:1; min-width: 320px;">
-                  </div>
-                  <div class="h2hd-addr-row">
-                    <span class="h2hd-addr-label" data-i18n="charging.help.field.detail">상세 :</span>
-                    <input type="text" class="h2hd-input" placeholder="" style="flex:1; min-width: 320px;">
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span data-i18n="charging.help.field.content">신청내용</span> <span class="req" aria-hidden="true">*</span></th>
-              <td>
-                <div class="h2hd-textarea-wrap">
-                  <textarea class="h2hd-textarea" id="h2hdBody" rows="6" maxlength="3000" placeholder="※ 내용은 최대 3,000Byte까지 입력 가능합니다." required data-i18n-attr="placeholder:charging.help.textarea.ph"></textarea>
-                  <div class="h2hd-byte-count"><span id="h2hdBytes">0</span>/3000bytes</div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th data-i18n-html="charging.help.file.label">첨부파일<br>(토지대장)</th>
-              <td>
-                <div class="h2hd-file">
-                  <label class="h2hd-file-btn" for="h2hdFile" data-i18n="charging.help.file.select">파일선택</label>
-                  <input type="file" id="h2hdFile" hidden accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff">
-                  <span class="h2hd-file-name" id="h2hdFileName" data-i18n="charging.help.file.none">선택된 파일 없음</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="h2hd-notes">
-          <p data-i18n="charging.help.note1">※ 파일첨부시 첨부가능한 용량은 최대 3M 입니다.</p>
-          <p data-i18n="charging.help.note2">※ 문의 시 지번 주소별 진행·처리됨으로 한 건씩 요청 바랍니다.(지번건=요청건)</p>
-          <p data-i18n="charging.help.note3">※ 접수부터 완료까지 통상 처리기간은 5~15일 정도 소요되며, 신청 대상 내용에 따라 조정될 수 있습니다.</p>
+        <p class="hd-auth-lead" data-i18n="charging.help.auth.lead">개인정보 제공에 동의하신 뒤, 휴대전화 인증으로 본인확인을 완료해 주세요.</p>
+        <div class="cf-auth-card is-locked" id="authCard">
+          <div class="cf-auth-ico" aria-hidden="true">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18" x2="14" y2="18"/><path d="M13 9.5c1.6.6 1.6 2.4 0 3-1 .4-1.2 1-1.2 1.7"/></svg>
+          </div>
+          <button type="button" class="cf-auth-btn" id="doAuth" data-i18n="charging.help.auth.btn">휴대전화 인증하기
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+          <p class="cf-auth-note" data-i18n="charging.help.auth.note">※ 인증하신 이름·연락처·이메일은 문의 접수에 자동 반영됩니다.</p>
+          <span class="cf-auth-live" id="authLive" aria-live="polite"></span>
         </div>
 
-        <div class="h2hd-submit-row">
-          <button type="button" class="h2hd-submit" data-action="notify" data-action-label="시연 화면입니다. 실제 접수 처리는 본 시스템 연동 후 동작합니다." data-i18n="charging.help.btn.register">등록</button>
+        <div class="hd-foot">
+          <button type="button" class="btn btn-primary btn-lg" id="toStep3" data-i18n="charging.help.btn.next">다음</button>
+          <a href="inquiry-status.html" class="btn btn-secondary btn-lg" data-i18n="charging.help.btn.mystatus">내 문의 조회</a>
         </div>
-      </form>
+      </div>
+
+      <!-- ===== STEP 2. 정보입력 (현 프로토타입 문의내용 접수 화면 · EVCS_H2_REPORT 정합) ===== -->
+      <div data-panel="3" hidden>
+        <div class="h2hd-section-h" data-i18n="charging.help.section.title">문의내용 접수</div>
+        <div class="h2hd-section-help"><span style="color:#2C5BB6;" aria-hidden="true">*</span><span data-i18n="charging.help.section.required"> 는 필수 항목입니다.</span></div>
+
+        <form id="h2hdForm">
+          <table class="h2hd-form">
+            <tbody>
+              <!-- 문의대상 = H2_INQRY_SE 실코드 4종(2026-07-24 AS-IS 실측) · 기타 옵션 없음 → INSE_ETC 입력칸 없음 -->
+              <tr>
+                <th><span data-i18n="charging.help.field.target">문의대상</span> <span class="req" aria-hidden="true">*</span></th>
+                <td>
+                  <select class="h2hd-select" id="inqTarget" required>
+                    <option value="" data-i18n="charging.help.opt.select">선택</option>
+                    <option value="1" data-i18n="charging.help.opt.t1">1. 직접발굴</option>
+                    <option value="2" data-i18n="charging.help.opt.t2">2. 부지검토</option>
+                    <option value="3" data-i18n="charging.help.opt.t3">3. 연계지원</option>
+                    <option value="4" data-i18n="charging.help.opt.t4">4. 컨설팅</option>
+                  </select>
+                </td>
+              </tr>
+              <!-- 신청기관(자) = H2_SE 실코드 5종 · ★'5. 기타기관' 선택 시에만 SE_ETC 직접입력(reportH2Edit.jsp:159 se_etc) -->
+              <tr>
+                <th><span data-i18n="charging.help.field.applicant">신청기관(자)</span> <span class="req" aria-hidden="true">*</span></th>
+                <td>
+                  <select class="h2hd-select" id="inqApplicant" required>
+                    <option value="" data-i18n="charging.help.opt.select">선택</option>
+                    <option value="1" data-i18n="charging.help.opt.a1">1. 부지소유자</option>
+                    <option value="2" data-i18n="charging.help.opt.a2">2. 구축사업자</option>
+                    <option value="3" data-i18n="charging.help.opt.a3">3. 환경청</option>
+                    <option value="4" data-i18n="charging.help.opt.a4">4. 지방자치단체</option>
+                    <option value="5" data-i18n="charging.help.opt.a5">5. 기타기관</option>
+                  </select>
+                  <input type="text" class="h2hd-input h2hd-etc" id="inqApplicantEtc" hidden placeholder="신청기관(자)을 직접 입력해 주세요" data-i18n-attr="placeholder:charging.help.etc.applicant" aria-label="신청기관 기타설명">
+                </td>
+              </tr>
+              <!-- 이름·이메일·연락처 = 본인인증값 자동(readonly) · REPORTER_NAME/EMAIL/PHONE 암호화 저장 -->
+              <tr>
+                <th><span data-i18n="charging.help.field.name">이름</span> <span class="req" aria-hidden="true">*</span></th>
+                <td><input type="text" class="h2hd-input" id="repName" style="max-width: 220px;" readonly required></td>
+              </tr>
+              <tr>
+                <th><span data-i18n="charging.help.field.email">이메일</span> <span class="req" aria-hidden="true">*</span></th>
+                <td><input type="email" class="h2hd-input" id="repEmail" style="max-width: 380px;" readonly required></td>
+              </tr>
+              <tr>
+                <th><span data-i18n="charging.help.field.phone">연락처</span> <span class="req" aria-hidden="true">*</span></th>
+                <td>
+                  <div class="h2hd-input-tel">
+                    <input type="tel" class="h2hd-input" id="repTel1" maxlength="3" readonly required>
+                    <span class="sep" aria-hidden="true">-</span>
+                    <input type="tel" class="h2hd-input" id="repTel2" maxlength="4" readonly required>
+                    <span class="sep" aria-hidden="true">-</span>
+                    <input type="tel" class="h2hd-input" id="repTel3" maxlength="4" readonly required>
+                  </div>
+                </td>
+              </tr>
+              <!-- 대상부지 = ZIP_CODE + ADDR_DORO + ADDR_DORO_DETAIL -->
+              <tr>
+                <th><span data-i18n="charging.help.field.site">대상부지</span> <span class="req" aria-hidden="true">*</span></th>
+                <td>
+                  <div class="h2hd-addr">
+                    <div class="h2hd-addr-row">
+                      <input type="text" class="h2hd-input h2hd-zip" id="addrZip" placeholder="" readonly aria-label="우편번호">
+                      <button type="button" class="h2hd-zip-btn" id="zipBtn" data-i18n="charging.help.field.zip.btn">우편번호</button>
+                    </div>
+                    <div class="h2hd-addr-row">
+                      <span class="h2hd-addr-label" data-i18n="charging.help.field.addr">주소 :</span>
+                      <input type="text" class="h2hd-input" id="addrDoro" placeholder="" readonly style="flex:1; min-width: 320px;" aria-label="도로명 주소">
+                    </div>
+                    <div class="h2hd-addr-row">
+                      <span class="h2hd-addr-label" data-i18n="charging.help.field.detail">상세 :</span>
+                      <input type="text" class="h2hd-input" id="addrDetail" placeholder="" style="flex:1; min-width: 320px;" aria-label="상세 주소">
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- 신청내용 = CONTENTS(최대 3,000Byte) -->
+              <tr>
+                <th><span data-i18n="charging.help.field.content">신청내용</span> <span class="req" aria-hidden="true">*</span></th>
+                <td>
+                  <div class="h2hd-textarea-wrap">
+                    <textarea class="h2hd-textarea" id="h2hdBody" rows="6" maxlength="3000" placeholder="※ 내용은 최대 3,000Byte까지 입력 가능합니다." required data-i18n-attr="placeholder:charging.help.textarea.ph"></textarea>
+                    <div class="h2hd-byte-count"><span id="h2hdBytes">0</span>/3000bytes</div>
+                  </div>
+                </td>
+              </tr>
+              <!-- 첨부 = FILE_ID · FILE_NM -->
+              <tr>
+                <th data-i18n-html="charging.help.file.label">첨부파일<br>(토지대장)</th>
+                <td>
+                  <div class="h2hd-file">
+                    <label class="h2hd-file-btn" for="h2hdFile" data-i18n="charging.help.file.select">파일선택</label>
+                    <input type="file" id="h2hdFile" hidden accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff">
+                    <span class="h2hd-file-name" id="h2hdFileName" data-i18n="charging.help.file.none">선택된 파일 없음</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="h2hd-notes">
+            <p data-i18n="charging.help.note1">※ 파일첨부시 첨부가능한 용량은 최대 3M 입니다.</p>
+            <p data-i18n="charging.help.note2">※ 문의 시 지번 주소별 진행·처리됨으로 한 건씩 요청 바랍니다.(지번건=요청건)</p>
+            <p data-i18n="charging.help.note3">※ 접수부터 완료까지 통상 처리기간은 5~15일 정도 소요되며, 신청 대상 내용에 따라 조정될 수 있습니다.</p>
+          </div>
+
+          <div class="hd-foot">
+            <button type="button" class="btn btn-secondary btn-lg" id="backTo1" data-i18n="charging.help.btn.prev">이전</button>
+            <button type="button" class="h2hd-submit" id="hdRegister" data-i18n="charging.help.btn.register">등록</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ===== STEP 3. 입력완료 (접수 완료 UI 재사용) ===== -->
+      <div data-panel="4" hidden>
+        <div class="hd-done">
+          <div class="hd-done-ico" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2 data-i18n="charging.help.done.title">수소충전소 Help Desk 문의가 접수되었습니다</h2>
+          <p class="desc" id="hdDoneDesc"></p>
+          <div class="hd-receipt">
+            <div class="rc-no"><span data-i18n="charging.help.done.rcno">접수 번호</span><strong id="hdDoneNo">H20260724-0000</strong></div>
+            <dl>
+              <dt data-i18n="charging.help.done.dt.target">문의대상</dt><dd id="hdDoneTarget">-</dd>
+              <dt data-i18n="charging.help.done.dt.at">접수 일시</dt><dd id="hdDoneAt">-</dd>
+              <!-- 접수증 '처리 예정(통상 5~15일 이내)' 행 삭제(2026-07-24, 사용자 지시) -->
+            </dl>
+          </div>
+          <div class="hd-foot">
+            <a href="inquiry-status.html" class="btn btn-primary btn-lg" data-i18n="charging.help.btn.mystatus">내 문의 조회</a>
+          </div>
+        </div>
+      </div>
 
     </div>
   </section>
 </main>
 
+<!--
+[DEV] 수소충전소 Help Desk 원천 = EVCS_H2_REPORT (대민 partcptn_reportH2Station / 관리자 ev_adm siteMng/reportH2).
+  논리삭제 DEL_YN · 상태 STATUS(90/91/92 계열).
+  ★코드 실값(2026-07-24 AS-IS 운영화면 실측 — 더미 아님):
+    문의대상 = EVCS_CODE_DETAIL.H2_INQRY_SE (1 직접발굴 · 2 부지검토 · 3 연계지원 · 4 컨설팅) — 기타 코드 없음 → INSE_ETC 입력칸 없음
+    신청기관(자) = H2_SE (1 부지소유자 · 2 구축사업자 · 3 환경청 · 4 지방자치단체 · 5 기타기관) — ★5 선택 시 SE_ETC 입력(필수).
+      근거 reportH2Edit.jsp:159 input[name=se_etc] · reportH2Edit.jsp:23 '신청기관(자) 기타항목 설명창 보이기'
+  본인인증(휴대전화) 후 이름/연락처/이메일 자동 채움 → REPORTER_NAME/PHONE/EMAIL(개인정보 3종 암호화 저장). 대상부지 = ZIP_CODE+ADDR_DORO+ADDR_DORO_DETAIL. 신청내용 CONTENTS(≤3,000Byte). 첨부 FILE_ID/FILE_NM(≤3M).
+  접수번호 형식 = H + YYYYMMDD + '-' + 시퀀스(예 H20260724-5878). 완료 후 '내 문의 조회' = 민원 처리 현황(inquiry-status.html)으로 이동.
+-->
+
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260723a"></script>
+<script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260723a"></script>
-<script src="js/i18n-charging.js?v=20260723a"></script>
+<script src="js/i18n-common.js?v=20260724a"></script>
+<script src="js/i18n-charging.js?v=20260724b"></script>
 <script src="js/main.js?v=20260520"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 <script>
-/* 신청내용 — 한글 1자=3byte(UTF-8 기준) 카운터, ASIS 일관성 */
+/* [ISS-067] 위저드 — 패널 1(동의+인증) → 3(정보입력) → 4(완료) · 스텝 게이팅
+   [ISS-068] 화면 스텝 표기는 3단계(01 동의·본인인증 / 02 정보입력 / 03 입력완료) */
 (function () {
-  var ta = document.getElementById('h2hdBody');
-  var out = document.getElementById('h2hdBytes');
-  if (!ta || !out) return;
-  function byteLen(s) {
-    var b = 0;
-    for (var i = 0; i < s.length; i++) {
-      var c = s.charCodeAt(i);
-      b += (c >> 7) ? 3 : 1;
-    }
-    return b;
-  }
-  function update() { out.textContent = byteLen(ta.value); }
-  ta.addEventListener('input', update);
-  update();
+  var $ = function (id) { return document.getElementById(id); };
+  function toast(m, t) { if (window.__toast) window.__toast(m, t || 'info'); else alert(m); }
+  function tr(ko, en){ return (window.__i18n && window.__i18n.getLang && window.__i18n.getLang() === 'en') ? en : ko; }
 
-  // 파일 선택 라벨 갱신
-  var file = document.getElementById('h2hdFile');
-  var name = document.getElementById('h2hdFileName');
-  if (file && name) {
-    file.addEventListener('change', function () {
-      if (file.files && file.files[0]) {
-        var f = file.files[0];
-        if (f.size > 3 * 1024 * 1024) {
-          alert('첨부 가능한 용량은 최대 3M 입니다.');
-          file.value = '';
-          name.textContent = '선택된 파일 없음';
-          return;
-        }
-        name.textContent = f.name;
-      } else {
-        name.textContent = '선택된 파일 없음';
-      }
+  // ── 패널/스텝 전환 ─────────────────────────────────────────────
+  function goPanel(n) {
+    document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = (parseInt(p.dataset.panel, 10) !== n); });
+    // [ISS-068] 3단계 표기 정합 — 패널 1 = 스텝 1(동의+본인인증) / 패널 3 = 스텝 2(정보입력) / 패널 4 = 스텝 3(입력완료)
+    //           ※패널 번호(1·3·4)는 기존 마크업 유지, 스텝 번호만 1·2·3으로 매핑
+    var STEP_OF = { 1: 1, 3: 2, 4: 3 };
+    var cur = STEP_OF[n] || 1;
+    document.querySelectorAll('.h2hd-step').forEach(function (s) {
+      var sn = parseInt(s.dataset.step, 10);
+      s.classList.toggle('active', sn === cur);
+      s.classList.toggle('done', sn < cur);
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // ── STEP1: 동의 → 본인인증 게이팅(한 화면) ─────────────────────
+  var authDone = false;
+  var agree = $('agree'), authCard = $('authCard'), doAuth = $('doAuth');
+  function syncAuthLock() { if (authCard) authCard.classList.toggle('is-locked', !agree.checked); }
+  if (agree) agree.addEventListener('change', syncAuthLock);
+  syncAuthLock();
+
+  if (doAuth) doAuth.addEventListener('click', function () {
+    if (!agree.checked) { toast(tr('개인정보이용 제공 동의에 체크해 주세요.', 'Please agree to the privacy consent.'), 'warning'); return; }
+    authDone = true;
+    this.textContent = tr('✓ 본인인증 완료', '✓ Verified');
+    this.classList.add('done');
+    this.disabled = true;
+    if (authCard) authCard.classList.add('is-verified');
+    var live = $('authLive'); if (live) live.textContent = tr('본인인증이 완료되었습니다.', 'Identity verification complete.');
+    // 인증값 자동 채움(데모) → 이름/이메일/연락처 readonly
+    $('repName').value = '홍길동';
+    $('repEmail').value = 'hong@example.com';
+    $('repTel1').value = '010'; $('repTel2').value = '1234'; $('repTel3').value = '5678';
+    toast(tr('본인인증이 완료되었습니다. (데모)', 'Identity verification complete. (demo)'), 'info');
+  });
+
+  if ($('toStep3')) $('toStep3').addEventListener('click', function () {
+    if (!agree.checked) { toast(tr('개인정보이용 제공 동의에 체크해 주세요.', 'Please agree to the privacy consent.'), 'warning'); return; }
+    if (!authDone) { toast(tr('휴대전화 본인인증을 완료해 주세요.', 'Please complete phone verification.'), 'warning'); return; }
+    goPanel(3);
+  });
+  if ($('backTo1')) $('backTo1').addEventListener('click', function () { goPanel(1); });
+
+  // ── STEP2: 신청기관(자) '5. 기타기관' 선택 시에만 SE_ETC 직접입력 노출 ──
+  //   (문의대상 H2_INQRY_SE에는 기타 코드가 없어 INSE_ETC 입력칸 없음)
+  (function () {
+    var sel = $('inqApplicant'), etc = $('inqApplicantEtc'); if (!sel || !etc) return;
+    sel.addEventListener('change', function () {
+      var on = (sel.value === '5');
+      etc.hidden = !on;
+      if (!on) etc.value = ''; else etc.focus();
+    });
+  })();
+
+  // 신청내용 바이트 카운터(UTF-8: 한글 1자=3byte)
+  var ta = $('h2hdBody'), out = $('h2hdBytes');
+  function byteLen(s) { var b = 0; for (var i = 0; i < s.length; i++) { b += (s.charCodeAt(i) >> 7) ? 3 : 1; } return b; }
+  if (ta && out) { var upd = function () { out.textContent = byteLen(ta.value); }; ta.addEventListener('input', upd); upd(); }
+
+  // 첨부(≤3M) 라벨 갱신
+  var file = $('h2hdFile'), fname = $('h2hdFileName');
+  if (file && fname) file.addEventListener('change', function () {
+    if (file.files && file.files[0]) {
+      if (file.files[0].size > 3 * 1024 * 1024) { toast(tr('첨부 가능한 용량은 최대 3M 입니다.', 'Max attachment size is 3MB.'), 'warning'); file.value = ''; fname.textContent = tr('선택된 파일 없음', 'No file selected'); return; }
+      fname.textContent = file.files[0].name;
+    } else fname.textContent = tr('선택된 파일 없음', 'No file selected');
+  });
+
+  // 우편번호 찾기(데모) → 대상부지 자동 입력
+  if ($('zipBtn')) $('zipBtn').addEventListener('click', function () {
+    $('addrZip').value = '08355';
+    $('addrDoro').value = '서울특별시 구로구 디지털로 300';
+    toast(tr('주소가 입력되었습니다. (데모)', 'Address entered. (demo)'), 'info');
+    $('addrDetail').focus();
+  });
+
+  // ── STEP2 → 등록 → STEP3 완료 ─────────────────────────────────
+  function receiptNo() {
+    var d = new Date(), p = function (v) { return v < 10 ? '0' + v : '' + v; };
+    var seq = String(Math.floor(1000 + Math.random() * 9000));   // 4자리 시퀀스(데모)
+    return 'H' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + seq;
+  }
+  if ($('hdRegister')) $('hdRegister').addEventListener('click', function () {
+    var tSel = $('inqTarget');
+    if (!tSel.value) { toast(tr('문의대상을 선택해 주세요.', 'Please select the inquiry subject.'), 'warning'); return; }
+    var aSel = $('inqApplicant');
+    if (!aSel.value) { toast(tr('신청기관(자)을 선택해 주세요.', 'Please select the applicant.'), 'warning'); return; }
+    // '5. 기타기관' 선택 시 SE_ETC 필수
+    if (aSel.value === '5' && !$('inqApplicantEtc').value.trim()) {
+      toast(tr('신청기관(자) 기타설명을 입력해 주세요.', 'Please describe the other organization.'), 'warning');
+      $('inqApplicantEtc').focus(); return;
+    }
+    if (!$('addrZip').value) { toast(tr('대상부지 주소를 입력해 주세요.', 'Please enter the site address.'), 'warning'); return; }
+    if (!ta.value.trim()) { toast(tr('신청내용을 입력해 주세요.', 'Please enter the content.'), 'warning'); return; }
+
+    var no = receiptNo();
+    var d = new Date(), p = function (v) { return v < 10 ? '0' + v : '' + v; };
+    var at = d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    $('hdDoneNo').textContent = no;
+    $('hdDoneTarget').textContent = tSel.options[tSel.selectedIndex].textContent;
+    $('hdDoneAt').textContent = at;
+    $('hdDoneDesc').innerHTML = tr(
+      '접수번호 <strong>' + no + '</strong> 로 접수되었습니다. 담당자 검토 후 답변드리며, 처리 현황은 아래 <b>내 문의 조회</b>에서 확인하실 수 있습니다.',
+      'Your inquiry has been received as <strong>' + no + '</strong>. Our staff will review and reply; check the status via <b>My Inquiries</b> below.');
+    goPanel(4);
+  });
 })();
 </script>
 </body>
