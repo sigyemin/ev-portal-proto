@@ -571,6 +571,7 @@
 
 
     /* === kev100-companies.html === */
+    /* [ISS-069추가] 업종 분포 막대차트 삭제 → kcp.chart.h3 / kcp.bar.* 키 제거(2026-07-24) */
     'kcp.bc.current':         { ko: 'K-EV100 현황',          en: 'K-EV100 Status' },
     'kcp.h1':                 { ko: 'K-EV100 현황',          en: 'K-EV100 Status' },
     'kcp.lead':               { ko: 'K-EV100 참여 기업의 <strong style="color:#fff;">차량 보유·무공해차 전환 통계</strong>와 참여기업 명단을 공개합니다.',
@@ -605,8 +606,7 @@
     'kcp.f.50':               { ko: '50% 이상',            en: '50%+' },
     'kcp.f.btn':              { ko: '조회',                en: 'Search' },
     'kcp.h3.list':            { ko: '전체 참여기업 목록',       en: 'All Participating Companies' },
-    'kcp.btn.list':           { ko: '리스트',              en: 'List' },
-    'kcp.btn.card':           { ko: '카드',                en: 'Card' },
+    /* [ISS-069추가] 목록 보기 전환 토글 키 2종 삭제 — 참여기업 목록은 표 형태 고정 */
     'kcp.th.firm':            { ko: '기업명',              en: 'Company' },
     'kcp.th.industry':        { ko: '업종',                en: 'Industry' },
     'kcp.th.join':            { ko: '참여 연도',             en: 'Joined' },
@@ -671,19 +671,6 @@
     'kcp.k5.d3.p':            { ko: '주요 항만 수소충전소 3개소 운영',   en: 'Operates 3 hydrogen stations at major ports' },
     'kcp.k5.d4.h5':           { ko: '목표',                en: 'Target' },
     'kcp.k5.d4.p':            { ko: '2030년 100%',          en: '100% by 2030' },
-    'kcp.chart.h3':           { ko: '업종별 참여 분포',         en: 'Participation by Industry' },
-    'kcp.bar.lbl.logi':       { ko: '운수·물류',             en: 'Transport & Logistics' },
-    'kcp.bar.lbl.mfg':        { ko: '제조업',              en: 'Manufacturing' },
-    'kcp.bar.lbl.it':         { ko: 'IT·서비스',            en: 'IT & Services' },
-    'kcp.bar.lbl.fin':        { ko: '금융·보험',             en: 'Finance & Insurance' },
-    'kcp.bar.lbl.con':        { ko: '건설',                en: 'Construction' },
-    'kcp.bar.lbl.pub':        { ko: '공공기관',              en: 'Public Sector' },
-    'kcp.bar.142':            { ko: '142社',              en: '142 firms' },
-    'kcp.bar.98':             { ko: '98社',               en: '98 firms' },
-    'kcp.bar.72':             { ko: '72社',               en: '72 firms' },
-    'kcp.bar.51':             { ko: '51社',               en: '51 firms' },
-    'kcp.bar.32':             { ko: '32社',               en: '32 firms' },
-    'kcp.bar.17':             { ko: '17社',               en: '17 firms' },
 
 
     /* === tax-integrated.html === */

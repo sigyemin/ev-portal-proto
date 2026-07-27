@@ -134,13 +134,10 @@
 
       <!-- Table -->
       <div data-reveal>
-        <div class="flex justify-between items-center mb-4">
-          <h3 style="font-size: 20px;" data-i18n="kcp.h3.list">전체 참여기업 목록</h3>
-          <div class="btn-group">
-            <button class="btn active" data-i18n="kcp.btn.list">리스트</button>
-            <button class="btn" data-i18n="kcp.btn.card">카드</button>
-          </div>
-        </div>
+        <!-- [ISS-069추가] 리스트/카드 보기 전환 토글 삭제(2026-07-24) — 표(리스트) 형태로 고정.
+             카드형 렌더 마크업·전용 JS·전용 CSS는 애초에 없었고 버튼만 있던 장식 UI였음(동작 없음).
+             정렬(th.sortable)·상세 펼침(.expand-btn)·페이지네이션은 js/main.js 전역 처리라 토글과 무관 — 그대로 동작. -->
+        <h3 class="mb-4" style="font-size: 20px;" data-i18n="kcp.h3.list">전체 참여기업 목록</h3>
 
         <table class="data-table" id="company-table">
           <thead>
@@ -230,18 +227,7 @@
         <div class="pagination" data-total="14" data-current="1"></div>
       </div>
 
-      <!-- 업종별 분포 차트 -->
-      <div class="mt-8" data-reveal>
-        <h3 style="font-size: 22px; margin-bottom: 16px;" data-i18n="kcp.chart.h3">업종별 참여 분포</h3>
-        <div class="bar-chart">
-          <div class="bar-chart-item"><span class="bar" style="height: 95%;"><span class="bar-value" data-i18n="kcp.bar.142">142社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.logi">운수·물류</span></div>
-          <div class="bar-chart-item"><span class="bar" style="height: 72%;"><span class="bar-value" data-i18n="kcp.bar.98">98社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.mfg">제조업</span></div>
-          <div class="bar-chart-item"><span class="bar" style="height: 55%;"><span class="bar-value" data-i18n="kcp.bar.72">72社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.it">IT·서비스</span></div>
-          <div class="bar-chart-item"><span class="bar" style="height: 38%;"><span class="bar-value" data-i18n="kcp.bar.51">51社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.fin">금융·보험</span></div>
-          <div class="bar-chart-item"><span class="bar" style="height: 28%;"><span class="bar-value" data-i18n="kcp.bar.32">32社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.con">건설</span></div>
-          <div class="bar-chart-item"><span class="bar" style="height: 15%;"><span class="bar-value" data-i18n="kcp.bar.17">17社</span></span><span class="bar-label" data-i18n="kcp.bar.lbl.pub">공공기관</span></div>
-        </div>
-      </div>
+      <!-- [ISS-069추가] 업종 분포 막대차트 삭제(2026-07-24) — 렌더 깨짐(막대 높이 0) + 목록 표의 업종 컬럼·필터로 대체 가능. 목록 업종 컬럼은 존치 -->
 
     </div>
   </section>
@@ -261,8 +247,8 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-extra.js?v=20260724k"></script>
-<script src="js/main.js?v=20260520"></script>
+<script src="js/i18n-extra.js?v=20260724m"></script>
+<script src="js/main.js?v=20260724b"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 
 <script>

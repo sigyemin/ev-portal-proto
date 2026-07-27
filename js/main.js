@@ -236,19 +236,28 @@
     ths.forEach((th, idx) => {
       th.addEventListener('click', () => {
         const tbody = table.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
+        /* [ISS-069추가] 상세 펼침(tr.detail-row)은 정렬 대상에서 제외한다.
+           (구)전 tr을 함께 정렬 → ① 상세행이 데이터행처럼 섞여 기업-상세 짝이 깨지고
+           ② 상세행은 td가 colspan 1칸뿐이라 children[idx]가 undefined → innerText 예외로 정렬 자체가 중단됐다.
+           데이터행만 정렬한 뒤, 각 행 뒤에 자기 상세행(#data-expand)을 붙여 짝을 유지한다. */
+        const rows = Array.from(tbody.children).filter(r => r.tagName === 'TR' && !r.classList.contains('detail-row'));
         const asc = !th.classList.contains('sort-asc');
         ths.forEach(t => t.classList.remove('sort-asc', 'sort-desc'));
         th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+        const cellText = (r) => (r.children[idx] ? r.children[idx].innerText.trim() : '');
         rows.sort((a, b) => {
-          const av = a.children[idx].innerText.trim();
-          const bv = b.children[idx].innerText.trim();
+          const av = cellText(a);
+          const bv = cellText(b);
           const an = parseFloat(av.replace(/[^0-9.-]/g, ''));
           const bn = parseFloat(bv.replace(/[^0-9.-]/g, ''));
           if (!isNaN(an) && !isNaN(bn)) return asc ? an - bn : bn - an;
           return asc ? av.localeCompare(bv, 'ko') : bv.localeCompare(av, 'ko');
         });
-        rows.forEach(r => tbody.appendChild(r));
+        rows.forEach(r => {
+          tbody.appendChild(r);
+          const detail = r.dataset.expand ? tbody.querySelector('#' + r.dataset.expand) : null;
+          if (detail) tbody.appendChild(detail);
+        });
       });
     });
   });
