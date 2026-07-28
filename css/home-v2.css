@@ -69,15 +69,7 @@ body.main03-active .aif-panel{width:min(900px,72vw);}
 
 /* ===== main_03 보정: 상세비교 카드 배열 + 전체보기 버튼 ===== */
 .m03-tabs{gap:20px;}
-.m03-fee-more{
-  display:inline-flex;align-items:center;gap:8px;
-  margin-left:-10px;height:32px;padding:0 16px;border-radius:999px;
-  background:#fff;color:#2f8ed8!important;border:1px solid #e8edf3;
-  box-shadow:0 8px 18px rgba(15,23,42,.06);
-  font-size:13px;font-weight:900;white-space:nowrap;text-decoration:none;
-}
-.m03-fee-more:hover{border-color:#9dd0f4;background:#f7fbff;color:#1479c9!important;transform:translateY(-1px);}
-.m03-fee-more span{font-size:16px;line-height:1;}
+/* [ISS-076] .m03-fee-more(텍스트 전체보기 링크) 스타일 삭제 — .m02-sec-more 아이콘 버튼으로 교체됨 */
 .m03-fee-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:stretch;}
 .m03-fee-detail[hidden]{display:none!important;}
 .m03-detail-list{display:grid;gap:14px;}
@@ -116,7 +108,7 @@ body.main03-active .aif-panel{width:min(900px,72vw);}
 .m03-benefit strong{display:block;font-size:16px;margin-bottom:6px;}
 .m03-benefit span{display:block;font-size:14px;color:#5f6b7a;}
 .m03-detail-cta{height:58px;margin-top:28px;border-radius:12px;background:linear-gradient(90deg,#6ecb6f,#2f94df);display:flex;align-items:center;justify-content:center;color:#fff!important;font-size:18px;font-weight:900;}
-@media(max-width:1200px){.m03-fee-detail{grid-template-columns:1fr}.m03-detail-row{min-height:124px}.m03-fee-more{margin-left:0}.m03-fee-filters{width:100%;justify-content:flex-end;}}
+@media(max-width:1200px){.m03-fee-detail{grid-template-columns:1fr}.m03-detail-row{min-height:124px}.m03-fee-filters{width:100%;justify-content:flex-end;}}
 @media(max-width:720px){.m03-detail-price-wrap{grid-template-columns:1fr}.m03-detail-row{grid-template-columns:44px 1fr}.m03-detail-chip{grid-column:2;justify-self:start}.m03-detail-panel{padding:24px 20px}.m03-detail-table th,.m03-detail-table td{font-size:13px;padding:12px 6px}.m03-detail-table tbody th{font-size:14px}}
 
 

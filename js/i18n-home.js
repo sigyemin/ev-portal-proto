@@ -333,8 +333,7 @@
     'hm.maker.hyundai': { ko: '현대', en: 'Hyundai' },
     'hm.maker.kia': { ko: '기아', en: 'Kia' },
     'hm.maker.tesla': { ko: '테슬라', en: 'Tesla' },
-    'hm.badge.100': { ko: '100% 지원', en: '100% Supported' },
-    'hm.badge.50': { ko: '50% 지원', en: '50% Supported' },
+    /* 메인 보조금·차량 카드 지원율 뱃지 삭제(2026-07-24, 사용자 지시) — hm.badge.* 제거 */
     'hm.veh.k.price': { ko: '차량가격', en: 'Price' },
     'hm.veh.k.sub': { ko: '보조금', en: 'Subsidy' },
     'hm.veh.k.range': { ko: '주행거리(1회 충전시)', en: 'Range (per charge)' },
@@ -359,7 +358,8 @@
     'hm.fee.title': { ko: '충전 요금 비교', en: 'Compare Charging Fees' },
     'hm.fee.tab.card': { ko: '카드비교', en: 'Card View' },
     'hm.fee.tab.detail': { ko: '상세보기', en: 'Detail View' },
-    'hm.fee.more': { ko: '충전요금 비교 전체 보기 <span aria-hidden="true">→</span>', en: 'View all charging fees <span aria-hidden="true">→</span>' },
+    /* [ISS-076] hm.fee.more(텍스트 전체보기) → 아이콘 버튼 aria 키로 전환 */
+    'hm.fee.morearia': { ko: '충전요금 비교 전체 보기', en: 'View all charging fee comparisons' },
     'hm.fee.f.typearia': { ko: '충전유형 선택', en: 'Select charge type' },
     'hm.fee.f.type': { ko: '충전유형', en: 'Charge type' },
     'hm.fee.f.fast': { ko: '급속 (50km)', en: 'Fast (50km)' },

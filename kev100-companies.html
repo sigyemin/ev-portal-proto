@@ -13,7 +13,7 @@
 .ds-ranking-wrap{background:#fff;border:1px solid var(--border-light,#e2e8f0);border-radius:14px;padding:22px 24px;}
 .ds-ranking-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
 .ds-ranking-head h3{font-size:20px;margin:0;letter-spacing:-0.02em;}
-.ds-refresh{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text-tertiary,#94a3b8);font-weight:600;}
+/* [ISS-069추가③] .ds-refresh(연 갱신 배지) 스타일 삭제 — 배지 제거로 미사용 */
 .ds-combo-head-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 6px;}
 .ds-combo-head-row h4{margin:0;font-size:15px;letter-spacing:-0.01em;}
 .ds-xlsx-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--border-light,#e2e8f0);background:#fff;border-radius:8px;font-size:12px;font-weight:700;color:var(--text-secondary,#475569);cursor:pointer;font-family:inherit;}
@@ -59,20 +59,29 @@
   <section class="section">
     <div class="container">
       <!-- Summary -->
-      <!-- [ISS-069] 요약 = 아래 통계(KEV_STAT)와 동일 데이터세트로 정합 -->
+      <!-- [ISS-069/기획 재설계 2026-07-28] 상단 KPI 4종 전면 교체 — 소개 페이지(참여 524社·전환 2,180대·전환율 20.6%)와 겹치지 않는 카테고리별 집계 지표.
+           기존 "100% 달성 기업 23社"(기업별 달성률 미공개 → 근거 없는 더미) 제거.
+           ★값은 전부 시연용 더미(정수) — 실값은 운영DB 집계 연동 대상. ★공통 필터: APROV_FINAL_YN='Y' + MBER_STTUS='P'(승인 확정·참여중 기업).
+           ① 올해 신규 참여 기업 = (연도별 참여 최신값 − 전년). 더미 +34社. 소스 LET_TN_CAMP
+           ② 누적 보유 충전기 = 완속(SLOW)+급속(FAST)+수소충전기 3종 합. ★초급속 컬럼 없음(실테이블 3종뿐). 더미 2,980+470+18=3,468기. 소스 LET_TN_CAMP_RESULT
+           ③ 계획 대비 이행률 = SUM(실적)/SUM(계획)×100. ★전환율(무공해차/전체보유 20.6%)과 다른 지표 — '전환율'로 라벨 금지. 더미 680/1,000=68%. 소스 FN_GET_CAMP_ACHIVE_RATE
+           ④ 올해 전환 실적 = 당해년도 무공해차 증차(IN_ELECT/HYDRG_*_BUY+RENT − DE_*). ①올해 신규참여와 '올해 성과' 짝. 더미 412대. 소스 LET_TN_CAMP_RESULT
+              (이전 '무공해차 구성 전기1,842·수소338'은 값 2개·하단 도넛 중복이라 취소 — 단일숫자로 교체) -->
+      <!-- ★값은 정적 정수 표기(data-counter 미사용) — 공용 카운터(main.js)는 target<100을 toFixed(1)로 렌더해 "34.0"·"68.0" 같은
+           소수점(더미 티)을 만든다. 이번 지시의 '소수점 금지'와 정면 충돌하므로 ①(34)·③(68) 등 2자리 값은 정적 정수로 고정. -->
       <div class="grid grid-4 mb-8" style="gap: 20px;" data-reveal>
-        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s1.lbl">누적 참여 기업</div><div class="stat-value"><span data-counter="524">0</span><span class="unit" data-i18n="kev.unit.firms">社</span></div><span class="stat-trend up" data-i18n="kcp.s1.trend">2019년 출범 이후 누적</span></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s2.lbl">전체 보유 차량</div><div class="stat-value"><span data-counter="10600">0</span><span class="unit" data-i18n="kev.unit.units">대</span></div><span class="stat-trend up" data-i18n="kcp.s2.trend">참여 기업 보유·임차 합계</span></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s3.lbl">무공해차 전환</div><div class="stat-value"><span data-counter="2180">0</span><span class="unit" data-i18n="kev.unit.units">대</span></div><span class="stat-trend up" data-i18n="kcp.s3.trend">전환율 20.6%</span></div>
-        <div class="stat-card" style="background: var(--gradient-primary); color: #fff; border: none;"><div class="stat-label" style="color: rgba(255,255,255,0.8);" data-i18n="kcp.s4.lbl">100% 달성 기업</div><div class="stat-value" style="color: #fff;"><span data-counter="23">0</span><span class="unit" style="color: rgba(255,255,255,0.9);" data-i18n="kev.unit.firms">社</span></div><span class="stat-trend up" style="background: rgba(255,255,255,0.2); color: #fff;" data-i18n="kcp.s4.trend">목표 조기 달성</span></div>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s1.lbl">올해 신규 참여 기업</div><div class="stat-value">+34<span class="unit" data-i18n="kev.unit.firms">社</span></div></div>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s2.lbl">누적 보유 충전기</div><div class="stat-value">3,468<span class="unit" data-i18n="kcp.unit.charger">기</span></div></div>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s3.lbl">계획 대비 이행률</div><div class="stat-value">68<span class="unit">%</span></div></div>
+        <div class="stat-card"><div class="stat-label" data-i18n="kcp.s4.lbl">올해 전환 실적</div><div class="stat-value">412<span class="unit" data-i18n="kev.unit.units">대</span></div></div>
       </div>
 
       <!-- [ISS-069] K-EV100 통계 (관리자 'K-EV100 통계 > 전체 현황'과 동일 지표) — data.html 컴포넌트 사용 -->
       <div class="ds-ranking-wrap mb-8" id="kvStat" data-reveal>
         <div class="ds-ranking-head">
           <div>
+            <!-- [ISS-069추가③] '↻ 연 갱신' 배지 제거 — 갱신 주기 근거 없음(창작 표기 삭제) -->
             <h3 data-i18n="kcp.stat.h3">K-EV100 차량 보유·전환 통계</h3>
-            <span class="ds-refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="kcp.stat.refresh">연 갱신</span></span>
           </div>
         </div>
 
@@ -111,21 +120,21 @@
               <option data-i18n="kcp.f.it">IT·서비스</option>
             </select>
           </div>
+          <!-- [ISS-069/기획] 참여연도(주 필터) 앞, 목표연도(보조) 뒤 순서. 달성률 필터는 삭제(AEA 미공개)됨 -->
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" data-i18n="kcp.f.join">참여 연도</label>
+            <select class="form-select">
+              <option data-i18n="kcp.f.all">전체</option>
+              <option>2021년</option><option>2022년</option><option>2023년</option><option>2024년</option><option>2025년</option>
+              <option>2026년</option><option>2027년</option><option>2028년</option><option>2029년</option><option>2030년</option>
+            </select>
+          </div>
           <div class="form-group" style="margin: 0;">
             <label class="form-label" data-i18n="kcp.f.target">목표 연도</label>
             <select class="form-select">
               <option data-i18n="kcp.f.all">전체</option>
               <option data-i18n="kcp.f.2030">2030년</option>
-              <option data-i18n="kcp.f.2040">2040년</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin: 0;">
-            <label class="form-label" data-i18n="kcp.f.rate">달성률</label>
-            <select class="form-select">
-              <option data-i18n="kcp.f.all">전체</option>
-              <option data-i18n="kcp.f.100">100% 달성</option>
-              <option data-i18n="kcp.f.70">70% 이상</option>
-              <option data-i18n="kcp.f.50">50% 이상</option>
+              <option data-i18n="kcp.f.2035">2035년</option>
             </select>
           </div>
           <button class="btn btn-primary" data-i18n="kcp.f.btn">조회</button>
@@ -147,6 +156,7 @@
               <th class="sortable" data-i18n="kcp.th.join">참여 연도</th>
               <th class="sortable" data-i18n="kcp.th.target">목표 연도</th>
               <th class="sortable" data-i18n="kcp.th.count">전환 대수</th>
+              <!-- [ISS-069/총괄2 정정] 달성률 컬럼 유지(표시). [DEV] 달성률은 AEA 미공개 데이터 — 아래 progress 값은 시연용 더미, 실데이터 연동 시 교체. 임의 수치 창작 금지 -->
               <th class="sortable" data-i18n="kcp.th.rate">달성률</th>
               <th style="text-align:center;width:80px;" data-i18n="kcp.th.detail">상세</th>
             </tr>
@@ -195,7 +205,7 @@
             </td></tr>
 
             <tr class="expandable" data-expand="k4">
-              <td><strong data-i18n="kcp.k4.firm">삼성SDS</strong></td><td data-i18n="kcp.f.it">IT·서비스</td><td>2022</td><td>2040</td><td data-i18n="kcp.k4.units">320대</td>
+              <td><strong data-i18n="kcp.k4.firm">삼성SDS</strong></td><td data-i18n="kcp.f.it">IT·서비스</td><td>2022</td><td>2035</td><td data-i18n="kcp.k4.units">320대</td>
               <td><div class="progress" style="width: 120px;"><div class="progress-bar" style="width: 42%;"></div></div><span style="font-size: 12px;">42%</span></td>
               <td style="text-align:center;" class="expand-btn-wrap"><span class="expand-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></td>
             </tr>
@@ -247,7 +257,7 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-extra.js?v=20260724m"></script>
+<script src="js/i18n-extra.js?v=20260728e"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/ai-floating.js?v=20260626d"></script>
 

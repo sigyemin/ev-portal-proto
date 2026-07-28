@@ -442,7 +442,7 @@
               <dt>결제방식·결과</dt>
               <dd><code>PAY_KIND</code> 1선불/2후불/3현장/4간편/5포인트 — 실질 대부분 <b>4간편</b>.</dd>
               <dt>상태 정규화 (대민 6종)</dt>
-              <dd><b>충전중</b>=<code>CHRG_STAT=2</code>(진행중, 미완료) · <b>완료</b>=공단 POS <code>PAY_RSLT=2</code> / 로밍 <code>PAYRESULT=3</code> · <b>결제대기</b>=공단 <code>1</code>(미결제) / 로밍 <code>0·1·2·9</code>(진행중이면 충전중 우선) · <b>결제실패</b>=공단 <code>3</code> / 로밍 <code>4</code>(사유=<code>PERRMSG</code>) · <b>취소</b>=로밍 <code>5</code>(환불, 공단 없음) · <b>무료</b>=<code>FREE_YN='Y'</code>/<code>CHGER_PAY_YN='N'</code>(PAYRESULT 아님). 원천: 공단 <code>EV2_RAW_CHRGRPT.PAY_RSLT</code>(1미결제/2완료/3실패) vs 로밍 <code>R_BUSI_STTL_DETAIL.PAY_RESULT</code>(0~9). 충전상태 <code>CHRG_STAT</code>(1대기/2충전중). ※요약 합계는 <b>완료건만</b> — <code>SUM(DECODE(CHGER_PAY_YN,'N',0,MON))</code> + 결과 필터.</dd>
+              <dd><b>충전중</b>=<code>CHRG_STAT=2</code>(진행중, 미완료) · <b>완료</b>=공단 POS <code>PAY_RSLT=2</code> / 로밍 <code>PAYRESULT=3</code> · <b>결제대기</b>=공단 <code>1</code>(미결제) / 로밍 <code>0·1·2·6·9</code>(진행중이면 충전중 우선) · <b>결제실패</b>=공단 <code>3</code> / 로밍 <code>4</code>(사유=<code>PERRMSG</code>) · <b>취소</b>=로밍 <code>5</code>(환불, 공단 없음) · <b>무료</b>=<code>FREE_YN='Y'</code>/<code>CHGER_PAY_YN='N'</code>(PAYRESULT 아님). 원천: 공단 <code>EV2_RAW_CHRGRPT.PAY_RSLT</code>(1미결제/2완료/3실패) vs 로밍 <code>R_BUSI_STTL_DETAIL.PAY_RESULT</code>(0~9). 충전상태 <code>CHRG_STAT</code>(1대기/2충전중). ※요약 합계는 <b>완료건만</b> — <code>SUM(DECODE(CHGER_PAY_YN,'N',0,MON))</code> + 결과 필터. <b>[ISS-072]</b> 로밍 <code>PAYRESULT</code>: <code>3</code>성공(완료)·<code>4</code>실패·<code>5</code>취소·<code>0/1/2/6/9</code> 결제대기(<code>6</code>=전달, 성공 전 중간단계 — 대기 편입, 2026-07-24 확정) / 무료는 <code>PAYRESULT</code> 아님(<code>CHGER_PAY_YN='N'</code>·<code>FREE_YN='Y'</code>).</dd>
               <dt>명세(정산)</dt>
               <dd><b>후불</b>=<code>EVCS_AFTER_PAYMENT</code>(<code>MON</code>월·<code>PAY_FEE</code>입금액·<code>PAY_DATE</code>납부일·<code>PAY_YN</code>납부여부 Y/N=<b>미납정지 근거</b>·<code>PAY_GUBUN</code>·<code>SET_SDATE/EDATE</code>후불대상기간). <b>선불</b>=<code>EVCS_PRE_PAYMENT</code>(<code>DEPOSIT_AMOUNT/DATE/NAME/TOTAL</code>), 잔여=입금−사용.</dd>
               <dt>월별 명세서(PDF) 설계</dt>
@@ -930,7 +930,9 @@
     // 결제대기(공단, 미결제 PAY_RSLT=1)
     {seq:6,busi:'환경부(KECO)',roaming:false,station:'환경부 선릉',chargerId:'ME-0777',card:'…7788',car:'34나 5678',start:'2026.06.03 09:05',end:'2026.06.03 09:25',dur:'0:19:44',kwh:20.0,unit:347.0,charge:5240,payKind:'간편결제',payAmt:0,status:'결제대기',payDt:'—',authNo:'',free:false},
     // 취소(로밍, PAY_RESULT=5 환불)
-    {seq:7,busi:'GS차지비',roaming:true,station:'차지비 서초',chargerId:'PI-0345',card:'…4567',car:'12가 3456',start:'2026.06.01 07:50',end:'2026.06.01 08:22',dur:'0:31:40',kwh:14.2,unit:240.0,charge:3408,payKind:'간편결제',payAmt:0,status:'취소',payDt:'2026.06.01 09:10',authNo:'',free:false}
+    {seq:7,busi:'GS차지비',roaming:true,station:'차지비 서초',chargerId:'PI-0345',card:'…4567',car:'12가 3456',start:'2026.06.01 07:50',end:'2026.06.01 08:22',dur:'0:31:40',kwh:14.2,unit:240.0,charge:3408,payKind:'간편결제',payAmt:0,status:'취소',payDt:'2026.06.01 09:10',authNo:'',free:false},
+    // [ISS-072] 결제대기(로밍, PAYRESULT=6 전달) — 성공 전 중간단계 → 대기 편입(충전중 아님). 합계 미포함(payAmt=0)
+    {seq:8,busi:'SK일렉링크',roaming:true,station:'SK 판교테크노',chargerId:'SK-0450',card:'…7788',car:'34나 5678',start:'2026.05.28 18:12',end:'2026.05.28 18:41',dur:'0:29:03',kwh:16.7,unit:288.0,charge:4810,payKind:'간편결제',payAmt:0,status:'결제대기',payDt:'—',authNo:'',free:false}
   ];
   POST.forEach(function(r){ r.mode='post'; });
   // 월 추이(mock, 최근 6개월 총 이용금액) — 마지막(당월)은 POST 합계로 동기화
