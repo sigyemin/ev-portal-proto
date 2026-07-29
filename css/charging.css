@@ -163,9 +163,11 @@
 .concierge-banner .concierge-cta { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* ===== Find: station detail drawer ===== */
+/* [ISS-078] 충전기 현황 7열(#·구분·타입·회원가·비회원가·상태·위치) 수용 위해 폭 480→600px 확대.
+   ★닫힘 right 오프셋도 -600px로 동기화(안 하면 닫힘 상태에서 일부 노출). min(…,100vw) 유지 → 모바일 풀폭. */
 .station-drawer {
-  position: fixed; top: 0; right: -480px;
-  width: min(480px, 100vw);
+  position: fixed; top: 0; right: -600px;
+  width: min(600px, 100vw);
   height: 100vh; background: #fff;
   border-left: 1px solid var(--border-light);
   box-shadow: -12px 0 40px rgba(15,23,42,0.12);

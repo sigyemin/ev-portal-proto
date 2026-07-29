@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>충전소 찾기 | 충전소·요금 정보 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/charging.css">
+<link rel="stylesheet" href="css/charging.css?v=20260728a">
 <link rel="stylesheet" href="css/fee-disclaimer.css?v=20260721a">
 <style>
 /* 충전소 찾기 전용 로컬 스타일 */
@@ -987,6 +987,15 @@
       <div class="sc-tile"><div class="sc-label">그 외</div><div class="sc-val" id="sdFault" style="color:var(--mk-unavailable);">0</div><div class="sc-sub">사용불가·상태미확인·이용자제한</div></div>
     </div>
 
+    <!-- [ISS-045] 기후에너지환경부 회원카드 결제 요금 — ★공표 요금(참고값 아님) → 안내가 뱃지·'실결제와 다를 수 있음' 문구 금지.
+         기후부 회원카드로 결제하면 어느 사업자 충전기를 이용해도 동일 적용(현행 ev.or.kr '로밍 충전요금'과 동일 개념).
+         수치 = js/me-public-rate.js 단일 소스(charging-fee.html 공표 5밴드와 동일) · 보유 밴드 강조는 충전기 배열(kW)에서 파생. 전기 전용(수소 미적용).
+         [ISS-077] 공표 요금(정확값)을 상단에 먼저 → 그 아래 충전기별 실시간 현황. 스코어보드 바로 아래로 이동. -->
+    <div class="sd-section" id="sdMeRate">
+      <h4>기후에너지환경부 회원카드 결제 요금</h4>
+      <div class="me-bands" id="sdMeBands"></div>
+    </div>
+
     <!-- 충전기 현황 — 목록형(기본 8개 + 더보기, 최대 97기 대응) -->
     <!-- [DEV] R_CHARGER: #ID(2자리·상한99) · CHGE_OUTPUT(밴드) · CONNECTOR · 상태 · POSITION_DESC(상세위치, 입력률 17%·최대 99자, Disclosure 펼침) -->
     <div class="sd-section">
@@ -996,40 +1005,16 @@
       <div class="chg-table-wrap" id="sdChargerList"></div>
       <button type="button" class="chg-more" id="sdChgMore" hidden aria-expanded="false" aria-controls="sdChargerList"></button>
       <!-- 실시간 요금도 회원·할인·로밍에 따라 실결제와 다를 수 있음(참고) — ISS-020/028 정합 -->
-      <p class="chg-fee-note"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>충전기별 <b>실시간 요금</b>은 공시 회원가 기준 참고값입니다. 회원·할인·시간대·로밍에 따라 실제 결제금액과 다를 수 있습니다. 실시간 미제공 충전기는 <b>사업자 표준요금</b>(계절시간제·지금 시각 기준)을 표시합니다.</span></p>
+      <!-- [ISS-077] 사업자 표준요금 안내 블록 삭제에 맞춰 문구 개편 + '사업자별 요금 매트릭스' 이동 링크 추가 -->
+      <p class="chg-fee-note"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>충전기별 <b>실시간 요금</b>은 공시 회원가 기준 참고값입니다. 회원·할인·시간대·로밍에 따라 실제 결제금액과 다를 수 있습니다. 실시간 미제공 충전기의 <b>사업자 표준요금</b>(계절시간제)은 아래에서 확인하세요.</span></p>
+      <p style="margin-top:8px;"><a href="charging-fee.html#section-matrix" class="btn btn-secondary btn-sm sd-fee-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg><span>사업자별 요금 매트릭스 보기 →</span></a></p>
       <p style="font-size:11.5px;color:var(--color-gray-500);margin-top:8px;">밴드: <b>완속</b> &lt;30 · <b>중속</b> 30~50 · <b>급속</b> 50~100 · <b>급속+</b> 100~200 · <b>초급속</b> ≥200 (kW) · 상태: <span style="color:var(--mk-available);">사용가능</span>·<span style="color:var(--mk-busy);">사용중</span>·<span style="color:var(--mk-unavailable);">사용불가</span>·<span style="color:var(--mk-unknown);">상태미확인</span>·<span style="color:var(--mk-restricted);">이용자제한</span></p>
     </div>
 
-    <!-- [ISS-045] 기후에너지환경부 회원카드 결제 요금 — ★공표 요금(참고값 아님) → 안내가 뱃지·'실결제와 다를 수 있음' 문구 금지.
-         기후부 회원카드로 결제하면 어느 사업자 충전기를 이용해도 동일 적용(현행 ev.or.kr '로밍 충전요금'과 동일 개념).
-         수치 = js/me-public-rate.js 단일 소스(charging-fee.html 공표 5밴드와 동일) · 보유 밴드 강조는 충전기 배열(kW)에서 파생. 전기 전용(수소 미적용). -->
-    <div class="sd-section" id="sdMeRate">
-      <h4>기후에너지환경부 회원카드 결제 요금</h4>
-      <div class="me-bands" id="sdMeBands"></div>
-    </div>
-
-    <!-- 충전 요금 -->
-    <!-- [DEV] 단가 = APP_CHARGE_PRICE.MEMBER_PRICE(회원가) · 5밴드(완속<30/중속30~50/급속50~100/급속100~200/초급속≥200) 정규화 · 충전소 출력구성(CHGE_OUTPUT)에 존재하는 밴드 행만 노출(예시=중속 없음)
-         비회원가(GUEST_PRICE)는 미노출 — 요금 비교·시뮬레이터에서 제공
-         할인 = TNCC_RMNG_SEAS_FEE 규칙 생성 표기(자유텍스트 할인 필드 없음) · 규칙 등록 사업자만 '할인' 행 노출. 회원/심야 할인 문구는 근거 없어 삭제.
-         ★[ISS-030] 계절시간제(계시제) 안내요금 = 사업자 입력 규칙(용량구간 × 시즌 × 요일 × 대상 × 시간)으로 24h 적용단가 산출 → '지금 시각' 기준 현재 구간 표기(sdNowFee). 참고=요금제개편(계절시간제) 화면설명서 2026-06-16. 충전기별 실시간 단가 미제공 시 이 계시제 안내요금이 fallback. -->
-    <div class="sd-section">
-      <h4>사업자 표준 요금 안내 <span style="font-size:11.5px;font-weight:600;color:var(--text-tertiary);">회원가 기준</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h4>
-      <!-- [ISS-030] 계절시간제(계시제) 표준 요금 = 각 충전기가 이미 실시간/표준요금을 표시하므로 전체 밴드표는 디스클로저로 접어둠(디폴트 접힘) · sdNowFee = 지금 시각 기준 라벨 -->
-      <!-- [ISS-030] 단가 표 토글 = '더보기' 버튼 UI로 통일(.chg-more) -->
-      <button type="button" class="chg-more" id="sdNowFeeBtn" aria-expanded="false" aria-controls="sdBandTable">
-        <span id="sdNowFee"></span>
-      </button>
-      <dl class="sd-kv" id="sdBandTable" hidden>
-        <dt>완속 (&lt;30kW)</dt><dd>292원/kWh</dd>
-        <dt>급속 (50~100kW)</dt><dd>347원/kWh</dd>
-        <dt>급속+ (100~200kW)</dt><dd>390원/kWh</dd>
-        <dt>초급속 (≥200kW)</dt><dd>433원/kWh</dd>
-      </dl>
-      <!-- [ISS-030] 이동 링크 = 아웃라인 버튼 UI 통일(data.html ds-navlink와 동일 규격) -->
-      <p style="margin-top:10px;"><a href="charging-fee.html" class="btn btn-secondary btn-sm sd-fee-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>자세한 계절시간제 요금은 충전요금 안내에서 →</span></a></p>
-      <div class="fee-caption-sm" data-i18n="charging.fee.disc.captionSlide">※ 안내가 — 실제 결제 금액과 다를 수 있습니다</div>
-    </div>
+    <!-- [ISS-077] '기후에너지환경부 회원카드 결제 요금' 블록은 스코어보드 바로 아래로 이동(위쪽 참조).
+         [ISS-077] '사업자 표준 요금 안내' 블록(지금시각 disclosure·밴드표·계절시간제 링크) 삭제 —
+         충전기 현황 표가 이미 실시간/표준요금을 표시하고, 상세 밴드표는 '사업자별 요금 매트릭스'(charging-fee.html)로 이관.
+         관련 JS(renderNowFee·sdNowFeeBtn·sdBandTable)도 정리. -->
 
     <!-- 참고사항(비고) -->
     <div class="sd-section">
@@ -1107,7 +1092,7 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-charging.js?v=20260724b"></script>
+<script src="js/i18n-charging.js?v=20260728c"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/fee-disclaimer.js?v=20260721a"></script>
 <script>
@@ -1303,45 +1288,31 @@
   // [ISS-030] 충전기별 실시간 요금(공시 회원가 기준) — API 있으면 단가, 없으면 '실시간 요금 미제공' → 하단 계시제 안내요금 fallback
   //   [DEV] 원천: 실시간 = EV2_RAW_CHRGRPT/사업자 실시간 단가 API(밴드별) · 미제공(통신 미연결·미확인·API 미제공) 시 계시제(TNCC_RMNG_SEAS_FEE)로 대체. 프로토는 더미로 두 상태 혼재.
   var RT_BAND_PRICE = { slow:292, mid:320, fast:347, fastp:390, ultra:433 };   // 공공 5밴드 회원가(원/kWh) 기준
-  function chargerRt(c){
-    if(c.state==='comm' || c.state==='unknown') return null;      // 통신 미연결·미확인 = 실시간 미제공
-    if(parseInt(c.id,10)%3===0) return null;                       // 데모: 일부 충전기 실시간 미제공(혼재 노출)
-    return (RT_BAND_PRICE[c.band]||300) + (parseInt(c.id,10)%5)*2; // 실시간 단가(소폭 변동)
+  // [ISS-078] 비회원가 5밴드 — 더미(회원가보다 소폭 높음). ★[DEV] 실소스: 실시간=APP_CHARGE_PRICE.GUEST_PRICE / 표준=사업자별 요금 매트릭스 NONMEMBER_FEE. 창작 수치 아님(운영DB 연동 대상).
+  var NONMEMBER_BAND_PRICE = { slow:328, mid:360, fast:389, fastp:437, ultra:485 };
+  // [ISS-078] 실시간 제공 여부(회원/비회원 공통) — 통신 미연결·미확인 또는 데모상 id%3===0이면 미제공
+  function chargerRtAvail(c){
+    if(c.state==='comm' || c.state==='unknown') return false;      // 통신 미연결·미확인 = 실시간 미제공
+    if(parseInt(c.id,10)%3===0) return false;                       // 데모: 일부 충전기 실시간 미제공(혼재 노출)
+    return true;
   }
-  // 표 '요금' 셀 = 위 단가 / 아래 실시간·표준요금 배지(색 단독 금지 → 아이콘+텍스트 병용)
-  function chargerFeeHTML(c){
-    var rt=chargerRt(c);
-    if(rt!=null){
-      return '<span role="group" aria-label="실시간 요금 '+rt+'원 퍼 킬로와트시">'
+  // [ISS-078] 요금 셀 = 단가 + 실시간/표준요금 배지(색 단독 금지 → 아이콘+텍스트 병용). table=회원가/비회원가, kind=aria 접두. 밴드 값 없으면 '-'.
+  function chargerFeeHTML(c, table, kind){
+    var base = table[c.band];
+    if(base==null) return '<span class="ct-price" style="color:var(--text-tertiary);">-</span>';
+    if(chargerRtAvail(c)){
+      var rt = base + (parseInt(c.id,10)%5)*2;   // 실시간 단가(소폭 변동)
+      return '<span role="group" aria-label="'+kind+' 실시간 요금 '+rt+'원 퍼 킬로와트시">'
         + '<span class="ct-price">'+rt+'원</span>'
         + '<span class="cr-fee-badge rt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>실시간</span></span>';
     }
-    // 실시간 미제공 → 그 충전기 출력밴드의 사업자 표준요금(하단 '지금시각 기준 적용 단가'와 동일 소스)
-    var std=RT_BAND_PRICE[c.band]||300;
-    return '<span role="group" aria-label="사업자 표준요금 '+std+'원 퍼 킬로와트시">'
-      + '<span class="ct-price">'+std+'원</span>'
+    return '<span role="group" aria-label="'+kind+' 사업자 표준요금 '+base+'원 퍼 킬로와트시">'
+      + '<span class="ct-price">'+base+'원</span>'
       + '<span class="cr-fee-badge std"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>표준요금</span></span>';
   }
 
-  // [ISS-030] 표준 요금 = 지금 시각(계절·요일·시간) 기준 적용 단가임을 표기(할인 50% 단정 금지 — 풀 계시제는 ISS-034 charging-fee)
-  var _DOW=['일','월','화','수','목','금','토'];
-  function renderNowFee(){
-    var el=document.getElementById('sdNowFee'); if(!el) return;
-    var btn=document.getElementById('sdNowFeeBtn');
-    var open = btn && btn.getAttribute('aria-expanded')==='true';
-    var d=new Date(), m=d.getMonth()+1, dow=d.getDay(), h=d.getHours();
-    el.textContent = '지금 시각('+m+'월 '+_DOW[dow]+'요일 '+h+'시) 기준 적용 단가 ' + (open ? '접기 ▲' : '보기 ▼');
-  }
-  // [ISS-030] 지금시각 기준 적용 단가 표 = 접기/펼치기 디스클로저(디폴트 접힘) · 각 충전기가 자기 요금을 표시하므로 전체 밴드표는 상세로 접음
-  (function(){
-    var btn=document.getElementById('sdNowFeeBtn'); if(!btn) return;
-    btn.addEventListener('click', function(){
-      var open=btn.getAttribute('aria-expanded')==='true';
-      btn.setAttribute('aria-expanded', open?'false':'true');
-      var tbl=document.getElementById('sdBandTable'); if(tbl) tbl.hidden=open;
-      renderNowFee();   // 라벨 보기 ▼ / 접기 ▲ 동기화
-    });
-  })();
+  // [ISS-077] renderNowFee()·_DOW·sdNowFeeBtn 디스클로저 IIFE 삭제 — '사업자 표준 요금 안내' 블록(sdNowFee/sdBandTable) 제거로 죽은 코드.
+  //           상세 밴드표·계절시간제 안내는 '사업자별 요금 매트릭스'(charging-fee.html#section-matrix)로 이관.
 
   function renderChargerList(stationId){
     var host=document.getElementById('sdChargerList'); if(!host) return;
@@ -1361,19 +1332,21 @@
         + '<td class="ct-band"><b style="color:'+BAND_CLR[c.band]+';">'+BAND_LBL[c.band]+'</b>'
           + (c.kw!=null ? '<span class="ct-kw">('+c.kw+'kW)</span>' : '') + '</td>'   // CHGE_OUTPUT 원값 — 밴드 라벨은 이 값에서 파생
         + '<td class="ct-type">'+connCellHTML(c)+'</td>'
-        + '<td class="ct-fee">'+chargerFeeHTML(c)+'</td>'
+        + '<td class="ct-fee">'+chargerFeeHTML(c, RT_BAND_PRICE, '회원가')+'</td>'          // [ISS-078] 회원가
+        + '<td class="ct-fee">'+chargerFeeHTML(c, NONMEMBER_BAND_PRICE, '비회원가')+'</td>'  // [ISS-078] 비회원가
         + '<td class="ct-state">'+stateCellHTML(c)+'</td>'
         + '<td class="ct-loc">'+(c.loc ? esc(c.loc) : '<span style="color:var(--text-tertiary);">-</span>')+'</td>'
         + '</tr>';
     }).join('');
     host.innerHTML =
       '<table class="chg-table">'
-      + '<caption class="sr-only">충전기 현황 — 번호, 구분(출력 밴드·kW), 타입(커넥터), 요금(원/kWh), 상태 및 갱신일시, 위치</caption>'
+      + '<caption class="sr-only">충전기 현황 — 번호, 구분(출력 밴드·kW), 타입(커넥터), 회원가(원/kWh), 비회원가(원/kWh), 상태 및 갱신일시, 위치</caption>'
       + '<thead><tr>'
       +   '<th scope="col">#</th>'
       +   '<th scope="col">구분</th>'
       +   '<th scope="col">타입</th>'
-      +   '<th scope="col">요금</th>'
+      +   '<th scope="col">회원가</th>'
+      +   '<th scope="col">비회원가</th>'
       +   '<th scope="col">상태<span class="th-sub">갱신일시</span></th>'
       +   '<th scope="col">위치</th>'
       + '</tr></thead><tbody>' + rows + '</tbody></table>';
@@ -1469,7 +1442,7 @@
         : '개방형 (누구나 이용 가능)';
       // 참고사항(비고) = EVCS_STATION.ETC — 200자 상한(실측 최장 90자) → 말줄임 없이 전문 노출
       var ec = document.getElementById('sdEtc'); if(ec) ec.textContent = data.etc || '등록된 비고가 없습니다.';
-      renderNowFee();   // [ISS-030] 계시제 '지금 시각 기준' 적용 구간
+      // [ISS-077] renderNowFee() 호출 제거 — '사업자 표준 요금 안내' 블록 삭제됨
       renderMeRate(stationId);   // [ISS-045] 기후부 회원카드 결제 요금(보유 밴드 강조) — 전기 전용
     } else {
       var oh = document.getElementById('sdOperH2'); if (oh) oh.textContent = data.brand;

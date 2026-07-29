@@ -293,6 +293,8 @@
     'hm.ai.feat3.t': { ko: '즉각 결과 노출', en: 'Instant results' },
     'hm.ai.feat3.d': { ko: '빠른 답변을 바로 확인해요.', en: 'Get fast answers right away.' },
     'hm.calc.title': { ko: '구매 보조금 계산기', en: 'Purchase Subsidy Calculator' },
+    /* [ISS-076] 타이틀 우측 ↗ 이동버튼 aria (하단 풀폭 CTA 대체) */
+    'hm.calc.morearia': { ko: '자세한 보조금 안내·계산기', en: 'Full subsidy guide & calculator' },
     'hm.calc.h3': { ko: '보조금 계산', en: 'Subsidy Calculation' },
     'hm.calc.p': { ko: '차종과 지역을 선택하면 예상 보조금을 바로 확인할 수 있습니다. 아래 정보를 입력하고 계산 버튼을 누르세요.', en: 'Select a model and region to see your estimated subsidy. Enter the details below and press Calculate.' },
     'hm.calc.lbl.type': { ko: '차량 유형', en: 'Vehicle Type' },
