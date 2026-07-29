@@ -27,19 +27,9 @@
       headerSub: '사용 환경에 맞춘 1:1 안내',
       placeholder: '예: 우리 집 충전기 어떤 게 좋을까요?',
       chips: ['아파트 충전기', '저공해 등급', '내 차에 맞는 보조금', '주행거리 비교', '월 충전비'],
-      cards: [
-        { title: '내가 받을 수 있는 보조금?', desc: '거주지·차종·소득 맞춤 결과', icon: 'subsidy' },
-        { title: '우리 집 충전 환경?', desc: '아파트·주택·완속/급속 추천', icon: 'home' },
-        { title: '내 차로 바꾸면?', desc: '주행거리·충전 시간 비교', icon: 'compare' }
-      ],
+      // [ISS-085] cards(추천카드)·answer.actions(링크카드)·answer.suggest(후속칩) 제거 — 응답은 text만
       answer: {
-        text: '<strong>맞춤 상담</strong>을 시작합니다.<br>거주지·차종·연소득을 알려주시면 신청 가능한 보조금과 추천 차종을 제안해 드릴게요.',
-        actions: [
-          { title: '구매 보조금 안내', desc: '신청 자격·금액·절차', href: 'subsidy-info.html', primary: true },
-          { title: '지자체별 현황', desc: '시군구 단가·접수 현황', href: 'subsidy-region.html' },
-          { title: '대상 차종', desc: '환경부 지원 차종 목록', href: 'subsidy-vehicles.html' }
-        ],
-        suggest: ['내 차량으로 받을 수 있는 보조금?', '서울에서 신청하려면?', '소득 조건이 있나요?']
+        text: '<strong>맞춤 상담</strong>을 시작합니다.<br>거주지·차종·연소득을 알려주시면 신청 가능한 보조금과 추천 차종을 제안해 드릴게요.'
       }
     },
     subsidy: {
@@ -47,19 +37,9 @@
       headerSub: '내가 받을 수 있는 보조금을 한 번에',
       placeholder: '예: 보조금 얼마? 신청 절차?',
       chips: ['최대 보조금', '신청 자격', '필요 서류', '집행 현황', '서식 다운로드'],
-      cards: [
-        { title: '2026년 보조금 단가', desc: '국비 + 지방비 통합', icon: 'subsidy' },
-        { title: '신청 자격 확인', desc: '거주지·연령·자격', icon: 'check' },
-        { title: '필요 서류', desc: '신청서·지급 청구서', icon: 'doc' }
-      ],
+      // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       answer: {
-        text: '<strong>2026년 보조금 큐레이션</strong>입니다. 일반 승용 BEV 기준 국비 480만원 + 지방비 100만원 = 최대 580만원 지원. 차량가 7천만원 이상은 100% 단가 적용 대상에서 제외됩니다.',
-        actions: [
-          { title: '지원 대상·절차', desc: '5단계 신청 안내', href: 'subsidy-target.html', primary: true },
-          { title: '대상 차종 목록', desc: '환경부 지원 차종', href: 'subsidy-vehicles.html' },
-          { title: '서식 다운로드', desc: '신청서·청구서 양식', href: 'info-forms.html' }
-        ],
-        suggest: ['지자체별 보조금 차이', '신청 후 처리 기간', '양도양수 신고 방법']
+        text: '<strong>2026년 보조금 큐레이션</strong>입니다. 일반 승용 BEV 기준 국비 480만원 + 지방비 100만원 = 최대 580만원 지원. 차량가 7천만원 이상은 100% 단가 적용 대상에서 제외됩니다.'
       }
     },
     charge: {
@@ -67,19 +47,9 @@
       headerSub: '충전 문제 즉시 해결',
       placeholder: '예: 충전이 안 돼요',
       chips: ['충전기 고장', '결제 오류', '카드 인식 안됨', '인근 충전소', '환불 절차'],
-      cards: [
-        { title: '충전기 장애 신고', desc: '즉시 신고·복구 안내', icon: 'alert' },
-        { title: '근처 사용 가능 충전소', desc: '실시간 상태 지도', icon: 'map' },
-        { title: '결제·환불 안내', desc: '오결제·환불 처리', icon: 'card' }
-      ],
+      // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       answer: {
-        text: '<strong>충전기 장애 대응</strong>입니다.<br>(1) 카드 칩 청결 확인 → (2) 카드 재등록 → (3) 다른 충전기 시도 순으로 점검해 주세요. 문제 지속 시 <strong>1661-0970</strong>(평일 09~18시) 또는 우측 액션의 <strong>장애 신고</strong>를 이용해 주세요.',
-        actions: [
-          { title: '수소충전소 Help Desk', desc: '장애 신고·운영·이력', href: 'charging-help.html', primary: true },
-          { title: '인근 충전소 찾기', desc: '실시간 가용 충전기', href: 'charging-find.html' },
-          { title: 'FAQ 검색', desc: '자주 묻는 충전 문제', href: 'inquiry-faq.html' }
-        ],
-        suggest: ['충전 중 갑자기 멈춤', '카드 인식 안 될 때', '환불은 어떻게 받나요?']
+        text: '<strong>충전기 장애 대응</strong>입니다.<br>(1) 카드 칩 청결 확인 → (2) 카드 재등록 → (3) 다른 충전기 시도 순으로 점검해 주세요. 문제 지속 시 <strong>1661-0970</strong>(평일 09~18시)으로 문의해 주세요.'
       }
     }
   };
@@ -176,10 +146,7 @@
         + '<input type="text" class="aif-followup-input" id="aifFollowupInput" placeholder="이 주제로 더 궁금한 점은?" aria-label="추가 질문">'
         + '<button type="submit" class="aif-followup-send" aria-label="전송">' + ICON.send + '</button>'
       + '</form>'
-      + '<footer class="aif-foot">'
-        + '<a href="inquiry-faq.html" class="aif-foot-btn">' + ICON.faq + 'FAQ</a>'
-        + '<a href="index.html#aiSectionAnchor" class="aif-foot-btn">' + ICON.expand + '전체화면</a>'
-      + '</footer>'
+      // [ISS-085] 하단 바(FAQ·전체화면 버튼) 제거
     + '</aside>';
   document.body.appendChild(box);
 
@@ -211,23 +178,14 @@
 
   // ===== 빈 상태 =====
   function renderEmpty() {
+    // [ISS-085] 빈 상태 추천카드 제거 — 상단 '자주 묻는 질문' 칩으로 시작 유도. (환영 문구/일러스트는 유지)
     var f = FLOWS[currentFlow];
-    var cards = (f.cards || []).map(function (c) {
-      return '<button class="aif-empty-card" type="button" data-q="' + escHtml(c.title) + '">'
-        + '<span class="aif-empty-card-icon">' + (ICON[c.icon] || ICON.bot) + '</span>'
-        + '<span class="aif-empty-card-text"><span class="aif-empty-card-title">' + escHtml(c.title) + '</span><span class="aif-empty-card-desc">' + escHtml(c.desc) + '</span></span>'
-      + '</button>';
-    }).join('');
     feed.innerHTML =
       '<div class="aif-empty">'
         + '<div class="aif-empty-illust">' + ICON.bot + '</div>'
         + '<h4 class="aif-empty-title">' + escHtml(f.label) + '</h4>'
-        + '<p class="aif-empty-sub">' + escHtml(f.headerSub) + '<br>아래 추천 질문을 눌러 시작해 보세요.</p>'
-        + '<div class="aif-empty-cards">' + cards + '</div>'
+        + '<p class="aif-empty-sub">' + escHtml(f.headerSub) + '<br>상단의 자주 묻는 질문을 눌러 시작해 보세요.</p>'
       + '</div>';
-    feed.querySelectorAll('.aif-empty-card').forEach(function (c) {
-      c.addEventListener('click', function () { runQuery(c.dataset.q); });
-    });
   }
 
   // ===== 칩 =====
@@ -281,47 +239,17 @@
     if (t) t.remove();
   }
   function addBotMsg(ans) {
-    var actions = (ans.actions || []).map(function (a) {
-      return '<a class="aif-action ' + (a.primary ? 'primary' : '') + '" href="' + escHtml(a.href) + '">'
-        + '<span class="aif-action-text"><span class="aif-action-title">' + escHtml(a.title) + '</span>'
-        + (a.desc ? '<span class="aif-action-desc">' + escHtml(a.desc) + '</span>' : '')
-        + '</span><span class="aif-action-arrow">' + ICON.arrow + '</span></a>';
-    }).join('');
-    var sugg = (ans.suggest && ans.suggest.length)
-      ? '<div class="aif-suggest"><div class="aif-suggest-label">이런 질문도 많이 해요</div><div class="aif-suggest-chips">'
-        + ans.suggest.map(function (s) { return '<button class="aif-suggest-chip" type="button" data-q="' + escHtml(s) + '">' + escHtml(s) + '</button>'; }).join('')
-        + '</div></div>'
-      : '';
-    var rate =
-      '<div class="aif-rate" data-rate>'
-        + '<span>도움이 되었나요?</span>'
-        + '<button class="aif-rate-btn" type="button" data-r="up" aria-label="도움됨">' + ICON.thumbsUp + '</button>'
-        + '<button class="aif-rate-btn" type="button" data-r="down" aria-label="도움 안 됨">' + ICON.thumbsDown + '</button>'
-      + '</div>';
-
+    // [ISS-085] 응답 말풍선 = 텍스트만. 링크(action)카드·후속질문칩(suggest)·피드백(rate) 전부 제거.
     var div = document.createElement('div');
     div.className = 'aif-msg bot';
     div.innerHTML =
       '<div class="aif-msg-avatar">' + ICON.bot + '</div>'
       + '<div class="aif-msg-bubble">'
         + ans.text
-        + (actions ? '<div class="aif-actions">' + actions + '</div>' : '')
-        + rate
-        + sugg
+        // [DEV] 향후 차트/표 슬롯 — 데이터 연동 시 여기에 렌더 추가: + renderChart(ans.chart) + renderTable(ans.table)
       + '</div>';
     feed.appendChild(div);
     scrollEnd();
-
-    div.querySelectorAll('[data-rate] .aif-rate-btn').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var r = b.dataset.r;
-        var w = b.closest('.aif-rate');
-        w.innerHTML = '<span class="aif-rate-thanks">' + (r === 'up' ? '✓ 답변이 도움이 되어 다행이에요!' : '· 더 정확한 답변을 위해 의견이 반영됩니다.') + '</span>';
-      });
-    });
-    div.querySelectorAll('.aif-suggest-chip').forEach(function (c) {
-      c.addEventListener('click', function () { runQuery(c.dataset.q); });
-    });
   }
 
   // ===== 질의 =====
@@ -345,10 +273,10 @@
     panel.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     prevFocus = document.activeElement;
-    // 대체: 패널 열 때 첫 진입 요소(추천 카드 → 칩 → 닫기 버튼)로 포커스
+    // 대체: 패널 열 때 첫 진입 요소(자주 묻는 질문 칩 → 닫기 버튼)로 포커스  // [ISS-085] 추천카드 제거로 칩 우선
     setTimeout(function () {
       try {
-        var first = feed.querySelector('.aif-empty-card') || chipsBox.querySelector('.aif-chip') || closeBtn;
+        var first = chipsBox.querySelector('.aif-chip') || closeBtn;
         if (first) first.focus();
       } catch (e) {}
     }, 360);

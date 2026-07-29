@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>전기자동차 보급사업 수행자 선정 평가 신청 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
 <link rel="stylesheet" href="css/screens-v2.css">
 <link rel="stylesheet" href="css/auth.css">
 <style>
@@ -128,7 +128,8 @@
           </div>
           <div class="ba-grid">
             <div class="lab">국내 사업장 수 <span class="req-star">*</span></div><div class="val"><input type="number" min="0" placeholder="0" style="max-width:120px;"> 개</div>
-            <div class="lab">사업자 유형 <span class="req-star">*</span></div><div class="val"><label class="ba-radio"><input type="radio" name="biztype" value="dom" checked> 국내 제작사</label><label class="ba-radio"><input type="radio" name="biztype" value="imp"> 수입사</label></div>
+            <!-- [ISS-084][DEV] AS-IS ecoEvaluationEdit.jsp:349-350 — 사업자유형 4종 다중선택(체크박스) BSNM_TY_YN1~4. (구)2종 단일선택 라디오에서 교체. -->
+            <div class="lab">사업자 유형 <span class="req-star">*</span></div><div class="val" id="evBizType"><label class="ba-radio"><input type="checkbox" name="biztype" value="1"> 국내 제작사</label><label class="ba-radio"><input type="checkbox" name="biztype" value="2"> 해외 제작사의 국내 법인·지사</label><label class="ba-radio"><input type="checkbox" name="biztype" value="3"> 수입사</label><label class="ba-radio"><input type="checkbox" name="biztype" value="4"> 기타</label></div>
             <div class="lab">평가 대상 차종 <span class="req-star">*</span></div><div class="val"><select id="evCarType" style="width:100%;height:42px;padding:0 12px;border:1px solid var(--border-light);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;"><option value="">선택</option><option value="승용">승용</option><option value="승합">승합</option><option value="화물">화물</option></select></div>
           </div>
           <div class="ba-grid">
@@ -201,7 +202,7 @@
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/ai-floating.js?v=20260728a"></script>
 <script>
 (function(){
   function $(s,r){ return (r||document).querySelector(s); }

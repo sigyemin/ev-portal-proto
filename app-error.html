@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>접근 오류 (앱) | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260724a">
+<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
+<style>
+/* [ISS-083 / B4] 앱 전용 로그인거부/접근거부 오류 페이지 시안.
+   [DEV] AS-IS = KecofrmwrkCmmnController.java:163,181 `/kecofrmwrk/cmmn/appLoginDenied.do`·`appAccessDenied.do`.
+         로그인/권한거부 오류의 앱 전용 변형(웹·keco 버전과 별개 3중). ?type=login|access 로 분기 시안. */
+.apperr-wrap{max-width:640px;margin:0 auto;padding:36px 0 20px;text-align:center;}
+.apperr-ico{width:110px;height:110px;margin:0 auto 22px;border-radius:50%;background:#fdede9;display:grid;place-items:center;color:#d64545;}
+.apperr-h{font-size:24px;font-weight:800;letter-spacing:-0.02em;color:var(--text-primary,#1f2a37);margin:0 0 10px;}
+.apperr-p{font-size:15px;color:var(--text-secondary,#475569);line-height:1.8;margin:0 0 26px;}
+.apperr-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.apperr-code{margin-top:26px;font-size:12px;color:var(--text-tertiary,#94a3b8);}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = '';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="section">
+    <div class="container">
+      <div class="apperr-wrap" data-reveal>
+        <span class="apperr-ico" aria-hidden="true">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        </span>
+        <h1 class="apperr-h" id="apperrH" data-i18n="app.err.login.h">로그인이 필요합니다</h1>
+        <p class="apperr-p" id="apperrP" data-i18n="app.err.login.p">앱에서 로그인 후 이용할 수 있는 화면입니다. 로그인 상태가 만료되었거나 인증되지 않았습니다. 다시 로그인해 주세요.</p>
+        <div class="apperr-actions">
+          <a href="login.html" class="btn btn-primary btn-lg" id="apperrCta" data-i18n="app.err.login.cta">로그인하기</a>
+          <a href="index.html" class="btn btn-secondary btn-lg" data-i18n="app.err.home">홈으로</a>
+        </div>
+        <div class="apperr-code" id="apperrCode">오류 유형: 로그인 거부 (APP-LOGIN-DENIED)</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!--
+[DEV] B4 — 앱 전용 로그인거부/접근거부 오류 페이지 (ISS-083)
+  원천: KecofrmwrkCmmnController.java:163,181 `/kecofrmwrk/cmmn/appLoginDenied.do`(로그인거부)·`appAccessDenied.do`(접근/권한거부)
+  웹·keco 버전과 별개인 앱 전용 변형(3중 존재). 시안은 ?type=login(기본)|access 로 두 유형 분기.
+-->
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260724a"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260724a"></script>
+<script src="js/main.js?v=20260724b"></script>
+<script src="js/ai-floating.js?v=20260728a"></script>
+<script>
+(function(){
+  // i18n 등록(페이지 로컬)
+  if(window.__i18n && __i18n.register){
+    __i18n.register({
+      'app.err.login.h':  { ko:'로그인이 필요합니다', en:'Login required' },
+      'app.err.login.p':  { ko:'앱에서 로그인 후 이용할 수 있는 화면입니다. 로그인 상태가 만료되었거나 인증되지 않았습니다. 다시 로그인해 주세요.',
+                            en:'This screen requires an app login. Your session has expired or you are not authenticated. Please sign in again.' },
+      'app.err.login.cta':{ ko:'로그인하기', en:'Sign in' },
+      'app.err.access.h': { ko:'접근 권한이 없습니다', en:'Access denied' },
+      'app.err.access.p': { ko:'이 화면에 접근할 권한이 없습니다. 권한이 필요한 경우 관리자에게 문의해 주세요.',
+                            en:'You do not have permission to access this screen. If you need access, please contact the administrator.' },
+      'app.err.access.cta':{ ko:'이전으로', en:'Go back' },
+      'app.err.home':     { ko:'홈으로', en:'Home' }
+    });
+  }
+  // ?type=login(기본)|access 분기
+  var type = (new URL(location.href).searchParams.get('type') || 'login').toLowerCase();
+  if(type === 'access'){
+    var setI = function(id, key){ var el=document.getElementById(id); if(el){ el.setAttribute('data-i18n', key); } };
+    setI('apperrH','app.err.access.h'); setI('apperrP','app.err.access.p'); setI('apperrCta','app.err.access.cta');
+    var cta=document.getElementById('apperrCta'); if(cta){ cta.setAttribute('href','javascript:history.length>1?history.back():location.assign("index.html")'); }
+    document.title = '접근 권한 오류 (앱) | 무공해차 통합누리집';
+    var code=document.getElementById('apperrCode'); if(code) code.textContent = '오류 유형: 접근 거부 (APP-ACCESS-DENIED)';
+  }
+  if(window.__i18n && __i18n.applyLang) __i18n.applyLang(__i18n.getLang());
+})();
+</script>
+</body>
+</html>

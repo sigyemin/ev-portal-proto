@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>회원카드 관리 | 충전소·요금 정보 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
 <link rel="stylesheet" href="css/charging.css">
 <link rel="stylesheet" href="css/auth.css?v=20260520">
 <link rel="stylesheet" href="css/board.css">
@@ -278,7 +278,9 @@
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
             <button type="button" class="btn btn-ghost btn-sm" id="ccDemoToggle" title="데모: 빈 상태/보유 상태 전환">빈 상태 미리보기</button>
-            <button type="button" class="btn btn-secondary" id="ccBatchBtn">결제카드 일괄등록</button>
+            <button type="button" class="btn btn-secondary" id="ccBatchBtn" data-i18n="charging.card.batch">결제카드 일괄등록</button>
+            <!-- [ISS-077] 결제카드 등록해지(일괄해제) — AS-IS paymentCardRegister.jsp는 등록·해제 같은 화면/리스트/체크박스. ★'회원카드 해지'와 다른 개념(후불 빌링만 제거) -->
+            <button type="button" class="btn btn-ghost" id="ccUnbatchBtn" data-i18n="charging.card.unbatch">결제카드 일괄해제</button>
             <a href="charging-card-apply.html" class="btn btn-primary">＋ 회원카드 신청</a>
           </div>
         </div>
@@ -467,9 +469,9 @@
       </div>
 
       <!-- ===== [ISS-076] 법인 앱 카드지갑 관리 (법인회원 전용 · AS-IS memberCardApplication3.jsp 3번째 탭) =====
-           법인이 소속 직원 명의 앱(모바일) 회원카드를 핸드폰번호별로 조회·삭제. 소속=대민 포털(nportal keco.portal.mngInqire.memberCard).
-           [DEV] 원천 = APP_CARD_WALLET ⋈ APP_CARD_USER_PHONE(핸드폰 조인 · M_PHONE_NO 암호화). 프로토는 더미데이터.
-                 삭제 = 실제로는 앱카드 삭제 + 이력 적재(개발 시 DB). -->
+           법인이 기 발급 회원카드에 매핑된 소속 직원 앱(모바일) 카드를 핸드폰번호별로 조회·매핑해제. 소속=대민 포털(nportal keco.portal.mngInqire.memberCard).
+           [DEV] ★3테이블 = APP_CARD_WALLET(지갑 카드마스터) + APP_CARD_USER_PHONE(핸드폰 매핑·SEQ) + EVCS_SMART_CARD(실물카드·상태원천). 근거 memberCard_sqlmap.xml:854~922.
+                 ★대민 웹 = 조회 + 매핑해제만(지갑 생성은 모바일 앱). 삭제 = 핸드폰 매핑만 물리 DELETE + 이력(EVENT='D') — 실물·지갑카드 유지. 프로토는 더미데이터. -->
       <div class="tab-content" data-tab-content="appwallet">
         <div class="cch-bar">
           <div>
@@ -530,9 +532,9 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-charging.js?v=20260728c"></script>
+<script src="js/i18n-charging.js?v=20260728e"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/ai-floating.js?v=20260728a"></script>
 <script>
 /* ===== 회원카드 허브 — 리스트 + 카드별 액션 + 결제카드 일괄등록 (레거시 정합) =====
    ── 상태모델: 단일코드(cardStCd) 폐기 → 레거시 2축(발급진행 + 운영플래그) 우선순위 판정.
@@ -670,6 +672,7 @@
       acts.push('<button class="btn btn-ghost btn-sm" data-act="check" data-i="'+i+'">발급조회</button>');           // 항상
       if (key==='normal' || key==='ship') acts.push('<button class="btn btn-ghost btn-sm" data-act="lost" data-i="'+i+'">분실신고</button>');     // 정상/발급중
       if (key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');                       // 해지 아님
+      if (c.payCard && key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="unpay" data-i="'+i+'" data-i18n="charging.card.unpay">결제해제</button>');       // [ISS-077] 개별 결제카드 등록해지(결제카드 등록된 행만)
       if (key==='suspend' || key==='pay' || key==='lost') acts.push('<a class="btn btn-primary btn-sm" href="charging-card-apply.html?reason=lost">재발급</a>'); // 일시정지/미납정지/분실
       if (key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="cancel" data-i="'+i+'" style="color:var(--color-danger,#b5341f);">해지</button>'); // 해지 아님
       var payHtml = c.payCard
@@ -689,7 +692,7 @@
       else if (key!=='ship') useBadge = '<span class="use-badge '+(s.usable?'use-ok':'use-no')+'">'+(s.usable?'이용가능':'이용불가')+'</span>';
       var statCell = '<div class="st-cell"><span class="st-chip '+s.cls+'">'+s.label+'</span>'+mini+useBadge+'</div>';
       var chkCell = eligibleForBatch(c)
-        ? '<input type="checkbox" class="cc-row-chk" data-i="'+i+'" aria-label="일괄등록 대상 선택">'
+        ? '<input type="checkbox" class="cc-row-chk" data-i="'+i+'" aria-label="일괄등록·해제 대상 선택">'
         : '<input type="checkbox" disabled title="일괄등록 대상이 아닙니다 (EV등록·결제실패·해지 등)" aria-label="선택 불가">';
       return '<tr>'
         + '<td style="text-align:center;">'+chkCell+'</td>'
@@ -782,6 +785,8 @@
     openModal('분실신고', c.cardNo + ' · ' + c.carNo, bodyFor(false), footFor(false));
     var stopBtn = document.getElementById('ccLostStop');
     if (stopBtn) stopBtn.addEventListener('click', function () {
+      // [ISS-077][DEV] updateCardLost (memberCard_sqlmap.xml:970~977): LOSS_YN='Y' · LOSS_DATE · CHANGE_REASON='분실/정지 신청'(★고정 문자열, 사용자 입력 아님).
+      //   ★AS-IS는 분실·정지 구분 없이 동일 처리. 프로토 팝업에 사유 자유입력칸 없음(자동 사유). ★미납 체크는 회원 탈퇴 시점에만 — 분실/정지엔 없음.
       c.lossYn = 'Y'; // 분실신고 → LOSS_YN=Y (판정상 '분실(정지)')
       render();
       mBody.innerHTML = bodyFor(true); mFoot.innerHTML = footFor(true);
@@ -847,6 +852,7 @@
     if (act==='check') actCheck(c);
     else if (act==='lost') actLost(c, btn.getAttribute('data-i'));
     else if (act==='edit') actEdit(c, btn.getAttribute('data-i'));
+    else if (act==='unpay') actUnpay(c);
     else if (act==='cancel') actCancel(c);
   });
 
@@ -883,6 +889,31 @@
   }
   var batchBtn = document.getElementById('ccBatchBtn');
   if (batchBtn) batchBtn.addEventListener('click', actBatch);
+
+  /* ── [ISS-077] 결제카드 등록해지(일괄해제 + 개별해제) ──
+     [DEV] deleteBillCardInfo (paymentCardRegister.jsp:131·166·273~280·532~548):
+        BILL_KEY·BILL_CARD_* NULL · PAY_KIND='3' · PAYMENT_YN='Y'. ★회원카드는 유지, 후불 결제수단(빌링)만 제거.
+        ★'회원카드 해지(delYn=Y)'와 전혀 다른 개념. */
+  function actUnpay(c){
+    if(!c || !c.payCard){ toast('등록된 결제카드가 없습니다.', 'warning'); return; }
+    if(!window.confirm('카드등록 해제를 진행하시겠습니까?')) return;
+    c.payCard=''; c.cardCorp='';
+    render();
+    toast('결제카드 등록이 해제되었습니다.', 'info');
+  }
+  function actUnbatch(){
+    // 체크박스(일괄등록과 공유) 선택 → 결제카드가 등록된 행만 해제
+    var checked = Array.prototype.slice.call(document.querySelectorAll('.cc-row-chk:checked'));
+    if(!checked.length){ toast('등록해지할 카드를 체크박스로 선택해 주세요.', 'warning'); return; }
+    var withPay = checked.map(function(ch){ return CARDS[parseInt(ch.getAttribute('data-i'),10)]; }).filter(function(c){ return c && c.payCard; });
+    if(!withPay.length){ toast('선택한 카드 중 등록된 결제카드가 없습니다.', 'warning'); return; }
+    if(!window.confirm('카드등록 해제를 진행하시겠습니까?')) return;
+    withPay.forEach(function(c){ c.payCard=''; c.cardCorp=''; });
+    render();
+    toast(withPay.length+'건의 결제카드 등록이 해제되었습니다.', 'info');
+  }
+  var unbatchBtn = document.getElementById('ccUnbatchBtn');
+  if (unbatchBtn) unbatchBtn.addEventListener('click', actUnbatch);
 
   // 데모: 빈 상태 토글
   var demoOn = false, backup = null;
@@ -1298,11 +1329,16 @@
   function tt(key, fb){ return (window.__i18n && __i18n.t) ? __i18n.t(key) : fb; }
   function onlyDigits(s){ return (s||'').replace(/\D/g,''); }
 
-  // [DEV] 원천 APP_CARD_WALLET ⋈ APP_CARD_USER_PHONE(핸드폰·M_PHONE_NO 암호화). 아래는 시연용 더미(직원 명의 앱 회원카드).
+  /* [DEV] ★3테이블 구조 (memberCard_sqlmap.xml:854~922):
+       APP_CARD_WALLET(지갑 카드마스터) + APP_CARD_USER_PHONE(핸드폰 매핑·SEQ) + EVCS_SMART_CARD(실물카드·상태 원천).
+       ★기 발급 회원카드에 핸드폰번호를 매핑하는 구조(카드 신규생성 아님). 실물카드 ↔ 앱지갑 ↔ 핸드폰.
+       ★지갑 등록(생성)은 모바일 앱에서만 — 대민 웹은 '조회 + 매핑해제'만.
+       컬럼 원천: 카드유형=CARD_TYPE코드→명 · 발급기관=R_BUSI.BNM(BID) · 회원카드번호/핸드폰=암호화→복호화(대민 ★마스킹) · 상태=★계산값(실물카드 LOSS_YN/STOP_YN → 정상/분실/정지) · 순번=ROW_NUMBER(등록 최신순).
+       아래는 시연용 더미(상태 정상/분실/정지 혼재). */
   var WALLET = [
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-7788', phone:'010-1234-****', status:'정상'},
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-8291', phone:'010-2345-****', status:'정상'},
-    {type:'모바일', org:'한국전력(KEPCO)',  card:'2200-11##-####-3417', phone:'010-3456-****', status:'정지'},
+    {type:'모바일', org:'한국전력(KEPCO)',  card:'2200-11##-####-3417', phone:'010-3456-****', status:'분실'},
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-5540', phone:'010-4567-****', status:'정상'},
     {type:'모바일', org:'GS차지비',        card:'3050-77##-####-1120', phone:'010-5678-****', status:'정상'},
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-9982', phone:'010-6789-****', status:'정상'},
@@ -1310,7 +1346,7 @@
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-2214', phone:'010-8901-****', status:'정상'},
     {type:'모바일', org:'한국전력(KEPCO)',  card:'2200-11##-####-4408', phone:'010-9012-****', status:'정상'},
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-7051', phone:'010-1023-****', status:'정상'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-3390', phone:'010-2134-****', status:'정상'},
+    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-3390', phone:'010-2134-****', status:'분실'},
     {type:'모바일', org:'GS차지비',        card:'3050-77##-####-8845', phone:'010-3245-****', status:'정지'},
     {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-1177', phone:'010-4356-****', status:'정상'}
   ];
@@ -1340,7 +1376,7 @@
     var start=(page-1)*PAGE;
     var delTxt = tt('charging.card.aw.del','삭제');
     body.innerHTML = filtered.slice(start, start+PAGE).map(function(r,i){
-      var stCls = r.status==='정지' ? 'color:#d64545;' : 'color:var(--color-primary-700);';
+      var stCls = r.status!=='정상' ? 'color:#d64545;' : 'color:var(--color-primary-700);';   // 분실·정지=적색, 정상=녹색
       return '<tr>'
         + '<td style="text-align:center;">'+(start+i+1)+'</td>'
         + '<td style="text-align:center;">'+esc(r.type)+'</td>'
@@ -1358,8 +1394,13 @@
   }
 
   function doSearch(){
-    var cardQ = onlyDigits(document.getElementById('awCard').value);
-    var phoneQ = onlyDigits(document.getElementById('awPhone').value);
+    var cardRaw = document.getElementById('awCard').value.trim();
+    var phoneRaw = document.getElementById('awPhone').value.trim();
+    // ★각 항목 4자 이상만 검색(1~3자 입력 시 차단) — AS-IS 검증. 빈칸은 전체(조건 없음).
+    if(cardRaw && cardRaw.length<4){ alert(tt('charging.card.aw.min4.card','카드번호 검색은 4자 이상입니다.')); return; }
+    if(phoneRaw && phoneRaw.length<4){ alert(tt('charging.card.aw.min4.phone','핸드폰번호 검색은 4자 이상입니다.')); return; }
+    var cardQ = onlyDigits(cardRaw);
+    var phoneQ = onlyDigits(phoneRaw);
     filtered = WALLET.filter(function(r){
       var okc = !cardQ  || onlyDigits(r.card).indexOf(cardQ)>=0;
       var okp = !phoneQ || onlyDigits(r.phone).indexOf(phoneQ)>=0;
@@ -1377,9 +1418,9 @@
     if(!window.confirm('삭제하시겠습니까?')) return;   // AS-IS confirm 그대로
     var idx = parseInt(del.getAttribute('data-idx'),10);
     var row = filtered[idx];
-    var wi = WALLET.indexOf(row); if(wi>=0) WALLET.splice(wi,1);   // [DEV] 실제=앱카드 삭제+이력 적재(DB)
+    var wi = WALLET.indexOf(row); if(wi>=0) WALLET.splice(wi,1);   // [DEV] 실제 = 핸드폰 매핑(APP_CARD_USER_PHONE) 물리 DELETE + 이력(HIS, EVENT='D'). ★실물카드·지갑카드는 유지 — 지갑에서 매핑만 해제(카드 삭제 아님)
     doSearch();
-    if(window.__toast) window.__toast('앱 회원카드가 삭제되었습니다.', 'info');
+    if(window.__toast) window.__toast('지갑에서 핸드폰 매핑이 해제되었습니다.', 'info');   // 실물카드·회원카드는 유지
   });
   pager.addEventListener('click', function(e){ var b=e.target.closest('button[data-p]'); if(b){ page=parseInt(b.getAttribute('data-p'),10); render(); } });
   if(toggle) toggle.addEventListener('click', function(){

@@ -273,28 +273,7 @@
 .aif-empty-illust svg { width: 44px; height: 44px; color: var(--color-primary-600); }
 .aif-empty-title { font-size: 17px; font-weight: 700; color: var(--text-primary); margin: 0 0 8px; letter-spacing: -0.02em; }
 .aif-empty-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 22px; }
-.aif-empty-cards { display: grid; gap: 10px; }
-.aif-empty-card {
-  background: #fff; border: 1px solid var(--color-gray-200, #E2E8F0); border-radius: 14px;
-  padding: 14px 16px; text-align: left; cursor: pointer; font-family: inherit;
-  display: flex; align-items: center; gap: 14px; width: 100%;
-  transition: all 160ms ease;
-}
-.aif-empty-card:hover {
-  border-color: var(--color-primary-400);
-  box-shadow: 0 4px 14px rgba(26,173,108,0.14);
-  transform: translateY(-1px);
-}
-.aif-empty-card-icon {
-  width: 42px; height: 42px; flex: none; border-radius: 10px;
-  background: var(--color-primary-50);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--color-primary-600);
-}
-.aif-empty-card-icon svg { width: 20px; height: 20px; }
-.aif-empty-card-text { flex: 1; min-width: 0; }
-.aif-empty-card-title { font-size: 14.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; letter-spacing: -0.01em; }
-.aif-empty-card-desc { font-size: 12.5px; color: var(--text-secondary); }
+/* [ISS-085] 빈 상태 추천카드 스타일 삭제 — 마크업 제거로 미사용 */
 
 /* 메시지 */
 .aif-msg { margin-bottom: 16px; display: flex; align-items: flex-end; gap: 10px; animation: aif-msg-in 320ms cubic-bezier(0.16,1,0.3,1); }
@@ -319,57 +298,7 @@
 .aif-msg-bubble strong { color: var(--color-primary-700); font-weight: 700; }
 .aif-msg.user .aif-msg-bubble strong { color: #FFE89C; }
 
-/* 액션 카드 */
-.aif-actions { display: grid; gap: 8px; margin-top: 12px; }
-.aif-action {
-  background: #fff; border: 1px solid var(--color-gray-200, #E2E8F0); border-radius: 12px;
-  padding: 12px 14px; text-align: left; display: flex; align-items: center; gap: 12px;
-  cursor: pointer; text-decoration: none; color: var(--text-primary); font-family: inherit;
-  transition: all 160ms ease;
-}
-.aif-action:hover { border-color: var(--color-primary-400); background: var(--color-primary-50); transform: translateX(2px); }
-.aif-action.primary {
-  background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
-  border-color: var(--color-primary-500); color: #fff;
-  box-shadow: 0 4px 12px rgba(26,173,108,0.24);
-}
-.aif-action.primary:hover { filter: brightness(1.08); }
-.aif-action-text { flex: 1; min-width: 0; }
-.aif-action-title { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
-.aif-action-desc { font-size: 12.5px; margin-top: 2px; opacity: 0.78; }
-.aif-action-arrow { margin-left: auto; opacity: 0.7; display: flex; }
-.aif-action-arrow svg { width: 16px; height: 16px; }
-
-/* 평가 */
-.aif-rate { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
-.aif-rate-btn {
-  width: 32px; height: 32px; border-radius: 50%; background: #fff;
-  border: 1px solid var(--color-gray-200, #E2E8F0); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 160ms ease;
-}
-.aif-rate-btn:hover { border-color: var(--color-primary-500); background: var(--color-primary-50); transform: scale(1.08); }
-.aif-rate-btn svg { width: 14px; height: 14px; }
-.aif-rate-thanks { font-size: 13px; color: var(--color-primary-700); font-weight: 600; animation: aif-fade-in 240ms ease-out; }
-
-/* 후속 제안 */
-.aif-suggest {
-  margin-top: 18px; padding: 14px 16px;
-  background: var(--color-secondary-50, #EBF5FF);
-  border-radius: 14px;
-  border: 1px dashed var(--color-secondary-500, #2C7BE5);
-}
-.aif-suggest-label {
-  font-size: 13px; font-weight: 600;
-  color: var(--color-secondary-600, #1A5BB8); margin-bottom: 10px;
-}
-.aif-suggest-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.aif-suggest-chip {
-  background: #fff; border: 1px solid var(--color-secondary-500, #2C7BE5); border-radius: 16px;
-  padding: 6px 12px; font-size: 13px; color: var(--color-secondary-600, #1A5BB8); cursor: pointer;
-  font-family: inherit; letter-spacing: -0.01em; transition: all 160ms ease;
-}
-.aif-suggest-chip:hover { background: var(--color-secondary-50, #EBF5FF); }
+/* [ISS-085] 액션(링크)카드·평가(rate 피드백)·후속 제안(suggest) 스타일 삭제 — 응답 말풍선 텍스트화로 미사용 */
 
 /* 타이핑 */
 .aif-typing {
@@ -420,17 +349,7 @@
 .aif-followup-send svg { width: 16px; height: 16px; }
 
 /* ===== 10. 푸터 ===== */
-.aif-foot { display: flex; border-top: 1px solid var(--color-gray-200, #E2E8F0); background: var(--color-gray-50, #F8FAFC); flex: none; }
-.aif-foot-btn {
-  flex: 1; padding: 12px 8px; background: transparent; border: none;
-  font-size: 13px; color: var(--text-secondary); cursor: pointer; text-decoration: none;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  transition: all 160ms ease; font-family: inherit; letter-spacing: -0.01em;
-  font-weight: 500;
-}
-.aif-foot-btn + .aif-foot-btn { border-left: 1px solid var(--color-gray-200, #E2E8F0); }
-.aif-foot-btn svg { width: 16px; height: 16px; }
-.aif-foot-btn:hover { background: #fff; color: var(--color-primary-700); }
+/* [ISS-085] 하단 바(FAQ·전체화면 버튼) 스타일 삭제 — 마크업 제거로 미사용 */
 
 /* ===== 11. 모바일 ===== */
 @media (max-width: 1280px) { .aif-panel { width: 60vw; } }

@@ -129,6 +129,10 @@
     'charging.card.tab.apply':    { ko: '회원카드 신청·발급조회', en: 'Apply / Check Card' },
     'charging.card.tab.edit':     { ko: '카드 정보 수정', en: 'Edit Card Info' },
     'charging.card.tab.history':  { ko: '충전요금 조회', en: 'Charging Fee' },
+    /* [ISS-077] 결제카드 등록/해지 — '회원카드 해지'와 다른 개념(후불 빌링만 제거) */
+    'charging.card.batch':        { ko: '결제카드 일괄등록', en: 'Bulk Register Payment Card' },
+    'charging.card.unbatch':      { ko: '결제카드 일괄해제', en: 'Bulk Remove Payment Card' },
+    'charging.card.unpay':        { ko: '결제해제', en: 'Remove Card' },
     /* [ISS-076] 법인 앱 카드지갑 관리(법인회원 전용 3번째 탭) */
     'charging.card.tab.appwallet':{ ko: '법인 앱 카드지갑 관리', en: 'Corporate App Card Wallet' },
     'charging.card.aw.h3':        { ko: '법인 앱 카드지갑 관리', en: 'Corporate App Card Wallet' },
@@ -151,6 +155,8 @@
     'charging.card.aw.th.mng':    { ko: '관리', en: 'Manage' },
     'charging.card.aw.del':       { ko: '삭제', en: 'Delete' },
     'charging.card.aw.empty':     { ko: '조회된 내역이 없습니다', en: 'No records found' },
+    'charging.card.aw.min4.card':  { ko: '카드번호 검색은 4자 이상 입력해 주세요.', en: 'Enter at least 4 characters to search by card number.' },
+    'charging.card.aw.min4.phone': { ko: '핸드폰번호 검색은 4자 이상 입력해 주세요.', en: 'Enter at least 4 characters to search by phone number.' },
     'charging.card.tab.point':    { ko: '충전 포인트', en: 'Charging Points' },
 
     /* charging-install.html — 본문 */

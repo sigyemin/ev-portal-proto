@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR 충전 결제 (앱 연동) | 충전소·요금 정보 | 무공해차 통합누리집</title>
+<link rel="stylesheet" href="css/style.css?v=20260724a">
+<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
+<style>
+/* [ISS-083 / B1] 모바일 QR결제 앱 브릿지 시안 — 앱 전용 기능의 대민 웹 표현(PC=안내만).
+   [DEV] AS-IS = MobileBridgeController.java:22 `/mobile/bridge/initMobileBridgeAction.do` + mobile/bridge.jsp.
+         QR충전 결제 딥링크 브릿지. 충전앱 9종 web2app 스킴 분기(스킴 문자열은 소스 미확정 → 창작 금지, 버튼만 시안). PC 접속은 안내만. */
+.qrb-wrap{max-width:900px;margin:0 auto;padding:8px 0 8px;}
+.qrb-hero-card{display:flex;gap:22px;align-items:center;border:1px solid var(--border-light,#e2e8f0);border-radius:16px;padding:26px 30px;background:#fff;margin-bottom:22px;}
+.qrb-hero-ico{width:88px;height:88px;flex:none;border-radius:20px;background:var(--color-primary-50,#eaf7f0);display:grid;place-items:center;color:var(--color-primary-700,#0f7a44);}
+.qrb-hero-card p{margin:6px 0 0;color:var(--text-secondary,#475569);font-size:14.5px;line-height:1.75;}
+.qrb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:720px){.qrb-grid{grid-template-columns:repeat(2,1fr);}}
+.qrb-app{display:flex;align-items:center;gap:12px;border:1px solid var(--border-light,#e2e8f0);border-radius:12px;padding:16px 18px;background:#fff;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;color:var(--text-primary,#1f2a37);transition:.15s;text-align:left;}
+.qrb-app:hover,.qrb-app:focus-visible{border-color:var(--color-primary-400,#4cc38a);box-shadow:0 8px 20px rgba(20,35,58,.08);transform:translateY(-2px);outline:none;}
+.qrb-app .ic{width:38px;height:38px;flex:none;border-radius:10px;background:var(--color-gray-100,#f1f5f9);display:grid;place-items:center;color:var(--color-primary-700,#0f7a44);font-weight:900;font-size:15px;}
+.qrb-devnote{margin-top:22px;font-size:12.5px;color:var(--text-tertiary,#94a3b8);line-height:1.7;border-top:1px dashed var(--border-light,#e2e8f0);padding-top:14px;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
+<script>window.__activeNav = 'charging';</script>
+<div id="header-slot"></div>
+
+<main id="main">
+  <section class="page-hero compact">
+    <div class="container container-wide">
+      <nav class="breadcrumb" aria-label="경로">
+        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
+        <span class="current" aria-current="page" data-i18n="app.qr.crumb">QR 충전 결제 (앱 연동)</span>
+      </nav>
+      <h1 data-i18n="app.qr.title">QR 충전 결제 (앱 연동)</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-wide">
+      <div class="qrb-wrap">
+        <!-- PC 안내(AS-IS: PC는 안내만) -->
+        <div class="qrb-hero-card" data-reveal>
+          <span class="qrb-hero-ico" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h.01M21 21v-3h-3"/></svg>
+          </span>
+          <div>
+            <h2 style="font-size:20px;margin:0;letter-spacing:-0.02em;" data-i18n="app.qr.lead.h">충전기 QR을 촬영하면 결제 앱으로 연결됩니다</h2>
+            <p data-i18n-html="app.qr.lead.p">충전소 현장에서 <strong>충전기의 QR 코드를 모바일로 촬영</strong>하면 이용 중인 충전 앱이 자동 실행되어 결제가 진행됩니다.<br><strong>이 화면은 모바일에서 동작하는 진입점</strong>이며, PC에서는 지원 앱 안내만 제공됩니다. 모바일에서 열어 주세요.</p>
+          </div>
+        </div>
+
+        <!-- 지원 충전 앱 9종(web2app 딥링크) -->
+        <h3 style="font-size:16px;margin:0 0 12px;" data-i18n="app.qr.apps.h">지원 충전 앱</h3>
+        <div class="qrb-grid" id="qrbApps" role="list"></div>
+
+        <p class="qrb-devnote">
+          <!-- [DEV] 스킴(web2app) 문자열은 AS-IS mobile/bridge.jsp에서 앱별 분기 — 실값 미확정으로 버튼은 시안(클릭 시 안내). 실연동 시 각 앱 스킴/스토어 폴백 매핑. -->
+          <span data-i18n="app.qr.devnote">※ 지원 앱 목록은 무공해차 충전 결제 연동 앱 기준입니다. 각 앱의 설치 여부에 따라 앱 실행 또는 스토어로 연결됩니다. (프로토타입 — 실제 딥링크는 모바일에서 동작)</span>
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!--
+[DEV] B1 — 모바일 스마트 QR결제 앱 브릿지 (ISS-083)
+  원천: MobileBridgeController.java:22 `/mobile/bridge/initMobileBridgeAction.do` + mobile/bridge.jsp
+  충전앱 9종 web2app 스킴 분기(카카오내비·Tmap·KEVIT·스파로스EV·일렉베리·모두의충전·eON·SSCharger·에버온). PC는 안내만.
+  ★스킴 문자열 미확정 → 창작 금지. 버튼 클릭은 시안 안내(toast). 실연동 시 앱별 커스텀스킴 + 스토어 폴백 필요.
+-->
+<div id="footer-slot"></div>
+<script src="js/partials.js?v=20260724a"></script>
+<script src="js/i18n.js?v=20260520"></script>
+<script src="js/i18n-common.js?v=20260724a"></script>
+<script src="js/main.js?v=20260724b"></script>
+<script src="js/ai-floating.js?v=20260728a"></script>
+<script>
+(function(){
+  // [ISS-083/B1] 지원 충전 앱 9종 — AS-IS mobile/bridge.jsp 목록(회의록 숨은기능_2차발굴 B1)
+  var APPS = ['카카오내비','Tmap','KEVIT','스파로스EV','일렉베리','모두의충전','eON','SSCharger','에버온'];
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  var host = document.getElementById('qrbApps');
+  if(host){
+    host.innerHTML = APPS.map(function(name){
+      var initial = esc(name.slice(0,1));
+      return '<button type="button" class="qrb-app" role="listitem" data-app="'+esc(name)+'">'
+        + '<span class="ic" aria-hidden="true">'+initial+'</span><span>'+esc(name)+'</span></button>';
+    }).join('');
+    host.addEventListener('click', function(e){
+      var b = e.target.closest('.qrb-app'); if(!b) return;
+      var name = b.getAttribute('data-app');
+      // [DEV] 실연동: 앱별 web2app 스킴으로 location.href 분기 + 미설치 시 스토어 폴백. 프로토는 안내만(PC).
+      if(window.__toast) window.__toast(name + ' 앱 연결은 모바일에서 지원됩니다. (프로토타입 안내)', 'info');
+    });
+  }
+  // i18n 등록(페이지 로컬) + 재적용
+  if(window.__i18n && __i18n.register){
+    __i18n.register({
+      'app.qr.crumb':   { ko:'QR 충전 결제 (앱 연동)', en:'QR Charging Payment (App)' },
+      'app.qr.title':   { ko:'QR 충전 결제 (앱 연동)', en:'QR Charging Payment (App)' },
+      'app.qr.lead.h':  { ko:'충전기 QR을 촬영하면 결제 앱으로 연결됩니다', en:'Scan the charger QR to open your payment app' },
+      'app.qr.lead.p':  { ko:'충전소 현장에서 <strong>충전기의 QR 코드를 모바일로 촬영</strong>하면 이용 중인 충전 앱이 자동 실행되어 결제가 진행됩니다.<br><strong>이 화면은 모바일에서 동작하는 진입점</strong>이며, PC에서는 지원 앱 안내만 제공됩니다. 모바일에서 열어 주세요.',
+                          en:'At the station, <strong>scan the charger’s QR code with your phone</strong> and your charging app opens to complete payment.<br><strong>This screen is a mobile entry point</strong>; on PC only the supported-app guide is shown. Please open it on mobile.' },
+      'app.qr.apps.h':  { ko:'지원 충전 앱', en:'Supported Charging Apps' },
+      'app.qr.devnote': { ko:'※ 지원 앱 목록은 무공해차 충전 결제 연동 앱 기준입니다. 각 앱의 설치 여부에 따라 앱 실행 또는 스토어로 연결됩니다. (프로토타입 — 실제 딥링크는 모바일에서 동작)',
+                          en:'* Supported apps are ZEV charging-payment partners. Depending on installation, the app opens or the store link is shown. (Prototype — real deep links work on mobile.)' }
+    });
+    __i18n.applyLang(__i18n.getLang());
+  }
+})();
+</script>
+</body>
+</html>

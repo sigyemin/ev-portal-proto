@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>완속충전기 설치보조금 지원시스템 이용신청 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css">
+<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
+<link rel="stylesheet" href="css/biz-terms.css?v=20260729a"><!-- [ISS-086] 공용 약관동의 -->
 <link rel="stylesheet" href="css/business-apply.css?v=20260703b">
 </head>
 <body>
@@ -106,6 +107,9 @@
           </div>
         </div>
 
+        <!-- [ISS-086] 사업자 신청폼 공용 약관동의 컴포넌트 (진입 체크 + 팝업은 js/biz-terms.js가 자동 주입) -->
+        <div data-biz-terms></div>
+
         <div class="bf-foot">
           <a href="mypage.html#mp-business" class="btn btn-secondary">마이페이지</a>
           <button type="submit" class="btn btn-primary">신청</button>
@@ -129,7 +133,8 @@
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260626d"></script>
+<script src="js/biz-terms.js?v=20260729a"></script><!-- [ISS-086] 공용 약관동의 -->
+<script src="js/ai-floating.js?v=20260728a"></script>
 <script>
 (function(){
   function toast(msg, type){ if(window.__toast) window.__toast(msg, type||'info'); }
