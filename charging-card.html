@@ -291,7 +291,8 @@
             <div class="fld"><label for="mcType">카드유형</label>
               <select id="mcType"><option value="">전체</option><option>실물카드</option><option>모바일카드</option><option>실물카드(EV등록)</option></select></div>
             <div class="fld"><label for="mcStat">카드상태</label>
-              <select id="mcStat"><option value="">전체</option><option value="normal">정상</option><option value="ship">발급중</option><option value="suspend">일시정지</option><option value="pay">미납정지</option><option value="lost">분실(정지)</option><option value="cancel">해지</option></select></div>
+              <!-- [ISS-089] 상태필터 '해지' 제거 — AS-IS EVCS_SMART_CARD DEL_YN·해지로직 부재 -->
+              <select id="mcStat"><option value="">전체</option><option value="normal">정상</option><option value="ship">발급중</option><option value="suspend">일시정지</option><option value="pay">미납정지</option><option value="lost">분실(정지)</option></select></div>
             <div class="fld"><label for="mcPay">결제카드</label>
               <select id="mcPay"><option value="">전체</option><option value="y">등록</option><option value="n">미등록</option></select></div>
             <div class="fld grow"><label for="mcSearch">검색</label>
@@ -343,26 +344,27 @@
                 <code>0001</code> 신청접수 → <code>0002</code> 발급(제작) → <code>0003</code> 발송(등기) → <code>0004</code> 수령완료 · <code>0005</code> 반려
                 <span class="ccd-todo">※ TODO: EVCS_CODE_DETAIL 확정 전 잠정 코드·라벨</span></div>
               <div><b>축2 · 운영플래그</b> (Y/N)<br>
-                <code>delYn</code> 해지 · <code>lossYn</code> 분실 · <code>paymentYn</code> 미납 · <code>stopYn</code> 일시정지</div>
+                <code>lossYn</code> 분실 · <code>paymentYn</code> 미납 · <code>stopYn</code> 일시정지
+                <span class="ccd-todo">※ [ISS-089] delYn(해지)=AS-IS(EVCS_SMART_CARD) 컬럼·로직 부재로 제거</span></div>
             </div>
 
             <table class="ccd-tbl">
               <thead><tr><th>우선순위</th><th>판정 조건</th><th>표시 상태</th><th>USE</th><th>노출 액션</th></tr></thead>
+              <!-- [ISS-089] delYn=Y(해지) 행 제거 + 전 행 액션에서 '해지' 제거 — AS-IS DEL_YN·해지로직 부재 -->
               <tbody>
-                <tr><td>1</td><td><code>delYn=Y</code></td><td><span class="st-chip st-cancel">해지</span></td><td>종료</td><td>발급조회</td></tr>
-                <tr><td>2</td><td><code>lossYn=Y</code></td><td><span class="st-chip st-lost">분실(정지)</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b> · 해지</td></tr>
-                <tr><td>3</td><td><code>paymentYn=Y</code> <span class="ccd-new">★신규</span></td><td><span class="st-chip st-pay">미납정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b> · 해지</td></tr>
-                <tr><td>4</td><td><code>stopYn=Y</code></td><td><span class="st-chip st-suspend">일시정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b> · 해지</td></tr>
-                <tr><td>5</td><td><code>issueStatCd ≠ 0004</code></td><td><span class="st-chip st-ship">발급중</span></td><td>단계표시</td><td>발급조회 · <b>분실신고</b> · 정보수정 · 해지</td></tr>
-                <tr><td>6</td><td>그 외 (수령완료·플래그 전부 N)</td><td><span class="st-chip st-normal">정상</span></td><td>이용가능</td><td>발급조회 · <b>분실신고</b> · 정보수정 · 해지</td></tr>
+                <tr><td>1</td><td><code>lossYn=Y</code></td><td><span class="st-chip st-lost">분실(정지)</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b></td></tr>
+                <tr><td>2</td><td><code>paymentYn=Y</code> <span class="ccd-new">★신규</span></td><td><span class="st-chip st-pay">미납정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b></td></tr>
+                <tr><td>3</td><td><code>stopYn=Y</code></td><td><span class="st-chip st-suspend">일시정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b></td></tr>
+                <tr><td>4</td><td><code>issueStatCd ≠ 0004</code></td><td><span class="st-chip st-ship">발급중</span></td><td>단계표시</td><td>발급조회 · <b>분실신고</b> · 정보수정</td></tr>
+                <tr><td>5</td><td>그 외 (수령완료·플래그 전부 N)</td><td><span class="st-chip st-normal">정상</span></td><td>이용가능</td><td>발급조회 · <b>분실신고</b> · 정보수정</td></tr>
               </tbody>
             </table>
 
             <ul class="ccd-notes">
               <li><b>우선순위 예:</b> 분실·미납·정지 플래그가 동시에 Y여도 위 순서상 <b>분실</b>로 판정(분실 &gt; 미납 &gt; 정지).</li>
-              <li><b>USE 뱃지:</b> 정상=이용가능 / 분실·미납·정지=이용불가 / 해지=종료. <b>발급중</b>은 가·불가 대신 진행단계(●●●○) 표시. (레거시 <code>USE_YN=(LOSS_YN=N &amp; STOP_YN=N)</code>에 미납·해지 축 확장)</li>
-              <li><b>액션 매핑:</b> 발급조회=항상 · 분실신고=정상/발급중 · 정보수정=해지 아님 · 재발급=일시정지/미납/분실 · 해지=해지 아님.</li>
-              <li><b>상태 전이:</b> 분실신고→<code>lossYn='Y'</code>, 해지→<code>delYn='Y'</code> (단일 상태코드 재대입 없음).</li>
+              <li><b>USE 뱃지:</b> 정상=이용가능 / 분실·미납·정지=이용불가. <b>발급중</b>은 가·불가 대신 진행단계(●●●○) 표시. (레거시 <code>USE_YN=(LOSS_YN=N &amp; STOP_YN=N)</code>에 미납 축 확장)</li>
+              <li><b>액션 매핑:</b> 발급조회=항상 · 분실신고=정상/발급중 · 정보수정=항상 · 재발급=일시정지/미납/분실.</li>
+              <li><b>상태 전이:</b> 분실신고→<code>lossYn='Y'</code> (단일 상태코드 재대입 없음). <span class="ccd-todo">※ [ISS-089] 해지(delYn) 전이 제거 — AS-IS 부재</span></li>
             </ul>
           </div>
         </details>
@@ -534,21 +536,21 @@
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/i18n-charging.js?v=20260728e"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 <script>
 /* ===== 회원카드 허브 — 리스트 + 카드별 액션 + 결제카드 일괄등록 (레거시 정합) =====
    ── 상태모델: 단일코드(cardStCd) 폐기 → 레거시 2축(발급진행 + 운영플래그) 우선순위 판정.
    [축1] 발급진행 issueStatCd (절차): 0001 신청접수 → 0002 발급(제작) → 0003 발송(등기) → 0004 수령완료
         · TODO(EVCS_CODE_DETAIL 확보 전 잠정): 코드값/라벨 미확정. 0005=반려(예외)로 잠정 매핑. 수령완료(0004) 이전=발급중.
-   [축2] 운영플래그: delYn(해지) · lossYn(분실) · paymentYn(미납) · stopYn(일시정지)  ※Y/N
+   [축2] 운영플래그: lossYn(분실) · paymentYn(미납) · stopYn(일시정지)  ※Y/N
+        ※ [ISS-089] delYn(해지) 축 제거 — AS-IS EVCS_SMART_CARD에 DEL_YN 컬럼·대민 해지 액션 부재(창작 제거).
    [표시상태] 아래 '우선순위'로 결정(레거시 CASE 정합) — 단일코드 재도입 금지:
-        1) delYn=Y     → 해지(종료)
-        2) lossYn=Y    → 분실(정지)·이용불가
-        3) paymentYn=Y → 미납정지·이용불가        ★신규 상태
-        4) stopYn=Y    → 일시정지·이용불가
-        5) issueStatCd 수령완료 전(≠0004) → 발급중(세부단계)
-        6) 그 외        → 정상·이용가능
-   [USE 뱃지] 레거시 USE_YN=(LOSS_YN=N & STOP_YN=N) 기준에 미납·해지 축 확장 → 정상만 이용가능.
+        1) lossYn=Y    → 분실(정지)·이용불가
+        2) paymentYn=Y → 미납정지·이용불가        ★신규 상태
+        3) stopYn=Y    → 일시정지·이용불가
+        4) issueStatCd 수령완료 전(≠0004) → 발급중(세부단계)
+        5) 그 외        → 정상·이용가능
+   [USE 뱃지] 레거시 USE_YN=(LOSS_YN=N & STOP_YN=N) 기준에 미납 축 확장 → 정상만 이용가능.
    · CARD_TYPE: C 실물카드 / M 모바일카드 / T 실물카드(EV등록)
    · 발급사유(ISSUE_REASON, 0005=기타): 신규(신차)/신규(중고)/분실/파손/기타  ※TODO: 실코드 미확정
    · 결제카드 일괄등록: '실물카드(EV등록=한전등록회원)'·'결제실패 내역 카드' 제외. */
@@ -559,7 +561,7 @@
 
   // 표시상태 정의 (우선순위 판정 결과 → {label, chip class, usable})
   var STATUS = {
-    cancel:  { label:'해지',       cls:'st-cancel',  usable:false },
+    // [ISS-089] cancel(해지) 상태 제거 — AS-IS DEL_YN 부재
     lost:    { label:'분실(정지)', cls:'st-lost',    usable:false },
     pay:     { label:'미납정지',   cls:'st-pay',     usable:false }, // ★신규
     suspend: { label:'일시정지',   cls:'st-suspend', usable:false },
@@ -579,12 +581,12 @@
 
   // ── 우선순위 판정: 2축 플래그 → 표시상태 key (레거시 CASE 정합) ──
   function resolveStatus(c){
-    if (isY(c.delYn))      return 'cancel';   // 1) 해지(종료)
-    if (isY(c.lossYn))     return 'lost';     // 2) 분실(정지)
-    if (isY(c.paymentYn))  return 'pay';      // 3) 미납정지 ★
-    if (isY(c.stopYn))     return 'suspend';  // 4) 일시정지
-    if (c.issueStatCd !== ISSUE_DONE) return 'ship'; // 5) 수령완료 전 → 발급중
-    return 'normal';                          // 6) 정상
+    // [ISS-089] delYn(해지) 판정 제거 — AS-IS DEL_YN 부재
+    if (isY(c.lossYn))     return 'lost';     // 1) 분실(정지)
+    if (isY(c.paymentYn))  return 'pay';      // 2) 미납정지 ★
+    if (isY(c.stopYn))     return 'suspend';  // 3) 일시정지
+    if (c.issueStatCd !== ISSUE_DONE) return 'ship'; // 4) 수령완료 전 → 발급중
+    return 'normal';                          // 5) 정상
   }
 
   // 보유 카드(mock) — 상태는 2축 플래그(issueStatCd + del/loss/payment/stopYn)로만 표현. 단일 상태코드 없음.
@@ -631,14 +633,8 @@
       reason:'기타', issueMethod:'등기배송', shipZip:'13529', shipAddr:'경기도 성남시 분당구 판교로 242', reqName:'홍길동',
       issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
       payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', kepco:true, payFail:false,
-      stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] },
-    // 7) 해지 (delYn=Y) — 종료. 최우선 판정
-    { cardNo:'EVCD-2022-0910-2001', cardType:'실물카드', carNo:'42고 3030', carNm:'봉고3 EV',
-      applyDate:'2022-08-03', issueDate:'2022-08-11', carNoApply:'42고 3030',
-      reason:'기타', issueMethod:'등기배송', shipZip:'21554', shipAddr:'인천광역시 남동구 정각로 29', reqName:'홍길동',
-      issueStatCd:'0004', delYn:'Y', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'', cardCorp:'', kepco:false, payFail:false,
-      stepDates:['2022-08-03','2022-08-06','2022-08-08','2022-08-11'] }
+      stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] }
+    // [ISS-089] 7) 해지(delYn=Y) 카드 제거 — AS-IS DEL_YN·해지로직 부재
   ];
 
   var body = document.getElementById('ccListBody');
@@ -666,15 +662,14 @@
     body.innerHTML = rows.map(function (c, di) {
       var i = CARDS.indexOf(c);
       var key = resolveStatus(c);
-      var s = STATUS[key] || STATUS.cancel;
-      // 액션 노출 조건 (§3, 판정된 표시상태 기준)
+      var s = STATUS[key] || STATUS.normal;
+      // 액션 노출 조건 (§3, 판정된 표시상태 기준) — [ISS-089] '해지' 액션 제거
       var acts = [];
       acts.push('<button class="btn btn-ghost btn-sm" data-act="check" data-i="'+i+'">발급조회</button>');           // 항상
       if (key==='normal' || key==='ship') acts.push('<button class="btn btn-ghost btn-sm" data-act="lost" data-i="'+i+'">분실신고</button>');     // 정상/발급중
-      if (key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');                       // 해지 아님
-      if (c.payCard && key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="unpay" data-i="'+i+'" data-i18n="charging.card.unpay">결제해제</button>');       // [ISS-077] 개별 결제카드 등록해지(결제카드 등록된 행만)
+      acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');                       // 항상
+      if (c.payCard) acts.push('<button class="btn btn-ghost btn-sm" data-act="unpay" data-i="'+i+'" data-i18n="charging.card.unpay">결제해제</button>');       // [ISS-077] 개별 결제카드 등록해지(결제카드 등록된 행만) — 회원카드 해지와 무관
       if (key==='suspend' || key==='pay' || key==='lost') acts.push('<a class="btn btn-primary btn-sm" href="charging-card-apply.html?reason=lost">재발급</a>'); // 일시정지/미납정지/분실
-      if (key!=='cancel') acts.push('<button class="btn btn-ghost btn-sm" data-act="cancel" data-i="'+i+'" style="color:var(--color-danger,#b5341f);">해지</button>'); // 해지 아님
       var payHtml = c.payCard
         ? '<strong style="color:var(--text-primary);">'+c.cardCorp+'</strong><br><small style="color:var(--text-tertiary);">'+c.payCard+'</small>'
         : '<span style="color:var(--color-danger,#b5341f);">미등록</span>';
@@ -686,14 +681,13 @@
         for (var k=1;k<=4;k++) dots += '<i class="'+(k<=info.step?'on':'')+'"></i>';
         mini = '<span class="cc-mini">'+dots+'<small>'+info.label+'</small></span>';
       }
-      // USE 뱃지: 발급중은 진행단계로 대체(가/불가 미표기). 해지=종료. 그 외 정상=이용가능/그 외=이용불가.
+      // USE 뱃지: 발급중은 진행단계로 대체(가/불가 미표기). 정상=이용가능/그 외=이용불가. [ISS-089] 해지=종료 분기 제거
       var useBadge = '';
-      if (key==='cancel') useBadge = '<span class="use-badge use-no">종료</span>';
-      else if (key!=='ship') useBadge = '<span class="use-badge '+(s.usable?'use-ok':'use-no')+'">'+(s.usable?'이용가능':'이용불가')+'</span>';
+      if (key!=='ship') useBadge = '<span class="use-badge '+(s.usable?'use-ok':'use-no')+'">'+(s.usable?'이용가능':'이용불가')+'</span>';
       var statCell = '<div class="st-cell"><span class="st-chip '+s.cls+'">'+s.label+'</span>'+mini+useBadge+'</div>';
       var chkCell = eligibleForBatch(c)
         ? '<input type="checkbox" class="cc-row-chk" data-i="'+i+'" aria-label="일괄등록·해제 대상 선택">'
-        : '<input type="checkbox" disabled title="일괄등록 대상이 아닙니다 (EV등록·결제실패·해지 등)" aria-label="선택 불가">';
+        : '<input type="checkbox" disabled title="일괄등록 대상이 아닙니다 (EV등록·결제실패 등)" aria-label="선택 불가">';
       return '<tr>'
         + '<td style="text-align:center;">'+chkCell+'</td>'
         + '<td>'+(di+1)+'</td>'
@@ -832,17 +826,7 @@
     });
   }
 
-  /* ── 해지 ── */
-  function actCancel(c) {
-    openModal('회원카드 해지', c.cardNo,
-      '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">해당 회원카드를 해지하시겠습니까? 해지 후에는 충전에 사용할 수 없으며, 다시 사용하려면 신규 신청이 필요합니다.</p>',
-      '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccCancelOk" style="background:var(--color-danger,#b5341f);border-color:var(--color-danger,#b5341f);">해지하기</button>');
-    var ok = document.getElementById('ccCancelOk');
-    if (ok) ok.addEventListener('click', function () {
-      c.delYn = 'Y'; render(); closeModal(); // 해지 → DEL_YN=Y (판정상 '해지')
-      toast('회원카드가 해지되었습니다.', 'info');
-    });
-  }
+  /* ── [ISS-089] 회원카드 '해지'(actCancel) 제거 — AS-IS EVCS_SMART_CARD DEL_YN·해지 액션 부재 ── */
 
   // 액션 위임
   body.addEventListener('click', function (e) {
@@ -853,7 +837,6 @@
     else if (act==='lost') actLost(c, btn.getAttribute('data-i'));
     else if (act==='edit') actEdit(c, btn.getAttribute('data-i'));
     else if (act==='unpay') actUnpay(c);
-    else if (act==='cancel') actCancel(c);
   });
 
   /* ── 결제카드 일괄등록 (소스: 결제수단을 보유 회원카드에 일괄 등록) ── */
@@ -863,7 +846,7 @@
     var checked = Array.prototype.slice.call(document.querySelectorAll('.cc-row-chk:checked'));
     if (!checked.length) { toast('일괄등록할 대상 카드를 체크박스로 선택해 주세요.', 'warning'); return; }
     var eligible = checked.map(function(ch){ return CARDS[parseInt(ch.getAttribute('data-i'),10)]; }).filter(Boolean);
-    var exNote = '<p style="margin:10px 0 0;font-size:12.5px;color:var(--text-tertiary);">※ 체크하신 '+eligible.length+'건에만 등록됩니다. (EV등록·결제실패·해지 카드는 선택 불가)</p>';
+    var exNote = '<p style="margin:10px 0 0;font-size:12.5px;color:var(--text-tertiary);">※ 체크하신 '+eligible.length+'건에만 등록됩니다. (EV등록·결제실패 카드는 선택 불가)</p>';
     var body = '<p style="font-size:13.5px;color:var(--text-secondary);line-height:1.7;margin:0 0 14px;">보유 회원카드 중 <strong style="color:var(--text-primary);">'+eligible.length+'건</strong>에 동일한 결제카드(간편결제)를 한 번에 등록합니다.</p>'
       + '<div style="display:flex;flex-direction:column;gap:12px;">'
       + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">카드사</label>'

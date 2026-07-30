@@ -70,7 +70,8 @@
       <div class="filter-bar" id="filterBar">
         <div class="filter-grp">
           <label data-i18n="charging.install.products.lbl.type">유형</label>
-          <select id="fType"><option value="all" data-i18n="charging.install.products.type.all">전체</option><option value="벽부형" data-i18n="charging.install.products.type.wall">벽부형</option><option value="스탠드형" data-i18n="charging.install.products.type.stand">스탠드형</option><option value="가정용" data-i18n="charging.install.products.type.home">가정용</option></select>
+          <!-- [ISS-088 A4] 유형에 키오스크·과금형 콘센트 추가 -->
+          <select id="fType"><option value="all" data-i18n="charging.install.products.type.all">전체</option><option value="벽부형" data-i18n="charging.install.products.type.wall">벽부형</option><option value="스탠드형" data-i18n="charging.install.products.type.stand">스탠드형</option><option value="가정용" data-i18n="charging.install.products.type.home">가정용</option><option value="키오스크">키오스크</option><option value="과금형 콘센트">과금형 콘센트</option></select>
         </div>
         <div class="filter-grp">
           <label data-i18n="charging.install.products.lbl.power">출력</label>
@@ -126,7 +127,7 @@
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/i18n-charging.js?v=20260728e"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 <script>
 /* ===== 완속충전기 제품 카탈로그 (v0.17) — 시연용 예시 데이터 ===== */
 (function(){
@@ -149,7 +150,10 @@
     { id:'gsc-11p', model:'PublicMax 11kW', maker:'gsc', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'420(W)×1480(H)×225(D) mm', material:'스테인리스', cert:'KC·KS·환경부', pAvg:332, pMin:308, pMax:350, rate:180, notes:['V2G 대응','스마트제어형 충전기'], addons:['캐노피 (30만원)'] },
     { id:'pcube-7s', model:'SmartWall 7kW', maker:'pcube', type:'벽부형', power:'단상 220V', cap:7, cable:'일체형(C타입)', pay:PAY_ALL, size:'365(W)×455(H)×170(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:322, pMin:298, pMax:340, rate:140, notes:['7인치 터치 디스플레이','PnC 자동인증 지원'], addons:['스탠드폴 (20만원)'] },
     { id:'dycb-7u', model:'UrbanCharge 7kW', maker:'dycb', type:'벽부형', power:'단상 220V', cap:7, cable:'분리형', pay:['신용카드','QR결제','APP결제'], size:'370(W)×460(H)×175(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:316, pMin:292, pMax:328, rate:140, notes:['도심형 디자인','스마트제어형 충전기'], addons:[] },
-    { id:'sks-11t', model:'TowerPlus 11kW', maker:'sks', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'405(W)×1420(H)×215(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:334, pMin:306, pMax:351, rate:180, notes:['멀티 커넥터(2구)','전력분배형 지원'], addons:['캐노피 (30만원)'] }
+    { id:'sks-11t', model:'TowerPlus 11kW', maker:'sks', type:'스탠드형', power:'3상 380V', cap:11, cable:'분리형', pay:PAY_ALL, size:'405(W)×1420(H)×215(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:334, pMin:306, pMax:351, rate:180, notes:['멀티 커넥터(2구)','전력분배형 지원'], addons:['캐노피 (30만원)'] },
+    // [ISS-088 A4] 라이브 메뉴 확정 유형 추가 — 키오스크(M051)·과금형 콘센트(M052). 시연용 예시 데이터.
+    { id:'ksk-7k', model:'ChargeKiosk 7kW', maker:'pcube', type:'키오스크', power:'단상 220V', cap:7, cable:'분리형', pay:PAY_ALL, size:'450(W)×1500(H)×250(D) mm', material:'스테인리스', cert:'KC·KS·환경부', pAvg:328, pMin:300, pMax:350, rate:140, notes:['키오스크 일체형 · 대형 터치 디스플레이','다중 충전기 통합 제어'], addons:['캐노피 (30만원)'] },
+    { id:'mout-3o', model:'MeterOutlet 3kW', maker:'pl', type:'과금형 콘센트', power:'단상 220V', cap:3, cable:'없음(콘센트)', pay:['RFID카드','APP결제'], size:'120(W)×180(H)×70(D) mm', material:'난연 PC/ABS', cert:'KC·KS·환경부', pAvg:300, pMin:285, pMax:312, rate:60, notes:['과금형 콘센트(개별 과금)','기존 주차장 콘센트 대체형'], addons:[] }
   ];
 
   var state = { type:'all', power:'all', pay:'all', maker:'' };

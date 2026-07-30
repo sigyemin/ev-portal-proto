@@ -76,6 +76,11 @@
   .cs-table td:nth-child(1), .cs-table td:nth-child(2) { text-align:left; }
   .cs-pick { padding:5px 14px; border:1px solid var(--color-secondary-500); color:var(--color-secondary-600); background:#fff; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
   .cs-pick:hover { background:var(--color-secondary-50); }
+  /* [ISS-088 A1] 불편민원 신고 유형 탭 */
+  .cp-tabs { display:flex; gap:8px; border-bottom:2px solid var(--border-light); margin-bottom:24px; }
+  .cp-tab { appearance:none; background:none; border:none; border-bottom:3px solid transparent; margin-bottom:-2px; padding:12px 20px; font-size:15px; font-weight:700; color:var(--text-tertiary); cursor:pointer; font-family:inherit; }
+  .cp-tab.active { color:var(--color-primary-700); border-bottom-color:var(--color-primary-600); }
+  .cp-tab:hover { color:var(--color-primary-600); }
 </style>
 </head>
 <body>
@@ -98,6 +103,13 @@
   <section class="section-sm">
     <div class="container container-narrow">
 
+      <!-- [ISS-088 A1] AS-IS 2탭(①충전기 불편민원 ②전기화물 신고접수) — ② 간이폼 신설. [DEV] 근거 inconfortReportFormTruck.jsp(제목 125자·신고내용 3,000byte만). -->
+      <div class="cp-tabs" role="tablist" aria-label="불편민원 신고 유형">
+        <button type="button" class="cp-tab active" data-cp-tab="charger" role="tab" aria-selected="true">충전기 불편민원</button>
+        <button type="button" class="cp-tab" data-cp-tab="truck" role="tab" aria-selected="false">전기화물 신고접수</button>
+      </div>
+
+      <div data-cp-panel="charger">
       <!-- 진행 스텝 -->
       <div class="cf-steps">
         <div class="cf-step active" data-step="1">01. 개인정보 제공동의 및 본인인증</div>
@@ -200,6 +212,30 @@
           </div>
         </div>
       </div>
+      </div><!-- /data-cp-panel=charger -->
+
+      <!-- ===== [ISS-088 A1] ② 전기화물 신고접수 — 간이폼(제목·신고내용만). [DEV] AS-IS inconfortReportFormTruck.jsp: 제목 maxlength 125자 · 신고내용 3,000byte. 별도 본인인증 단계 없음(간이). ===== -->
+      <div data-cp-panel="truck" hidden>
+        <div class="cf-notice" style="margin-bottom:18px;">
+          <div class="cf-notice-ico">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <p>전기화물차 관련 불편·이상 사항을 신고하실 수 있습니다.<br>제목과 신고 내용을 입력해 접수해 주세요.</p>
+        </div>
+        <p class="cf-required-note"><b>*</b> 는 필수 항목입니다.</p>
+        <form id="truckForm" class="card cf-card" style="padding:8px 24px;">
+          <div class="cf-row"><label class="cf-lab">제목 <em>*</em></label>
+            <div class="cf-field"><input class="form-input" id="truckTitle" type="text" maxlength="125" placeholder="제목 (최대 125자)">
+              <span class="cf-help" id="truckTitleCnt" style="display:block;text-align:right;font-size:12px;color:var(--text-tertiary);margin-top:4px;">0 / 125자</span></div></div>
+          <div class="cf-row"><label class="cf-lab">신고 내용 <em>*</em></label>
+            <div class="cf-field"><textarea class="form-textarea" id="truckBody" rows="6" placeholder="전기화물 관련 신고 내용을 구체적으로 적어주세요."></textarea>
+              <span class="cf-help" id="truckBodyCnt" style="display:block;text-align:right;font-size:12px;color:var(--text-tertiary);margin-top:4px;">0 / 3,000 byte</span></div></div>
+          <div class="cf-foot">
+            <button type="button" class="btn btn-primary btn-lg" id="truckSubmit">신고 접수</button>
+            <a href="inquiry-status.html" class="btn btn-secondary btn-lg">나의 신고 조회하기</a>
+          </div>
+        </form>
+      </div>
 
     </div>
   </section>
@@ -232,7 +268,7 @@
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 <script>
 /* 캡차(매크로 방지 보안문자) — simplecaptcha 모사. 비회원 신고·조회 공용 */
 (function(){
@@ -331,6 +367,35 @@
     goStep(4);
     toast('신고가 접수되었습니다. 접수 안내 문자(SMS)를 ' + (ph||'등록 번호') + ' 로 발송했습니다.','success');
   });
+
+  // ---- [ISS-088 A1] 신고 유형 탭(충전기 불편민원 / 전기화물 신고접수) ----
+  document.querySelectorAll('.cp-tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      var name = t.getAttribute('data-cp-tab');
+      document.querySelectorAll('.cp-tab').forEach(function(x){ var on = x===t; x.classList.toggle('active', on); x.setAttribute('aria-selected', on?'true':'false'); });
+      document.querySelectorAll('[data-cp-panel]').forEach(function(p){ p.hidden = (p.getAttribute('data-cp-panel') !== name); });
+    });
+  });
+
+  // ---- [ISS-088 A1] 전기화물 간이폼: 제목 125자 / 신고내용 3,000byte 카운터 + 접수 ----
+  var tTitle = $('truckTitle'), tBody = $('truckBody');
+  if (tTitle && tBody) {
+    var tTitleCnt = $('truckTitleCnt'), tBodyCnt = $('truckBodyCnt');
+    var byteLen = function(s){ return new Blob([s]).size; };   // UTF-8 바이트 수
+    tTitle.addEventListener('input', function(){ tTitleCnt.textContent = tTitle.value.length + ' / 125자'; });
+    tBody.addEventListener('input', function(){
+      // 3,000byte 초과 시 잘라내기(AS-IS 신고내용 3,000byte 제한)
+      while (byteLen(tBody.value) > 3000) { tBody.value = tBody.value.slice(0, -1); }
+      tBodyCnt.textContent = byteLen(tBody.value).toLocaleString() + ' / 3,000 byte';
+    });
+    $('truckSubmit').addEventListener('click', function(){
+      if(!tTitle.value.trim()){ toast('제목을 입력해 주세요.','warning'); tTitle.focus(); return; }
+      if(!tBody.value.trim()){ toast('신고 내용을 입력해 주세요.','warning'); tBody.focus(); return; }
+      // [DEV] 실제 = inconfortReportFormTruck 접수(제목·신고내용). 프로토는 더미 접수.
+      toast('전기화물 신고가 접수되었습니다.','success');
+      tTitle.value=''; tBody.value=''; tTitleCnt.textContent='0 / 125자'; tBodyCnt.textContent='0 / 3,000 byte';
+    });
+  }
 })();
 </script>
 </body>

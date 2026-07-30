@@ -13,48 +13,17 @@
       charge:   ['시스템·홈페이지오류','충전기설치요청','충전기고장','결제오류']
     };
 
-    // 플로우별 응답 템플릿
+    // 플로우별 응답 템플릿 — [ISS-087] 답변 텍스트만(body). 링크카드(actions)·관련메뉴(related)·후속질문(SUGGEST_FOLLOWUP) 데이터 제거.
     const ANSWER_TEMPLATES = {
       subsidy: {
-        body: '고객님의 조건에 따른 예상 보조금은 약 <strong>800만원</strong>입니다. 전기차 구매 시 <strong>국고 보조금(최대 450만원)</strong>과 <strong>지방자치단체 보조금(최대 350만원)</strong>을 합산하여 받으실 수 있습니다.',
-        actions: [
-          { label: '상세 계산하기', type: 'primary', action: 'open-calc' },
-          { label: '신청 방법 보기', type: 'secondary', href: 'subsidy-target.html' }
-        ],
-        related: [
-          { crumb: ['자동차 분석','저공해 조치','제작사별 저공해 조치 현황'], title: '제작사별 저공해조치 현황', desc: '자동차 제작사별 저공해 조치 이행 현황 및 통계를 확인할 수 있습니다.', href: 'subsidy-vehicles.html' },
-          { crumb: ['충전 인프라','데이터 서비스','저공해차 충전소 현황'], title: '저공해차 충전소 현황', desc: '전국 저공해차 충전소 설치 및 이용 현황을 지도와 함께 확인할 수 있습니다.', href: 'charging-find.html' }
-        ]
+        body: '고객님의 조건에 따른 예상 보조금은 약 <strong>800만원</strong>입니다. 전기차 구매 시 <strong>국고 보조금(최대 450만원)</strong>과 <strong>지방자치단체 보조금(최대 350만원)</strong>을 합산하여 받으실 수 있습니다.'
       },
       personal: {
-        body: '고객님께 필요한 정보를 종합해 안내해드립니다. <strong>차량번호 변경</strong>·<strong>결제카드 등록</strong>·<strong>통합카드 배송 조회</strong> 등 자주 찾으시는 업무는 아래 관련 메뉴에서 바로 처리 가능합니다.',
-        actions: [
-          { label: '마이페이지 이동', type: 'primary', href: '#', action: 'notify:로그인 후 이용 가능합니다.' },
-          { label: '카드 관리', type: 'secondary', href: 'charging-card.html' }
-        ],
-        related: [
-          { crumb: ['소통·지원','민원·문의','자주 묻는 질문'], title: 'FAQ (자주 묻는 질문)', desc: '카테고리별 자주 묻는 질문 428건을 AI 추천 엔진이 연결해드립니다.', href: 'inquiry-faq.html' },
-          { crumb: ['충전 인프라','카드 관리','정보 수정'], title: '회원카드 정보 수정', desc: '차량번호 변경, 결제카드 등록, 주소 변경을 한 화면에서 처리할 수 있습니다.', href: 'charging-card-edit.html' }
-        ]
+        body: '고객님께 필요한 정보를 종합해 안내해드립니다. <strong>차량번호 변경</strong>·<strong>결제카드 등록</strong>·<strong>통합카드 배송 조회</strong> 등 자주 찾으시는 업무를 안내해 드립니다.'
       },
       charge: {
-        body: '충전기 고장·시스템 오류 문의는 즉시 담당 운영사에 전달되며, 복구 경과를 <strong>SMS·이메일</strong>로 안내해드립니다. 긴급한 경우 통합 콜센터 <strong>1661-0970</strong>로 연락해 주시기 바랍니다.',
-        actions: [
-          { label: '장애 신고 접수', type: 'primary', href: 'inquiry-complaint.html' },
-          { label: '운영 현황 확인', type: 'secondary', href: 'charging-help.html?tab=status' }
-        ],
-        related: [
-          { crumb: ['충전소·요금 정보','수소충전소 Help Desk','운영 현황'], title: '실시간 운영 현황', desc: '전국 247개 수소충전소의 정상·정비·장애 상태를 실시간으로 확인합니다.', href: 'charging-help.html?tab=status' },
-          { crumb: ['소통·지원','민원·문의','불편 민원 신고'], title: '불편 민원 신고', desc: '시스템 오류·서비스 불편 사항을 접수하면 3일 이내 처리됩니다.', href: 'inquiry-complaint.html' }
-        ]
+        body: '충전기 고장·시스템 오류 문의는 즉시 담당 운영사에 전달되며, 복구 경과를 <strong>SMS·이메일</strong>로 안내해드립니다. 긴급한 경우 통합 콜센터 <strong>1661-0970</strong>로 연락해 주시기 바랍니다.'
       }
-    };
-
-    // 플로우별 후속 질문 제안 (suggest chips)
-    const SUGGEST_FOLLOWUP = {
-      subsidy: ['의무운행 기간이 얼마인가요?', '지자체별 지원금이 다른 이유는?', '보조금 환수 대상 사유', '신청부터 수령까지 얼마나 걸리나요?'],
-      personal: ['마이페이지 비밀번호 찾기', '통합카드 재발급 비용', '주소 변경 후 반영까지', '이메일 알림 설정'],
-      charge:   ['충전기 예약이 가능한가요?', '로밍 수수료 면제 사업자', '심야 할인 시간대', '장애 신고 후 복구까지']
     };
 
     const flowBtns   = document.querySelectorAll('.ai-flow-btn');
@@ -63,20 +32,17 @@
     const searchInput= document.getElementById('aiSearchInput');
     const answer     = document.getElementById('aiAnswer');
     const messages   = document.getElementById('aiMessages');
-    const suggest    = document.getElementById('aiSuggest');
-    const suggestChips = document.getElementById('aiSuggestChips');
+    // [ISS-087] aiSuggest·aiTurnBadge·aiReset·aiSaveChat 제거 — 참조 삭제
     const followupForm = document.getElementById('aiFollowupForm');
     const followupInput= document.getElementById('aiFollowupInput');
     const topbarFlow = document.getElementById('aiTopbarFlow');
-    const turnBadge  = document.getElementById('aiTurnBadge');
     const answerClose= document.getElementById('aiAnswerClose');
-    const resetBtn   = document.getElementById('aiReset');
 
     const FLOW_NAMES = { personal: 'AI 맞춤 상담', subsidy: '보조금 큐레이터', charge: '장애 대응 안내' };
 
     let currentFlow = 'subsidy';
     let activeChip  = null;
-    let turnCount   = 0;
+    // [ISS-087] turnCount 제거 (턴 뱃지 삭제)
 
     function renderChips(flow) {
       hashChips.innerHTML = CHIPS[flow].map(tag =>
@@ -130,77 +96,23 @@
     }
 
     function appendAnswerBubble(flow) {
+      // [ISS-087] AI 답변 = 말풍선(아바타 + bubble) · 텍스트만. 링크카드(actions)·관련메뉴(related) 제거.
+      //   [ISS-087 정정] 답변 툴 아이콘 3종 전부 삭제. [DEV] 향후 차트/표 슬롯은 body 아래에 렌더.
       const tmpl = ANSWER_TEMPLATES[flow] || ANSWER_TEMPLATES.subsidy;
       const el = document.createElement('div');
       el.className = 'ai-msg ai-msg-bot';
-      const actionsHTML = tmpl.actions.map(a => {
-        const cls = 'ai-answer-btn' + (a.type === 'primary' ? ' primary' : '');
-        if (a.action === 'open-calc') {
-          return `<button type="button" class="${cls}" data-action="open-calc">${a.label}</button>`;
-        }
-        if (a.action && a.action.startsWith('notify:')) {
-          return `<button type="button" class="${cls}" data-action="notify" data-action-label="${a.action.slice(7)}">${a.label}</button>`;
-        }
-        return `<a href="${a.href}" class="${cls}">${a.label}</a>`;
-      }).join('');
-      const relHTML = tmpl.related.map(r =>
-        `<a href="${r.href}" class="ai-answer-rel-item">
-          <div class="rel-breadcrumb">${r.crumb.map((c,i)=>i===r.crumb.length-1?`<strong>${c}</strong>`:c).join(' <span>›</span> ')}</div>
-          <div class="rel-title">${r.title}</div>
-          <div class="rel-desc">${r.desc}</div>
-        </a>`
-      ).join('');
-
-      el.innerHTML = `<div class="ai-msg-inner">
-        <div class="ai-msg-head">
+      el.innerHTML = `<div class="ai-msg-avatar" aria-hidden="true">
           <svg class="ai-answer-spark" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 L13.5 10.5 L21 12 L13.5 13.5 L12 21 L10.5 13.5 L3 12 L10.5 10.5 Z"/></svg>
-          <strong>AI 답변</strong>
-          <div class="ai-msg-tools">
-            <button type="button" class="msg-tool" data-copy title="복사" aria-label="답변 복사">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            </button>
-            <button type="button" class="msg-tool" data-helpful="up" title="도움이 되었어요" aria-label="도움이 되었어요">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-            </button>
-            <button type="button" class="msg-tool" data-helpful="down" title="부정확해요" aria-label="부정확해요">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM17 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg>
-            </button>
-          </div>
         </div>
-        <p class="ai-answer-body">${tmpl.body}</p>
-        <div class="ai-answer-actions">${actionsHTML}</div>
-        <div class="ai-answer-related">${relHTML}</div>
-      </div>`;
+        <div class="ai-msg-bubble">
+          <!-- [ISS-087 정정] 답변 툴 아이콘 3종 전부 삭제 — 말풍선은 텍스트만 -->
+          <p class="ai-answer-body">${tmpl.body}</p>
+          <!-- [DEV] 향후 차트/표 슬롯 — 데이터 연동 시 body 아래에 렌더 추가 -->
+        </div>`;
       messages.appendChild(el);
-
-      // 이벤트 바인딩
-      el.querySelectorAll('[data-action="open-calc"]').forEach(b => b.addEventListener('click', openDetailCalc));
-      el.querySelector('[data-copy]')?.addEventListener('click', e => {
-        const txt = el.querySelector('.ai-answer-body').textContent;
-        navigator.clipboard?.writeText(txt).then(() => {
-          if (window.__toast) window.__toast('답변이 복사되었습니다.', 'success');
-        });
-      });
-      el.querySelectorAll('[data-helpful]').forEach(b => b.addEventListener('click', () => {
-        el.querySelectorAll('[data-helpful]').forEach(x => x.classList.remove('is-voted'));
-        b.classList.add('is-voted');
-        if (window.__toast) window.__toast(b.dataset.helpful === 'up' ? '도움이 되어 기쁩니다!' : '더 나은 답변을 준비하겠습니다.', 'info');
-      }));
     }
 
-    function renderSuggest(flow) {
-      const list = SUGGEST_FOLLOWUP[flow] || [];
-      suggestChips.innerHTML = list.map(q =>
-        `<button type="button" data-q="${escapeAttr(q)}">${q}</button>`
-      ).join('');
-      suggestChips.querySelectorAll('button').forEach(b => b.addEventListener('click', () => ask(b.dataset.q)));
-      suggest.hidden = list.length === 0;
-    }
-
-    function updateTurn() {
-      turnCount++;
-      turnBadge.textContent = `${turnCount}회 대화`;
-    }
+    // [ISS-087] renderSuggest(후속질문)·updateTurn(턴 뱃지) 함수 제거
 
     function scrollToBottom() {
       messages.scrollTop = messages.scrollHeight;
@@ -217,8 +129,7 @@
       setTimeout(() => {
         typing.remove();
         appendAnswerBubble(currentFlow);
-        updateTurn();
-        renderSuggest(currentFlow);
+        // [ISS-087] updateTurn(턴 뱃지)·renderSuggest(후속질문) 제거
         scrollToBottom();
       }, 650);
     }
@@ -238,18 +149,10 @@
       answer.setAttribute('aria-hidden','true');
     }
 
-    // 초기 진입 시 답변 패널·후속 질문 패널 모두 확실히 닫힘
+    // 초기 진입 시 답변 패널 닫힘
     answer.setAttribute('hidden', '');
     answer.setAttribute('aria-hidden','true');
-    suggest.setAttribute('hidden', '');
-
-    function resetChat() {
-      messages.innerHTML = '';
-      suggest.hidden = true;
-      turnCount = 0;
-      turnBadge.textContent = '새 대화';
-      if (window.__toast) window.__toast('대화가 초기화되었습니다.', 'info');
-    }
+    // [ISS-087] resetChat(초기화)·suggest 관련 로직 제거
 
     function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function escapeAttr(s) { return s.replace(/"/g, '&quot;'); }
@@ -284,7 +187,7 @@
     });
 
     answerClose.addEventListener('click', hideAnswer);
-    resetBtn.addEventListener('click', resetChat);
+    // [ISS-087] resetBtn 핸들러 제거
 
     // ============ 상세 보조금 계산기 모달 ============
     const calcModal = document.getElementById('detailCalcModal');

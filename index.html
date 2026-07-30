@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
 <link rel="stylesheet" href="css/home-v2.css?v=20260728b">
 <link rel="stylesheet" href="css/home-main02.css?v=20260728b">
-<link rel="stylesheet" href="css/ai-helpdesk-v2.css?v=20260609">
+<link rel="stylesheet" href="css/ai-helpdesk-v2.css?v=20260729a">
 <link rel="stylesheet" href="css/persona-cards.css?v=20260613">
 <link rel="stylesheet" href="css/subsidy-calc.css?v=20260613">
 </head>
@@ -167,15 +167,9 @@
         <button type="submit" class="ai-search-submit" data-i18n="home.ai.search.submit">검색</button>
       </form>
 
-      <!-- 해시태그 퀵 칩 + 홈 버튼 (v0.12 [34] 홈 버튼을 칩 행 우측 끝으로 이동·확대) -->
+      <!-- 해시태그 퀵 칩 ([ISS-090] '홈으로' 버튼 삭제 — 사용자 재지시. 나머지 칩 유지) -->
       <div class="ai-hashrow">
       <div class="ai-hashchips" id="aiHashChips"></div>
-      <div class="ai-home-row">
-        <button type="button" class="ai-home-btn" id="aiHomeBtn" data-i18n-aria="hm.ai.home" aria-label="홈으로">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <span data-i18n="hm.ai.home">홈으로</span>
-        </button>
-      </div>
       </div><!-- /.ai-hashrow -->
 
 
@@ -186,17 +180,10 @@
           <div class="ai-topbar-flow">
             <span class="ai-topbar-dot"></span>
             <span id="aiTopbarFlow" data-i18n="home.ai.flow.subsidy">보조금 큐레이터</span>
-            <span class="ai-topbar-turn" id="aiTurnBadge" data-i18n="home.ai.turn.unit">1회 대화</span>
+            <!-- [ISS-087] '1회 대화' 턴 뱃지(#aiTurnBadge) 제거 -->
           </div>
           <div class="ai-topbar-tools">
-            <button type="button" class="ai-tool-btn" id="aiReset" title="대화 초기화" data-i18n-aria="home.ai.btn.reset.aria" aria-label="대화 초기화">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-<span data-i18n="home.ai.btn.reset">              초기화</span>
-            </button>
-            <button type="button" class="ai-tool-btn" id="aiSaveChat" title="대화 저장" data-i18n-aria="home.ai.btn.save.aria" aria-label="대화 저장" data-action="notify" data-action-label="로그인 후 내 대화 이력을 저장할 수 있습니다.">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-<span data-i18n="home.ai.btn.save">              저장</span>
-            </button>
+            <!-- [ISS-087] 초기화(#aiReset)·저장(#aiSaveChat) 버튼 제거 — 닫기만 유지 -->
             <button type="button" class="ai-answer-close" id="aiAnswerClose" data-i18n-aria="home.ai.btn.close.aria" aria-label="닫기">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 <span data-i18n="home.ai.btn.close">              닫기</span>
@@ -210,11 +197,7 @@
 
           <!-- 타이핑 인디케이터 (동적 표출) -->
 
-          <!-- 후속 질문 제안 -->
-          <div class="ai-suggest" id="aiSuggest" hidden>
-            <span class="ai-suggest-label" data-i18n="home.ai.suggest.label">이런 질문도 많이 해요</span>
-            <div class="ai-suggest-chips" id="aiSuggestChips"></div>
-          </div>
+          <!-- [ISS-087] 후속 질문 제안(.ai-suggest) 제거 -->
 
           <!-- 후속 대화 입력 -->
           <form class="ai-followup" id="aiFollowupForm" autocomplete="off">
@@ -225,13 +208,7 @@
             </button>
           </form>
 
-          <!-- 하단 고정 액션 (FAQ 바로가기) -->
-          <footer class="ai-answer-foot">
-            <a href="inquiry-faq.html" class="ai-foot-btn ai-foot-link">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-<span data-i18n="home.ai.btn.faq">              FAQ 바로가기</span>
-            </a>
-          </footer>
+          <!-- [ISS-087] 하단 'FAQ 바로가기'(footer.ai-answer-foot) 제거 -->
         </div>
       </div>
 
@@ -568,15 +545,15 @@
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/i18n-home.js?v=20260728c"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 <script src="js/home-v2.js?v=20260608"></script>
 <script src="js/home-main02.js?v=20260703c"></script>
-<script src="js/persona-cards.js?v=20260724a"></script>
+<script src="js/persona-cards.js?v=20260730b"></script>
 <script src="js/fee-compare.js?v=20260613"></script>
 <script src="js/news-data.js?v=20260613"></script>
 <script src="js/home-news.js?v=20260613"></script>
 <script src="js/subsidy-calc.js?v=20260721c"></script>
-<script src="js/ai-helpdesk-v2.js?v=20260609"></script>
+<script src="js/ai-helpdesk-v2.js?v=20260729b"></script>
 
 <!-- [삭제 2026-07-21] 메인 진입 시 AI 헬프데스크 초기 스크롤 — 진입 시 자동 스크롤 제거 지시로 폐기 -->
 

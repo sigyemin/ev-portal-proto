@@ -1273,7 +1273,7 @@
   flex-shrink: 0;
   color: #fff;
 }
-.vc-ico-onepass { background: linear-gradient(135deg, #1AAD6C, #0D8A54); }
+/* [ISS-088 C9] .vc-ico-onepass 제거 — 디지털원패스=사라진 시스템(미사용 죽은 클래스). PASS(.vc-ico-pass)는 통신사 인증으로 별개·유지 */
 .vc-ico-phone   { background: linear-gradient(135deg, #4CA2E2, #2C7BE5); }
 .vc-ico-cert    { background: linear-gradient(135deg, #6B7A8C, #4B5563); }
 .vc-ico-kakao   { background: #FEE500; color: #191919; }

@@ -25,6 +25,13 @@
   .mp-mydata-done{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:.84rem;font-weight:700;}
   .mp-mydata-date{font-size:.82rem;color:var(--color-gray-600);}
   .mp-mydata-date strong{color:var(--color-gray-800);font-weight:700;}
+  /* [ISS-088 C11] 업무지원시스템 이용신청 진행상태 집계 요약 */
+  .mp-sys-summary{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px;}
+  .mp-sys-sum-card{flex:1 1 130px;display:flex;flex-direction:column;gap:3px;padding:12px 16px;border:1px solid var(--color-gray-200);border-radius:10px;background:var(--color-gray-50);}
+  .mp-sys-sum-num{font-size:1.5rem;font-weight:800;line-height:1;}
+  .mp-sys-sum-lbl{font-size:.8rem;color:var(--text-secondary);font-weight:600;}
+  .mp-sys-sum-card.is-approved .mp-sys-sum-num{color:var(--color-primary-600);}
+  .mp-sys-sum-card.is-apply .mp-sys-sum-num{color:var(--color-gray-700);}
 </style>
 </head>
 <body>
@@ -302,6 +309,12 @@
 <span><strong>업무지원시스템 이용 안내 ·</strong> 각 항목의 <strong>[이용신청]</strong>을 클릭하면 승인 후 사용할 수 있습니다. 승인된 시스템은 <strong>[바로가기]</strong>로 이동합니다.</span>
           </div>
         </div>
+        <!-- [ISS-088 C11] 이용신청 진행상태 집계 대시보드 — AS-IS myPageMain.jsp:199-421 (12개 시스템 진행상태 _CD) 집계. 임시(준비중) 카드 제외 -->
+        <div class="mp-sys-summary" id="mpSysSummary" aria-label="업무지원시스템 이용신청 진행상태 요약">
+          <div class="mp-sys-sum-card is-approved"><span class="mp-sys-sum-num" id="sumApproved">0</span><span class="mp-sys-sum-lbl">승인완료 · 바로가기</span></div>
+          <div class="mp-sys-sum-card is-apply"><span class="mp-sys-sum-num" id="sumApply">0</span><span class="mp-sys-sum-lbl">미신청 · 이용신청</span></div>
+          <div class="mp-sys-sum-card"><span class="mp-sys-sum-num" id="sumTotal">0</span><span class="mp-sys-sum-lbl">전체 지원시스템</span></div>
+        </div>
         <div class="mp-system-grid">
           <a href="business-apply-roaming.html" class="mp-system-card">
             <div class="mp-system-ico">
@@ -427,9 +440,11 @@
 
       <!-- 보안 정보 푸터 -->
       <div class="mp-security-footer">
+        <!-- [ISS-088 C10] 접속정보 — AS-IS myPageMain.jsp:444-457 .ipInfo 3필드(현재접속IP·이전접속IP·이전 로그인시각) 정합 -->
         <div class="mp-security-info">
-          <span><strong data-i18n="mp.sec.ip.current">현재 IP</strong>14.35.255.226</span>
-          <span><strong data-i18n="mp.sec.lastlogin">마지막 로그인</strong>2026-04-27 09:07:34</span>
+          <span><strong data-i18n="mp.sec.ip.current">현재 접속 IP</strong>14.35.255.226</span>
+          <span><strong data-i18n="mp.sec.ip.prev">이전 접속 IP</strong>121.130.44.18</span>
+          <span><strong data-i18n="mp.sec.lastlogin">이전 로그인 시각</strong>2026-04-27 09:07:34</span>
         </div>
         <div class="mp-security-help" data-i18n-html="mp.sec.help">
 <span data-i18n-html="mp.contact.note">문의 사항이 있으신가요? <a href="inquiry.html">고객센터</a>로 연락해 주세요.</span>
@@ -447,9 +462,9 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-mypage.js?v=20260703a"></script>
+<script src="js/i18n-mypage.js?v=20260730a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 <script>
 /* 회원유형별 보조금 신청현황 진입 메뉴 — 법인은 리스트형, 그 외(개인·개인사업자)는 카드형 */
 (function(){
@@ -470,6 +485,24 @@
   try { var u = JSON.parse(sessionStorage.getItem('mp_user') || 'null'); if (u && u.mydataLinked) linked = true; } catch(e){}
   before.hidden = linked;
   after.hidden  = !linked;
+})();
+
+/* [ISS-088 C11] 업무지원시스템 이용신청 진행상태 집계 — 렌더된 카드 상태태그를 집계(AS-IS myPageMain 12개 시스템 진행상태 요약). 임시(준비중) 카드 제외.
+   ※ AS-IS 진행상태 _CD 4종: 미신청('')·승인 Y(바로가기)·신청중 F·반려 N. 현 프로토는 미신청/승인 2종만 시연 — F(신청중)·N(반려) 상태 라벨/표현은 미정(개발 협의). */
+(function(){
+  var grid = document.querySelector('#mp-business .mp-system-grid');
+  if(!grid) return;
+  var cards = grid.querySelectorAll('.mp-system-card');
+  var approved=0, apply=0, total=0;
+  cards.forEach(function(c){
+    if(c.id==='mpTempChargerCard') return; // 임시(준비중) 제외
+    total++;
+    var tag = c.querySelector('.mp-system-tag');
+    if(tag && tag.classList.contains('approved')) approved++;
+    else if(tag && tag.classList.contains('apply')) apply++;
+  });
+  var set=function(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; };
+  set('sumApproved',approved); set('sumApply',apply); set('sumTotal',total);
 })();
 
 /* 마이데이터 연계 — 클릭 시 토스트(우측 상단) 후 동의 URL 로 이동 */

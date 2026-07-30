@@ -89,6 +89,12 @@
             <h3 class="mp-form-card-title" data-i18n="mpi.basic.title">기본 인적 사항</h3>
             <p class="mp-form-card-desc" data-i18n="mpi.basic.desc">아이디·이름·생년월일은 본인 확인을 통해 변경할 수 있습니다.</p>
 
+            <!-- [ISS-088 C12] 본인인증(PCC) 재확인 — AS-IS indvdlInfoMng.jsp:281 openPCCWindow(). 이름·생년월일·휴대전화는 본인인증 완료 시 자동 갱신 -->
+            <div class="mp-form-inline" style="align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 4px;">
+              <button type="button" class="btn btn-secondary btn-sm" id="mpiPccBtn" data-i18n="mpi.pcc.btn">본인인증 재확인</button>
+              <span class="mp-form-help" id="mpiPccStatus" style="margin:0;" data-i18n="mpi.pcc.note">이름·생년월일·휴대전화번호는 휴대폰 본인인증이 완료되면 자동으로 갱신됩니다.</span>
+            </div>
+
             <div class="mp-form-row">
               <label class="mp-form-label" for="mi-id" data-i18n="mpi.field.id">아이디</label>
               <div class="mp-form-control">
@@ -282,6 +288,23 @@
               });
             }
 
+            // ── [ISS-088 C12] 본인인증(PCC) 재확인 (AS-IS openPCCWindow — 데모) ──
+            var pccBtn = document.getElementById('mpiPccBtn');
+            var pccStatus = document.getElementById('mpiPccStatus');
+            if (pccBtn) pccBtn.addEventListener('click', function(){
+              if (window.__toast) window.__toast(_t('mpi.pcc.calling','휴대폰 본인인증(PCC) 창을 호출합니다. (데모)'), 'info');
+              // 데모: 본인인증 성공 → 이름·휴대전화 자동 표시(AS-IS: 완료 시 자동 채움) + 완료 상태 안내
+              setTimeout(function(){
+                if (pccStatus) {
+                  pccStatus.textContent = _t('mpi.pcc.done','✓ 본인인증이 완료되었습니다.');
+                  pccStatus.removeAttribute('data-i18n'); // 완료 표시는 고정(재적용 시 note 로 되돌아가지 않도록)
+                  pccStatus.style.color = 'var(--color-primary-700)';
+                  pccStatus.style.fontWeight = '700';
+                }
+                if (window.__toast) window.__toast(_t('mpi.pcc.done','✓ 본인인증이 완료되었습니다.'), 'success');
+              }, 700);
+            });
+
             if (f1) f1.addEventListener('submit', function(e){
               e.preventDefault();
               alert(_t('mpi.msg.saved.profile', '회원 정보가 저장되었습니다.'));
@@ -311,8 +334,8 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-mypage.js?v=20260707t"></script>
+<script src="js/i18n-mypage.js?v=20260730a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 </body>
 </html>

@@ -152,6 +152,13 @@
   /* ── 패널(펼친 지자체 표) ── */
   function renderPanel(loc) {
     var cats = visibleCats();
+    // [ISS-088 B6] 지자체 보조금 담당자 연락처 레이어 진입 버튼. [DEV] 원천 psLocalList.jsp:154(지자체별 담당자 DB).
+    var locName = SIDO_LABEL[loc.sido] + ' ' + loc.gu;
+    var contactBar = '<div class="sl-contact-bar">'
+      + '<span class="sl-contact-loc">' + locName + ' 보조금 문의</span>'
+      + '<button type="button" class="btn btn-secondary btn-sm sl-contact-btn" data-contact-loc="' + locName.replace(/"/g,'&quot;') + '">'
+      + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.94.36 1.86.68 2.75a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.33-1.33a2 2 0 0 1 2.11-.45c.89.32 1.81.55 2.75.68A2 2 0 0 1 22 16.92z"/></svg>'
+      + '보조금 담당자 연락처</button></div>';
     var note = '<p class="sl-note">'
       + '단위: <strong>만원</strong> · 2026년 지자체 공고 기준(지자체 공고에 따라 변동) · 출처: 각 지자체 공고<br>'
       + '<strong>국비는 전국 공통</strong>(지자체 무관 동일값)이며 지방비만 지자체별로 다릅니다. '
@@ -199,7 +206,7 @@
     if (!bodies) bodies = '<tbody><tr><td colspan="7" style="padding:28px;text-align:center;color:var(--text-tertiary);">조건에 맞는 차량이 없습니다.</td></tr></tbody>';
 
     // 정렬 화살표 표시
-    var html = note + '<div class="sl-tablewrap"><table class="sl-vtable">' + thead + bodies + '</table></div>';
+    var html = contactBar + note + '<div class="sl-tablewrap"><table class="sl-vtable">' + thead + bodies + '</table></div>';
     var tmp = document.createElement('div'); tmp.innerHTML = html;
     tmp.querySelectorAll('.sl-th-sort').forEach(function (th) {
       if (th.dataset.sk === state.sort.key) { th.classList.add('sorted'); th.querySelector('.sl-arrow').textContent = state.sort.dir === 'asc' ? '▲' : '▼'; }
@@ -344,6 +351,9 @@
         refreshOpenPanel();
         return;
       }
+      // [ISS-088 B6] 보조금 담당자 연락처 레이어
+      var cbtn = e.target.closest('.sl-contact-btn');
+      if (cbtn) { openContact(cbtn.getAttribute('data-contact-loc') || '해당 지자체'); return; }
       var head = e.target.closest('.sl-acc-head'); if (!head) return;
       var acc = head.closest('.sl-acc'); if (acc) toggleLocale(acc.dataset.full);
     });
@@ -351,6 +361,39 @@
     fillTierSelect(); updateCompareLink();
     renderList();
   }
+
+  /* ── [ISS-088 B6] 보조금 담당자 연락처 레이어 (지자체별) ──
+     [DEV] 원천 = psLocalList.jsp:154 · subsidyPaymentCheck.jsp:33 (지자체별 담당 부서·연락처 DB). 아래는 시연용 예시. */
+  var contactModal = null;
+  function openContact(locName) {
+    if (!contactModal) {
+      contactModal = document.createElement('div');
+      contactModal.className = 'sl-contact-modal';
+      contactModal.setAttribute('hidden', '');
+      contactModal.innerHTML =
+        '<div class="sl-cm-dim" data-cm-close></div>'
+        + '<div class="sl-cm-box" role="dialog" aria-modal="true" aria-labelledby="slCmTitle">'
+          + '<div class="sl-cm-head"><h3 id="slCmTitle">보조금 담당자 연락처</h3>'
+            + '<button type="button" class="sl-cm-x" data-cm-close aria-label="닫기">✕</button></div>'
+          + '<div class="sl-cm-body">'
+            + '<p class="sl-cm-loc" id="slCmLoc"></p>'
+            + '<dl class="sl-cm-dl">'
+              + '<dt>담당 부서</dt><dd>친환경차량 보조금 담당 부서 <span class="sl-cm-ex">(예시)</span></dd>'
+              + '<dt>전화</dt><dd>관할 지자체 대표번호 <span class="sl-cm-ex">(예시 — 공고에 게시된 담당 전화 확인)</span></dd>'
+              + '<dt>이메일</dt><dd>ev-subsidy@[지자체].go.kr <span class="sl-cm-ex">(예시)</span></dd>'
+            + '</dl>'
+            + '<p class="sl-cm-note">※ 지자체별 담당 부서·연락처는 각 지자체 보조금 공고에 게시됩니다. 정확한 담당자 정보는 해당 지자체 공고를 확인해 주세요.</p>'
+          + '</div>'
+        + '</div>';
+      document.body.appendChild(contactModal);
+      contactModal.querySelectorAll('[data-cm-close]').forEach(function (b) { b.addEventListener('click', closeContact); });
+      contactModal.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeContact(); });
+    }
+    var locEl = contactModal.querySelector('#slCmLoc');
+    if (locEl) locEl.textContent = locName;
+    contactModal.hidden = false; document.body.style.overflow = 'hidden';
+  }
+  function closeContact() { if (contactModal) { contactModal.hidden = true; document.body.style.overflow = ''; } }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 

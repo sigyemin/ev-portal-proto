@@ -8,6 +8,23 @@
 <link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
 <link rel="stylesheet" href="css/biz-terms.css?v=20260729a"><!-- [ISS-086] 공용 약관동의 -->
 <link rel="stylesheet" href="css/business-apply.css?v=20260703b">
+<style>
+  /* [ISS-088 B7] 지자체 검색 팝업 (AS-IS popupLocal / psPopupLocal) — mandatory 팝업 패턴과 동일 */
+  .bf-search-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .bf-search-row input{flex:1;min-width:200px;}
+  .srch-modal { position:fixed; inset:0; background:rgba(15,23,42,.45); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .srch-modal.open { display:flex; }
+  .srch-box { background:#fff; width:min(560px,94vw); max-height:88vh; overflow-y:auto; border-radius:14px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .srch-box h3 { font-size:18px; margin:0 0 16px; }
+  .srch-form { width:100%; border-collapse:collapse; margin-bottom:8px; }
+  .srch-form th { width:120px; background:var(--color-gray-50,#f6f8fa); border:1px solid var(--border-light); padding:10px 12px; text-align:left; font-size:13.5px; color:var(--text-secondary); }
+  .srch-form td { border:1px solid var(--border-light); padding:8px 10px; }
+  .srch-form input { width:100%; height:38px; border:1px solid var(--border-light); border-radius:8px; padding:0 10px; }
+  .srch-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .srch-table th { background:var(--color-gray-700,#334155); color:#fff; padding:10px; }
+  .srch-table td { border-bottom:1px solid var(--border-light); padding:9px 10px; text-align:center; }
+  .srch-table td:nth-child(2) { text-align:left; }
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
@@ -74,9 +91,10 @@
             <label class="bf-row"><span class="bf-lab">주요 설치 유형 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>공동주택</option><option>업무시설</option><option>근린생활</option><option>복합</option></select></label>
             <label class="bf-row"><span class="bf-lab">지원 단가 분류 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>7kW</option><option>11kW</option><option>복합</option></select></label>
             <label class="bf-row"><span class="bf-lab">주요 설치 권역 <em style="color:var(--color-danger,#e11d48);">*</em></span><select required><option>수도권</option><option>충청권</option><option>호남권</option><option>영남권</option><option>강원권</option><option>전국</option></select></label>
-            <label class="bf-row"><span class="bf-lab">사업수행기관 (1지망) <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" placeholder="지자체 또는 위탁기관" required></label>
-            <label class="bf-row"><span class="bf-lab">사업수행기관 (2지망) <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
-            <label class="bf-row"><span class="bf-lab">사업수행기관 (3지망) <em style="color:var(--color-danger,#e11d48);">*</em></span><input type="text" required></label>
+            <!-- [ISS-088 B7] 사업수행기관 = 지자체 검색 팝업(AS-IS popupLocal) 연동. 위탁기관은 직접입력도 허용 -->
+            <div class="bf-row"><span class="bf-lab">사업수행기관 (1지망) <em style="color:var(--color-danger,#e11d48);">*</em></span><span class="bf-search-row"><input type="text" id="agency1" placeholder="지자체 검색 또는 위탁기관 직접입력" required><button type="button" class="bf-mini-btn js-sido-search" data-target="agency1">지자체 검색</button></span></div>
+            <div class="bf-row"><span class="bf-lab">사업수행기관 (2지망) <em style="color:var(--color-danger,#e11d48);">*</em></span><span class="bf-search-row"><input type="text" id="agency2" required><button type="button" class="bf-mini-btn js-sido-search" data-target="agency2">지자체 검색</button></span></div>
+            <div class="bf-row"><span class="bf-lab">사업수행기관 (3지망) <em style="color:var(--color-danger,#e11d48);">*</em></span><span class="bf-search-row"><input type="text" id="agency3" required><button type="button" class="bf-mini-btn js-sido-search" data-target="agency3">지자체 검색</button></span></div>
           </div>
         </div>
 
@@ -128,13 +146,26 @@
   </section>
 </main>
 
+<!-- [ISS-088 B7] 지자체 검색 팝업 (AS-IS popupLocal / psPopupLocal) -->
+<div class="srch-modal" id="sidoModal" role="dialog" aria-modal="true" aria-labelledby="sidoTitle">
+  <div class="srch-box">
+    <h3 id="sidoTitle">지자체 선택</h3>
+    <table class="srch-form"><tbody>
+      <tr><th><label for="sidoSrchName">지자체명</label></th><td><input type="text" id="sidoSrchName" placeholder="예: 성남, 강남구, 부산"></td></tr>
+    </tbody></table>
+    <div style="text-align:right; margin:10px 0;"><button type="button" class="bf-mini-btn" id="sidoSrchGo">조 회</button></div>
+    <table class="srch-table"><thead><tr><th style="width:110px;">행정코드</th><th>지자체명</th><th style="width:80px;">선택</th></tr></thead><tbody id="sidoResults"></tbody></table>
+    <div style="text-align:right; margin-top:12px;"><button type="button" class="btn btn-secondary" id="sidoClose">닫기</button></div>
+  </div>
+</div>
+
 <div id="footer-slot"></div>
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/biz-terms.js?v=20260729a"></script><!-- [ISS-086] 공용 약관동의 -->
-<script src="js/ai-floating.js?v=20260728a"></script>
+<script src="js/ai-floating.js?v=20260729a"></script>
 <script>
 (function(){
   function toast(msg, type){ if(window.__toast) window.__toast(msg, type||'info'); }
@@ -161,6 +192,42 @@
     toast('이용신청이 접수되었습니다. 관리자 승인 후 이용하실 수 있습니다.', 'success');
     setTimeout(function(){ location.href='mypage.html#mp-business'; }, 900);
   });
+
+  // ── [ISS-088 B7] 지자체 검색 팝업 (AS-IS popupLocal) — 사업수행기관 1~3지망 공용 ──
+  // 데모 지자체 목록(광역+기초 일부). 코드는 데모값.
+  var LOCAL = [
+    ['1100','서울특별시'],['1168','서울특별시 강남구'],['1174','서울특별시 강동구'],['1144','서울특별시 마포구'],
+    ['2600','부산광역시'],['2650','부산광역시 해운대구'],['2700','대구광역시'],['2800','인천광역시'],
+    ['2900','광주광역시'],['3000','대전광역시'],['3100','울산광역시'],['3611','세종특별자치시'],
+    ['4100','경기도'],['4113','경기도 성남시'],['4111','경기도 수원시'],['4128','경기도 고양시'],
+    ['4200','강원특별자치도'],['4300','충청북도'],['4400','충청남도'],['4500','전북특별자치도'],
+    ['4600','전라남도'],['4700','경상북도'],['4800','경상남도'],['5000','제주특별자치도']
+  ];
+  var sidoModal = document.getElementById('sidoModal');
+  var sidoTarget = null;
+  function renderLocal(kw){
+    kw = (kw||'').trim();
+    var rows = LOCAL.filter(function(d){ return !kw || d[1].indexOf(kw) >= 0; });
+    var body = document.getElementById('sidoResults');
+    if(!rows.length){ body.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-tertiary);">자료가 없습니다.</td></tr>'; return; }
+    body.innerHTML = rows.map(function(d){ return '<tr><td>'+d[0]+'</td><td>'+d[1]+'</td><td><button type="button" class="bf-mini-btn sido-pick" data-name="'+d[1]+'">선택</button></td></tr>'; }).join('');
+  }
+  function openSido(inputId){
+    sidoTarget = document.getElementById(inputId);
+    document.getElementById('sidoSrchName').value = '';
+    renderLocal('');
+    sidoModal.classList.add('open');
+    document.getElementById('sidoSrchName').focus();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.js-sido-search'), function(btn){
+    btn.addEventListener('click', function(){ openSido(btn.getAttribute('data-target')); });
+  });
+  document.getElementById('sidoSrchGo').addEventListener('click', function(){ renderLocal(document.getElementById('sidoSrchName').value); });
+  document.getElementById('sidoSrchName').addEventListener('keyup', function(e){ if(e.key==='Enter'){ e.preventDefault(); renderLocal(this.value); } });
+  document.getElementById('sidoResults').addEventListener('click', function(e){ var b=e.target.closest('.sido-pick'); if(b && sidoTarget){ sidoTarget.value = b.getAttribute('data-name'); sidoModal.classList.remove('open'); toast('지자체가 선택되었습니다.','success'); } });
+  document.getElementById('sidoClose').addEventListener('click', function(){ sidoModal.classList.remove('open'); });
+  sidoModal.addEventListener('click', function(e){ if(e.target===sidoModal) sidoModal.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && sidoModal.classList.contains('open')) sidoModal.classList.remove('open'); });
 })();
 </script>
 </body>

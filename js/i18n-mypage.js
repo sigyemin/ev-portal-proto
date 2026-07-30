@@ -133,9 +133,10 @@
     'mp.business.t10':        { ko: '표지발급<br>이용신청', en: 'Label Issuance<br>Access' },
 
     /* ===== 보안 정보 푸터 ===== */
-    'mp.sec.ip.current':      { ko: '현재 IP', en: 'Current IP' },
+    'mp.sec.ip.current':      { ko: '현재 접속 IP', en: 'Current IP' },
     'mp.sec.ip.external':     { ko: '외부 IP', en: 'External IP' },
-    'mp.sec.lastlogin':       { ko: '마지막 로그인', en: 'Last Login' },
+    'mp.sec.ip.prev':         { ko: '이전 접속 IP', en: 'Previous IP' },
+    'mp.sec.lastlogin':       { ko: '이전 로그인 시각', en: 'Last Login' },
     'mp.sec.help':            { ko: '문의 사항이 있으신가요? <a href="inquiry.html">고객센터</a>로 연락해 주세요.',
                                 en: 'Have questions? Please contact <a href="inquiry.html">customer support</a>.' },
 
@@ -155,6 +156,12 @@
     'mpi.field.name.help':    { ko: '이름 변경은 본인 확인(공동·간편 인증) 후 가능합니다.',
                                 en: 'Name change requires identity verification (joint or simple authentication).' },
     'mpi.field.name.verify':  { ko: '본인 확인 →', en: 'Verify Identity →' },
+    /* [ISS-088 C12] 본인인증(PCC) 재확인 — AS-IS indvdlInfoMng.jsp:281 openPCCWindow() */
+    'mpi.pcc.btn':            { ko: '본인인증 재확인', en: 'Re-verify Identity' },
+    'mpi.pcc.note':           { ko: '이름·생년월일·휴대전화번호는 휴대폰 본인인증이 완료되면 자동으로 갱신됩니다.',
+                                en: 'Name, date of birth and mobile number are updated automatically once mobile identity verification is completed.' },
+    'mpi.pcc.calling':        { ko: '휴대폰 본인인증(PCC) 창을 호출합니다. (데모)', en: 'Opening mobile identity verification (PCC) window. (demo)' },
+    'mpi.pcc.done':           { ko: '✓ 본인인증이 완료되었습니다.', en: '✓ Identity verification completed.' },
     'mpi.field.birth':        { ko: '생년월일', en: 'Date of Birth' },
     'mpi.field.memtype':      { ko: '개인/법인사업자 여부', en: 'Individual / Corporate' },
     'mpi.memtype.personal':   { ko: '개인', en: 'Individual' },

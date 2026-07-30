@@ -85,6 +85,12 @@
                                      en: 'When applying for regional subsidies, application information is forwarded from MCEE to the local government.' },
     'signup.terms.tp.full':        { ko: '지자체별 보조금 신청 시 신청자 식별을 위해 이름·연락처·차량 정보가 해당 지자체로 제공됩니다. 미동의 시 직접 지자체에 방문하여 별도로 신청해야 합니다.',
                                      en: 'For regional subsidy applications, applicant identification (name, contact, vehicle info) is provided to the relevant local government. Without consent, you must apply directly at the local government office.' },
+    /* [ISS-088 B8] 공공급속충전 인프라 이용약관 (4번째 약관). [DEV] AS-IS memberJoin.jsp:86 → infra_law05.jsp(공공급속충전인프라 서비스 공급 및 이용약관). 전문 요지=제1조 목적 발췌. */
+    'signup.terms.infra.title':    { ko: '공공급속충전 인프라 이용약관 동의',        en: 'Public Fast-Charging Infrastructure Terms' },
+    'signup.terms.infra.desc':     { ko: '환경부 공공급속충전 인프라(충전소) 이용 시 적용되는 이용약관입니다.',
+                                     en: 'Terms applying to use of MCEE public fast-charging infrastructure (stations).' },
+    'signup.terms.infra.full':     { ko: '「공공급속충전인프라 서비스 공급 및 이용약관」 제1조(목적) — 본 약관은 환경부 공공충전인프라 멤버십 카드를 사용하는 소지자(회원)이 한국자동차환경협회(협회)가 제공하는 서비스를 이용하는 것과 관련하여, 회원 및 협회의 권리·의무를 포함한 제반 사항을 규정하는데 그 목적이 있습니다. (약관 전문은 별도 약관 페이지에서 제공)',
+                                     en: '“Public Fast-Charging Infrastructure Service Supply and Use Agreement” Art.1 (Purpose) — This agreement governs the rights and obligations of members (holders of the MCEE public charging membership card) and KAEA regarding use of the services. (Full terms are provided on a separate terms page.)' },
 
     'signup.side.aria':            { ko: '회원가입 혜택 안내',                    en: 'Sign-up Benefits' },
     'signup.side.title':           { ko: '회원이 되시면<br>이런 혜택이 있어요',     en: 'Become a member to<br>enjoy these benefits' },

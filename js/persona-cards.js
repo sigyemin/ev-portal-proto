@@ -24,56 +24,44 @@
         { t: '지자체별 보조금 현황', t_en: 'Subsidies by Region', d: '우리 지역 차종별 보조금 지원 현황과 잔여 예산을 확인하세요.', d_en: 'See subsidy status and remaining budget by region and vehicle.', href: 'subsidy-region.html', emoji: '📍' },
         { t: '보조금 지급대상 차종', t_en: 'Eligible Vehicles', d: '보조금 지원이 가능한 차종 목록을 조회하세요.', d_en: 'Browse the list of subsidy-eligible vehicles.', href: 'subsidy-vehicles.html', emoji: '🚙' },
         { t: '보조금 안내·계산기', t_en: 'Subsidy Calculator', d: '차종·지역을 선택해 예상 보조금을 계산해 보세요.', d_en: 'Estimate your subsidy by vehicle and region.', href: 'subsidy-info.html', emoji: '🧮' },
-        { t: '차종 비교 도구', t_en: 'Vehicle Compare', d: '가격·주행거리·충전시간 등 조건별로 차종을 비교하세요.', d_en: 'Compare vehicles by price, range and charging time.', href: 'compare-tool.html', emoji: '⚖️' },
-        { t: '초보자 가이드', t_en: "Beginner's Guide", d: '처음이라면 무공해차 기초부터 차근차근 안내받으세요.', d_en: 'New to ZEVs? Start with the basics, step by step.', href: 'info-beginner.html', emoji: '🧭' },
-        { t: '보조금 큐레이터', t_en: 'Subsidy Curator', d: 'AI가 내 조건에 맞는 보조금을 찾아 안내해 드립니다.', d_en: 'AI finds the subsidies that match your situation.', href: 'index.html?ai=subsidy#aiSectionAnchor', emoji: '🤖' }
+        { t: '차종 비교 도구', t_en: 'Vehicle Compare', d: '가격·주행거리·충전시간 등 조건별로 차종을 비교하세요.', d_en: 'Compare vehicles by price, range and charging time.', href: 'compare-tool.html', emoji: '⚖️' }
+        /* [ISS-091] 제거: 초보자 가이드(info-beginner)·보조금 큐레이터(AI) */
       ]
     },
     driver: {
       title: '무공해차 운전자를 위한 서비스', title_en: 'Services for ZEV Drivers',
       cards: [
-        { t: '회원카드 신청·발급조회', t_en: 'Card Apply & Status', d: '충전 회원카드를 신청하고 발급 현황을 조회하세요.', d_en: 'Apply for a charging card and check issuance status.', href: 'charging-card.html?tab=apply', emoji: '💳' },
-        { t: '내 충전요금 시뮬레이터', t_en: 'Fee Simulator', d: '충전 패턴을 입력해 월 예상 충전요금을 계산하세요.', d_en: 'Estimate monthly charging costs from your usage pattern.', href: 'charging-fee-simulator.html', emoji: '🧮' },
+        /* [ISS-091] driver 9→5 (제거: 운영 현황 charging-help·데이터·통계 data·환수금 subsidy-refund·AI). 순서 재정렬 */
         { t: '통합 지도 (전기+수소)', t_en: 'Integrated Map', d: '전기·수소 충전소를 하나의 지도에서 찾으세요.', d_en: 'Find EV and H2 stations on a single map.', href: 'charging-find.html?tab=map', emoji: '🗺️' },
         { t: '전기차 충전요금 안내', t_en: 'EV Charging Fees', d: '사업자별 충전 단가와 요금체계를 확인하세요.', d_en: 'Check charging rates and fee plans by operator.', href: 'charging-fee.html?tab=ev', emoji: '⚡' },
         { t: '수소차 충전요금 안내', t_en: 'H2 Charging Fees', d: '수소차 충전 단가와 지역별 요금 정보를 확인하세요.', d_en: 'Check hydrogen charging rates and regional fees.', href: 'charging-fee-h2.html', emoji: '💧' },
-        { t: '운영 현황 안내', t_en: 'Operation Status', d: '수소충전소 운영·정비 현황을 안내해 드립니다.', d_en: 'See hydrogen station operation and maintenance status.', href: 'charging-help.html', emoji: '🛠️' },
-        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
-        { t: '환수금 안내·계산기', t_en: 'Recovery Calculator', d: '잔여 의무기간을 기준으로 예상 보조금 환수금을 계산하세요.', d_en: 'Estimate subsidy recovery based on remaining duty period.', href: 'subsidy-refund.html', emoji: '↩️' },
-        { t: 'AI 맞춤 상담', t_en: 'AI Assistant', d: '궁금한 점을 AI 헬프데스크에 자연어로 물어보세요.', d_en: 'Ask the AI help desk anything in plain language.', href: 'index.html?ai=personal#aiSectionAnchor', emoji: '🤖' }
+        { t: '회원카드 신청·발급조회', t_en: 'Card Apply & Status', d: '충전 회원카드를 신청하고 발급 현황을 조회하세요.', d_en: 'Apply for a charging card and check issuance status.', href: 'charging-card.html?tab=apply', emoji: '💳' },
+        { t: '내 충전요금 시뮬레이터', t_en: 'Fee Simulator', d: '충전 패턴을 입력해 월 예상 충전요금을 계산하세요.', d_en: 'Estimate monthly charging costs from your usage pattern.', href: 'charging-fee-simulator.html', emoji: '🧮' },
+        /* [ISS-091 정정] driver 5→6: 민원 처리현황 추가 */
+        { t: '민원 처리현황', t_en: 'My Complaints', d: '내가 접수한 민원·신청의 처리 상태를 한 곳에서 조회하세요.', d_en: 'Check the processing status of your complaints and requests.', href: 'inquiry-status.html', emoji: '📨' }
       ]
     },
     cpo: {
       title: '사업자·제조사를 위한 서비스', title_en: 'Services for Operators & Makers',
       cards: [
+        /* [ISS-091] cpo 11→5 (제거: 공모/평가 8종 전부. 유지 3 + 신규 2) */
         { t: '지자체별 보조금 현황', t_en: 'Subsidies by Region', d: '지자체별 차종별 보조금 지원·집행 현황을 확인하세요.', d_en: 'Check subsidy support and disbursement by region.', href: 'subsidy-region.html', emoji: '📍' },
         { t: '공지사항', t_en: 'Notices', d: '공모·보급사업 관련 공지와 공고를 확인하세요.', d_en: 'See notices and announcements on programs and open calls.', href: 'notice-list.html', emoji: '📢' },
-        { t: '전기차 수행자 평가신청', t_en: 'EV Supplier Eval.', d: '전기자동차 보급사업 수행자 선정 평가를 신청하세요.', d_en: 'Apply for EV supply program supplier evaluation.', href: 'public-ev.html', emoji: '🚗' },
-        { t: '전기승합차 공모 신청', t_en: 'E-Bus Open Call', d: '전기승합차 보급사업 공모에 참여 신청하세요.', d_en: 'Apply to the electric bus supply open call.', href: 'public-bus.html', emoji: '🚌' },
-        { t: '공용 완속/급속·중속 충전시설 운영사·제조사 공모 신청', t_en: 'Operator/Maker Call', d: '완속/급속·중속 충전시설 운영사·제조사 공모에 신청하세요.', d_en: 'Apply to the operator/maker charging-facility open call.', href: 'charging-install-contest.html', emoji: '⚡' },
-        { t: '공용 완속충전 시설 신청', t_en: 'Public Slow Charger', d: '공용 완속충전기 설치를 온라인으로 신청하세요.', d_en: 'Apply online to install public slow chargers.', href: 'charging-install-slow.html', emoji: '🏗️' },
-        { t: '무공해 건설기계 공모', t_en: 'ZEV Equipment Call', d: '전기지게차 등 무공해 건설기계 공모에 신청하세요.', d_en: 'Apply to the ZEV construction-equipment open call.', href: 'public-construction.html', emoji: '🚜' },
-        { t: '이륜차 수행자 평가신청', t_en: 'E-Bike Supplier Eval.', d: '전기이륜차 보급사업 수행자 선정 평가를 신청하세요.', d_en: 'Apply for e-motorbike supply supplier evaluation.', href: 'public-moto.html', emoji: '🛵' },
-        { t: '지역별 무공해차 전환 브랜드 사업 공모 신청', t_en: 'Charging Brand Call', d: '지역과 연계한 충전 브랜드 사업 공모에 신청하세요.', d_en: 'Apply to the regional EV transition brand project call.', href: 'charging-install-brand.html', emoji: '🏷️' },
-        { t: '이륜차 BSS 공모신청', t_en: 'E-Bike BSS Call', d: '전기이륜차 배터리 교환(BSS) 충전시설 공모에 신청하세요.', d_en: 'Apply to the e-motorbike battery-swap (BSS) open call.', href: 'charging-install-moto.html', emoji: '🔋' },
-        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' }
+        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
+        { t: '공모 신청현황', t_en: 'My Applications', d: '여러 공모 사업의 신청 건과 진행 상태를 한 리스트에서 확인하세요.', d_en: 'Track your open-call applications and their status in one list.', href: 'mypage-contests.html', emoji: '📄' },
+        { t: '민원 처리현황', t_en: 'My Complaints', d: '내가 접수한 민원·신청의 처리 상태를 한 곳에서 조회하세요.', d_en: 'Check the processing status of your complaints and requests.', href: 'inquiry-status.html', emoji: '📨' }
       ]
     },
     gov: {
       title: '지자체·공공기관을 위한 서비스', title_en: 'Services for Government & Public',
       cards: [
+        /* [ISS-091] gov 12→6 (제거: subsidy-vehicles·subsidy-refund·public-bus·public-construction·charging-install-slow·notice-list·AI. 유지 5 + 신규 1) */
         { t: '지자체별 보조금 현황', t_en: 'Subsidies by Region', d: '지자체별 차종별 보조금 지원·집행 현황을 확인하세요.', d_en: 'Check subsidy support and disbursement by region.', href: 'subsidy-region.html', emoji: '📍' },
-        { t: '보조금 지급대상 차종', t_en: 'Eligible Vehicles', d: '보조금 지원이 가능한 차종 목록을 조회하세요.', d_en: 'Browse the list of subsidy-eligible vehicles.', href: 'subsidy-vehicles.html', emoji: '🚙' },
         { t: '보조금 안내·계산기', t_en: 'Subsidy Calculator', d: '차종·지역별 예상 보조금을 안내·계산하세요.', d_en: 'Estimate subsidies by vehicle and region.', href: 'subsidy-info.html', emoji: '🧮' },
-        { t: '환수금 안내·계산기', t_en: 'Recovery Calculator', d: '잔여 의무기간을 기준으로 예상 보조금 환수금을 계산하세요.', d_en: 'Estimate subsidy recovery based on remaining duty period.', href: 'subsidy-refund.html', emoji: '↩️' },
-        { t: '전기승합차 공모 신청', t_en: 'E-Bus Open Call', d: '전기승합차 보급사업 공모를 신청·관리하세요.', d_en: 'Apply to and manage the electric bus open call.', href: 'public-bus.html', emoji: '🚌' },
-        { t: '무공해 건설기계 공모', t_en: 'ZEV Equipment Call', d: '무공해 건설기계(전기지게차) 공모를 신청·관리하세요.', d_en: 'Apply to and manage the ZEV equipment open call.', href: 'public-construction.html', emoji: '🚜' },
         { t: '참여기업 현황', t_en: 'Participants', d: 'K-EV100 기업 무공해차 전환 참여 현황을 확인하세요.', d_en: 'See companies participating in the K-EV100 transition.', href: 'kev100-companies.html', emoji: '🏢' },
-        { t: '공용 완속충전 시설 신청', t_en: 'Public Slow Charger', d: '공공시설 공용 완속충전기 설치를 신청하세요.', d_en: 'Apply to install public slow chargers at public sites.', href: 'charging-install-slow.html', emoji: '🏗️' },
-        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
-        { t: '공지사항', t_en: 'Notices', d: '공모·보급사업 관련 공지와 공고를 확인하세요.', d_en: 'See notices and announcements on programs and open calls.', href: 'notice-list.html', emoji: '📢' },
         { t: '요청자료', t_en: 'Requested Materials', d: '지자체·공공기관 대상 요청·공유 자료를 확인하세요.', d_en: 'Find materials shared with governments and public bodies.', href: 'info-library.html?tab=request', emoji: '📂' },
-        { t: 'AI 맞춤 상담', t_en: 'AI Assistant', d: '담당 업무 관련 궁금한 점을 AI 헬프데스크에 물어보세요.', d_en: 'Ask the AI help desk about your administrative tasks.', href: 'index.html?ai=personal#aiSectionAnchor', emoji: '🤖' }
+        { t: '데이터·통계', t_en: 'Data & Stats', d: '무공해차 보급·충전 인프라·보조금 집행 현황을 확인하세요.', d_en: 'See ZEV adoption, charging infrastructure, and subsidy status.', href: 'data.html', emoji: '📊' },
+        { t: '공모 신청현황', t_en: 'My Applications', d: '여러 공모 사업의 신청 건과 진행 상태를 한 리스트에서 확인하세요.', d_en: 'Track your open-call applications and their status in one list.', href: 'mypage-contests.html', emoji: '📄' }
       ]
     }
   };
