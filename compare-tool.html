@@ -317,7 +317,8 @@
   }
   function cardHTML(key, idx){
     if(!key) return placeholderCard();
-    var c=CARS[key], lamt=curLamt(), net=c.subsidy.판매가-(c.subsidy.국비+lamt);
+    // [ISS-093 후속] 카드 우측 = 파생 net(판매가−국비−지방비) 제거 → '국비 보조금' 개별 확정값 표기(탭과 일관). ※국비 자체 '대표조건'은 §5-1 미정 대기.
+    var c=CARS[key];
     return '<div class="car-card selected">'
       +'<div style="position:absolute;top:16px;right:16px;"><button class="btn btn-icon-only" style="width:32px;height:32px;" aria-label="제거" type="button" data-role="remove-car" data-idx="'+idx+'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'
       +'<div class="car-image"><img src="'+c.img+'" alt="'+esc(c.name)+'"></div>'
@@ -326,7 +327,7 @@
       +'<p style="color:var(--text-tertiary);font-size:13px;margin-bottom:12px;">'+esc(c.maker)+' · '+esc(c.year)+'</p>'
       +'<div style="padding:14px;background:var(--color-primary-50);border-radius:12px;"><div class="flex justify-between">'
         +'<div><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.card.price')+'</div><div style="font-size:18px;font-weight:700;">'+won(c.subsidy.판매가)+'만원</div></div>'
-        +'<div style="text-align:right;"><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.card.aftersub')+'</div><div style="font-size:18px;font-weight:700;color:var(--color-primary-700);">'+won(net)+'만원</div></div>'
+        +'<div style="text-align:right;"><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.row.subNat')+'</div><div style="font-size:18px;font-weight:700;color:var(--color-primary-700);">'+won(c.subsidy.국비)+'만원</div></div>'
       +'</div></div></div>';
   }
 
@@ -395,9 +396,8 @@
     var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
     h+=row(t('ctool.row.subNat'), function(c){return won(c.subsidy.국비)+'만원';});
     h+=row(t('ctool.row.subLoc'), function(){return won(lamt)+'만원';}, {ctrl:ctrl});
-    h+=row(t('ctool.row.subTotal')+' <span style="font-size:11.5px;color:var(--text-tertiary);">'+t('ctool.row.subTotalSub')+'</span>', function(c){return won(c.subsidy.국비+lamt)+'만원';}, {rowStyle:'background:var(--color-primary-50);', cellStyle:'font-weight:700;color:var(--color-primary-700);'});
+    // [ISS-093 후속] '총 보조금'·'실 구매 가격' 행 제거(사용자 지시 2026-08-03) — 국비 대표조건·SALE_PRICE 성격이 §5 미정이라 파생 합산값 비노출. 국비/지방비/세제감면만 표시.
     h+=row(t('ctool.row.taxcut'), function(c){return won(c.subsidy.세제감면)+'만원';}, {tip:t('ctool.tip.taxcut')});
-    h+=row(t('ctool.row.net'), function(c){return won(c.subsidy.판매가-(c.subsidy.국비+lamt))+'만원';}, {tip:t('ctool.tip.net'), rowStyle:'background:var(--gradient-primary);color:#fff;', labelStyle:'font-weight:700;color:#fff;', cellStyle:'font-weight:700;font-size:18px;'});
     $('cmpSubsidy').innerHTML=h+'</div>';
     fillRegion();
   }
