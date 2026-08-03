@@ -6,24 +6,25 @@
 <title>차종 비교 도구 | 무공해차 통합누리집</title>
 <link rel="stylesheet" href="css/style.css?v=20260724a">
 <link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
+<link rel="stylesheet" href="css/amount-guard.css?v=20260802a">
 <style>
 .ctip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;margin-left:5px;border-radius:50%;background:#94a3b8;color:#fff;font-size:10px;line-height:1;cursor:help;vertical-align:middle;font-style:normal}
 .ctip:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:150%;transform:translateX(-50%);white-space:normal;width:250px;background:#1f2937;color:#fff;font-size:11.5px;font-weight:400;line-height:1.6;padding:9px 11px;border-radius:8px;z-index:50;box-shadow:0 6px 18px rgba(0,0,0,.2);text-align:left}
-/* 해당 로우 라벨(지방비·자동차세) 밑에 들어가는 조건 드롭다운 */
 .cmp-row-ctrl{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;}
 .cmp-row-ctrl select{flex:0 1 auto;min-width:90px;max-width:140px;height:34px;padding:0 10px;border:1px solid var(--border-medium);border-radius:8px;font-size:12.5px;font-family:inherit;font-weight:600;color:var(--text-primary);background:#fff;cursor:pointer;}
 .cmp-row-ctrl select:focus{outline:2px solid var(--color-primary-400,#5cc295);outline-offset:1px;}
 .ctip:hover::before{content:"";position:absolute;left:50%;bottom:150%;transform:translateX(-50%) translateY(100%);border:5px solid transparent;border-top-color:#1f2937;z-index:50}
-/* 추가 모달 radio-card: 라디오 선택 표시 */
 [data-modal-car-select] .radio-card{display:flex;align-items:center;cursor:pointer;}
 [data-modal-car-select] .radio-card:has(input:checked){border-color:var(--color-primary-500,#22c55e);box-shadow:0 0 0 2px var(--color-primary-100,#dcfce7);}
-/* 모달 내부 스크롤 보정(목록이 길어도 body가 스크롤되도록) */
 #addCarModal .modal-body{flex:1 1 auto;min-height:0;}
-/* 추가 모달 페이지네이션 */
 #cmpModalPager{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
 #cmpModalPager button{min-width:34px;height:34px;padding:0 10px;border:1px solid var(--border-light);border-radius:8px;background:#fff;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;}
 #cmpModalPager button.active{background:var(--color-primary-500,#22c55e);border-color:var(--color-primary-500,#22c55e);color:#fff;}
 #cmpModalPager button:disabled{opacity:.4;cursor:default;}
+.est-badge{font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;background:#fff3e0;color:#b45309;vertical-align:middle;margin-left:2px;}
+.dev-note{margin-top:28px;border:1px dashed #cbd5e1;border-radius:10px;background:#f8fafc;padding:14px 18px;font-size:12.5px;color:#475569;line-height:1.7;}
+.dev-note summary{font-weight:800;color:#334155;cursor:pointer;}
+.dev-note code{background:#e2e8f0;border-radius:4px;padding:1px 5px;font-size:11.5px;}
 </style>
 </head>
 <body>
@@ -56,7 +57,6 @@
         </div>
       </div>
 
-      <!-- 3 CAR CARDS SIDE BY SIDE (동적 렌더) -->
       <div class="grid grid-3" style="gap: 20px;" id="cmpCards" data-reveal></div>
 
       <!-- 세부 비교 -->
@@ -64,29 +64,34 @@
         <div class="tabs-pill" data-tabs>
           <button class="tab active" data-tab="basic" data-i18n="ctool.tab.basic">기본 스펙</button>
           <button class="tab" data-tab="charging" data-i18n="ctool.tab.charging">충전·배터리</button>
-          <button class="tab" data-tab="subsidy"><span data-i18n="ctool.tab.subsidy">보조금·세제</span> <span style="font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;background:#fff3e0;color:#b45309;vertical-align:middle;margin-left:2px;">추정</span></button>
-          <button class="tab" data-tab="running"><span data-i18n="ctool.tab.running">유지비</span> <span style="font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;background:#fff3e0;color:#b45309;vertical-align:middle;margin-left:2px;">추정</span></button>
+          <button class="tab" data-tab="subsidy"><span data-i18n="ctool.tab.subsidy">보조금·세제</span> <span class="est-badge">추정</span></button>
+          <button class="tab" data-tab="running"><span data-i18n="ctool.tab.running">유지비</span> <span class="est-badge">추정</span></button>
         </div>
 
-        <div class="tab-content active" data-tab-content="basic">
-          <div id="cmpBasic"></div>
-        </div>
-
-        <div class="tab-content" data-tab-content="charging">
-          <div id="cmpCharging"></div>
-        </div>
-
+        <div class="tab-content active" data-tab-content="basic"><div id="cmpBasic"></div></div>
+        <div class="tab-content" data-tab-content="charging"><div id="cmpCharging"></div></div>
         <div class="tab-content" data-tab-content="subsidy">
           <div style="display:flex;gap:10px;align-items:flex-start;background:#eef5ff;border:1px solid #bcd3f5;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1559c2;line-height:1.6;"><strong style="white-space:nowrap;">ℹ 안내</strong><span>차량별 단순 비교를 위해 특정 조건을 기준으로 최대치를 산정하였습니다. 실제 금액은 거주지·소득·기존 차량 등 개인 조건에 따라 달라집니다.</span></div>
           <div id="cmpSubsidy"></div>
         </div>
-
         <div class="tab-content" data-tab-content="running">
           <div style="display:flex;gap:10px;align-items:flex-start;background:#eef5ff;border:1px solid #bcd3f5;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1559c2;line-height:1.6;"><strong style="white-space:nowrap;">ℹ 안내</strong><span>차량별 단순 비교를 위해 특정 조건을 기준으로 최대치를 산정하였습니다.</span></div>
           <div id="cmpRunning"></div>
         </div>
-
       </div>
+
+      <!-- [DEV] 원천 매핑 노트 (개발자용 · 대민 노출 아님) -->
+      <details class="dev-note">
+        <summary>[DEV] 데이터 원천 · 계산식 (개발 참고 — 대민 미노출)</summary>
+        <p><strong>원천 테이블 = <code>EVCS_CAR_INFO</code></strong>(대민 지급대상 차종, 55컬럼·EV-MAPS 실측). 아래 항목만 AS-IS 보유 → 그 외 제원(구동·크기·축거·토크·저공해등급·효율등급·충전시간·급속출력)은 컬럼 부재로 <strong>제거</strong>.</p>
+        <ul style="margin:6px 0 0 16px;">
+          <li>기본: 차종 <code>CAR_KIND+CAR_TYPE</code> · 차급 <code>CAR_TYPE_SUB</code>(화물·버스만) · 정원 <code>PERSONS</code> · 최고속도 <code>MAX_SPEED</code> · 연식 <code>YEAR</code> · 제조국 <code>MADE_IN</code> · 판매가 <code>SALE_PRICE</code> · (건설기계)<code>WEIGHT/RATED_OUTPUT/BUCKET_CAPACITY/MAX_EXCAVATION</code></li>
+          <li>충전: 배터리 <code>BATTERY</code>(종류+용량 텍스트) · 주행 <code>CHARGER_DISTANCE</code> · 충전포트 <code>CHARGER_PORT</code> · (수소)<code>STGK_CPCTY/ELCTC_PRESSR</code></li>
+          <li>복합효율/연료비 = <strong>추정</strong>: 전비 = 주행거리 ÷ 배터리용량(km/kWh), 수소 = 주행 ÷ 수소탱크(km/kg). 연료비 = 20,000km ÷ 전비 × 단가.</li>
+          <li>국비=psSubsiSimulCalc 산식 / 지방비=지자체×차종 데이터 / 세제감면=개소세300+교육세90+취득세140(승용) / 자동차세=용도별 정액 / 실구매가=판매가−(국비+지방비).</li>
+          <li>단가 <code>[미정]</code>: 전기 <code>ELEC_RATE</code>=300원/kWh(환경부 5밴드 대표), 수소 <code>H2_RATE</code>=8,800원/kg — 발주처 확정. SALE_PRICE 값 성격(판매가 vs 보조금)도 운영 확인.</li>
+        </ul>
+      </details>
 
     </div>
   </section>
@@ -122,6 +127,9 @@
 
 </main>
 
+<!-- [ISS-092] 진입 팝업(매 진입) -->
+<template data-amount-guard="popup" data-ag-title="차종 비교 금액 안내"><p>비교에 표시되는 <strong>보조금·세제감면·연료비는 추정치</strong>이며 실제와 다를 수 있습니다.</p></template>
+
 <div id="footer-slot"></div>
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
@@ -129,90 +137,99 @@
 <script src="js/i18n-extra.js?v=20260728e"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/ai-floating.js?v=20260729a"></script>
+<script src="js/amount-guard.js?v=20260802b"></script>
 <script>
-/* 차종 비교 도구 — 선택 차량 배열(state, 최대 3) 기반 동적 렌더 + 수소차 혼합(에너지원 적응형)
-   · 공통 거주지(시도+시군구)로 차량별 지방비, 공통 자동차세 용도로 세금 재계산. 전부 더미. */
+/* 차종 비교 도구 — EV-MAPS(EVCS_CAR_INFO 55컬럼) 기준 재구성 (2026-08-03)
+   · AS-IS 보유 컬럼 + 추정 계산 가능 항목만 노출. 없는 제원은 제거.
+   · 데이터는 더미(현실값), 실개발 시 EVCS_CAR_INFO 연동. 계산 단가는 [DEV] 상수. */
 (function(){
-  // ── 차량 스펙 데이터셋 (모델별 전 탭 스펙 + 에너지원 태그 · 더미·현실값) ──
+  // ── 단가 상수([DEV] 발주처 확정) ──
+  var ELEC_RATE=300;   // 원/kWh — 환경부 충전요금 5밴드 대표값(대민 안내용 추정)
+  var H2_RATE=8800;    // 원/kg — 수소 판매단가(미정)
+  var YEAR_KM=20000;   // 연 주행 가정(km)
+
+  // ── 차량 데이터셋 (basic=AS-IS 보유 필드 / charging / subsidy / spec=건설기계 전용) ──
   var CARS = {
-    ioniq6:{ name:'아이오닉 6', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-ioniq6.svg',
-      basic:{ 차종:'전기승용', 차급:'준대형', 구동방식:'후륜(2WD)', 정원:'5명', 크기:'4,855 × 1,880 × 1,495 mm', 축거:'2,950 mm', 공차중량:'1,960 kg', 모터출력:'168 kW', 토크:'350 Nm', 최고속도:'185 km/h', 복합효율:'6.2 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
-      ev:{ 배터리용량:'77.4 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'524 km', 주행저온:'약 440 km', 완속:'약 11시간', 급속:'18분', 급속출력:'233 kW' },
-      subsidy:{ 국비:650, 출고가:5200, 세제감면:530 }, running:{ 에너지비용:'약 68만원 (전기 충전료)' } },
-    ev6:{ name:'EV6', maker:'기아', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg',
-      basic:{ 차종:'전기승용', 차급:'준중형', 구동방식:'후륜(2WD)', 정원:'5명', 크기:'4,680 × 1,890 × 1,550 mm', 축거:'2,900 mm', 공차중량:'1,990 kg', 모터출력:'168 kW', 토크:'350 Nm', 최고속도:'185 km/h', 복합효율:'5.6 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
-      ev:{ 배터리용량:'77.4 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'475 km', 주행저온:'약 400 km', 완속:'약 11시간', 급속:'18분', 급속출력:'240 kW' },
-      subsidy:{ 국비:650, 출고가:4995, 세제감면:530 }, running:{ 에너지비용:'약 72만원 (전기 충전료)' } },
-    ioniq5:{ name:'아이오닉 5', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg',
-      basic:{ 차종:'전기승용', 차급:'준중형', 구동방식:'후륜(2WD)', 정원:'5명', 크기:'4,655 × 1,890 × 1,605 mm', 축거:'3,000 mm', 공차중량:'2,020 kg', 모터출력:'168 kW', 토크:'350 Nm', 최고속도:'185 km/h', 복합효율:'5.5 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
-      ev:{ 배터리용량:'84.0 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'481 km', 주행저온:'약 405 km', 완속:'약 11.5시간', 급속:'18분', 급속출력:'240 kW' },
-      subsidy:{ 국비:650, 출고가:5250, 세제감면:530 }, running:{ 에너지비용:'약 70만원 (전기 충전료)' } },
-    toresEvx:{ name:'토레스 EVX', maker:'KG모빌리티', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-suv-torres.svg',
-      basic:{ 차종:'전기승용', 차급:'준중형 SUV', 구동방식:'전륜(2WD)', 정원:'5명', 크기:'4,715 × 1,890 × 1,620 mm', 축거:'2,720 mm', 공차중량:'1,940 kg', 모터출력:'152 kW', 토크:'339 Nm', 최고속도:'166 km/h', 복합효율:'4.7 km/kWh', 저공해등급:'1종', 효율등급:'3등급' },
-      ev:{ 배터리용량:'73.4 kWh', 배터리종류:'리튬인산철 (LFP)', 주행상온:'433 km', 주행저온:'약 360 km', 완속:'약 9시간', 급속:'37분', 급속출력:'145 kW' },
-      subsidy:{ 국비:580, 출고가:4870, 세제감면:530 }, running:{ 에너지비용:'약 78만원 (전기 충전료)' } },
-    porter2:{ name:'포터 II 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
-      basic:{ 차종:'전기화물', 차급:'소형 트럭(1톤)', 구동방식:'후륜(2WD)', 정원:'3명', 크기:'5,105 × 1,740 × 1,970 mm', 축거:'2,640 mm', 공차중량:'1,970 kg', 모터출력:'135 kW', 토크:'395 Nm', 최고속도:'약 130 km/h', 복합효율:'3.1 km/kWh', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'58.8 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'211 km', 주행저온:'약 175 km', 완속:'약 9.5시간', 급속:'약 40분', 급속출력:'100 kW' },
-      subsidy:{ 국비:1100, 출고가:4350, 세제감면:460 }, running:{ 에너지비용:'약 95만원 (전기 충전료)' } },
-    nexo:{ name:'NEXO', maker:'현대자동차', energy:'fcev', chip:'수소승용', chipClass:'chip-info', img:'assets/cars/fcev-suv-nexo.svg',
-      basic:{ 차종:'수소승용', 차급:'중형 SUV', 구동방식:'전륜(2WD)', 정원:'5명', 크기:'4,670 × 1,860 × 1,640 mm', 축거:'2,790 mm', 공차중량:'1,890 kg', 모터출력:'120 kW', 토크:'395 Nm', 최고속도:'179 km/h', 복합효율:'96.2 km/kg', 저공해등급:'1종', 효율등급:'1등급' },
-      fcev:{ 수소탱크:'6.33 kg', 충전압력:'700 bar', 주행상온:'609 km', 주행저온:'약 540 km', 충전시간:'약 5분', 연비:'96.2 km/kg' },
-      subsidy:{ 국비:2250, 출고가:7650, 세제감면:660 }, running:{ 에너지비용:'약 183만원 (수소료)' } },
-    // ── 전기승용 (더미 추가) ──
-    kona:{ name:'코나 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg',
-      basic:{ 차종:'전기승용', 차급:'소형 SUV', 구동방식:'전륜(2WD)', 정원:'5명', 크기:'4,355 × 1,825 × 1,575 mm', 축거:'2,660 mm', 공차중량:'1,690 kg', 모터출력:'150 kW', 토크:'255 Nm', 최고속도:'172 km/h', 복합효율:'5.4 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
-      ev:{ 배터리용량:'64.8 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'417 km', 주행저온:'약 350 km', 완속:'약 9시간', 급속:'41분', 급속출력:'100 kW' },
-      subsidy:{ 국비:640, 출고가:4735, 세제감면:530 }, running:{ 에너지비용:'약 66만원 (전기 충전료)' } },
-    model3:{ name:'모델 3', maker:'테슬라', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-model3.svg',
-      basic:{ 차종:'전기승용', 차급:'준중형', 구동방식:'후륜(2WD)', 정원:'5명', 크기:'4,720 × 1,850 × 1,441 mm', 축거:'2,875 mm', 공차중량:'1,760 kg', 모터출력:'208 kW', 토크:'420 Nm', 최고속도:'201 km/h', 복합효율:'5.6 km/kWh', 저공해등급:'1종', 효율등급:'1등급' },
-      ev:{ 배터리용량:'57.5 kWh', 배터리종류:'리튬인산철 (LFP)', 주행상온:'403 km', 주행저온:'약 340 km', 완속:'약 8시간', 급속:'27분', 급속출력:'170 kW' },
-      subsidy:{ 국비:230, 출고가:5199, 세제감면:530 }, running:{ 에너지비용:'약 69만원 (전기 충전료)' } },
-    // ── 전기승합 (더미) ──
-    elecCity:{ name:'일렉시티 (전기버스)', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg',
-      basic:{ 차종:'전기승합', 차급:'대형 저상버스', 구동방식:'후륜(2WD)', 정원:'49명', 크기:'10,995 × 2,490 × 3,375 mm', 축거:'5,400 mm', 공차중량:'11,700 kg', 모터출력:'240 kW', 토크:'-', 최고속도:'약 90 km/h', 복합효율:'0.9 km/kWh', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'384 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'319 km', 주행저온:'약 260 km', 완속:'약 6시간', 급속:'약 72분', 급속출력:'150 kW' },
-      subsidy:{ 국비:7000, 출고가:38000, 세제감면:0 }, running:{ 에너지비용:'약 620만원 (전기 충전료)' } },
-    countyEv:{ name:'카운티 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg',
-      basic:{ 차종:'전기승합', 차급:'소형 승합', 구동방식:'후륜(2WD)', 정원:'25명', 크기:'7,745 × 2,038 × 2,760 mm', 축거:'4,085 mm', 공차중량:'5,600 kg', 모터출력:'150 kW', 토크:'-', 최고속도:'약 92 km/h', 복합효율:'1.4 km/kWh', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'128 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'161 km', 주행저온:'약 130 km', 완속:'약 5시간', 급속:'약 72분', 급속출력:'100 kW' },
-      subsidy:{ 국비:6000, 출고가:15500, 세제감면:0 }, running:{ 에너지비용:'약 330만원 (전기 충전료)' } },
-    // ── 전기화물 (더미 추가) ──
-    bongo3:{ name:'봉고3 EV', maker:'기아', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
-      basic:{ 차종:'전기화물', 차급:'소형 트럭(1톤)', 구동방식:'후륜(2WD)', 정원:'3명', 크기:'5,120 × 1,740 × 1,995 mm', 축거:'2,615 mm', 공차중량:'1,985 kg', 모터출력:'135 kW', 토크:'395 Nm', 최고속도:'약 130 km/h', 복합효율:'3.1 km/kWh', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'58.8 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'211 km', 주행저온:'약 175 km', 완속:'약 9.5시간', 급속:'약 40분', 급속출력:'100 kW' },
-      subsidy:{ 국비:1100, 출고가:4330, 세제감면:460 }, running:{ 에너지비용:'약 94만원 (전기 충전료)' } },
-    evMighty:{ name:'이-마이티', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
-      basic:{ 차종:'전기화물', 차급:'중형 트럭(3.5톤)', 구동방식:'후륜(2WD)', 정원:'3명', 크기:'6,285 × 2,020 × 2,230 mm', 축거:'3,435 mm', 공차중량:'3,700 kg', 모터출력:'160 kW', 토크:'320 Nm', 최고속도:'약 110 km/h', 복합효율:'1.9 km/kWh', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'114.5 kWh', 배터리종류:'리튬이온 (NCM)', 주행상온:'202 km', 주행저온:'약 165 km', 완속:'약 15시간', 급속:'약 60분', 급속출력:'100 kW' },
-      subsidy:{ 국비:1600, 출고가:9200, 세제감면:700 }, running:{ 에너지비용:'약 150만원 (전기 충전료)' } },
-    // ── 전기이륜 (더미) ──
-    smartEvz:{ name:'스마트 EV Z', maker:'그린모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg',
-      basic:{ 차종:'전기이륜', 차급:'경형 이륜(스쿠터)', 구동방식:'후륜', 정원:'2명', 크기:'1,870 × 690 × 1,140 mm', 축거:'1,320 mm', 공차중량:'110 kg', 모터출력:'4 kW', 토크:'-', 최고속도:'약 78 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'3.4 kWh', 배터리종류:'리튬이온 (탈착식)', 주행상온:'95 km', 주행저온:'약 75 km', 완속:'약 4시간', 급속:'-', 급속출력:'-' },
-      subsidy:{ 국비:140, 출고가:430, 세제감면:0 }, running:{ 에너지비용:'약 8만원 (전기 충전료)' } },
-    emVibe:{ name:'EM 바이브', maker:'대동모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg',
-      basic:{ 차종:'전기이륜', 차급:'소형 이륜(스쿠터)', 구동방식:'후륜', 정원:'2명', 크기:'1,930 × 700 × 1,180 mm', 축거:'1,350 mm', 공차중량:'125 kg', 모터출력:'6 kW', 토크:'-', 최고속도:'약 85 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
-      ev:{ 배터리용량:'4.6 kWh', 배터리종류:'리튬이온 (탈착식)', 주행상온:'120 km', 주행저온:'약 95 km', 완속:'약 5시간', 급속:'-', 급속출력:'-' },
-      subsidy:{ 국비:180, 출고가:560, 세제감면:0 }, running:{ 에너지비용:'약 9만원 (전기 충전료)' } },
-    // ── 수소차 (더미: 버스·트럭) ──
-    h2bus:{ name:'일렉시티 수소전기버스', maker:'현대자동차', energy:'fcev', chip:'수소버스', chipClass:'chip-info', img:'assets/cars/ev-bus-elec-city.svg',
-      basic:{ 차종:'수소버스', 차급:'대형 저상버스', 구동방식:'후륜(2WD)', 정원:'49명', 크기:'10,995 × 2,490 × 3,405 mm', 축거:'5,400 mm', 공차중량:'13,500 kg', 모터출력:'180 kW', 토크:'-', 최고속도:'약 90 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
-      fcev:{ 수소탱크:'34.5 kg', 충전압력:'350 bar', 주행상온:'474 km', 주행저온:'약 400 km', 충전시간:'약 15분', 연비:'13.8 km/kg' },
-      subsidy:{ 국비:21000, 출고가:66000, 세제감면:0 }, running:{ 에너지비용:'약 2,400만원 (수소료)' } },
-    h2truck:{ name:'엑시언트 수소전기트럭', maker:'현대자동차', energy:'fcev', chip:'수소트럭', chipClass:'chip-info', img:'assets/cars/ev-truck-porter.svg',
-      basic:{ 차종:'수소트럭', 차급:'대형 트럭(카고)', 구동방식:'후륜(6×2)', 정원:'2명', 크기:'9,745 × 2,490 × 3,730 mm', 축거:'4,635 mm', 공차중량:'9,800 kg', 모터출력:'350 kW', 토크:'-', 최고속도:'약 85 km/h', 복합효율:'-', 저공해등급:'1종', 효율등급:'-' },
-      fcev:{ 수소탱크:'31 kg', 충전압력:'350 bar', 주행상온:'570 km', 주행저온:'약 480 km', 충전시간:'약 20분', 연비:'18.4 km/kg' },
-      subsidy:{ 국비:25000, 출고가:69000, 세제감면:0 }, running:{ 에너지비용:'약 2,800만원 (수소료)' } },
-    // ── 건설기계 (더미) ──
-    forkliftEv:{ name:'전동 지게차 3톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
-      basic:{ 차종:'건설기계', 차급:'전동 지게차(3톤)', 구동방식:'후륜 조향', 정원:'1명', 크기:'3,720 × 1,270 × 2,200 mm', 축거:'1,700 mm', 공차중량:'4,900 kg', 모터출력:'2 × 11 kW', 토크:'-', 최고속도:'약 18 km/h', 복합효율:'-', 저공해등급:'-', 효율등급:'-' },
-      ev:{ 배터리용량:'51.2 kWh', 배터리종류:'리튬이온 (LFP)', 주행상온:'약 8시간 가동', 주행저온:'약 6시간 가동', 완속:'약 6시간', 급속:'약 90분', 급속출력:'30 kW' },
-      subsidy:{ 국비:500, 출고가:5200, 세제감면:0 }, running:{ 에너지비용:'약 120만원 (전기 충전료)' } },
-    excavatorEv:{ name:'전동 굴착기 1.9톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg',
-      basic:{ 차종:'건설기계', 차급:'미니 굴착기(1.9톤)', 구동방식:'무한궤도', 정원:'1명', 크기:'3,880 × 1,360 × 2,510 mm', 축거:'-', 공차중량:'1,900 kg', 모터출력:'18 kW', 토크:'-', 최고속도:'약 4.5 km/h', 복합효율:'-', 저공해등급:'-', 효율등급:'-' },
-      ev:{ 배터리용량:'32 kWh', 배터리종류:'리튬이온 (LFP)', 주행상온:'약 4시간 가동', 주행저온:'약 3시간 가동', 완속:'약 4시간', 급속:'약 60분', 급속출력:'20 kW' },
-      subsidy:{ 국비:600, 출고가:8500, 세제감면:0 }, running:{ 에너지비용:'약 90만원 (전기 충전료)' } }
+    // 전기승용 (차급=CAR_TYPE_SUB 승용 세분 없음 → '-')
+    ioniq6:{ name:'아이오닉 6', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-ioniq6.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'185 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 77.4 kWh', 주행거리:'524 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:650, 판매가:5200, 세제감면:530 } },
+    ev6:{ name:'EV6', maker:'기아', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'185 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 77.4 kWh', 주행거리:'475 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:650, 판매가:4995, 세제감면:530 } },
+    ioniq5:{ name:'아이오닉 5', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'185 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 84.0 kWh', 주행거리:'481 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:650, 판매가:5250, 세제감면:530 } },
+    toresEvx:{ name:'토레스 EVX', maker:'KG모빌리티', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-suv-torres.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'166 km/h' },
+      charging:{ 배터리:'리튬인산철(LFP) 73.4 kWh', 주행거리:'433 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:580, 판매가:4870, 세제감면:530 } },
+    kona:{ name:'코나 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'172 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 64.8 kWh', 주행거리:'417 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:640, 판매가:4735, 세제감면:530 } },
+    model3:{ name:'모델 3', maker:'테슬라', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-model3.svg', year:'2024', origin:'미국',
+      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'201 km/h' },
+      charging:{ 배터리:'리튬인산철(LFP) 57.5 kWh', 주행거리:'403 km', 충전포트:'NACS' },
+      subsidy:{ 국비:230, 판매가:5199, 세제감면:530 } },
+    // 전기승합 (차급=버스 세분)
+    elecCity:{ name:'일렉시티 (전기버스)', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승합', 차급:'버스대형', 정원:'49명', 최고속도:'90 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 384 kWh', 주행거리:'319 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:7000, 판매가:38000, 세제감면:0 } },
+    countyEv:{ name:'카운티 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기승합', 차급:'버스중형', 정원:'25명', 최고속도:'92 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 128 kWh', 주행거리:'161 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:6000, 판매가:15500, 세제감면:0 } },
+    // 전기화물 (차급=화물 세분)
+    porter2:{ name:'포터 II 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기화물', 차급:'화물소형(1톤)', 정원:'3명', 최고속도:'130 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 58.8 kWh', 주행거리:'211 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:1100, 판매가:4350, 세제감면:460 } },
+    bongo3:{ name:'봉고3 EV', maker:'기아', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기화물', 차급:'화물소형(1톤)', 정원:'3명', 최고속도:'130 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 58.8 kWh', 주행거리:'211 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:1100, 판매가:4330, 세제감면:460 } },
+    evMighty:{ name:'이-마이티', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기화물', 차급:'화물경형(3.5톤)', 정원:'3명', 최고속도:'110 km/h' },
+      charging:{ 배터리:'리튬이온(NCM) 114.5 kWh', 주행거리:'202 km', 충전포트:'DC콤보' },
+      subsidy:{ 국비:1600, 판매가:9200, 세제감면:700 } },
+    // 전기이륜
+    smartEvz:{ name:'스마트 EV Z', maker:'그린모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기이륜', 차급:'-', 정원:'2명', 최고속도:'78 km/h' },
+      charging:{ 배터리:'리튬이온(탈착) 3.4 kWh', 주행거리:'95 km', 충전포트:'전용' },
+      subsidy:{ 국비:140, 판매가:430, 세제감면:0 } },
+    emVibe:{ name:'EM 바이브', maker:'대동모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'전기이륜', 차급:'-', 정원:'2명', 최고속도:'85 km/h' },
+      charging:{ 배터리:'리튬이온(탈착) 4.6 kWh', 주행거리:'120 km', 충전포트:'전용' },
+      subsidy:{ 국비:180, 판매가:560, 세제감면:0 } },
+    // 수소차 (charging=수소탱크·충전압력)
+    nexo:{ name:'NEXO', maker:'현대자동차', energy:'fcev', chip:'수소승용', chipClass:'chip-info', img:'assets/cars/fcev-suv-nexo.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'수소승용', 차급:'-', 정원:'5명', 최고속도:'179 km/h' },
+      charging:{ 수소탱크:'6.33 kg', 충전압력:'700 bar', 주행거리:'609 km', 충전포트:'수소' },
+      subsidy:{ 국비:2250, 판매가:7650, 세제감면:660 } },
+    h2bus:{ name:'일렉시티 수소전기버스', maker:'현대자동차', energy:'fcev', chip:'수소버스', chipClass:'chip-info', img:'assets/cars/ev-bus-elec-city.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'수소버스', 차급:'버스대형', 정원:'49명', 최고속도:'90 km/h' },
+      charging:{ 수소탱크:'34.5 kg', 충전압력:'350 bar', 주행거리:'474 km', 충전포트:'수소' },
+      subsidy:{ 국비:21000, 판매가:66000, 세제감면:0 } },
+    h2truck:{ name:'엑시언트 수소전기트럭', maker:'현대자동차', energy:'fcev', chip:'수소트럭', chipClass:'chip-info', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'수소트럭', 차급:'화물대형', 정원:'2명', 최고속도:'85 km/h' },
+      charging:{ 수소탱크:'31 kg', 충전압력:'350 bar', 주행거리:'570 km', 충전포트:'수소' },
+      subsidy:{ 국비:25000, 판매가:69000, 세제감면:0 } },
+    // 건설기계 (spec=총중량·모터출력·버켓·굴삭 · 주행=가동시간이라 연료비 추정 제외)
+    forkliftEv:{ name:'전동 지게차 3톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'건설기계', 차급:'지게차(3톤)', 정원:'1명', 최고속도:'18 km/h' },
+      charging:{ 배터리:'리튬이온(LFP) 51.2 kWh', 주행거리:'약 8시간 가동', 충전포트:'-' },
+      spec:{ 총중량:'4,900 kg', 모터출력:'2 × 11 kW' },
+      subsidy:{ 국비:500, 판매가:5200, 세제감면:0 } },
+    excavatorEv:{ name:'전동 굴착기 1.9톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
+      basic:{ 차종:'건설기계', 차급:'미니 굴착기(1.9톤)', 정원:'1명', 최고속도:'4.5 km/h' },
+      charging:{ 배터리:'리튬이온(LFP) 32 kWh', 주행거리:'약 4시간 가동', 충전포트:'-' },
+      spec:{ 총중량:'1,900 kg', 모터출력:'18 kW', 버켓용량:'0.05 ㎥', 최대굴삭력:'약 14 kN' },
+      subsidy:{ 국비:600, 판매가:8500, 세제감면:0 } }
   };
 
   // 시도 → [시군구, 지방비(만원)] · 자동차세 용도(만원) — 공통(같은 조건으로 차량 비교)
@@ -228,7 +245,7 @@
   var TAX=[['비영업 승용',13],['영업용 승용',2],['전기화물',2.85],['전기승합(소형)',2]];
 
   var DEFAULT=['ioniq6','ev6'];
-  var state=DEFAULT.slice();                 // 선택 차량 키 배열(최대 3)
+  var state=DEFAULT.slice();
   var selSido='충청남도', selSgg=String((REGION['충청남도'][0]||[])[1]||0), selUse=String(TAX[0][1]);
   var modalTab='전기승용', modalQuery='', modalPage=1;
   var MODAL_PAGE_SIZE=3;
@@ -237,35 +254,86 @@
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function toast(m,t){ if(window.__toast) window.__toast(m,t); }
   function tip(t){ return '<span class="ctip" data-tip="'+esc(t)+'">ⓘ</span>'; }
-  function na(){ return '<span style="color:var(--text-tertiary);">해당없음</span>'; }
+  function na(){ return '<span style="color:var(--text-tertiary);">'+t('ctool.val.na')+'</span>'; }
   function curLamt(){ return parseFloat(selSgg)||0; }
   function $(id){ return document.getElementById(id); }
+
+  // [ISS-093] 페이지 로컬 i18n(ko/en) — JS 렌더 라벨·툴팁. 표시 데이터값(차명·스펙·지역)은 AS-IS라 키화 대상 아님.
+  var CT_I18N = {
+    'ctool.row.type':{ko:'차종',en:'Type'}, 'ctool.row.maker':{ko:'제조사',en:'Manufacturer'},
+    'ctool.row.class':{ko:'차급',en:'Class'}, 'ctool.row.seats':{ko:'승차정원',en:'Seats'},
+    'ctool.row.topspeed':{ko:'최고속도',en:'Top Speed'}, 'ctool.row.year':{ko:'연식',en:'Model Year'},
+    'ctool.row.origin':{ko:'제조국',en:'Country of Origin'}, 'ctool.row.eff':{ko:'복합효율',en:'Combined Efficiency'},
+    'ctool.row.weight':{ko:'총중량',en:'Gross Weight'}, 'ctool.row.motor':{ko:'모터 출력',en:'Motor Power'},
+    'ctool.row.bucket':{ko:'버켓 용량',en:'Bucket Capacity'}, 'ctool.row.excav':{ko:'최대 굴삭력',en:'Max Digging Force'},
+    'ctool.row.range':{ko:'1회 충전 주행',en:'Driving Range'}, 'ctool.row.port':{ko:'충전 포트',en:'Charging Port'},
+    'ctool.row.battery':{ko:'배터리',en:'Battery'}, 'ctool.row.h2tank':{ko:'수소탱크 용량',en:'H₂ Tank Capacity'},
+    'ctool.row.h2press':{ko:'충전 압력',en:'Fill Pressure'}, 'ctool.row.subNat':{ko:'국비 보조금',en:'National Subsidy'},
+    'ctool.row.subLoc':{ko:'지방비',en:'Local Subsidy'}, 'ctool.row.subTotal':{ko:'총 보조금',en:'Total Subsidy'},
+    'ctool.row.subTotalSub':{ko:'(국비+지방비)',en:'(National+Local)'}, 'ctool.row.taxcut':{ko:'세제 감면 (최대)',en:'Tax Reduction (max)'},
+    'ctool.row.net':{ko:'실 구매 가격',en:'Net Price'}, 'ctool.row.energy':{ko:'에너지 비용 (2만km)',en:'Energy Cost (20,000km)'},
+    'ctool.row.autotax':{ko:'자동차세',en:'Vehicle Tax'}, 'ctool.row.benefits':{ko:'이용 혜택',en:'Usage Benefits'},
+    'ctool.row.benefitsSub':{ko:'(무공해차 공통)',en:'(all ZEVs)'}, 'ctool.row.tollHwy':{ko:'고속도로 통행료',en:'Highway Toll'},
+    'ctool.row.tollCong':{ko:'혼잡통행료 (서울)',en:'Congestion Toll (Seoul)'}, 'ctool.row.parking':{ko:'공영주차장',en:'Public Parking'},
+    'ctool.row.envfee':{ko:'환경개선부담금',en:'Environment Fee'},
+    'ctool.hdr.item':{ko:'항목',en:'Item'}, 'ctool.hdr.annual':{ko:'연간 기준',en:'Per year'}, 'ctool.hdr.addcar':{ko:'추가 차량',en:'Add vehicle'},
+    'ctool.val.na':{ko:'해당없음',en:'N/A'}, 'ctool.val.reduce':{ko:'감면',en:'Reduced'}, 'ctool.val.exempt':{ko:'면제',en:'Exempt'}, 'ctool.val.est':{ko:'추정',en:'Est.'},
+    'ctool.card.price':{ko:'판매가',en:'Price'}, 'ctool.card.aftersub':{ko:'보조금 차감',en:'After subsidy'},
+    'ctool.card.add':{ko:'차량 추가',en:'Add vehicle'}, 'ctool.card.addhint':{ko:'최대 3대까지 비교 가능',en:'Compare up to 3'},
+    'ctool.tip.class':{ko:'화물·버스만 세분 분류가 있습니다(승용은 미분류).',en:'Only trucks and buses have sub-classes (passenger cars are not sub-classified).'},
+    'ctool.tip.eff':{ko:'주행거리 ÷ 배터리용량으로 산출한 추정 전비입니다(전기 km/kWh · 수소 km/kg).',en:'Estimated efficiency = range ÷ battery capacity (EV km/kWh · H₂ km/kg).'},
+    'ctool.tip.range':{ko:'AS-IS 1회충전주행거리(상온·저온이 한 항목에 기재될 수 있음).',en:'Single-charge range as recorded (normal/low temperature may be combined in one field).'},
+    'ctool.tip.battery':{ko:'AS-IS 배터리 항목(종류·용량이 한 텍스트로 기재).',en:'Battery field as recorded (type and capacity in one text).'},
+    'ctool.tip.taxcut':{ko:'개별소비세(최대300)+교육세(개소세30%·최대90)+취득세(최대140) 합. 승용 기준 최대 530만원(공채 별도).',en:'Individual consumption tax (max 300) + education tax (30% of ICT, max 90) + acquisition tax (max 140). Up to 5.3M KRW for passenger cars (bonds separate).'},
+    'ctool.tip.net':{ko:'판매가 − (국비+지방비). 세제감면은 별도 표시.',en:'Price − (national + local subsidy). Tax reduction shown separately.'},
+    'ctool.tip.energy':{ko:'연 2만km 가정 · 전비(주행÷배터리) × 단가로 추정. 전기 300원/kWh·수소 8,800원/kg(추정).',en:'Assumes 20,000km/yr · efficiency × unit price. EV 300 KRW/kWh · H₂ 8,800 KRW/kg (est.).'},
+    'ctool.tip.autotax':{ko:'차량 용도별 정액(지방교육세 포함). 아래에서 용도 선택. 비영업 13만·영업용 2만원.',en:'Flat rate by use (incl. local education tax). Select use below. Non-commercial 130k · commercial 20k KRW.'}
+  };
+  (function(){ if(window.__i18n && __i18n.register){ var ko={},en={}; Object.keys(CT_I18N).forEach(function(k){ko[k]=CT_I18N[k].ko;en[k]=CT_I18N[k].en;}); __i18n.register({ko:ko,en:en}); } })();
+  function ctIsEn(){ try{ return window.__i18n && __i18n.getLang && __i18n.getLang()==='en'; }catch(e){ return false; } }
+  function t(k){ try{ if(window.__i18n && __i18n.t){ var m=__i18n.t(k); if(m&&m!==k) return m; } }catch(e){} return CT_I18N[k]?(ctIsEn()?CT_I18N[k].en:CT_I18N[k].ko):k; }
+
+  // ── 숫자 파싱 · 전비/연료비 추정 ──
+  function pnum(s){ var m=String(s).replace(/,/g,'').match(/[\d.]+/); return m?parseFloat(m[0]):0; }
+  function battKwh(s){ var m=String(s).match(/([\d.]+)\s*kWh/); return m?parseFloat(m[1]):0; }
+  function isKm(s){ return /\bkm\b/.test(String(s)); }
+  function effOf(c){                         // 복합효율(추정) km/kWh (수소=km/kg)
+    var km=pnum(c.charging.주행거리); if(!isKm(c.charging.주행거리)||!km) return 0;
+    if(c.energy==='ev'){ var kwh=battKwh(c.charging.배터리); return kwh?km/kwh:0; }
+    var kg=pnum(c.charging.수소탱크); return kg?km/kg:0;
+  }
+  function effTxt(c){ var e=effOf(c); if(!e) return na();
+    return e.toFixed(1)+(c.energy==='ev'?' km/kWh':' km/kg')+' <span class="est-badge">'+t('ctool.val.est')+'</span>'; }
+  function fuelTxt(c){ var e=effOf(c); if(!e) return na();
+    var rate=c.energy==='ev'?ELEC_RATE:H2_RATE;
+    var cost=YEAR_KM/e*rate;                 // 원/년
+    return '약 '+won(Math.round(cost/10000))+'만원'+(c.energy==='ev'?' (전기)':' (수소)'); }
 
   // ── 차량 카드 ──
   function placeholderCard(){
     return '<button class="car-card" data-modal-open="addCarModal" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;background:var(--color-gray-50);border-style:dashed;cursor:pointer;width:100%;">'
       +'<div style="width:64px;height:64px;border-radius:50%;background:var(--gradient-primary-soft);display:grid;place-items:center;color:var(--color-primary-600);margin-bottom:16px;font-size:32px;">+</div>'
-      +'<h4>차량 추가</h4><p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">최대 3대까지 비교 가능</p></button>';
+      +'<h4>'+t('ctool.card.add')+'</h4><p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">'+t('ctool.card.addhint')+'</p></button>';
   }
   function cardHTML(key, idx){
     if(!key) return placeholderCard();
-    var c=CARS[key], lamt=curLamt(), net=c.subsidy.출고가-(c.subsidy.국비+lamt);
+    var c=CARS[key], lamt=curLamt(), net=c.subsidy.판매가-(c.subsidy.국비+lamt);
     return '<div class="car-card selected">'
       +'<div style="position:absolute;top:16px;right:16px;"><button class="btn btn-icon-only" style="width:32px;height:32px;" aria-label="제거" type="button" data-role="remove-car" data-idx="'+idx+'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'
       +'<div class="car-image"><img src="'+c.img+'" alt="'+esc(c.name)+'"></div>'
       +'<span class="chip '+c.chipClass+' mb-2">'+esc(c.chip)+'</span>'
       +'<h3 style="font-size:22px;">'+esc(c.name)+'</h3>'
-      +'<p style="color:var(--text-tertiary);font-size:13px;margin-bottom:12px;">'+esc(c.maker)+'</p>'
+      +'<p style="color:var(--text-tertiary);font-size:13px;margin-bottom:12px;">'+esc(c.maker)+' · '+esc(c.year)+'</p>'
       +'<div style="padding:14px;background:var(--color-primary-50);border-radius:12px;"><div class="flex justify-between">'
-        +'<div><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">판매가</div><div style="font-size:18px;font-weight:700;">'+won(c.subsidy.출고가)+'만원</div></div>'
-        +'<div style="text-align:right;"><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">보조금 차감</div><div style="font-size:18px;font-weight:700;color:var(--color-primary-700);">'+won(net)+'만원</div></div>'
+        +'<div><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.card.price')+'</div><div style="font-size:18px;font-weight:700;">'+won(c.subsidy.판매가)+'만원</div></div>'
+        +'<div style="text-align:right;"><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.card.aftersub')+'</div><div style="font-size:18px;font-weight:700;color:var(--color-primary-700);">'+won(net)+'만원</div></div>'
       +'</div></div></div>';
   }
 
-  // ── 비교표 공통 빌더 (항목 + 3열 고정) ──
+  // ── 비교표 공통 빌더 ──
   function headerRow(first){
     var out='<div class="comparison-row header"><div>'+first+'</div>';
-    for(var i=0;i<3;i++) out+='<div>'+(state[i]?esc(CARS[state[i]].name):'추가 차량')+'</div>';
+    for(var i=0;i<3;i++) out+='<div>'+(state[i]?esc(CARS[state[i]].name):t('ctool.hdr.addcar'))+'</div>';
     return out+'</div>';
   }
   function cells(fn, cellStyle){
@@ -281,75 +349,71 @@
     var lab='<div style="'+labStyle+'">'+label+(opt.tip?tip(opt.tip):'')+(opt.ctrl||'')+'</div>';
     return '<div class="comparison-row"'+(opt.rowStyle?' style="'+opt.rowStyle+'"':'')+'>'+lab+cells(fn,opt.cellStyle)+'</div>';
   }
+  function anySpec(key){ return state.some(function(k){return k&&CARS[k].spec&&CARS[k].spec[key]!=null;}); }
+  function specCell(c,key){ return (c.spec&&c.spec[key]!=null)?esc(c.spec[key]):na(); }
 
-  // ── 탭별 렌더 ──
+  // ── 기본 스펙 탭 (AS-IS 보유 항목만) ──
   function renderBasic(){
-    var R=[
-      ['차종', function(c){return esc(c.basic.차종);}],
-      ['제조사', function(c){return esc(c.maker);}],
-      ['차급', function(c){return esc(c.basic.차급);}],
-      ['구동방식', function(c){return esc(c.basic.구동방식);}],
-      ['승차정원', function(c){return esc(c.basic.정원);}],
-      ['전장 × 전폭 × 전고', function(c){return esc(c.basic.크기);}],
-      ['축거', function(c){return esc(c.basic.축거);}],
-      ['공차중량', function(c){return esc(c.basic.공차중량);}],
-      ['모터 최고출력', function(c){return esc(c.basic.모터출력);}],
-      ['최대 토크', function(c){return esc(c.basic.토크);}],
-      ['최고속도', function(c){return esc(c.basic.최고속도);}],
-      ['복합효율 <span style="font-size:11.5px;color:var(--text-tertiary);">(전기 km/kWh · 수소 km/kg)</span>', function(c){return esc(c.basic.복합효율);}],
-      ['저공해차 등급', function(c){return esc(c.basic.저공해등급);}],
-      ['에너지소비효율 등급', function(c){return esc(c.basic.효율등급);}]
-    ];
-    var h='<div class="comparison-table">'+headerRow('항목');
-    R.forEach(function(r){ h+=row(r[0], r[1]); });
+    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
+    h+=row(t('ctool.row.type'), function(c){return esc(c.basic.차종);});
+    h+=row(t('ctool.row.maker'), function(c){return esc(c.maker);});
+    h+=row(t('ctool.row.class'), function(c){return c.basic.차급&&c.basic.차급!=='-'?esc(c.basic.차급):na();}, {tip:t('ctool.tip.class')});
+    h+=row(t('ctool.row.seats'), function(c){return esc(c.basic.정원);});
+    h+=row(t('ctool.row.topspeed'), function(c){return esc(c.basic.최고속도);});
+    h+=row(t('ctool.row.year'), function(c){return esc(c.year);});
+    h+=row(t('ctool.row.origin'), function(c){return esc(c.origin);});
+    h+=row(t('ctool.row.eff'), function(c){return effTxt(c);}, {tip:t('ctool.tip.eff')});
+    // 건설기계 전용 제원(값 있는 차량이 있을 때만)
+    if(anySpec('총중량')) h+=row(t('ctool.row.weight'), function(c){return specCell(c,'총중량');});
+    if(anySpec('모터출력')) h+=row(t('ctool.row.motor'), function(c){return specCell(c,'모터출력');});
+    if(anySpec('버켓용량')) h+=row(t('ctool.row.bucket'), function(c){return specCell(c,'버켓용량');});
+    if(anySpec('최대굴삭력')) h+=row(t('ctool.row.excav'), function(c){return specCell(c,'최대굴삭력');});
     $('cmpBasic').innerHTML=h+'</div>';
   }
+
+  // ── 충전·배터리 탭 ──
   function renderCharging(){
     var anyEv=state.some(function(k){return k&&CARS[k].energy==='ev';});
     var anyF=state.some(function(k){return k&&CARS[k].energy==='fcev';});
-    var h='<div class="comparison-table">'+headerRow('항목');
-    // 공통(중립 라벨)
-    h+=row('1회 충전 주행 (상온)', function(c){return esc(c[c.energy].주행상온);});
-    h+=row('1회 충전 주행 (저온)', function(c){return esc(c[c.energy].주행저온);});
-    h+=row('충전 · 연료 시간', function(c){return c.energy==='ev'?esc(c.ev.완속):esc(c.fcev.충전시간);}, {tip:'전기차는 완속 완충(0→100%), 수소차는 1회 충전 시간 기준입니다.'});
-    // 전기 전용(수소차 셀=해당없음)
+    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
+    h+=row(t('ctool.row.range'), function(c){return esc(c.charging.주행거리);}, {tip:t('ctool.tip.range')});
+    h+=row(t('ctool.row.port'), function(c){return c.charging.충전포트?esc(c.charging.충전포트):na();});
     if(anyEv){
-      h+=row('배터리 용량', function(c){return c.energy==='ev'?esc(c.ev.배터리용량):na();});
-      h+=row('배터리 종류', function(c){return c.energy==='ev'?esc(c.ev.배터리종류):na();});
-      h+=row('급속 (10→80%)', function(c){return c.energy==='ev'?esc(c.ev.급속):na();}, {tip:'고출력 급속충전기로 10%→80% 충전에 걸리는 대략적 시간(더미).'});
-      h+=row('급속 최대 충전출력', function(c){return c.energy==='ev'?esc(c.ev.급속출력):na();});
+      h+=row(t('ctool.row.battery'), function(c){return c.energy==='ev'?esc(c.charging.배터리):na();}, {tip:t('ctool.tip.battery')});
     }
-    // 수소 전용(전기차 셀=해당없음)
     if(anyF){
-      h+=row('수소탱크 용량', function(c){return c.energy==='fcev'?esc(c.fcev.수소탱크):na();});
-      h+=row('충전 압력', function(c){return c.energy==='fcev'?esc(c.fcev.충전압력):na();});
-      h+=row('연비 (km/kg)', function(c){return c.energy==='fcev'?esc(c.fcev.연비):na();});
+      h+=row(t('ctool.row.h2tank'), function(c){return c.energy==='fcev'?esc(c.charging.수소탱크):na();});
+      h+=row(t('ctool.row.h2press'), function(c){return c.energy==='fcev'?esc(c.charging.충전압력):na();});
     }
     $('cmpCharging').innerHTML=h+'</div>';
   }
+
+  // ── 보조금·세제 탭 ──
   function renderSubsidy(){
     var lamt=curLamt();
     var ctrl='<div class="cmp-row-ctrl"><select id="cmpSido" aria-label="거주지 시·도"></select><select id="cmpSigungu" aria-label="거주지 시·군·구"></select></div>';
-    var h='<div class="comparison-table">'+headerRow('항목');
-    h+=row('국비 보조금', function(c){return won(c.subsidy.국비)+'만원';});
-    h+=row('지방비', function(){return won(lamt)+'만원';}, {ctrl:ctrl});
-    h+=row('총 보조금 <span style="font-size:11.5px;color:var(--text-tertiary);">(국비+지방비)</span>', function(c){return won(c.subsidy.국비+lamt)+'만원';}, {rowStyle:'background:var(--color-primary-50);', cellStyle:'font-weight:700;color:var(--color-primary-700);'});
-    h+=row('세제 감면 (최대)', function(c){return won(c.subsidy.세제감면)+'만원';}, {tip:'개별소비세·교육세·취득세 등 법정 한도까지 적용한 최대 감면액(더미).'});
-    h+=row('실 구매 가격', function(c){return won(c.subsidy.출고가-(c.subsidy.국비+lamt))+'만원';}, {rowStyle:'background:var(--gradient-primary);color:#fff;', labelStyle:'font-weight:700;color:#fff;', cellStyle:'font-weight:700;font-size:18px;'});
+    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
+    h+=row(t('ctool.row.subNat'), function(c){return won(c.subsidy.국비)+'만원';});
+    h+=row(t('ctool.row.subLoc'), function(){return won(lamt)+'만원';}, {ctrl:ctrl});
+    h+=row(t('ctool.row.subTotal')+' <span style="font-size:11.5px;color:var(--text-tertiary);">'+t('ctool.row.subTotalSub')+'</span>', function(c){return won(c.subsidy.국비+lamt)+'만원';}, {rowStyle:'background:var(--color-primary-50);', cellStyle:'font-weight:700;color:var(--color-primary-700);'});
+    h+=row(t('ctool.row.taxcut'), function(c){return won(c.subsidy.세제감면)+'만원';}, {tip:t('ctool.tip.taxcut')});
+    h+=row(t('ctool.row.net'), function(c){return won(c.subsidy.판매가-(c.subsidy.국비+lamt))+'만원';}, {tip:t('ctool.tip.net'), rowStyle:'background:var(--gradient-primary);color:#fff;', labelStyle:'font-weight:700;color:#fff;', cellStyle:'font-weight:700;font-size:18px;'});
     $('cmpSubsidy').innerHTML=h+'</div>';
     fillRegion();
   }
+
+  // ── 유지비 탭 ──
   function renderRunning(){
     var tax=parseFloat(selUse)||0;
     var ctrl='<div class="cmp-row-ctrl"><select id="cmpUse" aria-label="자동차세 용도"></select></div>';
-    var h='<div class="comparison-table">'+headerRow('연간 기준');
-    h+=row('에너지 비용 (2만km)', function(c){return esc(c.running.에너지비용);}, {tip:'1년 2만km 가정 · 전기차는 충전료, 수소차는 수소료 단가 기준(더미).'});
-    h+=row('자동차세', function(){return won(tax)+'만원';}, {tip:'차량 용도·종류별 자동차세(지방교육세 포함). 아래에서 용도 선택.', ctrl:ctrl});
-    h+='<div class="comparison-row" style="background:var(--color-gray-50);"><div style="font-weight:700;grid-column:1 / -1;">이용 혜택 <span style="font-size:11.5px;font-weight:400;color:var(--text-tertiary);">(무공해차 공통)</span></div></div>';
-    h+=row('고속도로 통행료', function(){return '<span class="chip chip-success">감면</span>';});
-    h+=row('혼잡통행료 (서울)', function(){return '<span class="chip chip-success">면제</span>';});
-    h+=row('공영주차장', function(){return '<span class="chip chip-success">감면</span>';});
-    h+=row('환경개선부담금', function(){return '<span class="chip chip-success">면제</span>';});
+    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.annual'));
+    h+=row(t('ctool.row.energy'), function(c){return fuelTxt(c);}, {tip:t('ctool.tip.energy')});
+    h+=row(t('ctool.row.autotax'), function(){return won(tax)+'만원';}, {tip:t('ctool.tip.autotax'), ctrl:ctrl});
+    h+='<div class="comparison-row" style="background:var(--color-gray-50);"><div style="font-weight:700;grid-column:1 / -1;">'+t('ctool.row.benefits')+' <span style="font-size:11.5px;font-weight:400;color:var(--text-tertiary);">'+t('ctool.row.benefitsSub')+'</span></div></div>';
+    h+=row(t('ctool.row.tollHwy'), function(){return '<span class="chip chip-success">'+t('ctool.val.reduce')+'</span>';});
+    h+=row(t('ctool.row.tollCong'), function(){return '<span class="chip chip-success">'+t('ctool.val.exempt')+'</span>';});
+    h+=row(t('ctool.row.parking'), function(){return '<span class="chip chip-success">'+t('ctool.val.reduce')+'</span>';});
+    h+=row(t('ctool.row.envfee'), function(){return '<span class="chip chip-success">'+t('ctool.val.exempt')+'</span>';});
     $('cmpRunning').innerHTML=h+'</div>';
     fillUse();
   }
@@ -404,7 +468,7 @@
     var m=$('addCarModal'); if(!m) return;
     m.classList.remove('show'); m.setAttribute('aria-hidden','true');
     document.querySelectorAll('.modal-backdrop.show').forEach(function(b){b.classList.remove('show');});
-    document.body.style.overflow='';   // main.js openModal이 건 스크롤 잠금 해제
+    document.body.style.overflow='';
   }
 
   // ── 전체 렌더 ──
@@ -412,7 +476,7 @@
   function renderTitle(){ $('cmpSelTitle').textContent='선택한 차량 ('+state.length+'/3)'; }
   function renderAll(){ renderTitle(); renderCards(); renderBasic(); renderCharging(); renderSubsidy(); renderRunning(); renderModalList(); }
 
-  // ── 이벤트(위임 · main.js 정적 바인딩과 충돌 없이 동적 요소 처리) ──
+  // ── 이벤트 ──
   document.addEventListener('change', function(e){
     var t=e.target;
     if(t.id==='cmpSido'){ selSido=t.value; selSgg=String((REGION[selSido][0]||[])[1]||0); renderSubsidy(); renderCards(); }
@@ -444,6 +508,7 @@
   var resetEl=$('cmpReset');
   if(resetEl) resetEl.addEventListener('click', function(){ state=DEFAULT.slice(); renderAll(); toast('기본 2대로 초기화했습니다.','info'); });
 
+  if(window.__i18n && __i18n.on) __i18n.on(function(){ renderAll(); });
   renderAll();
 })();
 </script>

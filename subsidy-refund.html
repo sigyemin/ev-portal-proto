@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260724a">
 <link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
 <link rel="stylesheet" href="css/screens-v2.css">
+<link rel="stylesheet" href="css/amount-guard.css?v=20260802a"><!-- [ISS-092] 블러 확인 -->
 <style>
   /* 환수금 계산 폼 (라벨 좌 · 입력 우) */
   .refund-grid { display: flex; flex-direction: column; }
@@ -156,6 +157,7 @@
 <script src="js/i18n-common.js?v=20260724a"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/ai-floating.js?v=20260729a"></script>
+<script src="js/amount-guard.js?v=20260802b"></script><!-- [ISS-092] 블러 확인 -->
 <script>
 (function(){
   function el(id){ return document.getElementById(id); }
@@ -209,6 +211,8 @@
     box.hidden = false;
     amt.textContent = fmt(amount);
     note.textContent = msg + ' (참고용 추정치)';
+    // [ISS-092] 매 계산 시 결과 블러 — 확인 후 노출
+    if (window.AmountGuard) AmountGuard.guard(box, { focus: true, note: '이 환수금은 안내가(추정)입니다. 실제 환수액은 차종·연도·지자체 기준에 따라 달라질 수 있습니다.' });
   }
   // 금액 입력란: 숫자만 입력 + 입력 종료(blur) 시 천단위 콤마, 재편집(focus) 시 콤마 제거
   ['rfSubsidy','rfSelf','rfComp'].forEach(function(id){

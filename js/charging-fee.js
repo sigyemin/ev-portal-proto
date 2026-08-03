@@ -1073,6 +1073,8 @@
         renderSegments(SEG, kwh);
         // 결과 최초 산정 1회만 스트립 펄스(세션 내 재계산 시 재펄스 없음)
         if (window.FeeDisclaimer) window.FeeDisclaimer.pulse(document.getElementById('feeStripSim'), 'fee-sim');
+        // [ISS-092] 매 변경 시 예상금액 블러 — 확인 후 노출(라이브 슬라이더라 focus 생략)
+        if (window.AmountGuard) { var _mini = priceEl.closest('.sim-result-mini'); if (_mini) AmountGuard.guard(_mini, { note: '이 예상 금액은 안내가(추정)입니다. 실제 결제금액은 현장 단가·프로모션·로밍에 따라 달라질 수 있습니다.' }); }
         if (flowEl) {
           if (R.disc) {
             // 기본단가 → [할인 배지] → 적용단가 (할인규칙 있을 때만)

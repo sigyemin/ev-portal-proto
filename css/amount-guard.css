@@ -1,0 +1,82 @@
+/* ════════════════════════════════════════════════════════════
+   amount-guard — 안내가(≠실결제) '빡세게' 고지 툴킷 (ISS-092)
+   2종: [블러 확인] 금액을 흐림+오버레이로 가리고 확인 후 노출 · [진입 팝업] 페이지 로드 시 모달 1회(매 진입)
+   · 매 진입/매 계산 시 재적용(세션·쿠키 스킵 없음) — JS가 담당
+   · amber/warning 계열(fee-disclaimer.css와 톤 일치). 색 단독 금지 → 아이콘·텍스트 병용
+   ════════════════════════════════════════════════════════════ */
+
+/* ── [블러 확인] 래퍼 ── */
+.ag-wrap{ position:relative; }
+.ag-content{ transition:filter .18s ease; }
+.ag-content.ag-blurred{
+  filter:blur(9px); user-select:none; pointer-events:none;
+}
+/* 오버레이 — 블러된 금액 위에 문구+확인 버튼 */
+.ag-overlay{
+  position:absolute; inset:0; z-index:5;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; text-align:center; padding:20px 22px;
+  background:rgba(255,251,235,.86); backdrop-filter:blur(1px);
+  border:1px solid #FDE68A; border-radius:12px;
+}
+.ag-overlay[hidden]{ display:none; }
+.ag-overlay .ag-ov-ico{ color:#B45309; flex-shrink:0; }
+.ag-overlay .ag-ov-msg{
+  margin:0; max-width:440px; font-size:13px; line-height:1.6; font-weight:600; color:#92400E;
+}
+.ag-overlay .ag-ov-btn{
+  display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-family:inherit;
+  padding:10px 20px; border-radius:10px; border:1px solid #D97706;
+  background:#F59E0B; color:#3d2707; font-size:13.5px; font-weight:800; line-height:1.2;
+  transition:background .15s ease, transform .1s ease;
+}
+.ag-overlay .ag-ov-btn::before{ content:'🔓'; font-size:13px; }
+.ag-overlay .ag-ov-btn:hover{ background:#D97706; }
+.ag-overlay .ag-ov-btn:active{ transform:scale(.98); }
+.ag-overlay .ag-ov-btn:focus-visible{ outline:2px solid #B45309; outline-offset:2px; }
+
+/* 노출 후 상시 각주 (블러 해제 시 금액 하단에 부착) */
+.ag-note{
+  display:flex; align-items:flex-start; gap:8px;
+  margin-top:12px; padding:9px 13px; border-radius:9px;
+  background:#FFFBEB; border:1px solid #FDE68A; border-left:3px solid #F59E0B;
+  font-size:12px; line-height:1.55; font-weight:600; color:#92400E;
+}
+.ag-note[hidden]{ display:none; }
+.ag-note .ag-note-ico{ flex-shrink:0; font-size:13px; line-height:1.4; }
+
+/* ── [진입 팝업] 모달 ── */
+.ag-modal{ position:fixed; inset:0; z-index:1300; display:none; }
+.ag-modal.is-open{ display:block; }
+.ag-modal-back{ position:absolute; inset:0; background:rgba(15,23,32,.52); }
+.ag-modal-dialog{
+  position:relative; max-width:460px; width:calc(100% - 40px);
+  margin:16vh auto 0; background:#fff; border-radius:16px; overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.3);
+}
+.ag-modal-head{
+  display:flex; align-items:center; gap:10px;
+  padding:18px 22px 0;
+}
+.ag-modal-head .ag-modal-ico{
+  flex-shrink:0; width:38px; height:38px; border-radius:50%;
+  display:grid; place-items:center; background:#FEF3C7; color:#B45309;
+}
+.ag-modal-head h3{ margin:0; font-size:1.1rem; color:#111; }
+.ag-modal-body{ padding:12px 22px 4px; font-size:13.5px; line-height:1.66; color:var(--text-secondary,#4b5563); }
+.ag-modal-body strong{ color:#92400E; }
+.ag-modal-foot{ padding:14px 22px 20px; text-align:right; }
+.ag-modal-foot .ag-modal-btn{
+  display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-family:inherit;
+  padding:11px 24px; border-radius:10px; border:none;
+  background:var(--color-primary-600,#0d8a54); color:#fff; font-size:14px; font-weight:800; line-height:1.2;
+}
+.ag-modal-foot .ag-modal-btn:hover{ background:var(--color-primary-700,#0b7346); }
+.ag-modal-foot .ag-modal-btn:focus-visible{ outline:2px solid var(--color-primary-700,#0b7346); outline-offset:2px; }
+
+/* 진입 팝업 대기 중 본문 가림(선택) — [data-amount-guard="popup"] 호스트가 감싼 영역 */
+.ag-veil{ filter:blur(6px); pointer-events:none; user-select:none; }
+
+@media (prefers-reduced-motion: reduce){
+  .ag-content, .ag-modal-btn{ transition:none !important; }
+}

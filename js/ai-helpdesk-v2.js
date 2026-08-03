@@ -107,6 +107,7 @@
         <div class="ai-msg-bubble">
           <!-- [ISS-087 정정] 답변 툴 아이콘 3종 전부 삭제 — 말풍선은 텍스트만 -->
           <p class="ai-answer-body">${tmpl.body}</p>
+          ${flow === 'subsidy' ? '<p class="ai-amt-badge"><span class="ai-amt-pill">ⓘ 안내가</span> 위 금액은 추정치이며 실제 지급액과 다를 수 있습니다.</p>' : ''}
           <!-- [DEV] 향후 차트/표 슬롯 — 데이터 연동 시 body 아래에 렌더 추가 -->
         </div>`;
       messages.appendChild(el);
@@ -166,7 +167,18 @@
       activeChip = null;
       topbarFlow.textContent = FLOW_NAMES[currentFlow];
       renderChips(currentFlow);
+      syncSubsidyNotice();   // [ISS-092] 보조금 큐레이터 탭 진입 시마다 고지
     }));
+
+    // [ISS-092] 보조금 큐레이터 탭 진입 시마다 '안내가' 고지 배너 (세션 스킵 없음 — 탭 전환할 때마다 노출)
+    var subsidyNotice = document.createElement('div');
+    subsidyNotice.className = 'ai-amt-notice';
+    subsidyNotice.setAttribute('role', 'note');
+    subsidyNotice.hidden = true;
+    subsidyNotice.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>보조금 큐레이터가 안내하는 금액은 <strong>안내가(추정)</strong>이며, 실제 지급액은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</span>';
+    (function () { var flowsEl = document.querySelector('.ai-flows'); if (flowsEl) flowsEl.insertAdjacentElement('afterend', subsidyNotice); })();
+    function syncSubsidyNotice() { subsidyNotice.hidden = (currentFlow !== 'subsidy'); }
+    syncSubsidyNotice();
 
     // 상단 검색 제출
     searchForm.addEventListener('submit', e => {

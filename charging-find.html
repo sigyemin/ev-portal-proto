@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260724a">
 <link rel="stylesheet" href="css/charging.css?v=20260728a">
 <link rel="stylesheet" href="css/fee-disclaimer.css?v=20260721a">
+<link rel="stylesheet" href="css/amount-guard.css?v=20260802a"><!-- [ISS-092] 블러 확인 -->
 <style>
 /* 충전소 찾기 전용 로컬 스타일 */
 [hidden] { display: none !important; }
@@ -1095,6 +1096,7 @@
 <script src="js/i18n-charging.js?v=20260728e"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/fee-disclaimer.js?v=20260721a"></script>
+<script src="js/amount-guard.js?v=20260802b"></script><!-- [ISS-092] 블러 확인 -->
 <script>
 // URL 해시 기반 초기 탭
 (function(){
@@ -1358,6 +1360,8 @@
         more.setAttribute('aria-expanded', __chgExpanded ? 'true' : 'false');
       } else { more.hidden=true; more.setAttribute('aria-expanded','false'); }
     }
+    // [ISS-092] 충전기별 실시간 요금표(참고값) 블러 — 상세패널·충전소 전환마다 재적용. ※기후부 5밴드(#sdMeBands)는 공표 정확값(ISS-045)이라 제외
+    if (window.AmountGuard) AmountGuard.guard(host, { note: '충전기별 회원가·비회원가는 공시 회원가 기준 참고값입니다. 회원·할인·시간대·로밍에 따라 실제 결제금액과 다를 수 있습니다.' });
   }
   /* ── 표 셀 빌더 ─────────────────────────────────────────────────────────────
      [DEV] ★커넥터 타입 이미지 자산 필요 — 프로토타입에 커넥터 이미지 없음(2026-07-23 전수 확인).

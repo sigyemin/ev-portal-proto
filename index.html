@@ -12,6 +12,15 @@
 <link rel="stylesheet" href="css/ai-helpdesk-v2.css?v=20260729a">
 <link rel="stylesheet" href="css/persona-cards.css?v=20260613">
 <link rel="stylesheet" href="css/subsidy-calc.css?v=20260613">
+<link rel="stylesheet" href="css/amount-guard.css?v=20260802a"><!-- [ISS-092] 블러 확인 -->
+<style>
+  /* [ISS-092] AI 보조금 큐레이터 — 안내가 고지 배너 + 답변 배지 */
+  .ai-amt-notice{display:flex;align-items:flex-start;gap:9px;margin:0 0 14px;padding:11px 15px;border-radius:10px;background:#FFFBEB;border:1px solid #FDE68A;border-left:4px solid #F59E0B;font-size:13px;line-height:1.6;font-weight:600;color:#92400E;}
+  .ai-amt-notice[hidden]{display:none;}
+  .ai-amt-notice svg{flex-shrink:0;margin-top:2px;color:#B45309;}
+  .ai-amt-badge{margin:10px 0 0;font-size:12px;line-height:1.55;color:#92400E;}
+  .ai-amt-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;margin-right:4px;border-radius:999px;background:#FEF3C7;border:1px solid #FDE68A;color:#92400E;font-size:11.5px;font-weight:800;}
+</style>
 </head>
 <body class="m02-home">
 <a href="#main" class="skip-link" data-i18n="hm.skip">본문 바로가기</a>
@@ -552,8 +561,9 @@
 <script src="js/fee-compare.js?v=20260613"></script>
 <script src="js/news-data.js?v=20260613"></script>
 <script src="js/home-news.js?v=20260613"></script>
-<script src="js/subsidy-calc.js?v=20260721c"></script>
-<script src="js/ai-helpdesk-v2.js?v=20260729b"></script>
+<script src="js/amount-guard.js?v=20260802b"></script><!-- [ISS-092] 블러 확인 -->
+<script src="js/subsidy-calc.js?v=20260802a"></script>
+<script src="js/ai-helpdesk-v2.js?v=20260802a"></script>
 
 <!-- [삭제 2026-07-21] 메인 진입 시 AI 헬프데스크 초기 스크롤 — 진입 시 자동 스크롤 제거 지시로 폐기 -->
 

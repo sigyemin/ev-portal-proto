@@ -625,6 +625,8 @@
       if (result) result.classList.add('show');
       // 예상액 스트립 최초 등장 1회만 펄스(세션 내 재계산 시 재펄스 없음)
       if (window.FeeDisclaimer) window.FeeDisclaimer.pulse(document.getElementById('feeStripCalc'), 'subsidy-calc');
+      // [ISS-092] 매 계산 시 결과 블러 — 확인 후 노출(빡세게)
+      if (window.AmountGuard && result) AmountGuard.guard(result, { focus: true, note: '이 금액은 안내가(추정)입니다. 실제 지급액은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.' });
     });
 
     renderType();

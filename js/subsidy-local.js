@@ -237,6 +237,13 @@
         + (open ? renderPanel(loc) : '') + '</div>'
         + '</div>';
     }).join('');
+    guardOpenPanel();
+  }
+  /* [ISS-092] 펼친 지자체 금액표 블러 — 매 렌더/펼침/정렬 시 재적용(확인 후 노출) */
+  function guardOpenPanel() {
+    if (!state.open || !window.AmountGuard) return;
+    var acc = els.list.querySelector('.sl-acc.open .sl-acc-panel');
+    if (acc) AmountGuard.guard(acc, { note: '표시된 국비·지방비·소계·전환지원금은 안내가(추정)입니다. 실제 지급액은 지자체 예산·차량 효율 등급·공고에 따라 달라질 수 있습니다.' });
   }
 
   function findLocale(full) { for (var i = 0; i < LOCALES.length; i++) if (LOCALES[i].full === full) return LOCALES[i]; return null; }
@@ -258,6 +265,7 @@
     if (!acc) return;
     var panel = acc.querySelector('.sl-acc-panel');
     if (panel) panel.innerHTML = renderPanel(loc);
+    guardOpenPanel();
   }
 
   /* ── 규격 셀렉트 채우기(선택 차종 기준 · 소스 '규격구분') ── */
