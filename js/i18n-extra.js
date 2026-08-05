@@ -47,7 +47,7 @@
     'ctool.add.desc':         { ko: '최대 3대까지 비교 가능', en: 'Compare up to 3 vehicles' },
     'ctool.tab.basic':        { ko: '기본 스펙',         en: 'Basic Specs' },
     'ctool.tab.charging':     { ko: '충전·배터리',        en: 'Charging & Battery' },
-    'ctool.tab.subsidy':      { ko: '보조금·세제',        en: 'Subsidy & Tax' },
+    'ctool.tab.subsidy':      { ko: '보조금',        en: 'Subsidy' },
     'ctool.tab.running':      { ko: '유지비',            en: 'Running Cost' },
     'ctool.tab.safety':       { ko: '안전·편의',          en: 'Safety & Convenience' },
     'ctool.col.item':         { ko: '항목',              en: 'Item' },

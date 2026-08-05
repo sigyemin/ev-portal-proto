@@ -64,7 +64,8 @@
         <div class="tabs-pill" data-tabs>
           <button class="tab active" data-tab="basic" data-i18n="ctool.tab.basic">기본 스펙</button>
           <button class="tab" data-tab="charging" data-i18n="ctool.tab.charging">충전·배터리</button>
-          <button class="tab" data-tab="subsidy"><span data-i18n="ctool.tab.subsidy">보조금·세제</span> <span class="est-badge">추정</span></button>
+          <!-- [ISS-093 확정] 세제 항목 미노출로 탭명 '보조금'(ko)/'Subsidy'(en) 확정. '추정' 배지=지방비 거주지·개인조건 안내 취지로 유지 확정. -->
+          <button class="tab" data-tab="subsidy"><span data-i18n="ctool.tab.subsidy">보조금</span> <span class="est-badge">추정</span></button>
           <button class="tab" data-tab="running"><span data-i18n="ctool.tab.running">유지비</span> <span class="est-badge">추정</span></button>
         </div>
 
@@ -88,7 +89,9 @@
           <li>기본: 차종 <code>CAR_KIND+CAR_TYPE</code> · 차급 <code>CAR_TYPE_SUB</code>(화물·버스만) · 정원 <code>PERSONS</code> · 최고속도 <code>MAX_SPEED</code> · 연식 <code>YEAR</code> · 제조국 <code>MADE_IN</code> · 판매가 <code>SALE_PRICE</code> · (건설기계)<code>WEIGHT/RATED_OUTPUT/BUCKET_CAPACITY/MAX_EXCAVATION</code></li>
           <li>충전: 배터리 <code>BATTERY</code>(종류+용량 텍스트) · 주행 <code>CHARGER_DISTANCE</code> · 충전포트 <code>CHARGER_PORT</code> · (수소)<code>STGK_CPCTY/ELCTC_PRESSR</code></li>
           <li>복합효율/연료비 = <strong>추정</strong>: 전비 = 주행거리 ÷ 배터리용량(km/kWh), 수소 = 주행 ÷ 수소탱크(km/kg). 연료비 = 20,000km ÷ 전비 × 단가.</li>
-          <li>국비=psSubsiSimulCalc 산식 / 지방비=지자체×차종 데이터 / 세제감면=개소세300+교육세90+취득세140(승용) / 자동차세=용도별 정액 / 실구매가=판매가−(국비+지방비).</li>
+          <li>국비 = <strong><code>PS_MODEL_GOV.GAMT</code> ÷ 10000</strong>(기본국비, 연도·모델별 · WHERE YEAR=해당연도) · 가산 제외(<code>GAMT_ADIT</code>·<code>EXCHANGE_3YEAR_GAMT</code>·차상위·청년·택시·다자녀 미포함) / 지방비=지자체×차종 데이터 / <strong>총 보조금=국비+지방비(탭 노출)</strong> / 자동차세=용도별 정액. <span style="color:#b45309;">[DEV] 매칭: <code>EVCS_CAR_INFO.MODEL</code> ↔ <code>PS_MODEL(MODEL_CD)</code> 연계 필요.</span></li>
+          <li>[ISS-093 확정] <strong>세제 감면(=개소세300+교육세90+취득세140, 승용)·실 구매 가격(=판매가−국비−지방비)은 탭 미노출</strong> — 세제=추정값, 실구매가=SALE_PRICE 성격 §5 미정. 계산식은 참고로만 보존.</li>
+          <li>[ISS-093 확정] 세제 항목 미노출로 <strong>탭명='보조금'</strong>(ko)/'Subsidy'(en) 확정. '<strong>추정</strong>' 배지=지방비 거주지·개인조건 안내 취지로 <strong>유지</strong> 확정.</li>
           <li>단가 <code>[미정]</code>: 전기 <code>ELEC_RATE</code>=300원/kWh(환경부 5밴드 대표), 수소 <code>H2_RATE</code>=8,800원/kg — 발주처 확정. SALE_PRICE 값 성격(판매가 vs 보조금)도 운영 확인.</li>
         </ul>
       </details>
@@ -134,7 +137,7 @@
 <script src="js/partials.js?v=20260724a"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-extra.js?v=20260728e"></script>
+<script src="js/i18n-extra.js?v=20260803a"></script>
 <script src="js/main.js?v=20260724b"></script>
 <script src="js/ai-floating.js?v=20260729a"></script>
 <script src="js/amount-guard.js?v=20260802b"></script>
@@ -396,8 +399,8 @@
     var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
     h+=row(t('ctool.row.subNat'), function(c){return won(c.subsidy.국비)+'만원';});
     h+=row(t('ctool.row.subLoc'), function(){return won(lamt)+'만원';}, {ctrl:ctrl});
-    // [ISS-093 후속] '총 보조금'·'실 구매 가격' 행 제거(사용자 지시 2026-08-03) — 국비 대표조건·SALE_PRICE 성격이 §5 미정이라 파생 합산값 비노출. 국비/지방비/세제감면만 표시.
-    h+=row(t('ctool.row.taxcut'), function(c){return won(c.subsidy.세제감면)+'만원';}, {tip:t('ctool.tip.taxcut')});
+    // [ISS-093 후속 정정] 탭 = 국비/지방비/총 보조금 3행. 세제감면(추정)·실구매가(SALE_PRICE §5미정 파생) 제거. 총 보조금=국비+지방비(둘 다 DB 실값).
+    h+=row(t('ctool.row.subTotal')+' <span style="font-size:11.5px;color:var(--text-tertiary);">'+t('ctool.row.subTotalSub')+'</span>', function(c){return won(c.subsidy.국비+lamt)+'만원';}, {rowStyle:'background:var(--color-primary-50);', cellStyle:'font-weight:700;color:var(--color-primary-700);'});
     $('cmpSubsidy').innerHTML=h+'</div>';
     fillRegion();
   }
