@@ -132,9 +132,8 @@
     'mega.data.open.download':{ ko: '데이터 다운로드',   en: 'Data Download' },
 
     /* 메가메뉴 Lv3 - 소통·지원 */
-    'mega.community.ai.personal': { ko: 'AI 맞춤 상담',    en: 'AI Personalized' },
     'mega.community.ai.subsidy':  { ko: '보조금 큐레이터', en: 'Subsidy Curator' },
-    'mega.community.ai.charge':   { ko: '장애 대응 안내',  en: 'Issue Response' },
+    'mega.community.ai.charge':   { ko: '충전 컨시어지',  en: 'Charging Concierge' },
     'mega.community.notice.keeper': { ko: '전기차 충전소 지킴이 활동', en: 'Charging Station Stewards' },
     'mega.community.notice.list':   { ko: '공지사항', en: 'Notices' },
     'mega.community.notice.press':  { ko: '보도자료', en: 'Press Releases' },

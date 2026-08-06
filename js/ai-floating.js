@@ -12,6 +12,7 @@
   // 메인페이지로 ?ai=플로우 파라미터를 달고 진입한 경우, 인라인 섹션의 해당 플로우 탭 활성화
   if (isMainPage) {
     var aiParam = (location.search.match(/[?&]ai=(personal|subsidy|charge)/) || [])[1];
+    if (aiParam === 'personal') aiParam = 'subsidy';   // [ISS-101] personal 폐지 → subsidy 리다이렉트
     if (aiParam) {
       window.addEventListener('load', function () {
         var fb = document.querySelector('.ai-flow-btn[data-flow="' + aiParam + '"]');
@@ -21,15 +22,17 @@
   }
 
   // ===== 데이터 =====
+  // [ISS-101] 배치 순서: 충전 컨시어지 → 보조금 큐레이터 (기본 선택 active는 subsidy 유지, setFlow('subsidy'))
   var FLOWS = {
-    personal: {
-      label: 'AI 맞춤 상담',
-      headerSub: '사용 환경에 맞춘 1:1 안내',
-      placeholder: '예: 우리 집 충전기 어떤 게 좋을까요?',
-      chips: ['아파트 충전기', '저공해 등급', '내 차에 맞는 보조금', '주행거리 비교', '월 충전비'],
-      // [ISS-085] cards(추천카드)·answer.actions(링크카드)·answer.suggest(후속칩) 제거 — 응답은 text만
+    charge: {
+      label: '충전 컨시어지',
+      headerSub: '충전소·요금·회원카드부터 장애 대응까지',
+      placeholder: '예: 인근 충전소? 충전요금? 충전이 안 돼요',
+      chips: ['인근 충전소', '충전 요금', '회원카드', '충전기 고장', '결제 오류'],
+      // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
+      // [ISS-101] 충전 전반 catch-all 인사말. 장애 트러블슈팅은 후속 안내로 유지.
       answer: {
-        text: '<strong>맞춤 상담</strong>을 시작합니다.<br>거주지·차종·연소득을 알려주시면 신청 가능한 보조금과 추천 차종을 제안해 드릴게요.'
+        text: '<strong>충전 컨시어지</strong>입니다. 충전소 찾기·요금·회원카드부터 충전기 장애 대응까지 도와드려요.<br>충전이 안 될 땐 (1) 카드 칩 청결 확인 → (2) 카드 재등록 → (3) 다른 충전기 시도 순으로 점검해 주세요. 문제 지속 시 <strong>1661-0970</strong>(평일 09~18시)으로 문의해 주세요.'
       }
     },
     subsidy: {
@@ -40,16 +43,6 @@
       // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       answer: {
         text: '<strong>2026년 보조금 큐레이션</strong>입니다. 일반 승용 BEV 기준 국비 480만원 + 지방비 100만원 = 최대 580만원 지원. 차량가 7천만원 이상은 100% 단가 적용 대상에서 제외됩니다.'
-      }
-    },
-    charge: {
-      label: '장애 대응 안내',
-      headerSub: '충전 문제 즉시 해결',
-      placeholder: '예: 충전이 안 돼요',
-      chips: ['충전기 고장', '결제 오류', '카드 인식 안됨', '인근 충전소', '환불 절차'],
-      // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
-      answer: {
-        text: '<strong>충전기 장애 대응</strong>입니다.<br>(1) 카드 칩 청결 확인 → (2) 카드 재등록 → (3) 다른 충전기 시도 순으로 점검해 주세요. 문제 지속 시 <strong>1661-0970</strong>(평일 09~18시)으로 문의해 주세요.'
       }
     }
   };
@@ -89,6 +82,7 @@
     var href = link.getAttribute('href') || '';
     var m = href.match(/[?&]ai=(personal|subsidy|charge)/);
     var flow = m ? m[1] : null;
+    if (flow === 'personal') flow = 'subsidy';   // [ISS-101] personal 폐지 → subsidy 리다이렉트
 
     if (isMainPage) {
       e.preventDefault();
@@ -135,9 +129,8 @@
         + '<button class="aif-close" id="aifClose" type="button" aria-label="닫기">' + ICON.close + '</button>'
       + '</header>'
       + '<nav class="aif-flows" role="tablist">'
-        + '<button class="aif-flow-btn" data-flow="personal" type="button">' + ICON.user + '맞춤 상담</button>'
+        + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '충전 컨시어지</button>'
         + '<button class="aif-flow-btn active" data-flow="subsidy" type="button">' + ICON.money + '보조금 큐레이터</button>'
-        + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '장애 대응</button>'
       + '</nav>'
       + '<div class="aif-chips-wrap"><div class="aif-chips-label">자주 묻는 질문</div><div class="aif-chips" id="aifChips"></div></div>'
       + '<div class="aif-feed" id="aifFeed"></div>'

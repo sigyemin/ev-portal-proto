@@ -8,9 +8,8 @@
   (function(){
     // 플로우별 해시태그
     const CHIPS = {
-      personal: ['차량번호변경','결제카드등록·변경','카드배송','회원가입','마이페이지'],
       subsidy:  ['보조금 계산','충전소 찾기','통계조회','차량 등록'],
-      charge:   ['시스템·홈페이지오류','충전기설치요청','충전기고장','결제오류']
+      charge:   ['충전소 찾기','충전요금','회원카드','충전기고장','결제오류']
     };
 
     // 플로우별 응답 템플릿 — [ISS-087] 답변 텍스트만(body). 링크카드(actions)·관련메뉴(related)·후속질문(SUGGEST_FOLLOWUP) 데이터 제거.
@@ -18,11 +17,8 @@
       subsidy: {
         body: '고객님의 조건에 따른 예상 보조금은 약 <strong>800만원</strong>입니다. 전기차 구매 시 <strong>국고 보조금(최대 450만원)</strong>과 <strong>지방자치단체 보조금(최대 350만원)</strong>을 합산하여 받으실 수 있습니다.'
       },
-      personal: {
-        body: '고객님께 필요한 정보를 종합해 안내해드립니다. <strong>차량번호 변경</strong>·<strong>결제카드 등록</strong>·<strong>통합카드 배송 조회</strong> 등 자주 찾으시는 업무를 안내해 드립니다.'
-      },
       charge: {
-        body: '충전기 고장·시스템 오류 문의는 즉시 담당 운영사에 전달되며, 복구 경과를 <strong>SMS·이메일</strong>로 안내해드립니다. 긴급한 경우 통합 콜센터 <strong>1661-0970</strong>로 연락해 주시기 바랍니다.'
+        body: '<strong>충전 컨시어지</strong>가 충전소 찾기·요금·회원카드부터 충전기 장애 대응까지 도와드립니다. 충전기 고장·시스템 오류 문의는 즉시 담당 운영사에 전달되며, 복구 경과를 <strong>SMS·이메일</strong>로 안내해드립니다. 긴급한 경우 통합 콜센터 <strong>1661-0970</strong>로 연락해 주시기 바랍니다.'
       }
     };
 
@@ -38,7 +34,7 @@
     const topbarFlow = document.getElementById('aiTopbarFlow');
     const answerClose= document.getElementById('aiAnswerClose');
 
-    const FLOW_NAMES = { personal: 'AI 맞춤 상담', subsidy: '보조금 큐레이터', charge: '장애 대응 안내' };
+    const FLOW_NAMES = { subsidy: '보조금 큐레이터', charge: '충전 컨시어지' };
 
     let currentFlow = 'subsidy';
     let activeChip  = null;
@@ -61,13 +57,8 @@
         '충전소 찾기': '우리 지역 충전소를 찾아주세요.',
         '통계조회': '보급 대수 통계를 알려주세요.',
         '차량 등록': '전기차 등록 절차는 어떻게 되나요?',
-        '차량번호변경': '충전카드 차량번호를 변경하려면?',
-        '결제카드등록·변경': '결제카드를 등록·변경하고 싶습니다.',
-        '카드배송': '통합카드 배송은 얼마나 걸리나요?',
-        '회원가입': '회원가입 방법을 알려주세요.',
-        '마이페이지': '마이페이지에서 할 수 있는 일이 뭔가요?',
-        '시스템·홈페이지오류': '홈페이지 접속 오류가 발생합니다.',
-        '충전기설치요청': '충전기 설치를 신청하려면?',
+        '충전요금': '충전 요금은 어떻게 되나요?',
+        '회원카드': '충전 회원카드는 어떻게 발급하나요?',
         '충전기고장': '충전기가 고장났을 때 어떻게 신고하나요?',
         '결제오류': '결제 중 오류가 발생했습니다.'
       };
@@ -269,12 +260,14 @@
     // 초기: 보조금 큐레이터 칩 표시
     renderChips(currentFlow);
 
-    // ─── URL 쿼리 파라미터 라우팅 (?ai=personal|subsidy|charge) ───
+    // ─── URL 쿼리 파라미터 라우팅 (?ai=subsidy|charge) ───
     // GNB > 소통·지원 > AI 헬프데스크 > 각 메뉴 클릭 시 해당 플로우 자동 활성화 + 섹션 스크롤
+    // [ISS-101] personal 플로우 폐지 → 구 personal 링크는 subsidy로 리다이렉트(하위호환)
     (function aiDeepLink(){
       const params = new URLSearchParams(location.search);
-      const target = params.get('ai');
-      if (!['personal','subsidy','charge'].includes(target)) return;
+      let target = params.get('ai');
+      if (target === 'personal') target = 'subsidy';
+      if (!['subsidy','charge'].includes(target)) return;
       // DOMContentLoaded 후 실행 보장 (이미 IIFE는 readyState 이후이지만 헤더 partials 주입 후 안정화 위해 약간 지연)
       setTimeout(() => {
         const btn = document.querySelector(`.ai-flow-btn[data-flow="${target}"]`);

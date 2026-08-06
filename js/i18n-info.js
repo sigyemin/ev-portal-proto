@@ -903,8 +903,8 @@
     'info.lib.m5.desc':           { ko: '통합카드 신청·사용·결제·포인트·분실 처리 안내',
                                     en: 'Integrated Card application, usage, payment, points, and loss handling' },
     'info.lib.m6.title':          { ko: 'AI 헬프데스크 이용 가이드',                  en: 'AI Help Desk Usage Guide' },
-    'info.lib.m6.desc':           { ko: 'AI 맞춤 상담·보조금 큐레이터·장애 대응 활용법',
-                                    en: 'How to use AI personalized consulting, subsidy curator, and incident response' },
+    'info.lib.m6.desc':           { ko: '보조금 큐레이터·충전 컨시어지 활용법',
+                                    en: 'How to use the Subsidy Curator and Charging Concierge' },
     /* === info-cert.html === */
     'info.cert.bc.reg':           { ko: '규정·가이드라인',                          en: 'Regulations & Guidelines' },
     'info.cert.bc.current':       { ko: '인증 기준 안내',                          en: 'Certification Standards' },

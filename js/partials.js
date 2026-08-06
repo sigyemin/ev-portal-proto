@@ -268,11 +268,10 @@
                 <div class="mega-label" data-i18n="nav.community">소통·지원</div>
                 <div class="mega-columns">
                   <div class="mega-col">
-                    <a href="index.html?ai=personal#aiSectionAnchor" class="mega-col-title"><span data-i18n="mega.community.ai">AI 헬프데스크</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
+                    <a href="index.html?ai=subsidy#aiSectionAnchor" class="mega-col-title"><span data-i18n="mega.community.ai">AI 헬프데스크</span> <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 3 11 8 6 13"/></svg></a>
                     <ul>
-                      <li><a href="index.html?ai=personal#aiSectionAnchor" data-i18n="mega.community.ai.personal">AI 맞춤 상담</a></li>
+                      <li><a href="index.html?ai=charge#aiSectionAnchor" data-i18n="mega.community.ai.charge">충전 컨시어지</a></li>
                       <li><a href="index.html?ai=subsidy#aiSectionAnchor" data-i18n="mega.community.ai.subsidy">보조금 큐레이터</a></li>
-                      <li><a href="index.html?ai=charge#aiSectionAnchor" data-i18n="mega.community.ai.charge">장애 대응 안내</a></li>
                     </ul>
                   </div>
                   <div class="mega-col">
@@ -387,7 +386,7 @@
       /* v0.12 IA 재편: 공개 데이터 컬럼 삭제(7) — 공개 데이터 목록은 소통지원>알림공지>공개자료로 통합(8). 원본 보존: { tKey: 'mega.data.open', items: [['공개 데이터 목록','data.html#open-data','mega.data.open.list'],['데이터 다운로드','data.html#open-data','mega.data.open.download']] }, */
     ]},
     { tKey: 'nav.community', cols: [
-      { tKey: 'mega.community.ai', items: [['AI 맞춤 상담','index.html?ai=personal#aiSectionAnchor','mega.community.ai.personal'],['보조금 큐레이터','index.html?ai=subsidy#aiSectionAnchor','mega.community.ai.subsidy'],['장애 대응 안내','index.html?ai=charge#aiSectionAnchor','mega.community.ai.charge']] },
+      { tKey: 'mega.community.ai', items: [['충전 컨시어지','index.html?ai=charge#aiSectionAnchor','mega.community.ai.charge'],['보조금 큐레이터','index.html?ai=subsidy#aiSectionAnchor','mega.community.ai.subsidy']] },
       { tKey: 'mega.community.notice', items: [['공지사항','notice-list.html','mega.community.notice.list'],['보도자료','notice-press.html','mega.community.notice.press'],['홍보자료','notice-promo.html','mega.community.notice.promo'],['공개자료','notice-data.html','mega.community.notice.data']] },
       { tKey: 'mega.community.inquiry', items: [['FAQ (자주 묻는 질문)','inquiry-faq.html','mega.community.inquiry.faq'],['질의응답(건의사항)','inquiry-qna.html','mega.community.inquiry.qna'],['불편 민원 신고','inquiry-complaint.html','mega.community.inquiry.complaint'],['보조금 부적정집행 신고','inquiry-report.html','mega.community.inquiry.report'],['충전요금 할인 미적용 신고','inquiry-charge-discount.html','mega.community.inquiry.discount'],['민원 처리 현황 조회','inquiry-status.html','mega.community.inquiry.status']] },
     ]},

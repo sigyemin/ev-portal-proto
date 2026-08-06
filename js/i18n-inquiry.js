@@ -57,12 +57,12 @@
     'inq.m5.metric':          { ko: '실시간 업데이트',          en: 'Real-Time Updates' },
     'inq.m5.strong':          { ko: 'SMS · 이메일 알림',      en: 'SMS / Email Alerts' },
     'inq.ai.badge':           { ko: 'AI',                 en: 'AI' },
-    'inq.ai.h3':              { ko: 'AI 맞춤 상담',          en: 'AI Personalized Consultation' },
+    'inq.ai.h3':              { ko: 'AI 헬프데스크',          en: 'AI Help Desk' },
     'inq.ai.p':               { ko: '자연어로 질문하면 보조금·충전·세제·정책 답변을 즉시 제공합니다. 복잡한 문의는 담당자에게 자동 연결됩니다.',
                                 en: 'Ask in natural language and get instant answers on subsidies, charging, tax, and policy. Complex inquiries are routed to specialists.' },
     'inq.ai.metric':          { ko: '24시간 운영',           en: '24/7 Service' },
     'inq.ai.strong':          { ko: 'AI 챗봇 시작 →',         en: 'Start AI Chatbot →' },
-    'inq.notify.ai':          { ko: 'AI 맞춤 상담이 곧 연결됩니다.', en: 'AI consultation will connect shortly.' },
+    'inq.notify.ai':          { ko: 'AI 헬프데스크가 곧 연결됩니다.', en: 'AI Help Desk will connect shortly.' },
     /* 최근 답변 */
     'inq.recent.h3':          { ko: '최근 답변된 질의응답',       en: 'Recently Answered Q&A' },
     'inq.recent.p':           { ko: '담당 부서 답변이 최근 5일 이내 등록된 건',
@@ -325,8 +325,8 @@
     'faq.q8.date':            { ko: '최종 업데이트: 2026.02.14',     en: 'Last updated: 2026.02.14' },
     /* 빈 결과 */
     'faq.empty.h4':           { ko: '검색 결과가 없습니다',          en: 'No Search Results' },
-    'faq.empty.p':            { ko: '다른 키워드를 입력하시거나 AI 맞춤 상담을 이용해 보세요.',
-                                en: 'Try different keywords or use the AI consultation.' },
+    'faq.empty.p':            { ko: '다른 키워드를 입력하시거나 AI 헬프데스크를 이용해 보세요.',
+                                en: 'Try different keywords or use the AI Help Desk.' },
     'faq.empty.btn':          { ko: '질의응답 등록',             en: 'Post a Question' },
     'faq.aria.pgnav':         { ko: '페이지 이동',               en: 'Page Navigation' },
 

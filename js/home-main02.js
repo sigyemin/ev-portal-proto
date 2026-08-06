@@ -149,9 +149,9 @@
     if (aiBtn) aiBtn.addEventListener('click', function () {
       quick.classList.remove('open');
       if (window.AIFloating && typeof window.AIFloating.open === 'function') {
-        window.AIFloating.open('personal');
+        window.AIFloating.open('subsidy');
       } else {
-        location.href = 'index.html?ai=personal#aiSectionAnchor';
+        location.href = 'index.html?ai=subsidy#aiSectionAnchor';
       }
     });
     // 회원카드 추가 → 발급 신청 페이지로 이동(링크는 마크업의 href 사용)
@@ -222,7 +222,7 @@
     q = q || '';
     if (/충전|장애|고장/.test(q)) return 'charge';
     if (/보조금|지원금|지급/.test(q)) return 'subsidy';
-    return 'personal';
+    return 'subsidy';   // [ISS-101] personal 폐지 → 기본 subsidy
   }
   function askAI(q, flow) {
     q = (q || '').trim();
@@ -234,13 +234,13 @@
   if (aiForm) aiForm.addEventListener('submit', function (e) {
     e.preventDefault(); askAI(aiInput.value, currentAiFlow());
   });
-  var _aiFlow = 'personal';
+  var _aiFlow = 'subsidy';   // [ISS-101] personal 폐지 → 기본 subsidy
   function currentAiFlow() { return _aiFlow; }
   document.querySelectorAll('.m02-ai-tab').forEach(function (tab) {
     tab.addEventListener('click', function () {
       document.querySelectorAll('.m02-ai-tab').forEach(function (t) { t.classList.remove('active'); });
       tab.classList.add('active');
-      _aiFlow = tab.getAttribute('data-flow') || 'personal';
+      _aiFlow = tab.getAttribute('data-flow') || 'subsidy';
       if (window.AIFloating && window.AIFloating.setFlow) { /* 패널 열기 전엔 플로우만 기억 */ }
     });
   });

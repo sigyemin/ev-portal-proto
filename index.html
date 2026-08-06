@@ -83,7 +83,7 @@
       <button type="button" class="m02-persona-btn" data-persona="driver" role="tab" aria-selected="false" aria-controls="m02EvsvcTrack"><span class="ic">🚗</span><span>무공해차 운전자</span></button>
       <button type="button" class="m02-persona-btn" data-persona="cpo" role="tab" aria-selected="false" aria-controls="m02EvsvcTrack"><span class="ic">🔌</span><span>사업자·제조사</span></button>
       <button type="button" class="m02-persona-btn" data-persona="gov" role="tab" aria-selected="false" aria-controls="m02EvsvcTrack"><span class="ic">🏢</span><span>지자체·공공기관</span></button>
-      <a class="m02-persona-ai" href="index.html?ai=personal#aiSectionAnchor"><span class="ic ai">AI</span><span data-i18n="hm.persona.ai">AI 헬프데스크</span></a>
+      <a class="m02-persona-ai" href="index.html?ai=subsidy#aiSectionAnchor"><span class="ic ai">AI</span><span data-i18n="hm.persona.ai">AI 헬프데스크</span></a>
     </nav>
   </section>
 
@@ -147,25 +147,19 @@
         <p data-i18n-html="home.ai.sub">복잡한 정보 검색도 AI와 대화하듯 간편하게.<br>궁금한 내용을 자연어로 물어보시면 바로 답변해드립니다.</p>
       </div>
 
-      <!-- 3 진입 버튼 (기본: 보조금 큐레이터) -->
+      <!-- 2 진입 버튼 (배치 순서: 충전 컨시어지 → 보조금 큐레이터 / 기본 선택=보조금 큐레이터) [ISS-101] personal 제거·순서 반전 -->
       <div class="ai-flows" role="tablist" data-i18n-aria="home.ai.flow.aria" aria-label="상담 유형 선택">
-        <button type="button" class="ai-flow-btn" data-flow="personal" role="tab" aria-selected="false">
+        <button type="button" class="ai-flow-btn" data-flow="charge" role="tab" aria-selected="false">
           <span class="ai-flow-ico">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
           </span>
-          <span class="ai-flow-name" data-i18n="home.ai.flow.personal">AI 맞춤 상담</span>
+          <span class="ai-flow-name" data-i18n="home.ai.flow.charge">충전 컨시어지</span>
         </button>
         <button type="button" class="ai-flow-btn active" data-flow="subsidy" role="tab" aria-selected="true">
           <span class="ai-flow-ico">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
           </span>
           <span class="ai-flow-name" data-i18n="home.ai.flow.subsidy">보조금 큐레이터</span>
-        </button>
-        <button type="button" class="ai-flow-btn" data-flow="charge" role="tab" aria-selected="false">
-          <span class="ai-flow-ico">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
-          </span>
-          <span class="ai-flow-name" data-i18n="home.ai.flow.charge">장애 대응 안내</span>
         </button>
       </div>
 
@@ -549,21 +543,21 @@
 
 <div id="footer-slot"></div>
 
-<script src="js/partials.js?v=20260724a"></script>
+<script src="js/partials.js?v=20260806a"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260724a"></script>
-<script src="js/i18n-home.js?v=20260728c"></script>
+<script src="js/i18n-common.js?v=20260806a"></script>
+<script src="js/i18n-home.js?v=20260806a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260729a"></script>
+<script src="js/ai-floating.js?v=20260806a"></script>
 <script src="js/home-v2.js?v=20260608"></script>
-<script src="js/home-main02.js?v=20260703c"></script>
+<script src="js/home-main02.js?v=20260806a"></script>
 <script src="js/persona-cards.js?v=20260730b"></script>
 <script src="js/fee-compare.js?v=20260613"></script>
 <script src="js/news-data.js?v=20260613"></script>
 <script src="js/home-news.js?v=20260613"></script>
 <script src="js/amount-guard.js?v=20260802b"></script><!-- [ISS-092] 블러 확인 -->
 <script src="js/subsidy-calc.js?v=20260802a"></script>
-<script src="js/ai-helpdesk-v2.js?v=20260802a"></script>
+<script src="js/ai-helpdesk-v2.js?v=20260806a"></script>
 
 <!-- [삭제 2026-07-21] 메인 진입 시 AI 헬프데스크 초기 스크롤 — 진입 시 자동 스크롤 제거 지시로 폐기 -->
 
