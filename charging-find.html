@@ -587,9 +587,7 @@
               <div style="font-size: 14px;"><span data-i18n="charging.find.result.prefix">검색 결과</span> <strong id="station-count" style="color: var(--color-primary-700);">8</strong><span data-i18n="charging.find.result.suffix">건</span></div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <label class="cf-fav-check"><input type="checkbox" id="cfFavOnly"><span>☆ 즐겨찾기만 보기</span></label>
-                <select class="form-select" style="width:140px;padding:6px 30px 6px 10px;font-size:12px;" data-i18n-aria="charging.find.sort.aria" aria-label="정렬">
-                  <option data-i18n="charging.find.sort.distance">거리순</option><option data-i18n="charging.find.sort.avail">이용 가능한순</option><option data-i18n="charging.find.sort.uptime">가동률 높은순</option><option data-i18n="charging.find.sort.cheap">요금 저렴한순</option>
-                </select>
+                <!-- [ISS-102] 정렬 드롭다운(거리순/이용가능/가동률/요금) 전체 삭제 (사용자 8/6). 즐겨찾기 체크박스·XLSX는 유지 -->
                 <button type="button" class="ev-download-btn xlsx" id="stationXlsxBtn" aria-label="검색 결과 엑셀 다운로드">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   <span class="ext">XLSX</span>
@@ -1089,7 +1087,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/me-public-rate.js?v=20260723a"></script><!-- [ISS-045] 기후부 공표 5밴드 단일 소스 -->
-<script src="js/partials.js?v=20260806a"></script>
+<script src="js/partials.js?v=20260806g"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260806a"></script>
 <script src="js/i18n-charging.js?v=20260728e"></script>

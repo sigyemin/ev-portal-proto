@@ -32,6 +32,9 @@
   .mp-sys-sum-lbl{font-size:.8rem;color:var(--text-secondary);font-weight:600;}
   .mp-sys-sum-card.is-approved .mp-sys-sum-num{color:var(--color-primary-600);}
   .mp-sys-sum-card.is-apply .mp-sys-sum-num{color:var(--color-gray-700);}
+  /* [ISS-094] 상단 요약 1분할 — 단일 카드 폭 확보(라벨 줄바꿈 방지) */
+  .mp-stats-single{flex-wrap:nowrap;}
+  .mp-stats-single .mp-stat-card{flex:0 0 auto;min-width:200px;}
 </style>
 </head>
 <body>
@@ -65,18 +68,11 @@
               <h2 class="mp-name" style="margin:0;">홍길동<span class="mp-name-suffix" data-i18n="mp.hero.name.suffix">회원님</span></h2>
             </div>
           </div>
-          <div class="mp-stats">
-            <div class="mp-stat-card accent-green">
-              <div class="mp-stat-val">3,420<span class="mp-stat-unit" data-i18n="mp.stat.point.unit">P</span></div>
-              <div class="mp-stat-label" data-i18n="mp.stat.point.label">충전 포인트</div>
-            </div>
+          <!-- [ISS-094] 상단 요약 1분할 — '이번 달 이용금액'만. 충전 포인트·즐겨찾기 충전소 stat 삭제(사용자 2026-08-06). 하단 '나의 충전소' 즐겨찾기 카드는 별개로 유지. -->
+          <div class="mp-stats mp-stats-single">
             <div class="mp-stat-card accent-blue">
               <div class="mp-stat-val">17,432<span class="mp-stat-unit" data-i18n="mp.stat.amount.unit">원</span></div>
               <div class="mp-stat-label" data-i18n="mp.stat.amount.label">이번 달 이용금액</div>
-            </div>
-            <div class="mp-stat-card accent-orange">
-              <div class="mp-stat-val">2<span class="mp-stat-unit" data-i18n="mp.stat.fav.unit">곳</span></div>
-              <div class="mp-stat-label" data-i18n="mp.stat.fav.label">즐겨찾기 충전소</div>
             </div>
           </div>
         </div>
@@ -180,7 +176,7 @@
             <ul class="mp-card-actions">
               <li><a href="charging-card.html?tab=history" data-i18n="mp.card.use.a1">이용요금 조회</a></li>
               <li><a href="charging-card.html?tab=history" data-i18n="mp.card.use.a2">충전 명세서 조회</a></li>
-              <li><a href="charging-card.html?tab=point" data-i18n="mp.card.use.a3">충전 포인트 현황</a></li>
+<!-- [ISS-102] 포인트현황 링크(tab=point) 삭제 -->
             </ul>
           </div>
 
@@ -195,7 +191,7 @@
             <p data-i18n="mp.card.fav.desc">즐겨찾는 충전소를 관리하고 이용 통계를 확인하세요</p>
             <ul class="mp-card-actions">
               <li><a href="charging-find.html?tab=map&list=fav" data-i18n="mp.card.fav.a1">자주 쓰는 충전소 즐겨찾기</a></li>
-              <li><a href="charging-card.html?tab=history" data-i18n="mp.card.fav.a2">충전 이력 통계</a></li>
+<!-- [ISS-102] 이력통계 링크(tab=history) 삭제 -->
             </ul>
           </div>
         </div>
@@ -459,12 +455,12 @@
 </main>
 
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260806a"></script>
+<script src="js/partials.js?v=20260806g"></script>
 <script src="js/i18n.js?v=20260520"></script>
 <script src="js/i18n-common.js?v=20260806a"></script>
-<script src="js/i18n-mypage.js?v=20260730a"></script>
+<script src="js/i18n-mypage.js?v=20260806b"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260806a"></script>
+<script src="js/ai-floating.js?v=20260806h"></script>
 <script>
 /* 회원유형별 보조금 신청현황 진입 메뉴 — 법인은 리스트형, 그 외(개인·개인사업자)는 카드형 */
 (function(){

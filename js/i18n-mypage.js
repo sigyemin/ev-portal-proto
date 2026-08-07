@@ -21,12 +21,9 @@
     'mp.hero.chip.personal':{ ko: '일반 회원', en: 'Personal Member' },
     'mp.hero.chip.joined': { ko: '가입일 2022.03.15', en: 'Joined 2022.03.15' },
     'mp.hero.chip.lastlogin':{ ko: '최근 접속 2026.05.10', en: 'Last login 2026.05.10' },
-    'mp.stat.point.unit':  { ko: 'P', en: 'P' },
-    'mp.stat.point.label': { ko: '충전 포인트', en: 'Charging Points' },
+    /* [ISS-094] 상단 요약 1분할 — mp.stat.point.*·mp.stat.fav.* 제거(카드 삭제). amount만 유지 */
     'mp.stat.amount.unit': { ko: '원', en: 'KRW' },
     'mp.stat.amount.label':{ ko: '이번 달 이용금액', en: 'This Month Usage' },
-    'mp.stat.fav.unit':    { ko: '곳', en: '' },
-    'mp.stat.fav.label':   { ko: '즐겨찾기 충전소', en: 'Favorite Stations' },
 
     /* ===== mypage.html — 섹션 헤더 ===== */
     'mp.sec.info.title':      { ko: '내 정보 관리', en: 'Account Management' },
@@ -76,14 +73,14 @@
                                 en: 'Check fees, usage history, and point status' },
     'mp.card.use.a1':         { ko: '이용요금 조회', en: 'View Usage Fees' },
     'mp.card.use.a2':         { ko: '충전 명세서 조회', en: 'View Charging Statements' },
-    'mp.card.use.a3':         { ko: '충전 포인트 현황', en: 'Charging Point Status' },
+    /* [ISS-102] mp.card.use.a3(충전 포인트 현황) 제거 — 링크 삭제 */
 
     'mp.card.fav.tag':        { ko: '나의 충전소', en: 'My Stations' },
     'mp.card.fav.title':      { ko: '나의 충전소', en: 'My Charging Stations' },
     'mp.card.fav.desc':       { ko: '즐겨찾는 충전소를 관리하고 이용 통계를 확인하세요',
                                 en: 'Manage favorite stations and view usage statistics' },
     'mp.card.fav.a1':         { ko: '자주 쓰는 충전소 즐겨찾기', en: 'Favorite Stations' },
-    'mp.card.fav.a2':         { ko: '충전 이력 통계', en: 'Charging History Stats' },
+    /* [ISS-102] mp.card.fav.a2(충전 이력 통계) 제거 — 링크 삭제 */
 
     /* ===== mypage.html — 나의 신청·민원 ===== */
     'mp.card.subsidy.tag':    { ko: '보조금', en: 'Subsidy' },

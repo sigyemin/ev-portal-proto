@@ -28,7 +28,13 @@
       label: '충전 컨시어지',
       headerSub: '충전소·요금·회원카드부터 장애 대응까지',
       placeholder: '예: 인근 충전소? 충전요금? 충전이 안 돼요',
-      chips: ['인근 충전소', '충전 요금', '회원카드', '충전기 고장', '결제 오류'],
+      chips: [
+        { tag:'회원카드 신청', q:'환경부 회원카드는 어떻게 신청하나요?' },
+        { tag:'충전기 고장 신고', q:'환경부 충전기가 작동하지 않을 때 현장에서 어떻게 고장 신고를 하나요?' },
+        { tag:'충전내역 조회', q:'환경부 회원카드로 충전한 내역은 어디에서 확인하나요?' },
+        { tag:'결제 후 충전 오류', q:'결제는 되었지만 충전이 시작되지 않을 때 어떻게 처리하나요?' },
+        { tag:'전기차 충전요금', q:'환경부 충전기에서 전기차를 충전할 때 요금은 완속·급속 등 충전 속도별로 얼마인가요?' }
+      ],  // [ISS-101 후속] {tag,q} 확정본
       // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       // [ISS-101] 충전 전반 catch-all 인사말. 장애 트러블슈팅은 후속 안내로 유지.
       answer: {
@@ -39,7 +45,13 @@
       label: '보조금 큐레이터',
       headerSub: '내가 받을 수 있는 보조금을 한 번에',
       placeholder: '예: 보조금 얼마? 신청 절차?',
-      chips: ['최대 보조금', '신청 자격', '필요 서류', '집행 현황', '서식 다운로드'],
+      chips: [
+        { tag:'서울 전기차 보조금', q:'2026년 서울시 전기승용차 구매보조금은 중·대형, 소형, 초소형 차량별로 최대 얼마인가요?' },
+        { tag:'서울 개인·법인 보조금 자격', q:'2026년 서울시 전기승용차 구매보조금은 개인, 개인사업자, 법인이 모두 신청할 수 있나요?' },
+        { tag:'서울 보조금 신청 절차', q:'2026년 서울시 전기승용차 구매보조금은 구매계약 후 제작·수입사를 통해 어떻게 신청하나요?' },
+        { tag:'보조금 선정순서', q:'2026년 서울시 전기승용차 보조금 대상자는 신청 순서로 선정하나요, 차량 출고·등록 순서로 선정하나요?' },
+        { tag:'2년 내 전기차 판매', q:'서울시 보조금으로 구매한 전기차를 등록 후 2년 이내에 다른 지역 사람에게 판매하면 서울시 보조금을 반환해야 하나요?' }
+      ],  // [ISS-101 후속] {tag,q} 확정본
       // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       answer: {
         text: '<strong>2026년 보조금 큐레이션</strong>입니다. 일반 승용 BEV 기준 국비 480만원 + 지방비 100만원 = 최대 580만원 지원. 차량가 7천만원 이상은 100% 단가 적용 대상에서 제외됩니다.'
@@ -129,8 +141,8 @@
         + '<button class="aif-close" id="aifClose" type="button" aria-label="닫기">' + ICON.close + '</button>'
       + '</header>'
       + '<nav class="aif-flows" role="tablist">'
-        + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '충전 컨시어지</button>'
-        + '<button class="aif-flow-btn active" data-flow="subsidy" type="button">' + ICON.money + '보조금 큐레이터</button>'
+        + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '<span data-i18n="mega.community.ai.charge">충전 컨시어지</span></button>'
+        + '<button class="aif-flow-btn active" data-flow="subsidy" type="button">' + ICON.money + '<span data-i18n="mega.community.ai.subsidy">보조금 큐레이터</span></button>'
       + '</nav>'
       + '<div class="aif-chips-wrap"><div class="aif-chips-label">자주 묻는 질문</div><div class="aif-chips" id="aifChips"></div></div>'
       + '<div class="aif-feed" id="aifFeed"></div>'
@@ -141,6 +153,10 @@
       // [ISS-085] 하단 바(FAQ·전체화면 버튼) 제거
     + '</aside>';
   document.body.appendChild(box);
+
+  // [ISS-101 잔여] 플로팅 위젯 i18n(ko/en) — flow 라벨(data-i18n=mega.community.ai.*)·빈상태 제목(t()).
+  //   ★applyLang 재호출 안 함 — __i18n가 로드/언어전환 시 doc 전체에 data-i18n을 적용하므로 위젯 버튼은 자동 번역. t()는 __i18n.t만 사용(재귀 없음).
+  function t(key, ko){ try{ if(window.__i18n && __i18n.t){ var m=__i18n.t(key); if(m&&m!==key) return m; } }catch(e){} return ko; }
 
   // 요소 참조
   var fab = document.getElementById('aifFab');
@@ -175,7 +191,7 @@
     feed.innerHTML =
       '<div class="aif-empty">'
         + '<div class="aif-empty-illust">' + ICON.bot + '</div>'
-        + '<h4 class="aif-empty-title">' + escHtml(f.label) + '</h4>'
+        + '<h4 class="aif-empty-title">' + escHtml(t('mega.community.ai.' + currentFlow, f.label)) + '</h4>'
         + '<p class="aif-empty-sub">' + escHtml(f.headerSub) + '<br>상단의 자주 묻는 질문을 눌러 시작해 보세요.</p>'
       + '</div>';
   }
@@ -183,8 +199,9 @@
   // ===== 칩 =====
   function renderChips() {
     var chips = FLOWS[currentFlow].chips || [];
+    // [ISS-101 후속] 칩 라벨=#tag, 클릭 전송값=q(풀 질문)
     chipsBox.innerHTML = chips.map(function (c) {
-      return '<button class="aif-chip" type="button" data-q="' + escHtml(c) + '">#' + escHtml(c) + '</button>';
+      return '<button class="aif-chip" type="button" data-q="' + escHtml(c.q) + '">#' + escHtml(c.tag) + '</button>';
     }).join('');
     chipsBox.querySelectorAll('.aif-chip').forEach(function (chip) {
       chip.addEventListener('click', function () { runQuery(chip.dataset.q); });
@@ -208,6 +225,12 @@
   flowBtns.forEach(function (b) {
     b.addEventListener('click', function () { setFlow(b.dataset.flow); });
   });
+
+  // [ISS-101 잔여] 언어 전환 시: 버튼 라벨은 data-i18n 자동 반영(langChange 시 __i18n이 이미 doc 적용). 빈상태 제목(JS 렌더)만 재렌더.
+  // ★applyLang() 재호출 금지 — langChange 핸들러 안에서 applyLang을 부르면 리스너가 재발화되어 무한재귀.
+  function onLangChange(){ if (!convStarted) renderEmpty(); }
+  if (window.__i18n && __i18n.on) { try { __i18n.on(onLangChange); } catch(e){} }
+  window.addEventListener('langChange', onLangChange);
 
   // ===== 메시지 =====
   function addUserMsg(text) {

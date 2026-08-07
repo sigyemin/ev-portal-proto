@@ -289,7 +289,8 @@
                       <li><a href="inquiry-faq.html" data-i18n="mega.community.inquiry.faq">FAQ (자주 묻는 질문)</a></li>
                       <li><a href="inquiry-qna.html" data-i18n="mega.community.inquiry.qna">질의응답(건의사항)</a></li>
                       <li><a href="inquiry-complaint.html" data-i18n="mega.community.inquiry.complaint">불편 민원 신고</a></li>
-                      <li><a href="inquiry-report.html" data-i18n="mega.community.inquiry.report">보조금 부적정집행 신고</a></li>
+                      <!-- [ISS-102] 부적정집행신고(inquiry-report) 메뉴 삭제 -->
+
                       <li><a href="inquiry-charge-discount.html" data-i18n="mega.community.inquiry.discount">충전요금 할인 미적용 신고</a></li>
                       <li><a href="inquiry-status.html" data-i18n="mega.community.inquiry.status">민원 처리 현황 조회</a></li>
                     </ul>
@@ -388,7 +389,7 @@
     { tKey: 'nav.community', cols: [
       { tKey: 'mega.community.ai', items: [['충전 컨시어지','index.html?ai=charge#aiSectionAnchor','mega.community.ai.charge'],['보조금 큐레이터','index.html?ai=subsidy#aiSectionAnchor','mega.community.ai.subsidy']] },
       { tKey: 'mega.community.notice', items: [['공지사항','notice-list.html','mega.community.notice.list'],['보도자료','notice-press.html','mega.community.notice.press'],['홍보자료','notice-promo.html','mega.community.notice.promo'],['공개자료','notice-data.html','mega.community.notice.data']] },
-      { tKey: 'mega.community.inquiry', items: [['FAQ (자주 묻는 질문)','inquiry-faq.html','mega.community.inquiry.faq'],['질의응답(건의사항)','inquiry-qna.html','mega.community.inquiry.qna'],['불편 민원 신고','inquiry-complaint.html','mega.community.inquiry.complaint'],['보조금 부적정집행 신고','inquiry-report.html','mega.community.inquiry.report'],['충전요금 할인 미적용 신고','inquiry-charge-discount.html','mega.community.inquiry.discount'],['민원 처리 현황 조회','inquiry-status.html','mega.community.inquiry.status']] },
+      { tKey: 'mega.community.inquiry', items: [['FAQ (자주 묻는 질문)','inquiry-faq.html','mega.community.inquiry.faq'],['질의응답(건의사항)','inquiry-qna.html','mega.community.inquiry.qna'],['불편 민원 신고','inquiry-complaint.html','mega.community.inquiry.complaint'],['충전요금 할인 미적용 신고','inquiry-charge-discount.html','mega.community.inquiry.discount'],['민원 처리 현황 조회','inquiry-status.html','mega.community.inquiry.status']] },
     ]},
     { tKey: 'nav.info', cols: [
       { tKey: 'mega.info.regulation', items: [['법령·지침·규정·가이드라인','info-regulation.html?tab=law','mega.info.regulation.law'],['인증 기준 안내','info-regulation.html?tab=cert','mega.info.regulation.cert']] },

@@ -6,10 +6,22 @@
    ========================================================================== */
   // ============ AI 헬프데스크 — 검색형 답변 + 상세 계산기 모달 ============
   (function(){
-    // 플로우별 해시태그
+    // 플로우별 해시태그 [ISS-101 후속] {tag(표시), q(클릭 시 전송 풀질문)} — 회의록 AI헬프데스크_FAQ해시태그_확정_20260806
     const CHIPS = {
-      subsidy:  ['보조금 계산','충전소 찾기','통계조회','차량 등록'],
-      charge:   ['충전소 찾기','충전요금','회원카드','충전기고장','결제오류']
+      subsidy: [
+        { tag:'서울 전기차 보조금', q:'2026년 서울시 전기승용차 구매보조금은 중·대형, 소형, 초소형 차량별로 최대 얼마인가요?' },
+        { tag:'서울 개인·법인 보조금 자격', q:'2026년 서울시 전기승용차 구매보조금은 개인, 개인사업자, 법인이 모두 신청할 수 있나요?' },
+        { tag:'서울 보조금 신청 절차', q:'2026년 서울시 전기승용차 구매보조금은 구매계약 후 제작·수입사를 통해 어떻게 신청하나요?' },
+        { tag:'보조금 선정순서', q:'2026년 서울시 전기승용차 보조금 대상자는 신청 순서로 선정하나요, 차량 출고·등록 순서로 선정하나요?' },
+        { tag:'2년 내 전기차 판매', q:'서울시 보조금으로 구매한 전기차를 등록 후 2년 이내에 다른 지역 사람에게 판매하면 서울시 보조금을 반환해야 하나요?' }
+      ],
+      charge: [
+        { tag:'회원카드 신청', q:'환경부 회원카드는 어떻게 신청하나요?' },
+        { tag:'충전기 고장 신고', q:'환경부 충전기가 작동하지 않을 때 현장에서 어떻게 고장 신고를 하나요?' },
+        { tag:'충전내역 조회', q:'환경부 회원카드로 충전한 내역은 어디에서 확인하나요?' },
+        { tag:'결제 후 충전 오류', q:'결제는 되었지만 충전이 시작되지 않을 때 어떻게 처리하나요?' },
+        { tag:'전기차 충전요금', q:'환경부 충전기에서 전기차를 충전할 때 요금은 완속·급속 등 충전 속도별로 얼마인가요?' }
+      ]
     };
 
     // 플로우별 응답 템플릿 — [ISS-087] 답변 텍스트만(body). 링크카드(actions)·관련메뉴(related)·후속질문(SUGGEST_FOLLOWUP) 데이터 제거.
@@ -41,28 +53,15 @@
     // [ISS-087] turnCount 제거 (턴 뱃지 삭제)
 
     function renderChips(flow) {
-      hashChips.innerHTML = CHIPS[flow].map(tag =>
-        `<button type="button" data-tag="${tag}" class="${activeChip === tag ? 'is-active' : ''}"><span class="hash">#</span>${tag}</button>`
+      // [ISS-101 후속] 칩 라벨=#tag, 클릭 시 전송값=q(풀 질문). autoQuestion(QMAP) 제거.
+      hashChips.innerHTML = CHIPS[flow].map(c =>
+        `<button type="button" data-tag="${escapeAttr(c.tag)}" data-q="${escapeAttr(c.q)}" class="${activeChip === c.tag ? 'is-active' : ''}"><span class="hash">#</span>${escapeHtml(c.tag)}</button>`
       ).join('');
       hashChips.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
         activeChip = b.dataset.tag;
         hashChips.querySelectorAll('button').forEach(x => x.classList.toggle('is-active', x.dataset.tag === activeChip));
-        ask(autoQuestion(currentFlow, b.dataset.tag));
+        ask(b.dataset.q);
       }));
-    }
-
-    function autoQuestion(flow, tag) {
-      const QMAP = {
-        '보조금 계산': '전기차 보조금은 얼마인가요?',
-        '충전소 찾기': '우리 지역 충전소를 찾아주세요.',
-        '통계조회': '보급 대수 통계를 알려주세요.',
-        '차량 등록': '전기차 등록 절차는 어떻게 되나요?',
-        '충전요금': '충전 요금은 어떻게 되나요?',
-        '회원카드': '충전 회원카드는 어떻게 발급하나요?',
-        '충전기고장': '충전기가 고장났을 때 어떻게 신고하나요?',
-        '결제오류': '결제 중 오류가 발생했습니다.'
-      };
-      return QMAP[tag] || `${tag}에 대해 알고 싶습니다.`;
     }
 
     function appendUserBubble(text) {
