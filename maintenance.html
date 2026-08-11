@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>서비스 점검 안내 | 무공해차 통합누리집</title>
+<!-- 웹투비(WebToB) sorry page — 앱단이 죽어도 뜨는 페이지이므로 외부 CSS/JS/폰트/이미지 링크 절대 금지. 모든 자원 인라인. -->
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    background: linear-gradient(160deg, #eafaf1 0%, #f4fbf7 55%, #ffffff 100%);
+    color: #1f2d27;
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; padding:24px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .card {
+    width:100%; max-width:520px; background:#ffffff;
+    border:1px solid #dcefe3; border-radius:24px;
+    box-shadow:0 18px 48px rgba(31,90,60,.10);
+    padding:44px 32px 36px; text-align:center;
+  }
+  .illust { width:180px; height:180px; margin:0 auto 22px; }
+  @media (max-width:400px){ .illust{ width:150px; height:150px; } }
+  .badge {
+    display:inline-block; font-size:13px; font-weight:700; letter-spacing:.2px;
+    color:#0f7a48; background:#e3f6ec; border:1px solid #bfe9d1;
+    padding:5px 14px; border-radius:999px; margin-bottom:16px;
+  }
+  h1 { font-size:24px; font-weight:800; color:#12352a; margin-bottom:12px; letter-spacing:-.3px; }
+  @media (max-width:400px){ h1{ font-size:21px; } }
+  .lead { font-size:15.5px; color:#3c5248; margin-bottom:24px; }
+  .lead strong { color:#0f7a48; }
+  .info {
+    background:#f5fbf8; border:1px solid #dcefe3; border-radius:14px;
+    padding:16px 18px; margin-bottom:22px; text-align:left;
+  }
+  .info dl { display:flex; gap:10px; font-size:14.5px; }
+  .info dt { flex:0 0 78px; font-weight:700; color:#0f7a48; }
+  .info dd { color:#2b3f37; }
+  .note { font-size:14px; color:#5a6f65; }
+  .note .again { display:block; margin-top:10px; font-weight:700; color:#12352a; }
+  .foot { margin-top:26px; font-size:12.5px; color:#9bb0a6; }
+  /* 러닝 스피너(과하지 않게) — 인라인 keyframes */
+  @keyframes zev-spin { to { transform: rotate(360deg); } }
+  .gear { transform-box: fill-box; transform-origin: center; animation: zev-spin 6s linear infinite; }
+  @media (prefers-reduced-motion: reduce){ .gear{ animation:none; } }
+</style>
+</head>
+<body>
+  <main class="card" role="main">
+
+    <!-- ============ UX팀 이미지 교체 지점 (시작) ============
+         아래 인라인 SVG는 임시 일러스트입니다. 최종본은 UX팀 제작 이미지로 교체하세요.
+         교체 시에도 외부 링크 금지 — data:URI(base64) 또는 인라인 SVG로만 삽입할 것. -->
+    <svg class="illust" viewBox="0 0 200 200" role="img" aria-label="서비스 점검 중 일러스트 — 안전모를 쓴 캐릭터와 회전하는 톱니바퀴">
+      <circle cx="100" cy="100" r="92" fill="#e3f6ec"/>
+      <circle cx="100" cy="100" r="92" fill="none" stroke="#bfe9d1" stroke-width="2"/>
+      <!-- 회전 톱니바퀴(점검 느낌) -->
+      <g class="gear">
+        <g fill="#9bd8b6">
+          <rect x="150" y="52" width="9" height="9" rx="2"/>
+          <rect x="150" y="52" width="9" height="9" rx="2" transform="rotate(45 154.5 56.5)"/>
+        </g>
+        <circle cx="154.5" cy="56.5" r="10" fill="#8fd0ac"/>
+        <circle cx="154.5" cy="56.5" r="4.5" fill="#e3f6ec"/>
+      </g>
+      <!-- 몸통 -->
+      <ellipse cx="100" cy="176" rx="52" ry="12" fill="#cde0d8"/>
+      <rect x="66" y="104" width="68" height="58" rx="20" fill="#34b978"/>
+      <!-- 얼굴 -->
+      <circle cx="100" cy="88" r="34" fill="#ffe0b8"/>
+      <circle cx="90" cy="90" r="3.4" fill="#3a3027"/>
+      <circle cx="112" cy="90" r="3.4" fill="#3a3027"/>
+      <path d="M92 100 q8 7 16 0" fill="none" stroke="#b56a3a" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="82" cy="97" r="4" fill="#ffb3a0" opacity=".7"/>
+      <circle cx="120" cy="97" r="4" fill="#ffb3a0" opacity=".7"/>
+      <!-- 안전모 -->
+      <path d="M66 76 a34 34 0 0 1 68 0 z" fill="#ffcf47"/>
+      <rect x="60" y="74" width="80" height="9" rx="4.5" fill="#ffb703"/>
+      <rect x="96" y="47" width="8" height="16" rx="3" fill="#ffb703"/>
+      <!-- 렌치 -->
+      <g transform="rotate(32 128 140)">
+        <rect x="120" y="120" width="9" height="34" rx="4.5" fill="#7f95a3"/>
+        <path d="M118 116 a10 10 0 1 1 13 0 l-3 5 h-7 z" fill="#9fb2bd"/>
+      </g>
+    </svg>
+    <!-- ============ UX팀 이미지 교체 지점 (끝) ============ -->
+
+    <span class="badge">서비스 점검 안내</span>
+    <h1>잠시 점검하고 있어요</h1>
+    <p class="lead">
+      <strong>무공해차 통합누리집</strong>을 더 편리하게 개편하는 중입니다.<br>
+      이용에 불편을 드려 죄송합니다.
+    </p>
+
+    <div class="info">
+      <dl>
+        <dt>작업 일시</dt>
+        <dd>2026. 8. 16.(일) 10:00 ~ 17:00</dd>
+      </dl>
+    </div>
+
+    <p class="note">
+      이 시간 중 서비스 접속이 <strong>간헐적으로 제한</strong>될 수 있습니다.<br>
+      접속이 안 될 때는 잠시 후 다시 시도해 주세요.<br>
+      작업이 완료되면 정상적으로 이용하실 수 있습니다.
+      <span class="again">잠시 후 다시 접속해 주세요.</span>
+    </p>
+
+    <!-- 미정(개발/UX 협의): 문의 연락처(콜센터 등)는 확정 전이라 표기하지 않음. 확정 시 이 위치에 추가. -->
+
+    <p class="foot">무공해차 통합누리집 · ev.or.kr</p>
+  </main>
+</body>
+</html>

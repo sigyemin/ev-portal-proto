@@ -30,7 +30,7 @@
         body: '고객님의 조건에 따른 예상 보조금은 약 <strong>800만원</strong>입니다. 전기차 구매 시 <strong>국고 보조금(최대 450만원)</strong>과 <strong>지방자치단체 보조금(최대 350만원)</strong>을 합산하여 받으실 수 있습니다.'
       },
       charge: {
-        body: '<strong>충전 컨시어지</strong>가 충전소 찾기·요금·회원카드부터 충전기 장애 대응까지 도와드립니다. 충전기 고장·시스템 오류 문의는 즉시 담당 운영사에 전달되며, 복구 경과를 <strong>SMS·이메일</strong>로 안내해드립니다. 긴급한 경우 통합 콜센터 <strong>1661-0970</strong>로 연락해 주시기 바랍니다.'
+        body: '<strong>충전 도우미</strong>가 충전소 찾기·요금·회원카드부터 충전기 장애 대응까지 도와드립니다. 충전기 고장·시스템 오류 문의는 즉시 담당 운영사에 전달되며, 복구 경과를 <strong>SMS·이메일</strong>로 안내해드립니다. 긴급한 경우 통합 콜센터 <strong>1661-0970</strong>로 연락해 주시기 바랍니다.'
       }
     };
 
@@ -46,7 +46,7 @@
     const topbarFlow = document.getElementById('aiTopbarFlow');
     const answerClose= document.getElementById('aiAnswerClose');
 
-    const FLOW_NAMES = { subsidy: '보조금 큐레이터', charge: '충전 컨시어지' };
+    const FLOW_NAMES = { subsidy: '보조금 도우미', charge: '충전 도우미' };
 
     let currentFlow = 'subsidy';
     let activeChip  = null;
@@ -157,15 +157,15 @@
       activeChip = null;
       topbarFlow.textContent = FLOW_NAMES[currentFlow];
       renderChips(currentFlow);
-      syncSubsidyNotice();   // [ISS-092] 보조금 큐레이터 탭 진입 시마다 고지
+      syncSubsidyNotice();   // [ISS-092] 보조금 도우미 탭 진입 시마다 고지
     }));
 
-    // [ISS-092] 보조금 큐레이터 탭 진입 시마다 '안내가' 고지 배너 (세션 스킵 없음 — 탭 전환할 때마다 노출)
+    // [ISS-092] 보조금 도우미 탭 진입 시마다 '안내가' 고지 배너 (세션 스킵 없음 — 탭 전환할 때마다 노출)
     var subsidyNotice = document.createElement('div');
     subsidyNotice.className = 'ai-amt-notice';
     subsidyNotice.setAttribute('role', 'note');
     subsidyNotice.hidden = true;
-    subsidyNotice.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>보조금 큐레이터가 안내하는 금액은 <strong>안내가(추정)</strong>이며, 실제 지급액은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</span>';
+    subsidyNotice.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>보조금 도우미가 안내하는 금액은 <strong>안내가(추정)</strong>이며, 실제 지급액은 지자체 예산·차량 효율 등급 등에 따라 달라질 수 있습니다.</span>';
     (function () { var flowsEl = document.querySelector('.ai-flows'); if (flowsEl) flowsEl.insertAdjacentElement('afterend', subsidyNotice); })();
     function syncSubsidyNotice() { subsidyNotice.hidden = (currentFlow !== 'subsidy'); }
     syncSubsidyNotice();
@@ -256,7 +256,7 @@
       calcResult.hidden = false;
     });
 
-    // 초기: 보조금 큐레이터 칩 표시
+    // 초기: 보조금 도우미 칩 표시
     renderChips(currentFlow);
 
     // ─── URL 쿼리 파라미터 라우팅 (?ai=subsidy|charge) ───

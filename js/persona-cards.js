@@ -25,7 +25,7 @@
         { t: '보조금 지급대상 차종', t_en: 'Eligible Vehicles', d: '보조금 지원이 가능한 차종 목록을 조회하세요.', d_en: 'Browse the list of subsidy-eligible vehicles.', href: 'subsidy-vehicles.html', emoji: '🚙' },
         { t: '보조금 안내·계산기', t_en: 'Subsidy Calculator', d: '차종·지역을 선택해 예상 보조금을 계산해 보세요.', d_en: 'Estimate your subsidy by vehicle and region.', href: 'subsidy-info.html', emoji: '🧮' },
         { t: '차종 비교 도구', t_en: 'Vehicle Compare', d: '가격·주행거리·충전시간 등 조건별로 차종을 비교하세요.', d_en: 'Compare vehicles by price, range and charging time.', href: 'compare-tool.html', emoji: '⚖️' }
-        /* [ISS-091] 제거: 초보자 가이드(info-beginner)·보조금 큐레이터(AI) */
+        /* [ISS-091] 제거: 초보자 가이드(info-beginner)·보조금 도우미(AI) */
       ]
     },
     driver: {

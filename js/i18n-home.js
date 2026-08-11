@@ -19,7 +19,7 @@
     'home.persona.business.title': { ko: '충전 사업자·제조사',    en: 'Charger Operators & Manufacturers' },
     'home.persona.business.sub':   { ko: '설치신청·공모·현황조회', en: 'Install · Procurement · Status' },
     'home.persona.ai.title':       { ko: 'AI 헬프데스크',          en: 'AI Help Desk' },
-    'home.persona.ai.sub':         { ko: 'AI 상담 큐레이터',       en: 'AI Curator' },
+    'home.persona.ai.sub':         { ko: 'AI 상담 도우미',       en: 'AI Helper' },
     'home.persona.ai.badge':       { ko: 'OPEN',                   en: 'OPEN' },
 
     'home.persona.buyer.desc':    { ko: '보조금 조회부터 차량 비교, 구매 절차까지 무공해차 구매에 필요한 정보를 단계별로 안내합니다.',
@@ -72,7 +72,7 @@
     /* 페르소나 카드 - ai */
     'home.card.ai.1.title': { ko: 'AI 맞춤 상담', en: 'AI Personalized' },
     'home.card.ai.1.desc':  { ko: '사용자 상황 기반 종합 추천 + 카드 문의', en: 'Comprehensive recommendations based on your situation' },
-    'home.card.ai.2.title': { ko: '보조금 큐레이터', en: 'Subsidy Curator' },
+    'home.card.ai.2.title': { ko: '보조금 도우미', en: 'Subsidy Helper' },
     'home.card.ai.2.desc':  { ko: '자격·금액·신청 조건을 즉시 확인', en: 'Instantly check eligibility, amounts, and conditions' },
     'home.card.ai.3.title': { ko: '장애 대응 안내', en: 'Issue Response' },
     'home.card.ai.3.desc':  { ko: '충전기 고장·시스템 오류 즉시 대응', en: 'Immediate response to charger faults and system errors' },
@@ -102,8 +102,8 @@
     'home.ai.sub':            { ko: '복잡한 정보 검색도 AI와 대화하듯 간편하게.<br>궁금한 내용을 자연어로 물어보시면 바로 답변해드립니다.',
                                 en: 'Find information by chatting with the AI.<br>Ask in natural language and get instant answers.' },
     'home.ai.flow.aria':      { ko: '상담 유형 선택', en: 'Select consultation type' },
-    'home.ai.flow.subsidy':   { ko: '보조금 큐레이터', en: 'Subsidy Curator' },
-    'home.ai.flow.charge':    { ko: '충전 컨시어지', en: 'Charging Concierge' },
+    'home.ai.flow.subsidy':   { ko: '보조금 도우미', en: 'Subsidy Helper' },
+    'home.ai.flow.charge':    { ko: '충전 도우미', en: 'Charging Helper' },
     'home.ai.search.placeholder': { ko: '예: 저공해, 보조금 얼마?, 충전소 위치',
                                     en: 'e.g., low-emission, how much subsidy?, charger location' },
     'home.ai.search.aria':    { ko: 'AI에게 질문 입력', en: 'Ask the AI' },
@@ -183,8 +183,8 @@
                                          en: 'EV/H2 vehicle subsidies, tax info, vehicle comparison, procurements, and K-EV100 corporate transition — all in one place.' },
     'home.persona.hp':                 { ko: '나에게 맞는 서비스',                 en: 'services tailored to you' },
 
-    /* AI 컨시어지 헤더 */
-    'home.ai.flow.subsidy':            { ko: '보조금 큐레이터',                  en: 'Subsidy Curator' },
+    /* AI 도우미 헤더 */
+    'home.ai.flow.subsidy':            { ko: '보조금 도우미',                  en: 'Subsidy Helper' },
     'home.ai.turn.unit':               { ko: '1회 대화',                         en: '1 turn' },
     'home.ai.btn.reset.aria':          { ko: '대화 초기화',                      en: 'Reset chat' },
     'home.ai.btn.reset':               { ko: '초기화',                          en: 'Reset' },
@@ -274,7 +274,7 @@
     'hm.ai.home': { ko: '홈으로', en: 'Home' },
     'hm.ai.desc': { ko: '복잡한 정보 검색도 AI와 대화하듯 간편하게 궁금한 내용을 물어보시면, 바로 답변해드립니다.', en: 'Skip complex searches—just ask in plain language and get instant answers from our AI.' },
     'hm.ai.tab1': { ko: 'AI 맞춤 상담', en: 'AI Custom Consult' },
-    'hm.ai.tab2': { ko: '보조금 큐레이터', en: 'Subsidy Curator' },
+    'hm.ai.tab2': { ko: '보조금 도우미', en: 'Subsidy Helper' },
     'hm.ai.tab3': { ko: '장애 대응 안내', en: 'Fault Response Guide' },
     'hm.ai.ph': { ko: '예: 현대 아이오닉6 보조금 얼마인가요?', en: 'e.g., How much subsidy for the Hyundai Ioniq 6?' },
     'hm.ai.inputaria': { ko: 'AI 검색어 입력', en: 'Enter AI search query' },

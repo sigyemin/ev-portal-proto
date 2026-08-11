@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="css/subsidy-calc.css?v=20260613">
 <link rel="stylesheet" href="css/amount-guard.css?v=20260802a"><!-- [ISS-092] 블러 확인 -->
 <style>
-  /* [ISS-092] AI 보조금 큐레이터 — 안내가 고지 배너 + 답변 배지 */
+  /* [ISS-092] AI 보조금 도우미 — 안내가 고지 배너 + 답변 배지 */
   .ai-amt-notice{display:flex;align-items:flex-start;gap:9px;margin:0 0 14px;padding:11px 15px;border-radius:10px;background:#FFFBEB;border:1px solid #FDE68A;border-left:4px solid #F59E0B;font-size:13px;line-height:1.6;font-weight:600;color:#92400E;}
   .ai-amt-notice[hidden]{display:none;}
   .ai-amt-notice svg{flex-shrink:0;margin-top:2px;color:#B45309;}
@@ -147,19 +147,19 @@
         <p data-i18n-html="home.ai.sub">복잡한 정보 검색도 AI와 대화하듯 간편하게.<br>궁금한 내용을 자연어로 물어보시면 바로 답변해드립니다.</p>
       </div>
 
-      <!-- 2 진입 버튼 (배치 순서: 충전 컨시어지 → 보조금 큐레이터 / 기본 선택=보조금 큐레이터) [ISS-101] personal 제거·순서 반전 -->
+      <!-- 2 진입 버튼 (배치 순서: 충전 도우미 → 보조금 도우미 / 기본 선택=보조금 도우미) [ISS-101] personal 제거·순서 반전 -->
       <div class="ai-flows" role="tablist" data-i18n-aria="home.ai.flow.aria" aria-label="상담 유형 선택">
         <button type="button" class="ai-flow-btn" data-flow="charge" role="tab" aria-selected="false">
           <span class="ai-flow-ico">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
           </span>
-          <span class="ai-flow-name" data-i18n="home.ai.flow.charge">충전 컨시어지</span>
+          <span class="ai-flow-name" data-i18n="home.ai.flow.charge">충전 도우미</span>
         </button>
         <button type="button" class="ai-flow-btn active" data-flow="subsidy" role="tab" aria-selected="true">
           <span class="ai-flow-ico">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
           </span>
-          <span class="ai-flow-name" data-i18n="home.ai.flow.subsidy">보조금 큐레이터</span>
+          <span class="ai-flow-name" data-i18n="home.ai.flow.subsidy">보조금 도우미</span>
         </button>
       </div>
 
@@ -182,7 +182,7 @@
         <header class="ai-answer-topbar">
           <div class="ai-topbar-flow">
             <span class="ai-topbar-dot"></span>
-            <span id="aiTopbarFlow" data-i18n="home.ai.flow.subsidy">보조금 큐레이터</span>
+            <span id="aiTopbarFlow" data-i18n="home.ai.flow.subsidy">보조금 도우미</span>
             <!-- [ISS-087] '1회 대화' 턴 뱃지(#aiTurnBadge) 제거 -->
           </div>
           <div class="ai-topbar-tools">
@@ -545,19 +545,19 @@
 
 <script src="js/partials.js?v=20260806g"></script>
 <script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260806a"></script>
-<script src="js/i18n-home.js?v=20260806a"></script>
+<script src="js/i18n-common.js?v=20260807a"></script>
+<script src="js/i18n-home.js?v=20260807a"></script>
 <script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260806h"></script>
+<script src="js/ai-floating.js?v=20260807a"></script>
 <script src="js/home-v2.js?v=20260608"></script>
 <script src="js/home-main02.js?v=20260806a"></script>
-<script src="js/persona-cards.js?v=20260730b"></script>
+<script src="js/persona-cards.js?v=20260807a"></script>
 <script src="js/fee-compare.js?v=20260613"></script>
 <script src="js/news-data.js?v=20260613"></script>
 <script src="js/home-news.js?v=20260613"></script>
 <script src="js/amount-guard.js?v=20260802b"></script><!-- [ISS-092] 블러 확인 -->
 <script src="js/subsidy-calc.js?v=20260802a"></script>
-<script src="js/ai-helpdesk-v2.js?v=20260806b"></script>
+<script src="js/ai-helpdesk-v2.js?v=20260807a"></script>
 
 <!-- [삭제 2026-07-21] 메인 진입 시 AI 헬프데스크 초기 스크롤 — 진입 시 자동 스크롤 제거 지시로 폐기 -->
 

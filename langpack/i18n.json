@@ -5808,8 +5808,8 @@
     {
       "key": "charging.main.ai.title",
       "scope": "charging",
-      "ko": "AI 충전 컨시어지",
-      "en": "AI Charging Concierge"
+      "ko": "AI 충전 도우미",
+      "en": "AI Charging Helper"
     },
     {
       "key": "charging.main.card1.desc",
@@ -6510,8 +6510,8 @@
     {
       "key": "hm.ai.tab2",
       "scope": "home",
-      "ko": "보조금 큐레이터",
-      "en": "Subsidy Curator"
+      "ko": "보조금 도우미",
+      "en": "Subsidy Helper"
     },
     {
       "key": "hm.ai.tab3",
@@ -7668,8 +7668,8 @@
     {
       "key": "home.ai.flow.subsidy",
       "scope": "home",
-      "ko": "보조금 큐레이터",
-      "en": "Subsidy Curator"
+      "ko": "보조금 도우미",
+      "en": "Subsidy Helper"
     },
     {
       "key": "home.ai.followup.aria",
@@ -7752,8 +7752,8 @@
     {
       "key": "home.card.ai.2.title",
       "scope": "home",
-      "ko": "보조금 큐레이터",
-      "en": "Subsidy Curator"
+      "ko": "보조금 도우미",
+      "en": "Subsidy Helper"
     },
     {
       "key": "home.card.ai.3.desc",
@@ -8364,8 +8364,8 @@
     {
       "key": "home.persona.ai.sub",
       "scope": "home",
-      "ko": "AI 상담 큐레이터",
-      "en": "AI Curator"
+      "ko": "AI 상담 도우미",
+      "en": "AI Helper"
     },
     {
       "key": "home.persona.ai.title",
@@ -8850,8 +8850,8 @@
     {
       "key": "mega.community.ai.subsidy",
       "scope": "common",
-      "ko": "보조금 큐레이터",
-      "en": "Subsidy Curator"
+      "ko": "보조금 도우미",
+      "en": "Subsidy Helper"
     },
     {
       "key": "mega.community.inquiry",

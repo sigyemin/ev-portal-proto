@@ -576,7 +576,7 @@
     'charging.main.card6.link1':          { ko: '시뮬레이션 시작',            en: 'Start Simulation' },
 
     'charging.main.ai.badge':             { ko: 'NEW · AI 서비스',            en: 'NEW · AI Service' },
-    'charging.main.ai.title':             { ko: 'AI 충전 컨시어지',           en: 'AI Charging Concierge' },
+    'charging.main.ai.title':             { ko: 'AI 충전 도우미',           en: 'AI Charging Helper' },
     'charging.main.ai.desc':              { ko: '오늘 밤 자택 심야 충전 vs. 내일 아침 급속 충전—어떤 선택이 더 경제적일까요? 자연어로 질문하면 요금·동선·가용성을 분석해 최적의 충전 동선을 제안합니다.',
                                             en: 'Tonight\'s home overnight charge vs. tomorrow morning\'s fast charge — which is more economical? Ask in natural language; we analyze rates, routes, and availability to suggest the optimal charging plan.' },
     'charging.main.ai.btn.start':         { ko: '챗봇 시작하기',              en: 'Start Chatbot' },

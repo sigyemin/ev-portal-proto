@@ -22,10 +22,10 @@
   }
 
   // ===== 데이터 =====
-  // [ISS-101] 배치 순서: 충전 컨시어지 → 보조금 큐레이터 (기본 선택 active는 subsidy 유지, setFlow('subsidy'))
+  // [ISS-101] 배치 순서: 충전 도우미 → 보조금 도우미 (기본 선택 active는 subsidy 유지, setFlow('subsidy'))
   var FLOWS = {
     charge: {
-      label: '충전 컨시어지',
+      label: '충전 도우미',
       headerSub: '충전소·요금·회원카드부터 장애 대응까지',
       placeholder: '예: 인근 충전소? 충전요금? 충전이 안 돼요',
       chips: [
@@ -38,11 +38,11 @@
       // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       // [ISS-101] 충전 전반 catch-all 인사말. 장애 트러블슈팅은 후속 안내로 유지.
       answer: {
-        text: '<strong>충전 컨시어지</strong>입니다. 충전소 찾기·요금·회원카드부터 충전기 장애 대응까지 도와드려요.<br>충전이 안 될 땐 (1) 카드 칩 청결 확인 → (2) 카드 재등록 → (3) 다른 충전기 시도 순으로 점검해 주세요. 문제 지속 시 <strong>1661-0970</strong>(평일 09~18시)으로 문의해 주세요.'
+        text: '<strong>충전 도우미</strong>입니다. 충전소 찾기·요금·회원카드부터 충전기 장애 대응까지 도와드려요.<br>충전이 안 될 땐 (1) 카드 칩 청결 확인 → (2) 카드 재등록 → (3) 다른 충전기 시도 순으로 점검해 주세요. 문제 지속 시 <strong>1661-0970</strong>(평일 09~18시)으로 문의해 주세요.'
       }
     },
     subsidy: {
-      label: '보조금 큐레이터',
+      label: '보조금 도우미',
       headerSub: '내가 받을 수 있는 보조금을 한 번에',
       placeholder: '예: 보조금 얼마? 신청 절차?',
       chips: [
@@ -54,7 +54,7 @@
       ],  // [ISS-101 후속] {tag,q} 확정본
       // [ISS-085] cards·actions·suggest 제거 — 응답은 text만
       answer: {
-        text: '<strong>2026년 보조금 큐레이션</strong>입니다. 일반 승용 BEV 기준 국비 480만원 + 지방비 100만원 = 최대 580만원 지원. 차량가 7천만원 이상은 100% 단가 적용 대상에서 제외됩니다.'
+        text: '<strong>2026년 보조금 도우미</strong>입니다. 일반 승용 BEV 기준 국비 480만원 + 지방비 100만원 = 최대 580만원 지원. 차량가 7천만원 이상은 100% 단가 적용 대상에서 제외됩니다.'
       }
     }
   };
@@ -141,8 +141,8 @@
         + '<button class="aif-close" id="aifClose" type="button" aria-label="닫기">' + ICON.close + '</button>'
       + '</header>'
       + '<nav class="aif-flows" role="tablist">'
-        + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '<span data-i18n="mega.community.ai.charge">충전 컨시어지</span></button>'
-        + '<button class="aif-flow-btn active" data-flow="subsidy" type="button">' + ICON.money + '<span data-i18n="mega.community.ai.subsidy">보조금 큐레이터</span></button>'
+        + '<button class="aif-flow-btn" data-flow="charge" type="button">' + ICON.bolt + '<span data-i18n="mega.community.ai.charge">충전 도우미</span></button>'
+        + '<button class="aif-flow-btn active" data-flow="subsidy" type="button">' + ICON.money + '<span data-i18n="mega.community.ai.subsidy">보조금 도우미</span></button>'
       + '</nav>'
       + '<div class="aif-chips-wrap"><div class="aif-chips-label">자주 묻는 질문</div><div class="aif-chips" id="aifChips"></div></div>'
       + '<div class="aif-feed" id="aifFeed"></div>'
