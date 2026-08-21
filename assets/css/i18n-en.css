@@ -1,0 +1,20 @@
+/* EN 상태 전용 보정 — 영어 라벨 길이 증가로 인한 GNB/탭 넘침 방지 (html[lang=en]은 i18n.js가 설정) */
+html[lang="en"] .gnb .gnb__item .gnb__link {
+  font-size: 1rem;
+  padding: 0 0.75rem;
+  letter-spacing: 0;
+}
+@media (min-width: 64.0625rem) and (max-width: 96rem) {
+  html[lang="en"] .gnb .gnb__item .gnb__link {
+    font-size: 0.875rem;
+    padding: 0 0.5rem;
+  }
+  html[lang="en"] .nav-gnb .button--sitemap .button__label {
+    display: none;
+  }
+}
+html[lang="en"] .tab--nav .tab__button {
+  white-space: normal;
+  line-height: 1.3;
+  text-align: center;
+}

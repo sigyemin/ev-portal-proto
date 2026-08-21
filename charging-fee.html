@@ -1,1900 +1,1290 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>전기차 충전요금 안내 | 충전소·요금 정보 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
-<link rel="stylesheet" href="css/charging.css">
-<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260721a">
-<link rel="stylesheet" href="css/amount-guard.css?v=20260802a">
-<style>
-  /* ────── 전기차 충전요금 페이지 전용 스타일 ────── */
-  /* TOU 컨트롤 셀렉트 — 폰트/사이즈 업 */
-  #tou-capacity{
-    -webkit-appearance:none; appearance:none;
-    height:42px;
-    padding:0 36px 0 16px;
-    border:1px solid var(--border-light);
-    border-radius:10px;
-    font-size:15px;
-    font-weight:var(--fw-medium);
-    color:var(--text-primary);
-    background:#fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 12px center;
-    cursor:pointer;
-    transition:border-color var(--t-fast);
-  }
-  #tou-capacity:hover{border-color:var(--color-gray-400);}
-  #tou-capacity:focus{outline:2px solid var(--color-primary-500); outline-offset:2px;}
-
-  /* ────────── 컨트롤 탭 통일 (TOU·매트릭스·로밍) ──────────
-     모든 .tab 버튼이 사이트 표준 --fs-sm(15px) + 일관된 패딩·라디우스 */
-  #tou-season-tabs .tab,
-  #tou-day-tabs .tab,
-  #matrix-type-tabs .tab,
-  #matrix-mem-tabs .tab,
-  #roaming-tier-tabs .tab{
-    font-size: var(--fs-sm) !important;       /* 14 → 15 (--fs-sm) */
-    font-weight: var(--fw-semibold);          /* medium → semibold */
-    padding: 10px 20px !important;            /* 9/18 → 10/20 */
-    border-radius: var(--radius-md);
-    letter-spacing: -0.01em;
-    transition: background var(--t-fast), color var(--t-fast);
-  }
-  #roaming-tier-tabs .tab { padding: 9px 18px !important; }    /* 한 단계 작게 */
-
-  /* 탭 그룹 컨테이너 — 회색 배경의 pill 그룹 */
-  #matrix-type-tabs,
-  #matrix-mem-tabs,
-  #roaming-tier-tabs,
-  #tou-season-tabs,
-  #tou-day-tabs {
-    background: var(--color-gray-50);
-    border-radius: var(--radius-md);
-    padding: 4px;
-    gap: 2px !important;
-  }
-  /* 그룹 사이 시각적 분리 (matrix 영역) */
-  #matrix-type-tabs + #matrix-mem-tabs::before {
-    content: ''; width: 1px; height: 20px;
-    background: var(--border-light);
-    margin-right: 8px;
-    align-self: center;
-  }
-
-  /* TOU 요약 카드 */
-  .tou-summary-card{
-    background:#fff;
-    border:1px solid var(--color-gray-200);
-    border-radius:12px;
-    padding:14px 22px;
-    min-width:160px;
-    transition:transform var(--t-fast), box-shadow var(--t-fast);
-  }
-  .tou-summary-card:hover{transform:translateY(-1px); box-shadow:var(--shadow-sm);}
-  .tou-summary-card .ts-label{
-    font-size:13px;
-    color:var(--color-gray-500);
-    font-weight:var(--fw-medium);
-    margin-bottom:6px;
-    letter-spacing:-0.005em;
-  }
-  .tou-summary-card .ts-value{
-    font-size:22px;
-    font-weight:var(--fw-bold);
-    letter-spacing:-0.025em;
-    line-height:1.15;
-    font-feature-settings:"tnum";
-  }
-
-  /* TOU 범례 */
-  .tou-legend .lg-item{font-size:14px !important; color:var(--text-secondary);}
-  .tou-axis{font-size:12px !important; color:var(--color-gray-600);}
-
-  /* 매트릭스 카운터 — 일관된 칩 스타일 */
-  #matrix-count {
-    font-size: var(--fs-sm) !important;    /* 13.5 → 15 */
-    color: var(--color-gray-700) !important;
-    font-weight: var(--fw-semibold);
-    background: var(--color-gray-50);
-    padding: 8px 14px;
-    border-radius: var(--radius-pill);
-    letter-spacing: -0.005em;
-    margin-left: auto;                       /* 우측 정렬로 시각 분리 */
-  }
-  /* 매트릭스 영역 컨트롤 행 정렬 보강 */
-  #matrix-type-tabs,
-  #matrix-mem-tabs {
-    flex-shrink: 0;
-  }
-  /* 매트릭스 섹션 타이틀의 단위 라벨 */
-  #section-matrix > span,
-  #section-roaming > span {
-    font-size: var(--fs-sm) !important;       /* 12 → 15 */
-    font-weight: var(--fw-medium) !important;
-    color: var(--color-gray-500) !important;
-    margin-left: 8px !important;
-  }
-
-  /* 주석/안내 텍스트 */
-  .tou-chart-wrap > div:last-child{font-size:13px !important; line-height:1.7 !important;}
-  .charge-fine-note{font-size:13px; color:var(--color-gray-500); line-height:1.7;}
-  /* 매트릭스/로밍 sticky 보장 */
-  #matrix-wrap .data-table,
-  #roaming-wrap .data-table{overflow:visible !important;}
-  #matrix-wrap{overflow-x:auto;overflow-y:auto;max-height:520px;border-radius:14px;border:1px solid var(--border-light);background:#fff;}
-  #roaming-wrap{}
-  /* 시뮬레이터 */
-  .sim-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:start;}
-  @media(max-width:880px){.sim-grid{grid-template-columns:1fr;}}
-  .sim-result-wrap{display:flex;flex-direction:column;}
-  .sim-result-lbl{display:block;font-size:11.5px;color:#6b7280;margin:4px 0 3px;font-weight:600;}
-  .sim-inputs label{display:block;font-size:11.5px;color:#6b7280;margin:4px 0 3px;}
-  .sim-inputs select,.sim-inputs input[type=range]{width:100%;padding:6px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:12.5px;font-family:inherit;background:#fff;margin-bottom:4px;}
-  .sim-inputs input[type=range]{padding:0;height:28px;}
-  .sim-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .sim-result-mini{background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;justify-content:center;border:1px solid #bae6fd;}
-  .sim-result-mini .big{font-size:38px;font-weight:800;color:#0d57b0;margin:0 0 8px;font-feature-settings:"tnum";line-height:1.1;}
-  .sim-result-mini .name{font-size:13px;color:#1e293b;font-weight:600;}
-  .sim-result-mini .sub{font-size:11.5px;color:#475569;margin-top:6px;line-height:1.5;}
-  /* ════════════════════════════════════════════════════════════════
-     사업자 요금 상세 모달 v3 — 와이드 + 모던 그레이 톤 (Slate 시스템)
-     - 사이즈: 960px (와이드 모달 트렌드)
-     - 헤더: 다크 슬레이트 그라데이션 + 액센트 점
-     - 카드/타이포: 시각적 호흡 강화 (--space-5/6/8 활용)
-     - 톤: 그레이 베이스 + 컬러 액센트 (브랜드 색상 최소 사용)
-     ════════════════════════════════════════════════════════════════ */
-  #op-modal-overlay{
-    display:none; position:fixed; inset:0;
-    background:rgba(15,23,42,0.6);
-    backdrop-filter:blur(6px);
-    z-index:1000;
-    align-items:center; justify-content:center;
-    padding:var(--space-5);
-  }
-  #op-modal-overlay.open{display:flex;}
-  #op-modal{
-    background:#fff;
-    border-radius:var(--radius-2xl);
-    width:min(960px, 100%);
-    max-height:90vh;
-    overflow:hidden;
-    display:flex; flex-direction:column;
-    box-shadow:0 32px 80px rgba(15,23,42,0.20), 0 12px 32px rgba(15,23,42,0.10);
-    animation:opModalIn .35s cubic-bezier(.16,1,.3,1);
-  }
-  @keyframes opModalIn{
-    from{transform:translateY(-16px) scale(0.97);opacity:0;}
-    to{transform:translateY(0) scale(1);opacity:1;}
-  }
-
-  /* ── 헤더: 모던 다크 슬레이트 (디자인시스템 토큰 정합) ── */
-  #op-modal-hdr{
-    padding:var(--space-8) var(--space-10);
-    background:linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-    color:#fff;
-    display:flex; align-items:center; gap:var(--space-5);
-    position:relative;
-    overflow:hidden;
-  }
-  #op-modal-hdr::before{
-    content:'';
-    position:absolute; inset:0;
-    background:
-      radial-gradient(circle at 88% 30%, rgba(26,173,108,0.12), transparent 45%),
-      radial-gradient(circle at 92% 90%, rgba(44,123,229,0.10), transparent 45%);
-    pointer-events:none;
-  }
-  #op-modal-hdr > *{position:relative; z-index:1;}
-  #op-modal-hdr .op-meta{flex:1; min-width:0;}
-  #op-modal-hdr .op-name{
-    font-size:var(--fs-xl);   /* 26px = --fs-xl */
-    font-weight:var(--fw-bold);
-    letter-spacing:-0.03em;
-    line-height:1.25;
-    margin:0;
-    color:#fff;
-    display:flex; align-items:center; gap:var(--space-3);
-  }
-  #op-modal-hdr .op-name::before{
-    content:'';
-    width:6px; height:26px;
-    background:linear-gradient(180deg, #1AAD6C, #2C7BE5);
-    border-radius:var(--radius-xs);
-    flex-shrink:0;
-  }
-  #op-modal-hdr .op-bid{
-    font-size:var(--fs-sm);   /* 13 → 15px (--fs-sm) */
-    color:rgba(255,255,255,0.72);
-    margin-top:var(--space-2);
-    font-weight:var(--fw-medium);
-    letter-spacing:0.01em;
-    padding-left:18px;
-  }
-  #op-modal-hdr .op-chip{
-    align-self:center;
-    font-size:var(--fs-xs);   /* 12 → 13px (--fs-xs 최소 토큰) */
-    font-weight:var(--fw-bold);
-    padding:7px 16px;
-    border-radius:var(--radius-pill);
-    background:rgba(255,255,255,0.12);
-    border:1px solid rgba(255,255,255,0.22);
-    color:#fff;
-    letter-spacing:0.04em;
-    backdrop-filter:blur(8px);
-  }
-  #op-modal-close{
-    width:40px; height:40px;
-    border-radius:var(--radius-md);
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.14);
-    color:#fff;
-    display:grid; place-items:center;
-    cursor:pointer;
-    transition:background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
-    flex-shrink:0;
-  }
-  #op-modal-close:hover{background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.30); transform:rotate(90deg);}
-  #op-modal-close:focus-visible{outline:2px solid rgba(255,255,255,0.6); outline-offset:2px;}
-
-  /* ── 바디: 넉넉한 호흡 ── */
-  #op-modal-body{
-    overflow-y:auto;
-    padding:var(--space-10);
-    display:flex; flex-direction:column; gap:var(--space-10);
-    background:#FAFBFC;
-  }
-  #op-modal-body::-webkit-scrollbar{width:8px;}
-  #op-modal-body::-webkit-scrollbar-thumb{background:var(--color-gray-300); border-radius:var(--radius-pill);}
-  #op-modal-body::-webkit-scrollbar-track{background:transparent;}
-
-  /* ── 섹션 타이틀: 모던 슬레이트 톤 ── */
-  .op-section-title{
-    font-size:var(--fs-sm);   /* 13 → 15px (--fs-sm) */
-    font-weight:var(--fw-bold);
-    color:var(--color-gray-700);
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    margin-bottom:var(--space-5);
-    display:flex; align-items:center; gap:var(--space-3);
-  }
-  .op-section-title::before{
-    content:'';
-    width:28px; height:3px;
-    background:linear-gradient(90deg, #1AAD6C, #2C7BE5);
-    border-radius:var(--radius-pill);
-  }
-
-  /* ── 요금 그리드: 모던 클린 카드 (굵은 라인 없음) ── */
-  .op-rate-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:var(--space-3);
-  }
-  .op-rate-cell{
-    background:#fff;
-    border:1px solid var(--color-gray-200);
-    border-radius:var(--radius-lg);
-    padding:var(--space-6) var(--space-4);
-    text-align:center;
-    transition:transform var(--t-fast), box-shadow var(--t-fast), border-color var(--t-fast);
-  }
-  .op-rate-cell:hover{
-    transform:translateY(-2px);
-    box-shadow:var(--shadow-md);
-    border-color:var(--color-gray-300);
-  }
-  .op-rate-cell .cap-label{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    font-size:var(--fs-sm);   /* 12.5 → 15px (--fs-sm) */
-    color:var(--color-gray-600);
-    margin-bottom:var(--space-3);
-    font-weight:var(--fw-semibold);
-    letter-spacing:-0.01em;
-  }
-  /* 모던 디테일 — 라벨 앞 7px 컬러 도트로 그룹 식별 */
-  .op-rate-cell .cap-label::before{
-    content:'';
-    width:7px; height:7px;
-    border-radius:50%;
-    background:var(--accent-color, var(--color-gray-400));
-    flex-shrink:0;
-  }
-  .op-rate-cell .cap-value{
-    font-size:28px;          /* 26 → 28: 카드 라벨 키운 만큼 보정 */
-    font-weight:var(--fw-bold);
-    color:var(--color-gray-900);
-    letter-spacing:-0.03em;
-    font-feature-settings:"tnum";
-    line-height:1.1;
-  }
-  .op-rate-cell .cap-value .unit{
-    font-size:var(--fs-xs);   /* 12 → 13px (--fs-xs 최소 토큰) */
-    font-weight:var(--fw-medium);
-    color:var(--color-gray-500);
-    margin-left:4px;
-    letter-spacing:0;
-  }
-  .op-rate-cell .cap-value.null-val{
-    color:var(--color-gray-300);
-    font-size:var(--fs-md);   /* 18 → 19px (--fs-md) */
-    font-weight:var(--fw-regular);
-  }
-  /* 그룹별 액센트 — 도트 컬러로만 표현 */
-  .op-rate-cell.group-slow  { --accent-color: #0EA5E9; }
-  .op-rate-cell.group-mid   { --accent-color: #F59E0B; }
-  .op-rate-cell.group-fast  { --accent-color: #EC4899; }
-  .op-rate-cell.group-ultra { --accent-color: #8B5CF6; }
-
-  /* ── 비회원 요금 카드 ── */
-  .op-nmr-card{
-    display:flex; align-items:center; gap:var(--space-5);
-    background:linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
-    border:1px solid #FDE68A;
-    border-radius:var(--radius-lg);
-    padding:var(--space-6) var(--space-8);
-  }
-  .op-nmr-card .nmr-ico{
-    width:60px; height:60px;
-    border-radius:var(--radius-md);
-    background:linear-gradient(135deg, #F59E0B, #D97706);
-    color:#fff;
-    display:grid; place-items:center;
-    flex-shrink:0;
-    box-shadow:0 6px 16px rgba(245,158,11,0.25);
-  }
-  .op-nmr-card .nmr-meta{flex:1;}
-  .op-nmr-card .nmr-label{
-    font-size:var(--fs-xs);   /* 11.5 → 13px (--fs-xs) */
-    color:#92400E;
-    font-weight:var(--fw-bold);
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    margin-bottom:var(--space-2);
-  }
-  .op-nmr-card .nmr-value{
-    font-size:32px;          /* 30 → 32 */
-    font-weight:var(--fw-bold);
-    color:#78350F;
-    letter-spacing:-0.03em;
-    line-height:1.1;
-    font-feature-settings:"tnum";
-  }
-  .op-nmr-card .nmr-value .unit{
-    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
-    font-weight:var(--fw-medium);
-    color:#92400E;
-    margin-left:4px;
-  }
-  .op-nmr-card .nmr-hint{
-    font-size:var(--fs-xs);   /* 12.5 → 13px (--fs-xs) */
-    color:#92400E;
-    margin-top:var(--space-2);
-    opacity:0.85;
-    line-height:1.5;
-  }
-  .op-nmr-empty{
-    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
-    color:var(--color-gray-500);
-    background:#fff;
-    border:1px dashed var(--color-gray-300);
-    border-radius:var(--radius-lg);
-    padding:var(--space-6);
-    text-align:center;
-    font-weight:var(--fw-medium);
-  }
-
-  /* ── 비고 박스 ── */
-  .op-note{
-    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
-    color:var(--color-gray-700);
-    background:#fff;
-    border:1px solid var(--color-gray-200);
-    border-radius:var(--radius-lg);
-    padding:var(--space-5) var(--space-6);
-    line-height:1.7;
-  }
-  .op-note strong{
-    color:var(--color-gray-900);
-    font-weight:var(--fw-semibold);
-  }
-
-  /* ── 지원·조건별 / 로밍 서브 카드 ── */
-  .op-sub-card{
-    border:1px solid var(--color-gray-200);
-    border-radius:var(--radius-lg);
-    padding:var(--space-5);
-    margin-top:var(--space-4);
-    background:#fff;
-  }
-  .op-sub-card-note{
-    font-size:var(--fs-xs);   /* 13px (--fs-xs 최소) */
-    color:var(--color-gray-500);
-    margin-top:var(--space-4);
-    padding-top:var(--space-4);
-    border-top:1px dashed var(--color-gray-200);
-    line-height:1.65;
-  }
-
-  /* ── 테이블 (계절시간제 / 로밍 파트너) ── */
-  .op-roaming-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
-  }
-  .op-roaming-table thead th{
-    background:#F8FAFC;
-    color:var(--color-gray-600);
-    font-weight:var(--fw-semibold);
-    padding:var(--space-4) var(--space-5);
-    text-align:left;
-    font-size:var(--fs-xs);   /* 12.5 → 13px (--fs-xs) */
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    border-bottom:1px solid var(--color-gray-200);
-  }
-  .op-roaming-table tbody td{
-    padding:var(--space-4) var(--space-5);
-    border-bottom:1px solid #F1F5F9;
-    color:var(--color-gray-800);
-    font-feature-settings:"tnum";
-    font-weight:var(--fw-medium);
-  }
-  .op-roaming-table tbody tr:last-child td{border-bottom:none;}
-  .op-roaming-table tbody tr{transition:background var(--t-fast);}
-  .op-roaming-table tbody tr:hover{background:#F8FAFC;}
-  .op-roaming-table .num{text-align:right; font-variant-numeric:tabular-nums; font-weight:var(--fw-semibold);}
-
-  /* ── 푸터 ── */
-  #op-modal-foot{
-    padding:var(--space-5) var(--space-10);
-    border-top:1px solid var(--color-gray-200);
-    background:#fff;
-    display:flex; justify-content:space-between; align-items:center;
-    gap:var(--space-3);
-  }
-  #op-modal-foot .foot-meta{
-    font-size:var(--fs-xs);   /* 12.5 → 13px (--fs-xs) */
-    color:var(--color-gray-500);
-    display:flex; align-items:center; gap:8px;
-    font-weight:var(--fw-medium);
-  }
-  #op-modal-foot .foot-meta::before{
-    content:'';
-    width:6px; height:6px;
-    border-radius:50%;
-    background:var(--color-primary-500);
-  }
-  #op-modal-foot .btn{
-    padding:11px 24px;
-    font-size:var(--fs-sm);   /* 14 → 15px (--fs-sm) */
-  }
-
-  /* ── 전기충전소 요금 검색 (AS-IS 기능 유지) ── */
-  .ev-search-wrap {
-    background: var(--color-gray-50);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    padding: var(--space-6);
-    margin-top: var(--space-6);
-  }
-  .ev-search-head {
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5);
-  }
-  .ev-search-head h3 {
-    font-size: 19px; font-weight: var(--fw-bold);
-    color: var(--text-primary); letter-spacing: -0.025em; margin: 0;
-  }
-  .ev-search-head .ev-search-meta {
-    font-size: 13px; color: var(--color-gray-500); font-weight: var(--fw-medium);
-  }
-  .ev-search-grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
-    gap: var(--space-3); align-items: end;
-  }
-  .ev-search-field { display: flex; flex-direction: column; gap: 6px; }
-  .ev-search-field label {
-    font-size: 13px; font-weight: var(--fw-semibold);
-    color: var(--color-gray-700); letter-spacing: -0.005em;
-  }
-  .ev-search-field select,
-  .ev-search-field input {
-    height: 44px; padding: 0 14px;
-    border: 1px solid var(--border-light); border-radius: var(--radius-md);
-    font-size: 14.5px; background: #fff; color: var(--text-primary);
-    font-family: inherit; transition: border-color var(--t-fast);
-  }
-  .ev-search-field select:focus,
-  .ev-search-field input:focus {
-    outline: 2px solid var(--color-primary-500); outline-offset: 2px;
-    border-color: var(--color-primary-500);
-  }
-  .ev-search-field select {
-    -webkit-appearance: none; appearance: none;
-    background: #fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 12px center;
-    padding-right: 36px; cursor: pointer;
-  }
-  .ev-search-actions { display: flex; gap: var(--space-2); }
-  .ev-search-actions .btn { height: 44px; padding: 0 22px; font-size: 14.5px; white-space: nowrap; }
-
-  .ev-result-wrap {
-    margin-top: var(--space-6); background: #fff;
-    border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden;
-  }
-  .ev-result-head {
-    padding: var(--space-4) var(--space-5); background: var(--color-gray-50);
-    border-bottom: 1px solid var(--border-light);
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: var(--space-2);
-  }
-  .ev-result-count { font-size: 14px; color: var(--text-primary); font-weight: var(--fw-semibold); }
-  .ev-result-count strong { color: var(--color-primary-700); font-weight: var(--fw-bold); }
-  .ev-result-tools { display: flex; gap: var(--space-2); }
-  .ev-download-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 14px; background: #fff;
-    border: 1px solid var(--border-light); border-radius: var(--radius-sm);
-    font-size: 13.5px; font-weight: var(--fw-semibold); color: var(--text-primary);
-    cursor: pointer; transition: all var(--t-fast);
-  }
-  .ev-download-btn:hover {
-    background: var(--color-primary-50); border-color: var(--color-primary-300); color: var(--color-primary-700);
-  }
-  .ev-download-btn .ext {
-    font-size: 11.5px; font-weight: var(--fw-bold);
-    padding: 1px 6px; border-radius: 3px;
-  }
-  .ev-download-btn.csv .ext { background: #DBEAFE; color: #1E40AF; }
-  .ev-download-btn.xlsx .ext { background: #DCFCE7; color: #166534; }
-
-  .ev-result-table { width: 100%; border-collapse: collapse; }
-  .ev-result-table thead th {
-    background: #fff; font-size: 13px; font-weight: var(--fw-semibold);
-    color: var(--color-gray-700); padding: 12px 14px; text-align: left;
-    border-bottom: 1px solid var(--border-light); letter-spacing: -0.005em;
-  }
-  .ev-result-table thead th.num { text-align: right; }
-  .ev-result-table tbody td {
-    padding: 14px; font-size: 14px; border-bottom: 1px solid #F1F5F9;
-    color: var(--text-primary); vertical-align: middle;
-  }
-  .ev-result-table tbody tr:last-child td { border-bottom: none; }
-  .ev-result-table tbody tr:hover { background: var(--color-gray-50); }
-  .ev-result-table tbody td.num { text-align: right; font-weight: var(--fw-semibold); font-feature-settings: "tnum"; }
-  .ev-result-table .station-name { font-weight: var(--fw-bold); color: var(--text-primary); }
-  .ev-result-table .station-addr { font-size: 12.5px; color: var(--color-gray-500); margin-top: 2px; font-weight: var(--fw-regular); }
-  /* v0.12 [37a] 출력(완속/급속/초급속) 칩 색 제거 — 일반 텍스트(검정) 통일 */
-  .ev-result-chip {
-    display: inline-block; padding: 0; border-radius: 0;
-    font-size: 13px; font-weight: var(--fw-semibold); color: var(--text-primary); background: transparent;
-  }
-  .ev-result-chip.slow,
-  .ev-result-chip.fast,
-  .ev-result-chip.ultra,
-  .ev-result-chip.mid { background: transparent; color: var(--text-primary); }
-  /* 다중선택 체크박스 드롭다운 (사업자·출력) */
-  .ms-dd { position: relative; }
-  .ms-btn { width: 100%; text-align: left; height: 42px; padding: 0 30px 0 12px; border: 1px solid var(--border-medium, #cbd5e1); border-radius: 8px; background: #fff; font-size: 14px; color: var(--text-primary); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ms-btn::after { content: ''; position: absolute; right: 13px; top: 50%; width: 7px; height: 7px; border-right: 2px solid #94a3b8; border-bottom: 2px solid #94a3b8; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
-  .ms-btn:focus { outline: 2px solid var(--color-primary-300, #93c5fd); outline-offset: 1px; }
-  .ms-pop { position: absolute; z-index: 60; top: calc(100% + 4px); left: 0; min-width: 100%; max-height: 300px; overflow-y: auto; background: #fff; border: 1px solid var(--border-medium, #cbd5e1); border-radius: 10px; box-shadow: 0 10px 28px rgba(0,0,0,0.14); padding: 6px; }
-  .ms-pop[hidden] { display: none; }
-  .ms-opt { display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 13.5px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
-  .ms-opt:hover { background: var(--color-gray-50, #f6f8fa); }
-  .ms-opt input { width: 16px; height: 16px; flex: 0 0 auto; cursor: pointer; }
-  .ms-all-opt { border-bottom: 1px solid var(--border-light, #eef2f6); margin-bottom: 4px; font-weight: 700; }
-  .ev-status-dot {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 12.5px; font-weight: var(--fw-semibold);
-  }
-  .ev-status-dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
-  .ev-status-dot.on::before { background: #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.5); }
-  .ev-status-dot.busy::before { background: #F59E0B; }
-  .ev-status-dot.maint::before { background: #EF4444; }
-  .ev-status-dot.on { color: #047857; }
-  .ev-status-dot.busy { color: #B45309; }
-  .ev-status-dot.maint { color: #B91C1C; }
-
-  .ev-result-pagination {
-    padding: var(--space-4); display: flex; justify-content: center;
-    gap: 4px; border-top: 1px solid var(--border-light);
-  }
-  .ev-page-btn {
-    width: 36px; height: 36px;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: #fff; border: 1px solid var(--border-light);
-    border-radius: var(--radius-sm); font-size: 13px; font-weight: var(--fw-semibold);
-    color: var(--text-secondary); cursor: pointer; transition: all var(--t-fast);
-  }
-  .ev-page-btn:hover { border-color: var(--color-primary-300); color: var(--color-primary-700); }
-  .ev-page-btn.active {
-    background: var(--color-primary-500); color: #fff; border-color: var(--color-primary-500);
-  }
-
-  @media (max-width: 1080px) {
-    .ev-search-grid { grid-template-columns: repeat(3, 1fr); }
-    .ev-search-actions { grid-column: 1 / -1; justify-content: flex-end; }
-  }
-  @media (max-width: 640px) {
-    .ev-search-grid { grid-template-columns: 1fr; }
-    .ev-result-tools { width: 100%; flex-direction: column; align-items: stretch; }
-    .ev-download-btn { justify-content: center; }
-  }
-
-  /* ── 반응형 (디자인시스템 토큰 정합) ── */
-  @media (max-width: 960px){
-    #op-modal{width:100%; max-height:94vh;}
-    #op-modal-hdr{padding:var(--space-6) var(--space-6);}
-    #op-modal-hdr .op-name{font-size:var(--fs-lg);}   /* 22px */
-    #op-modal-body{padding:var(--space-6); gap:var(--space-8);}
-    #op-modal-foot{padding:var(--space-4) var(--space-6);}
-    .op-rate-grid{grid-template-columns:repeat(4,1fr);}
-    .op-rate-cell{padding:var(--space-5) var(--space-3);}
-    .op-rate-cell .cap-value{font-size:24px;}
-    .op-nmr-card{padding:var(--space-5);}
-    .op-nmr-card .nmr-value{font-size:var(--fs-xl);}  /* 26px */
-  }
-  @media (max-width: 640px){
-    #op-modal{border-radius:var(--radius-lg);}
-    #op-modal-overlay{padding:var(--space-3);}
-    #op-modal-hdr{padding:var(--space-5); gap:var(--space-3);}
-    #op-modal-hdr .op-name{font-size:var(--fs-md);}    /* 19px */
-    #op-modal-hdr .op-name::before{width:4px; height:20px;}
-    #op-modal-hdr .op-bid{font-size:var(--fs-xs); padding-left:14px;}  /* 13px */
-    #op-modal-body{padding:var(--space-5); gap:var(--space-6);}
-    #op-modal-foot{padding:var(--space-4) var(--space-5); flex-direction:column-reverse; align-items:stretch;}
-    #op-modal-foot .btn{width:100%;}
-    .op-rate-grid{grid-template-columns:repeat(2,1fr);}
-    .op-rate-cell .cap-value{font-size:22px;}
-    .op-nmr-card{flex-direction:column; align-items:flex-start; gap:var(--space-3);}
-    .op-nmr-card .nmr-value{font-size:26px;}
-  }
-  /* v0.12 [25] 로밍 안내 툴팁 */
-  .info-tip-wrap{position:relative;display:inline-flex;align-items:center;margin-left:8px;vertical-align:middle;}
-  .info-tip-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--color-gray-400);background:#fff;color:var(--color-gray-600);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:all var(--t-fast);}
-  .info-tip-btn:hover,.info-tip-btn[aria-expanded="true"]{border-color:var(--color-primary-500);color:var(--color-primary-700);background:var(--color-primary-50);}
-  .info-tip-btn:focus-visible{outline:2px solid var(--color-primary-500);outline-offset:2px;}
-  .info-tip{position:absolute;top:calc(100% + 8px);left:0;z-index:30;width:max-content;max-width:340px;background:#1F2937;color:#fff;font-size:13px;font-weight:500;line-height:1.6;letter-spacing:-0.01em;padding:12px 14px;border-radius:8px;box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity var(--t-fast),transform var(--t-fast),visibility var(--t-fast);pointer-events:none;white-space:normal;}
-  .info-tip::before{content:"";position:absolute;bottom:100%;left:14px;border:6px solid transparent;border-bottom-color:#1F2937;}
-  .info-tip-wrap:hover .info-tip,.info-tip-wrap:focus-within .info-tip,.info-tip.is-open{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
-  /* v0.17 내 카드 선택 — 네이티브 드롭다운(CPO 다수·모바일 접근성) + 선택칩 */
-  #roaming-card-select{display:block !important;}
-  .roam-card-dd{
-    -webkit-appearance:none; appearance:none;
-    min-width:260px; max-width:100%; height:46px;       /* 46px 터치타깃 */
-    padding:0 40px 0 16px;
-    border:1px solid var(--border-medium);
-    border-radius:10px;
-    font-size:15px; font-weight:var(--fw-semibold); color:var(--text-primary);
-    background:#fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 14px center;
-    cursor:pointer; font-family:inherit;
-  }
-  .roam-card-dd:hover{border-color:var(--color-primary-400);}
-  .roam-card-dd:focus-visible{outline:2px solid var(--color-primary-500); outline-offset:2px; border-color:var(--color-primary-500);}
-  .roam-card-tags{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px;}
-  .roam-card-tag{display:inline-flex; align-items:center; gap:6px; padding:6px 8px 6px 14px; background:var(--color-primary-50); border:1px solid var(--color-primary-200); border-radius:999px; font-size:13.5px; font-weight:600; color:var(--color-primary-700);}
-  .roam-card-tag-x{width:22px; height:22px; border:none; background:var(--color-primary-100); color:var(--color-primary-700); border-radius:50%; cursor:pointer; font-size:11px; line-height:1; display:inline-flex; align-items:center; justify-content:center; flex:none;}
-  .roam-card-tag-x:hover{background:var(--color-primary-200);}
-  .roam-card-tag-x:focus-visible{outline:2px solid var(--color-primary-500); outline-offset:1px;}
-  .roam-card-clear{padding:6px 12px; border:none; background:transparent; color:var(--color-gray-500); font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline;}
-  @media (max-width:640px){ .roam-card-dd{width:100%; min-width:0;} }
-  /* 체크박스형 멀티셀렉트 드롭다운 */
-  .roam-dd{position:relative; display:inline-block; max-width:100%;}
-  .roam-dd-btn{display:inline-flex; align-items:center; justify-content:flex-start; text-align:left;}
-  .roam-dd-panel{position:absolute; top:calc(100% + 6px); left:0; z-index:40; width:min(360px,92vw); background:#fff; border:1px solid var(--border-medium); border-radius:12px; box-shadow:var(--shadow-lg); padding:10px;}
-  .roam-dd-search input{width:100%; height:40px; border:1px solid var(--border-light); border-radius:8px; padding:0 12px; font-size:14px; font-family:inherit;}
-  .roam-dd-search input:focus-visible{outline:2px solid var(--color-primary-500); outline-offset:1px;}
-  .roam-dd-list{list-style:none; margin:8px 0; padding:0; max-height:248px; overflow-y:auto;}
-  .roam-dd-item{display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:8px; cursor:pointer; font-size:14px; color:var(--text-primary);}
-  .roam-dd-item:hover{background:var(--color-gray-50);}
-  .roam-dd-item input{width:18px; height:18px; accent-color:var(--color-primary-600); cursor:pointer; flex:none;}
-  .roam-dd-item small{color:var(--color-gray-400); font-weight:500; margin-left:4px;}
-  .roam-dd-foot{display:flex; justify-content:space-between; align-items:center; padding-top:8px; margin-top:2px; border-top:1px solid var(--border-light);}
-  .roam-dd-close{padding:7px 16px; border:1px solid var(--border-light); background:#fff; border-radius:8px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer;}
-  .roam-dd-close:hover{background:var(--color-gray-50);}
-  @media (max-width:640px){ .roam-dd, .roam-dd-btn{width:100%;} }
-</style>
+<title>전기차 충전요금 안내</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
 </head>
 <body>
-<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
-<script>window.__activeNav = 'charging';</script>
 <div id="header-slot"></div>
-
-<!-- [ISS-028] ISS-020 빨강 계열 경고 프로세스(상단 띠·축약 배지·로밍 강조) 제거 — 노랑 안내가 배지·4버전 데모로 대체 -->
-
-<main id="main">
-  <section class="page-hero compact">
-    <div class="container container-wide">
-      <nav class="breadcrumb" aria-label="경로">
-        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging-fee.html?tab=ev">충전 요금 안내</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" aria-current="page">전기차 충전요금</span>
-      </nav>
-      <h1 data-i18n="charging.fee.title">전기차 충전요금 안내</h1>
-      <p class="hero-lead" data-i18n-html="charging.fee.lead">사업자별·시간대별 전기차 충전요금을 <strong>매트릭스로 비교</strong>하고, 로밍 요금과 월 예상 충전비를 시뮬레이션합니다.</p>
-    </div>
-  </section>
-
-  <section class="section-sm">
-    <div class="container container-wide">
-
-      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
-        <a href="charging-fee-simulator.html" class="btn btn-primary btn-sm" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14v4"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>내 충전요금 시뮬레이터</a>
-      </div>
-
-      <!-- ══════ [ISS-028] 안내요금 ≠ 실결제 고지 UX 4버전 데모(회의 비교용) ══════ -->
-      <style>
-        .fd-demo-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;}
-        .fd-demo-bar .lbl{font-size:13px;font-weight:800;color:#92400E;}
-        .fd-demo-seg{display:inline-flex;gap:5px;flex-wrap:wrap;}
-        .fd-demo-seg button{font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid #FDE68A;background:#fff;color:#92400E;cursor:pointer;}
-        .fd-demo-seg button[aria-pressed="true"]{background:#F59E0B;color:#fff;border-color:#F59E0B;}
-        .fd-demo-seg button:focus-visible{outline:2px solid #B45309;outline-offset:2px;}
-        .fd-demo-desc{flex-basis:100%;font-size:12px;color:#92400E;margin-top:2px;}
-        /* [ISS-028] '안내가' 배지 = 펼침/접힘 토글 · 상태 아이콘 강조 */
-        .fee-badge::after{ content:'⌄'; margin-left:5px; font-size:14px; font-weight:900; line-height:1; display:inline-block; transition:transform .15s ease; }
-        .fee-badge[aria-expanded="true"]::after{ transform:translateY(-1px) rotate(0deg); }
-        .fee-badge[aria-expanded="false"]::after{ transform:rotate(-90deg); }   /* 접힘 = ▸(펼치기) */
-        .fee-badge[aria-expanded="true"]{ background:#FDE68A; border-color:#F59E0B; box-shadow:0 0 0 2px rgba(245,158,11,.28); }
-        @media (prefers-reduced-motion: reduce){ .fee-badge::after{ transition:none; } }
-        .fd-disc{margin:0 0 16px;border:1px solid #FDE68A;border-left:4px solid #F59E0B;background:#FFFBEB;border-radius:10px;padding:12px 16px;color:#92400E;}
-        .fd-disc[hidden]{display:none;}
-        .fd-disc-row{display:flex;align-items:flex-start;gap:10px;}
-        .fd-disc .fd-ico{flex:none;margin-top:1px;color:#B45309;}
-        .fd-disc .fd-body{flex:1;font-size:13.5px;line-height:1.6;font-weight:600;}
-        .fd-disc .fd-body strong{font-weight:800;}
-        .fd-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;padding-left:28px;}
-        .fd-disc-btn{font:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:8px;border:1px solid #F59E0B;background:#fff;color:#92400E;cursor:pointer;}
-        .fd-disc-btn.primary{background:#F59E0B;color:#fff;}
-        .fd-disc-btn:disabled{opacity:.6;cursor:default;}
-        .fd-disc-btn:focus-visible{outline:2px solid #B45309;outline-offset:2px;}
-        .fd-disc-badge{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;font-weight:800;padding:6px 13px;border-radius:999px;border:1px solid #FDE68A;background:#FEF3C7;color:#92400E;cursor:pointer;margin:0 0 16px;}
-        .fd-disc-badge[hidden]{display:none;}
-        .fd-disc-badge:focus-visible{outline:2px solid #B45309;outline-offset:2px;}
-        #feeAmountZone.fd-blur{filter:blur(6px);user-select:none;transition:filter .2s ease;}
-        @media (prefers-reduced-motion: reduce){ #feeAmountZone.fd-blur{transition:none;} }
-        .fd-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.55);}
-        .fd-modal[hidden]{display:none;}
-        .fd-modal-box{background:#fff;border-radius:14px;max-width:460px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.28);}
-        .fd-modal-box h2{font-size:18px;font-weight:800;margin:0 0 8px;color:#1f2937;display:flex;align-items:center;gap:8px;}
-        .fd-modal-box h2 .fd-ico{color:#F59E0B;}
-        .fd-modal-box p{font-size:14px;line-height:1.65;color:#374151;margin:0 0 8px;}
-        .fd-modal-box .fd-field{margin:12px 0;}
-        .fd-modal-box .fd-field label{font-size:13.5px;color:#374151;display:flex;align-items:center;gap:8px;}
-        .fd-modal-box .fd-field input[type=text]{width:100%;height:38px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;margin-top:6px;box-sizing:border-box;}
-        .fd-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
-        .fd-modal-box .btn{cursor:pointer;}
-        .fd-modal-box button:focus-visible, .fd-modal-box input:focus-visible{outline:2px solid #1D6F42;outline-offset:2px;}
-      </style>
-      <div class="fd-demo-bar" role="group" aria-label="고지 UX 데모 버전 선택">
-        <span class="lbl" aria-hidden="true">고지 UX 데모</span>
-        <span class="fd-demo-seg" id="fdSeg">
-          <button type="button" data-ver="1" aria-pressed="true">V1 펼침·접힘</button>
-          <button type="button" data-ver="2" aria-pressed="false">V2 진입 팝업</button>
-          <button type="button" data-ver="3" aria-pressed="false">V3 블러·확인</button>
-          <button type="button" data-ver="4" aria-pressed="false">V4 확인 취득</button>
-        </span>
-        <span class="fd-demo-desc" id="fdDesc"></span>
-      </div>
-
-      <!-- V1/V3 노랑 안내가 디스클로저(펼침) + 접힌 배지 -->
-      <div class="fd-disc" id="fdDisc" role="region" aria-label="안내요금 고지" hidden>
-        <div class="fd-disc-row">
-          <span class="fd-ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
-          <div class="fd-body"><strong>안내요금(참고용)</strong> — 사업자·시간대·할인·로밍에 따라 실제 결제금액이 다를 수 있습니다. 특히 <strong>타 사업자(로밍)</strong> 충전 시 요금이 크게 다를 수 있습니다.</div>
-        </div>
-        <div class="fd-actions" id="fdDiscActions"></div>
-      </div>
-      <button type="button" class="fd-disc-badge" id="fdBadge" hidden aria-expanded="false"><span aria-hidden="true">ⓘ</span> 안내요금 고지 펼치기</button>
-
-      <div id="feeAmountZone">
-      <!-- [DEV] KPI(범위형·현재 더미) — ① 공공 기준단가 · ② 민간 요금대 = TNCC_RMNG_RTCPCTY_FEE 회원가(MEMBER_FEE) min~max / ③ 계절시간제 운영 사업자 = TNCC_RMNG_SEAS_FEE 활성 규칙 보유 BID 수(JS kpiTouCount 동적) / ④ 등재 충전사업자 = 요금 공시 CPO 수 (등재 기준 미정 · 개발 협의 — 투명성지수 대민 제거로 재정의 필요) -->
-      <!-- ═══════ KPI (범위형) ═══════ -->
-      <div class="grid grid-4 mb-6" style="gap:16px;">
-        <div class="stat-card">
-          <div class="stat-label">공공 기준단가</div>
-          <div class="stat-value" style="font-size:22px;"><span>294~392</span><span class="unit" style="font-size:13px;">원/kWh</span></div>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">완속 294.3 ~ 초급속 391.9</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">민간 요금대</div>
-          <div class="stat-value" style="font-size:22px;"><span>약 280~450</span><span class="unit" style="font-size:13px;">원/kWh</span></div>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">등재 CPO 회원가 범위</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">계절시간제 운영 사업자</div>
-          <div class="stat-value" style="font-size:22px;"><span id="kpiTouCount">—</span><span class="unit" style="font-size:13px;">개사</span></div>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">계절·시간대 할인규칙 등록</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">등재 충전사업자</div>
-          <div class="stat-value" style="font-size:22px;"><span>159</span><span class="unit" style="font-size:13px;">개사</span></div>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">요금 공시 사업자 기준</div>
-        </div>
-      </div>
-
-      <!-- [DEV] 충전소 요금 검색 결과(현재 더미) — 출력구성 = EVCS_CHARGER_STATUS(STAT_ID별 CHGE_OUTPUT·CHGER_KIND 집계, 출력값만·중복제거) / 요금 5밴드 = APP_CHARGE_PRICE(PRICE_TYPE·MEMBER_PRICE/GUEST_PRICE) 사업자 단가를 공공 5밴드로 정규화 매핑(없으면 —) / 상태·거리·비고 컬럼 제외(실시간 상태는 충전소 찾기=EVCS_CHARGER_STATUS 담당) -->
-      <!-- ═══════ 충전소 요금 검색 ═══════ -->
-      <section class="ev-search-wrap" aria-labelledby="ev-search-title">
-        <div class="ev-search-head">
-          <h3 id="ev-search-title">충전소 요금 검색 <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
-          <span class="ev-search-meta">지역·충전소명으로 조회 · 회원가(지금 시각) 기준 · 충전기 상태는 <a href="charging-find.html?tab=map" style="color:var(--color-primary-700);font-weight:600;">충전소 찾기</a>에서 확인</span>
-        </div>
-        <form class="ev-search-grid" id="evSearchForm" autocomplete="off" style="grid-template-columns:1fr 1fr 1.6fr auto;">
-          <div class="ev-search-field">
-            <label for="evSido">시·도</label>
-            <select id="evSido" aria-label="시도 선택">
-              <option value="">전체</option>
-              <option value="서울">서울특별시</option>
-              <option value="부산">부산광역시</option>
-              <option value="대구">대구광역시</option>
-              <option value="인천">인천광역시</option>
-              <option value="광주">광주광역시</option>
-              <option value="대전">대전광역시</option>
-              <option value="울산">울산광역시</option>
-              <option value="세종">세종특별자치시</option>
-              <option value="경기">경기도</option>
-              <option value="강원">강원특별자치도</option>
-              <option value="충북">충청북도</option>
-              <option value="충남">충청남도</option>
-              <option value="전북">전북특별자치도</option>
-              <option value="전남">전라남도</option>
-              <option value="경북">경상북도</option>
-              <option value="경남">경상남도</option>
-              <option value="제주">제주특별자치도</option>
-            </select>
-          </div>
-          <div class="ev-search-field">
-            <label for="evGugun">구·군</label>
-            <select id="evGugun" aria-label="구군 선택"><option value="">전체</option></select>
-          </div>
-          <div class="ev-search-field">
-            <label for="evKeyword">충전소명</label>
-            <input type="text" id="evKeyword" placeholder="충전소명 키워드" aria-label="충전소명 검색어 입력">
-          </div>
-          <div class="ev-search-actions">
-            <button type="submit" class="btn btn-primary" id="evSearchBtn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <span>검색</span>
-            </button>
-            <button type="button" class="btn btn-ghost" id="evResetBtn">초기화</button>
-          </div>
-        </form>
-      </section>
-
-      <div class="ev-result-wrap" id="evResultWrap">
-        <div class="ev-result-head">
-          <span class="ev-result-count">총 <strong id="evResultCount">0</strong>건</span>
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <div id="ev-mem-tabs" class="tabs-pill" role="group" aria-label="요금 기준" style="display:inline-flex;">
-              <button class="tab active" data-emem="member" type="button">회원가</button>
-              <button class="tab" data-emem="nonmember" type="button">비회원가</button>
-            </div>
-            <span style="font-size:12.5px;color:var(--color-gray-500);" id="evResultTime">회원가 기준</span>
-            <button type="button" class="ev-download-btn xlsx" id="evExcelBtn" aria-label="검색 결과 엑셀 다운로드">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              <span class="ext">XLSX</span>
-              <span>엑셀 다운로드</span>
-            </button>
-          </div>
-        </div>
-        <div style="overflow-x:auto;">
-          <table class="ev-result-table">
-            <caption class="sr-only">충전소 요금 검색 결과</caption>
-            <thead>
-              <tr>
-                <th scope="col" class="sortable" data-esk="no" tabindex="0" role="button" style="width:56px;text-align:center;">번호</th>
-                <th scope="col" class="sortable" data-esk="name" tabindex="0" role="button">충전소명 / 주소</th>
-                <th scope="col" class="sortable" data-esk="cpo" tabindex="0" role="button">사업자(CPO)</th>
-                <th scope="col" style="min-width:128px;">충전기 출력구성 <span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">(kW)</span></th>
-                <th scope="col" class="num sortable" data-esk="slow" tabindex="0" role="button">완속</th>
-                <th scope="col" class="num sortable" data-esk="mid" tabindex="0" role="button">중속</th>
-                <th scope="col" class="num sortable" data-esk="fast50" tabindex="0" role="button">급속<br><span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">50~100</span></th>
-                <th scope="col" class="num sortable" data-esk="fast100" tabindex="0" role="button">급속<br><span style="font-weight:400;color:var(--color-gray-400);font-size:11px;">100~200</span></th>
-                <th scope="col" class="num sortable" data-esk="ultra" tabindex="0" role="button">초급속</th>
-                <th scope="col" style="width:118px;text-align:center;">로밍</th>
-              </tr>
-            </thead>
-            <tbody id="evResultTbody"></tbody>
-          </table>
-          <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
-        </div>
-      </div>
-
-      <!-- [DEV] 사업자별 요금 매트릭스(현재 더미) — 셀 = TNCC_RMNG_RTCPCTY_FEE 기본단가(정격용량구간 STRT/END_RTCPCTY·MEMBER_FEE/NONMEMBER_FEE)에 TNCC_RMNG_SEAS_FEE 규칙(SEAS_SE 시즌·DAY_TYPE 요일·STRT_HR/END_HR 시간·DSCNT_SE 방식[정액/정률/고정]·DSCNT_VAL·TRGT_SE 대상·CTYPE 용량) 매칭 적용(겹치면 SEQ 큰 규칙이 덮어씀). 공공 기준행 BID 'ME' · 사업자명 R_BUSI.BNM -->
-      <!-- ═══════ 사업자별 요금 매트릭스 ═══════ -->
-      <h3 id="section-matrix" class="section-h mt-8" style="scroll-margin-top:96px;">사업자별 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
-
-      <!-- 요금조건: 셀 값 계산 -->
-      <div class="mx-cond" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 10px;">
-        <div id="mx-mem-tabs" class="tabs-pill" role="group" aria-label="회원 구분" style="display:inline-flex;">
-          <button class="tab active" data-mmem="member" type="button">회원</button>
-          <button class="tab" data-mmem="nonmember" type="button">비회원</button>
-        </div>
-        <div id="mx-season-tabs" class="tabs-pill" role="group" aria-label="계절" style="display:inline-flex;">
-          <button class="tab" data-season="spring" type="button">봄·가을</button>
-          <button class="tab" data-season="summer" type="button">여름</button>
-          <button class="tab" data-season="winter" type="button">겨울</button>
-        </div>
-        <div id="mx-day-tabs" class="tabs-pill" role="group" aria-label="요일" style="display:inline-flex;">
-          <button class="tab" data-day="weekday" type="button">평일</button>
-          <button class="tab" data-day="saturday" type="button">토요일</button>
-          <button class="tab" data-day="sunday" type="button">일·공휴일</button>
-        </div>
-        <div style="display:inline-flex;align-items:center;gap:8px;">
-          <label for="mxHour" style="font-size:13px;font-weight:600;color:var(--text-secondary);white-space:nowrap;">시각</label>
-          <input type="range" id="mxHour" min="0" max="23" step="1" value="0" style="width:150px;accent-color:var(--color-primary-500);" aria-label="시각 선택">
-          <span id="mxHourVal" style="font-size:13px;font-weight:700;min-width:78px;color:var(--color-primary-700);">00시</span>
-        </div>
-      </div>
-
-      <!-- 필터바: 행 추림 -->
-      <div class="mx-filter" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px;">
-        <div class="mx-search-box" style="position:relative;display:inline-flex;align-items:center;">
-          <input type="text" id="mxSearch" placeholder="사업자명 검색" aria-label="사업자명 검색" style="height:40px;padding:0 34px 0 12px;border:1px solid var(--border-light);border-radius:8px;font-size:14px;min-width:200px;font-family:inherit;">
-          <button type="button" id="mxSearchClear" aria-label="검색어 지우기" hidden style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:var(--color-gray-200);color:var(--color-gray-600);border-radius:50%;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;">✕</button>
-        </div>
-        <div id="mxBands" role="group" aria-label="출력밴드 필터" style="display:inline-flex;gap:6px;flex-wrap:wrap;"></div>
-        <button type="button" class="ev-download-btn xlsx" id="mxExcelBtn" aria-label="사업자별 요금 매트릭스 엑셀 다운로드" style="margin-left:auto;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="ext">XLSX</span><span>엑셀 다운로드</span></button>
-      </div>
-
-      <div id="matrix-wrap"></div>
-      <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
-
-      <div class="charge-fine-note" style="margin-top:10px;">
-        ※ 계절·시간대 할인이 있는 사업자는 선택한 시각·계절·요일에 따라 금액이 바뀝니다.<br>
-        ※ 사업자 행을 클릭하면 하루 24시간 요금 변화와 할인 정보를 볼 수 있습니다.
-      </div>
-
-      <!-- [DEV] 로밍 요금 매트릭스(getRoamingMatrixV2·현재 더미) — TNCC_RMNG_CHRGNG_UNTPC(BID 발급 × TBID 이용 × 정격용량구간, BUSI_UNTPC 자사단가·TARINSP_UNTPC 로밍단가) JOIN R_BUSI_REQ(REQ_STAT='CON' 및 오늘이 협약기간 내)로 협약 활성 쌍만. 대각선(발급=이용)=자사단가, 미협약=— -->
-      <!-- ═══════ 로밍 요금 매트릭스 ═══════ -->
-      <h3 id="section-roaming" class="section-h mt-8" style="scroll-margin-top:96px;">로밍 요금 매트릭스 <span style="font-size:15px;color:var(--color-gray-500);font-weight:500;">(단위: 원/kWh)</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></h3>
-      <!-- [DEV] 로밍 개념 안내(정적 텍스트) — 데이터 연동 없음 · 매트릭스 제목 바로 아래 배치 -->
-      <div class="alert alert-info mt-3">
-        <div class="alert-icon" aria-hidden="true"></div>
-        <div class="alert-body"><strong>로밍이란?</strong> 내 회원카드(발급 사업자)로 다른 사업자(이용 충전기)의 충전기를 이용하는 것입니다. 협약된 사업자 간에만 로밍되며, 로밍 시에는 <strong>이용 충전기 운영 CPO의 요금 체계</strong>가 적용됩니다. <strong>무공해차 통합카드는 로밍 수수료가 없습니다.</strong></div>
-      </div>
-      <div class="roam-pick">
-        <div class="roam-pick-panel">
-          <div class="roam-pick-hd">회원 소속기관 <span>(발급 카드)</span></div>
-          <div class="roam-search-box">
-            <input type="text" class="roam-pick-search" id="roamIssSearch" placeholder="사업자명 검색" aria-label="발급 사업자 검색">
-            <button type="button" class="roam-search-clear" data-clear="roamIssSearch" data-list="roamIssList" aria-label="검색어 지우기" hidden>✕</button>
-          </div>
-          <div class="roam-pick-list" id="roamIssList" role="group" aria-label="발급 사업자 선택"></div>
-        </div>
-        <div class="roam-pick-panel">
-          <div class="roam-pick-hd">충전기 운영기관 <span>(이용)</span></div>
-          <div class="roam-search-box">
-            <input type="text" class="roam-pick-search" id="roamUsedSearch" placeholder="사업자명 검색" aria-label="이용 사업자 검색">
-            <button type="button" class="roam-search-clear" data-clear="roamUsedSearch" data-list="roamUsedList" aria-label="검색어 지우기" hidden>✕</button>
-          </div>
-          <div class="roam-pick-list" id="roamUsedList" role="group" aria-label="이용 사업자 선택"></div>
-        </div>
-      </div>
-      <div class="roam-toolbar" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin:16px 0 12px;">
-        <div id="roam-band-tabs" class="tabs-pill" role="group" aria-label="용량 구분" style="display:inline-flex;flex-wrap:wrap;"></div>
-        <button type="button" class="ev-download-btn xlsx" id="roamExcelBtn" aria-label="로밍 매트릭스 엑셀 다운로드"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="ext">XLSX</span><span>엑셀 다운로드</span></button>
-      </div>
-      <div id="roaming-wrap"></div>
-      <div class="fee-caption full" data-i18n="charging.fee.disc.caption">※ 표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다</div>
-      </div><!-- /#feeAmountZone -->
-
-    </div>
-  </section>
-
-</main>
-
-<!-- [ISS-092] 진입 팝업(매 진입) — 기존 고지 띠와 병행 -->
-<template data-amount-guard="popup" data-ag-title="충전요금 안내 (안내가 · 참고용)"><p>이 페이지의 충전요금은 <strong>안내가(참고용)</strong>입니다. 실제 결제금액은 사업자·시간대·할인·로밍에 따라 달라질 수 있으며, 특히 타 사업자(로밍) 충전 시 요금이 크게 다를 수 있습니다.</p></template>
-
-<!-- [ISS-028] V2 진입 안내 모달 -->
-<div class="fd-modal" id="fdModalV2" hidden role="dialog" aria-modal="true" aria-labelledby="fdV2Title" aria-describedby="fdV2Desc">
-  <div class="fd-modal-box">
-    <h2 id="fdV2Title"><span class="fd-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>안내요금 안내</h2>
-    <p id="fdV2Desc">표시 요금은 <strong>안내요금(참고용)</strong>입니다. 사업자·시간대·할인·로밍에 따라 <strong>실제 결제금액이 다를 수 있습니다.</strong> 특히 타 사업자(로밍) 충전 시 요금이 크게 다를 수 있습니다.</p>
-    <div class="fd-modal-actions"><button type="button" class="btn btn-primary" id="fdV2Ok">확인</button></div>
-  </div>
-</div>
-
-<!-- [ISS-028] V4 확인 취득 모달(체크 + 성명, 확인 전 진행 차단) -->
-<div class="fd-modal" id="fdModalV4" hidden role="dialog" aria-modal="true" aria-labelledby="fdV4Title" aria-describedby="fdV4Desc">
-  <div class="fd-modal-box">
-    <h2 id="fdV4Title"><span class="fd-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>안내요금 확인</h2>
-    <p id="fdV4Desc">표시 요금은 <strong>안내요금(참고용)</strong>이며 실제 결제금액과 다를 수 있습니다. 아래를 확인해 주세요. (프로토타입 — 실제 저장되지 않습니다)</p>
-    <div class="fd-field"><label><input type="checkbox" id="fdV4Chk"> 위 내용을 확인했습니다.</label></div>
-    <div class="fd-field"><label for="fdV4Name">성명</label><input type="text" id="fdV4Name" placeholder="성명을 입력하세요" autocomplete="off"></div>
-    <div class="fd-modal-actions"><button type="button" class="btn btn-primary" id="fdV4Ok" disabled>확인하고 계속</button></div>
-  </div>
-</div>
-
-<!-- 로밍 요금 팝업 -->
-<div id="rp-overlay" role="dialog" aria-modal="true" aria-labelledby="rpTitle">
-  <div class="rp-box">
-    <div class="rp-hd">
-      <div style="flex:1;min-width:0;">
-        <div id="rpTitle" style="font-size:17px;font-weight:800;">로밍 요금</div>
-        <div id="rpSub" style="font-size:12.5px;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
-      </div>
-      <button type="button" id="rpClose" class="rp-close" aria-label="닫기">&#10005;</button>
-    </div>
-    <div class="rp-bd"><div id="rpBody"></div></div>
-  </div>
-</div>
-
-<div id="footer-slot"></div>
-<script src="js/me-public-rate.js?v=20260723a"></script><!-- [ISS-045] 기후부 공표 5밴드 단일 소스 -->
-<script src="js/partials.js?v=20260806g"></script>
-<script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260807a"></script>
-<script src="js/i18n-charging.js?v=20260807a"></script>
-<script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260807a"></script>
-<script src="js/fee-disclaimer.js?v=20260721a"></script>
-<script src="js/amount-guard.js?v=20260802b"></script>
-
 <style>
-  /* ── 매트릭스 & 행펼침 (신규) ── */
-  #matrix-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border-light);background:#fff;}
-  .mx-table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px;}
-  .mx-table thead th{position:sticky;top:0;background:#F8FAFC;color:var(--color-gray-700);font-weight:700;padding:12px;text-align:right;border-bottom:1px solid var(--border-light);font-size:13px;z-index:1;}
-  .mx-table thead th.opcol{text-align:left;}
-  .mx-table thead th small{display:block;font-weight:400;color:var(--color-gray-400);font-size:11px;}
-  .mx-table tbody td{padding:12px;border-bottom:1px solid #F1F5F9;text-align:right;font-feature-settings:"tnum";font-weight:600;color:var(--text-primary);}
-  .mx-table tbody td.opcol{text-align:left;font-weight:700;white-space:nowrap;}
-  .mx-table tbody tr:hover{background:var(--color-gray-50);}
-  .mx-null{color:var(--color-gray-300);font-weight:500;}
-  .mx-disc-badge{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;font-size:10.5px;font-weight:700;vertical-align:middle;white-space:nowrap;}
-  .mx-exp-btn{background:none;border:none;cursor:pointer;color:var(--color-gray-500);font-size:13px;margin-right:6px;padding:0;width:14px;display:inline-block;transition:transform .15s;}
-  .mx-exp-btn.open{color:var(--color-primary-600);transform:rotate(90deg);}
-  .mx-exp-row > td{background:#FAFBFC;padding:16px 18px;}
-  .mx-bars{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:end;height:160px;padding:6px 4px;background:#fff;border:1px solid var(--border-light);border-radius:10px;position:relative;overflow:visible;}
-  .mx-bars .bar{border-radius:3px 3px 0 0;min-height:4px;position:relative;cursor:pointer;}
-  .mx-bars .bar:hover{filter:brightness(1.08);}
-  .mx-bars .bar:hover::after{content:attr(data-label);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:10;}
-  .mx-axis{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;padding:0 4px;margin-top:4px;font-size:11px;color:var(--text-tertiary);text-align:center;}
-  .mx-eband{display:inline-flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
-  .mx-eband button{padding:5px 12px;border:1px solid var(--border-light);background:#fff;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--text-secondary);cursor:pointer;font-family:inherit;}
-  .mx-eband button.on{background:var(--color-primary-500);color:#fff;border-color:var(--color-primary-500);}
-  /* 24h 요금곡선 개선: 헤더·배지·기준선·선택강조·범례 */
-  .mx-chart-head{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:8px;}
-  .mx-chart-head .now{color:var(--color-primary-700);}
-  .mx-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;font-size:12.5px;font-weight:700;margin-bottom:10px;}
-  .mx-badge svg{flex:none;}
-  .mx-bars-wrap{position:relative;}
-  .mx-bars .bar.sel{outline:2px solid var(--color-primary-600);outline-offset:1px;z-index:2;}
-  .mx-baseline{position:absolute;left:4px;right:4px;border-top:1.6px dashed #475569;z-index:3;pointer-events:none;}
-  .mx-baseline .lbl{position:absolute;right:2px;top:-16px;background:#fff;padding:0 5px;font-size:10.5px;font-weight:700;color:#334155;white-space:nowrap;border-radius:4px;}
-  .mx-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:12px;color:var(--color-gray-600);}
-  .mx-legend .lg{display:inline-flex;align-items:center;gap:6px;}
-  .mx-legend .sw{width:13px;height:13px;border-radius:3px;display:inline-block;}
-  .mx-legend .swline{width:18px;height:0;border-top:1.6px dashed #475569;display:inline-block;}
-  .mx-band-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border-medium);border-radius:999px;font-size:13px;font-weight:600;color:var(--text-secondary);background:#fff;cursor:pointer;user-select:none;}
-  .mx-band-chip input{accent-color:var(--color-primary-600);cursor:pointer;margin:0;}
-  .mx-band-chip.on{border-color:var(--color-primary-400);background:var(--color-primary-50);color:var(--color-primary-700);}
-  .rf-tbl{width:100%;border-collapse:collapse;font-size:14px;}
-  .rf-tbl th,.rf-tbl td{padding:10px 12px;border-bottom:1px solid #F1F5F9;text-align:right;font-feature-settings:"tnum";}
-  .rf-tbl thead th{background:#F8FAFC;color:var(--color-gray-600);font-size:12.5px;font-weight:700;}
-  .rf-tbl th:first-child,.rf-tbl td:first-child{text-align:left;}
-  .roam-card-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border:1px solid var(--border-medium);border-radius:999px;font-size:14px;font-weight:600;color:var(--text-secondary);background:#fff;cursor:pointer;}
-  .roam-card-chip.on{border-color:var(--color-primary-500);background:var(--color-primary-50);color:var(--color-primary-700);}
-  .ev-cpo-link{background:none;border:none;padding:0;color:var(--color-primary-700);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-  .ev-cpo-link:hover{color:var(--color-primary-800);}
-  .ev-roam-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--color-primary-300);background:#fff;color:var(--color-primary-700);border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
-  .ev-roam-btn:hover{background:var(--color-primary-50);}
-  .ev-out-cfg{font-size:13px;color:var(--text-secondary);font-feature-settings:"tnum";white-space:nowrap;}
-  /* 매트릭스 정렬(공지 리스트 표준 .sortable 재사용) + 행클릭 펼침 + 검색 클리어 */
-  .mx-table thead th.sortable{cursor:pointer;user-select:none;}
-  .mx-table thead th.sortable::after{content:' ↕';color:#6B7280;font-size:12px;font-weight:400;}
-  .mx-table thead th.sort-desc::after{content:' ↓';color:var(--color-primary-600);}
-  .mx-table thead th.sort-asc::after{content:' ↑';color:var(--color-primary-600);}
-  .mx-table thead th.sortable:hover{color:var(--color-primary-700);}
-  .mx-table tbody tr[data-row]{cursor:pointer;}
-  .mx-exp-ind{display:inline-block;margin-right:6px;color:var(--color-gray-400);transition:transform .15s;font-size:12px;}
-  .mx-exp-ind.open{transform:rotate(90deg);color:var(--color-primary-600);}
-  #mxSearchClear:hover{background:var(--color-gray-300);}
-  /* 로밍 요금 매트릭스 (발급 × 이용) */
-  .roam-mx{border-collapse:collapse;font-size:13.5px;width:max-content;min-width:100%;}
-  .roam-mx th,.roam-mx td{border:1px solid var(--border-light);padding:9px 10px;text-align:center;font-feature-settings:"tnum";min-width:108px;white-space:nowrap;}
-  .roam-mx thead th:first-child,.roam-mx tbody th{min-width:168px;max-width:168px;}
-  .roam-mx thead th{background:#F8FAFC;color:var(--color-gray-700);font-weight:700;font-size:12.5px;position:sticky;top:0;z-index:2;box-shadow:inset 0 -1px var(--border-light);}
-  .roam-mx thead th:first-child{text-align:left;color:var(--color-gray-500);font-weight:600;left:0;z-index:3;}
-  .roam-mx tbody th{background:#F8FAFC;text-align:left;font-weight:700;white-space:nowrap;color:var(--text-primary);position:sticky;left:0;z-index:1;box-shadow:inset -1px 0 var(--border-light);}
-  .roam-mx td.self{color:var(--color-gray-400);font-weight:500;}
-  .roam-mx td.na{color:var(--color-gray-300);}
-  /* 로밍 선택 UI (발급/이용 다중선택) */
-  .roam-pick{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 12px;}
-  @media(max-width:760px){ .roam-pick{grid-template-columns:1fr;} }
-  .roam-pick-panel{border:1px solid var(--border-light);border-radius:12px;background:#fff;padding:12px;}
-  .roam-pick-hd{font-size:13.5px;font-weight:700;color:var(--text-primary);margin-bottom:8px;}
-  .roam-pick-hd span{font-weight:500;color:var(--color-gray-500);font-size:12px;}
-  .roam-search-box{position:relative;margin-bottom:8px;}
-  .roam-pick-search{width:100%;height:36px;padding:0 34px 0 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13.5px;font-family:inherit;box-sizing:border-box;}
-  .roam-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:var(--color-gray-200);color:var(--color-gray-600);border-radius:50%;cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;}
-  .roam-search-clear:hover{background:var(--color-gray-300);}
-  .roam-pick-list{max-height:184px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
-  .roam-pick-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13.5px;color:var(--text-primary);cursor:pointer;}
-  .roam-pick-item:hover{background:var(--color-gray-50);}
-  .roam-pick-item input{accent-color:var(--color-primary-600);cursor:pointer;flex:none;}
-  .roam-pick-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:2px;}
-  #roam-band-tabs .tab .rng{display:block;font-size:10.5px;font-weight:400;color:var(--color-gray-400);margin-top:1px;}
-  #roam-band-tabs .tab.active .rng{color:rgba(255,255,255,.85);}
-  .roam-free{background:#F0FDF4;color:#166534;font-weight:700;}
-  .roam-mid{background:#FFFBEB;color:#92400E;font-weight:600;}
-  .roam-high{background:#FEF2F2;color:#991B1B;font-weight:700;}
-  .roam-tou-badge{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:6px;background:var(--color-primary-50);color:var(--color-primary-700);font-size:10.5px;font-weight:700;vertical-align:middle;}
-  .roam-lg{display:inline-flex;align-items:center;gap:6px;}
-  .roam-lg .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.08);}
-  /* 검색 리스트 정렬(공지 표준 .sortable) */
-  .ev-result-table thead th.sortable{cursor:pointer;user-select:none;}
-  .ev-result-table thead th.sortable::after{content:' ↕';color:#6B7280;font-size:12px;font-weight:400;}
-  .ev-result-table thead th.sort-desc::after{content:' ↓';color:var(--color-primary-600);}
-  .ev-result-table thead th.sort-asc::after{content:' ↑';color:var(--color-primary-600);}
-  .ev-result-table thead th.sortable:hover{color:var(--color-primary-700);}
-  /* 로밍 요금 팝업 */
-  #rp-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9200;align-items:center;justify-content:center;padding:20px;}
-  #rp-overlay.open{display:flex;}
-  .rp-box{background:#fff;border-radius:16px;width:min(640px,100%);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.3);}
-  .rp-hd{padding:18px 22px;background:linear-gradient(135deg,var(--color-primary-500),var(--color-primary-700));color:#fff;display:flex;align-items:center;gap:12px;}
-  .rp-bd{padding:20px 22px;overflow-y:auto;}
-  .rp-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:#fff;cursor:pointer;font-size:18px;flex:none;}
-  .rp-tbl{width:100%;border-collapse:collapse;font-size:13.5px;}
-  .rp-tbl th,.rp-tbl td{border:1px solid var(--border-light);padding:9px 10px;text-align:right;font-feature-settings:"tnum";}
-  .rp-tbl thead th{background:#F8FAFC;color:var(--color-gray-700);font-size:12.5px;font-weight:700;text-align:center;}
-  .rp-tbl tbody th{background:#F8FAFC;text-align:left;font-weight:700;white-space:nowrap;}
+/* 그리드 헤더 용량 구간은 '~' 뒤에서만 줄바꿈 (199kW 같은 숫자+단위 분리 방지) */
+.ag-header-multiline {
+  word-break: keep-all !important;
+  overflow-wrap: normal;
+}
+/* 충전소 그리드는 용량 구간이 최대 3줄까지 늘어나므로 헤더 높이를 키운다 */
+#gridStation {
+  --ag-header-height: 88px;
+}
 </style>
 
+      <div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전소·요금 정보</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전 요금 안내</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="charging-fee.html" class="breadcrumb__link">
+                    <span>전기차 충전요금 안내</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">전기차 충전요금 안내</h1>
+              <p class="page-header__description">사업자별 전기차 충전요금을 용량 구간 매트릭스로 비교하고, 충전소별 요금과 로밍 요금을 조회합니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+          <!-- 전기차 충전요금 안내 -->
+          <div class="charge-wrapper">
+            <div class="button-group button-group--align-right">
+              <a href="charging-fee-simulator.html" class="button button--tertiary">
+                <i class="svg-icon wand"></i>
+                <span class="button__label">내 충전요금 시뮬레이터</span>
+              </a>
+            </div>
+            
+            <div class="data-set-group">
+              <dl class="data-set">
+                <dt class="data-set__label">공공 기준단가</dt>
+                <dd class="data-set__figure">
+                  292.9 ~ 391.9
+                  <span class="unit">원/kWh</span>
+                </dd>
+                <dd class="data-set__description">완속 292.9 ~ 초급속 391.9</dd>
+              </dl>
+              <dl class="data-set">
+                <dt class="data-set__label">민간 요금대</dt>
+                <dd class="data-set__figure">
+                  276.9 ~ 450.9
+                  <span class="unit">원/kWh</span>
+                </dd>
+                <dd class="data-set__description">등재 CPO 회원가 범위</dd>
+              </dl>
+              <dl class="data-set">
+                <dt class="data-set__label">요금 등재 사업자</dt>
+                <dd class="data-set__figure">
+                  
+                  <span class="unit">개사</span>
+                </dd>
+                <dd class="data-set__description">용량 구간별 단가 등재 기준</dd>
+              </dl>
+            </div>
+
+            <!-- 충전소 요금 검색 -->
+            <section class="section">
+              <div class="board-wrapper" id="stationWrapper">
+                <div class="board-toolbar">
+                  <div class="heading-group">
+                    <!-- 디스클로저 : 확장(오픈)시 disclosure--expand 추가 -->
+                    <div class="disclosure">
+                      <div class="disclosure-heading">
+                        <h2 class="heading-title">
+                          <i class="svg-icon symbol-electricity"></i>
+                          충전소 요금 검색
+                        </h2>
+                        <button type="button" class="disclosure-button" aria-expanded="false" aria-controls="disclosureStation">안내가</button>
+                      </div>
+                      <div id="disclosureStation" class="disclosure-container">
+                        <div class="disclosure-content">
+                          <p>현장 단가·사업자 프로모션·로밍 할증·멤버십에 따라 실제 결제 금액이 달라질 수 있습니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //디스클로저 -->
+                  </div>
+                  <p class="board-toolbar__notice">(단위: 원/kWh)</p>
+                </div>
+                
+                <form name="frmStation" id="frmStation" method="post" onsubmit="return false;">
+                <input type="hidden" id="spageNo" name="spageNo" value="1">
+                <input type="hidden" id="srecordCountPerPage" name="srecordCountPerPage" value="10">
+                <input type="hidden" id="spageSize" name="spageSize" value="10">
+                <!-- 게시판 검색폼 -->
+                <div class="board-search">
+                  <!-- 검색폼 -->
+                  <div class="search-form">
+                    <div class="search-form__elements">
+                      <!-- 폼 항목 -->
+                      <div class="element-group">
+                        <div class="element-group__label">
+                          <label for="zcode" class="element-label">시/도</label>
+                        </div>
+                        <div class="element-group__control">
+                          <select id="zcode" name="zcode" title="시/도 선택" class="select">
+                            <option value="">시/도 전체</option>
+                              <option value="11">서울특별시</option>
+                              <option value="26">부산광역시</option>
+                              <option value="27">대구광역시</option>
+                              <option value="28">인천광역시</option>
+                              <option value="29">광주광역시</option>
+                              <option value="30">대전광역시</option>
+                              <option value="31">울산광역시</option>
+                              <option value="36">세종특별자치시</option>
+                              <option value="41">경기도</option>
+                              <option value="43">충청북도</option>
+                              <option value="44">충청남도</option>
+                              <option value="46">전라남도</option>
+                              <option value="47">경상북도</option>
+                              <option value="48">경상남도</option>
+                              <option value="50">제주특별자치도</option>
+                              <option value="51">강원특별자치도</option>
+                              <option value="52">전북특별자치도</option>
+                              <option value="11">서울특별시</option>
+                              <option value="26">부산광역시</option>
+                              <option value="27">대구광역시</option>
+                              <option value="28">인천광역시</option>
+                              <option value="29">광주광역시</option>
+                              <option value="30">대전광역시</option>
+                              <option value="31">울산광역시</option>
+                              <option value="36">세종특별자치시</option>
+                              <option value="41">경기도</option>
+                              <option value="43">충청북도</option>
+                              <option value="44">충청남도</option>
+                              <option value="46">전라남도</option>
+                              <option value="47">경상북도</option>
+                              <option value="48">경상남도</option>
+                              <option value="50">제주특별자치도</option>
+                              <option value="51">강원특별자치도</option>
+                              <option value="52">전북특별자치도</option>
+                            
+                              <option value=""></option>
+                            
+                          </select>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                      <!-- 폼 항목 -->
+                      <div class="element-group">
+                        <div class="element-group__label">
+                          <label for="zscode" class="element-label">구/군</label>
+                        </div>
+                        <div class="element-group__control">
+                          <select id="zscode" name="zscode" title="구/군 선택" class="select">
+                            <option value="">전체</option>
+                              <option value="11010" data-up="11">서울특별시 종로구</option>
+                              <option value="11020" data-up="11">서울특별시 중구</option>
+                              <option value="11030" data-up="11">서울특별시 성동구</option>
+                              <option value="11040" data-up="11">서울특별시 강남구</option>
+                              <option value="11050" data-up="11">서울특별시 송파구</option>
+                              <option value="11060" data-up="11">서울특별시 마포구</option>
+                              <option value="11070" data-up="11">서울특별시 노원구</option>
+                              <option value="26010" data-up="26">부산광역시 해운대구</option>
+                              <option value="26020" data-up="26">부산광역시 부산진구</option>
+                              <option value="26030" data-up="26">부산광역시 사하구</option>
+                              <option value="26040" data-up="26">부산광역시 남구</option>
+                              <option value="26050" data-up="26">부산광역시 기장군</option>
+                              <option value="27010" data-up="27">대구광역시 수성구</option>
+                              <option value="27020" data-up="27">대구광역시 달서구</option>
+                              <option value="27030" data-up="27">대구광역시 북구</option>
+                              <option value="27040" data-up="27">대구광역시 동구</option>
+                              <option value="27050" data-up="27">대구광역시 달성군</option>
+                              <option value="28010" data-up="28">인천광역시 남동구</option>
+                              <option value="28020" data-up="28">인천광역시 연수구</option>
+                              <option value="28030" data-up="28">인천광역시 서구</option>
+                              <option value="28040" data-up="28">인천광역시 부평구</option>
+                              <option value="28050" data-up="28">인천광역시 강화군</option>
+                              <option value="29010" data-up="29">광주광역시 동구</option>
+                              <option value="29020" data-up="29">광주광역시 서구</option>
+                              <option value="29030" data-up="29">광주광역시 남구</option>
+                              <option value="29040" data-up="29">광주광역시 북구</option>
+                              <option value="29050" data-up="29">광주광역시 광산구</option>
+                              <option value="30010" data-up="30">대전광역시 유성구</option>
+                              <option value="30020" data-up="30">대전광역시 서구</option>
+                              <option value="30030" data-up="30">대전광역시 중구</option>
+                              <option value="30040" data-up="30">대전광역시 대덕구</option>
+                              <option value="31010" data-up="31">울산광역시 남구</option>
+                              <option value="31020" data-up="31">울산광역시 북구</option>
+                              <option value="31030" data-up="31">울산광역시 중구</option>
+                              <option value="31040" data-up="31">울산광역시 울주군</option>
+                              <option value="36010" data-up="36">세종특별자치시 세종특별자치시</option>
+                              <option value="41010" data-up="41">경기도 수원시</option>
+                              <option value="41020" data-up="41">경기도 성남시</option>
+                              <option value="41030" data-up="41">경기도 고양시</option>
+                              <option value="41040" data-up="41">경기도 용인시</option>
+                              <option value="41050" data-up="41">경기도 화성시</option>
+                              <option value="41060" data-up="41">경기도 부천시</option>
+                              <option value="41070" data-up="41">경기도 안산시</option>
+                              <option value="43010" data-up="43">충청북도 청주시</option>
+                              <option value="43020" data-up="43">충청북도 충주시</option>
+                              <option value="43030" data-up="43">충청북도 제천시</option>
+                              <option value="43040" data-up="43">충청북도 음성군</option>
+                              <option value="44010" data-up="44">충청남도 천안시</option>
+                              <option value="44020" data-up="44">충청남도 아산시</option>
+                              <option value="44030" data-up="44">충청남도 서산시</option>
+                              <option value="44040" data-up="44">충청남도 당진시</option>
+                              <option value="46010" data-up="46">전라남도 목포시</option>
+                              <option value="46020" data-up="46">전라남도 여수시</option>
+                              <option value="46030" data-up="46">전라남도 순천시</option>
+                              <option value="46040" data-up="46">전라남도 나주시</option>
+                              <option value="47010" data-up="47">경상북도 포항시</option>
+                              <option value="47020" data-up="47">경상북도 구미시</option>
+                              <option value="47030" data-up="47">경상북도 경주시</option>
+                              <option value="47040" data-up="47">경상북도 안동시</option>
+                              <option value="48010" data-up="48">경상남도 창원시</option>
+                              <option value="48020" data-up="48">경상남도 김해시</option>
+                              <option value="48030" data-up="48">경상남도 진주시</option>
+                              <option value="48040" data-up="48">경상남도 양산시</option>
+                              <option value="50010" data-up="50">제주특별자치도 제주시</option>
+                              <option value="50020" data-up="50">제주특별자치도 서귀포시</option>
+                              <option value="51010" data-up="51">강원특별자치도 춘천시</option>
+                              <option value="51020" data-up="51">강원특별자치도 원주시</option>
+                              <option value="51030" data-up="51">강원특별자치도 강릉시</option>
+                              <option value="51040" data-up="51">강원특별자치도 속초시</option>
+                              <option value="52010" data-up="52">전북특별자치도 전주시</option>
+                              <option value="52020" data-up="52">전북특별자치도 익산시</option>
+                              <option value="52030" data-up="52">전북특별자치도 군산시</option>
+                              <option value="52040" data-up="52">전북특별자치도 정읍시</option>
+                              <option value="11010" data-up="11">서울특별시 종로구</option>
+                              <option value="11020" data-up="11">서울특별시 중구</option>
+                              <option value="11030" data-up="11">서울특별시 성동구</option>
+                              <option value="11040" data-up="11">서울특별시 강남구</option>
+                              <option value="11050" data-up="11">서울특별시 송파구</option>
+                              <option value="11060" data-up="11">서울특별시 마포구</option>
+                              <option value="11070" data-up="11">서울특별시 노원구</option>
+                              <option value="26010" data-up="26">부산광역시 해운대구</option>
+                              <option value="26020" data-up="26">부산광역시 부산진구</option>
+                              <option value="26030" data-up="26">부산광역시 사하구</option>
+                              <option value="26040" data-up="26">부산광역시 남구</option>
+                              <option value="26050" data-up="26">부산광역시 기장군</option>
+                              <option value="27010" data-up="27">대구광역시 수성구</option>
+                              <option value="27020" data-up="27">대구광역시 달서구</option>
+                              <option value="27030" data-up="27">대구광역시 북구</option>
+                              <option value="27040" data-up="27">대구광역시 동구</option>
+                              <option value="27050" data-up="27">대구광역시 달성군</option>
+                              <option value="28010" data-up="28">인천광역시 남동구</option>
+                              <option value="28020" data-up="28">인천광역시 연수구</option>
+                              <option value="28030" data-up="28">인천광역시 서구</option>
+                              <option value="28040" data-up="28">인천광역시 부평구</option>
+                              <option value="28050" data-up="28">인천광역시 강화군</option>
+                              <option value="29010" data-up="29">광주광역시 동구</option>
+                              <option value="29020" data-up="29">광주광역시 서구</option>
+                              <option value="29030" data-up="29">광주광역시 남구</option>
+                              <option value="29040" data-up="29">광주광역시 북구</option>
+                              <option value="29050" data-up="29">광주광역시 광산구</option>
+                              <option value="30010" data-up="30">대전광역시 유성구</option>
+                              <option value="30020" data-up="30">대전광역시 서구</option>
+                              <option value="30030" data-up="30">대전광역시 중구</option>
+                              <option value="30040" data-up="30">대전광역시 대덕구</option>
+                              <option value="31010" data-up="31">울산광역시 남구</option>
+                              <option value="31020" data-up="31">울산광역시 북구</option>
+                              <option value="31030" data-up="31">울산광역시 중구</option>
+                              <option value="31040" data-up="31">울산광역시 울주군</option>
+                              <option value="36010" data-up="36">세종특별자치시 세종특별자치시</option>
+                              <option value="41010" data-up="41">경기도 수원시</option>
+                              <option value="41020" data-up="41">경기도 성남시</option>
+                              <option value="41030" data-up="41">경기도 고양시</option>
+                              <option value="41040" data-up="41">경기도 용인시</option>
+                              <option value="41050" data-up="41">경기도 화성시</option>
+                              <option value="41060" data-up="41">경기도 부천시</option>
+                              <option value="41070" data-up="41">경기도 안산시</option>
+                              <option value="43010" data-up="43">충청북도 청주시</option>
+                              <option value="43020" data-up="43">충청북도 충주시</option>
+                              <option value="43030" data-up="43">충청북도 제천시</option>
+                              <option value="43040" data-up="43">충청북도 음성군</option>
+                              <option value="44010" data-up="44">충청남도 천안시</option>
+                              <option value="44020" data-up="44">충청남도 아산시</option>
+                              <option value="44030" data-up="44">충청남도 서산시</option>
+                              <option value="44040" data-up="44">충청남도 당진시</option>
+                              <option value="46010" data-up="46">전라남도 목포시</option>
+                              <option value="46020" data-up="46">전라남도 여수시</option>
+                              <option value="46030" data-up="46">전라남도 순천시</option>
+                              <option value="46040" data-up="46">전라남도 나주시</option>
+                              <option value="47010" data-up="47">경상북도 포항시</option>
+                              <option value="47020" data-up="47">경상북도 구미시</option>
+                              <option value="47030" data-up="47">경상북도 경주시</option>
+                              <option value="47040" data-up="47">경상북도 안동시</option>
+                              <option value="48010" data-up="48">경상남도 창원시</option>
+                              <option value="48020" data-up="48">경상남도 김해시</option>
+                              <option value="48030" data-up="48">경상남도 진주시</option>
+                              <option value="48040" data-up="48">경상남도 양산시</option>
+                              <option value="50010" data-up="50">제주특별자치도 제주시</option>
+                              <option value="50020" data-up="50">제주특별자치도 서귀포시</option>
+                              <option value="51010" data-up="51">강원특별자치도 춘천시</option>
+                              <option value="51020" data-up="51">강원특별자치도 원주시</option>
+                              <option value="51030" data-up="51">강원특별자치도 강릉시</option>
+                              <option value="51040" data-up="51">강원특별자치도 속초시</option>
+                              <option value="52010" data-up="52">전북특별자치도 전주시</option>
+                              <option value="52020" data-up="52">전북특별자치도 익산시</option>
+                              <option value="52030" data-up="52">전북특별자치도 군산시</option>
+                              <option value="52040" data-up="52">전북특별자치도 정읍시</option>
+                            
+                              <option value="" data-up=""></option>
+                            
+                          </select>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                      <!-- 폼 항목 -->
+                      <div class="element-group element-group--keyword">
+                        <div class="element-group__label">
+                          <label for="snm" class="element-label">충전소명</label>
+                        </div>
+                        <div class="element-group__control">
+                          <input type="text" id="snm" name="snm" title="충전소명 입력" placeholder="충전소명 키워드" class="text-input" />
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                    </div>
+                    <div class="search-form__actions">
+                      <button type="button" id="btnStationSearch" class="button button--primary button--search">
+                        <span class="button__label">검색</span>
+                      </button>
+                      <button type="button" id="btnStationReset" class="button button--secondary button--reset">
+                        <span class="button__label">초기화</span>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- //검색폼 -->
+                </div>
+                <!-- //게시판 검색폼 -->
+                </form>
+                <!-- 게시판 도구모음 -->
+                <div class="board-toolbar">
+                  <div class="board-toolbar__total">
+                    <p class="total-number">
+                      총
+                      <b class="total-number__total" id="stationTotal">0</b>
+                      건
+                    </p>
+                  </div>
+                  <div class="board-toolbar__options">
+                    <div class="radios">
+                      <div class="radio radio--chip">
+                        <input type="radio" id="stationFeeM" name="stationFeeGb" value="M" checked class="radio__input" />
+                        <label for="stationFeeM" class="radio__label">
+                          <span>회원가</span>
+                        </label>
+                      </div>
+                      <div class="radio radio--chip">
+                        <input type="radio" id="stationFeeN" name="stationFeeGb" value="N" class="radio__input" />
+                        <label for="stationFeeN" class="radio__label">
+                          <span>비회원가</span>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- 같은 기능 버튼 PC용 Mobile용 -->
+                    <button type="button" class="button button--secondary pc-only js-station-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                    <button type="button" class="button button--icon button--secondary mobile-only js-station-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- //게시판 도구모음 -->
+                <!-- 게시판 목록 -->
+                <div class="board-list">
+                  <div id="gridStation" class="ag-grid ag-theme-ev"></div>
+                </div>
+                <div class="board-description">
+                  <p class="bullet bullet--refer text-warning">표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다.</p>
+                  <p class="bullet bullet--refer">충전소 요금은 해당 충전소를 운영하는 사업자의 용량 구간별 단가입니다. 단가 미등재 사업자는 &lsquo;-&rsquo; 로 표시됩니다.</p>
+                </div>
+                <!-- 페이징 -->
+                <div class="pagination pc-only" id="stationPaging">
+                  <button type="button" class="pagination__button" data-page="first">
+                    <i class="svg-icon arrow-first"></i>
+                    <span class="ir-pm">첫 페이지</span>
+                  </button>
+                  <button type="button" class="pagination__button" data-page="prev">
+                    <i class="svg-icon arrow-prev"></i>
+                    <span class="ir-pm">이전</span>
+                  </button>
+                  <div class="pagination__list" id="stationPageList"></div>
+                  <button type="button" class="pagination__button" data-page="next">
+                    <i class="svg-icon arrow-next"></i>
+                    <span class="ir-pm">다음</span>
+                  </button>
+                  <button type="button" class="pagination__button" data-page="last">
+                    <i class="svg-icon arrow-last"></i>
+                    <span class="ir-pm">마지막 페이지</span>
+                  </button>
+                </div>
+                <!-- 모바일 전용 -->
+                <div class="pagination pagination--fraction" id="stationPagingM">
+                  <button type="button" class="pagination__button" data-page="prev">
+                    <i class="svg-icon arrow-prev"></i>
+                    <span>이전</span>
+                  </button>
+                  <div class="pagination__text">
+                    <span class="pagination__current" id="stationPageCur">1</span>
+                    <span class="pagination__total" id="stationPageTot">1</span>
+                  </div>
+                  <button type="button" class="pagination__button" data-page="next">
+                    <span>다음</span>
+                    <i class="svg-icon arrow-next"></i>
+                  </button>
+                </div>
+                <!-- //페이징 -->
+              </div>
+            </section>
+            <!-- //충전소 요금 검색 -->
+
+            <!-- 사업자별 요금 매트릭스 -->
+            <section class="section">
+              <div class="board-wrapper" id="busiWrapper">
+                <div class="board-toolbar">
+                  <div class="heading-group">
+                    <!-- 디스클로저 : 확장(오픈)시 disclosure--expand 추가 -->
+                    <div class="disclosure">
+                      <div class="disclosure-heading">
+                        <h2 class="heading-title">
+                          <i class="svg-icon symbol-electricity"></i>
+                          사업자별 요금 매트릭스
+                        </h2>
+                        <button type="button" class="disclosure-button" aria-expanded="false" aria-controls="disclosureBusi">안내가</button>
+                      </div>
+                      <div id="disclosureBusi" class="disclosure-container">
+                        <div class="disclosure-content">
+                          <p>현장 단가·사업자 프로모션·로밍 할증·멤버십에 따라 실제 결제 금액이 달라질 수 있습니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //디스클로저 -->
+                  </div>
+                  <p class="board-toolbar__notice">(단위: 원/kWh)</p>
+                </div>
+                <!-- 게시판 검색폼 -->
+                <div class="board-search">
+                  <!-- 검색폼 -->
+                  <div class="search-form">
+                    <div class="search-form__elements">
+                      <!-- 폼 항목 -->
+                      <div class="element-group flex-grow-0">
+                        <div class="element-group__label">
+                          <span class="element-label">구분</span>
+                        </div>
+                        <div class="element-group__control">
+                          <div class="radios">
+                            <div class="radio radio--chip">
+                              <input type="radio" id="busiFeeM" name="busiFeeGb" value="M" checked class="radio__input" />
+                              <label for="busiFeeM" class="radio__label"><span>회원가</span></label>
+                            </div>
+                            <div class="radio radio--chip">
+                              <input type="radio" id="busiFeeN" name="busiFeeGb" value="N" class="radio__input" />
+                              <label for="busiFeeN" class="radio__label"><span>비회원가</span></label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                    </div>
+                    <div class="search-form__elements">
+                      <!-- 폼 항목 -->
+                      <div class="element-group">
+                        <div class="element-group__label">
+                          <span class="element-label">충전속도</span>
+                        </div>
+                        <div class="element-group__control">
+                          <div class="checkboxs">
+                            <div class="checkbox">
+                              <input type="checkbox" id="speed01" name="matrixSpeed" value="s1" checked class="checkbox__input" />
+                              <label for="speed01" class="checkbox__label"><span>완속(30kW 미만)</span></label>
+                            </div>
+                            <div class="checkbox">
+                              <input type="checkbox" id="speed02" name="matrixSpeed" value="s2" checked class="checkbox__input" />
+                              <label for="speed02" class="checkbox__label"><span>중속(30~49kW)</span></label>
+                            </div>
+                            <div class="checkbox">
+                              <input type="checkbox" id="speed03" name="matrixSpeed" value="s3" checked class="checkbox__input" />
+                              <label for="speed03" class="checkbox__label"><span>급속(50~99kW)</span></label>
+                            </div>
+                            <div class="checkbox">
+                              <input type="checkbox" id="speed04" name="matrixSpeed" value="s4" checked class="checkbox__input" />
+                              <label for="speed04" class="checkbox__label"><span>급속(100~199kW)</span></label>
+                            </div>
+                            <div class="checkbox">
+                              <input type="checkbox" id="speed05" name="matrixSpeed" value="s5" checked class="checkbox__input" />
+                              <label for="speed05" class="checkbox__label"><span>초급속(200kW 이상)</span></label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                    </div>
+                    <div class="search-form__actions">
+                      <button type="button" id="btnBusiSearch" class="button button--primary button--search">
+                        <span class="button__label">검색</span>
+                      </button>
+                      <button type="button" id="btnBusiReset" class="button button--secondary button--reset">
+                        <span class="button__label">초기화</span>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- //검색폼 -->
+                </div>
+                <!-- //게시판 검색폼 -->
+                <!-- 게시판 도구모음 -->
+                <div class="board-toolbar">
+                  <div class="board-toolbar__options">
+                    <div class="text-input-icon w-200">
+                      <input type="text" id="busiKeyword" class="text-input" title="사업자명 입력" placeholder="사업자명 검색" />
+                      <div class="text-input-icon__append">
+                        <button type="button" id="btnBusiKeywordClear" title="입력 필드 초기화" class="button button--icon button--borderless button--delete">
+                          <i class="svg-icon item-delete"></i>
+                          <span class="button__label">삭제</span>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- 같은 기능 버튼 PC용 Mobile용 -->
+                    <button type="button" class="button button--secondary pc-only js-busi-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                    <button type="button" class="button button--icon button--secondary mobile-only js-busi-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- //게시판 도구모음 -->
+                <!-- 게시판 목록 -->
+                <div class="board-list">
+                  <div id="gridBusi" class="ag-grid ag-theme-ev"></div>
+                </div>
+                <div class="board-description">
+                  <p class="bullet bullet--refer text-warning">표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다.</p>
+                  <p class="bullet bullet--refer">지역차등·사업차등 요금은 별도 고시 대상이라 매트릭스에서 제외됩니다.</p>
+                </div>
+              </div>
+            </section>
+            <!-- //사업자별 요금 매트릭스 -->
+
+            <!-- 로밍 요금 매트릭스 -->
+            <section class="section">
+              <div class="heading-group">
+                <!-- 디스클로저 : 확장(오픈)시 disclosure--expand 추가 -->
+                <div class="disclosure">
+                  <div class="disclosure-heading">
+                    <h2 class="heading-title">
+                      <i class="svg-icon symbol-electricity"></i>
+                      로밍 요금 매트릭스
+                    </h2>
+                    <button type="button" class="disclosure-button" aria-expanded="false" aria-controls="disclosureRoam">안내가</button>
+                  </div>
+                  <div id="disclosureRoam" class="disclosure-container">
+                    <div class="disclosure-content">
+                      <p>현장 단가·사업자 프로모션·로밍 할증·멤버십에 따라 실제 결제 금액이 달라질 수 있습니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- //디스클로저 -->
+              </div>
+              <h3 class="heading-subtitle">로밍이란?</h3>
+              <p class="text-paragraph">내 회원카드(발급 사업자)로 다른 사업자(이용 충전기)의 충전기를 이용하는 것입니다. 협약된 사업자 간에만 로밍되며, 로밍 시에는 이용 충전기 운영 CPO의 요금 체계가 적용됩니다. <br />무공해차 통합카드는 로밍 수수료가 없습니다.</p>
+              <div class="list-wrapper">
+                <ul class="column-list">
+                  <li class="column-list__item">
+                    <strong class="column-list__title">회원 소속기관 (발급카드)</strong>
+                    <!-- 사업자명 검색 -->
+                    <div class="column-list__form">
+                      <div class="text-input-icon">
+                        <input type="text" id="roamIssueKeyword" class="text-input" title="사업자명 입력" placeholder="사업자명 검색" />
+                        <div class="text-input-icon__append">
+                          <button type="button" id="btnRoamIssueClear" title="입력 필드 초기화" class="button button--icon button--borderless button--delete">
+                            <i class="svg-icon item-delete" aria-hidden="true"></i>
+                            <span class="button__label">삭제</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column-list__data scroll">
+                      <div class="checkboxs checkboxs--column" id="roamIssueList"></div>
+                    </div>
+                  </li>
+                  <li class="column-list__item">
+                    <strong class="column-list__title">충전기 운영기관 (이용)</strong>
+                    <!-- 사업자명 검색 -->
+                    <div class="column-list__form">
+                      <div class="text-input-icon">
+                        <input type="text" id="roamOperKeyword" class="text-input" title="사업자명 입력" placeholder="사업자명 검색" />
+                        <div class="text-input-icon__append">
+                          <button type="button" id="btnRoamOperClear" title="입력 필드 초기화" class="button button--icon button--borderless button--delete">
+                            <i class="svg-icon item-delete" aria-hidden="true"></i>
+                            <span class="button__label">삭제</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column-list__data scroll">
+                      <div class="checkboxs checkboxs--column" id="roamOperList"></div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="board-wrapper" id="roamWrapper">
+                <div class="board-toolbar">
+                  <!-- radios -->
+                  <div class="radios pc-only">
+                    <div class="radio radio--chip">
+                      <input type="radio" id="roamStage1" name="roamStage" value="s1" class="radio__input" />
+                      <label for="roamStage1" class="radio__label"><span>완속(30kW 미만)</span></label>
+                    </div>
+                    <div class="radio radio--chip">
+                      <input type="radio" id="roamStage2" name="roamStage" value="s2" class="radio__input" />
+                      <label for="roamStage2" class="radio__label"><span>중속(30~49kW)</span></label>
+                    </div>
+                    <div class="radio radio--chip">
+                      <input type="radio" id="roamStage3" name="roamStage" value="s3" checked class="radio__input" />
+                      <label for="roamStage3" class="radio__label"><span>급속(50~99kW)</span></label>
+                    </div>
+                    <div class="radio radio--chip">
+                      <input type="radio" id="roamStage4" name="roamStage" value="s4" class="radio__input" />
+                      <label for="roamStage4" class="radio__label"><span>급속(100~199kW)</span></label>
+                    </div>
+                    <div class="radio radio--chip">
+                      <input type="radio" id="roamStage5" name="roamStage" value="s5" class="radio__input" />
+                      <label for="roamStage5" class="radio__label"><span>초급속(200kW 이상)</span></label>
+                    </div>
+                  </div>
+                  <div class="board-toolbar__options">
+                    <!-- radios : MOBILE버전 -->
+                    <div class="radios mobile-only flex-auto">
+                      <label class="blind" for="roamStageSelect">속도 선택</label>
+                      <select title="속도 선택" id="roamStageSelect" class="select flex-auto">
+                        <option value="s1">완속(30kW 미만)</option>
+                        <option value="s2">중속(30~49kW)</option>
+                        <option value="s3" selected>급속(50~99kW)</option>
+                        <option value="s4">급속(100~199kW)</option>
+                        <option value="s5">초급속(200kW 이상)</option>
+                      </select>
+                    </div>
+                    <!-- //radios -->
+                    <!-- 같은 기능 버튼 PC용 Mobile용 -->
+                    <button type="button" class="button button--secondary pc-only js-roam-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                    <button type="button" class="button button--icon button--secondary mobile-only js-roam-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- 게시판 목록 -->
+                <div class="board-list">
+                  <div class="table-scroll" id="roamTableArea"></div>
+                </div>
+                <div class="board-description">
+                  <p class="bullet bullet--refer text-warning">표시 요금은 안내가이며 실제 결제 금액과 다를 수 있습니다.</p>
+                  <p class="bullet bullet--refer">대각선(발급=이용)은 자사 충전기 이용 단가이며, 그 밖의 칸은 로밍 단가입니다.</p>
+                </div>
+              </div>
+            </section>
+            <!-- //로밍 요금 매트릭스 -->
+          </div>
+          <!-- //전기차 충전요금 안내 -->
+
+          <!-- modal 로밍요금 -->
+          <div class="modal-container" id="modalRoamingRateDetail" role="dialog" aria-modal="true">
+            <div class="modal" tabindex="0" style="width: 800px;">
+              <div class="modal__header">
+                <h1 class="modal__header-title">로밍요금</h1>
+                <p class="modal__header-description" id="roamModalDesc"></p>
+              </div>
+              <div class="modal__body">
+                <div class="board-wrapper">
+                  <!-- 게시판 목록 -->
+                  <div class="board-list">
+                    <div class="table-scroll table-scroll--horizontal" id="roamModalTableArea"></div>
+                  </div>
+                  <div class="board-description">
+                    <p class="bullet bullet--refer" id="roamModalNote"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal__footer">
+                <button type="button" class="button button--secondary"><span>닫기</span></button>
+              </div>
+              <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+              <div class="modal__close">
+                <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+                  <i class="svg-icon close"></i>
+                  <span class="button__label">팝업닫기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- //modal -->
+
+          
+          <form name="frmExcel" id="frmExcel" method="post">
+            <input type="hidden" name="excelDown" value="Y">
+            <input type="hidden" name="zcode" id="exZcode">
+            <input type="hidden" name="zscode" id="exZscode">
+            <input type="hidden" name="snm" id="exSnm">
+            <input type="hidden" name="feeGb" id="exFeeGb">
+            <input type="hidden" name="stage" id="exStage">
+            <input type="hidden" name="busiKeyword" id="exBusiKeyword">
+            <input type="hidden" name="speeds" id="exSpeeds">
+            <input type="hidden" name="roamIssue" id="exRoamIssue">
+            <input type="hidden" name="roamOper" id="exRoamOper">
+          </form>
+        </div>
+      </div>
+
+<script type="application/json" id="matrixJson">[{"BID": "B01", "BNM": "환경부(한국환경공단)", "UPD_DT": "2026-08-01", "M_S1": 284.9, "N_S1": 356.9, "M_S2": 285.9, "N_S2": 358.9, "M_S3": 341.2, "N_S3": 415.2, "M_S4": 342.2, "N_S4": 417.2, "M_S5": 387.9, "N_S5": 463.9}, {"BID": "B02", "BNM": "한국전력", "UPD_DT": "2026-08-02", "M_S1": 320.9, "N_S1": 388.9, "M_S2": 321.9, "N_S2": 390.9, "M_S3": 377.2, "N_S3": 447.2, "M_S4": 378.2, "N_S4": 449.2, "M_S5": 423.9, "N_S5": 495.9}, {"BID": "B03", "BNM": "GS차지비", "UPD_DT": "2026-08-03", "M_S1": 282.9, "N_S1": 342.9, "M_S2": 0, "N_S2": 0, "M_S3": 339.2, "N_S3": 401.2, "M_S4": 340.2, "N_S4": 403.2, "M_S5": 385.9, "N_S5": 449.9}, {"BID": "B04", "BNM": "SK일렉링크", "UPD_DT": "2026-08-04", "M_S1": 315.9, "N_S1": 388.9, "M_S2": 316.9, "N_S2": 390.9, "M_S3": 372.2, "N_S3": 447.2, "M_S4": 373.2, "N_S4": 449.2, "M_S5": 0, "N_S5": 0}, {"BID": "B05", "BNM": "이피트(E-pit)", "UPD_DT": "2026-08-05", "M_S1": 349.9, "N_S1": 416.9, "M_S2": 350.9, "N_S2": 418.9, "M_S3": 406.2, "N_S3": 475.2, "M_S4": 317.2, "N_S4": 387.2, "M_S5": 362.9, "N_S5": 433.9}, {"BID": "B06", "BNM": "차지비", "UPD_DT": "2026-08-06", "M_S1": 347.9, "N_S1": 412.9, "M_S2": 348.9, "N_S2": 414.9, "M_S3": 404.2, "N_S3": 471.2, "M_S4": 405.2, "N_S4": 473.2, "M_S5": 450.9, "N_S5": 519.9}, {"BID": "B07", "BNM": "에버온", "UPD_DT": "2026-08-07", "M_S1": 341.9, "N_S1": 430.9, "M_S2": 342.9, "N_S2": 432.9, "M_S3": 398.2, "N_S3": 489.2, "M_S4": 399.2, "N_S4": 491.2, "M_S5": 444.9, "N_S5": 537.9}, {"BID": "B08", "BNM": "대영채비", "UPD_DT": "2026-08-08", "M_S1": 350.9, "N_S1": 418.9, "M_S2": 0, "N_S2": 0, "M_S3": 317.2, "N_S3": 387.2, "M_S4": 318.2, "N_S4": 389.2, "M_S5": 0, "N_S5": 0}, {"BID": "B09", "BNM": "채비", "UPD_DT": "2026-08-09", "M_S1": 306.9, "N_S1": 400.9, "M_S2": 307.9, "N_S2": 402.9, "M_S3": 363.2, "N_S3": 459.2, "M_S4": 364.2, "N_S4": 461.2, "M_S5": 409.9, "N_S5": 507.9}, {"BID": "B10", "BNM": "스타코프", "UPD_DT": "2026-08-10", "M_S1": 276.9, "N_S1": 370.9, "M_S2": 277.9, "N_S2": 372.9, "M_S3": 333.2, "N_S3": 429.2, "M_S4": 334.2, "N_S4": 431.2, "M_S5": 379.9, "N_S5": 477.9}, {"BID": "B11", "BNM": "휴맥스EV", "UPD_DT": "2026-08-11", "M_S1": 285.9, "N_S1": 368.9, "M_S2": 286.9, "N_S2": 370.9, "M_S3": 342.2, "N_S3": 427.2, "M_S4": 343.2, "N_S4": 429.2, "M_S5": 388.9, "N_S5": 475.9}, {"BID": "B12", "BNM": "제주전기자동차서비스", "UPD_DT": "2026-08-12", "M_S1": 322.9, "N_S1": 412.9, "M_S2": 323.9, "N_S2": 414.9, "M_S3": 379.2, "N_S3": 471.2, "M_S4": 380.2, "N_S4": 473.2, "M_S5": 0, "N_S5": 0}]</script>
+<script type="application/json" id="roamingJson">{"bids": [{"BID": "B01", "BNM": "환경부(한국환경공단)"}, {"BID": "B02", "BNM": "한국전력"}, {"BID": "B03", "BNM": "GS차지비"}, {"BID": "B04", "BNM": "SK일렉링크"}, {"BID": "B05", "BNM": "이피트(E-pit)"}, {"BID": "B06", "BNM": "차지비"}, {"BID": "B07", "BNM": "에버온"}, {"BID": "B08", "BNM": "대영채비"}, {"BID": "B09", "BNM": "채비"}, {"BID": "B10", "BNM": "스타코프"}, {"BID": "B11", "BNM": "휴맥스EV"}, {"BID": "B12", "BNM": "제주전기자동차서비스"}], "cells": {"B01|B02|s1": 366.9, "B01|B02|s2": 368.9, "B01|B02|s3": 425.2, "B01|B02|s4": 427.2, "B01|B02|s5": 473.9, "B01|B04|s1": 380.9, "B01|B04|s2": 382.9, "B01|B04|s3": 439.2, "B01|B04|s4": 441.2, "B01|B05|s1": 415.9, "B01|B05|s2": 417.9, "B01|B05|s3": 474.2, "B01|B05|s4": 386.2, "B01|B05|s5": 432.9, "B01|B07|s1": 409.9, "B01|B07|s2": 411.9, "B01|B07|s3": 468.2, "B01|B07|s4": 470.2, "B01|B07|s5": 516.9, "B01|B08|s1": 419.9, "B01|B08|s3": 388.2, "B01|B08|s4": 390.2, "B01|B10|s1": 345.9, "B01|B10|s2": 347.9, "B01|B10|s3": 404.2, "B01|B10|s4": 406.2, "B01|B10|s5": 452.9, "B01|B12|s1": 350.9, "B01|B12|s2": 352.9, "B01|B12|s3": 409.2, "B01|B12|s4": 411.2, "B02|B01|s1": 351.9, "B02|B01|s2": 353.9, "B02|B01|s3": 410.2, "B02|B01|s4": 412.2, "B02|B01|s5": 458.9, "B02|B03|s1": 308.9, "B02|B03|s3": 367.2, "B02|B03|s4": 369.2, "B02|B03|s5": 415.9, "B02|B04|s1": 342.9, "B02|B04|s2": 344.9, "B02|B04|s3": 401.2, "B02|B04|s4": 403.2, "B02|B06|s1": 376.9, "B02|B06|s2": 378.9, "B02|B06|s3": 435.2, "B02|B06|s4": 437.2, "B02|B06|s5": 483.9, "B02|B07|s1": 371.9, "B02|B07|s2": 373.9, "B02|B07|s3": 430.2, "B02|B07|s4": 432.2, "B02|B07|s5": 478.9, "B02|B09|s1": 355.9, "B02|B09|s2": 357.9, "B02|B09|s3": 414.2, "B02|B09|s4": 416.2, "B02|B09|s5": 462.9, "B02|B11|s1": 334.9, "B02|B11|s2": 336.9, "B02|B11|s3": 393.2, "B02|B11|s4": 395.2, "B02|B11|s5": 441.9, "B02|B12|s1": 372.9, "B02|B12|s2": 374.9, "B02|B12|s3": 431.2, "B02|B12|s4": 433.2, "B03|B01|s1": 330.9, "B03|B01|s2": 332.9, "B03|B01|s3": 389.2, "B03|B01|s4": 391.2, "B03|B01|s5": 437.9, "B03|B04|s1": 364.9, "B03|B04|s2": 366.9, "B03|B04|s3": 423.2, "B03|B04|s4": 425.2, "B03|B06|s1": 415.9, "B03|B06|s2": 417.9, "B03|B06|s3": 474.2, "B03|B06|s4": 476.2, "B03|B06|s5": 522.9, "B03|B07|s1": 410.9, "B03|B07|s2": 412.9, "B03|B07|s3": 469.2, "B03|B07|s4": 471.2, "B03|B07|s5": 517.9, "B03|B09|s1": 377.9, "B03|B09|s2": 379.9, "B03|B09|s3": 436.2, "B03|B09|s4": 438.2, "B03|B09|s5": 484.9, "B03|B11|s1": 356.9, "B03|B11|s2": 358.9, "B03|B11|s3": 415.2, "B03|B11|s4": 417.2, "B03|B11|s5": 463.9, "B03|B12|s1": 394.9, "B03|B12|s2": 396.9, "B03|B12|s3": 453.2, "B03|B12|s4": 455.2, "B04|B02|s1": 389.9, "B04|B02|s2": 391.9, "B04|B02|s3": 448.2, "B04|B02|s4": 450.2, "B04|B02|s5": 496.9, "B04|B03|s1": 352.9, "B04|B03|s3": 411.2, "B04|B03|s4": 413.2, "B04|B03|s5": 459.9, "B04|B05|s1": 378.9, "B04|B05|s2": 380.9, "B04|B05|s3": 437.2, "B04|B05|s4": 349.2, "B04|B05|s5": 395.9, "B04|B06|s1": 377.9, "B04|B06|s2": 379.9, "B04|B06|s3": 436.2, "B04|B06|s4": 438.2, "B04|B06|s5": 484.9, "B04|B08|s1": 382.9, "B04|B08|s3": 351.2, "B04|B08|s4": 353.2, "B04|B09|s1": 339.9, "B04|B09|s2": 341.9, "B04|B09|s3": 398.2, "B04|B09|s4": 400.2, "B04|B09|s5": 446.9, "B04|B10|s1": 308.9, "B04|B10|s2": 310.9, "B04|B10|s3": 367.2, "B04|B10|s4": 369.2, "B04|B10|s5": 415.9, "B04|B11|s1": 318.9, "B04|B11|s2": 320.9, "B04|B11|s3": 377.2, "B04|B11|s4": 379.2, "B04|B11|s5": 425.9, "B05|B02|s1": 351.9, "B05|B02|s2": 353.9, "B05|B02|s3": 410.2, "B05|B02|s4": 412.2, "B05|B02|s5": 458.9, "B05|B03|s1": 331.9, "B05|B03|s3": 390.2, "B05|B03|s4": 392.2, "B05|B03|s5": 438.9, "B05|B06|s1": 399.9, "B05|B06|s2": 401.9, "B05|B06|s3": 458.2, "B05|B06|s4": 460.2, "B05|B06|s5": 506.9, "B05|B08|s1": 421.9, "B05|B08|s3": 390.2, "B05|B08|s4": 392.2, "B05|B09|s1": 378.9, "B05|B09|s2": 380.9, "B05|B09|s3": 437.2, "B05|B09|s4": 439.2, "B05|B09|s5": 485.9, "B05|B10|s1": 347.9, "B05|B10|s2": 349.9, "B05|B10|s3": 406.2, "B05|B10|s4": 408.2, "B05|B10|s5": 454.9, "B05|B11|s1": 357.9, "B05|B11|s2": 359.9, "B05|B11|s3": 416.2, "B05|B11|s4": 418.2, "B05|B11|s5": 464.9, "B06|B01|s1": 353.9, "B06|B01|s2": 355.9, "B06|B01|s3": 412.2, "B06|B01|s4": 414.2, "B06|B01|s5": 460.9, "B06|B02|s1": 390.9, "B06|B02|s2": 392.9, "B06|B02|s3": 449.2, "B06|B02|s4": 451.2, "B06|B02|s5": 497.9, "B06|B04|s1": 387.9, "B06|B04|s2": 389.9, "B06|B04|s3": 446.2, "B06|B04|s4": 448.2, "B06|B05|s1": 422.9, "B06|B05|s2": 424.9, "B06|B05|s3": 481.2, "B06|B05|s4": 393.2, "B06|B05|s5": 439.9, "B06|B07|s1": 373.9, "B06|B07|s2": 375.9, "B06|B07|s3": 432.2, "B06|B07|s4": 434.2, "B06|B07|s5": 480.9, "B06|B08|s1": 383.9, "B06|B08|s3": 352.2, "B06|B08|s4": 354.2, "B06|B10|s1": 309.9, "B06|B10|s2": 311.9, "B06|B10|s3": 368.2, "B06|B10|s4": 370.2, "B06|B10|s5": 416.9, "B06|B12|s1": 357.9, "B06|B12|s2": 359.9, "B06|B12|s3": 416.2, "B06|B12|s4": 418.2, "B07|B01|s1": 315.9, "B07|B01|s2": 317.9, "B07|B01|s3": 374.2, "B07|B01|s4": 376.2, "B07|B01|s5": 422.9, "B07|B02|s1": 352.9, "B07|B02|s2": 354.9, "B07|B02|s3": 411.2, "B07|B02|s4": 413.2, "B07|B02|s5": 459.9, "B07|B04|s1": 349.9, "B07|B04|s2": 351.9, "B07|B04|s3": 408.2, "B07|B04|s4": 410.2, "B07|B05|s1": 401.9, "B07|B05|s2": 403.9, "B07|B05|s3": 460.2, "B07|B05|s4": 372.2, "B07|B05|s5": 418.9, "B07|B08|s1": 405.9, "B07|B08|s3": 374.2, "B07|B08|s4": 376.2, "B07|B10|s1": 331.9, "B07|B10|s2": 333.9, "B07|B10|s3": 390.2, "B07|B10|s4": 392.2, "B07|B10|s5": 438.9, "B07|B12|s1": 396.9, "B07|B12|s2": 398.9, "B07|B12|s3": 455.2, "B07|B12|s4": 457.2, "B08|B01|s1": 337.9, "B08|B01|s2": 339.9, "B08|B01|s3": 396.2, "B08|B01|s4": 398.2, "B08|B01|s5": 444.9, "B08|B03|s1": 354.9, "B08|B03|s3": 413.2, "B08|B03|s4": 415.2, "B08|B03|s5": 461.9, "B08|B04|s1": 388.9, "B08|B04|s2": 390.9, "B08|B04|s3": 447.2, "B08|B04|s4": 449.2, "B08|B06|s1": 422.9, "B08|B06|s2": 424.9, "B08|B06|s3": 481.2, "B08|B06|s4": 483.2, "B08|B06|s5": 529.9, "B08|B07|s1": 417.9, "B08|B07|s2": 419.9, "B08|B07|s3": 476.2, "B08|B07|s4": 478.2, "B08|B07|s5": 464.9, "B08|B09|s1": 341.9, "B08|B09|s2": 343.9, "B08|B09|s3": 400.2, "B08|B09|s4": 402.2, "B08|B09|s5": 448.9, "B08|B11|s1": 320.9, "B08|B11|s2": 322.9, "B08|B11|s3": 379.2, "B08|B11|s4": 381.2, "B08|B11|s5": 427.9, "B08|B12|s1": 358.9, "B08|B12|s2": 360.9, "B08|B12|s3": 417.2, "B08|B12|s4": 419.2, "B09|B01|s1": 316.9, "B09|B01|s2": 318.9, "B09|B01|s3": 375.2, "B09|B01|s4": 377.2, "B09|B01|s5": 423.9, "B09|B03|s1": 316.9, "B09|B03|s3": 375.2, "B09|B03|s4": 377.2, "B09|B03|s5": 423.9, "B09|B04|s1": 350.9, "B09|B04|s2": 352.9, "B09|B04|s3": 409.2, "B09|B04|s4": 411.2, "B09|B06|s1": 384.9, "B09|B06|s2": 386.9, "B09|B06|s3": 443.2, "B09|B06|s4": 445.2, "B09|B06|s5": 491.9, "B09|B07|s1": 396.9, "B09|B07|s2": 398.9, "B09|B07|s3": 455.2, "B09|B07|s4": 457.2, "B09|B07|s5": 503.9, "B09|B11|s1": 342.9, "B09|B11|s2": 344.9, "B09|B11|s3": 401.2, "B09|B11|s4": 403.2, "B09|B11|s5": 449.9, "B09|B12|s1": 380.9, "B09|B12|s2": 382.9, "B09|B12|s3": 439.2, "B09|B12|s4": 441.2, "B10|B02|s1": 340.9, "B10|B02|s2": 342.9, "B10|B02|s3": 399.2, "B10|B02|s4": 401.2, "B10|B02|s5": 447.9, "B10|B03|s1": 303.9, "B10|B03|s3": 362.2, "B10|B03|s4": 364.2, "B10|B03|s5": 410.9, "B10|B05|s1": 389.9, "B10|B05|s2": 391.9, "B10|B05|s3": 448.2, "B10|B05|s4": 360.2, "B10|B05|s5": 406.9, "B10|B06|s1": 388.9, "B10|B06|s2": 390.9, "B10|B06|s3": 447.2, "B10|B06|s4": 449.2, "B10|B06|s5": 495.9, "B10|B08|s1": 393.9, "B10|B08|s3": 362.2, "B10|B08|s4": 364.2, "B10|B09|s1": 350.9, "B10|B09|s2": 352.9, "B10|B09|s3": 409.2, "B10|B09|s4": 411.2, "B10|B09|s5": 457.9, "B10|B11|s1": 329.9, "B10|B11|s2": 331.9, "B10|B11|s3": 388.2, "B10|B11|s4": 390.2, "B10|B11|s5": 436.9, "B11|B02|s1": 362.9, "B11|B02|s2": 364.9, "B11|B02|s3": 421.2, "B11|B02|s4": 423.2, "B11|B02|s5": 469.9, "B11|B03|s1": 342.9, "B11|B03|s3": 401.2, "B11|B03|s4": 403.2, "B11|B03|s5": 449.9, "B11|B05|s1": 411.9, "B11|B05|s2": 413.9, "B11|B05|s3": 470.2, "B11|B05|s4": 382.2, "B11|B05|s5": 428.9, "B11|B06|s1": 410.9, "B11|B06|s2": 412.9, "B11|B06|s3": 469.2, "B11|B06|s4": 471.2, "B11|B06|s5": 517.9, "B11|B08|s1": 372.9, "B11|B08|s3": 341.2, "B11|B08|s4": 343.2, "B11|B09|s1": 329.9, "B11|B09|s2": 331.9, "B11|B09|s3": 388.2, "B11|B09|s4": 390.2, "B11|B09|s5": 436.9, "B11|B10|s1": 298.9, "B11|B10|s2": 300.9, "B11|B10|s3": 357.2, "B11|B10|s4": 359.2, "B11|B10|s5": 405.9, "B12|B01|s1": 304.9, "B12|B01|s2": 306.9, "B12|B01|s3": 363.2, "B12|B01|s4": 365.2, "B12|B01|s5": 411.9, "B12|B02|s1": 341.9, "B12|B02|s2": 343.9, "B12|B02|s3": 400.2, "B12|B02|s4": 402.2, "B12|B02|s5": 448.9, "B12|B04|s1": 338.9, "B12|B04|s2": 340.9, "B12|B04|s3": 397.2, "B12|B04|s4": 399.2, "B12|B05|s1": 373.9, "B12|B05|s2": 375.9, "B12|B05|s3": 432.2, "B12|B05|s4": 344.2, "B12|B05|s5": 390.9, "B12|B07|s1": 384.9, "B12|B07|s2": 386.9, "B12|B07|s3": 443.2, "B12|B07|s4": 445.2, "B12|B07|s5": 491.9, "B12|B08|s1": 394.9, "B12|B08|s3": 363.2, "B12|B08|s4": 365.2, "B12|B10|s1": 320.9, "B12|B10|s2": 322.9, "B12|B10|s3": 379.2, "B12|B10|s4": 381.2, "B12|B10|s5": 427.9}}</script>
+
+<script src="assets/js/board-grid.js?v=20260821f"></script>
 <script>
-(function(){
-  "use strict";
-  function $(s,c){return (c||document).querySelector(s);}
-  function $$(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s));}
-  function esc(v){return v==null?"":String(v).replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m];});}
-  function fmt(v){return v==null?"—":(Math.round(v*10)/10).toLocaleString();}
+(function ($) {
+  'use strict';
 
-  var CAP_LABEL = { slow:"완속", mid:"중속", fast50:"급속 100kW미만", fast100:"급속 100kW이상", ultra:"초급속" };
-  var BANDS = [
-    {k:"slow",  label:"완속",  sub:"&lt;30kW"},
-    {k:"mid",   label:"중속",  sub:"30~50"},
-    {k:"fast50",label:"급속",  sub:"50~100"},
-    {k:"fast100",label:"급속", sub:"100~200"},
-    {k:"ultra", label:"초급속",sub:"≥200"}
+  var STATION_URL = '/evcarInfo/selectEvStationFeeList.ajax';
+  var STATION_EXCEL_URL = '/evcarInfo/selectEvStationFeeExcel.do';
+  var BUSI_EXCEL_URL = '/evcarInfo/selectEvBusiFeeExcel.do';
+  var ROAM_EXCEL_URL = '/evcarInfo/selectEvRoamFeeExcel.do';
+  var PAGE_SIZE = 10;
+
+  var STAGES = [
+    { key: 's1', title: '완속',   sub: '(30kW 미만)' },
+    { key: 's2', title: '중속',   sub: '(30~49kW)' },
+    { key: 's3', title: '급속',   sub: '(50~99kW)' },
+    { key: 's4', title: '급속',   sub: '(100~199kW)' },
+    { key: 's5', title: '초급속', sub: '(200kW 이상)' }
   ];
-  // [DEV] 사업자 기본단가+계절시간 규칙(현재 더미) — TNCC_RMNG_RTCPCTY_FEE(member/nonmember 밴드 기본단가) + TNCC_RMNG_SEAS_FEE(rules=season/days/caps/target/mode/value/hours)
-  var TOU_OPERATORS = {
-    'ME': { name:'기후부 (공공급속)', type:'공공', tou:true,
-      member:    { slow:null, mid:null, fast50:324.4, fast100:347.2, ultra:347.2 },
-      nonmember: { slow:null, mid:null, fast50:347.2, fast100:347.2, ultra:347.2 },
-      rules:[
-        { season:'spring', days:['saturday'], caps:['all'], target:'common', mode:'amount', value:48.6, hours:[11,14] },
-        { season:'spring', days:['sunday'],   caps:['all'], target:'common', mode:'amount', value:42.7, hours:[11,14] }
-      ] },
-    'KP': { name:'한전 KEPCO (아파트)', type:'공공', tou:true,
-      member:    { slow:130, mid:160, fast50:324.4, fast100:347.2, ultra:347.2 },
-      nonmember: { slow:145, mid:175, fast50:347.2, fast100:347.2, ultra:347.2 },
-      rules:[
-        { season:'summer', days:['weekday'], caps:['slow','mid'], target:'common', mode:'percent', value:20, hours:[22,8] }
-      ] },
-    'EV': { name:'에버온', type:'민간', tou:true,
-      member:    { slow:295, mid:310, fast50:296, fast100:347.2, ultra:347.2 },
-      nonmember: { slow:320, mid:330, fast50:320, fast100:360, ultra:360 },
-      rules:[
-        { season:'summer', days:['saturday','sunday'], caps:['fast50'], target:'member', mode:'fixed', value:246, hours:[11,16] }
-      ] },
-    'HE': { name:'한국전기차충전서비스', type:'공공', tou:false, member:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2}, nonmember:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2}, rules:[] },
-    'CV': { name:'채비', type:'민간', tou:true, member:{slow:300,mid:330,fast50:410,fast100:430,ultra:430}, nonmember:{slow:330,mid:360,fast50:450,fast100:470,ultra:470},
-      rules:[
-        { season:'all', days:['weekday','saturday','sunday'], caps:['all'], target:'common', mode:'percent', value:15, hours:[23,6] }
-      ] },
-    'PI': { name:'GS차지비', type:'민간', tou:true, member:{slow:290,mid:310,fast50:335,fast100:345,ultra:345}, nonmember:{slow:320,mid:340,fast50:360,fast100:370,ultra:370},
-      rules:[
-        { season:'spring', days:['saturday','sunday'], caps:['fast50','fast100'], target:'common', mode:'amount', value:35, hours:[10,16] }
-      ] },
-    'ST': { name:'SK일렉링크', type:'민간', tou:true, member:{slow:280,mid:300,fast50:410,fast100:320,ultra:340}, nonmember:{slow:310,mid:330,fast50:450,fast100:360,ultra:380},
-      rules:[
-        { season:'all', days:['weekday','saturday','sunday'], caps:['all'], target:'common', mode:'amount', value:40, hours:[11,15] }
-      ] },
-    'HM': { name:'휴맥스이브이', type:'민간', tou:true, member:{slow:270,mid:290,fast50:320,fast100:340,ultra:340}, nonmember:{slow:300,mid:320,fast50:350,fast100:370,ultra:370},
-      rules:[
-        { season:'all', days:['weekday','saturday','sunday'], caps:['fast50'], target:'common', mode:'fixed', value:260, hours:[1,7] }
-      ] },
-    'PL': { name:'플러그링크', type:'민간', tou:true, member:{slow:260,mid:280,fast50:324.4,fast100:324.4,ultra:324.4}, nonmember:{slow:290,mid:310,fast50:350,fast100:350,ultra:350},
-      rules:[
-        { season:'all', days:['weekday','saturday','sunday'], caps:['all'], target:'common', mode:'percent', value:12, hours:[6,9] }
-      ] }
-  };
-  // [DEV] 공공 기준행(환경부, BID 'ME') 5밴드 표준단가(현재 더미)
-  var PUBLIC = { name:"환경부(공공)", rate: window.ME_PUBLIC_RATE.legacy };   // [ISS-045] 공표 5밴드 단일 소스(js/me-public-rate.js)
-  var CPO_ORDER = ['KP','EV','HE','CV','PI','ST','HM','PL'];
 
-  var MODE_LABEL = { amount:"정액(원 차감)", percent:"정률(% 차감)", fixed:"고정단가" };
-  function applyMode(base, mode, value){
-    if (mode==='percent') return Math.round(base*(1-value/100)*10)/10;
-    if (mode==='fixed')   return value;
-    return Math.round((base-value)*10)/10;
-  }
-  function hoursOf(rule){
-    var s=rule.hours[0], e=rule.hours[1], arr=[], h;
-    if (s<e){ for(h=s;h<e;h++) arr.push(h); }
-    else { for(h=s;h<24;h++) arr.push(h); for(h=0;h<e;h++) arr.push(h); }
-    return arr;
-  }
-  function ruleMatches(rule, season, day, cap, target){
-    if (rule.season!=='all' && rule.season!==season) return false;
-    if (rule.days.indexOf(day)<0) return false;
-    if (rule.caps.indexOf('all')<0 && rule.caps.indexOf(cap)<0) return false;
-    if (rule.target!=='common' && rule.target!==target) return false;
-    return true;
+  function parseJsonBlock(id) {
+    try { return JSON.parse(document.getElementById(id).textContent); } catch (e) { return null; }
   }
 
-  var now = new Date();
-  var curHour = now.getHours();
-  var curSeason = ([2,3,4,8,9].indexOf(now.getMonth())>=0) ? 'spring' : ([5,6,7].indexOf(now.getMonth())>=0) ? 'summer' : 'winter';
-  var curDay = (function(){ var d=now.getDay(); return d===0?'sunday':(d===6?'saturday':'weekday'); })();
-  var SEASON_KO = { spring:"봄·가을", summer:"여름", winter:"겨울", all:"전 계절" };
-  var DAY_KO = { weekday:"평일", saturday:"토요일", sunday:"일·공휴일" };
+  var MATRIX = parseJsonBlock('matrixJson') || [];
+  var ROAMING = parseJsonBlock('roamingJson') || {};
+  var ROAM_BIDS = ROAMING.bids || [];
+  var ROAM_CELLS = ROAMING.cells || {};
 
-  // (op, band, target, season, hour, day) → {v, base, disc} | null
-  function computeRate(op, band, target, season, hour, day){
-    var base = (op[target]||{})[band];
-    if (base==null || isNaN(base)) return null;
-    var val = base, disc = false;
-    if (op.tou){
-      (op.rules||[]).forEach(function(r){
-        if (!ruleMatches(r, season, day, band, target)) return;
-        if (hoursOf(r).indexOf(hour) < 0) return;
-        val = applyMode(base, r.mode, r.value); disc = true;
-      });
-    }
-    return { v: val, base: base, disc: disc };
+  var stationApi = null;
+  var busiApi = null;
+  var stationPage = 1;
+  var stationPageCount = 1;
+  var stationFeeGb = 'M';
+  var busiFeeGb = 'M';
+
+  function fmtCount(n) {
+    return Number(n || 0).toLocaleString('ko-KR');
   }
 
-  // ════════ KPI: 계절시간제 운영 사업자 수 ════════
-  (function initKpi(){
-    var n=0; for (var k in TOU_OPERATORS){ var o=TOU_OPERATORS[k]; if(o.tou && o.rules && o.rules.length) n++; }
-    var el=document.getElementById('kpiTouCount'); if(el) el.textContent=n;
-  })();
-
-  // ════════ 매트릭스 ════════
-  var mxState = { mem:"member", season:curSeason, day:curDay, hour:curHour, search:"", sortKey:null, sortDir:0,
-                  bands:{slow:true,mid:true,fast50:true,fast100:true,ultra:true}, expanded:{} };
-  function activeBands(){ return BANDS.filter(function(b){ return mxState.bands[b.k]; }); }
-  function mxRate(op, band){ return computeRate(op, band, mxState.mem, mxState.season, mxState.hour, mxState.day); }
-  function cellHTML(rate){ if(!rate) return '<span class="mx-null">—</span>'; return fmt(rate.v); }
-  // 현재 조건(회원·계절·요일·시각)에 실제 적용 중인 할인 → 사업자명 옆 배지
-  function currentDiscount(op){
-    if(!op.tou || !op.rules || !op.rules.length) return null;
-    var seen={}, keys=[], any=false;
-    BANDS.forEach(function(b){
-      var base=(op[mxState.mem]||{})[b.k]; if(base==null) return;
-      var applied=null;
-      op.rules.forEach(function(r){
-        if(!ruleMatches(r, mxState.season, mxState.day, b.k, mxState.mem)) return;
-        if(hoursOf(r).indexOf(mxState.hour)<0) return;
-        applied=r;
-      });
-      if(applied){ any=true; var k=applied.mode+':'+applied.value; if(!seen[k]){ seen[k]=applied; keys.push(k); } }
-    });
-    if(!any) return null;
-    if(keys.length===1){ var d=seen[keys[0]]; return {mode:d.mode, value:d.value}; }
-    return {multi:true};
-  }
-  function discBadge(op){
-    var d=currentDiscount(op); if(!d) return '';
-    if(d.multi) return ' <span class="mx-disc-badge">할인중</span>';
-    var txt = d.mode==='percent' ? ('−'+d.value+'%') : d.mode==='amount' ? ('−'+d.value+'원') : ('고정 '+fmt(d.value)+'원');
-    return ' <span class="mx-disc-badge">할인중 '+txt+'</span>';
-  }
-  function rowVal(op, key){ var r=mxRate(op,key); return r?r.v:null; }
-  function publicVisible(){ var q=mxState.search.trim(); return !q || PUBLIC.name.indexOf(q)>=0 || "환경부".indexOf(q)>=0 || q.indexOf("환경부")>=0 || q.indexOf("공공")>=0; }
-  function cpoRows(){
-    var q=mxState.search.trim();
-    var rows=CPO_ORDER.map(function(bid){return {bid:bid,op:TOU_OPERATORS[bid]};}).filter(function(r){return r.op&&(!q||r.op.name.indexOf(q)>=0);});
-    if(mxState.sortKey){
-      var key=mxState.sortKey, dir=mxState.sortDir;
-      rows.sort(function(a,b){
-        if(key==='name'){ var c=a.op.name.localeCompare(b.op.name,'ko'); return dir===1?-c:c; }
-        var va=rowVal(a.op,key), vb=rowVal(b.op,key);
-        if(va==null&&vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;
-        return dir===1?(vb-va):(va-vb);
-      });
-    }
-    return rows;
+  // 단가 표시: 값이 없거나 0 이하면 '-'
+  function fmtFee(v) {
+    var n = Number(v);
+    if (v === null || v === undefined || v === '' || isNaN(n) || n <= 0) return '-';
+    return (Math.round(n * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 });
   }
 
-  var expandBand = {};
-  function defaultBand(op){ var order=['fast50','fast100','ultra','slow','mid']; for(var i=0;i<order.length;i++){ if((op.member||{})[order[i]]!=null) return order[i]; } return 'fast50'; }
-  function expandHTML(bid){
-    var op=TOU_OPERATORS[bid];
-    var avail=BANDS.filter(function(b){ return (op.member||{})[b.k]!=null || (op.nonmember||{})[b.k]!=null; });
-    var cur=expandBand[bid]||defaultBand(op);
-    var btns='<div class="mx-eband" data-eband="'+bid+'">'+avail.map(function(b){ return '<button type="button" data-eb="'+b.k+'" class="'+(b.k===cur?'on':'')+'">'+CAP_LABEL[b.k]+'</button>'; }).join('')+'</div>';
-    return '<div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">'+esc(op.name)+' · 24시간 요금곡선 <span style="font-weight:500;color:var(--color-gray-500);">('+SEASON_KO[mxState.season]+' · '+DAY_KO[mxState.day]+' · '+(mxState.mem==='member'?'회원':'비회원')+')</span></div>'
-      + btns
-      + '<div class="mx-chart-head" id="mxhead-'+bid+'"></div>'
-      + '<div id="mxbadge-'+bid+'"></div>'
-      + '<div class="mx-bars-wrap"><div class="mx-bars" id="mxbars-'+bid+'"></div></div>'
-      + '<div class="mx-axis" id="mxaxis-'+bid+'"></div>'
-      + '<div class="mx-legend" id="mxlegend-'+bid+'"></div>'
-      + '<div id="mxrules-'+bid+'"></div>';
-  }
-  function drawCurve(bid, band){
-    var op=TOU_OPERATORS[bid]; if(!op) return;
-    expandBand[bid]=band;
-    var bars=document.getElementById('mxbars-'+bid), axis=document.getElementById('mxaxis-'+bid);
-    if(!bars||!axis) return;
-    var target=mxState.mem, season=mxState.season, day=mxState.day;
-    var base=(op[target]||{})[band]; if(base!=null && isNaN(base)) base=null;
-    var rates=[]; for(var h=0;h<24;h++){ var r=computeRate(op,band,target,season,h,day); rates.push(r?r.v:null); }
-    var nums=rates.filter(function(x){return x!=null;});
-    var maxV=Math.max.apply(null, nums.concat(base!=null?[base]:[]).concat([1]));
-    var scale=maxV*1.12;   // y=0 기준(정직 비율) · 상단 여유
-    // 막대
-    var bh='';
-    rates.forEach(function(v,i){
-      var selCls=(i===mxState.hour?' sel':'');
-      if(v==null){ bh+='<div class="bar'+selCls+'" style="height:3%;background:#e5e7eb;" data-label="'+i+'시 · 미공시"></div>'; return; }
-      var disc=(base!=null && v<base);
-      var col=disc?'#1AAD6C':'#94A3B8';   // 할인=초록 · 기본단가=회색
-      var ht=Math.max(2, v/scale*100).toFixed(1);
-      bh+='<div class="bar'+(disc?' disc':'')+selCls+'" style="height:'+ht+'%;background:'+col+';" data-label="'+(i<10?'0'+i:i)+'시 · '+fmt(v)+'원/kWh"></div>';
-    });
-    if(base!=null){ var bp=(base/scale*100).toFixed(1);
-      bh+='<div class="mx-baseline" style="bottom:'+bp+'%;"><span class="lbl">기본단가 '+fmt(base)+'원</span></div>'; }
-    bars.innerHTML=bh;
-    var ax=''; for(var j=0;j<24;j++){ ax+='<div>'+(j%3===0?j:'')+'</div>'; }
-    axis.innerHTML=ax;
-    // 현재 조건에 적용되는 규칙(마지막 매칭 = computeRate와 동일 우선순위)
-    var applied=null; (op.tou?op.rules:[]).forEach(function(r){ if(ruleMatches(r,season,day,band,target)) applied=r; });
-    // 헤더: 선택 시각 요금
-    var curV=rates[mxState.hour], hh=(mxState.hour<10?'0'+mxState.hour:mxState.hour);
-    var head=document.getElementById('mxhead-'+bid);
-    if(head){
-      var tail;
-      if(curV==null) tail='미공시';
-      else if(base!=null && curV<base){ var pc=Math.round((1-curV/base)*100); tail=fmt(curV)+'원 <span style="color:#1AAD6C;font-weight:700;">(−'+pc+'%)</span>'; }
-      else tail=fmt(curV)+'원 <span style="color:var(--color-gray-500);font-weight:600;">(할인 없음)</span>';
-      head.innerHTML='<span class="now">'+(mxState.hour===curHour?'지금 ':'')+hh+'시</span> = '+tail;
-    }
-    // 요약 배지
-    var badge=document.getElementById('mxbadge-'+bid);
-    if(badge){
-      if(applied && base!=null){
-        var after=applyMode(base, applied.mode, applied.value);
-        var hrs=applied.hours[0]+'~'+applied.hours[1]+'시', main, money;
-        if(applied.mode==='percent'){ main='정률 '+applied.value+'% 할인'; money=' · '+fmt(base)+'→'+fmt(after)+'원'; }
-        else if(applied.mode==='amount'){ main='정액 '+applied.value+'원 할인'; money=' · '+fmt(base)+'→'+fmt(after)+'원'; }
-        else { main='고정단가 '+fmt(applied.value)+'원 적용'; money=''; }
-        badge.innerHTML='<div class="mx-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>'+main+' · '+hrs+money+'</div>';
-      } else { badge.innerHTML=''; }
-    }
-    // 범례
-    var legend=document.getElementById('mxlegend-'+bid);
-    if(legend){
-      var discV=null;
-      if(applied && base!=null){ discV = (applied.mode==='fixed') ? applied.value : applyMode(base,applied.mode,applied.value); }
-      var lg='';
-      lg+='<span class="lg"><span class="sw" style="background:#1AAD6C;"></span>할인 적용'+(discV!=null?' '+fmt(discV)+'원':'')+'</span>';
-      lg+='<span class="lg"><span class="sw" style="background:#94A3B8;"></span>기본단가'+(base!=null?' '+fmt(base)+'원':'')+'</span>';
-      lg+='<span class="lg"><span class="swline"></span>기본단가 기준선</span>';
-      legend.innerHTML=lg;
-    }
-    // 규칙 목록 (읽기 쉬운 형식 + 실제 할인액)
-    var rulesEl=document.getElementById('mxrules-'+bid);
-    if(rulesEl){
-      if(op.tou && op.rules.length){
-        var lis=op.rules.map(function(r){
-          var dayKo=r.days.map(function(d){return DAY_KO[d]||d;}).join('·');
-          var useCap=(r.caps.indexOf('all')>=0||r.caps.indexOf(band)>=0)?band:r.caps[0];
-          var tgt=(r.target==='common')?target:r.target;
-          var bs=(op[tgt]||{})[useCap], amtTxt='';
-          if(bs!=null){ var af=applyMode(bs,r.mode,r.value), amt=Math.round((bs-af)*10)/10; amtTxt=' → <b style="color:#1AAD6C;">'+fmt(amt)+'원 할인</b>'; }
-          var modeTxt=(r.mode==='percent'?'정률 '+r.value+'%':r.mode==='amount'?'정액 '+r.value+'원':'고정단가 '+fmt(r.value)+'원');
-          return '<li style="margin-bottom:4px;">'+SEASON_KO[r.season]+' · '+dayKo+' · '+r.hours[0]+'~'+r.hours[1]+'시 · <b>'+modeTxt+'</b>'+amtTxt+'</li>';
-        }).join('');
-        rulesEl.innerHTML='<div style="margin-top:12px;font-size:12.5px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;"><div style="font-weight:700;margin-bottom:6px;color:#334155;">계절·시간 할인규칙 ('+op.rules.length+'건)</div><ul style="margin:0;padding-left:18px;line-height:1.7;">'+lis+'</ul></div>';
+  // ag-grid 2줄 헤더 (구분명 + 용량 구간)
+  function MultilineHeader() {}
+  MultilineHeader.prototype.init = function (params) {
+    this.eGui = document.createElement('div');
+    this.eGui.className = 'ag-header-multiline';
+    this.eGui.appendChild(document.createTextNode(params.title));
+    if (params.subTitle) {
+      var sub = document.createElement('span');
+      sub.className = 'text-size-small';
+      // wrapTilde 가 true 인 그리드에서만 '~' 뒤에서 줄을 바꾼다
+      if (params.wrapTilde) {
+        params.subTitle.split('~').forEach(function (part, i, arr) {
+          if (i > 0) sub.appendChild(document.createElement('br'));
+          sub.appendChild(document.createTextNode(i < arr.length - 1 ? part + '~' : part));
+        });
       } else {
-        rulesEl.innerHTML='<div style="margin-top:12px;font-size:12.5px;color:var(--color-gray-500);">평단가(시간대 무관) 사업자 · 계절·시간 할인규칙 없음</div>';
+        sub.appendChild(document.createTextNode(params.subTitle));
       }
+      this.eGui.appendChild(sub);
     }
-  }
+  };
+  MultilineHeader.prototype.getGui = function () { return this.eGui; };
 
-  function renderMatrix(){
-    var wrap=$('#matrix-wrap'); if(!wrap) return;
-    var bands=activeBands();
-    function thSort(key,label,sub){
-      var cls='sortable'+(key==='name'?' opcol':'');
-      if(mxState.sortKey===key){ cls+=(mxState.sortDir===1?' sort-desc':(mxState.sortDir===2?' sort-asc':'')); }
-      return '<th class="'+cls+'" data-sk="'+key+'" tabindex="0" role="button">'+label+(sub?'<small>'+sub+'</small>':'')+'</th>';
-    }
-    var thead='<thead><tr>'+thSort('name','사업자','')+bands.map(function(b){return thSort(b.k,b.label,b.sub);}).join('')+'</tr></thead>';
-    var body='';
-    var showPub=publicVisible();
-    if(showPub){
-      var pubOpen=!!mxState.expanded['__PUB__'];
-      body+='<tr class="pub" data-row="__PUB__"><td class="opcol"><span class="mx-exp-ind '+(pubOpen?'open':'')+'">▸</span>'+PUBLIC.name+'</td>'+bands.map(function(b){return '<td>'+fmt(PUBLIC.rate[b.k])+'</td>';}).join('')+'</tr>';
-      if(pubOpen){
-        var MEP=window.ME_PUBLIC_RATE, MEP_TXT='완속 '+MEP.rate.slow+' · 중속 '+MEP.rate.mid+' · 급속(50~100) '+MEP.rate.fast+' · 급속(100~200) '+MEP.rate.fastp+' · 초급속 '+MEP.rate.ultra+' 원/kWh';
-        body+='<tr class="mx-exp-row"><td colspan="'+(bands.length+1)+'"><div style="font-size:13.5px;color:var(--color-gray-700);line-height:1.8;"><b>환경부 공공 표준단가</b> · 출력 5단계 고정단가로 <b>시각·요일·회원 구분과 무관</b>하게 적용됩니다.<br>'+MEP_TXT+'</div></td></tr>';
+  // 회원/비회원 전환은 컬럼 교체 없이 valueGetter 가 접두어를 바꿔 읽는다
+  function stageColumn(stage, width, gbFn, wrapTilde) {
+    return {
+      colId: stage.key,
+      headerName: stage.title,
+      width: width,
+      minWidth: width,
+      sortable: true,
+      cellDataType: false,
+      valueGetter: function (p) {
+        if (!p.data) return null;
+        return p.data[gbFn() + '_' + stage.key.toUpperCase()];
+      },
+      valueFormatter: function (p) { return fmtFee(p.value); },
+      headerComponentParams: {
+        innerHeaderComponent: MultilineHeader,
+        innerHeaderComponentParams: { title: stage.title, subTitle: stage.sub, wrapTilde: !!wrapTilde }
       }
-    }
-    var rows=cpoRows();
-    rows.forEach(function(r){
-      var op=r.op, open=!!mxState.expanded[r.bid];
-      body+='<tr data-row="'+r.bid+'"><td class="opcol"><span class="mx-exp-ind '+(open?'open':'')+'">▸</span>'+esc(op.name)+discBadge(op)+'</td>'+bands.map(function(b){return '<td>'+cellHTML(mxRate(op,b.k))+'</td>';}).join('')+'</tr>';
-      if(open){ body+='<tr class="mx-exp-row" data-exprow="'+r.bid+'"><td colspan="'+(bands.length+1)+'">'+expandHTML(r.bid)+'</td></tr>'; }
-    });
-    wrap.innerHTML='<table class="mx-table">'+thead+'<tbody>'+body+'</tbody></table>';
-    rows.forEach(function(r){ if(mxState.expanded[r.bid]) drawCurve(r.bid, expandBand[r.bid]||defaultBand(r.op)); });
+    };
   }
 
-  (function initMatrix(){
-    var bandBox=$('#mxBands');
-    if(bandBox){
-      bandBox.innerHTML=BANDS.map(function(b){ return '<label class="mx-band-chip on" data-band="'+b.k+'"><input type="checkbox" checked value="'+b.k+'"> '+b.label+'</label>'; }).join('');
-      bandBox.addEventListener('change',function(e){ var cb=e.target.closest('input'); if(!cb) return; mxState.bands[cb.value]=cb.checked; cb.closest('.mx-band-chip').classList.toggle('on',cb.checked); renderMatrix(); });
-    }
-    $$('#mx-mem-tabs .tab').forEach(function(b){ b.addEventListener('click',function(){ $$('#mx-mem-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mxState.mem=b.dataset.mmem; renderMatrix(); }); });
-    $$('#mx-season-tabs .tab').forEach(function(b){
-      b.classList.toggle('active', b.dataset.season===curSeason);
-      b.addEventListener('click',function(){ $$('#mx-season-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mxState.season=b.dataset.season; renderMatrix(); });
-    });
-    $$('#mx-day-tabs .tab').forEach(function(b){
-      b.classList.toggle('active', b.dataset.day===curDay);
-      b.addEventListener('click',function(){ $$('#mx-day-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mxState.day=b.dataset.day; renderMatrix(); });
-    });
-    var hr=$('#mxHour'), hv=$('#mxHourVal');
-    if(hr){ hr.value=curHour; if(hv) hv.textContent=(curHour<10?'0'+curHour:curHour)+'시 (지금)';
-      hr.addEventListener('input',function(){ mxState.hour=parseInt(hr.value,10); if(hv) hv.textContent=(mxState.hour<10?'0'+mxState.hour:mxState.hour)+'시'+(mxState.hour===curHour?' (지금)':''); renderMatrix(); });
-    }
-    var se=$('#mxSearch'), clr=$('#mxSearchClear');
-    function syncClear(){ if(clr) clr.hidden = !(se&&se.value); }
-    if(se) se.addEventListener('input',function(){ mxState.search=se.value; syncClear(); renderMatrix(); });
-    if(clr) clr.addEventListener('click',function(){ if(se){se.value=''; se.focus();} mxState.search=''; syncClear(); renderMatrix(); });
-    // 사업자별 요금 매트릭스 엑셀(.xlsx) 다운로드 — 현재 필터·회원·계절·시각 기준
-    var mxb=$('#mxExcelBtn');
-    if(mxb) mxb.addEventListener('click',function(){
-      var bands=activeBands();
-      var head=['사업자'].concat(bands.map(function(b){ return b.label+(b.sub?'('+b.sub+')':''); }));
-      var aoa=[head];
-      if(publicVisible()){ aoa.push([PUBLIC.name].concat(bands.map(function(b){ return PUBLIC.rate[b.k]; }))); }
-      cpoRows().forEach(function(r){ var op=r.op; aoa.push([op.name].concat(bands.map(function(b){ return mxRate(op,b.k); }))); });
-      downloadXlsx('사업자별_요금_매트릭스.xlsx','사업자별요금', aoa);
-      if(window.__toast) window.__toast('사업자별 요금 매트릭스를 엑셀(xlsx)로 내려받았습니다.','success');
-    });
-    var wrap=$('#matrix-wrap');
-    if(wrap) wrap.addEventListener('click',function(e){
-      var th=e.target.closest('thead th.sortable');
-      if(th){ var key=th.dataset.sk; if(mxState.sortKey!==key){mxState.sortKey=key;mxState.sortDir=1;} else {mxState.sortDir=(mxState.sortDir+1)%3; if(mxState.sortDir===0) mxState.sortKey=null;} renderMatrix(); return; }
-      var eb=e.target.closest('.mx-eband button');
-      if(eb){ var box=eb.closest('.mx-eband'); var bid=box.dataset.eband; $$('button',box).forEach(function(x){x.classList.remove('on');}); eb.classList.add('on'); drawCurve(bid,eb.dataset.eb); return; }
-      if(e.target.closest('.mx-exp-row')) return;
-      var tr=e.target.closest('tr[data-row]');
-      if(tr){ var id=tr.getAttribute('data-row'); mxState.expanded[id]=!mxState.expanded[id]; renderMatrix(); }
-    });
-    if(wrap) wrap.addEventListener('keydown',function(e){
-      if((e.key==='Enter'||e.key===' ')){ var th=e.target.closest('thead th.sortable'); if(th){ e.preventDefault(); th.click(); } }
-    });
-    renderMatrix();
-  })();
-
-  // ════════ 충전소 요금 검색 ════════
-  // [DEV] 충전소 목록(현재 더미) — 실개발: 충전소 마스터 + EVCS_CHARGER_STATUS(out=CHGE_OUTPUT 집계) + APP_CHARGE_PRICE(요금)
-  var STATIONS = [
-    { no:1,  name:'서울 강남 롯데타워 충전소',  addr:'서울 송파구 올림픽로 300', sido:'서울', op:'ME', out:[100,200,350] },
-    { no:2,  name:'서울 양재 SK일렉링크 허브',  addr:'서울 서초구 강남대로 311', sido:'서울', op:'ST', out:[7,100,350] },
-    { no:3,  name:'서울 상암 GS차지비 1호점',    addr:'서울 마포구 월드컵북로 396', sido:'서울', op:'PI', out:[7,50,100] },
-    { no:4,  name:'서울 송파 휴맥스이브이 거점', addr:'서울 송파구 위례성대로 220', sido:'서울', op:'HM', out:[100,200] },
-    { no:5,  name:'경기 분당 채비 야탑 충전소',  addr:'경기 성남시 야탑동 343', sido:'경기', op:'CV', out:[100,350] },
-    { no:6,  name:'경기 화성 에버온 동탄 충전소',addr:'경기 화성시 동탄대로 1', sido:'경기', op:'EV', out:[7,30,100] },
-    { no:7,  name:'경기 평택 한전 KEPCO 충전소',addr:'경기 평택시 청북읍 백봉리 11', sido:'경기', op:'KP', out:[7,50] },
-    { no:8,  name:'인천 송도 GS차지비 컨벤시아',addr:'인천 연수구 컨벤시아대로 165', sido:'인천', op:'PI', out:[50,100] },
-    { no:9,  name:'인천공항 T2 SK일렉링크',     addr:'인천 중구 공항로 272', sido:'인천', op:'ST', out:[200,350] },
-    { no:10, name:'대전 둔산 한국전기차충전서비스', addr:'대전 서구 둔산동 1004', sido:'대전', op:'HE', out:[100,350] },
-    { no:11, name:'부산 해운대 채비 신세계',    addr:'부산 해운대구 센텀남대로 35', sido:'부산', op:'CV', out:[100,200,350] },
-    { no:12, name:'부산 강서 GS차지비 명지점', addr:'부산 강서구 명지동 1234', sido:'부산', op:'PI', out:[7,50] },
-    { no:13, name:'대구 동성로 SK일렉링크',     addr:'대구 중구 동성로 62', sido:'대구', op:'ST', out:[200,350] },
-    { no:14, name:'광주 첨단 에버온',           addr:'광주 광산구 첨단3로 88', sido:'광주', op:'EV', out:[7,11] },
-    { no:15, name:'울산 매암 휴맥스이브이',     addr:'울산 남구 매암동 137', sido:'울산', op:'HM', out:[100] },
-    { no:16, name:'세종 정부청사 기후부 충전소',addr:'세종 어진동 670', sido:'세종', op:'ME', out:[200,350] },
-    { no:17, name:'제주 함덕 한전 KEPCO',       addr:'제주 제주시 함덕리 55', sido:'제주', op:'KP', out:[7,100] },
-    { no:18, name:'제주 서귀포 플러그링크',     addr:'제주 서귀포시 중앙로 105', sido:'제주', op:'PL', out:[7,11] },
-    { no:19, name:'강원 춘천 에버온 명동',      addr:'강원 춘천시 명동길 22', sido:'강원', op:'EV', out:[7] },
-    { no:20, name:'충북 청주 SK일렉링크 청주IC',addr:'충북 청주시 흥덕구 옥산면', sido:'충북', op:'ST', out:['50~200',350] }
-  ];
-  // 출력구성 텍스트 (출력값만 · 중복제거 · 오름차순)
-  function outStart(o){ return (typeof o==='string' && o.indexOf('~')>=0) ? parseInt(o,10) : o; }
-  function outText(outs){
-    var u=[]; (outs||[]).forEach(function(o){ if(u.indexOf(o)<0) u.push(o); });
-    u.sort(function(a,b){ return outStart(a)-outStart(b); });
-    return u.length ? u.join(' · ') : '—';
-  }
-  function gugunOf(addr){ var p=addr.split(' '); return p[1]||''; }
-  var evTbody=$('#evResultTbody'), evCount=$('#evResultCount'), evTime=$('#evResultTime');
-  var evState = { mem:"member", sortKey:null, sortDir:0 };
-  // 검색 리스트는 '지금 시각(오늘)' 기준 — 매트릭스 조건과 독립
-  function evBand(op, band){ var r=op?computeRate(op,band,evState.mem,curSeason,curHour,curDay):null; return r?r.v:null; }
-  function evSortVal(s, key){
-    if(key==='no') return s.no;
-    if(key==='name') return s.name;
-    if(key==='cpo'){ var op=TOU_OPERATORS[s.op]; return op?op.name:s.op; }
-    return evBand(TOU_OPERATORS[s.op], key);   // 밴드
-  }
-  function evSorted(list){
-    if(!evState.sortKey) return list;
-    var key=evState.sortKey, dir=evState.sortDir, arr=list.slice();
-    arr.sort(function(a,b){
-      var va=evSortVal(a,key), vb=evSortVal(b,key);
-      if(va==null&&vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;
-      var c = (typeof va==='number'&&typeof vb==='number') ? (va-vb) : String(va).localeCompare(String(vb),'ko');
-      return dir===1 ? -c : c;
-    });
-    return arr;
-  }
-  var _evList = STATIONS.slice();
-  function renderEv(){
-    if(!evTbody) return;
-    var list=evSorted(_evList);
-    evTbody.innerHTML=list.map(function(s){
-      var op=TOU_OPERATORS[s.op]; var nm=op?op.name:s.op;
-      function cell(band){ return '<td class="num">'+fmt(evBand(op,band))+'</td>'; }
-      return '<tr>' +
-        '<td style="text-align:center;color:var(--color-gray-500);">'+s.no+'</td>' +
-        '<td><div class="station-name">'+esc(s.name)+'</div><div class="station-addr">'+esc(s.addr)+'</div></td>' +
-        '<td><button type="button" class="ev-cpo-link" data-cpo="'+esc(nm)+'">'+esc(nm)+'</button></td>' +
-        '<td class="ev-out-cfg">'+esc(outText(s.out))+'</td>' +
-        cell('slow')+cell('mid')+cell('fast50')+cell('fast100')+cell('ultra') +
-        '<td style="text-align:center;"><button type="button" class="ev-roam-btn" data-roam="'+s.no+'">로밍요금 보기</button></td>' +
-      '</tr>';
-    }).join('');
-    if(evCount) evCount.textContent=list.length;
-    if(evTime){
-      var WD=['일','월','화','수','목','금','토'][now.getDay()];
-      var _hh=(curHour<10?'0'+curHour:curHour), _mm=now.getMinutes(); _mm=(_mm<10?'0'+_mm:_mm);
-      evTime.textContent=(evState.mem==='member'?'회원가':'비회원가')+' · 오늘('+WD+') '+_hh+':'+_mm+' 기준';
-    }
-    // 정렬 표시
-    $$('.ev-result-table thead th.sortable').forEach(function(th){
-      th.classList.remove('sort-asc','sort-desc');
-      if(evState.sortKey===th.dataset.esk){ th.classList.toggle('sort-desc', evState.sortDir===1); th.classList.toggle('sort-asc', evState.sortDir===2); }
-    });
-  }
-  function applyEvFilter(){
-    var sido=($('#evSido')||{}).value||'', gugun=($('#evGugun')||{}).value||'', kw=(($('#evKeyword')||{}).value||'').trim();
-    return STATIONS.filter(function(s){
-      if(sido && s.sido!==sido) return false;
-      if(gugun && gugunOf(s.addr)!==gugun) return false;
-      if(kw && s.name.indexOf(kw)<0 && s.addr.indexOf(kw)<0) return false;
-      return true;
-    });
-  }
-  (function initEv(){
-    var sidoSel=$('#evSido'), gugunSel=$('#evGugun'), form=$('#evSearchForm'), reset=$('#evResetBtn'), wrap=$('#evResultWrap');
-    function fillGugun(){
-      if(!gugunSel) return;
-      var sido=sidoSel.value, set=[];
-      STATIONS.forEach(function(s){ if(!sido||s.sido===sido){ var g=gugunOf(s.addr); if(g && set.indexOf(g)<0) set.push(g); } });
-      gugunSel.innerHTML='<option value="">전체</option>'+set.map(function(g){return '<option value="'+esc(g)+'">'+esc(g)+'</option>';}).join('');
-    }
-    if(sidoSel) sidoSel.addEventListener('change', fillGugun);
-    if(form) form.addEventListener('submit', function(e){ e.preventDefault(); _evList=applyEvFilter(); renderEv(); if(wrap) wrap.scrollIntoView({behavior:'smooth', block:'start'}); });
-    if(reset) reset.addEventListener('click', function(){ if(sidoSel) sidoSel.value=''; fillGugun(); if(gugunSel) gugunSel.value=''; var kw=$('#evKeyword'); if(kw) kw.value=''; _evList=STATIONS.slice(); renderEv(); });
-    // 회원/비회원 토글
-    $$('#ev-mem-tabs .tab').forEach(function(b){ b.addEventListener('click',function(){ $$('#ev-mem-tabs .tab').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); evState.mem=b.dataset.emem; renderEv(); }); });
-    // 엑셀(.xlsx) 다운로드 — 현재 표시된 결과(필터·정렬·회원기준 반영) · 헬퍼는 하단 공용 downloadXlsx
-    var xls=$('#evExcelBtn');
-    if(xls) xls.addEventListener('click', function(){
-      var list=evSorted(_evList), basis=(evState.mem==='member'?'회원가':'비회원가');
-      var head=['번호','충전소명','주소','사업자(CPO)','충전기 출력구성(kW)','완속','중속','급속(50~100)','급속(100~200)','초급속','요금기준'];
-      var disc=['※ 본 요금은 안내용이며 실제 결제 금액과 다를 수 있습니다'];   // 첫 행(제목 아래) 디스클레이머
-      var aoa=[disc,head].concat(list.map(function(s){
-        var op=TOU_OPERATORS[s.op], nm=op?op.name:s.op;
-        function v(band){ var x=evBand(op,band); return x==null?'—':x; }
-        return [s.no,s.name,s.addr,nm,outText(s.out),v('slow'),v('mid'),v('fast50'),v('fast100'),v('ultra'),basis];
-      }));
-      downloadXlsx('충전소_요금_검색결과.xlsx','충전소 요금', aoa);
-      if(window.__toast) window.__toast(list.length+'건을 엑셀(xlsx)로 내려받았습니다.','success');
-    });
-    // 정렬 헤더 (공지 표준 3단 사이클)
-    $$('.ev-result-table thead th.sortable').forEach(function(th){
-      function cycle(){ var key=th.dataset.esk; if(evState.sortKey!==key){evState.sortKey=key;evState.sortDir=1;} else {evState.sortDir=(evState.sortDir+1)%3; if(evState.sortDir===0) evState.sortKey=null;} renderEv(); }
-      th.addEventListener('click', cycle);
-      th.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); cycle(); } });
-    });
-    // 결과 위임: CPO → 매트릭스 필터 / 로밍 → 팝업
-    if(evTbody) evTbody.addEventListener('click', function(e){
-      var cpo=e.target.closest('.ev-cpo-link');
-      if(cpo){ var nm=cpo.dataset.cpo; var ms=$('#mxSearch'); if(ms){ ms.value=nm; mxState.search=nm; var c=$('#mxSearchClear'); if(c) c.hidden=!nm; renderMatrix(); } var sec=$('#section-matrix'); if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'}); return; }
-      var rb=e.target.closest('.ev-roam-btn');
-      if(rb){ openRoamPopup(parseInt(rb.dataset.roam,10)); return; }
-    });
-    fillGugun();
-    renderEv();
-  })();
-
-  // ════════ 로밍 요금 매트릭스 (발급 카드 × 이용 충전기) ════════
-  // ── 엑셀(.xlsx) 공용 생성 (검색리스트·로밍 매트릭스 공용) — 외부 라이브러리 없이 최소 OOXML ZIP(stored) ──
-  function _xe(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function _col(n){ var s=''; n+=1; while(n>0){ var m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26); } return s; }
-  function _sheetXml(aoa){
-    var rows=aoa.map(function(row,ri){
-      var cells=row.map(function(val,ci){
-        var ref=_col(ci)+(ri+1);
-        if(typeof val==='number' && isFinite(val)) return '<c r="'+ref+'"><v>'+val+'</v></c>';
-        return '<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+_xe(val)+'</t></is></c>';
-      }).join('');
-      return '<row r="'+(ri+1)+'">'+cells+'</row>';
-    }).join('');
-    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+rows+'</sheetData></worksheet>';
-  }
-  function _crc32(b){ var c,crc=0xFFFFFFFF,i,k; for(i=0;i<b.length;i++){ c=(crc^b[i])&0xFF; for(k=0;k<8;k++){ c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); } crc=(crc>>>8)^c; } return (crc^0xFFFFFFFF)>>>0; }
-  function downloadXlsx(fname, sheetName, aoa){
-    var enc=new TextEncoder();
-    var files=[
-      ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'],
-      ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
-      ['xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+_xe(sheetName)+'" sheetId="1" r:id="rId1"/></sheets></workbook>'],
-      ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>'],
-      ['xl/worksheets/sheet1.xml',_sheetXml(aoa)]
+  // ── 충전소 요금 검색 ──────────────────────────────────────────────
+  // 컬럼 폭은 가로 스크롤 없이 한 화면(본문 최대 1440px)에 담기도록 잡고, 남는 폭은 충전소명이 흡수한다
+  function stationColumnDefs() {
+    var cols = [
+      { field: 'RNUM', headerName: '번호', width: 100, minWidth: 100, sortable: true },
+      { field: 'SNM', headerName: '충전소명 / 주소', flex: 1, minWidth: 230, sortable: true, cellClass: 'text-left',
+        cellRenderer: function (p) {
+          var wrap = $('<div>', { 'class': 'ag-cell-multiline' });
+          wrap.append($('<span>', { text: p.data.SNM == null ? '' : String(p.data.SNM) }));
+          wrap.append('<br>');
+          wrap.append($('<span>', { 'class': 'text-size-small', text: p.data.ADDR == null ? '' : String(p.data.ADDR) }));
+          return wrap[0];
+        }
+      },
+      { field: 'BNM', headerName: '사업자 (CPO)', width: 170, minWidth: 170, sortable: true,
+        valueFormatter: function (p) { return p.value || '-'; } },
+      { field: 'OUTPUTS', headerName: '충전기 출력구성', width: 170, minWidth: 170, sortable: false,
+        valueFormatter: function (p) { return p.value || '-'; },
+        headerComponentParams: {
+          innerHeaderComponent: MultilineHeader,
+          innerHeaderComponentParams: { title: '충전기 출력구성', subTitle: '(kW)' }
+        }
+      }
     ];
-    var local=[], cd=[], offset=0, n=files.length;
-    function le(arr,val,bytes){ for(var i=0;i<bytes;i++) arr.push((val>>>(8*i))&0xFF); }
-    files.forEach(function(pair){
-      var nb=enc.encode(pair[0]), data=enc.encode(pair[1]), crc=_crc32(data);
-      var lh=[]; le(lh,0x04034b50,4); le(lh,20,2); le(lh,0,2); le(lh,0,2); le(lh,0,2); le(lh,0,2); le(lh,crc,4); le(lh,data.length,4); le(lh,data.length,4); le(lh,nb.length,2); le(lh,0,2);
-      local.push(new Uint8Array(lh), nb, data);
-      var c=[]; le(c,0x02014b50,4); le(c,20,2); le(c,20,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,crc,4); le(c,data.length,4); le(c,data.length,4); le(c,nb.length,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,2); le(c,0,4); le(c,offset,4);
-      cd.push(new Uint8Array(c), nb);
-      offset += lh.length + nb.length + data.length;
+    STAGES.forEach(function (stage) {
+      cols.push(stageColumn(stage, 112, function () { return stationFeeGb; }, true));
     });
-    var cdSize=0; cd.forEach(function(u){ cdSize+=u.length; });
-    var eocd=[]; le(eocd,0x06054b50,4); le(eocd,0,2); le(eocd,0,2); le(eocd,n,2); le(eocd,n,2); le(eocd,cdSize,4); le(eocd,offset,4); le(eocd,0,2);
-    var parts=local.concat(cd); parts.push(new Uint8Array(eocd));
-    var blob=new Blob(parts,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-    var url=URL.createObjectURL(blob), a=document.createElement('a');
-    a.href=url; a.download=fname; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+    cols.push({
+      colId: 'roaming', headerName: '로밍', width: 150, minWidth: 150, sortable: false,
+      cellRenderer: function (p) {
+        if (!p.data || !hasRoaming(p.data.BID)) return '-';
+        var btn = $('<button>', { type: 'button', 'class': 'button button--tertiary', title: '로밍요금 보기' });
+        btn.append($('<span>', { 'class': 'button__label', text: '로밍요금 보기' }));
+        btn.on('click', function (e) {
+          e.stopPropagation();
+          openRoamModal(p.data, this);
+        });
+        return btn[0];
+      },
+      suppressKeyboardEvent: function (params) {
+        var key = params.event.key;
+        return key === 'Tab' || key === 'Enter' || key === ' ';
+      }
+    });
+    return cols;
   }
 
-  // ════════ 로밍 요금 매트릭스 (TNCC_RMNG_CHRGNG_UNTPC: 발급 BID × 이용 TBID × 밴드 단가) ════════
-  // [DEV] 로밍 매트릭스 데이터(현재 더미) — ROAM_BASE=이용 CPO 자사단가(BUSI_UNTPC), ROAM_AGREE=발급→이용 협약 로밍 할증(TARINSP_UNTPC, R_BUSI_REQ 협약)
-  var ROAM_CPOS = [
-    {bid:'ME',name:'환경부(공공)'}, {bid:'KP',name:'한전 KEPCO'}, {bid:'EV',name:'에버온'},
-    {bid:'HE',name:'한국전기차충전서비스'}, {bid:'CV',name:'채비'}, {bid:'PI',name:'GS차지비'},
-    {bid:'ST',name:'SK일렉링크'}, {bid:'HM',name:'휴맥스이브이'}, {bid:'PL',name:'플러그링크'},
-    {bid:'LU',name:'볼트업(LG U+)'}, {bid:'NT',name:'나이스차저'}, {bid:'EO',name:'E1'}
-  ];
-  // 이용 CPO 자사단가 (밴드별) — 로밍단가 산정 기준
-  var ROAM_BASE = {
-    ME: window.ME_PUBLIC_RATE.legacy,   // [ISS-045] 공표 5밴드 단일 소스(js/me-public-rate.js)
-    KP:{slow:130,mid:160,fast50:324.4,fast100:347.2,ultra:347.2},
-    EV:{slow:295,mid:310,fast50:296,fast100:347.2,ultra:347.2},
-    HE:{slow:null,mid:null,fast50:null,fast100:347.2,ultra:347.2},
-    CV:{slow:300,mid:330,fast50:410,fast100:430,ultra:430},
-    PI:{slow:290,mid:310,fast50:335,fast100:345,ultra:345},
-    ST:{slow:280,mid:300,fast50:410,fast100:320,ultra:340},
-    HM:{slow:270,mid:290,fast50:320,fast100:340,ultra:340},
-    PL:{slow:260,mid:280,fast50:324.4,fast100:324.4,ultra:324.4},
-    LU:{slow:318,mid:330,fast50:350,fast100:350,ultra:350},
-    NT:{slow:324,mid:330,fast50:350,fast100:350,ultra:null},
-    EO:{slow:340,mid:350,fast50:400,fast100:400,ultra:null}
-  };
-  // 발급 BID → 이용 TBID 협약 로밍 할증(원). 미정의=미협약(—). ME(통합카드)=전 CPO 0.
-  var ROAM_AGREE = {
-    ME: {ME:0,KP:0,EV:0,HE:0,CV:0,PI:0,ST:0,HM:0,PL:0,LU:0,NT:0,EO:0},
-    KP: {KP:0,ME:0,EV:20,PI:0,ST:0,PL:0},
-    EV: {EV:0,ME:0,KP:20,PI:40,ST:50,CV:60,HM:55,PL:45,HE:40},
-    HE: {HE:0,ME:0,EV:40,PI:50,ST:55},
-    CV: {CV:0,ME:0,EV:60,PI:80,ST:70,HM:65},
-    PI: {PI:0,ME:0,KP:0,EV:40,ST:60,CV:80,HM:70,PL:55,LU:45,NT:50},
-    ST: {ST:0,ME:0,KP:0,EV:50,PI:60,CV:70,HM:70,HE:55,PL:60,LU:50},
-    HM: {HM:0,ME:0,EV:55,PI:70,ST:70,CV:65,PL:60},
-    PL: {PL:0,ME:0,KP:0,PI:55,ST:60,HM:60,LU:40,NT:45},
-    LU: {LU:0,ME:0,PI:45,ST:50,PL:40,NT:40},
-    NT: {NT:0,ME:0,PI:50,PL:45,LU:40},
-    EO: {EO:0,ME:0,PI:60,ST:65}
-  };
-  var ROAM_BAND_LABELS = { slow:['완속','&lt;30kW'], mid:['중속','30~50'], fast50:['급속','50~100'], fast100:['급속','100~200'], ultra:['초급속','≥200'] };
-  var roamBand='fast50';
-  function roamName(bid){ for(var i=0;i<ROAM_CPOS.length;i++){ if(ROAM_CPOS[i].bid===bid) return ROAM_CPOS[i].name; } return bid; }
-  // 로밍단가(단일값): 협약 없으면 null(—), 자사단가 미공시면 {v:null}
-  function roamPrice(iss, used, band){
-    var sur=(ROAM_AGREE[iss]||{})[used];
-    if(sur===undefined) return null;
-    var base=(ROAM_BASE[used]||{})[band];
-    if(base==null) return {v:null};
-    return { v: Math.round((base+sur)*10)/10 };
+  function renderStationPaging() {
+    var $list = $('#stationPageList').empty();
+    var start = Math.max(1, Math.min(stationPage - 2, stationPageCount - 4));
+    var end = Math.min(stationPageCount, start + 4);
+    for (var n = start; n <= end; n++) {
+      $list.append($('<a>', {
+        href: '#none',
+        'class': 'pagination__link' + (n === stationPage ? ' pagination__link--selected' : ''),
+        text: n,
+        'data-num': n
+      }));
+    }
+    $('#stationPageCur').text(stationPage);
+    $('#stationPageTot').text(stationPageCount);
   }
-  function pickListHtml(defaults){
-    return ROAM_CPOS.map(function(c){ var ck=defaults.indexOf(c.bid)>=0?' checked':''; return '<label class="roam-pick-item" data-name="'+esc(c.name)+'"><input type="checkbox" value="'+c.bid+'"'+ck+'> '+esc(c.name)+'</label>'; }).join('');
+
+  function fnStationSearch(page) {
+    stationPage = page || 1;
+    $('#spageNo').val(stationPage);
+    stationApplied = {
+      zcode: $('#zcode').val() || '',
+      zscode: $('#zscode').val() || '',
+      snm: $.trim($('#snm').val() || '')
+    };
+    $.ajax({
+      type: 'post',
+      url: STATION_URL,
+      dataType: 'json',
+      data: $('#frmStation').serialize(),
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var listCount = (obj && obj.page) ? Number(obj.page._listCount || 0) : 0;
+        stationPageCount = Math.max(1, Math.ceil(listCount / PAGE_SIZE));
+        if (stationApi) stationApi.setGridOption('rowData', list);
+        $('#stationTotal').text(fmtCount(listCount));
+        renderStationPaging();
+      },
+      error: function () {
+        alert('조회 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+        if (stationApi) stationApi.setGridOption('rowData', []);
+        $('#stationTotal').text('0');
+        stationPageCount = 1;
+        renderStationPaging();
+      }
+    });
   }
-  function checkedBids(id){ return $$('#'+id+' input[type=checkbox]:checked').map(function(cb){ return cb.value; }); }
-  function renderRoamTabs(){
-    var box=$('#roam-band-tabs'); if(!box) return;
-    box.innerHTML=BANDS.map(function(b){ var L=ROAM_BAND_LABELS[b.k]; return '<button class="tab'+(b.k===roamBand?' active':'')+'" data-rb="'+b.k+'" type="button">'+L[0]+'<span class="rng">'+L[1]+'</span></button>'; }).join('');
+
+  function goStationPage(next) {
+    var n = next;
+    if (next === 'first') n = 1;
+    else if (next === 'prev') n = stationPage - 1;
+    else if (next === 'next') n = stationPage + 1;
+    else if (next === 'last') n = stationPageCount;
+    n = Math.min(Math.max(1, n), stationPageCount);
+    if (n === stationPage) return;
+    fnStationSearch(n);
   }
-  function renderRoamMatrix(){
-    var wrap=$('#roaming-wrap'); if(!wrap) return;
-    var iss=checkedBids('roamIssList'), used=checkedBids('roamUsedList');
-    if(!iss.length || !used.length){
-      wrap.innerHTML='<div style="padding:28px 16px;text-align:center;color:var(--color-gray-500);font-size:14px;border:1px solid var(--border-light);border-radius:14px;background:#fff;">발급·이용 사업자를 선택해 주세요.</div>';
+
+  // 구/군 옵션: 전체 목록을 분리 보관하고 선택한 시/도 코드(앞 2자리)로 필터
+  var $sggPool = null;
+
+  // 엑셀은 입력 중인 값이 아니라 그리드에 적용된 조건을 따른다
+  var stationApplied = { zcode: '', zscode: '', snm: '' };
+  var busiApplied = { keyword: '', speeds: [] };
+
+  function initSggOptions() {
+    var $sel = $('#zscode');
+    $sel.find('option').not('[value=""]').each(function () {
+      var txt = $(this).text();
+      var idx = txt.indexOf(' ');
+      if (idx > -1) $(this).text(txt.substring(idx + 1));
+    });
+    $sggPool = $sel.find('option').not('[value=""]').detach();
+  }
+
+  function fnFilterSgg() {
+    var zcode = $('#zcode').val();
+    var $sel = $('#zscode');
+    $sel.find('option').not('[value=""]').detach();
+    var $opts = zcode
+      ? $sggPool.filter(function () { return $(this).attr('data-up') === zcode; })
+      : $sggPool;
+    $sel.append($opts).val('');
+  }
+
+  // ── 사업자별 요금 매트릭스 ────────────────────────────────────────
+  function busiColumnDefs() {
+    var cols = [
+      { field: 'BNM', headerName: '사업자', flex: 1, minWidth: 240, sortable: true, cellClass: 'text-left',
+        valueFormatter: function (p) { return p.value || '-'; } }
+    ];
+    STAGES.forEach(function (stage) {
+      cols.push(stageColumn(stage, 170, function () { return busiFeeGb; }, false));
+    });
+    cols.push({ field: 'UPD_DT', headerName: '갱신일', width: 130, minWidth: 130, sortable: true,
+      valueFormatter: function (p) { return p.value || '-'; } });
+    return cols;
+  }
+
+  // 선택한 충전속도 컬럼만 노출 (선택이 없으면 전체 노출)
+  function applyBusiSpeedColumns() {
+    if (!busiApi) return;
+    var checked = $('input[name="matrixSpeed"]:checked').map(function () { return this.value; }).get();
+    var visible = checked.length ? checked : STAGES.map(function (s) { return s.key; });
+    busiApplied.speeds = visible;
+    STAGES.forEach(function (stage) {
+      busiApi.setColumnsVisible([stage.key], visible.indexOf(stage.key) > -1);
+    });
+  }
+
+  function applyBusiRowData() {
+    if (!busiApi) return;
+    var keyword = $.trim($('#busiKeyword').val() || '');
+    busiApplied.keyword = keyword;
+    var rows = keyword
+      ? MATRIX.filter(function (r) { return String(r.BNM || '').indexOf(keyword) > -1; })
+      : MATRIX;
+    busiApi.setGridOption('rowData', rows);
+  }
+
+  // ── 로밍 요금 매트릭스 ────────────────────────────────────────────
+  function roamCell(bid, tbid, stage) {
+    var v = ROAM_CELLS[bid + '|' + tbid + '|' + stage];
+    return (v === null || v === undefined) ? null : Number(v);
+  }
+
+  function hasRoaming(tbid) {
+    if (!tbid) return false;
+    for (var i = 0; i < ROAM_BIDS.length; i++) {
+      var bid = ROAM_BIDS[i].BID;
+      if (bid === tbid) continue;
+      for (var s = 0; s < STAGES.length; s++) {
+        if (roamCell(bid, tbid, STAGES[s].key) > 0) return true;
+      }
+    }
+    return false;
+  }
+
+  function currentRoamStage() {
+    return $('input[name="roamStage"]:checked').val() || 's3';
+  }
+
+  function buildCheckbox(id, name, value, label) {
+    var wrap = $('<div>', { 'class': 'checkbox' });
+    wrap.append($('<input>', { type: 'checkbox', id: id, name: name, value: value, 'class': 'checkbox__input' }));
+    wrap.append($('<label>', { 'for': id, 'class': 'checkbox__label', text: label == null ? '' : String(label) }));
+    return wrap;
+  }
+
+  function renderRoamCheckboxes() {
+    var $issue = $('#roamIssueList').empty();
+    var $oper = $('#roamOperList').empty();
+    ROAM_BIDS.forEach(function (b, i) {
+      $issue.append(buildCheckbox('roamIssue' + i, 'roamIssue', b.BID, b.BNM));
+      $oper.append(buildCheckbox('roamOper' + i, 'roamOper', b.BID, b.BNM));
+    });
+  }
+
+  // 체크된 사업자만 (선택이 없으면 전체)
+  function pickedBids(name) {
+    var checked = $('input[name="' + name + '"]:checked').map(function () { return this.value; }).get();
+    if (!checked.length) return ROAM_BIDS;
+    return ROAM_BIDS.filter(function (b) { return checked.indexOf(b.BID) > -1; });
+  }
+
+  function renderRoamTable() {
+    var stage = currentRoamStage();
+    var rows = pickedBids('roamIssue');
+    var cols = pickedBids('roamOper');
+    var $area = $('#roamTableArea').empty();
+
+    if (!rows.length || !cols.length) {
+      $area.append($('<p>', { 'class': 'data-none', text: '조회된 내용이 없습니다.' }));
       return;
     }
-    var head='<thead><tr><th>발급 \\ 이용</th>'+used.map(function(u){ return '<th>'+esc(roamName(u))+'</th>'; }).join('')+'</tr></thead>';
-    var body=iss.map(function(i){
-      var tds=used.map(function(u){
-        if(i===u){ var ob=(ROAM_BASE[i]||{})[roamBand]; return ob==null?'<td class="na">—</td>':'<td class="self">'+fmt(ob)+'</td>'; }
-        var p=roamPrice(i,u,roamBand);
-        if(p==null || p.v==null) return '<td class="na">—</td>';
-        return '<td>'+fmt(p.v)+'</td>';
-      }).join('');
-      return '<tr><th>'+esc(roamName(i))+'</th>'+tds+'</tr>';
-    }).join('');
-    wrap.innerHTML='<div style="overflow:auto;max-height:460px;border:1px solid var(--border-light);border-radius:14px;background:#fff;"><table class="roam-mx">'+head+'<tbody>'+body+'</tbody></table></div>';
-  }
-  (function initRoam(){
-    var il=$('#roamIssList'), ul=$('#roamUsedList'); if(!il||!ul) return;
-    il.innerHTML=pickListHtml(['ME','KP','EV','PI']);
-    ul.innerHTML=pickListHtml(['ME','KP','EV','CV','PI','ST']);
-    renderRoamTabs(); renderRoamMatrix();
-    il.addEventListener('change', renderRoamMatrix);   // 발급 체크 → 즉시 반영
-    ul.addEventListener('change', renderRoamMatrix);   // 이용 체크 → 즉시 반영
-    var tabs=$('#roam-band-tabs'); if(tabs) tabs.addEventListener('click',function(e){ var b=e.target.closest('button[data-rb]'); if(!b) return; roamBand=b.dataset.rb; renderRoamTabs(); renderRoamMatrix(); });
-    function filterPick(inpId,listId){ var el=$('#'+inpId); if(!el) return; var q=(el.value||'').toLowerCase().trim(); $$('#'+listId+' .roam-pick-item').forEach(function(it){ it.style.display=(!q||(it.dataset.name||'').toLowerCase().indexOf(q)>=0)?'':'none'; }); var clr=document.querySelector('.roam-search-clear[data-clear="'+inpId+'"]'); if(clr) clr.hidden=!el.value; }
-    function bindSearch(inpId,listId){ var el=$('#'+inpId); if(!el) return; el.addEventListener('input',function(){ filterPick(inpId,listId); }); }
-    bindSearch('roamIssSearch','roamIssList'); bindSearch('roamUsedSearch','roamUsedList');
-    $$('.roam-search-clear').forEach(function(btn){ btn.addEventListener('click',function(){ var id=btn.dataset.clear, el=$('#'+id); if(el){ el.value=''; el.focus(); } filterPick(id, btn.dataset.list); }); });
-    var xb=$('#roamExcelBtn');
-    if(xb) xb.addEventListener('click',function(){
-      var iss=checkedBids('roamIssList'), used=checkedBids('roamUsedList');
-      if(!iss.length||!used.length){ if(window.__toast) window.__toast('발급·이용 사업자를 선택해 주세요.','info'); return; }
-      var L=ROAM_BAND_LABELS[roamBand];
-      var head=['발급 \\ 이용'].concat(used.map(function(u){ return roamName(u); }));
-      var aoa=[head].concat(iss.map(function(i){
-        return [roamName(i)].concat(used.map(function(u){
-          if(i===u){ var ob=(ROAM_BASE[i]||{})[roamBand]; return ob==null?'—':ob; }
-          var p=roamPrice(i,u,roamBand); return (p==null||p.v==null)?'—':p.v;
-        }));
-      }));
-      downloadXlsx('로밍요금_매트릭스_'+L[0]+'.xlsx','로밍요금('+L[0]+')', aoa);
-      if(window.__toast) window.__toast('로밍 매트릭스를 엑셀(xlsx)로 내려받았습니다.','success');
-    });
-  })();
 
-  // ════════ 로밍 요금 팝업 (검색 결과 · 이용 CPO 기준 발급카드별) ════════
-  var rpOverlay=$('#rp-overlay'), rpBody=$('#rpBody'), rpSub=$('#rpSub');
-  function openRoamPopup(no){
-    var s=STATIONS.filter(function(x){return x.no===no;})[0]; if(!s||!rpOverlay) return;
-    var tbid=s.op, destName=roamName(tbid);
-    if(rpSub) rpSub.textContent=s.name+' · 이용 충전기 '+destName;
-    // 이 이용 CPO와 협약된 발급 카드만
-    var issuers=ROAM_CPOS.filter(function(c){ return (ROAM_AGREE[c.bid]||{})[tbid]!==undefined; });
-    var html;
-    if(!issuers.length){
-      html='<div style="padding:20px;text-align:center;color:var(--color-gray-500);font-size:14px;">이 충전기와 협약된 발급 카드가 없습니다. (예시 더미)</div>';
+    var $table = $('<table>', { 'class': 'table' });
+    $table.append($('<caption>', { text: '로밍 요금 매트릭스 발급/이용 목록 테이블' }));
+
+    var $colgroup = $('<colgroup>').append($('<col>'));
+    cols.forEach(function () { $colgroup.append($('<col>', { css: { width: '186px' } })); });
+    $table.append($colgroup);
+
+    var $headRow = $('<tr>').append($('<th>', { scope: 'col', text: '발급/이용' }));
+    cols.forEach(function (c) { $headRow.append($('<th>', { scope: 'col', text: c.BNM })); });
+    $table.append($('<thead>').append($headRow));
+
+    var $tbody = $('<tbody>');
+    rows.forEach(function (r) {
+      var $tr = $('<tr>').append($('<th>', { scope: 'row', text: r.BNM }));
+      cols.forEach(function (c) {
+        $tr.append($('<td>', { text: fmtFee(roamCell(r.BID, c.BID, stage)) }));
+      });
+      $tbody.append($tr);
+    });
+    $table.append($tbody);
+    $area.append($table);
+  }
+
+  // 사업자명 검색: 체크박스 목록에서 일치하지 않는 항목 숨김
+  function filterRoamList(listSel, keyword) {
+    var kw = $.trim(keyword || '');
+    $(listSel).find('.checkbox').each(function () {
+      var txt = $(this).find('.checkbox__label').text();
+      $(this).toggle(!kw || txt.indexOf(kw) > -1);
+    });
+  }
+
+  // ── 로밍요금 모달 (충전소 목록 → 로밍요금 보기) ───────────────────
+  function openRoamModal(row, opener) {
+    var tbid = row.BID;
+    var $area = $('#roamModalTableArea').empty();
+
+    $('#roamModalDesc').text((row.SNM || '') + ' · 이용 충전기 ' + (row.BNM || ''));
+    $('#roamModalNote').text('협약된 발급 카드만 표시 · 로밍요금 = 이용 충전기(' + (row.BNM || '') + ') 요금 체계 기준 · 회원 기준');
+
+    var issuers = ROAM_BIDS.filter(function (b) {
+      if (b.BID === tbid) return false;
+      for (var s = 0; s < STAGES.length; s++) {
+        if (roamCell(b.BID, tbid, STAGES[s].key) > 0) return true;
+      }
+      return false;
+    });
+
+    if (!issuers.length) {
+      $area.append($('<p>', { 'class': 'data-none', text: '조회된 내용이 없습니다.' }));
     } else {
-      var thead='<thead><tr><th style="text-align:left;">발급 카드</th>'+BANDS.map(function(b){ var L=ROAM_BAND_LABELS[b.k]; return '<th>'+L[0]+'<br><span style="font-weight:400;color:var(--color-gray-400);font-size:10.5px;">'+L[1]+'</span></th>'; }).join('')+'</tr></thead>';
-      var rows=issuers.map(function(c){
-        var tds=BANDS.map(function(b){
-          if(c.bid===tbid){ var ob=(ROAM_BASE[tbid]||{})[b.k]; return ob==null?'<td class="na">—</td>':'<td class="self">'+fmt(ob)+'</td>'; }
-          var p=roamPrice(c.bid,tbid,b.k);
-          if(p==null||p.v==null) return '<td class="na" style="color:var(--color-gray-300);">—</td>';
-          return '<td>'+fmt(p.v)+'</td>';
-        }).join('');
-        return '<tr><th>'+esc(c.name)+'</th>'+tds+'</tr>';
-      }).join('');
-      html='<table class="rp-tbl">'+thead+'<tbody>'+rows+'</tbody></table>'
-        +'<div style="margin-top:12px;font-size:12.5px;color:var(--color-gray-600);line-height:1.7;">※ 협약된 발급 카드만 표시 · 로밍요금 = 이용 충전기('+esc(destName)+') 자사요금 + 협약 할증 · 회원 기준. (예시 더미)</div>';
+      var $table = $('<table>', { 'class': 'table' });
+      $table.append($('<caption>', { text: '로밍 요금 매트릭스 발급카드별 속도 목록 테이블' }));
+
+      var $colgroup = $('<colgroup>').append($('<col>'));
+      STAGES.forEach(function () { $colgroup.append($('<col>', { css: { width: '80px' } })); });
+      $table.append($colgroup);
+
+      var $headRow = $('<tr>').append($('<th>', { scope: 'col', text: '발급 카드' }));
+      STAGES.forEach(function (s) {
+        var $th = $('<th>', { scope: 'col' });
+        $th.append(document.createTextNode(s.title));
+        $th.append('<br>');
+        $th.append($('<span>', { 'class': 'text-size-small', text: s.sub.replace(/[()]/g, '') }));
+        $headRow.append($th);
+      });
+      $table.append($('<thead>').append($headRow));
+
+      var $tbody = $('<tbody>');
+      issuers.forEach(function (b) {
+        var $tr = $('<tr>').append($('<th>', { scope: 'row', text: b.BNM }));
+        STAGES.forEach(function (s) {
+          $tr.append($('<td>', { text: fmtFee(roamCell(b.BID, tbid, s.key)) }));
+        });
+        $tbody.append($tr);
+      });
+      $table.append($tbody);
+      $area.append($table);
     }
-    rpBody.innerHTML=html;
-    rpOverlay.classList.add('open'); document.body.style.overflow='hidden';
-  }
-  function closeRp(){ if(rpOverlay){ rpOverlay.classList.remove('open'); document.body.style.overflow=''; } }
-  var rpC=$('#rpClose'); if(rpC) rpC.addEventListener('click', closeRp);
-  if(rpOverlay) rpOverlay.addEventListener('click', function(e){ if(e.target===rpOverlay) closeRp(); });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && rpOverlay && rpOverlay.classList.contains('open')) closeRp(); });
 
-})();
-</script>
-
-<!-- [ISS-028] 안내요금 고지 UX 4버전 데모 컨트롤러 -->
-<script>
-(function feeDemo(){
-  'use strict';
-  var zone=document.getElementById('feeAmountZone');
-  var disc=document.getElementById('fdDisc'), badge=document.getElementById('fdBadge');
-  var actions=document.getElementById('fdDiscActions');
-  var seg=document.getElementById('fdSeg'), desc=document.getElementById('fdDesc');
-  var mV2=document.getElementById('fdModalV2'), mV4=document.getElementById('fdModalV4');
-  if(!seg||!zone) return;
-  var V3KEY='evax.feeV3Confirmed';   // V3 블러 '방문 1회' 세션 기억
-  var reduce=function(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
-  var DESC={
-    '1':'가격 리스트의 노랑 ‘안내가’ 배지가 기본 펼쳐진 상태(고지 노출) · 배지의 펼침/접힘 아이콘(⌄) 클릭으로 토글',
-    '2':'페이지(버전) 진입 시 안내 팝업(모달)',
-    '3':'요금 금액 블러 · 확인 1회로 이 방문(세션) 동안 해제 유지 · 데모에선 V3 재선택 시 다시 보기(리셋)',
-    '4':'진입 시 확인(체크+성명) 취득 후 진행 · 확인 전 금액 차단'
-  };
-  var INERT=['header-slot','footer-slot','main'];
-  function bgInert(on){ INERT.forEach(function(id){ var e=document.getElementById(id); if(e){ if(on) e.setAttribute('inert',''); else e.removeAttribute('inert'); } }); }
-
-  function setBlur(on){
-    zone.classList.toggle('fd-blur', on);
-    zone.setAttribute('aria-hidden', on?'true':'false');   // 확인 전 스크린리더에도 동일하게 가림(시각·SR 정합)
-    if(on) zone.setAttribute('inert',''); else zone.removeAttribute('inert');
+    openModal('#modalRoamingRateDetail', { width: 800, opener: opener });
   }
-  function showDisc(open){ disc.hidden=!open; badge.hidden=open; badge.setAttribute('aria-expanded', open?'true':'false'); }
-  function setDiscMode(mode){
-    actions.innerHTML='';
-    var b=document.createElement('button'); b.type='button'; b.className='fd-disc-btn';
-    if(mode==='collapse'){
-      b.textContent='배지로 접기';
-      b.addEventListener('click', function(){ showDisc(false); badge.focus(); });
-    } else {   // confirm(V3) — 확인 1회로 이 방문(세션) 동안 블러 해제 유지(sessionStorage 기억)
-      b.className+=' primary'; b.textContent='확인하고 금액 보기';
-      b.addEventListener('click', function(){ setBlur(false); b.disabled=true; b.textContent='확인됨 — 이 방문 동안 유지'; try{ sessionStorage.setItem(V3KEY,'1'); }catch(e){} });
-    }
-    actions.appendChild(b);
-  }
-  badge.addEventListener('click', function(){ showDisc(true); var f=actions.querySelector('button'); if(f) f.focus(); });
 
-  // ── 접근성 모달(포커스 트랩·ESC·포커스 복귀) ──
-  var lastFocus=null;
-  function focusables(m){ return [].slice.call(m.querySelectorAll('button:not([disabled]),input,a[href],[tabindex]:not([tabindex="-1"])')).filter(function(el){ return el.offsetParent!==null; }); }
-  function onKey(m){ return function(e){
-    if(e.key==='Escape'){ closeModal(m); return; }
-    if(e.key==='Tab'){ var f=focusables(m); if(!f.length) return; var first=f[0], last=f[f.length-1];
-      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); } }
-  }; }
-  function openModal(m){
-    lastFocus=document.activeElement; m.hidden=false; bgInert(true);
-    var f=focusables(m); if(f.length) f[0].focus();
-    m._key=onKey(m); document.addEventListener('keydown', m._key);
+  // ── 엑셀 다운로드 ─────────────────────────────────────────────────
+  function bidCsv(list) {
+    return list.map(function (b) { return b.BID; }).join(',');
   }
-  function closeModal(m){
-    m.hidden=true; bgInert(false);
-    if(m._key){ document.removeEventListener('keydown', m._key); m._key=null; }
-    if(lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  document.getElementById('fdV2Ok').addEventListener('click', function(){ closeModal(mV2); });
-  var chk=document.getElementById('fdV4Chk'), nm=document.getElementById('fdV4Name'), ok4=document.getElementById('fdV4Ok');
-  function v4valid(){ ok4.disabled=!(chk.checked && nm.value.trim().length>0); }
-  chk.addEventListener('change', v4valid); nm.addEventListener('input', v4valid);
-  ok4.addEventListener('click', function(){ setBlur(false); closeModal(mV4); });
 
-  // V1 = 가격 리스트의 '안내가' 배지(fee-disclaimer.js Disclosure)를 곧 고지로 사용 — 기본 펼침/접힘 토글
-  function setFeeBadges(open){
-    [].slice.call(document.querySelectorAll('[data-fee-badge]')).forEach(function(b){
-      var isOpen = b.getAttribute('aria-expanded')==='true';
-      if(open && !isOpen) b.click();          // 닫힘 → 펼침
-      else if(!open && isOpen) b.click();      // 펼침 → 접힘(배지로)
+  function submitExcel(url, feeGb, stage) {
+    $('#exZcode').val(stationApplied.zcode);
+    $('#exZscode').val(stationApplied.zscode);
+    $('#exSnm').val(stationApplied.snm);
+    $('#exFeeGb').val(feeGb || '');
+    $('#exStage').val(stage || '');
+    $('#exBusiKeyword').val(busiApplied.keyword);
+    $('#exSpeeds').val(busiApplied.speeds.join(','));
+    $('#exRoamIssue').val(bidCsv(pickedBids('roamIssue')));
+    $('#exRoamOper').val(bidCsv(pickedBids('roamOper')));
+    var frm = document.frmExcel;
+    frm.action = url;
+    frm.submit();
+  }
+
+  $(function () {
+    initSggOptions();
+    fnFilterSgg();
+    renderRoamCheckboxes();
+    renderRoamTable();
+
+    stationApi = agGrid.createGrid(document.querySelector('#gridStation'), boardGridOptions({
+      columnDefs: stationColumnDefs(),
+      defaultColDef: { resizable: false, sortable: false, unSortIcon: true, sortingOrder: ['asc', 'desc'] }
+    }));
+
+    busiApi = agGrid.createGrid(document.querySelector('#gridBusi'), boardGridOptions({
+      columnDefs: busiColumnDefs(),
+      defaultColDef: { resizable: false, sortable: false, unSortIcon: true, sortingOrder: ['asc', 'desc'] }
+    }));
+
+    // 충전소 요금 검색
+    $('#zcode').on('change', fnFilterSgg);
+    $('#btnStationSearch').on('click', function () { fnStationSearch(1); });
+    $('#snm').on('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); fnStationSearch(1); }
     });
-  }
-  function reset(){
-    setBlur(false); showDisc(false); disc.hidden=true; badge.hidden=true; setFeeBadges(false);
-    if(mV2._key){ document.removeEventListener('keydown', mV2._key); mV2._key=null; }
-    if(mV4._key){ document.removeEventListener('keydown', mV4._key); mV4._key=null; }
-    mV2.hidden=true; mV4.hidden=true; bgInert(false);
-  }
-  function applyVer(n){
-    n=String(n); reset();
-    [].slice.call(seg.querySelectorAll('button')).forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.ver===n?'true':'false'); });
-    desc.textContent=DESC[n]||'';
-    if(n==='1'){ setFeeBadges(true); }                          // 리스트 '안내가' 디스클로저 기본 펼침(상단 대표 배너 없음)
-    else if(n==='2'){ openModal(mV2); }
-    else if(n==='3'){ try{ sessionStorage.removeItem(V3KEY); }catch(e){}  // 데모: V3 재선택 = 리셋(다시 보기)
-                      setDiscMode('confirm'); showDisc(true); setBlur(true); }
-    else if(n==='4'){ chk.checked=false; nm.value=''; v4valid(); setBlur(true); openModal(mV4); }
-  }
-  seg.addEventListener('click', function(e){ var b=e.target.closest && e.target.closest('button[data-ver]'); if(b) applyVer(b.dataset.ver); });
-  applyVer('1');   // 기본 V1
-})();
+    $('#btnStationReset').on('click', function () {
+      $('#zcode').val('');
+      $('#snm').val('');
+      fnFilterSgg();
+      fnStationSearch(1);
+    });
+    $('input[name="stationFeeGb"]').on('change', function () {
+      stationFeeGb = this.value;
+      if (stationApi) stationApi.refreshCells({ force: true });
+    });
+    $('#stationPaging, #stationPagingM').on('click', '.pagination__button', function () {
+      goStationPage($(this).data('page'));
+    });
+    $('#stationPageList').on('click', '.pagination__link', function (e) {
+      e.preventDefault();
+      goStationPage(Number($(this).data('num')));
+    });
+    $('.js-station-excel').on('click', function () { submitExcel(STATION_EXCEL_URL, stationFeeGb, ''); });
+
+    // 사업자별 요금 매트릭스
+    $('input[name="busiFeeGb"]').on('change', function () {
+      busiFeeGb = this.value;
+      if (busiApi) busiApi.refreshCells({ force: true });
+    });
+    $('#btnBusiSearch').on('click', function () {
+      applyBusiSpeedColumns();
+      applyBusiRowData();
+    });
+    $('#btnBusiReset').on('click', function () {
+      $('#busiFeeM').prop('checked', true);
+      $('input[name="matrixSpeed"]').prop('checked', true);
+      $('#busiKeyword').val('');
+      busiFeeGb = 'M';
+      applyBusiSpeedColumns();
+      applyBusiRowData();
+      if (busiApi) busiApi.refreshCells({ force: true });
+    });
+    $('#busiKeyword').on('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); applyBusiRowData(); }
+    });
+    $('#btnBusiKeywordClear').on('click', function () {
+      $('#busiKeyword').val('');
+      applyBusiRowData();
+    });
+    $('.js-busi-excel').on('click', function () { submitExcel(BUSI_EXCEL_URL, busiFeeGb, ''); });
+
+    // 로밍 요금 매트릭스
+    $('#roamIssueList, #roamOperList').on('change', 'input[type="checkbox"]', renderRoamTable);
+    $('input[name="roamStage"]').on('change', function () {
+      $('#roamStageSelect').val(this.value);
+      renderRoamTable();
+    });
+    $('#roamStageSelect').on('change', function () {
+      $('input[name="roamStage"][value="' + this.value + '"]').prop('checked', true);
+      renderRoamTable();
+    });
+    $('#roamIssueKeyword').on('input', function () { filterRoamList('#roamIssueList', this.value); });
+    $('#roamOperKeyword').on('input', function () { filterRoamList('#roamOperList', this.value); });
+    $('#btnRoamIssueClear').on('click', function () {
+      $('#roamIssueKeyword').val('');
+      filterRoamList('#roamIssueList', '');
+    });
+    $('#btnRoamOperClear').on('click', function () {
+      $('#roamOperKeyword').val('');
+      filterRoamList('#roamOperList', '');
+    });
+    $('.js-roam-excel').on('click', function () { submitExcel(ROAM_EXCEL_URL, '', currentRoamStage()); });
+
+    applyBusiSpeedColumns();
+    applyBusiRowData();
+    fnStationSearch(1);
+  });
+})(jQuery);
 </script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
 </body>
 </html>

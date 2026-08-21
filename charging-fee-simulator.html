@@ -1,423 +1,419 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>내 충전요금 시뮬레이터 | 충전소·요금 정보 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
-<link rel="stylesheet" href="css/charging.css">
-<link rel="stylesheet" href="css/fee-disclaimer.css?v=20260721a">
-<link rel="stylesheet" href="css/amount-guard.css?v=20260802a"><!-- [ISS-092] 블러 확인 -->
-<style>
-  /* ════════════════════════════════════════════════════════════════
-     충전요금 시뮬레이터 전용 페이지 — 와이드 + 큰 타이포
-     ════════════════════════════════════════════════════════════════ */
-
-  .sim-page-hero {
-    background: linear-gradient(135deg, #F0FDF4 0%, #EFF6FF 100%);
-    border-bottom: 1px solid var(--border-light);
-  }
-  .sim-page-hero .container { padding-top: 32px; padding-bottom: 32px; }
-  .sim-page-hero h1 { font-size: 32px; font-weight: var(--fw-bold); letter-spacing: -0.03em; margin: 0 0 8px; color: var(--text-primary); }
-  .sim-page-hero .hero-lead { font-size: 16px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
-
-  /* 메인 시뮬레이터 카드 */
-  .sim-card {
-    background: #fff;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-2xl);
-    padding: var(--space-10);
-    margin-top: var(--space-8);
-    box-shadow: var(--shadow-sm);
-  }
-  .sim-card h2 {
-    font-size: 22px; font-weight: var(--fw-bold); letter-spacing: -0.025em;
-    margin: 0 0 8px; color: var(--text-primary);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .sim-card h2::before {
-    content: ''; width: 6px; height: 22px;
-    background: var(--gradient-primary); border-radius: var(--radius-xs);
-  }
-  .sim-card-desc { font-size: 14.5px; color: var(--text-secondary); margin: 0 0 28px; line-height: 1.65; }
-
-  /* 그리드 레이아웃 — 와이드 */
-  .sim-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-  @media (max-width: 1080px) { .sim-grid { grid-template-columns: 1fr; gap: 24px; } }
-
-  /* 입력 영역 */
-  .sim-inputs { display: flex; flex-direction: column; gap: 18px; }
-  .sim-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 640px) { .sim-row2 { grid-template-columns: 1fr; } }
-
-  .sim-field { display: flex; flex-direction: column; gap: 8px; }
-  .sim-field label {
-    font-size: 14px;
-    font-weight: var(--fw-semibold);
-    color: var(--color-gray-700);
-    letter-spacing: -0.01em;
-    margin: 0;
-  }
-  .sim-field select,
-  .sim-field input[type=range] {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
-    font-size: 15px;
-    font-family: inherit;
-    background: #fff;
-    color: var(--text-primary);
-    transition: border-color var(--t-fast);
-  }
-  .sim-field select { -webkit-appearance: none; appearance: none; cursor: pointer; padding-right: 38px;
-    background: #fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Cpath d=%22M2 5l5 5 5-5%22 stroke=%22%2364748B%22 stroke-width=%221.8%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E') no-repeat right 14px center;
-  }
-  .sim-field select:focus,
-  .sim-field input:focus {
-    outline: 2px solid var(--color-primary-500); outline-offset: 2px;
-    border-color: var(--color-primary-500);
-  }
-  .sim-field input[type=range] { padding: 0; height: 36px; cursor: pointer; }
-
-  /* 모델 정보 배너 */
-  #simModelInfo {
-    display: none;
-    background: var(--color-secondary-50);
-    border: 1px solid #BAE6FD;
-    border-radius: var(--radius-md);
-    padding: 14px 18px;
-    font-size: 14px;
-    color: var(--color-secondary-700);
-    gap: 18px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  #simModelInfo span { display: inline-flex; align-items: center; gap: 6px; }
-  #simModelInfo strong { color: var(--color-secondary-700); font-weight: var(--fw-bold); font-size: 15px; }
-
-  /* 충전량 슬라이더 */
-  .sim-kwh-row { display: flex; flex-direction: column; gap: 8px; }
-  .sim-kwh-row label { font-size: 14px; font-weight: var(--fw-semibold); color: var(--color-gray-700); display: flex; justify-content: space-between; align-items: baseline; }
-  .sim-kwh-row label .val { font-size: 17px; font-weight: var(--fw-bold); color: var(--color-primary-700); letter-spacing: -0.02em; }
-
-  /* 결과 영역 — 와이드, 큰 강조 */
-  .sim-result-wrap {
-    position: sticky; top: calc(var(--header-height) + 24px);
-    display: flex; flex-direction: column; gap: 16px;
-  }
-  .sim-result-lbl {
-    font-size: 13px;
-    color: var(--color-gray-600);
-    font-weight: var(--fw-bold);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin: 0;
-  }
-  .sim-result-mini {
-    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
-    border-radius: var(--radius-xl);
-    padding: 36px 32px;
-    border: 1px solid #BAE6FD;
-  }
-  .sim-result-mini .big {
-    font-size: 48px;
-    font-weight: var(--fw-bold);
-    color: #0D57B0;
-    margin: 0 0 14px;
-    font-feature-settings: "tnum";
-    line-height: 1.1;
-    letter-spacing: -0.04em;
-  }
-  .sim-result-mini .name {
-    font-size: 16px;
-    color: var(--color-gray-800);
-    font-weight: var(--fw-semibold);
-    margin-bottom: 8px;
-  }
-  .sim-result-mini .sub {
-    font-size: 14px;
-    color: var(--color-gray-600);
-    line-height: 1.6;
-  }
-
-  /* 결과 보조 정보 */
-  .sim-result-meta {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
-  .sim-result-meta .meta-item {
-    background: var(--color-gray-50);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
-  }
-  .sim-result-meta .meta-item .lbl { font-size: 12.5px; color: var(--color-gray-500); font-weight: var(--fw-medium); margin-bottom: 4px; }
-  .sim-result-meta .meta-item .val { font-size: 17px; font-weight: var(--fw-bold); color: var(--color-gray-900); font-feature-settings: "tnum"; }
-
-  /* 도움말 카드 그리드 */
-  .sim-help-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
-    margin-top: var(--space-8);
-  }
-  @media (max-width: 1080px) { .sim-help-grid { grid-template-columns: 1fr; } }
-  .sim-help-card {
-    background: #fff;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    padding: 24px 26px;
-  }
-  .sim-help-card h3 {
-    font-size: 17px; font-weight: var(--fw-bold); letter-spacing: -0.02em;
-    margin: 0 0 10px; color: var(--text-primary);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .sim-help-card h3 .ico {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--color-primary-50); color: var(--color-primary-700);
-    flex-shrink: 0;
-  }
-  .sim-help-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin: 0; }
-
-  /* 안내 박스 */
-  .sim-note-box {
-    background: var(--color-gray-50);
-    border-radius: var(--radius-lg);
-    padding: 20px 24px;
-    margin-top: var(--space-6);
-    font-size: 13.5px;
-    color: var(--color-gray-600);
-    line-height: 1.75;
-  }
-  .sim-note-box strong { color: var(--color-gray-800); font-weight: var(--fw-semibold); }
-
-  /* 시각 슬라이더 (계절시간제) */
-  .sim-hour-row { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-  .sim-hour-row label { font-size: 13px; font-weight: var(--fw-semibold); color: var(--color-gray-700); display: flex; justify-content: space-between; align-items: baseline; }
-  .sim-hour-row label .val { font-size: 15px; font-weight: var(--fw-bold); color: var(--color-primary-700); }
-  .sim-hour-row input[type=range] { width: 100%; height: 32px; cursor: pointer; }
-  /* 계절시간제 미적용(평단가·비회원·로밍) — 숨기지 않고 비활성 */
-  #simTouInputs.is-disabled { opacity: .5; }
-  #simTouInputs.is-disabled select,
-  #simTouInputs.is-disabled input[type=range] { pointer-events: none; }
-  .sim-tou-note { color: var(--color-gray-500) !important; margin-top: 6px; }
-  /* 내 카드 라벨 + 비회원 토글 */
-  .sim-label-row { display: flex; justify-content: space-between; align-items: center; }
-  .sim-nonmember-toggle { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: var(--fw-semibold); color: var(--color-gray-600); cursor: pointer; }
-  .sim-nonmember-toggle input { width: 15px; height: 15px; cursor: pointer; }
-  .sim-field select:disabled { background-color: var(--color-gray-100); color: var(--color-gray-400); cursor: not-allowed; }
-
-  /* 시간대별 적용 내역(구간 분할) 표 */
-  .sim-segments { margin-top: 14px; }
-  .sim-segments .seg-title { font-size: 12.5px; font-weight: var(--fw-bold); color: var(--color-gray-700); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
-  .sim-segments .seg-split-badge { font-size: 10.5px; font-weight: 800; padding: 1px 7px; border-radius: 999px; background: #eef2ff; color: #4338ca; }
-  .sim-segments .seg-table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; }
-  .sim-segments .seg-table th { background: #f8fafc; color: var(--color-gray-600); font-weight: var(--fw-semibold); padding: 8px 10px; text-align: left; font-size: 11.5px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
-  .sim-segments .seg-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: var(--color-gray-800); font-feature-settings: "tnum"; white-space: nowrap; }
-  .sim-segments .seg-table .num { text-align: right; }
-  .sim-segments .seg-table tfoot td { border-top: 1px solid var(--border-light); border-bottom: none; font-weight: 700; background: #fafbfc; }
-  .sim-segments .seg-base { text-decoration: line-through; color: #9ca3af; }
-  .sim-segments .seg-arrow { color: #9ca3af; }
-  .sim-segments .seg-disc { font-size: 10px; font-weight: 800; padding: 0 5px; border-radius: 4px; background: #e6f6ee; color: #0f7a44; margin-left: 2px; }
-  .sim-segments .seg-unit { font-size: 10.5px; color: var(--color-gray-400); font-weight: 500; }
-
-  /* 결과 — 단가 흐름 (기본 → 할인 → 적용) */
-  .sim-rate-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 20px; font-weight: var(--fw-bold); color: var(--color-gray-800); margin: 0 0 6px; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
-  .sim-rate-flow .base { color: var(--color-gray-500); }
-  .sim-rate-flow .base.struck { text-decoration: line-through; color: var(--color-gray-400); font-size: 17px; }
-  .sim-rate-flow .arrow { color: var(--color-gray-400); font-weight: var(--fw-regular); }
-  .sim-rate-flow .applied { color: #0D57B0; }
-  .sim-rate-flow .badge { display: inline-flex; align-items: center; height: 24px; padding: 0 11px; border-radius: 999px; background: #FEE2E2; color: #B91C1C; font-size: 13px; font-weight: var(--fw-bold); }
-  .sim-rate-flow .badge.roam { background: #EDE9FE; color: #6D28D9; }
-  .sim-rate-help { font-size: 13px; color: var(--color-gray-500); margin: 0 0 12px; }
-  .sim-cond { font-size: 13px; color: var(--color-gray-600); line-height: 1.75; margin-top: 4px; }
-  .sim-cond b { color: var(--color-gray-800); font-weight: var(--fw-semibold); }
-  /* 계산 조건 (통합 블록) */
-  .sim-calc-cond { background: var(--color-gray-50); border-radius: var(--radius-lg); padding: 16px 18px; }
-  .sim-calc-cond .scc-title { font-size: 12.5px; font-weight: var(--fw-bold); color: var(--color-gray-500); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
-  .scc-list { display: grid; grid-template-columns: auto 1fr; gap: 9px 16px; margin: 0; font-size: 13.5px; }
-  .scc-list dt { color: var(--color-gray-500); font-weight: var(--fw-medium); white-space: nowrap; }
-  .scc-list dd { margin: 0; color: var(--color-gray-900); font-weight: var(--fw-semibold); text-align: right; }
-</style>
+<title>내 충전요금 시뮬레이터</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
 </head>
 <body>
-<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
-<script>window.__activeNav = 'charging';</script>
 <div id="header-slot"></div>
-
-<main id="main">
-  <section class="page-hero compact sim-page-hero">
-    <div class="container container-wide">
-      <nav class="breadcrumb" aria-label="경로">
-        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging-fee.html?tab=ev">충전 요금 안내</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" aria-current="page">내 충전요금 시뮬레이터</span>
-      </nav>
-      <h1 data-i18n="charging.fee.sim.hero.title">내 충전요금 시뮬레이터</h1>
-      <p class="hero-lead" data-i18n-html="charging.fee.sim.hero.lead">차량 모델 · 결제 카드 · 충전기 조합으로 <strong>내 충전 1회 비용</strong>을 즉시 계산하세요. 회원·로밍·비회원 시나리오를 모두 지원합니다.</p>
-    </div>
-  </section>
-
-  <section class="section-sm">
-    <div class="container container-wide">
-
-      <!-- 메인 시뮬레이터 -->
-      <div class="sim-card">
-        <h2 data-i18n="charging.fee.sim.card.title">충전요금 계산</h2>
-        <p class="sim-card-desc" data-i18n="charging.fee.sim.card.desc">제조사 → 차량 모델 → 결제 카드 → 충전기 → 회원유형 → 출력 → 충전량 순으로 선택하시면 단가와 예상 비용이 즉시 계산됩니다.</p>
-
-        <div class="sim-grid">
-          <div class="sim-inputs">
-            <div class="sim-row2">
-              <div class="sim-field">
-                <label for="simBrand" data-i18n="charging.fee.sim.lbl.brand">제조사</label>
-                <select id="simBrand">
-                  <option value="" data-i18n="charging.fee.sim.opt.choose">선택</option>
-                </select>
-              </div>
-              <div class="sim-field">
-                <label for="simModel" data-i18n="charging.fee.sim.lbl.model">차량 모델</label>
-                <select id="simModel">
-                  <option value="" data-i18n="charging.fee.sim.opt.brand_first">제조사 먼저 선택</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="simModelInfo">
-              <span><span data-i18n="charging.fee.sim.battery.prefix">배터리</span> <strong id="simBatteryVal">—</strong></span>
-              <span>SOC <strong id="simSocVal">—</strong></span>
-              <span style="color:var(--color-gray-500);font-size:13px;font-weight:500;" data-i18n="charging.fee.sim.battery.note">※ 모델 선택 시 충전량은 배터리의 95%로 자동 세팅됩니다</span>
-            </div>
-
-            <div class="sim-row2">
-              <div class="sim-field">
-                <!-- [DEV] 회원유형 자동: 비회원 OFF+카드=충전기→회원가 / 비회원 OFF+카드≠충전기→로밍가 / 비회원 ON→비회원가 · 카드 잠금 / 더미 -->
-                <label for="simCard" class="sim-label-row">
-                  <span data-i18n="charging.fee.sim.lbl.card">내 카드 (사업자)</span>
-                  <label class="sim-nonmember-toggle"><input type="checkbox" id="simNonmember"> <span data-i18n="charging.fee.sim.opt.nonmember">비회원</span></label>
-                </label>
-                <select id="simCard"></select>
-              </div>
-              <div class="sim-field">
-                <label for="simCharger" data-i18n="charging.fee.sim.lbl.charger">이용 충전기</label>
-                <select id="simCharger"></select>
-              </div>
-            </div>
-
-            <div class="sim-field">
-              <label for="simSpeed" data-i18n="charging.fee.sim.lbl.speed">출력</label>
-              <select id="simSpeed"></select>
-            </div>
-
-            <div class="sim-row2" id="simConditionRow">
-              <div class="sim-field" id="simCondField" style="display:none;">
-                <label for="simCondition" data-i18n="charging.fee.sim.lbl.condition">조건 (선택)</label>
-                <select id="simCondition">
-                  <option value="" data-i18n="charging.fee.sim.opt.default">기본 (조건 없음)</option>
-                </select>
-              </div>
-              <div class="sim-field" id="simTouInputs">
-                <!-- [DEV] 계절시간제 입력 = 계절·요일·시각(0~23시). 상시 표시 · 규칙 없는(평단가) 사업자는 비활성+안내. 규칙 TNCC_RMNG_SEAS_FEE(SEAS_SE·DAY_TYPE·STRT_HR~END_HR·DSCNT_SE·DSCNT_VAL·TRGT_SE) / 더미 -->
-                <label data-i18n="charging.fee.sim.lbl.season">계절 · 요일 · 시각</label>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                  <select id="simSeason" style="flex:1;min-width:110px;">
-                    <option value="summer" data-i18n="charging.fee.sim.opt.summer">여름</option>
-                    <option value="spring_fall" selected data-i18n="charging.fee.sim.opt.spring_fall">봄·가을</option>
-                    <option value="winter" data-i18n="charging.fee.sim.opt.winter">겨울</option>
-                  </select>
-                  <select id="simDay" style="flex:1;min-width:110px;">
-                    <option value="weekday" selected>평일</option>
-                    <option value="saturday">토요일</option>
-                    <option value="sunday">일·공휴일</option>
-                  </select>
-                </div>
-                <div class="sim-hour-row">
-                  <label for="simHour"><span>시각</span><span class="val" id="simHourVal">12시</span></label>
-                  <input type="range" id="simHour" min="0" max="23" value="12" step="1" aria-label="시각 (0~23시)">
-                </div>
-                <div class="form-help sim-tou-note" id="simTouNote" data-i18n="charging.fee.sim.tou.none" hidden>이 사업자는 계절시간제가 적용되지 않습니다.</div>
-              </div>
-            </div>
-
-            <div class="sim-kwh-row">
-              <label for="simKwh">
-                <span data-i18n="charging.fee.sim.lbl.kwh">충전량</span>
-                <span class="val" id="simKwhVal">60 kWh</span>
-              </label>
-              <input type="range" id="simKwh" min="10" max="100" value="60" step="1" data-i18n-aria="charging.fee.sim.kwh.aria" aria-label="충전량 (kWh)">
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전소·요금 정보</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전 요금 안내</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="charging-fee-simulator.html" class="breadcrumb__link">
+                    <span>내 충전요금 시뮬레이터</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">내 충전요금 시뮬레이터</h1>
+              <p class="page-header__description">차량 모델 · 결제 카드 · 충전기 조합으로 내 충전 1회 비용을 즉시 계산하세요. 회원·로밍·비회원 시나리오를 모두 지원합니다.</p>
             </div>
           </div>
-
-          <div class="sim-result-wrap">
-            <!-- [2층] 결과 상단 스트립 — 기존 하단 '요금 산정 방식' 안내를 이 스트립으로 승격·이동(중복 제거) -->
-            <div class="fee-strip" id="feeStripSim" role="note">
-              <span class="fee-strip-ico" aria-hidden="true">⚠</span>
-              <span data-i18n="charging.fee.disc.strip">안내용 요금입니다. 실제 결제 금액은 현장 단가·프로모션·로밍 여부에 따라 다를 수 있습니다.</span>
-            </div>
-            <span class="sim-result-lbl" id="simLbl"><span id="simLblText" data-i18n="charging.fee.sim.result.lbl">1회 충전 예상 금액</span> <button type="button" class="fee-badge" data-fee-badge data-i18n="charging.fee.disc.badge" aria-label="안내가 설명 보기">안내가</button></span>
-            <div class="sim-result-mini">
-              <!-- [DEV] 예상 1회 충전비 = 적용단가 × 충전량(kWh). 단가 흐름: 기본단가 → [할인 배지] → 적용단가 / 더미 -->
-              <div class="big" id="simPrice">—</div>
-              <div class="sim-rate-flow" id="simRateFlow"><span class="applied">— 원/kWh</span></div>
-              <div class="sim-rate-help" id="simRateHelp">단위 원/kWh</div>
-              <div class="sub" id="simNote" data-i18n="charging.fee.sim.result.note">제조사·차량 모델·카드·충전기를 선택해 주세요.</div>
-            </div>
-
-            <!-- 시간대별 적용 내역(구간 분할 합산) — 경계 걸침 시 2행 이상 자연 노출 -->
-            <div id="simSegments" class="sim-segments" hidden></div>
-
-            <!-- [DEV] 계산 조건: 결제카드·이용충전기(출력밴드)·회원구분·계절·요일·시각 / 더미 -->
-            <div class="sim-calc-cond">
-              <div class="scc-title" data-i18n="charging.fee.sim.result.condtitle">계산 조건</div>
-              <dl class="scc-list" id="simCond"></dl>
-            </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+          <div class="simulator-wrapper">
+            <section class="section">
+              <div class="heading-group">
+                <h2 class="heading-title">
+                  <i class="svg-icon symbol-electricity"></i>
+                  충전요금 계산
+                </h2>
+                <p class="heading-description">제조사, 차량 모델, 결제 카드, 충전기, 회원유형, 출력, 충전량 순으로 선택하시면 단가와 예상 비용이 즉시 계산됩니다.</p>
+              </div>
+              <div class="calculator">
+                <div class="calculator-form">
+                  <div class="form">
+                    <div class="form__item">
+                      <div class="element-group">
+                        <label for="selectMaker" class="element-label">제조사</label>
+                        <div class="element-group__control">
+                          <select name="selectMaker" id="selectMaker" class="select">
+                            <option value="">제조사 선택</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form__item">
+                      <div class="element-group">
+                        <label for="selectModel" class="element-label">차량 모델</label>
+                        <div class="element-group__control">
+                          <select name="selectModel" id="selectModel" class="select">
+                            <option value="">차량 모델 선택</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form__item">
+                      <div class="element-group">
+                        <div class="element-label">
+                          <label for="selectCard">내 카드 (사업자)</label>
+                          <div class="checkbox">
+                            <input type="checkbox" id="chkNonMember" name="carType" class="checkbox__input" />
+                            <label for="chkNonMember" class="checkbox__label">
+                              <span>비회원</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="element-group__control">
+                          <select name="selectCard" id="selectCard" class="select">
+                            <option value="">선택</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form__item">
+                      <div class="element-group">
+                        <label for="selectCharger" class="element-label">이용 충전기</label>
+                        <div class="element-group__control">
+                          <select name="selectCharger" id="selectCharger" class="select">
+                            <option value="">선택</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form__item">
+                      <div class="element-group">
+                        <label for="selectStage" class="element-label">출력</label>
+                        <div class="element-group__control">
+                          <select name="selectStage" id="selectStage" class="select">
+                            <option value="">선택</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form__item">
+                      <div class="slider-range">
+                        <div class="slider-range__container">
+                          <label id="rangeLabel" for="rangeSlider" class="range-label">충전량</label>
+                          <span class="slider-range__button">
+                            <input type="range" id="rangeSlider" min="0" max="100" value="50" step="1" class="range-input" aria-labelledby="rangeLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 kWh" />
+                          </span>
+                          <span id="rangeValue" class="range-value" aria-live="argumentative" aria-atomic="true">50 kWh</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 접근성으로 인한 버튼 추가  -->
+                  <div class="button-group button-group--align-right">
+                    <button type="button" id="btnCalc" class="button button--large button--primary">
+                      <span class="button__label">계산하기</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="calculator-display">
+                  <!-- 디스클로저 : 확장(오픈)시 disclosure--expand 추가 -->
+                  <div class="disclosure">
+                    <div class="disclosure-heading">
+                      <h3 class="calculator-display__title">1회 충전 예상 비용</h3>
+                      <button type="button" class="disclosure-button" aria-expanded="false" aria-controls="disclosureSimulator">안내가</button>
+                    </div>
+                    <div id="disclosureSimulator" class="disclosure-container">
+                      <div class="disclosure-content">
+                        <p>사업자·시간대·할인·로밍에 따라 실제 결제금액이 다릅니다.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- //디스클로저 -->
+                  <strong class="calculator-display__total" id="simTotal">-</strong>
+                  <b class="calculator-display__unit" id="simUnit">-</b>
+                  
+                  <div id="simAlertArea"></div>
+                  <div class="calculator-content">
+                    <h4 class="heading-content">계산조건</h4>
+                    <ul class="calculation-result">
+                      <li class="calculation-result__item">
+                        <span class="calculation-result__title">결제카드</span>
+                        <b class="calculation-result__price" id="simCard">-</b>
+                      </li>
+                      <li class="calculation-result__item">
+                        <span class="calculation-result__title">이용 충전기</span>
+                        <b class="calculation-result__price" id="simCharger">-</b>
+                      </li>
+                      <li class="calculation-result__item">
+                        <span class="calculation-result__title">회원구분</span>
+                        <b class="calculation-result__price" id="simMemberGb">-</b>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
 
-      <!-- 도움말 3단 -->
-      <div class="sim-help-grid">
-        <div class="sim-help-card">
-          <h3>
-            <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
-            <span data-i18n="charging.fee.sim.faq.q1">회원 vs 로밍 vs 비회원</span>
-          </h3>
-          <p data-i18n-html="charging.fee.sim.faq.a1"><strong>회원</strong>은 카드사 자체 요금, <strong>로밍</strong>은 다른 사업자 충전기 이용 시 협약 요금, <strong>비회원</strong>은 카드 등록 없이 단발성 결제 시 적용되는 가장 비싼 단가입니다.</p>
-        </div>
-        <div class="sim-help-card">
-          <h3>
-            <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-            <span data-i18n="charging.fee.sim.faq.q2">계절시간제 (계시별)</span>
-          </h3>
-          <p data-i18n="charging.fee.sim.faq.a2">시즌(봄·가을/여름/겨울)·요일·시각별 할인규칙(정액/정률/고정)이 있는 사업자는 그 시간에 단가가 낮아집니다. 심야·주말이 저렴한 편입니다.</p>
-        </div>
-        <div class="sim-help-card">
-          <h3>
-            <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3v4zM3 19a2 2 0 0 0 2 2h1v-6H3v4z"/></svg></span>
-            <span data-i18n="charging.fee.sim.faq.q3">무공해차 통합카드</span>
-          </h3>
-          <p data-i18n="charging.fee.sim.faq.a3">기후에너지환경부(한국환경공단) 발급 무공해차 통합카드는 협약된 여러 사업자의 충전기를 카드 하나로 이용할 수 있습니다. 자사(공공) 충전기는 회원 요금, 협약된 타 사업자 충전기는 로밍 요금(해당 사업자 요금)이 적용됩니다.</p>
-        </div>
-      </div>
+<script type="application/json" id="matrixJson">[{"BID": "B01", "BNM": "환경부(한국환경공단)", "UPD_DT": "2026-08-01", "M_S1": 284.9, "N_S1": 356.9, "M_S2": 285.9, "N_S2": 358.9, "M_S3": 341.2, "N_S3": 415.2, "M_S4": 342.2, "N_S4": 417.2, "M_S5": 387.9, "N_S5": 463.9}, {"BID": "B02", "BNM": "한국전력", "UPD_DT": "2026-08-02", "M_S1": 320.9, "N_S1": 388.9, "M_S2": 321.9, "N_S2": 390.9, "M_S3": 377.2, "N_S3": 447.2, "M_S4": 378.2, "N_S4": 449.2, "M_S5": 423.9, "N_S5": 495.9}, {"BID": "B03", "BNM": "GS차지비", "UPD_DT": "2026-08-03", "M_S1": 282.9, "N_S1": 342.9, "M_S2": 0, "N_S2": 0, "M_S3": 339.2, "N_S3": 401.2, "M_S4": 340.2, "N_S4": 403.2, "M_S5": 385.9, "N_S5": 449.9}, {"BID": "B04", "BNM": "SK일렉링크", "UPD_DT": "2026-08-04", "M_S1": 315.9, "N_S1": 388.9, "M_S2": 316.9, "N_S2": 390.9, "M_S3": 372.2, "N_S3": 447.2, "M_S4": 373.2, "N_S4": 449.2, "M_S5": 0, "N_S5": 0}, {"BID": "B05", "BNM": "이피트(E-pit)", "UPD_DT": "2026-08-05", "M_S1": 349.9, "N_S1": 416.9, "M_S2": 350.9, "N_S2": 418.9, "M_S3": 406.2, "N_S3": 475.2, "M_S4": 317.2, "N_S4": 387.2, "M_S5": 362.9, "N_S5": 433.9}, {"BID": "B06", "BNM": "차지비", "UPD_DT": "2026-08-06", "M_S1": 347.9, "N_S1": 412.9, "M_S2": 348.9, "N_S2": 414.9, "M_S3": 404.2, "N_S3": 471.2, "M_S4": 405.2, "N_S4": 473.2, "M_S5": 450.9, "N_S5": 519.9}, {"BID": "B07", "BNM": "에버온", "UPD_DT": "2026-08-07", "M_S1": 341.9, "N_S1": 430.9, "M_S2": 342.9, "N_S2": 432.9, "M_S3": 398.2, "N_S3": 489.2, "M_S4": 399.2, "N_S4": 491.2, "M_S5": 444.9, "N_S5": 537.9}, {"BID": "B08", "BNM": "대영채비", "UPD_DT": "2026-08-08", "M_S1": 350.9, "N_S1": 418.9, "M_S2": 0, "N_S2": 0, "M_S3": 317.2, "N_S3": 387.2, "M_S4": 318.2, "N_S4": 389.2, "M_S5": 0, "N_S5": 0}, {"BID": "B09", "BNM": "채비", "UPD_DT": "2026-08-09", "M_S1": 306.9, "N_S1": 400.9, "M_S2": 307.9, "N_S2": 402.9, "M_S3": 363.2, "N_S3": 459.2, "M_S4": 364.2, "N_S4": 461.2, "M_S5": 409.9, "N_S5": 507.9}, {"BID": "B10", "BNM": "스타코프", "UPD_DT": "2026-08-10", "M_S1": 276.9, "N_S1": 370.9, "M_S2": 277.9, "N_S2": 372.9, "M_S3": 333.2, "N_S3": 429.2, "M_S4": 334.2, "N_S4": 431.2, "M_S5": 379.9, "N_S5": 477.9}, {"BID": "B11", "BNM": "휴맥스EV", "UPD_DT": "2026-08-11", "M_S1": 285.9, "N_S1": 368.9, "M_S2": 286.9, "N_S2": 370.9, "M_S3": 342.2, "N_S3": 427.2, "M_S4": 343.2, "N_S4": 429.2, "M_S5": 388.9, "N_S5": 475.9}, {"BID": "B12", "BNM": "제주전기자동차서비스", "UPD_DT": "2026-08-12", "M_S1": 322.9, "N_S1": 412.9, "M_S2": 323.9, "N_S2": 414.9, "M_S3": 379.2, "N_S3": 471.2, "M_S4": 380.2, "N_S4": 473.2, "M_S5": 0, "N_S5": 0}]</script>
+<script type="application/json" id="roamingJson">{"bids": [{"BID": "B01", "BNM": "환경부(한국환경공단)"}, {"BID": "B02", "BNM": "한국전력"}, {"BID": "B03", "BNM": "GS차지비"}, {"BID": "B04", "BNM": "SK일렉링크"}, {"BID": "B05", "BNM": "이피트(E-pit)"}, {"BID": "B06", "BNM": "차지비"}, {"BID": "B07", "BNM": "에버온"}, {"BID": "B08", "BNM": "대영채비"}, {"BID": "B09", "BNM": "채비"}, {"BID": "B10", "BNM": "스타코프"}, {"BID": "B11", "BNM": "휴맥스EV"}, {"BID": "B12", "BNM": "제주전기자동차서비스"}], "cells": {"B01|B02|s1": 366.9, "B01|B02|s2": 368.9, "B01|B02|s3": 425.2, "B01|B02|s4": 427.2, "B01|B02|s5": 473.9, "B01|B04|s1": 380.9, "B01|B04|s2": 382.9, "B01|B04|s3": 439.2, "B01|B04|s4": 441.2, "B01|B05|s1": 415.9, "B01|B05|s2": 417.9, "B01|B05|s3": 474.2, "B01|B05|s4": 386.2, "B01|B05|s5": 432.9, "B01|B07|s1": 409.9, "B01|B07|s2": 411.9, "B01|B07|s3": 468.2, "B01|B07|s4": 470.2, "B01|B07|s5": 516.9, "B01|B08|s1": 419.9, "B01|B08|s3": 388.2, "B01|B08|s4": 390.2, "B01|B10|s1": 345.9, "B01|B10|s2": 347.9, "B01|B10|s3": 404.2, "B01|B10|s4": 406.2, "B01|B10|s5": 452.9, "B01|B12|s1": 350.9, "B01|B12|s2": 352.9, "B01|B12|s3": 409.2, "B01|B12|s4": 411.2, "B02|B01|s1": 351.9, "B02|B01|s2": 353.9, "B02|B01|s3": 410.2, "B02|B01|s4": 412.2, "B02|B01|s5": 458.9, "B02|B03|s1": 308.9, "B02|B03|s3": 367.2, "B02|B03|s4": 369.2, "B02|B03|s5": 415.9, "B02|B04|s1": 342.9, "B02|B04|s2": 344.9, "B02|B04|s3": 401.2, "B02|B04|s4": 403.2, "B02|B06|s1": 376.9, "B02|B06|s2": 378.9, "B02|B06|s3": 435.2, "B02|B06|s4": 437.2, "B02|B06|s5": 483.9, "B02|B07|s1": 371.9, "B02|B07|s2": 373.9, "B02|B07|s3": 430.2, "B02|B07|s4": 432.2, "B02|B07|s5": 478.9, "B02|B09|s1": 355.9, "B02|B09|s2": 357.9, "B02|B09|s3": 414.2, "B02|B09|s4": 416.2, "B02|B09|s5": 462.9, "B02|B11|s1": 334.9, "B02|B11|s2": 336.9, "B02|B11|s3": 393.2, "B02|B11|s4": 395.2, "B02|B11|s5": 441.9, "B02|B12|s1": 372.9, "B02|B12|s2": 374.9, "B02|B12|s3": 431.2, "B02|B12|s4": 433.2, "B03|B01|s1": 330.9, "B03|B01|s2": 332.9, "B03|B01|s3": 389.2, "B03|B01|s4": 391.2, "B03|B01|s5": 437.9, "B03|B04|s1": 364.9, "B03|B04|s2": 366.9, "B03|B04|s3": 423.2, "B03|B04|s4": 425.2, "B03|B06|s1": 415.9, "B03|B06|s2": 417.9, "B03|B06|s3": 474.2, "B03|B06|s4": 476.2, "B03|B06|s5": 522.9, "B03|B07|s1": 410.9, "B03|B07|s2": 412.9, "B03|B07|s3": 469.2, "B03|B07|s4": 471.2, "B03|B07|s5": 517.9, "B03|B09|s1": 377.9, "B03|B09|s2": 379.9, "B03|B09|s3": 436.2, "B03|B09|s4": 438.2, "B03|B09|s5": 484.9, "B03|B11|s1": 356.9, "B03|B11|s2": 358.9, "B03|B11|s3": 415.2, "B03|B11|s4": 417.2, "B03|B11|s5": 463.9, "B03|B12|s1": 394.9, "B03|B12|s2": 396.9, "B03|B12|s3": 453.2, "B03|B12|s4": 455.2, "B04|B02|s1": 389.9, "B04|B02|s2": 391.9, "B04|B02|s3": 448.2, "B04|B02|s4": 450.2, "B04|B02|s5": 496.9, "B04|B03|s1": 352.9, "B04|B03|s3": 411.2, "B04|B03|s4": 413.2, "B04|B03|s5": 459.9, "B04|B05|s1": 378.9, "B04|B05|s2": 380.9, "B04|B05|s3": 437.2, "B04|B05|s4": 349.2, "B04|B05|s5": 395.9, "B04|B06|s1": 377.9, "B04|B06|s2": 379.9, "B04|B06|s3": 436.2, "B04|B06|s4": 438.2, "B04|B06|s5": 484.9, "B04|B08|s1": 382.9, "B04|B08|s3": 351.2, "B04|B08|s4": 353.2, "B04|B09|s1": 339.9, "B04|B09|s2": 341.9, "B04|B09|s3": 398.2, "B04|B09|s4": 400.2, "B04|B09|s5": 446.9, "B04|B10|s1": 308.9, "B04|B10|s2": 310.9, "B04|B10|s3": 367.2, "B04|B10|s4": 369.2, "B04|B10|s5": 415.9, "B04|B11|s1": 318.9, "B04|B11|s2": 320.9, "B04|B11|s3": 377.2, "B04|B11|s4": 379.2, "B04|B11|s5": 425.9, "B05|B02|s1": 351.9, "B05|B02|s2": 353.9, "B05|B02|s3": 410.2, "B05|B02|s4": 412.2, "B05|B02|s5": 458.9, "B05|B03|s1": 331.9, "B05|B03|s3": 390.2, "B05|B03|s4": 392.2, "B05|B03|s5": 438.9, "B05|B06|s1": 399.9, "B05|B06|s2": 401.9, "B05|B06|s3": 458.2, "B05|B06|s4": 460.2, "B05|B06|s5": 506.9, "B05|B08|s1": 421.9, "B05|B08|s3": 390.2, "B05|B08|s4": 392.2, "B05|B09|s1": 378.9, "B05|B09|s2": 380.9, "B05|B09|s3": 437.2, "B05|B09|s4": 439.2, "B05|B09|s5": 485.9, "B05|B10|s1": 347.9, "B05|B10|s2": 349.9, "B05|B10|s3": 406.2, "B05|B10|s4": 408.2, "B05|B10|s5": 454.9, "B05|B11|s1": 357.9, "B05|B11|s2": 359.9, "B05|B11|s3": 416.2, "B05|B11|s4": 418.2, "B05|B11|s5": 464.9, "B06|B01|s1": 353.9, "B06|B01|s2": 355.9, "B06|B01|s3": 412.2, "B06|B01|s4": 414.2, "B06|B01|s5": 460.9, "B06|B02|s1": 390.9, "B06|B02|s2": 392.9, "B06|B02|s3": 449.2, "B06|B02|s4": 451.2, "B06|B02|s5": 497.9, "B06|B04|s1": 387.9, "B06|B04|s2": 389.9, "B06|B04|s3": 446.2, "B06|B04|s4": 448.2, "B06|B05|s1": 422.9, "B06|B05|s2": 424.9, "B06|B05|s3": 481.2, "B06|B05|s4": 393.2, "B06|B05|s5": 439.9, "B06|B07|s1": 373.9, "B06|B07|s2": 375.9, "B06|B07|s3": 432.2, "B06|B07|s4": 434.2, "B06|B07|s5": 480.9, "B06|B08|s1": 383.9, "B06|B08|s3": 352.2, "B06|B08|s4": 354.2, "B06|B10|s1": 309.9, "B06|B10|s2": 311.9, "B06|B10|s3": 368.2, "B06|B10|s4": 370.2, "B06|B10|s5": 416.9, "B06|B12|s1": 357.9, "B06|B12|s2": 359.9, "B06|B12|s3": 416.2, "B06|B12|s4": 418.2, "B07|B01|s1": 315.9, "B07|B01|s2": 317.9, "B07|B01|s3": 374.2, "B07|B01|s4": 376.2, "B07|B01|s5": 422.9, "B07|B02|s1": 352.9, "B07|B02|s2": 354.9, "B07|B02|s3": 411.2, "B07|B02|s4": 413.2, "B07|B02|s5": 459.9, "B07|B04|s1": 349.9, "B07|B04|s2": 351.9, "B07|B04|s3": 408.2, "B07|B04|s4": 410.2, "B07|B05|s1": 401.9, "B07|B05|s2": 403.9, "B07|B05|s3": 460.2, "B07|B05|s4": 372.2, "B07|B05|s5": 418.9, "B07|B08|s1": 405.9, "B07|B08|s3": 374.2, "B07|B08|s4": 376.2, "B07|B10|s1": 331.9, "B07|B10|s2": 333.9, "B07|B10|s3": 390.2, "B07|B10|s4": 392.2, "B07|B10|s5": 438.9, "B07|B12|s1": 396.9, "B07|B12|s2": 398.9, "B07|B12|s3": 455.2, "B07|B12|s4": 457.2, "B08|B01|s1": 337.9, "B08|B01|s2": 339.9, "B08|B01|s3": 396.2, "B08|B01|s4": 398.2, "B08|B01|s5": 444.9, "B08|B03|s1": 354.9, "B08|B03|s3": 413.2, "B08|B03|s4": 415.2, "B08|B03|s5": 461.9, "B08|B04|s1": 388.9, "B08|B04|s2": 390.9, "B08|B04|s3": 447.2, "B08|B04|s4": 449.2, "B08|B06|s1": 422.9, "B08|B06|s2": 424.9, "B08|B06|s3": 481.2, "B08|B06|s4": 483.2, "B08|B06|s5": 529.9, "B08|B07|s1": 417.9, "B08|B07|s2": 419.9, "B08|B07|s3": 476.2, "B08|B07|s4": 478.2, "B08|B07|s5": 464.9, "B08|B09|s1": 341.9, "B08|B09|s2": 343.9, "B08|B09|s3": 400.2, "B08|B09|s4": 402.2, "B08|B09|s5": 448.9, "B08|B11|s1": 320.9, "B08|B11|s2": 322.9, "B08|B11|s3": 379.2, "B08|B11|s4": 381.2, "B08|B11|s5": 427.9, "B08|B12|s1": 358.9, "B08|B12|s2": 360.9, "B08|B12|s3": 417.2, "B08|B12|s4": 419.2, "B09|B01|s1": 316.9, "B09|B01|s2": 318.9, "B09|B01|s3": 375.2, "B09|B01|s4": 377.2, "B09|B01|s5": 423.9, "B09|B03|s1": 316.9, "B09|B03|s3": 375.2, "B09|B03|s4": 377.2, "B09|B03|s5": 423.9, "B09|B04|s1": 350.9, "B09|B04|s2": 352.9, "B09|B04|s3": 409.2, "B09|B04|s4": 411.2, "B09|B06|s1": 384.9, "B09|B06|s2": 386.9, "B09|B06|s3": 443.2, "B09|B06|s4": 445.2, "B09|B06|s5": 491.9, "B09|B07|s1": 396.9, "B09|B07|s2": 398.9, "B09|B07|s3": 455.2, "B09|B07|s4": 457.2, "B09|B07|s5": 503.9, "B09|B11|s1": 342.9, "B09|B11|s2": 344.9, "B09|B11|s3": 401.2, "B09|B11|s4": 403.2, "B09|B11|s5": 449.9, "B09|B12|s1": 380.9, "B09|B12|s2": 382.9, "B09|B12|s3": 439.2, "B09|B12|s4": 441.2, "B10|B02|s1": 340.9, "B10|B02|s2": 342.9, "B10|B02|s3": 399.2, "B10|B02|s4": 401.2, "B10|B02|s5": 447.9, "B10|B03|s1": 303.9, "B10|B03|s3": 362.2, "B10|B03|s4": 364.2, "B10|B03|s5": 410.9, "B10|B05|s1": 389.9, "B10|B05|s2": 391.9, "B10|B05|s3": 448.2, "B10|B05|s4": 360.2, "B10|B05|s5": 406.9, "B10|B06|s1": 388.9, "B10|B06|s2": 390.9, "B10|B06|s3": 447.2, "B10|B06|s4": 449.2, "B10|B06|s5": 495.9, "B10|B08|s1": 393.9, "B10|B08|s3": 362.2, "B10|B08|s4": 364.2, "B10|B09|s1": 350.9, "B10|B09|s2": 352.9, "B10|B09|s3": 409.2, "B10|B09|s4": 411.2, "B10|B09|s5": 457.9, "B10|B11|s1": 329.9, "B10|B11|s2": 331.9, "B10|B11|s3": 388.2, "B10|B11|s4": 390.2, "B10|B11|s5": 436.9, "B11|B02|s1": 362.9, "B11|B02|s2": 364.9, "B11|B02|s3": 421.2, "B11|B02|s4": 423.2, "B11|B02|s5": 469.9, "B11|B03|s1": 342.9, "B11|B03|s3": 401.2, "B11|B03|s4": 403.2, "B11|B03|s5": 449.9, "B11|B05|s1": 411.9, "B11|B05|s2": 413.9, "B11|B05|s3": 470.2, "B11|B05|s4": 382.2, "B11|B05|s5": 428.9, "B11|B06|s1": 410.9, "B11|B06|s2": 412.9, "B11|B06|s3": 469.2, "B11|B06|s4": 471.2, "B11|B06|s5": 517.9, "B11|B08|s1": 372.9, "B11|B08|s3": 341.2, "B11|B08|s4": 343.2, "B11|B09|s1": 329.9, "B11|B09|s2": 331.9, "B11|B09|s3": 388.2, "B11|B09|s4": 390.2, "B11|B09|s5": 436.9, "B11|B10|s1": 298.9, "B11|B10|s2": 300.9, "B11|B10|s3": 357.2, "B11|B10|s4": 359.2, "B11|B10|s5": 405.9, "B12|B01|s1": 304.9, "B12|B01|s2": 306.9, "B12|B01|s3": 363.2, "B12|B01|s4": 365.2, "B12|B01|s5": 411.9, "B12|B02|s1": 341.9, "B12|B02|s2": 343.9, "B12|B02|s3": 400.2, "B12|B02|s4": 402.2, "B12|B02|s5": 448.9, "B12|B04|s1": 338.9, "B12|B04|s2": 340.9, "B12|B04|s3": 397.2, "B12|B04|s4": 399.2, "B12|B05|s1": 373.9, "B12|B05|s2": 375.9, "B12|B05|s3": 432.2, "B12|B05|s4": 344.2, "B12|B05|s5": 390.9, "B12|B07|s1": 384.9, "B12|B07|s2": 386.9, "B12|B07|s3": 443.2, "B12|B07|s4": 445.2, "B12|B07|s5": 491.9, "B12|B08|s1": 394.9, "B12|B08|s3": 363.2, "B12|B08|s4": 365.2, "B12|B10|s1": 320.9, "B12|B10|s2": 322.9, "B12|B10|s3": 379.2, "B12|B10|s4": 381.2, "B12|B10|s5": 427.9}}</script>
+<script type="application/json" id="carJson">[{"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "아이오닉 6", "BTRY_CPCTY": "77.4"}, {"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "아이오닉 5", "BTRY_CPCTY": "84.0"}, {"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "코나 일렉트릭", "BTRY_CPCTY": "64.8"}, {"MAKER_CD": "M02", "MAKER_NM": "기아", "MODEL": "EV6", "BTRY_CPCTY": "77.4"}, {"MAKER_CD": "M02", "MAKER_NM": "기아", "MODEL": "EV3", "BTRY_CPCTY": "81.4"}, {"MAKER_CD": "M02", "MAKER_NM": "기아", "MODEL": "니로 EV", "BTRY_CPCTY": "64.8"}, {"MAKER_CD": "M03", "MAKER_NM": "KG모빌리티", "MODEL": "토레스 EVX", "BTRY_CPCTY": "73.4"}, {"MAKER_CD": "M04", "MAKER_NM": "테슬라", "MODEL": "모델 3", "BTRY_CPCTY": "57.5"}, {"MAKER_CD": "M04", "MAKER_NM": "테슬라", "MODEL": "모델 Y", "BTRY_CPCTY": "75.0"}, {"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "포터 II 일렉트릭", "BTRY_CPCTY": "58.8"}, {"MAKER_CD": "M02", "MAKER_NM": "기아", "MODEL": "봉고3 EV", "BTRY_CPCTY": "58.8"}, {"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "이-마이티", "BTRY_CPCTY": "114.5"}, {"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "일렉시티", "BTRY_CPCTY": "384.0"}, {"MAKER_CD": "M01", "MAKER_NM": "현대자동차", "MODEL": "카운티 일렉트릭", "BTRY_CPCTY": "128.0"}, {"MAKER_CD": "M05", "MAKER_NM": "그린모빌리티", "MODEL": "스마트 EV Z", "BTRY_CPCTY": "3.4"}, {"MAKER_CD": "M06", "MAKER_NM": "대동모빌리티", "MODEL": "EM 바이브", "BTRY_CPCTY": "4.6"}, {"MAKER_CD": "M07", "MAKER_NM": "현대건설기계", "MODEL": "전동 지게차 3톤", "BTRY_CPCTY": "51.2"}]</script>
 
-    </div>
-  </section>
-</main>
+<script>
+(function ($) {
+  'use strict';
 
+  var STAGES = [
+    { key: 's1', title: '완속',   range: '~30kW' },
+    { key: 's2', title: '중속',   range: '30~50kW' },
+    { key: 's3', title: '급속',   range: '50~100kW' },
+    { key: 's4', title: '급속',   range: '100~200kW' },
+    { key: 's5', title: '초급속', range: '200kW~' }
+  ];
+
+  function parseJsonBlock(id) {
+    try { return JSON.parse(document.getElementById(id).textContent); } catch (e) { return null; }
+  }
+
+  var MATRIX  = parseJsonBlock('matrixJson') || [];
+  var ROAMING = parseJsonBlock('roamingJson') || {};
+  var CARS    = parseJsonBlock('carJson') || [];
+  var ROAM_CELLS = ROAMING.cells || {};
+
+  var BUSI_MAP = {};
+  MATRIX.forEach(function (r) { BUSI_MAP[r.BID] = r; });
+
+  var STAGE_MAP = {};
+  STAGES.forEach(function (s) { STAGE_MAP[s.key] = s; });
+
+  // 단가 표시: 정수는 그대로, 소수는 첫째 자리까지
+  function fmtFee(v) {
+    var n = Number(v);
+    return (Math.round(n * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 });
+  }
+
+  // 단가 미공시 판정 — 값이 없거나 0 이하
+  function isUnpublished(v) {
+    var n = Number(v);
+    return v === null || v === undefined || v === '' || isNaN(n) || n <= 0;
+  }
+
+  function stageLabel(key) {
+    var s = STAGE_MAP[key];
+    return s ? s.title : '';
+  }
+
+  function busiName(bid) {
+    var r = BUSI_MAP[bid];
+    return r ? r.BNM : '';
+  }
+
+  function fillOptions($sel, items, placeholder) {
+    $sel.empty().append($('<option>', { value: '', text: placeholder }));
+    items.forEach(function (it) {
+      $sel.append($('<option>', { value: it.value, text: it.text }));
+    });
+  }
+
+  // ── 선택 목록 구성 ────────────────────────────────────────────────
+  function initSelects() {
+    var makers = [];
+    var seen = {};
+    CARS.forEach(function (c) {
+      if (seen[c.MAKER_CD]) return;
+      seen[c.MAKER_CD] = true;
+      makers.push({ value: c.MAKER_CD, text: c.MAKER_NM });
+    });
+    fillOptions($('#selectMaker'), makers, '제조사 선택');
+
+    var busiOpts = MATRIX.map(function (r) { return { value: r.BID, text: r.BNM }; });
+    fillOptions($('#selectCard'), busiOpts, '선택');
+    fillOptions($('#selectCharger'), busiOpts, '선택');
+
+    fillOptions($('#selectStage'), STAGES.map(function (s) {
+      return { value: s.key, text: s.title + ' (' + s.range + ')' };
+    }), '선택');
+  }
+
+  // 제조사 선택에 따라 차량 모델 목록을 갱신
+  function fillModels() {
+    var maker = $('#selectMaker').val();
+    var models = CARS.filter(function (c) { return !maker || c.MAKER_CD === maker; })
+                     .map(function (c) { return { value: c.MODEL, text: c.MODEL }; });
+    fillOptions($('#selectModel'), models, '차량 모델 선택');
+  }
+
+  // 차량 배터리 용량을 충전량 슬라이더 상한으로 사용 (미선택 시 100kWh)
+  function applyBatteryLimit() {
+    var maker = $('#selectMaker').val();
+    var model = $('#selectModel').val();
+    var car = null;
+    CARS.some(function (c) {
+      if (c.MODEL === model && (!maker || c.MAKER_CD === maker)) { car = c; return true; }
+      return false;
+    });
+
+    var slider = document.getElementById('rangeSlider');
+    var max = car ? Math.ceil(Number(car.BTRY_CPCTY)) : 100;
+    if (!max || max < 1) max = 100;
+
+    slider.max = max;
+    slider.setAttribute('aria-valuemax', max);
+    if (Number(slider.value) > max) slider.value = max;
+    // ui-common 의 네이티브 input 핸들러가 진행바·라벨을 다시 그린다
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // ── 단가 조회 ─────────────────────────────────────────────────────
+  // 비회원  : 이용 충전기의 비회원가
+  // 회원(자사) : 이용 충전기의 회원가
+  // 회원(로밍) : 내 카드 → 이용 충전기 로밍 단가
+  function lookupFee() {
+    var cardBid    = $('#selectCard').val();
+    var chargerBid = $('#selectCharger').val();
+    var stage      = $('#selectStage').val();
+    var nonMember  = $('#chkNonMember').is(':checked');
+
+    if (!chargerBid || !stage) return null;
+
+    var row = BUSI_MAP[chargerBid];
+    if (nonMember) {
+      return { type: 'N', fee: row ? row['N_' + stage.toUpperCase()] : null };
+    }
+    if (!cardBid) return null;
+    if (cardBid === chargerBid) {
+      return { type: 'M', fee: row ? row['M_' + stage.toUpperCase()] : null };
+    }
+    return { type: 'R', fee: ROAM_CELLS[cardBid + '|' + chargerBid + '|' + stage] };
+  }
+
+  function unpublishedMessage(type) {
+    var cardNm    = busiName($('#selectCard').val());
+    var chargerNm = busiName($('#selectCharger').val());
+    var label     = stageLabel($('#selectStage').val());
+    if (type === 'R') return cardNm + ' → ' + chargerNm + ' 로밍 요금 미공시';
+    if (type === 'N') return chargerNm + ' ' + label + ' 비회원 요금 미공시';
+    return chargerNm + ' ' + label + ' 회원 요금 미공시';
+  }
+
+  function renderAlert(message) {
+    var $area = $('#simAlertArea').empty();
+    if (!message) return;
+    var $banner = $('<div>', { 'class': 'alert-banner alert-banner--danger' });
+    $banner.append($('<i>', { 'class': 'svg-icon caution', 'aria-label': '주의', 'aria-hidden': 'false' }));
+    $banner.append($('<p>', { 'class': 'alert-banner__message', text: message }));
+    $area.append($('<div>', { 'class': 'critical-alert' }).append($banner));
+  }
+
+  // 계산조건 — 결제카드는 비회원이면 계산에 쓰이지 않으므로 '-'
+  function renderConditions(nonMember) {
+    var chargerBid = $('#selectCharger').val();
+    var stage      = $('#selectStage').val();
+    var charger    = chargerBid ? busiName(chargerBid) : '';
+
+    $('#simCard').text(nonMember ? '-' : (busiName($('#selectCard').val()) || '-'));
+    $('#simCharger').text(charger ? (charger + (stage ? '/' + stageLabel(stage) : '')) : '-');
+    $('#simMemberGb').text(nonMember ? '비회원'
+      : (!chargerBid || !$('#selectCard').val()) ? '-'
+      : ($('#selectCard').val() === chargerBid ? '회원 (자사)' : '회원 (로밍)'));
+  }
+
+  function calculate() {
+    var nonMember = $('#chkNonMember').is(':checked');
+    renderConditions(nonMember);
+
+    var found = lookupFee();
+    if (!found) {
+      $('#simTotal').text('-');
+      $('#simUnit').text('-');
+      renderAlert('');
+      return;
+    }
+
+    if (isUnpublished(found.fee)) {
+      $('#simTotal').text('-');
+      $('#simUnit').text('단가 미공시');
+      renderAlert(unpublishedMessage(found.type));
+      return;
+    }
+
+    var fee = Number(found.fee);
+    var kwh = Number($('#rangeSlider').val()) || 0;
+    $('#simTotal').text('약 ' + Math.round(fee * kwh).toLocaleString('ko-KR') + '원');
+    $('#simUnit').text('단가 ' + fmtFee(fee) + '원(kWh)');
+    renderAlert('');
+  }
+
+  $(function () {
+    initSelects();
+    fillModels();
+    applyBatteryLimit();
+
+    $('#selectMaker').on('change', function () {
+      fillModels();
+      applyBatteryLimit();
+      calculate();
+    });
+    $('#selectModel').on('change', function () {
+      applyBatteryLimit();
+      calculate();
+    });
+    // 비회원은 카드가 없으므로 발급 사업자 선택을 잠근다
+    $('#chkNonMember').on('change', function () {
+      $('#selectCard').prop('disabled', this.checked);
+      calculate();
+    });
+    $('#selectCard, #selectCharger, #selectStage').on('change', calculate);
+    $('#rangeSlider').on('input change', calculate);
+    $('#btnCalc').on('click', calculate);
+
+    calculate();
+  });
+})(jQuery);
+</script>
 <div id="footer-slot"></div>
-<script src="js/partials.js?v=20260806g"></script>
-<script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260807a"></script>
-<script src="js/i18n-charging.js?v=20260807a"></script>
-<script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260807a"></script>
-<script src="js/fee-disclaimer.js?v=20260721a"></script>
-<script src="js/amount-guard.js?v=20260802b"></script><!-- [ISS-092] 블러 확인 -->
-<script src="js/charging-fee.js?v=20260802a"></script>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
 </body>
 </html>

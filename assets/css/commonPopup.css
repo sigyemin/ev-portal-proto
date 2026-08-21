@@ -1,0 +1,95 @@
+
+/** popup **/
+#cont_bodyp {background-color:#fff; padding:0 10px 10px 10px; overflow:hidden;}
+#cont_bodyp .title_areap { color:#000; font-family:NanumGothic; font-size:16px; padding:10px 0 0 0; }
+#cont_bodyp .title_areap h2 { background:url(../../img/common/h2_tit_bullet.gif) no-repeat; padding-left:10px;margin:5px 0 0 0; font-weight:600; }
+
+.tablep_01 {border-top:2px solid #bdbdbd; width:100%; border-collapse:collapse;}
+.tablep_01 th {background-color:#efefef; border-bottom:1px solid #bdbdbd; border-left:1px solid #bdbdbd; border-right:1px solid #bdbdbd; padding:5px 5px; font-weight:bold; text-align:center}
+.tablep_01 td {border-bottom:1px solid #e5e5e5; border-left:1px solid #e5e5e5; border-right:1px solid #e5e5e5; padding:5px 0;text-align:center;}
+.tablep_01.tr_hover tbody tr:hover {background-color:#f6f6f6}
+
+.btn_agree_next{ background:#00aced; font-size:16px; font-family: 'NanumGothicBlod'; color:#fff; padding:20px 40px; display:inline-block;}
+.btn_agree_next:hover, .btn_agree_next:focus, .btn_agree_next:active {color:#fff;}
+
+.table_03 {width:100%; border-top:1px solid #bdbdbd; border-left:1px solid #bdbdbd;}
+.table_03 th {background-color:#efefef; border-bottom:1px solid #bdbdbd;  border-right:1px solid #bdbdbd; padding:5px 5px; font-weight:bold; text-align:center;height: 35px;font-size: 15px;}
+.table_03 td {border-bottom:1px solid #bdbdbd;  border-right:1px solid #bdbdbd; padding:5px 10px;text-align:center;height:35px;}
+.table_03 td input {border: 1px #ccc solid;padding: 3px;vertical-align: middle;text-align:center;}
+.table_03 select {border: 1px #ccc solid;padding: 2px;vertical-align: middle;}
+.table_03.tr_hover tbody tr:hover {background-color:#f6f6f6}
+.tsub {font-weight:bold;font-size: 14px;}
+.tcon {font-size: 12px;}
+
+/* new css */
+table.type1 { width:98%; text-align: left; line-height: 1.2; border-top: 1px solid #ccc; border-left: 3px solid #369; margin: 20px 10px; font-size: 13px; }
+table.type1 th { padding: 4px 10px 4px 10px; font-weight: bold; background: #ececec; color: #3f3f3f; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+table.type1 td { height: 28px; padding: 4px 10px 4px 10px; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+
+table.type2 { width:98%; border-collapse: collapse; text-align: left; line-height: 1.2; border-top: 1px solid #ccc; border-left: 1px solid #ccc; margin: 20px 10px; }
+table.type2 thead th { height: 30px; padding: 10px; font-weight: bold; text-align:center; background: #34495e; color: #fff; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+table.type2 tbody th { height: 30px; padding: 6px; font-weight: bold; text-align:center; background: #ececec; color: #153d73; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+table.type2 tbody tr:hover { background-color: #f4f5f6; }
+table.type2 td { height: 30px; padding: 6px; text-align:center; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+
+table.type3 { width:98%; text-align: left; line-height: 1.2; border-top: 1px solid #ccc; border-left: 3px solid #e67e22; margin: 20px 10px; font-size: 13px; }
+table.type3 th { padding: 4px 10px 4px 10px; font-weight: bold; background: #ececec; color: #153d73; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+table.type3 td { height: 28px; padding: 4px 10px 4px 10px; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+
+.text, .select { border: solid 1px #777; border-radius: 3px; -moz-border-ratdius: 3px; -webkit-border-radius: 3px; height: 28px; padding: 0 2px; outline: none; }
+.textarea { border: solid 1px #777; border-radius: 3px; -moz-border-ratdius: 3px; -webkit-border-radius: 3px; padding: 0 2px; outline: none; }
+.text:focus, .textarea:focus, .select:focus { border: solid 1px #5bc0de; background-color: #fff9cc; }
+
+/* action */
+a.btn01 {font-weight:bold; color:#fff; background-color:#4999da; padding: 6px 12px; margin:0 3px; border:1px solid #4999da; overflow:hidden; border-radius:3px; font-size: 12px; }
+a.btn01:hover, a.btn01:focus {color:#fff; background-color:#2677bc; border:1px solid #226aa6; }
+
+input.btn01 { font-weight:bold; color:#fff; background-color:#4999da; padding:6px 12px; margin:1px 3px; border:1px solid #4999da; overflow:hidden; border-radius:3px; font-size: 12px; cursor:pointer; }
+input.btn01:hover, input.btn01:focus { color:#fff; background-color:#2677bc; border:1px solid #226aa6; }
+
+
+.pagebtn { text-align:center; padding-top:15px; }
+.pagebtn> a:first-child { margin-left:0px !important;}
+.pagebtn> a { /*8isplay:inline-block;*/ width:18px;height:16px;border:1px #d7d7d7 solid;padding:5px 5px 3px 5px;vertical-align:middle}
+.pagebtn> a> img { height:24px; width:24px; border:0px;}
+.pagebtn> .select { color:#2176bc; border:1px #2176bc solid; font-weight:bold;}
+.pagebtn> a:hover {border:1px #2176bc solid;font-weight:bold;color:#2176bc}
+.pagebtn> .arrowbtn { color:#c8c8c8; font-weight:bold; letter-spacing:-2px; }
+
+.board_search {background-color:#ececec;border:1px #999 solid;padding:16px 24px;text-align:center;margin-bottom:20px}
+.board_search * {vertical-align:middle}
+.board_search select {border:1px #ccc solid;padding:3px}
+.board_search .s_input3 {border:1px #ccc solid;padding:4px;width:420px}
+.board_search .keyword {border:1px #ccc solid;padding:4px;width:300px}
+.board_search #s_input3 {border:1px #ccc solid;padding:4px;width:430px}
+.board_search #s_input4 {border:1px #ccc solid;padding:4px;width:230px}
+
+/* legacy : reset.css */
+.t_right{text-align:right !important}
+
+.caption-Hidden {
+	position: absolute;
+	overflow: hidden;
+	border: 0;
+	z-index: -1;
+	width:  1px;
+	height: 1px;
+	clip: rect(1px,1px,1px,1px);
+	clip-path: inset(50%);
+}
+
+body, tr, td {font-size:10pt; font-family:굴림,verdana; color:#433F37; line-height:19px;}
+table, img {border:none}
+
+/* Padding ******/
+.pl_01 {padding:1 10 0 10; line-height:19px;}
+.pl_03 {font-size:20pt; font-family:굴림,verdana; color:#FFFFFF; line-height:29px;}
+
+/* Link ******/
+.a:link  {font-size:9pt; color:#333333; text-decoration:none}
+.a:visited { font-size:9pt; color:#333333; text-decoration:none}
+.a:hover  {font-size:9pt; color:#0174CD; text-decoration:underline}
+
+.txt_03a:link  {font-size: 8pt;line-height:18px;color:#333333; text-decoration:none}
+.txt_03a:visited {font-size: 8pt;line-height:18px;color:#333333; text-decoration:none}
+.txt_03a:hover  {font-size: 8pt;line-height:18px;color:#EC5900; text-decoration:underline}

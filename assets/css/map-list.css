@@ -1,0 +1,39 @@
+@charset "utf-8";
+
+/* 통합지도 목록 보정 (style.css 오버라이드) */
+
+/* 목록 항목 우상단 즐겨찾기 별표 — 항목 버튼(.structured-list__button, padding 20px 28px) 안쪽 상단 오른쪽에 겹친다 */
+.search-result__list .structured-list__item {
+  position: relative;
+}
+
+.search-result__list .structured-list__item > .button--bookmark {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  z-index: 1;
+  height: 1.5rem;
+}
+
+.search-result__list .structured-list__item > .button--bookmark .svg-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* 내 주변 충전소 목록 스크롤 — 납품 CSS 의 height 값이 '680pxpx' 로 무효라 스크롤이 걸리지 않는다 */
+.around-station .search-result .structured-list {
+  overflow: auto;
+  height: 680px;
+}
+
+@media (max-width: 64rem) {
+  .around-station .search-result .structured-list {
+    height: auto;
+  }
+}
+
+/* 2차 탭(전기차/수소차) 선택 표시 — 납품 CSS 는 상위 요소의 --selected 를 보므로 li 선택 상태가 반영되지 않는다 */
+.energy-station > .tab .tab__item--selected .tab__button {
+  background-color: #1BA877;
+  color: #ffffff;
+}

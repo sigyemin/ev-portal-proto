@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충전요금 조회</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전소·요금 정보</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>회원카드 관리</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전요금 조회</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">충전요금 조회</h1>
+              <p class="page-header__description">월별 이용금액과 충전 건별 요금·결제 내역을 조회하고, 건별 영수증을 확인할 수 있습니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+          <!-- 충전요금 조회 -->
+          <div class="charge-wrapper">
+            <section class="section">
+              <div class="board-wrapper">
+                <div class="board-toolbar">
+                  <div class="heading-group heading-group--row">
+                    <h2 class="heading-title">
+                      <i class="svg-icon symbol-electricity" aria-hidden="true"></i>
+                      충전요금 조회
+                    </h2>
+                  </div>
+                </div>
+                <!-- 각 월별 이용금액 -->
+                <div class="charge-monthly">
+                  <div class="charge-monthly__header">
+                    <button type="button" class="button button--icon button--secondary button--month-prev">
+                      <i class="svg-icon arrow-prev"></i>
+                      <span class="button__label">이전달</span>
+                    </button>
+                    <span class="charge-monthly__label"></span>
+                    <button type="button" class="button button--icon button--secondary button--month-next">
+                      <i class="svg-icon arrow-next"></i>
+                      <span class="button__label">다음달</span>
+                    </button>
+                  </div>
+                  <div class="charge-monthly__body">
+                    <!-- 이번달 총 이용금액 -->
+                    <div class="month-summary">
+                      <dl class="month-summary__list">
+                        <dt class="month-summary__title">선택한 달 총 이용금액</dt>
+                        <dd class="month-summary__total">
+                          <strong id="monthTotal">0</strong>
+                          원
+                        </dd>
+                      </dl>
+                    </div>
+                    <!-- 막대바 차트 -->
+                    <div class="charge-monthly__chart">
+                      <div id="chartBarMonthlyUsage" class="bar-chart bar-chart--monthly" role="img" aria-label="1월부터 12월까지의 월별 이용금액을 표시한 막대 차트입니다. 지난달은 회색 막대, 선택한 달은 녹색 막대로 표시하며, 아직 오지 않은 달은 표시하지 않습니다."></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 게시판 검색폼 -->
+                <div class="board-search">
+                  <!-- 검색폼 -->
+                  <div class="search-form">
+                    <div class="search-form__elements">
+                      <!-- 폼 항목 -->
+                      <div class="element-group">
+                        <div class="element-group__label">
+                          <label for="searchChargingItem01" class="element-label">카드번호</label>
+                        </div>
+                        <div class="element-group__control">
+                          <select id="searchChargingItem01" class="select">
+                            <option value="">전체</option>
+                            <option value="9451002133881204">9451-0021-3388-1204 (12가3456)</option>
+                            <option value="9451002133882277">9451-0021-3388-2277 (34나7890)</option>
+                            <option value="9451002133883391">9451-0021-3388-3391 (56다1234)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                      <!-- 폼 항목 -->
+                      <div class="element-group">
+                        <div class="element-group__label">
+                          <label for="searchChargingItem02" class="element-label">충전사업자</label>
+                        </div>
+                        <div class="element-group__control">
+                          <select id="searchChargingItem02" class="select">
+                            <option value="">전체</option>
+                            <option value="B01">환경부(한국환경공단)</option>
+                            <option value="B02">한국전력</option>
+                            <option value="B03">GS차지비</option>
+                            <option value="B04">SK일렉링크</option>
+                            <option value="B07">에버온</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                      <!-- 폼 항목 -->
+                      <div class="element-group">
+                        <div class="element-group__label">
+                          <label for="searchChargingItem03" class="element-label">기간</label>
+                        </div>
+                        <div class="element-group__control">
+                          <select id="searchChargingItem03" class="select">
+                            <option value="">선택한 달</option>
+                            <option value="0">전일</option>
+                            <option value="1">전월</option>
+                            <option value="3">당월</option>
+                            <option value="5">1분기</option>
+                            <option value="6">2분기</option>
+                            <option value="7">3분기</option>
+                            <option value="8">4분기</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!-- //폼 항목 -->
+                    </div>
+                    <div class="search-form__actions">
+                      <button type="button" class="button button--primary button--search">
+                        <span class="button__label">검색</span>
+                      </button>
+                      <button type="button" class="button button--secondary button--reset">
+                        <span class="button__label">초기화</span>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- //검색폼 -->
+                </div>
+                <!-- //게시판 검색폼 -->
+                <!-- 게시판 도구모음 -->
+                <div class="board-toolbar">
+                  <div class="board-toolbar__total">
+                    <p class="total-number">
+                      총
+                      <b class="total-number__total">0</b>
+                      건
+                    </p>
+                  </div>
+                  <div class="board-toolbar__options">
+                    <button type="button" class="button button--secondary js-excel">
+                      <i class="svg-icon download"></i>
+                      <span class="button__label">Excel 다운로드</span>
+                    </button>
+                    <button type="button" class="button button--secondary js-statement">
+                      <i class="svg-icon file-check"></i>
+                      <span class="button__label">명세서 확인</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- //게시판 도구모음 -->
+                <!-- 게시판 목록 -->
+                <div class="board-list">
+                  <div id="myGrid" class="ag-grid ag-theme-ev"></div>
+                  <div class="table-footbar">
+                    <div class="table-tfoot">
+                      <div class="table-tfoot__item">
+                        총 충전시간
+                        <b id="sumCgTime">-</b>
+                      </div>
+                      <div class="table-tfoot__item">
+                        총 충전량
+                        <b id="sumCgKwh">-</b>
+                        kWh
+                      </div>
+                      <div class="table-tfoot__item">
+                        총 충전금액
+                        <b id="sumCgFee">-</b>
+                        원
+                      </div>
+                      <div class="table-tfoot__item">
+                        총 결제금액
+                        <b id="sumCgPay">-</b>
+                        원
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- //게시판 목록 -->
+                <!-- 페이징 -->
+                <div class="pagination pc-only">
+                  <button type="button" class="pagination__button">
+                    <i class="svg-icon arrow-first"></i>
+                    <span class="ir-pm">첫 페이지</span>
+                  </button>
+                  <button type="button" class="pagination__button">
+                    <i class="svg-icon arrow-prev"></i>
+                    <span class="ir-pm">이전</span>
+                  </button>
+                  <div class="pagination__list">
+                    <a href="#none" class="pagination__link pagination__link--selected">1</a>
+                  </div>
+                  <button type="button" class="pagination__button">
+                    <i class="svg-icon arrow-next"></i>
+                    <span class="ir-pm">다음</span>
+                  </button>
+                  <button type="button" class="pagination__button">
+                    <i class="svg-icon arrow-last"></i>
+                    <span class="ir-pm">마지막 페이지</span>
+                  </button>
+                </div>
+                <!-- 모바일 전용 -->
+                <div class="pagination pagination--fraction">
+                  <button type="button" class="pagination__button">
+                    <i class="svg-icon arrow-prev"></i>
+                    <span>이전</span>
+                  </button>
+                  <div class="pagination__text">
+                    <span class="pagination__current">1</span>
+                    <span class="pagination__total">1</span>
+                  </div>
+                  <button type="button" class="pagination__button">
+                    <span>다음</span>
+                    <i class="svg-icon arrow-next"></i>
+                  </button>
+                </div>
+                <!-- //페이징 -->
+                <div class="board-description">
+                  <p class="bullet bullet--refer">기후에너지환경부와 타기관 충전기 이용요금을 한번에 조회합니다. 조회 기간은 최대 3개월입니다.</p>
+                  <p class="bullet bullet--refer">BC그린카드 간편결제 할인은 <strong>카드사 대금청구 시</strong> 적용되며, 자세한 사항은 BC카드(1588-4000)로 문의해 주십시오.</p>
+                  <p class="bullet bullet--refer">시범운영 등 무료충전 건은 영수증이 발급되지 않습니다.</p>
+                  <p class="bullet bullet--refer">결제실패 내역은 간편결제 실패로 정지된 회원카드인 경우 조회됩니다. 그외 결제결과는 이용요금 조회 메뉴에서 확인 가능합니다.</p>
+                  <p class="bullet bullet--refer">재결제 내역은 결제카드 등록 시 자동 청구된 금액의 내역이 조회됩니다.</p>
+                </div>
+              </div>
+            </section>
+          </div>
+          <!-- //충전요금 조회 -->
+          <!-- modal 충전영수증 -->
+          <div class="modal-container" id="modalChargeReceipt" role="dialog" aria-modal="true" aria-hidden="true">
+            <div class="modal" tabindex="0" style="width: 800px">
+              <div class="modal__header">
+                <h1 class="modal__header-title">충전영수증 (건별 증빙)</h1>
+                <p class="modal__header-description" id="rcpSubject"></p>
+              </div>
+              <div class="modal__body">
+                <div class="board-wrapper" id="rcpPrintArea">
+                  <div class="board-data">
+                    <table class="table table--form">
+                      <caption>충전 영수증 내역</caption>
+                      <colgroup>
+                        <col style="width: 28%" />
+                        <col />
+                      </colgroup>
+                      <tbody>
+                        <tr>
+                          <th scope="row">충전소</th>
+                          <td id="rcpStation"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">회원명</th>
+                          <td id="rcpName"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">차량번호</th>
+                          <td id="rcpCarId"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">회원카드번호</th>
+                          <td id="rcpCardNo"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">충전 시작</th>
+                          <td id="rcpStart"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">충전 종료</th>
+                          <td id="rcpEnd"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">충전량</th>
+                          <td id="rcpPow"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">충전금액</th>
+                          <td id="rcpFee"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">결제금액</th>
+                          <td id="rcpPay"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">결제수단</th>
+                          <td id="rcpCalculate"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">결제일시</th>
+                          <td id="rcpPayDt"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">카드 승인번호</th>
+                          <td id="rcpAuth"></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">사업자</th>
+                          <td>
+                            한국자동차환경협회 (108-82-07206)
+                            <br />
+                            <span class="text-size-small">경기도 안양시 동안구 시민대로 317 · 전기자동차 헬프데스크 1661-9408</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="table-footbar">
+                      <div class="table-tfoot">
+                        <div class="table-tfoot__item">
+                          결제금액 (총액)
+                          <b id="rcpPayTotal">0</b>
+                          원
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="board-description">
+                    <p class="bullet bullet--refer">
+                      표시 금액은
+                      <strong>할인이 반영된 실 결제금액</strong>
+                      입니다(별도 할인·부가세 항목 없음, 총액 표기). BC그린카드 간편결제 할인은
+                      <strong>카드사 대금청구 시</strong>
+                      적용됩니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal__footer">
+                <button type="button" class="button button--secondary">
+                  <span class="button__label">닫기</span>
+                </button>
+                <button type="button" class="button button--primary js-receipt-print">
+                  <span class="button__label">인쇄</span>
+                </button>
+              </div>
+              <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+              <div class="modal__close">
+                <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+                  <i class="svg-icon close"></i>
+                  <span class="button__label">팝업닫기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- //modal -->
+          <!-- modal 명세서 확인 -->
+          <div class="modal-container" id="modalPostStatement" role="dialog" aria-modal="true" aria-hidden="true">
+            <div class="modal" tabindex="0" style="width: 720px">
+              <div class="modal__header">
+                <h1 class="modal__header-title">충전요금 명세서</h1>
+                <p class="modal__header-description" id="stmtSubject"></p>
+              </div>
+              <div class="modal__body">
+                <div class="board-wrapper" id="stmtPrintArea">
+                  <div class="data-set-group">
+                    <dl class="data-set">
+                      <dt class="data-set__label">명세서 대상 연월</dt>
+                      <dd class="data-set__figure"><span id="stmtMonth">-</span></dd>
+                    </dl>
+                    <dl class="data-set">
+                      <dt class="data-set__label">명세서 발행일자</dt>
+                      <dd class="data-set__figure"><span id="stmtIssueDate">-</span></dd>
+                    </dl>
+                  </div>
+                  <div class="data-set-group">
+                    <dl class="data-set">
+                      <dt class="data-set__label">월 확정 결제금액</dt>
+                      <dd class="data-set__figure">
+                        <span id="stmtPay">0</span>
+                        <span class="unit">원</span>
+                      </dd>
+                    </dl>
+                    <dl class="data-set">
+                      <dt class="data-set__label">결제 건수</dt>
+                      <dd class="data-set__figure">
+                        <span id="stmtCnt">0</span>
+                        <span class="unit">건</span>
+                      </dd>
+                    </dl>
+                    <dl class="data-set">
+                      <dt class="data-set__label">총 충전량</dt>
+                      <dd class="data-set__figure">
+                        <span id="stmtKwh">0.0</span>
+                        <span class="unit">kWh</span>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="board-data">
+                    <table class="table table--data">
+                      <caption>충전사업자별 집계</caption>
+                      <colgroup>
+                        <col />
+                        <col style="width: 22%" />
+                        <col style="width: 28%" />
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th scope="col">충전사업자</th>
+                          <th scope="col">건수</th>
+                          <th scope="col">충전금액</th>
+                        </tr>
+                      </thead>
+                      <tbody id="stmtBusiBody">
+                        <tr>
+                          <td colspan="3">조회된 내용이 없습니다.</td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th scope="row">합계</th>
+                          <td id="stmtFootCnt">0건</td>
+                          <td id="stmtFootPay">0원</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div class="board-description">
+                    <p class="bullet bullet--refer">금액은 총액(부가세 포함)이며, 결제 완료분 기준입니다.</p>
+                    <p class="bullet bullet--refer">포인트 사용액은 명세 금액에서 제외됩니다.</p>
+                    <p class="bullet bullet--refer">세부 이용내역은 이용요금 목록·엑셀에서 확인하세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal__footer">
+                <button type="button" class="button button--secondary">
+                  <span class="button__label">닫기</span>
+                </button>
+                <button type="button" class="button button--primary js-statement-print">
+                  <span class="button__label">인쇄</span>
+                </button>
+              </div>
+              <div class="modal__close">
+                <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+                  <i class="svg-icon close"></i>
+                  <span class="button__label">팝업닫기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- //modal -->
+        </div>
+      </div>
+
+<script type="application/json" id="pageInfo">{"nowYyyymm": "202608", "yyyymm": "202608", "cardNo": "", "bid": "", "dateRange": "2026-08-01 ~ 2026-08-21"}</script>
+<script type="application/json" id="monthSum">[{"MON": "202601", "SUM_CG_PAY": 41200}, {"MON": "202602", "SUM_CG_PAY": 39800}, {"MON": "202603", "SUM_CG_PAY": 46500}, {"MON": "202604", "SUM_CG_PAY": 51300}, {"MON": "202605", "SUM_CG_PAY": 38400}, {"MON": "202606", "SUM_CG_PAY": 52100}, {"MON": "202607", "SUM_CG_PAY": 47300}, {"MON": "202608", "SUM_CG_PAY": 61200}, {"MON": "202609", "SUM_CG_PAY": 0}, {"MON": "202610", "SUM_CG_PAY": 0}, {"MON": "202611", "SUM_CG_PAY": 0}, {"MON": "202612", "SUM_CG_PAY": 0}]</script>
+
+
+<script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+<script src="assets/js/board-grid.js?v=20260821f"></script>
+<script src="js/echarts/echarts.js?v=20260821f"></script>
+<script>
+$(function () {
+  var PAGE_INFO = (function () {
+    try { return JSON.parse(document.getElementById('pageInfo').textContent) || {}; } catch (e) { return {}; }
+  })();
+  var MONTH_SUM = (function () {
+    try { return JSON.parse(document.getElementById('monthSum').textContent) || []; } catch (e) { return []; }
+  })();
+
+  var LIST_URL = '/mngInqire/chargeFee/selectChargeTrade.ajax';
+  var RECEIPT_URL = '/mngInqire/chargeFee/chargeTradeReceipt.ajax';
+  var EXCEL_URL = '/mngInqire/chargeFee/chargeTradeExcel.do';
+  var STATEMENT_URL = '/mngInqire/chargeFee/postStatement.ajax';
+  var PAGE_URL = '/mngInqire/initBillSearchAction.do';
+  var STYLE_URL = '/assets/css/style.css';
+
+  var PER_PAGE = 10;
+  var MAX_DAYS = 93;
+  var COLOR_PREV = '#8C9EBA';
+  var COLOR_CURRENT = '#1BA877';
+  var COLOR_NEXT_BORDER = '#DAE0E9';
+
+  var curPage = 1;
+  var curYyyymm = String(PAGE_INFO.yyyymm || '');
+  var nowYyyymm = String(PAGE_INFO.nowYyyymm || '');
+  var dateRange = PAGE_INFO.dateRange || {};
+  var gridApi = null;
+  var monthChart = null;
+
+  function esc(v) { return v == null ? '' : $('<span>').text(String(v)).html(); }
+  function pad2(v) { return (Number(v) < 10 ? '0' : '') + Number(v); }
+  function toNum(v) { return Number(String(v == null ? '' : v).replace(/[^0-9.-]/g, '')) || 0; }
+  function comma(v) { return toNum(v).toLocaleString(); }
+
+  // 'YYYY-MM-DD HH24:MI:SS' → 날짜/시간 2줄 셀
+  function twoLine(v) {
+    var parts = String(v == null ? '' : v).split(' ');
+    if (!parts[0]) return '';
+    return '<div class="ag-cell-multiline">' + esc(parts[0]) + (parts[1] ? '<br>' + esc(parts[1]) : '') + '</div>';
+  }
+
+  function ellipsisCell(v) {
+    return '<div class="ag-cell-multiline"><div class="multi-ellipsis">' + esc(v) + '</div></div>';
+  }
+
+  // 선택한 달 1일 ~ 말일
+  function monthRange(yyyymm) {
+    var y = Number(String(yyyymm).substring(0, 4));
+    var m = Number(String(yyyymm).substring(4, 6));
+    var last = new Date(y, m, 0).getDate();
+    return [y + '-' + pad2(m) + '-01', y + '-' + pad2(m) + '-' + pad2(last)];
+  }
+
+  // 기간 select → [시작일, 종료일]
+  function periodRange() {
+    var v = $('#searchChargingItem03').val() || '';
+    var map = {
+      '0': ['START_P_DAY', 'END_P_DAY'],
+      '1': ['START_P_MONTH', 'END_P_MONTH'],
+      '3': ['START_C_MONTH', 'END_C_MONTH'],
+      '5': ['START_14', 'END_14'],
+      '6': ['START_24', 'END_24'],
+      '7': ['START_34', 'END_34'],
+      '8': ['START_44', 'END_44']
+    };
+    if (!v) return monthRange(curYyyymm);
+    var keys = map[v];
+    return [dateRange[keys[0]] || '', dateRange[keys[1]] || ''];
+  }
+
+  function daysDiff(from, to) {
+    var sd = new Date(from);
+    var ed = new Date(to);
+    if (isNaN(sd.getTime()) || isNaN(ed.getTime())) return 0;
+    return Math.abs(Math.round((ed - sd) / 86400000));
+  }
+
+  function searchParams() {
+    var range = periodRange();
+    return {
+      card_no: $('#searchChargingItem01').val() || '',
+      bid: $('#searchChargingItem02').val() || '',
+      s_date_str: range[0],
+      s_date_end: range[1]
+    };
+  }
+
+  // 월별 이용금액 차트
+  function monthType(mon) {
+    if (mon === curYyyymm) return 'current';
+    if (nowYyyymm && mon > nowYyyymm) return 'next';
+    return 'prev';
+  }
+
+  function renderChart() {
+    var dom = document.getElementById('chartBarMonthlyUsage');
+    if (!dom || typeof echarts === 'undefined') return;
+    if (!monthChart) monthChart = echarts.init(dom);
+
+    var barData = $.map(MONTH_SUM, function (row) {
+      var type = monthType(String(row.MON));
+      var isNext = type === 'next';
+      var itemStyle = type === 'current' ? { color: COLOR_CURRENT } : { color: COLOR_PREV };
+
+      var value = isNext ? 0 : toNum(row.SUM_CG_PAY);
+      // 아직 오지 않은 달과 이용금액이 없는 달은 막대를 그리지 않는다 — 값 0 이어도 borderRadius 때문에 캡이 남는다
+      if (value === 0) {
+        itemStyle = { color: 'transparent', borderWidth: 0, borderRadius: 0 };
+      }
+
+      return {
+        value: value,
+        itemStyle: itemStyle,
+        silent: isNext,
+        cursor: isNext ? 'default' : 'pointer',
+        emphasis: isNext ? { disabled: true } : undefined
+      };
+    });
+
+    monthChart.setOption({
+      aria: { enabled: true, description: '1월부터 12월까지의 월별 이용금액을 표시한 막대 차트입니다.' },
+      animation: true,
+      animationDuration: 1000,
+      animationEasing: 'cubicOut',
+      grid: { left: 0, right: 0, top: 20, bottom: 20 },
+      xAxis: {
+        type: 'category',
+        data: $.map(MONTH_SUM, function (row) { return Number(String(row.MON).substring(4, 6)); }),
+        axisLine: { lineStyle: { type: 'dashed', color: COLOR_NEXT_BORDER } },
+        axisLabel: { color: '#111', fontSize: 12 },
+        axisTick: { show: false }
+      },
+      yAxis: { show: false },
+      series: [{ type: 'bar', data: barData, barWidth: '53%', itemStyle: { borderRadius: [8, 8, 0, 0] } }],
+      tooltip: {
+        trigger: 'item',
+        position: 'top',
+        backgroundColor: 'transparent',
+        extraCssText: 'box-shadow:none',
+        borderWidth: 0,
+        padding: 0,
+        formatter: function (params) {
+          var row = MONTH_SUM[params.dataIndex];
+          if (!row || monthType(String(row.MON)) === 'next') return '';
+          return '<div class="chart-tooltip">' + Number(String(row.MON).substring(4, 6)) + '월 / <strong>' + comma(row.SUM_CG_PAY) + '원</strong><span class="chart-tooltip__arrow"></span></div>';
+        }
+      }
+    });
+
+    monthChart.off('click');
+    monthChart.on('click', function (params) {
+      var row = MONTH_SUM[params.dataIndex];
+      if (row && monthType(String(row.MON)) !== 'next') setMonth(String(row.MON));
+    });
+  }
+
+  function renderMonthSummary() {
+    var y = String(curYyyymm).substring(0, 4);
+    var m = Number(String(curYyyymm).substring(4, 6));
+    var amount = 0;
+    $.each(MONTH_SUM, function (i, row) {
+      if (String(row.MON) === curYyyymm) { amount = toNum(row.SUM_CG_PAY); return false; }
+    });
+    $('.charge-monthly__label').text(y + '년 ' + m + '월');
+    $('#monthTotal').text(amount.toLocaleString());
+  }
+
+  // 기준 월 변경 — 연도를 벗어나면 서버에서 해당 연도 차트를 다시 받는다
+  function setMonth(yyyymm) {
+    if (!yyyymm || yyyymm === curYyyymm) return;
+    if (yyyymm.substring(0, 4) !== curYyyymm.substring(0, 4)) {
+      var params = searchParams();
+      location.href = PAGE_URL + '?yyyymm=' + encodeURIComponent(yyyymm)
+        + '&card_no=' + encodeURIComponent(params.card_no)
+        + '&bid=' + encodeURIComponent(params.bid);
+      return;
+    }
+    curYyyymm = yyyymm;
+    renderMonthSummary();
+    renderChart();
+    if (!$('#searchChargingItem03').val()) fnGetList(1);
+  }
+
+  function shiftMonth(diff) {
+    var y = Number(curYyyymm.substring(0, 4));
+    var m = Number(curYyyymm.substring(4, 6)) + diff;
+    if (m < 1) { y -= 1; m = 12; }
+    if (m > 12) { y += 1; m = 1; }
+    setMonth(String(y) + pad2(m));
+  }
+
+  // 목록 조회
+  function fnGetList(pageNo) {
+    var params = searchParams();
+    if (params.s_date_str && params.s_date_end && daysDiff(params.s_date_str, params.s_date_end) > MAX_DAYS) {
+      alert('조회 기간은 3개월 이내로 설정해 주십시오.');
+      return;
+    }
+    curPage = pageNo || 1;
+    $.ajax({
+      type: 'post',
+      url: LIST_URL,
+      dataType: 'json',
+      data: $.extend({ spageNo: curPage, srecordCountPerPage: PER_PAGE, spageSize: 10 }, params),
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+        var sum = (obj && obj.sumdata) ? obj.sumdata : {};
+
+        gridApi.setGridOption('rowData', list);
+        $('.total-number__total').text(toNum(page._listCount).toLocaleString());
+        $('#sumCgTime').text(sum.SUM_CG_TIME || '-');
+        $('#sumCgKwh').text(sum.SUM_CG_KWH || '0');
+        $('#sumCgFee').text(sum.SUM_CG_FEE || '0');
+        $('#sumCgPay').text(sum.SUM_CG_PAY || '0');
+        fnRenderPaging(toNum(page._listCount), toNum(page._pageNo) || curPage, toNum(page._recordCountPerPage) || PER_PAGE);
+      }
+    });
+  }
+
+  function fnRenderPaging(listCount, current, perPage) {
+    var totalPages = Math.max(1, Math.ceil(listCount / perPage));
+    if (current > totalPages) current = totalPages;
+
+    var $pc = $('.board-wrapper .pagination.pc-only');
+    var $list = $pc.find('.pagination__list');
+    var block = Math.floor((current - 1) / 10);
+    var start = block * 10 + 1;
+    var end = Math.min(start + 9, totalPages);
+
+    var html = '';
+    for (var p = start; p <= end; p++) {
+      html += '<a href="#none" class="pagination__link' + (p === current ? ' pagination__link--selected' : '') + '" data-page="' + p + '">' + p + '</a>';
+    }
+    $list.html(html);
+
+    var $btns = $pc.find('.pagination__button');
+    $btns.eq(0).off('click.pg').on('click.pg', function () { if (current > 1) fnGetList(1); });
+    $btns.eq(1).off('click.pg').on('click.pg', function () { if (current > 1) fnGetList(current - 1); });
+    $btns.eq(2).off('click.pg').on('click.pg', function () { if (current < totalPages) fnGetList(current + 1); });
+    $btns.eq(3).off('click.pg').on('click.pg', function () { if (current < totalPages) fnGetList(totalPages); });
+    $list.find('.pagination__link').off('click.pg').on('click.pg', function (e) {
+      e.preventDefault();
+      fnGetList(Number($(this).data('page')));
+    });
+
+    var $frac = $('.board-wrapper .pagination--fraction');
+    $frac.find('.pagination__current').text(current);
+    $frac.find('.pagination__total').text(totalPages);
+    $frac.find('.pagination__button').eq(0).off('click.pg').on('click.pg', function () { if (current > 1) fnGetList(current - 1); });
+    $frac.find('.pagination__button').eq(1).off('click.pg').on('click.pg', function () { if (current < totalPages) fnGetList(current + 1); });
+  }
+
+  // 건별 영수증
+  function openReceipt(row, opener) {
+    $.ajax({
+      type: 'post',
+      url: RECEIPT_URL,
+      dataType: 'json',
+      data: { card_no: row.CARD_NO, bid: row.BID, sid: row.SID, cid: row.CID, tsdt: row.TSDT_ORI },
+      success: function (obj) {
+        var r = (obj && obj.receipt) ? obj.receipt : {};
+        $('#rcpSubject').text((r.TSDT || '') + (r.STAT_NM ? ' · ' + r.STAT_NM : ''));
+        $('#rcpStation').text(r.STAT_NM || '-');
+        $('#rcpName').text(r.NAME || '-');
+        $('#rcpCarId').text(r.CAR_ID || '-');
+        $('#rcpCardNo').text(r.MASK_CARD_NO || '-');
+        $('#rcpStart').text(r.TSDT || '-');
+        $('#rcpEnd').text(r.TEDT || '-');
+        $('#rcpPow').text((r.POW == null ? '-' : r.POW + 'kWh'));
+        $('#rcpFee').text((r.MON == null ? '-' : r.MON + '원'));
+        $('#rcpPay').text((r.PAYMON == null ? '-' : r.PAYMON + '원'));
+        $('#rcpCalculate').text(r.CALCULATE || '-');
+        $('#rcpPayDt').text(r.PAYDT || '-');
+        $('#rcpAuth').text(r.AUTH_CD || '-');
+        $('#rcpPayTotal').text(comma(r.PAYMON).toString());
+        openModal('#modalChargeReceipt', { width: 800, opener: opener });
+      }
+    });
+  }
+
+  // 모달 인쇄 — modal__footer 클릭은 ui-common 이 닫기로 위임하므로 전파를 막는다
+  function printArea(e, areaId, title, subject) {
+    // ui-common 이 modal__footer 버튼에 닫기를 직접 바인딩하므로 뒤 핸들러까지 막아 모달을 유지한다
+    e.stopImmediatePropagation();
+    var area = document.getElementById(areaId);
+    if (!area) return;
+    var win = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=1,status=0');
+    if (!win) return;
+    var head = subject ? '<h1 class="heading-title">' + title + '</h1><p class="text-description">' + subject + '</p>' : '';
+    win.document.write('<html><head><meta charset="utf-8"><title>' + title + '</title>'
+      + '<link rel="stylesheet" href="' + STYLE_URL + '"></head><body><div class="board-wrapper">'
+      + head + area.innerHTML + '</div></body></html>');
+    win.document.close();
+    win.focus();
+    setTimeout(function () { win.print(); win.close(); }, 500);
+  }
+
+  function submitForm(action, params) {
+    var $form = $('<form>').attr({ method: 'post', action: action });
+    $.each(params || {}, function (key, value) {
+      $form.append($('<input>').attr({ type: 'hidden', name: key }).val(value));
+    });
+    $form.appendTo('body').submit().remove();
+  }
+
+  // 그리드 컬럼 (selectChargeTrade.ajax 응답 필드)
+  var columnDefs = [
+    { field: 'NUM', headerName: '번호', width: 84, minWidth: 84 },
+    { field: 'BUSI_NM', headerName: '충전사업자', width: 140, minWidth: 140, cellRenderer: function (p) { return ellipsisCell(p.value); } },
+    { field: 'STAT_NM', headerName: '충전소명', flex: 1, minWidth: 160, cellStyle: { textAlign: 'left' }, cellRenderer: function (p) { return ellipsisCell(p.value); } },
+    { field: 'CARD_NO', headerName: '카드번호', width: 150, minWidth: 150 },
+    { field: 'TSDT', headerName: '충전시작', width: 116, minWidth: 116, cellRenderer: function (p) { return twoLine(p.value); } },
+    { field: 'TEDT', headerName: '충전종료', width: 116, minWidth: 116, cellRenderer: function (p) { return twoLine(p.value); } },
+    { field: 'POW', headerName: '충전량(kWh)', width: 116, minWidth: 116, cellDataType: false },
+    { field: 'MON', headerName: '충전금액(원)', width: 120, minWidth: 120, cellDataType: false },
+    { field: 'PAYMON', headerName: '결제금액(원)', width: 120, minWidth: 120, cellDataType: false },
+    {
+      field: 'PERRMSG', headerName: '상태', width: 108, minWidth: 108, cellClass: 'ag-cell-badge text-center',
+      cellRenderer: function (p) {
+        if (!p.data) return '';
+        var cls = p.data.PAYRESULT === 'Y' ? 'badge badge--light badge--primary' : 'badge badge--light badge--error';
+        return '<span class="' + cls + '">' + esc(p.value) + '</span>';
+      }
+    },
+    { field: 'PAYDT', headerName: '결제일시', width: 116, minWidth: 116, cellRenderer: function (p) { return twoLine(p.value); } },
+    {
+      field: 'RECEIPT', headerName: '영수증', width: 108, minWidth: 108, sortable: false, cellDataType: false,
+      cellRenderer: function (p) {
+        if (!p.data) return '';
+        if (p.data.PAYRESULT !== 'Y') return '<span class="text-disabled">미발급</span>';
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'button button--tertiary';
+        btn.title = '영수증';
+        var label = document.createElement('span');
+        label.className = 'button__label';
+        label.innerText = '영수증';
+        btn.appendChild(label);
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openReceipt(p.data, e.currentTarget);
+        });
+        return btn;
+      },
+      suppressKeyboardEvent: function (params) {
+        var key = params.event.key;
+        return key === 'Tab' || key === 'Enter' || key === ' ';
+      }
+    }
+  ];
+
+  // 명세서(후불) — 선택한 월의 결제 완료분 요약과 충전사업자별 집계
+  function openStatement(opener) {
+    $.ajax({
+      type: 'post',
+      url: STATEMENT_URL,
+      dataType: 'json',
+      data: { yyyymm: curYyyymm },
+      success: function (obj) {
+        renderStatement(obj || {});
+        openModal('#modalPostStatement', { width: 720, opener: opener });
+      },
+      error: function () {
+        alert('명세서를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      }
+    });
+  }
+
+  function renderStatement(obj) {
+    var sum = obj.sum || {};
+    var list = obj.busiStat || [];
+    var month = String(obj.yyyymm || curYyyymm);
+    var monthLabel = month.substring(0, 4) + '-' + month.substring(4, 6);
+    var cnt = sum.PAY_CNT || '0';
+    var pay = sum.SUM_PAY || '0';
+
+    $('#stmtSubject').text('과금구분 후불 · 대상 연월 ' + monthLabel);
+    $('#stmtMonth').text(monthLabel);
+    $('#stmtIssueDate').text(obj.issueDate || '-');
+    $('#stmtPay').text(pay);
+    $('#stmtCnt').text(cnt);
+    $('#stmtKwh').text(sum.SUM_KWH || '0.0');
+
+    var $body = $('#stmtBusiBody').empty();
+    if (!list.length) {
+      $body.append($('<tr>').append($('<td>', { colspan: 3, text: '조회된 내용이 없습니다.' })));
+    } else {
+      $.each(list, function (i, r) {
+        $body.append($('<tr>')
+          .append($('<td>', { text: r.BUSI_NM || '-' }))
+          .append($('<td>', { text: (r.CNT || '0') + '건' }))
+          .append($('<td>', { text: (r.SUM_PAY || '0') + '원' })));
+      });
+    }
+    $('#stmtFootCnt').text(cnt + '건');
+    $('#stmtFootPay').text(pay + '원');
+  }
+
+  function bindEvents() {
+    $('.button--month-prev').on('click', function () { shiftMonth(-1); });
+    $('.button--month-next').on('click', function () { shiftMonth(1); });
+
+    $('.board-search .button--search').on('click', function () { fnGetList(1); });
+    $('.board-search .button--reset').on('click', function () {
+      $('#searchChargingItem01').val('');
+      $('#searchChargingItem02').val('');
+      $('#searchChargingItem03').val('');
+      fnGetList(1);
+    });
+    $('#searchChargingItem03').on('change', function () { fnGetList(1); });
+
+    $('.js-excel').on('click', function () {
+      var params = searchParams();
+      if (params.s_date_str && params.s_date_end && daysDiff(params.s_date_str, params.s_date_end) > MAX_DAYS) {
+        alert('조회 기간은 3개월 이내로 설정해 주십시오.');
+        return;
+      }
+      submitForm(EXCEL_URL, params);
+    });
+    $('.js-statement').on('click', function () { openStatement(this); });
+    $('.js-receipt-print').on('click', function (e) { printArea(e, 'rcpPrintArea', '충전영수증'); });
+    $('.js-statement-print').on('click', function (e) { printArea(e, 'stmtPrintArea', '충전요금 명세서', $('#stmtSubject').text()); });
+
+    $(window).on('resize.chargeFee', function () { if (monthChart) monthChart.resize(); });
+  }
+
+  // 헤더 문구가 잘리지 않도록 실제 글자 폭을 재서 컬럼 폭을 넓힌다 (합계가 넘치면 가로 스크롤)
+  function expandHeaderWidths(defs) {
+    var probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;top:-9999px;left:-9999px;visibility:hidden;white-space:nowrap;font-weight:700;font-size:0.9375rem';
+    document.body.appendChild(probe);
+
+    defs.forEach(function (def) {
+      probe.textContent = def.headerName || '';
+      // 좌우 패딩 40 + 정렬아이콘·간격 26 + 여유 8
+      var need = Math.ceil(probe.getBoundingClientRect().width) + (def.sortable === false ? 48 : 74);
+      if (def.flex) {
+        def.minWidth = Math.max(def.minWidth || 0, need);
+        return;
+      }
+      def.width = Math.max(def.width || 0, need);
+      def.minWidth = def.width;
+    });
+
+    probe.parentNode.removeChild(probe);
+  }
+
+  // 초기화
+  expandHeaderWidths(columnDefs);
+  gridApi = agGrid.createGrid(document.querySelector('#myGrid'), boardGridOptions({ columnDefs: columnDefs }));
+  $('#searchChargingItem01').val(PAGE_INFO.cardNo || '');
+  $('#searchChargingItem02').val(PAGE_INFO.bid || '');
+  renderMonthSummary();
+  renderChart();
+  bindEvents();
+  fnGetList(1);
+});
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
+</body>
+</html>

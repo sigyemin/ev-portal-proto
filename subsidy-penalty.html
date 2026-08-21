@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보조금 환수금 안내·계산기</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<!-- 환수금 계산 URL (계산은 서버에서 수행) -->
+<script type="text/javascript">
+var PENALTY_CALC_CONFIG = {
+  calcUrl : '/buySupprt/penaltyCalc/calc.ajax'
+};
+</script>
+<script type="text/javascript" src="js/buySupprt/psCalPenalty.js?v=20260821f"></script>
+
+<div class="contents-wrapper">
+  <!-- 상단 공통 영역 -->
+  <div class="page-header">
+    <div class="page-header__inner">
+      <!-- breadcrumb -->
+      <nav class="breadcrumb">
+        <ol class="breadcrumb__list">
+          <li class="breadcrumb__item">
+            <a href="index.html" class="breadcrumb__link">
+              <i class="svg-icon home"></i>
+              <span class="hidden">홈</span>
+            </a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="#" class="breadcrumb__link"><span>구매·보조금</span></a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="#" class="breadcrumb__link"><span>무공해차 구매보조금 안내</span></a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="subsidy-penalty.html" class="breadcrumb__link"><span>보조금 환수금 안내·계산기</span></a>
+          </li>
+        </ol>
+      </nav>
+      <!-- subject -->
+      <div class="page-header__subject">
+        <h1 class="heading-subject">보조금 환수금 안내·계산기</h1>
+        <p class="page-header__description">의무운행기간을 채우지 못한 경우 발생할 수 있는 보조금 환수금의 기준을 안내하고, 잔여 의무기간을 기준으로 예상 환수금을 계산합니다.</p>
+      </div>
+    </div>
+  </div>
+  <!-- 하단 각 페이지별 컨텐츠 -->
+  <div class="contents">
+    <div class="subsidy-wrapper">
+      <section class="section">
+        <div class="heading-group">
+          <h2 class="heading-title">
+            <i class="svg-icon symbol-electricity"></i>
+            환수금 계산
+          </h2>
+          <p class="heading-description">차량등록일과 운행 불가 해당일을 기준으로 전기차 운행기간을 산정하고, 환수 사유 구분에 따른 보조금 회수요율을 적용해 예상 환수금을 계산합니다.</p>
+        </div>
+        <div class="calculator">
+          <div class="calculator-form">
+            <div class="form">
+              <div class="form__item">
+                <div class="element-group">
+                  <label for="search_type" class="element-label">구분</label>
+                  <div class="element-group__control">
+                    <select name="search_type" id="search_type" class="select">
+                      <option value="01">수출을 목적으로 등록을 말소하는 경우</option>
+                      <option value="02">그 밖의 경우</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form__item">
+                <div class="element-group">
+                  <label for="base_day" class="element-label">차량등록일</label>
+                  <div class="element-group__control">
+                    <div class="datepicker">
+                      <input type="text" id="base_day" name="base_day" class="datepicker-input" title="차량등록일" />
+                    </div>
+                  </div>
+                </div>
+                <div class="element-group">
+                  <label for="scrap_day" class="element-label">운행 불가 해당일</label>
+                  <div class="element-group__control">
+                    <div class="datepicker">
+                      <input type="text" id="scrap_day" name="scrap_day" class="datepicker-input" title="운행 불가 해당일" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form__item">
+                <div class="element-group">
+                  <div class="element-label">폐차 사유</div>
+                  <div class="element-group__control">
+                    <div class="checkbox">
+                      <input type="checkbox" id="chkinev" name="chkinev" value="Y" class="checkbox__input" />
+                      <label for="chkinev" class="checkbox__label"><span>교통사고 등 불가피한 사유로 폐차</span></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form__item">
+                <div class="element-group">
+                  <label for="psamt" class="element-label">보조받은 금액</label>
+                  <div class="element-group__control">
+                    <div class="text-input-group">
+                      <input type="text" id="psamt" name="psamt" class="text-input" title="보조받은 금액" maxlength="15" inputmode="numeric" />
+                      <div class="text-input-group__append">
+                        <span class="text-mute">원</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="complete-message" id="pswon"></p>
+                </div>
+              </div>
+              <div class="form__item">
+                <div class="element-group">
+                  <label for="chamt" class="element-label">자부담금</label>
+                  <div class="element-group__control">
+                    <input type="text" id="chamt" name="chamt" class="text-input" title="자부담금" maxlength="15" inputmode="numeric" />
+                  </div>
+                  <p class="complete-message" id="chwon">보상금 있는 경우 입력</p>
+                </div>
+                <div class="element-group">
+                  <label for="inamt" class="element-label">보상 금액(차량 보상금)</label>
+                  <div class="element-group__control">
+                    <input type="text" id="inamt" name="inamt" title="보상 금액 입력" class="text-input" maxlength="15" inputmode="numeric" />
+                  </div>
+                  <p class="complete-message" id="inwon">보상금 있는 경우 입력</p>
+                </div>
+              </div>
+              <ul class="bullet bullet--refer complete-message">
+                <li>교통사고 등 불가피한 사유로 폐차 시에는 원칙적으로 보조금 미환수 합니다.</li>
+                <li>폐차 시 보험사 등으로부터 보상받은 금액(차량 보상금)이 구매 당시 자부담금을 초과하는 경우 차액 환수 합니다.</li>
+              </ul>
+            </div>
+            <div class="button-group button-group--align-right">
+              <button type="button" id="btnCalc" class="button button--large button--primary">
+                <span class="button__label">계산하기</span>
+              </button>
+            </div>
+          </div>
+          <div class="calculator-display">
+            <h3 class="calculator-display__title">총 예상환수금</h3>
+            <strong class="calculator-display__total"><span id="out_reamt">0</span>원</strong>
+            <ul class="bullet bullet--refer complete-message" id="out_detail" style="display:none;">
+              <li>의무운행기간 <span id="out_year"></span></li>
+              <li>운행기간 <span id="out_day"></span></li>
+              <li>적용 회수요율 <span id="out_rate"></span></li>
+              <li>차액환수금 <span id="out_adamt"></span></li>
+            </ul>
+            <p class="complete-message" id="out_guide">차량등록일·운행 불가 해당일을 입력하고 [계산하기]를 누르면 예상 환수금을 확인할 수 있습니다. (참고용 추정치)</p>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="heading-group">
+          <h2 class="heading-title">
+            <i class="svg-icon symbol-electricity"></i>
+            수출을 목적으로 등록을 말소하는 경우
+          </h2>
+        </div>
+        <div class="table-wrapper table-scroll table--bordered">
+          <table class="table table--bordered text-center">
+            <caption>운행기간별 보조금 회수요율 안내</caption>
+            <colgroup>
+              <col /><col /><col /><col /><col /><col /><col /><col /><col />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">전기차<br />운행기간</th>
+                <td>6개월<br />미만</td>
+                <td>6개월 이상<br />12개월 미만</td>
+                <td>12개월 이상<br />18개월 미만</td>
+                <td>18개월 이상<br />24개월 미만</td>
+                <td>24개월 이상<br />30개월 미만</td>
+                <td>30개월 이상<br />36개월 미만</td>
+                <td>36개월 이상<br />48개월 미만</td>
+                <td>48개월 이상<br />96개월 미만</td>
+              </tr>
+              <tr>
+                <th scope="row">보조금<br />회수요율</th>
+                <td>70%</td>
+                <td>65%</td>
+                <td>60%</td>
+                <td>55%</td>
+                <td>50%</td>
+                <td>40%</td>
+                <td>30%</td>
+                <td>20%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section">
+        <div class="heading-group">
+          <h2 class="heading-title">
+            <i class="svg-icon symbol-electricity"></i>
+            그 밖의 경우
+          </h2>
+        </div>
+        <div class="table-wrapper table-scroll table--bordered">
+          <table class="table table--bordered text-center">
+            <caption>운행기간별 보조금 회수요율 안내</caption>
+            <colgroup>
+              <col /><col /><col /><col /><col /><col /><col /><col /><col />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">전기차<br />운행기간</th>
+                <td>3개월<br />미만</td>
+                <td>3개월 이상<br />6개월 미만</td>
+                <td>6개월 이상<br />9개월 미만</td>
+                <td>9개월 이상<br />12개월 미만</td>
+                <td>12개월 이상<br />15개월 미만</td>
+                <td>15개월 이상<br />18개월 미만</td>
+                <td>18개월 이상<br />21개월 미만</td>
+                <td>21개월 이상<br />24개월 미만</td>
+              </tr>
+              <tr>
+                <th scope="row">보조금<br />회수요율</th>
+                <td>70%</td>
+                <td>65%</td>
+                <td>60%</td>
+                <td>55%</td>
+                <td>50%</td>
+                <td>40%</td>
+                <td>30%</td>
+                <td>20%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div><!-- /.contents -->
+</div><!-- /.contents-wrapper -->
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
+</body>
+</html>

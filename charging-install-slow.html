@@ -1,302 +1,304 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>공용 완속충전시설 직접신청 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
-<link rel="stylesheet" href="css/info.css">
-<style>
-  .pe-demo { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--text-tertiary, #94a3b8); }
-  .pe-demo input { accent-color: var(--color-primary-500); }
-  .pe-aside-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-  .src-note { color: var(--text-tertiary, #94a3b8); font-size: 13px; margin-top: 12px; line-height: 1.7; }
-  /* 사업개요 정의 리스트 */
-  .ci-overview { margin: 0; display: grid; grid-template-columns: 120px 1fr; row-gap: 0; }
-  .ci-overview dt { font-weight: 700; color: var(--color-primary-700); padding: 13px 0; border-top: 1px solid var(--border-light); font-size: 14.5px; }
-  .ci-overview dd { margin: 0; padding: 13px 0 13px 8px; border-top: 1px solid var(--border-light); color: var(--text-secondary); line-height: 1.7; font-size: 14.5px; }
-  .ci-overview dt:first-of-type, .ci-overview dd:first-of-type { border-top: none; }
-  .ci-overview .muted { color: var(--text-tertiary); font-size: 13px; }
-  /* 주의사항 */
-  .ci-caution { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px 24px; }
-  .ci-caution h4 { margin: 0 0 10px; font-size: 15.5px; font-weight: 700; color: #b45309; }
-  .ci-caution ul { margin: 0; padding-left: 18px; color: var(--text-secondary); line-height: 1.85; font-size: 14px; }
-  .ci-caution ul ul { margin: 4px 0 8px; }
-  @media (max-width: 520px){ .ci-overview { grid-template-columns: 1fr; } .ci-overview dt { padding-bottom: 0; border-top: 1px solid var(--border-light); } .ci-overview dd { padding-top: 4px; border-top: none; } }
-</style>
+<title>공용 완속충전시설 직접신청</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
 </head>
 <body>
-<a href="#main" class="skip-link">본문 바로가기</a>
-<script>window.__activeNav = 'charging';</script>
 <div id="header-slot"></div>
-
-<main id="main">
-  <section class="page-hero compact">
-    <div class="container">
-      <nav class="breadcrumb" aria-label="경로">
-        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging-install-slow.html">충전시설 설치</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" aria-current="page">공용 완속충전시설 직접신청</span>
-      </nav>
-      <h1>공용 완속충전시설 직접신청</h1>
-      <p class="hero-lead">공동주택·사업장·대규모 주차장의 소유·운영주체가 <strong style="color:#fff;">공용 완속충전시설 설치 보조금</strong>을 직접 신청하는 절차입니다.</p>
-    </div>
-  </section>
-  <!-- 3뎁스 전환 탭 -->
-  <nav class="tab-nav" aria-label="충전시설 설치 신청 종류">
-    <div class="container">
-      <div class="tabs-pill" role="tablist">
-        <a class="tab active" aria-current="page" href="charging-install-slow.html">공용 완속충전 직접신청</a>
-        <a class="tab" href="charging-install-contest.html">운영사·제조사 공모</a>
-        <a class="tab" href="charging-install-brand.html">브랜드 사업 공모</a>
-        <a class="tab" href="charging-install-moto.html">브랜드 사업(BSS) 공모</a>
-      </div>
-    </div>
-  </nav>
-
-
-  <section class="section">
-    <div class="container">
-      <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 48px;" data-reveal>
-
-        <!-- 본문 -->
-        <div>
-          <span class="eyebrow-label">2026년 전기자동차 완속충전시설 보조사업</span>
-          <h2 style="font-size: 34px; margin-bottom: 16px; line-height: 1.3;">
-            공동주택·사업장 공용 공간에<br>
-            <span class="gradient-text">완속충전시설 설치를 지원</span>
-          </h2>
-          <p style="font-size: 17px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 28px;">
-            전기자동차 충전 인프라 확대를 위해 공동주택·사업장·대규모 주차장 등의 공용 공간에
-            완속충전시설(스마트 충전기)을 설치하려는 소유·운영주체에게 설치 비용의 일부를 보조합니다.
-            신청서 제출 이후 현장조사·설치·보조금 지급은 <strong>사업수행기관</strong>이 수행합니다.
-          </p>
-
-          <!-- 사업목적 -->
-          <div class="card mb-8" style="border-left: 4px solid var(--color-primary-500); background: var(--color-primary-50); padding: 18px 22px;">
-            <h4 style="font-size: 15.5px; font-weight: 700; color: var(--color-primary-700); margin: 0 0 8px;">사업목적</h4>
-            <p style="margin: 0; color: var(--text-secondary); line-height: 1.8; font-size: 14px;">생활 거점인 <strong>공동주택·사업장 등에 공용 완속충전시설을 확충</strong>하여 전기자동차 이용 편의를 높이고 충전 사각지대를 해소</p>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전소·요금 정보</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전시설 설치</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="charging-install-slow.html" class="breadcrumb__link">
+                    <span>공용 완속충전시설 직접신청</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">공용 완속충전시설 직접신청</h1>
+              <p class="page-header__description">공동주택·사업장·대규모 주차장의 소유·운영주체가 공용 완속충전시설 설치 보조금을 직접 신청하는 절차입니다.</p>
+            </div>
           </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
 
-          <h3 style="font-size: 24px; margin-bottom: 16px;">사업 개요</h3>
-          <div class="card mb-8">
-            <dl class="ci-overview">
-              <dt>지원대상</dt><dd>공동주택·사업장·대규모 주차장 등의 소유·운영주체 중 <strong>공용 완속충전시설</strong>(사용자 제한 없이 모두 이용 가능) 설치 희망자 <span class="muted">※ 소상공인 영업용(개인택시·개인화물) 전기차 전용은 사전 협의 시 지원 가능</span></dd>
-              <dt>지원금액</dt><dd>충전기 설치비용의 <strong>50% 이내</strong>에서 용량·수량별 최대 단가 한도로 지원 <span class="muted">(설치비용 = 충전기 구매비·공사비·한전불입금·CCTV 등 포함, 부가세 제외)</span></dd>
-              <dt>신청기간</dt><dd>’26. 2. 13.(금) ~ ’26년 사업 예산 소진 시까지</dd>
-              <dt>보급물량</dt><dd>스마트(신규) 50,000기(1,100억원) · 교체(일반 완속 → 스마트) 15,000기(225억원)</dd>
-            </dl>
-          </div>
-
-          <h3 style="font-size: 24px; margin-bottom: 16px;">보조금 최대 지원단가 (2026년)</h3>
-          <table class="data-table mb-2">
-            <thead>
-              <tr><th>충전기 구분</th><th>1기</th><th>2~5기</th><th>6기 이상</th></tr>
-            </thead>
-            <tbody>
-              <tr><td style="text-align:left;"><strong>① 11kW 이상</strong></td><td>240</td><td>220</td><td>200</td></tr>
-              <tr><td style="text-align:left;"><strong>② 7kW 이상</strong> (신규)</td><td>220</td><td>200</td><td>180</td></tr>
-              <tr><td style="text-align:left;"><strong>② 7kW 이상</strong> (교체)</td><td>110</td><td>100</td><td>90</td></tr>
-              <tr><td style="text-align:left;"><strong>③ 전력분배형</strong></td><td colspan="3" style="text-align:left;">①~② 용량별 단가에 <strong>케이블 1기당 30만원</strong> 추가 지원</td></tr>
-            </tbody>
-          </table>
-          <p class="src-note" style="margin-bottom: 28px;">단위: 만원/기 · 동일 장소 설치 수량에 따라 차등하며 <strong>설치비용의 50% 이내</strong>에서 위 최대 단가를 한도로 지원합니다. 소상공인 영업용(외부 비개방) 전기차 전용 충전기는 위 단가의 <strong>70%</strong>를 지원합니다.</p>
-
-          <h3 style="font-size: 24px; margin-bottom: 16px;">신청 자격</h3>
-          <p style="color: var(--text-secondary); font-size: 14px; margin: 0 0 14px;">반드시 다음에 해당하는 <strong>대표자</strong>가 신청해야 합니다.</p>
-          <div class="flex flex-col gap-3 mb-8">
-            <div class="info-box"><div class="info-box-icon"></div><div><h4>건물(부지) 소유자</h4><p>설치 대상 건물 또는 부지의 <strong>소유자</strong> 본인 또는 위임을 받은 대표자</p></div></div>
-            <div class="info-box"><div class="info-box-icon"></div><div><h4>입주자대표위원회 · 관리단</h4><p>공동주택의 <strong>입주자대표위원회</strong> 또는 집합건물 <strong>관리단</strong> 등 운영 주체</p></div></div>
-            <div class="info-box"><div class="info-box-icon"></div><div><h4>입주민 동의를 받은 자</h4><p>입주민 등 이해관계자의 <strong>설치 동의</strong>를 받은 대표자(설치동의서·회의록 등 증빙 제출)</p></div></div>
-          </div>
-
-          <h3 style="font-size: 24px; margin-bottom: 16px;">완속충전시설 기준</h3>
-          <div class="card mb-8">
-            <p style="color: var(--text-secondary); line-height: 1.8; margin: 0;">출력값 <strong>3kW 이상 ~ 30kW 미만</strong>의 완속충전시설로, 본 사업은 충전 중 배터리 정보 수집·충전 제어와 통신(PnC·V2G 등) 기능을 갖춘 <strong>스마트 충전기</strong>(지침 [별표 9] 세부 설치기준 충족)를 대상으로 합니다.</p>
-          </div>
-
-          <h3 style="font-size: 24px; margin-bottom: 16px;">신청 절차</h3>
-          <div class="timeline mb-6">
-            <div class="timeline-item"><div class="timeline-date">STEP 1</div><h4>입주민 충전기 설치 동의</h4><p>입주자대표위원회·관리단·입주민 등 이해관계자의 설치 동의를 확보합니다.</p></div>
-            <div class="timeline-item"><div class="timeline-date">STEP 2</div><h4>설치 신청서 제출</h4><p>대표자가 설치 신청서와 증빙서류(설치동의서·회의록 등)를 제출합니다.</p></div>
-            <div class="timeline-item"><div class="timeline-date">STEP 3</div><h4>현장조사 및 계약</h4><p>사업수행기관이 설치 현장을 사전 컨설팅·조사하고 설치 계약을 체결합니다.</p></div>
-            <div class="timeline-item"><div class="timeline-date">STEP 4</div><h4>사업수행기관의 충전기 설치·보조금 신청</h4><p>사업수행기관이 충전기를 설치하고 보조금(선급금)을 신청합니다.</p></div>
-            <div class="timeline-item"><div class="timeline-date">STEP 5</div><h4>신청 검토 · 접수</h4><p>한국환경공단이 신청 내용을 검토하고 접수합니다.</p></div>
-            <div class="timeline-item"><div class="timeline-date">STEP 6</div><h4>충전기 설치</h4><p>설치 신청서에 명시된 기관이 충전시설을 설치합니다(설치 신청 후 4개월 이내).</p></div>
-            <div class="timeline-item"><div class="timeline-date">STEP 7</div><h4>설치확인 · 보조금 지급</h4><p>한국환경공단의 현장조사 확인 후 보조금을 지급합니다(지급 결정 후 30일 이내).</p></div>
-          </div>
-          <p class="src-note" style="margin-bottom: 28px;">※ 신청서 제출 이후 단계(현장조사·설치·보조금 신청 등)는 <strong>충전시설 설치 사업자(사업수행기관)</strong>가 수행하는 절차입니다.</p>
-
-          <h3 style="font-size: 24px; margin-bottom: 16px;">신청 시 주의사항</h3>
-          <div class="ci-caution mb-8">
-            <h4>신청 전 반드시 확인하세요</h4>
-            <ul>
-              <li>허위신청 또는 신청자가 확인되지 않거나 대표자가 아닌 경우 <strong>접수 불가</strong> → 반드시 건물(부지)소유자, 입주자대표위원회, 관리단, 입주민 동의를 받은 자 등 <strong>대표자가 신청</strong>할 것</li>
-              <li>입주자대표위원회·관리단 외의 자가 신청하는 경우 <strong>설치동의서 또는 회의록 필수 제출</strong>
-                <ul>
-                  <li>사업자등록증에 ‘입주자대표회의’, ‘관리단’으로 명시되지 않은 경우</li>
-                  <li>설치동의서 또는 자치회 등의 전기차 충전기 설치 안건 회의록</li>
+          <!-- 공모신청 -->
+          <div class="contest-wrapper">
+            <div class="contest-content">
+              <div class="contest-catchphrase">
+                <strong class="contest-catchphrase__title">우리 건물 주차장에<br />공용 완속충전시설을 직접 신청</strong>
+                <p class="contest-catchphrase__description">공동주택·사업장·대규모 주차장 등의 소유 및 운영주체가 공용 완속충전시설 설치를 직접 신청하는 제도입니다.<br />신청서 제출 이후 현장조사·계약·설치·보조금 지급은 배정된 사업수행기관이 진행합니다.</p>
+              </div>
+              <section class="section">
+                <div class="heading-group">
+                  <h2 class="heading-title">
+                    <i class="svg-icon symbol-electricity"></i>
+                    사업개요
+                  </h2>
+                </div>
+                <div class="table-wrapper">
+                  <table class="table table--form">
+                    <caption>
+                      공용 완속충전시설 직접신청 지원대상·지원금액·신청기간·보급물량 안내표
+                    </caption>
+                    <colgroup>
+                      <col style="width: 16%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th scope="row">지원대상</th>
+                        <td>공동주택, 사업장, 대규모 주차장 등의 소유 및 운영주체 중 공용 완속충전시설 설치 희망자 모두 신청 가능</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">지원금액</th>
+                        <td>설치 비용의 50% 이내에서만 보조금 지원 <span class="text-secondary">(한도 금액은 지침 참고)</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">신청기간</th>
+                        <td>'26년 2월 13일(금) ~ '26년 사업 예산 소진 시까지</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">보급물량</th>
+                        <td>스마트(신규) : 50,000기(1,100억원)<br />교체(일반 완속 &#8594; 스마트) : 15,000기(225억원)</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+              <section class="section">
+                <div class="heading-group">
+                  <h2 class="heading-title">
+                    <i class="svg-icon symbol-electricity"></i>
+                    신청절차
+                  </h2>
+                </div>
+                <div class="step-wrapper">
+                  <div class="step-container">
+                    <ol class="step step--number">
+                      <li class="step__item step__item--current">
+                        <span class="step__icon"></span>
+                        <div class="step__label">입주민 충전기 설치 동의</div>
+                      </li>
+                      <li class="step__item">
+                        <span class="step__icon"></span>
+                        <div class="step__label">설치 신청서 제출</div>
+                      </li>
+                      <li class="step__item">
+                        <span class="step__icon"></span>
+                        <div class="step__label">현장조사 및 계약</div>
+                      </li>
+                      <li class="step__item">
+                        <span class="step__icon"></span>
+                        <div class="step__label">충전기 설치·보조금 신청</div>
+                      </li>
+                      <li class="step__item">
+                        <span class="step__icon"></span>
+                        <div class="step__label">신청 검토·접수</div>
+                      </li>
+                      <li class="step__item">
+                        <span class="step__icon"></span>
+                        <div class="step__label">충전기 설치</div>
+                      </li>
+                      <li class="step__item">
+                        <span class="step__icon"></span>
+                        <div class="step__label">설치확인·보조금 지급</div>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                <p class="section-description">신청서 제출 이후 단계는 충전시설 설치 사업자가 수행하는 절차입니다.</p>
+              </section>
+              <div class="contest-notification">
+                <strong class="notifications__title">신청 시 주의사항</strong>
+                <ul class="bullet bullet--refer">
+                  <li>허위신청 또는 신청자가 확인되지 않거나 대표자가 아닌 경우 접수가 불가합니다. 반드시 건물(부지)소유자, 입주자대표위원회, 관리단, 입주민 동의를 받은 자 등 대표자가 신청해야 합니다.</li>
+                  <li>입주자대표위원회·관리단 외의 자(사업자등록증에 '입주자대표회의', '관리단'으로 명시되지 않은 경우)가 신청하는 경우 설치동의서 또는 회의록을 필수로 제출해야 합니다.</li>
+                  <li>회의록은 설치동의서 또는 자치회 등의 전기차 충전기 설치 안건 회의록을 말합니다.</li>
                 </ul>
-              </li>
-            </ul>
-          </div>
-
-          <p class="src-note">※ 본 페이지의 사업개요·절차·자격은 「2026년 전기자동차 완속충전시설 보조사업 보조금 및 설치·운영 지침(개정)」을 기준으로 작성되었습니다. 보조금 한도·세부 설치기준·제출서식은 지침 원문을 따르며, 예산 소진 시 접수가 조기 마감될 수 있습니다. 자세한 내용은 한국환경공단 충전인프라 담당부서로 문의하세요.</p>
-        </div>
-
-        <!-- 신청·확인 배너 (스크롤 따라 고정) -->
-        <div>
-          <div class="card-hero sticky-aside">
-            <h3 style="font-size: 20px; margin-bottom: 8px;">신청 및 확인</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 4px;">로그인 후 누리집에서 신청서를 작성·제출합니다. 공고문·평가기준·진행상태는 본 페이지에서 확인할 수 있습니다.</p>
-
-            <div class="pe-aside-btns">
-              <button type="button" class="btn btn-ghost lib-dl-btn" data-doc="2026년 전기자동차 완속충전시설 보조사업 — 공고 및 신청서식" data-files='[{"name":"2026년 전기자동차 완속충전시설 보조사업 보조금 및 설치운영지침(개정).pdf","size":"PDF · 1.6MB"},{"name":"전기자동차 공용충전시설 설치이용승낙서(지침양식).hwp","size":"HWP · 86KB"},{"name":"전기자동차 완속충전시설 설치동의서(참고용).hwpx","size":"HWPX · 64KB"}]' aria-haspopup="dialog" style="width:100%;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                공고 및 신청서식 다운로드
-              </button>
-              <button type="button" class="btn btn-primary" id="bizApplyBtn" style="width:100%;">
-                신청하러 가기
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
-              </button>
-              <a class="btn btn-secondary" href="charging-install-slow-status.html" style="width:100%;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                신청조회
-              </a>
+              </div>
             </div>
-            <label class="pe-demo" style="margin-top:12px;">(데모) 로그인 상태 <input type="checkbox" id="bizLoginChk"></label>
-
-            <div class="divider"></div>
-
-            <h4 style="font-size: 15px; margin-bottom: 12px;">사업 요약</h4>
-            <div class="flex flex-col gap-3">
-              <div><div class="text-sm text-muted">신청기간</div><div class="num-highlight" style="font-size: 18px;">’26.02.13 ~ <span style="font-size:13px;color:var(--text-secondary);">예산 소진 시까지</span></div></div>
-              <div><div class="text-sm text-muted">지원금액</div><div class="num-highlight" style="font-size: 20px;">설치비 50% 이내</div></div>
-              <div><div class="text-sm text-muted">보급물량</div><div class="num-highlight" style="font-size: 18px;">신규 50,000기 · 교체 15,000기</div></div>
+            <div class="contest-aside">
+              <div class="contest-actions">
+                <div class="heading-group">
+                  <h2 class="heading-title">신청 및 확인</h2>
+                  <p class="heading-description">선정된 사업수행기관 목록을 확인한 뒤 해당 기관으로 설치를 문의하세요.<br />제출 양식과 보조사업 지침은 아래에서 내려받을 수 있습니다.</p>
+                </div>
+                <div class="button-group">
+                  
+                  
+                    <button type="button" class="button button--primary" onclick="location.href='/buySupprt/scDirectApplyBusiInfo.do';">
+                      <span class="button__label">사업수행기관 안내</span>
+                    </button>
+                  
+                  
+                  <a href="/file/zip/formDownload.zip" download="설치동의서_설치이용승낙서.zip" class="button button--secondary">
+                    <i class="svg-icon download" aria-hidden="true"></i>
+                    <span class="button__label">설치동의서 / 이용승낙서(양식)</span>
+                  </a>
+                  <a href="/file/pdf/guideDownload.pdf" download="2026년 전기자동차 완속충전시설 보조사업 보조금 및 설치운영지침(개정).pdf" class="button button--secondary">
+                    <i class="svg-icon download" aria-hidden="true"></i>
+                    <span class="button__label">2026년 완속충전시설 보조사업 지침</span>
+                  </a>
+                </div>
+                <div class="contest-schedule">
+                  <h3 class="heading-content">주요일정</h3>
+                  <dl class="contest-schedule__list">
+                    <dt>신청기간</dt>
+                    <dd>'26.02.13 ~ 예산 소진 시</dd>
+                    <dt>지원금액</dt>
+                    <dd>설치 비용의 50% 이내</dd>
+                    <dt>보급물량</dt>
+                    <dd>신규 50,000기 · 교체 15,000기</dd>
+                  </dl>
+                </div>
+              </div>
             </div>
-            <p style="font-size:12px;color:var(--text-tertiary);margin-top:14px;line-height:1.6;">로그인 후 신청 화면으로 이동합니다. 예산 소진 시 접수가 조기 마감될 수 있습니다.</p>
           </div>
+          <!-- //공모신청 -->
+
         </div>
       </div>
-    </div>
-  </section>
-</main>
 
-<!-- 첨부파일 다운로드 팝업 -->
-<div class="modal-backdrop" data-for="libDownloadModal"></div>
-<div class="modal" id="libDownloadModal" role="dialog" aria-modal="true" aria-labelledby="libDlTitle" aria-hidden="true">
-  <div class="modal-header"><h3 id="libDlTitle">첨부파일 다운로드</h3><button class="modal-close" type="button" data-modal-close aria-label="팝업 닫기"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
-  <div class="modal-body"><p id="libDlDocName"></p><div class="lib-dl-selectall"><label><input type="checkbox" id="libDlAll"> 전체 선택</label><span id="libDlCount" aria-live="polite">0개 선택</span></div><ul class="lib-file-list" id="libFileList" role="group" aria-label="파일 목록"></ul></div>
-  <div class="modal-footer"><button class="btn btn-secondary" type="button" data-modal-close>닫기</button><button class="btn btn-primary" type="button" id="libDlSelected">선택 다운로드</button></div>
-</div>
+<form name="reqPCCForm" method="post"></form>
+<form id="applyForm" name="applyForm" method="post"
+      data-login-yn=""
+      data-auth-id="">
+  <input type="hidden" name="pcc_chk_yn" id="pcc_chk_yn" />
+  <input type="hidden" name="gubun" id="gubun" />
+  <input type="hidden" name="username" id="username" />
+  <input type="hidden" name="mobile1" id="mobile1" />
+  <input type="hidden" name="mobile2" id="mobile2" />
+  <input type="hidden" name="mobile3" id="mobile3" />
+  <input type="hidden" name="mobile" id="mobile" />
+</form>
 
-<div id="footer-slot"></div>
-<script src="js/partials.js?v=20260806g"></script>
-<script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260807a"></script>
-<script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260807a"></script>
 <script>
-(function(){
-  // ===== [공모/평가 신청 게이트 표준] 로그인 게이트 + 접수기간 판정(권한 게이트 제거) =====
-  var APPLY_URL = 'charging-install-slow-apply.html';   // 완속충전 직접신청 = 상시접수(예산 소진 시 조기 마감)
-  var APPLY_READY = true;   // -apply 폼 존재 여부(false면 프로토타입 준비중 안내)
-  var PERIODS = [ { label:'', start:[2026,1,1], end:[2026,12,31] } ];     // 접수기간(하나라도 접수중이면 '중')
-  var btn = document.getElementById('bizApplyBtn');
-  var loginChk = document.getElementById('bizLoginChk');
-  if (!btn) return;
-  function realLoggedIn(){ try { if (JSON.parse(sessionStorage.getItem('mp_user')||'null')) return true; } catch(e){} return !!window.__loggedIn; }
-  if (loginChk) loginChk.checked = realLoggedIn();
-  function today(){ var d=new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
-  function ymd(a){ return a[0]*10000+a[1]*100+a[2]; }
-  function mmdd(a){ return ('0'+a[1]).slice(-2)+'.'+('0'+a[2]).slice(-2); }
-  function inPeriod(){ var tt=today(); return PERIODS.some(function(p){ return tt>=ymd(p.start) && tt<=ymd(p.end); }); }
-  function periodsText(){ return PERIODS.map(function(p){ return (p.label?p.label+' ':'')+mmdd(p.start)+' ~ '+mmdd(p.end); }).join(' · '); }
-  function goApply(){ if (APPLY_READY) { location.href = APPLY_URL; } else { if (window.__toast) window.__toast('신청서 페이지는 준비 중입니다. (프로토타입)','info'); else alert('신청서 페이지는 준비 중입니다.'); } }
-  function closeGate(){ var ov=document.getElementById('gateModalOverlay'); if(ov){ ov.style.display='none'; document.body.style.overflow=''; } }
-  function openGateModal(){
-    var ov=document.getElementById('gateModalOverlay');
-    if(!ov){
-      ov=document.createElement('div'); ov.id='gateModalOverlay';
-      ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','공모 접수기간 안내');
-      ov.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9300;display:flex;align-items:center;justify-content:center;padding:20px;';
-      ov.innerHTML='<div style="background:#fff;border-radius:16px;width:min(460px,100%);box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;">'
-        +'<div style="padding:22px 24px 0;"><h3 style="font-size:18px;font-weight:800;margin:0 0 10px;">공모 접수기간이 아닙니다</h3>'
-        +'<p style="font-size:14px;color:var(--text-secondary,#475569);line-height:1.7;margin:0 0 8px;">현재는 공모 접수기간이 아닙니다. 접수기간에 다시 신청해 주세요.</p>'
-        +'<p style="font-size:13px;color:var(--text-tertiary,#94a3b8);margin:0;">공모 접수기간: <b id="gateModalPeriod" style="color:var(--color-primary-700,#1f5fa8);"></b></p></div>'
-        +'<div style="display:flex;gap:8px;justify-content:flex-end;padding:18px 24px 20px;">'
-        +'<button type="button" id="gateModalClose" class="btn btn-secondary btn-sm">닫기</button>'
-        +'<button type="button" id="gateModalGo" class="btn btn-primary btn-sm">(데모) 신청하러 가기</button></div></div>';
-      document.body.appendChild(ov);
-      ov.addEventListener('click', function(e){ if(e.target===ov) closeGate(); });
-      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeGate(); });
-      ov.querySelector('#gateModalClose').addEventListener('click', closeGate);
-      ov.querySelector('#gateModalGo').addEventListener('click', function(){ closeGate(); goApply(); });
-    }
-    ov.querySelector('#gateModalPeriod').textContent = periodsText();
-    ov.style.display='flex'; document.body.style.overflow='hidden';
-  }
-  btn.addEventListener('click', function(){
-    var loggedIn = loginChk ? loginChk.checked : realLoggedIn();
-    if (!loggedIn) { location.href='login.html'; return; }         // 미로그인 → 로그인
-    if (inPeriod()) { goApply(); return; }                          // 접수기간 중 → -apply
-    openGateModal();                                                // 접수기간 외 → 공모기간 팝업
-  });
-})();
 
-/* 첨부파일 다운로드 팝업 (공지사항/공개자료실과 동일 로직) */
-(function(){
-  var modal=document.getElementById('libDownloadModal'); if(!modal) return;
-  var listEl=document.getElementById('libFileList');
-  var allCb=document.getElementById('libDlAll');
-  var countEl=document.getElementById('libDlCount');
-  var docNameEl=document.getElementById('libDlDocName');
-  var dlBtn=document.getElementById('libDlSelected');
-  var lastFocus=null;
-  function boxes(){ return listEl.querySelectorAll('input[type=checkbox]'); }
-  function update(){
-    var items=boxes(), checked=0; items.forEach(function(c){ if(c.checked) checked++; });
-    countEl.textContent=checked+'개 선택'; dlBtn.disabled = checked===0;
-    allCb.checked = checked>0 && checked===items.length;
-    allCb.indeterminate = checked>0 && checked<items.length;
+var g_gubun;
+
+function scApply(gubun) {
+  var frm = document.applyForm;
+  var $frm = $(frm);
+  g_gubun = gubun;
+
+  if (gubun === '2') {
+    if ($frm.data('login-yn') !== 'Y') {
+      alert('지자체 담당자로 신청하려면 먼저 로그인이 필요합니다.');
+      location.href = '/login.do';
+      return;
+    }
+    if (String($frm.data('auth-id') || '').indexOf('0002') < 0) {
+      alert('지자체 담당자로 로그인이 필요합니다.');
+      return false;
+    }
+    frm.pcc_chk_yn.value = 'Y';
+    frm.gubun.value = 'G';
+    frm.action = '/buySupprt/scApplyPreAction.do';
+    frm.submit();
+    return;
   }
-  function openPopup(btn){
-    lastFocus=btn;
-    var files=[]; try{ files=JSON.parse(btn.getAttribute('data-files')||'[]'); }catch(e){}
-    docNameEl.textContent=btn.getAttribute('data-doc')||'';
-    listEl.innerHTML='';
-    files.forEach(function(f,i){
-      var id='libf_'+i;
-      var li=document.createElement('li'); li.className='lib-file-item';
-      var lab=document.createElement('label'); lab.setAttribute('for',id);
-      lab.innerHTML='<input type="checkbox" id="'+id+'"><span class="lib-file-name"></span><span class="lib-file-size"></span>';
-      lab.querySelector('.lib-file-name').textContent=f.name;
-      lab.querySelector('.lib-file-size').textContent=f.size||'';
-      lab.querySelector('input').value=f.name;
-      li.appendChild(lab); listEl.appendChild(li);
-    });
-    boxes().forEach(function(c){ c.addEventListener('change', update); });
-    allCb.checked=false; allCb.indeterminate=false; update();
-    if(window.__openModal) window.__openModal('libDownloadModal');
-    var first=listEl.querySelector('input[type=checkbox]')||modal.querySelector('.modal-close');
-    if(first) setTimeout(function(){ first.focus(); }, 40);
+
+  frm.gubun.value = 'P';
+  openPCCWindow();
+}
+
+function openPCCWindow() {
+  var pccWindow = window.open('', 'PCCV3Window', 'width=300, height=400, resizable=1, scrollbars=no, status=0, titlebar=0, toolbar=0, left=300, top=200');
+
+  if (pccWindow == null) {
+    alert('※ 팝업이 차단된 경우 화면 상단의 팝업 차단 알림줄을 클릭하여 팝업을 허용해 주시기 바랍니다.');
+    return;
   }
-  document.addEventListener('click', function(e){
-    var b=e.target.closest('.lib-dl-btn'); if(b){ e.preventDefault(); openPopup(b); }
+
+  document.reqPCCForm.action = '/member/authPccRequest.do';
+  document.reqPCCForm.target = 'PCCV3Window';
+  document.reqPCCForm.submit();
+}
+
+function setPcc(di, no1, no2, no3, username, ci) {
+  if (ci === '' || no3.length !== 4) {
+    alert('본인 인증에 실패 하였습니다.');
+    return;
+  }
+
+  var frm = document.applyForm;
+  frm.mobile1.value = no1;
+  frm.mobile2.value = no2;
+  frm.mobile3.value = no3;
+  frm.username.value = username;
+  frm.mobile.value = no1 + '-' + no2 + '-' + no3;
+  frm.pcc_chk_yn.value = 'Y';
+
+  if (g_gubun === '3') {
+    frm.action = '/buySupprt/scDirectApplyCheckAction.do';
+    frm.submit();
+    return;
+  }
+
+  
+  $.ajax({
+    type: 'POST',
+    url: '/buySupprt/chkMobile.ajax',
+    dataType: 'json',
+    data: { mobile: frm.mobile.value, username: username },
+    success: function () {
+      alert('본인 인증에 성공 하였습니다. 다음 절차를 진행합니다.');
+      frm.action = '/buySupprt/scApplyPreAction.do';
+      frm.submit();
+    },
+    error: function () {
+      alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+    }
   });
-  allCb.addEventListener('change', function(){ boxes().forEach(function(c){ c.checked=allCb.checked; }); update(); });
-  dlBtn.addEventListener('click', function(){
-    var names=[]; boxes().forEach(function(c){ if(c.checked) names.push(c.value); });
-    if(!names.length) return;
-    var msg = names.length===1 ? ('"'+names[0]+'" 다운로드가 시작됩니다.') : (names.length+'개 파일 다운로드가 시작됩니다.');
-    if(window.__toast) window.__toast(msg,'success');
-    if(window.__closeModal) window.__closeModal(modal);
-  });
-  modal.addEventListener('transitionend', function(){
-    if(modal.getAttribute('aria-hidden')==='true' && lastFocus){ var t=lastFocus; lastFocus=null; t.focus(); }
-  });
-})();
+}
 </script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
 </body>
 </html>

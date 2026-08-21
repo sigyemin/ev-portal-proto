@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>규정·가이드라인</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>정보자료실</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>규정·가이드라인</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">규정·가이드라인</h1>
+              <p class="page-header__description">무공해차 보급·충전 인프라·인증 기준 관련 법령·지침·고시·가이드라인 원문을 제공합니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+            <!-- tab : PC버전 -->
+            <div class="tab tab--nav pc-only">
+              <ul class="tab__list">
+                <li class="tab__item"><button type="button" class="tab__button" onclick="location.href='/infoGarden/initGuideAction.do'">법령·지침·규정·가이드라인</button></li>
+                <li class="tab__item tab__item--selected"><button type="button" class="tab__button">인증 기준 안내</button></li>
+              </ul>
+            </div>
+            <!-- //tab -->
+            <!-- tab : MOBILE버전 -->
+            <div class="tab tab--mobile mobile-only">
+              <select title="탭메뉴" name="tabNavigation" id="tabNavigation" class="select" onchange="if(this.value){location.href=this.value;}">
+                <option value="/infoGarden/initGuideAction.do">법령·지침·규정·가이드라인</option>
+                <option value="" selected>인증 기준 안내</option>
+              </select>
+            </div>
+            <!-- //tab -->
+
+            <!-- 인증기준안내 -->
+            <div class="guideline">
+              <div class="heading-group">
+                <h2 class="heading-subject">“ 무공해차 및 충전기 인증기준 ”</h2>
+                <p class="heading-description">기후에너지환경부 「대기환경보전법」과 한국환경공단 인증 제도에 따라 무공해차·충전기는 성능·안전·환경 기준을 충족해야 합니다. 인증 대상과 기준을 카테고리별로 안내합니다.</p>
+              </div>
+              <ul class="guideline-list">
+                <li class="guideline-list__item">
+                  <h3 class="heading-title">전기 자동차 인증</h3>
+                  <dl class="guideline-list__info">
+                    <dt class="guideline-list__title">주행거리</dt>
+                    <dd class="guideline-list__value">1회 충전 150km 이상 (기후에너지환경부 인증 기준)</dd>
+                    <dt class="guideline-list__title">에너지소비효율</dt>
+                    <dd class="guideline-list__value">5등급 체계 (1~5등급, 높을수록 우수)</dd>
+                    <dt class="guideline-list__title">안전기준</dt>
+                    <dd class="guideline-list__value">자동차관리법 안전기준 + 배터리 안전성 시험</dd>
+                    <dt class="guideline-list__title">인증기관</dt>
+                    <dd class="guideline-list__value">국립환경과학원, 한국환경공단</dd>
+                  </dl>
+                </li>
+                <li class="guideline-list__item">
+                  <h3 class="heading-title">전기 승합차 인증</h3>
+                  <dl class="guideline-list__info">
+                    <dt class="guideline-list__title">차종 구분</dt>
+                    <dd class="guideline-list__value">시내·시외·고속버스 등 승합 전기차</dd>
+                    <dt class="guideline-list__title">주행거리</dt>
+                    <dd class="guideline-list__value">1회 충전 시내버스 기준 거리 이상 충족</dd>
+                    <dt class="guideline-list__title">안전기준</dt>
+                    <dd class="guideline-list__value">자동차관리법 + 대용량 배터리 안전성 시험</dd>
+                    <dt class="guideline-list__title">인증기관</dt>
+                    <dd class="guideline-list__value">국립환경과학원, 한국환경공단</dd>
+                  </dl>
+                </li>
+                <li class="guideline-list__item">
+                  <h3 class="heading-title">전기이륜차 인증</h3>
+                  <dl class="guideline-list__info">
+                    <dt class="guideline-list__title">차종 구분</dt>
+                    <dd class="guideline-list__value">경형·소형·중형·대형 전기이륜차</dd>
+                    <dt class="guideline-list__title">주행거리</dt>
+                    <dd class="guideline-list__value">정격출력·1회 충전 주행거리 최소 요건</dd>
+                    <dt class="guideline-list__title">안전기준</dt>
+                    <dd class="guideline-list__value">이륜자동차 안전기준 + 배터리 안전성</dd>
+                    <dt class="guideline-list__title">인증기관</dt>
+                    <dd class="guideline-list__value">국립환경과학원, 교통안전공단</dd>
+                  </dl>
+                </li>
+                <li class="guideline-list__item">
+                  <h3 class="heading-title">수소전기자동차 인증</h3>
+                  <dl class="guideline-list__info">
+                    <dt class="guideline-list__title">연료전지 효율</dt>
+                    <dd class="guideline-list__value">95km/kg 이상 (승용 기준)</dd>
+                    <dt class="guideline-list__title">수소 탱크</dt>
+                    <dd class="guideline-list__value">고압가스안전관리법 검사 필수</dd>
+                    <dt class="guideline-list__title">배출가스</dt>
+                    <dd class="guideline-list__value">수증기 외 유해물질 배출 제로</dd>
+                    <dt class="guideline-list__title">인증 기관</dt>
+                    <dd class="guideline-list__value">가스안전공사, 국립환경과학원</dd>
+                  </dl>
+                </li>
+                <li class="guideline-list__item">
+                  <h3 class="heading-title">무공해 건설기계</h3>
+                  <dl class="guideline-list__info">
+                    <dt class="guideline-list__title">대상 기종</dt>
+                    <dd class="guideline-list__value">굴착기·지게차·로더·덤프트럭 (전기·수소)</dd>
+                    <dt class="guideline-list__title">성능 기준</dt>
+                    <dd class="guideline-list__value">기종별 작업 시간·배터리 용량 최소 요건</dd>
+                    <dt class="guideline-list__title">안전 기준</dt>
+                    <dd class="guideline-list__value">건설기계관리법 + 고전압 배터리 안전</dd>
+                    <dt class="guideline-list__title">인증 기관</dt>
+                    <dd class="guideline-list__value">건설기계검사원, 환경공단</dd>
+                  </dl>
+                </li>
+                <li class="guideline-list__item">
+                  <h3 class="heading-title">충전기 인증</h3>
+                  <dl class="guideline-list__info">
+                    <dt class="guideline-list__title">전기적 안전</dt>
+                    <dd class="guideline-list__value">전기용품안전관리법 KC 인증</dd>
+                    <dt class="guideline-list__title">통신 프로토콜</dt>
+                    <dd class="guideline-list__value">OCPP 1.6/2.0 준수</dd>
+                    <dt class="guideline-list__title">과금형 기준</dt>
+                    <dd class="guideline-list__value">계량에 관한 법률 검정 필수</dd>
+                    <dt class="guideline-list__title">인증 기관</dt>
+                    <dd class="guideline-list__value">기후에너지환경부 (보조금 지원 시 기후에너지환경부 인증 필수)</dd>
+                  </dl>
+                </li>
+              </ul>
+            </div>
+            <!-- 안내사항 -->
+            <div class="notifications">
+              <strong class="notifications__title">
+                <i class="svg-icon info" aria-hidden="true"></i>
+                인증 기준 변경 알림
+              </strong>
+              <p class="notifications__description">
+                인증 기준은 「대기환경보전법 시행규칙」 및 기후에너지환경부 고시에 따라 정기적으로 개정됩니다. 신규 차종·충전기의 인증 일정·결과는 환경공단 인증 DB에서 조회하시거나 통합 콜센터 1661-0970로 문의해 주시기 바랍니다.
+              </p>
+            </div>
+            <!-- //인증기준안내 -->
+         </div>
+      </div>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
+</body>
+</html>

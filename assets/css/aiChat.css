@@ -1,0 +1,136 @@
+/* AI 챗 말풍선 Markdown·차트 렌더 (헬프데스크 패널·메인·테스트 화면 공용) */
+.ai-chat-rendered {
+  white-space: normal;
+  word-break: break-word;
+  width: 100%;
+}
+.ai-chat-rendered h1 { font-size: 1.25em; margin: 0 0 10px; }
+.ai-chat-rendered h2 { font-size: 1.1em; margin: 12px 0 8px; }
+.ai-chat-rendered h3 { font-size: 1em; margin: 10px 0 6px; }
+.ai-chat-rendered p { margin: 12px 0; }
+.ai-chat-rendered ul,
+.ai-chat-rendered ol { margin: 6px 0; padding-left: 18px; }
+.ai-chat-rendered li { margin: 2px 0; list-style: disc; }
+.ai-chat-rendered code {
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+}
+.ai-chat-rendered pre {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  font-size: 0.9em;
+}
+.ai-chat-rendered pre code {
+  padding: 0;
+  background: none;
+}
+.ai-chat-rendered table {
+  width: 100%;
+  margin: 8px 0;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+.ai-chat-rendered th,
+.ai-chat-rendered td {
+  border: 1px solid #d4d4d4;
+  padding: 6px 8px;
+  text-align: left;
+}
+.ai-chat-rendered th { background: #f4f6f8; }
+.ai-chat-rendered a {
+  color: #0b5fd7;
+  text-decoration: underline;
+  word-break: break-all;
+}
+.ai-chat-rendered blockquote {
+  border-left: 3px solid #c3cdd8;
+  padding: 6px 12px;
+  margin: 8px 0;
+  background: #f6f8fa;
+  border-radius: 0 6px 6px 0;
+}
+.ai-chat-rendered hr {
+  border: none;
+  border-top: 1px solid #d4d4d4;
+  margin: 12px 0;
+}
+.ai-chat-rendered .md-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 6px;
+  background: #fff;
+}
+.ai-chat-rendered .chatbot-accordion {
+  margin: 8px 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+.ai-chat-rendered .chatbot-accordion summary {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 600;
+  list-style: none;
+  user-select: none;
+}
+.ai-chat-rendered .chatbot-accordion summary::-webkit-details-marker { display: none; }
+.ai-chat-rendered .chatbot-accordion summary::before {
+  content: '\25B8  ';
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.ai-chat-rendered .chatbot-accordion[open] summary::before { transform: rotate(90deg); }
+.ai-chat-rendered .chatbot-accordion > :not(summary) { padding: 0 20px 10px; }
+.ai-chat-rendered .chatbot-chart {
+  width: 100%;
+  max-width: 100%;
+  min-height: 180px;
+  margin: 8px 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 8px;
+}
+
+/* 차트 CSV·이미지 저장 버튼 */
+.ai-chat-rendered .chatbot-chart-tools {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin: 0 0 12px;
+}
+
+/* chatType 별 대화 스레드 — 부모(.chat__content)의 flex gap 을 이어받아 말풍선 간격 유지 */
+.chat__thread {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+}
+
+/* 스트림 대기 표시 — loading 안내·비평문(deferred) 렌더 대기 */
+[data-loading="1"],
+[data-deferred="1"] {
+  color: #747E90;
+}
+[data-loading="1"]::after,
+[data-deferred="1"]::after {
+  content: '...';
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: ai-chat-wait-dots 1.2s steps(1) infinite;
+}
+@keyframes ai-chat-wait-dots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}

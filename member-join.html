@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>회원가입</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<script type="text/javascript" charset="utf-8" src="/raonnx/cmn/TouchEnNx.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/cmn/TouchEnNx_exproto.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/cmn/TouchEnNx_install.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/cmn/TouchEnNx_daemon.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/nxKey/js/nxkey_config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/nxKey/js/TouchEnNxKey_Interface.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/nxKey/js/TouchEnNxKey.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/nxWeb/js/nxweb_config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/nxWeb/js/TouchEnNxWeb_Interface.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/nxWeb/js/TouchEnNxWeb.js"></script>
+<script type="text/javascript" charset="utf-8" src="/raonnx/cmn/TouchEnNx_loader.js"></script>
+
+      <div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="member-join.html" class="breadcrumb__link">
+                    <span>회원가입</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">회원가입</h1>
+              <p class="page-header__description">간편하게 가입하고 맞춤 서비스를 만나보세요.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+
+          <!-- 이용과정 -->
+          <div class="step-wrapper">
+            <ol class="step step--number">
+              <li class="step__item step__item--current">
+                <span class="step__icon"></span>
+                <div class="step__label">약관동의</div>
+              </li>
+              <li class="step__item">
+                <span class="step__icon"></span>
+                <div class="step__label">회원정보 입력</div>
+              </li>
+              <li class="step__item">
+                <span class="step__icon"></span>
+                <div class="step__label">가입완료</div>
+              </li>
+            </ol>
+          </div>
+          <!-- //이용과정 -->
+
+          <!-- 키보드 보안 프로그램 안내 (모바일에서는 스크립트로 숨김) -->
+          <div class="notifications" id="nxKeyNotice">
+            <strong class="notifications__title">
+              <i class="svg-icon info" aria-hidden="true"></i>
+              키보드 보안 프로그램 안내
+            </strong>
+            <div class="notifications__description">
+              <p class="mb-12">비밀번호 입력 단계는 키보드 보안 프로그램(TouchEn nxKey)이 동작합니다. 설치되어 있지 않으면 자동으로 설치 안내창이 표시됩니다.</p>
+              <ul class="bullet bullet--dotted">
+                <li>설치 안내창이 뜨지 않거나 설치에 실패하면 아래 설치안내 페이지를 확인해 주세요.</li>
+                <li>회원가입은 보안상 PC 환경에서 진행하시기 바랍니다.</li>
+              </ul>
+              <a href="http://faq.touchen.co.kr/nxKey/" target="_blank" class="button button--tertiary" title="키보드 보안 프로그램 설치안내 페이지로 이동 (새창 열림)">
+                <span class="button__label">설치안내 페이지로 이동</span>
+                <i class="svg-icon arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+          <!-- //키보드 보안 프로그램 안내 -->
+
+          <div class="register-wrapper">
+            <section class="section">
+              <div class="heading-group">
+                <h2 class="heading-title">
+                  <i class="svg-icon symbol-electricity" aria-hidden="true"></i>
+                  약관동의
+                </h2>
+                <p class="heading-description">서비스 이용을 위해 아래 약관에 동의해 주세요. 필수 항목은 가입 후 서비스 이용에 반드시 필요합니다.</p>
+              </div>
+              <div class="agree-container agree-container--all">
+                <div class="checkbox">
+                  <input type="checkbox" id="checkboxAgreeAll" class="checkbox__input" />
+                  <label for="checkboxAgreeAll" class="checkbox__label">
+                    <span>모든 약관에 동의합니다. (필수+선택 약관을 한번에 동의처리)</span>
+                  </label>
+                </div>
+              </div>
+              <!-- accordion -->
+              <div class="accordion accordion--agree">
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkboxAgree1" class="checkbox__input agree-item" data-required="Y" />
+                      <label for="checkboxAgree1" class="checkbox__label">
+                        <span>
+                          이용약관 <span class="text-emphasis">(필수)</span>
+                          <small class="heading-description">서비스 이용 시 회원과 운영기관 간의 권리·의무를 정합니다.</small>
+                        </span>
+                      </label>
+                    </div>
+                    <button type="button" id="accordionHeaderAgree1" class="accordion-button" aria-controls="accordionCollapseAgree1">
+                      <span>전문보기</span>
+                    </button>
+                  </h3>
+                  <div id="accordionCollapseAgree1" class="accordion-collapse" aria-labelledby="accordionHeaderAgree1">
+                    <div class="accordion-content">
+                      <h4>제 1장 총칙</h4>
+                      <h5>제 1조(목적)</h5>
+                      <p>본 약관은 무공해차 통합누리집(이하 “당 사이트”라 한다)이 제공하는 모든 서비스(이하 "서비스"라 한다)의 이용조건 및 절차, 회원과 당 사이트의 권리, 의무, 책임사항과 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+                      <h5>제 2조(약관의 효력과 변경)</h5>
+                      <p>① 당 사이트는 귀하가 본 약관 내용에 동의하는 경우, 당 사이트의 서비스 제공 행위 및 귀하의 서비스 사용 행위에 본 약관이 우선적으로 적용됩니다.</p>
+                      <p>② 이 약관은 합리적인 사유가 발생할 경우 관련법령에 위배되지 않는 범위 안에서 개정될 수 있습니다.</p>
+                      <p>③ 당 사이트의 약관을 개정할 경우에는 적용일자 및 개정사유를 명시하여 현행 약관과 함께 사이트 초기화면에 그 적용일 7일 이전부터 적용일 이후 상당한 기간동안 공지하고, 기존회원에게는 개정약관을 개별로 통지합니다. 단, 회원에 불리하게 약관내용을 변경하는 경우에는 최소 30일 이전부터 적용일 이후 상당한 기간 동안 공지합니다.</p>
+                      <p>④ 변경된 약관은 부칙에 명시된 날부터 그 효력이 발생되며, 공지된 이후 거부의사를 표시하지 아니하고 서비스를 계속 사용할 경우에는 약관 변경에 동의한 것으로 간주됩니다. 회원이 변경된 약관에 동의하지 않는 경우 회원은 회원탈퇴를 할 수 있습니다.</p>
+                      <h5>제3조(약관 외 준칙)</h5>
+                      <p>① 이 약관은 당 사이트가 제공하는 서비스에 관한 이용안내와 함께 적용합니다.</p>
+                      <p>② 이 약관에 명시되지 아니한 사항은 관계법령 및 서비스별 안내의 취지에 따라 적용할 수 있습니다.</p>
+                      <h5>제4조(용어의 정의)</h5>
+                      <p>본 약관에서 사용하는 용어의 정의는 다음 각 호와 같습니다.</p>
+                      <p>1. 이용자 : 본 약관에 따라 당 사이트가 제공하는 서비스를 받는 자</p>
+                      <p>2. 가입 : 당 사이트가 제공하는 신청서 양식에 해당 정보를 기입하고, 본 약관에 동의하여 서비스 이용계약을 완료시키는 행위</p>
+                      <p>3. 회원 : 당 사이트에 개인 정보를 제공하여 회원 등록을 한 자로서 당 사이트가 제공하는 서비스를 이용할 수 있는 자</p>
+                      <p>4. 회원 ID : 회원의 식별 및 서비스 이용을 위하여 자신이 선정한 문자 및 숫자의 조합</p>
+                      <p>5. 비밀번호 : 이용자와 회원ID가 일치하는지를 확인하고 통신상의 자신의 비밀보호를 위하여 이용자 자신이 선정한 문자와 특수문자, 숫자의 조합</p>
+                      <p>6. 회원탈퇴 : 회원이용을 종료시키는 행위이며 기존 권한을 상실</p>
+                      <p>7. 본 약관에서 정의하지 않은 용어는 관계법령, 개별서비스에 대한 별도약관 및 이용규정에서 정의합니다.</p>
+                      <h4>제 2장 이용계약의 체결 및 해지</h4>
+                      <h5>제5조(이용계약의 성립)</h5>
+                      <p>① 이용계약은 신청자가 온라인으로 당 사이트에서 제공하는 소정의 가입신청 양식에서 요구하는 사항을 기록하여 가입을 완료하는 것으로 성립됩니다.</p>
+                      <p>② 본 약관에 대한 동의는 가입신청 당시 ‘동의함’버튼을 누름으로써 성립됩니다.</p>
+                      <h5>제6조(회원가입)</h5>
+                      <p>① 회원으로 가입하여 서비스를 이용하고자 하는 이용자는 당 사이트에서 요청하는 제반정보를 제공하여야 하며, 서비스 개선 등의 목적으로 회원의 동의하에 추가적인 개인정보를 요구할 수 있습니다.</p>
+                      <p>② 회원가입은 반드시 실명으로만 가입할 수 있습니다.</p>
+                      <p>③ 회원ID는 원칙적으로 변경이 불가하며 부득이한 사유로 인하여 변경하고자 하는 경우에는 전산센터에 요청하여야 합니다.</p>
+                      <p>④ 타인의 명의를 도용하여 가입신청을 한 회원의 모든 회원ID는 삭제되며, 관계법령에 따라 처벌을 받을 수 있습니다.</p>
+                      <p>⑤ 회원은 등록된 본인의 회원정보가 변경된 경우, 즉시 변경된 내용으로 회원정보를 수정하여야 하며, 변경사항을 수정하지 아니하여 발생한 불이익에 대하여 당 웹사이트는 책임지지 아니합니다.</p>
+                      <h5>제7조(이용신청의 승낙과 제한)</h5>
+                      <p>① 당 사이트는 제6조의 규정에 의한 가입신청고객에 대하여 서비스 이용을 승낙합니다.</p>
+                      <p>② 당 사이트는 다음 각 호의 어느 하나에 해당하는 경우에는 서비스이용을 승낙하지 아니합니다.</p>
+                      <p>1. 아이핀 등 중요 사항이 타인의 정보와 중복되는 경우</p>
+                      <p>2. 가입신청서의 내용을 허위로 기재하였거나 신청하였을 때</p>
+                      <p>3. 사회의 안녕 질서 혹은 미풍양속을 저해할 목적으로 신청하였을 때</p>
+                      <p>4. 다른 사람의 당 사이트 서비스 이용을 방해하거나 그 정보를 도용하는 등의 행위를 하였을 때</p>
+                      <p>5. 당 사이트를 이용하여 법령과 본 약관이 금지하는 행위를 하는 경우</p>
+                      <p>6. 영리를 추구할 목적으로 본 서비스를 이용하고자 하는 경우</p>
+                      <p>7. 기타 당 사이트가 정한 가입신청요건이 미비 되었을 때</p>
+                      <p>③ 당 사이트는 다음 각 호의 어느 하나에 해당하는 경우 그 사유가 해소될 때까지 이용계약 성립을 유보할 수 있습니다.</p>
+                      <p>1. 서비스 관련 제반 용량이 부족한 경우</p>
+                      <p>2. 기술상 장애 사유가 있는 경우</p>
+                      <h5>제8조(이용자격의 정지 및 상실)</h5>
+                      <p>당 사이트는 이용자가 본 약관의 내용에 위배되는 행동을 한 경우, 이용자격을 일시적으로 정지하고 30일 이내에 시정하도록 이용자에게 요구할 수 있으며, 이후 동일한 행위를 2회 이상 반복할 경우에 30일 기간의 소명기회를 부여한 후 이용자격을 상실 시킬 수 있습니다.</p>
+                      <h5>제9조(계약해제, 해지 등)</h5>
+                      <p>① 회원은 언제든지 서비스 정보수정 메뉴 등을 통하여 이용계약을 해지할 수 있으며, 기관은 관련법 등이 정하는 바에 따라 이를 즉시 처리하여야 합니다.</p>
+                      <p>② 회원이 계약을 해지할 경우, 관련법 및 개인정보취급방침에 따라 회원정보를 보유하는 경우를 제외하고는 수집된 개인정보를 파기하는 것을 원칙으로 합니다.</p>
+                      <h4>제3장 의무 및 책임</h4>
+                      <h5>제10조(당 사이트의 의무)</h5>
+                      <p>① 당 사이트는 법령과 본 약관이 금지하거나 미풍양속에 반하는 행위를 하지 않으며, 계속적, 안정적으로 서비스를 제공하기 위해 노력할 의무가 있습니다.</p>
+                      <p>② 당 사이트는 이용고객이 희망한 서비스 제공 개시일에 특별한 사정이 없는 한 서비스를 이용할 수 있도록 하여야 합니다.</p>
+                      <p>③ 당 사이트는 이용자의 귀책사유로 인한 서비스 이용 장애에 대하여 책임을 지지 않습니다.</p>
+                      <h5>제11조(개인정보의 보호 및 사용)</h5>
+                      <p>① 회원의 개인정보는 공공기관의 개인정보보호에 관한 법률에 의해 보호됩니다.</p>
+                      <p>② 당 사이트의 회원 정보는 다음 각 호와 같이 사용, 관리, 보호됩니다.</p>
+                      <p>1. 개인정보의 수집 : 당 사이트는 회원가입 시 회원이 제공하는 정보를 수집합니다.</p>
+                      <p>2. 개인정보의 사용 : 당 사이트는 서비스 제공과 관련해서 수집된 회원의 신상정보를 본인의 승낙 없이 제3자에게 누설, 배포하지 않습니다. 다만, 관련 법률의 규정에 의해 국가기관의 요구가 있는 경우, 범죄에 대한 수사상의 목적이 있거나 기타 관계법령에서 정한 절차에 따른 요청이 있는 경우, 귀하가 당 사이트에 제공한 개인정보를 스스로 공개한 경우에는 그러하지 않습니다.</p>
+                      <p>3. 개인정보의 관리 : 귀하는 개인정보의 보호 및 관리를 위하여 서비스의 개인정보관리에서 수시로 귀하의 개인정보를 수정/삭제할 수 있습니다.</p>
+                      <p>4. 개인정보의 보호 : 귀하의 개인정보는 오직 귀하만이 열람/수정/삭제할 수 있으며, 이는 전적으로 귀하의 ID와 비밀번호에 의해 관리되고 있습니다. 따라서 타인에게 본인의 ID와 비밀번호를 알려주어서는 안되며, 작업 종료 시에는 반드시 로그아웃 하고, 웹 브라우저의 창을 닫아야 합니다.(이는 타인과 컴퓨터를 공유하는 인터넷 카페나 도서관 같은 공공장소에서 컴퓨터를 사용하는 경우에 회원의 정보보호를 위하여 필요한 사항입니다.)</p>
+                      <p>③ 회원이 본 약관에 따라 이용신청을 하는 것은, 당 사이트가 신청서에 기재된 회원정보를 수집, 이용하는 것에 동의하는 것으로 간주됩니다.</p>
+                      <h5>제12조(회원의 의무)</h5>
+                      <p>① 회원 가입 시에 요구되는 정보는 정확하게 기입하여야 합니다. 또한 이미 제공된 귀하에 대한 정보가 정확한 정보가 되도록 유지, 갱신하여야 하며, 회원은 자신의 ID 및 비밀번호를 제3자에게 이용하게 해서는 안됩니다.</p>
+                      <p>② 회원은 당 사이트의 사전 승낙 없이 서비스를 이용하여 어떠한 영리행위도 할 수 없습니다.</p>
+                      <p>③ 회원은 카드 신청 시 전기차(BEV)에 한해서 신청이 가능하며, 이외의 차종에 대해서는 카드신청이 제한됩니다.</p>
+                      <p>④ 회원은 당 사이트 이용과 관련하여 다음 각 호의 행위를 하여서는 안됩니다.</p>
+                      <p>1. 회원가입 신청 또는 회원정보 변경 시 허위내용을 기재하거나 다른 회원의 비밀번호와 ID를 도용하여 부정 사용하는 행위</p>
+                      <p>2. 저속, 음란, 모욕적, 위협적이거나 타인의 Privacy를 침해할 수 있는 내용을 전송, 게시, 게재, 전자우편 또는 기타의 방법으로 전송하는 행위</p>
+                      <p>3. 기관 운영진, 직원 또는 관계자를 사칭하는 행위</p>
+                      <p>4. 서비스를 통하여 전송된 내용의 출처를 위장하는 행위</p>
+                      <p>5. 법률, 계약에 의해 이용할 수 없는 내용을 게시, 게재, 전자우편 또는 기타의 방법으로 전송하는 행위</p>
+                      <p>6. 당 사이트로부터 특별한 권리를 부여받지 않고 클라이언트 프로그램을 변경하거나, 서버 해킹 및 컴퓨터바이러스 유포, 웹 사이트 또는 게시된 정보의 일부분 또는 전체를 임의로 변경하는 행위</p>
+                      <p>7. 타인의 특허, 상표, 영업비밀, 저작권, 기타 지적재산권을 침해하는 내용을 게시, 게재, 전자우편 또는 기타의 방법으로 전송하는 행위</p>
+                      <p>8. 기관의 승인을 받지 아니한 광고, 판촉물, 스팸메일, 행운의 편지, 피라미드 조직 기타 다른 형태의 권유를 게시, 게재, 전자우편 또는 기타의 방법으로 전송하는 행위</p>
+                      <p>9. 다른 사용자의 개인정보를 수집, 저장, 공개하는 행위</p>
+                      <p>10. 범죄행위를 목적으로 하거나 기타 범죄행위와 관련된 행위</p>
+                      <p>11. 선량한 풍속, 기타 사회질서를 해하는 행위</p>
+                      <p>12. 타인의 명예를 훼손하거나 모욕하는 행위</p>
+                      <p>13. 타인의 지적재산권 등의 권리를 침해하는 행위</p>
+                      <p>14. 타인의 의사에 반하여 광고성 정보 등 일정한 내용을 지속적으로 전송하는 행위</p>
+                      <p>15. 서비스의 안정적인 운영에 지장을 주거나 줄 우려가 있는 일체의 행위</p>
+                      <p>16. 본 약관을 포함하여 기타 제반 규정 또는 이용 조건을 위반하는 행위</p>
+                      <p>17. 기타 관계법령에 위배되는 행위</p>
+                      <h5>13조(사용자의 정보 보안)</h5>
+                      <p>① 가입 신청자가 당 사이트 서비스 가입 절차를 완료하는 순간부터 귀하는 입력한 정보의 비밀을 유지할 책임이 있으며, 회원이 고의나 중대한 실수로 회원의 ID와 비밀번호를 사용하여 발생하는 피해에 대한 책임은 회원 본인에게 있습니다.</p>
+                      <p>② ID와 비밀번호에 관한 모든 관리의 책임은 회원에게 있으며, 회원의 ID나 비밀번호가 부정하게 사용되었다는 사실을 발견한 경우에는 즉시 당 사이트에 신고하여야 합니다. 신고를 하지 않음으로 인한 모든 책임은 회원 본인에게 있습니다.</p>
+                      <p>③ 이용자는 당 사이트 서비스의 사용 종료 시마다 정확히 접속을 종료해야 하며, 정확히 종료하지 아니함으로써 제3자가 귀하에 관한 정보를 이용하게 되는 등의 결과로 인해 발생하는 손해 및 손실에 대하여 당 사이트는 책임을 부담하지 아니합니다.</p>
+                      <h4>제4장 서비스 제공 및 이용</h4>
+                      <h5>제14조(서비스의 변경 및 중지)</h5>
+                      <p>① 당 사이트는 정보통신설비의 보수점검, 교체 및 고장, 통신두절 또는 정책 및 운영상의 상당한 이유가 있는 경우 제공하고 있는 전부 또는 일부 서비스를 중지할 수 있습니다. 이 경우 당 사이트는 이를 이용자에게 미리 통지하여야 하며, 사전에 통지할 수 없는 부득이한 사유가 있는 경우 사후에 통지할 수 있습니다.</p>
+                      <p>② 당 사이트는 상당한 이유가 있는 경우에 운영상, 기술상의 필요에 따라 제공하고 있는 서비스를 변경할 수 있습니다. 서비스의 내용, 이용방법, 이용시간을 변경할 경우에는 변경사유, 변경될 서비스의 내용 및 제공일자 등에 대해 변경 전 7일 이상 홈페이지 초기화면 등을 통해 이용자에게 미리 공지하여야 합니다.</p>
+                      <h5>제15조(서비스 이용제한)</h5>
+                      <p>① 당 사이트는 회원이 서비스 이용내용에 있어서 본 약관 제 12조 내용을 위반하거나, 다음 각 호에 해당하는 경우 서비스 이용을 제한할 수 있습니다.</p>
+                      <p>1. 2년 이상 서비스를 이용한 적이 없는 경우</p>
+                      <p>2. 정보통신 윤리위원회 등 관련 공공기관의 시정 요구가 있는 경우</p>
+                      <p>3. 기타 정상적인 서비스 운영에 방해가 될 경우</p>
+                      <p>4. 상용소프트웨어나 크랙파일을 올린 경우</p>
+                      <p>5. 정보통신 윤리위원회의 심의 세칙 제 7조에 어긋나는 음란물을 게재한 경우</p>
+                      <p>6. 반국가적 행위의 수행을 목적으로 하는 내용을 포함한 경우</p>
+                      <p>7. 저작권이 있는 글을 무단 복제하거나 mp3 등을 올린 경우</p>
+                      <h5>제16조(게시물의 관리)</h5>
+                      <p>① 귀하가 게시한 게시물의 내용에 대한 권리는 귀하에게 있습니다.</p>
+                      <p>② 당 사이트는 다음 각 호에 해당되는 게시물이나 자료를 사전통지 없이 삭제하거나 이동 또는 등록 거부를 할 수 있습니다.</p>
+                      <p>1. 본 서비스의 약관에 위배되거나 상용 또는 불법, 음란, 저속하다고 판단되는 게시물을 게시한 경우</p>
+                      <p>2. 다른 회원 또는 제 3자에게 심한 모욕을 주거나 명예를 손상시키는 내용인 경우</p>
+                      <p>3. 공공질서 및 미풍양속에 위반되는 내용을 유포하거나 링크 시키는 경우</p>
+                      <p>4. 불법복제 또는 해킹을 조장하는 내용인 경우</p>
+                      <p>5. 영리를 목적으로 하는 광고일 경우</p>
+                      <p>6. 범죄와 결부된다고 객관적으로 인정되는 내용일 경우</p>
+                      <p>7. 다른 이용자 또는 제 3자의 저작권 등 기타 권리를 침해하는 내용인 경우</p>
+                      <p>8. 유사하거나 동일한 내용이 반복하여 게재되는 경우</p>
+                      <p>9. 특정인의 개인정보가 공개되는 경우</p>
+                      <p>10. 당 사이트에서 규정한 게시물 원칙에 어긋나거나, 게시판 성격에 부합하지 않는 경우</p>
+                      <p>11. 기타 관계법령에 위배된다고 판단되는 경우</p>
+                      <p>③ 귀하의 게시물이 타인의 저작권을 침해함으로써 발생하는 민·형사상의 책임은 전적으로 귀하가 부담하여야 합니다.</p>
+                      <h5>제17조(게시물에 대한 저작권)</h5>
+                      <p>① 이용자가 게시한 게시물의 저작권은 게시한 이용자에게 귀속됩니다. 또한 당 사이트는 게시자의 동의 없이 게시물을 상업적으로 이용할 수 없습니다.</p>
+                      <p>② 당 사이트에서 제공하는 모든 저작물의 저작권 및 기타 지적재산권은 기후에너지환경부에 귀속됩니다.</p>
+                      <p>③ 회원은 서비스를 이용하여 취득한 정보를 당 사이트의 사전 승낙 없이 복제, 송신, 출판, 재배포, 방송, 임의 가공, 판매하는 행위 등을 할 수 없습니다.</p>
+                      <p>④ 당 사이트는 회원이 게시하거나 등록하는 서비스 내의 내용물, 게시 내용에 대해 제16조제2항 각 호에 해당된다고 판단되는 경우 사전통지 없이 삭제하거나 이동 또는 등록 거부를 할 수 있습니다.</p>
+                      <h5>제18조(정보 제공 및 홍보물 게재)</h5>
+                      <p>① 당 사이트는 서비스를 운영함에 있어서 사이트 운영에 필요한 각종 정보를 게재하거나 전자우편 등을 통해 회원에게 제공할 수 있습니다.</p>
+                      <p>② 당 사이트는 서비스에 적절하다고 판단되거나 공익성이 있는 홍보물을 게재할 수 있으나, 회원이 홍보를 통한 제3의 서비스를 이용하는 것과 관련하여 발생하는 모든 문제에 대해서 어떠한 책임도 지지 않습니다.</p>
+                      <h5>제19조(전자우편주소 수집 금지)</h5>
+                      <p>① 회원은 전자우편주소 추출기 등을 이용하여 전자우편주소를 수집 또는 제3자에게 제공할 수 없습니다.</p>
+                      <h4>제5장기타</h4>
+                      <h5>제20조(손해배상)</h5>
+                      <p>① 당 사이트는 서비스 이용과 관련하여 이용자에게 발생한 손해에 대하여 중대한 과실, 고의 또는 범죄행위로 인해 발생한 손해를 제외하고 이에 대하여 책임을 부담하지 않으며, 이용자가 본 사이트에 게재한 정보, 자료, 사실의 신뢰도, 정확성 등 내용에 관하여는 책임을 지지 않습니다.</p>
+                      <p>② 당 사이트는 서비스 이용과 관련하여 이용자에게 발생한 손해 중 이용자의 고의, 실수에 의한 손해에 대하여는 책임을 부담하지 아니합니다.</p>
+                      <h5>제21조(양도금지)</h5>
+                      <p>회원은 서비스의 이용권한, 기타 이용 계약상 지위를 타인에게 양도, 증여할 수 없으며 게시물 등 모든 형태의 공개 자료에 대한 공개책임은 이를 공개한 회원에게 있습니다.</p>
+                      <h5>제22조(면책조항)</h5>
+                      <p>① 당 사이트는 천재지변, 전쟁 및 기타 이에 준하는 불가항력으로 인하여 서비스 정보가 삭제되거나 서비스를 제공할 수 없는 경우에는 이에 대한 책임이 면제됩니다.</p>
+                      <p>② 당 사이트는 기간통신 사업자가 전기통신 서비스를 중지하거나 정상적으로 제공하지 아니하여 손해가 발생한 경우 책임이 면제됩니다.</p>
+                      <p>③ 당 사이트는 서비스용 설비의 보수, 교체, 정기점검, 공사 등 부득이한 사유로 발생한 손해에 대한 책임이 면제됩니다.</p>
+                      <p>④ 당 사이트는 이용자의 컴퓨터 오류에 의해 손해가 발생한 경우, 또는 회원이 신상정보 및 전자우편 주소를 부실하게 기재하여 손해가 발생한 경우 책임을 지지 않습니다.</p>
+                      <p>⑤ 당 사이트는 회원의 귀책사유로 인한 서비스 이용의 장애 또는 손해에 대하여 책임을 지지 않습니다.</p>
+                      <p>⑥ 당 사이트는 서비스에 표출된 어떠한 의견이나 정보에 대해 확신이나 대표할 의무가 없으며 이용자나 제3자에 의해 표출된 의견을 승인·반대·수정하지 않습니다.</p>
+                      <p>⑦ 당 사이트는 이용자 또는 기타 유관기관이 서비스에 게재한 정보에 대해 정확성, 신뢰도에 대하여 보장하지 않습니다. 따라서 당 사이트는 이용자가 위 내용을 이용함으로 인하여 입게 된 모든 종류의 손실이나 손해에 대하여 책임을 부담하지 아니합니다.</p>
+                      <p>⑧ 당 사이트는 이용자가 서비스를 이용하며 타 이용자로 인해 입게 되는 정신적 피해에 대하여 보상할 책임을 지지 않습니다.</p>
+                      <p>⑨ 당 사이트는 회원이 서비스를 이용하면서 얻은 자료로 인한 손해에 대하여 책임을 지지 않습니다.</p>
+                      <p>⑩ 당 사이트는 이용자 상호간 및 이용자와 제 3자 상호 간에 서비스를 매개로 발생한 분쟁에 대해 개입할 의무가 없으며, 이로 인한 손해를 배상할 책임도 없습니다.</p>
+                      <p>⑪ 당 사이트에서 링크를 통해 제공하는 다른 사이트의 비밀 보장 관행과 사이트의 내용에 대해서는 책임지지 않습니다.</p>
+                      <h5>제23조(재판관할)</h5>
+                      <p>① 당 사이트와 이용자 간에 발생한 서비스 이용에 관한 분쟁에 대하여는 대한민국 법을 적용하며, 본 분쟁으로 인한 소는 대한민국의 법원에 제기합니다.</p>
+                      <h5>부칙</h5>
+                      <p>본 약관은 2013년 3월 20일부터 시행합니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkboxAgree2" class="checkbox__input agree-item" data-required="Y" />
+                      <label for="checkboxAgree2" class="checkbox__label">
+                        <span>
+                          무공해차 통합누리집 시스템 개인정보 수집 및 이용에 관한 안내 <span class="text-emphasis">(필수)</span>
+                          <small class="heading-description">이름·주소·휴대폰번호·본인확인값(DI)을 수집하며, 회원 탈퇴 시 파기됩니다.</small>
+                        </span>
+                      </label>
+                    </div>
+                    <button type="button" id="accordionHeaderAgree2" class="accordion-button" aria-controls="accordionCollapseAgree2">
+                      <span>전문보기</span>
+                    </button>
+                  </h3>
+                  <div id="accordionCollapseAgree2" class="accordion-collapse" aria-labelledby="accordionHeaderAgree2">
+                    <div class="accordion-content">
+                      <h5>1. 정보의 수집·이용 목적</h5>
+                      <p>- 「무공해차 통합누리집」 홈페이지 가입 및 민원사무처리를 목적으로 개인정보를 수집·이용합니다.</p>
+                      <h5>2. 수집하려는 개인정보의 항목</h5>
+                      <p>무공해차 통합누리집 사용자정보를 위하여 처리하는 개인정보 항목은 아래와 같습니다.</p>
+                      <p>▶ 필수 항목 : 이름, 주소, 휴대폰번호, 본인확인값(DI)</p>
+                      <p>▶ 선택 항목 : 전화번호, E-Mail, 자동차등록번호, 회사명, 부서명, 사업자등록번호, 금융정보(은행명, 예금주, 계좌번호)</p>
+                      <h5>3. 정보의 보유 및 이용기간</h5>
+                      <p>- 수집된 개인정보는 <span class="text-emphasis">회원탈퇴 시까지</span> 보유 및 이용 후 폐기합니다.</p>
+                      <h5>4. 개인정보 수집 동의 거부의 권리</h5>
+                      <p>사용자는 개인정보수집에 대한 동의 거부를 할 수 있으나, 수집거부시 무공해차 통합누리집 서비스 이용에 제한이 있습니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkboxAgree3" class="checkbox__input agree-item" data-required="Y" />
+                      <label for="checkboxAgree3" class="checkbox__label">
+                        <span>
+                          본인 명의 휴대폰 인증 동의 <span class="text-emphasis">(필수)</span>
+                          <small class="heading-description">「전자서명법」에 따라 본인 명의 휴대폰으로 안전하게 인증합니다.</small>
+                        </span>
+                      </label>
+                    </div>
+                    <button type="button" id="accordionHeaderAgree3" class="accordion-button" aria-controls="accordionCollapseAgree3">
+                      <span>전문보기</span>
+                    </button>
+                  </h3>
+                  <div id="accordionCollapseAgree3" class="accordion-collapse" aria-labelledby="accordionHeaderAgree3">
+                    <div class="accordion-content">
+                      <p>본인 명의 휴대폰으로 본인 확인을 진행합니다. 주민등록번호는 일체 수집하지 않으며, 인증 과정에서 전달받은 이름·생년월일·성별·휴대전화번호·본인확인값(CI/DI)은 회원 식별 및 중복가입 확인 목적으로만 이용됩니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkboxAgree4" class="checkbox__input agree-item" data-required="Y" />
+                      <label for="checkboxAgree4" class="checkbox__label">
+                        <span>
+                          만 14세 이상 가입 가능 <span class="text-emphasis">(필수)</span>
+                          <small class="heading-description">만 14세 미만은 회원가입을 할 수 없습니다.</small>
+                        </span>
+                      </label>
+                    </div>
+                    <button type="button" id="accordionHeaderAgree4" class="accordion-button" aria-controls="accordionCollapseAgree4">
+                      <span>전문보기</span>
+                    </button>
+                  </h3>
+                  <div id="accordionCollapseAgree4" class="accordion-collapse" aria-labelledby="accordionHeaderAgree4">
+                    <div class="accordion-content">
+                      <h5>제 1장 총칙</h5>
+                      <h5>제 1조(목적)</h5>
+                      <p>본 약관은 무공해차 통합누리집(이하 “당 사이트”라 한다)이 제공하는 모든 서비스(이하 "서비스"라 한다)의 이용조건 및 절차, 회원과 당 사이트의 권리, 의무, 책임사항과 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+                      <p>① 당 사이트는 귀하가 본 약관 내용에 동의하는 경우, 당 사이트의 서비스 제공 행위 및 귀하의 서비스 사용 행위에 본 약관이 우선적으로 적용됩니다.</p>
+                      <h5>제 2조((약관의 효력과 변경))</h5>
+                      <p>본 약관은 무공해차 통합누리집(이하 “당 사이트”라 한다)이 제공하는 모든 서비스(이하 "서비스"라 한다)의 이용조건 및 절차, 회원과 당 사이트의 권리, 의무, 책임사항과 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+                      <p>① 당 사이트는 귀하가 본 약관 내용에 동의하는 경우, 당 사이트의 서비스 제공 행위 및 귀하의 서비스 사용 행위에 본 약관이 우선적으로 적용됩니다.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkboxAgree6" class="checkbox__input agree-item" />
+                      <label for="checkboxAgree6" class="checkbox__label">
+                        <span>
+                          개인정보의 제3자 제공 <span>(선택)</span>
+                          <small class="heading-description">공공충전인프라 이용·충전요금 정산을 위해 한국자동차환경협회에 제공합니다.</small>
+                        </span>
+                      </label>
+                    </div>
+                    <button type="button" id="accordionHeaderAgree6" class="accordion-button" aria-controls="accordionCollapseAgree6">
+                      <span>전문보기</span>
+                    </button>
+                  </h3>
+                  <div id="accordionCollapseAgree6" class="accordion-collapse" aria-labelledby="accordionHeaderAgree6">
+                    <div class="accordion-content">
+                      <h5>공공충전인프라 이용 및 충전요금 정산 서비스 등의 수행을 위해 회원동의시 제3자에게 제공하며 수집된 정보는 정보주체의 동의 없이는 수집·이용되지 않습니다.</h5>
+                      <p>1. 제공받는 자 : 대기환경보전법 제78조의 규정에 따라 설립된 <span class="text-emphasis">사단법인“한국자동차환경협회”</span></p>
+                      <p>2. 제공받는 자의 개인정보 이용목적 : <span class="text-emphasis">공공충전인프라 운영 및 충전요금 정산 서비스 제공</span></p>
+                      <p>3. 제공하는 개인정보 항목 : 이름, 주소, 차량번호, 회원카드번호, 휴대폰번호, 사업자등록번호, 회사명, 부서명, 전화번호, E-Mail, 충전이력</p>
+                      <p>4. 제공받는 자의 개인정보 보유 및 이용기간 : <span class="text-emphasis">회원탈퇴 및 동의철회 시까지</span></p>
+                      <h5>※ 개인정보 제공자는 개인정보의 제3자 제공에 대한 동의를 거부할 권리가 있으나, 위 항목 동의 거부시 전기자동차 충전 및 정산, 정보시스템 서비스 이용에 제한이 있습니다.</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="heading-group">
+                <h2 class="heading-title">
+                  <i class="svg-icon symbol-electricity" aria-hidden="true"></i>
+                  휴대전화 인증
+                </h2>
+                <p class="heading-description">필수 약관에 동의한 뒤 본인 명의 휴대전화로 인증해 주세요. 인증이 완료되면 다음 단계로 진행할 수 있습니다.</p>
+              </div>
+
+              <button type="button" id="btnPccAuth" class="agree-container" title="휴대전화 인증 (새창 열림)">
+                휴대전화 인증하기
+                <i class="svg-icon angle-right" aria-hidden="true"></i>
+              </button>
+
+              <!-- 인증 완료 후 표시 -->
+              <div class="notifications" id="pccResult" hidden>
+                <strong class="notifications__title">
+                  <i class="svg-icon info" aria-hidden="true"></i>
+                  본인인증 완료
+                </strong>
+                <div class="notifications__description">
+                  <p><strong id="pccResultName"></strong> 님, 본인인증이 완료되었습니다. 아래 <em>다음</em> 버튼을 눌러 회원정보를 입력해 주세요.</p>
+                  <p id="pccResultPhone"></p>
+                </div>
+              </div>
+            </section>
+
+            <div class="button-group">
+              <button type="button" class="button button--large button--secondary" onclick="fnCancelJoin();">
+                <span class="button__label">취소</span>
+              </button>
+              <button type="button" id="btnNext" class="button button--large button--primary" onclick="fnGoNext();">
+                <span class="button__label">다음</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+<form name="reqPCCForm" id="reqPCCForm" method="post"></form>
+<form name="regForm" id="regForm" method="post" action="">
+  
+  <input type="hidden" name="chkUseAgree" id="chkUseAgree" value="N" />
+  <input type="hidden" name="chkPersonallAgree" id="chkPersonallAgree" value="N" />
+  <input type="hidden" name="chkPccAgree" id="chkPccAgree" value="N" />
+  <input type="hidden" name="chkAgeConfirm" id="chkAgeConfirm" value="N" />
+  
+  <input type="hidden" name="accept_yn" id="accept_yn" value="N" />
+  <input type="hidden" name="indvdl_accept_yn" id="indvdl_accept_yn" value="N" />
+  <input type="hidden" name="info_accept_yn" id="info_accept_yn" value="N" />
+  <input type="hidden" name="mkt_agree_yn" id="mkt_agree_yn" value="N" />
+  <input type="hidden" name="mode" id="mode" value="write" />
+</form>
+
+<!-- 회원 중복 안내 -->
+<div class="modal-container" id="modalMemberDuplicate" role="dialog" aria-alert="true">
+  <div class="alert" tabindex="0">
+    <div class="alert__icon">
+      <i class="svg-icon infomation" aria-hidden="true"></i>
+    </div>
+    <div class="alert__body">
+      <p class="alert__description">이미 회원 가입이 되어 있습니다.</p>
+      <ul class="bullet bullet--dotted">
+        <li>DI(회원중복 검사코드) : ******************<span id="diNum"></span></li>
+        <li>아이디찾기로 검색되지 않는 경우, 해당 DI로 관리자에게 문의해 주세요.</li>
+      </ul>
+    </div>
+    <div class="alert__footer">
+      <a href="/portal/findId.do" class="button button--large button--primary"><span>아이디 찾기</span></a>
+      <button type="button" class="button button--large button--secondary button--close"><span>확인</span></button>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="pageInfo">{"authedYn": "N", "authName": "", "authPhone": "", "chkUseAgree": "N", "chkPersonallAgree": "N", "chkPccAgree": "N", "chkAgeConfirm": "N", "info_accept_yn": "N", "mkt_agree_yn": "N"}</script>
+
+<script>
+var PAGE_INFO = (function () {
+  try { return JSON.parse(document.getElementById('pageInfo').textContent) || {}; } catch (e) { return {}; }
+})();
+
+// 본인인증 완료 여부 및 인증 결과값
+var PCC_AUTHED = false;
+var PCC_NAME = '';
+
+$(function () {
+  // 모바일에서는 키보드 보안 프로그램 안내 숨김 (설치 대상 아님)
+  if (navigator.appVersion.indexOf('Mobile') > -1) {
+    $('#nxKeyNotice').hide();
+  }
+
+  fnRestoreState();
+
+  // 전체동의 ↔ 개별동의 동기화
+  $('#checkboxAgreeAll').on('change', function () {
+    $('.agree-item').prop('checked', this.checked);
+  });
+  $('.agree-item').on('change', function () {
+    $('#checkboxAgreeAll').prop('checked', $('.agree-item:not(:checked)').length === 0);
+  });
+
+  $('#btnPccAuth').on('click', function () {
+    if (!fnValidAgree()) { return false; }
+    openPCCWindow();
+  });
+});
+
+// 정보입력 단계에서 되돌아온 경우 직전 동의·인증 상태 복원
+function fnRestoreState() {
+  var restore = {
+    checkboxAgree1: PAGE_INFO.chkUseAgree,
+    checkboxAgree2: PAGE_INFO.chkPersonallAgree,
+    checkboxAgree3: PAGE_INFO.chkPccAgree,
+    checkboxAgree4: PAGE_INFO.chkAgeConfirm,
+    // checkboxAgree5: PAGE_INFO.mkt_agree_yn,
+    checkboxAgree6: PAGE_INFO.info_accept_yn
+  };
+  for (var id in restore) {
+    if (restore[id] === 'Y') { $('#' + id).prop('checked', true); }
+  }
+  $('#checkboxAgreeAll').prop('checked', $('.agree-item:not(:checked)').length === 0);
+
+  if (PAGE_INFO.authedYn === 'Y') {
+    PCC_AUTHED = true;
+    PCC_NAME = PAGE_INFO.authName || '';
+    fnShowAuthed(PAGE_INFO.authPhone || '');
+  }
+}
+
+// 인증 완료 상태 표시
+function fnShowAuthed(phoneNo) {
+  $('#pccResultName').text(PCC_NAME);
+  $('#pccResultPhone').text('인증 휴대전화번호 : ' + phoneNo);
+  $('#pccResult').prop('hidden', false);
+  $('#btnPccAuth').hide();
+}
+
+// 필수 약관 동의 검사
+function fnValidAgree() {
+  var $unchecked = $('.agree-item[data-required="Y"]:not(:checked)').first();
+  if ($unchecked.length > 0) {
+    alert('필수 약관에 모두 동의해 주십시오.');
+    $unchecked.focus();
+    return false;
+  }
+  return true;
+}
+
+// 동의 값을 다음 단계 전송 폼에 반영
+function fnSyncAgreeValue() {
+  $('#chkUseAgree').val($('#checkboxAgree1').is(':checked') ? 'Y' : 'N');
+  $('#chkPersonallAgree').val($('#checkboxAgree2').is(':checked') ? 'Y' : 'N');
+  $('#chkPccAgree').val($('#checkboxAgree3').is(':checked') ? 'Y' : 'N');
+  $('#chkAgeConfirm').val($('#checkboxAgree4').is(':checked') ? 'Y' : 'N');
+  $('#accept_yn').val($('#checkboxAgree1').is(':checked') ? 'Y' : 'N');
+  $('#indvdl_accept_yn').val($('#checkboxAgree2').is(':checked') ? 'Y' : 'N');
+  // $('#mkt_agree_yn').val($('#checkboxAgree5').is(':checked') ? 'Y' : 'N');
+  $('#info_accept_yn').val($('#checkboxAgree6').is(':checked') ? 'Y' : 'N');
+}
+
+// ---------------------------------
+// 휴대전화 본인인증 (PCC)
+// ---------------------------------
+function openPCCWindow() {
+  var pccWindow = window.open('', 'PCCV3Window', 'width=300, height=400, resizable=1, scrollbars=no, status=0, titlebar=0, toolbar=0, left=300, top=200');
+
+  if (pccWindow == null) {
+    alert('※ 팝업이 차단된 경우 화면 상단의 팝업 차단 알림줄을 클릭하여 팝업을 허용해 주시기 바랍니다.');
+    return;
+  }
+
+  document.reqPCCForm.action = '/member/authPccRequest.do';
+  document.reqPCCForm.target = 'PCCV3Window';
+  document.reqPCCForm.submit();
+}
+
+// 인증창(authPccResDiff) 콜백
+function setPcc(di, no1, no2, no3, username, ci) {
+  if (ci == '' || no3.length != 4) {
+    alert('본인 인증에 실패 하였습니다.');
+    return;
+  }
+  PCC_NAME = username;
+  fnCheckMember(no1 + '-' + no2 + '-' + no3);
+}
+
+function setPccErr(msg) {
+  alert(msg);
+}
+
+// 본인확인값(DI)으로 기존 가입 여부 확인
+function fnCheckMember(phoneNo) {
+  $.ajax({
+    type: 'POST',
+    url: '/member/checkIpinDuplicate.do',
+    dataType: 'json',
+    data: {},
+    success: function (data) {
+      if (parseInt(data.result, 10) > 0) {
+        var di = data.DI || '';
+        $('#diNum').text(di.substring(di.length - 15));
+        openModal('#modalMemberDuplicate');
+        return;
+      }
+      PCC_AUTHED = true;
+      fnShowAuthed(phoneNo);
+      alert('본인 인증에 성공하였습니다. 회원 가입 절차를 진행합니다.');
+    },
+    error: function () {
+      alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+    }
+  });
+}
+
+// ---------------------------------
+// 단계 이동
+// ---------------------------------
+function fnGoNext() {
+  if (!fnValidAgree()) { return false; }
+  if (!PCC_AUTHED) {
+    alert('휴대전화 본인인증을 먼저 진행해 주십시오.');
+    return false;
+  }
+  fnSyncAgreeValue();
+  document.regForm.action = '/member/insertMemberJoinForm.do';
+  document.regForm.submit();
+}
+
+function fnCancelJoin() {
+  if (confirm('회원가입을 취소하시겠습니까?')) {
+    location.href = '/login.do';
+  }
+}
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
+</body>
+</html>

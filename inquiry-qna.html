@@ -1,380 +1,471 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>질의응답(건의사항) | 민원·문의 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
-<link rel="stylesheet" href="css/board.css">
-<link rel="stylesheet" href="css/notice.css">
-<link rel="stylesheet" href="css/inquiry.css">
-<style>
-  /* 질의응답 게시판 — 카테고리/상태 칩 (board-table 내) */
-  .board-table .qna-cat-chip{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap;background:#eef2f7;color:#46566a}
-  .board-table .qi-state{display:inline-block;padding:3px 10px;border-radius:14px;font-size:12px;font-weight:700;white-space:nowrap}
-  .board-table .qi-state.done{background:#dff5e8;color:#19a76d}
-  .board-table .qi-state.pending{background:#fff3e0;color:#b45309}
-  .board-table .qi-state.closed{background:#eceef1;color:#5f6b7a}
-  .board-table .reply-tag{font-size:11.5px;font-weight:700;color:var(--color-primary-700,#0f6e56);margin-left:4px}
-  /* 비공개 게시글 표시 */
-  .qna-lock{display:inline-flex;align-items:center;gap:3px;margin-right:6px;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700;background:#eceef1;color:#5f6b7a;vertical-align:middle}
-  .qna-row.is-secret td .title-cell b{color:var(--text-secondary)}
-  .qna-row.is-secret.locked{cursor:not-allowed}
-  .board-table td.num.views{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-secondary)}
-</style>
+<title>질의응답(건의사항)</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
 </head>
 <body>
-<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
-<script>window.__activeNav = 'community';</script>
 <div id="header-slot"></div>
-
-<main id="main">
-  <section class="page-hero compact">
-    <div class="container container-wide">
-      <nav class="breadcrumb" aria-label="경로">
-        <a href="notice-list.html">소통·지원</a><span class="sep" aria-hidden="true">›</span>
-        <a href="inquiry-faq.html">민원·문의</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" aria-current="page">질의응답(건의사항)</span>
-      </nav>
-      <h1 data-i18n="qna.h1">질의응답(건의사항)</h1>
-      <p class="hero-lead" data-i18n="qna.lead">사용자 질문·건의사항을 공개 게시판 형식으로 운영합니다. 담당 부서가 공식적으로 답변하며, 다른 회원의 유사 문의도 함께 확인할 수 있습니다.</p>
-    </div>
-  </section>
-
-  <nav class="tab-nav" aria-label="게시판 탭" data-i18n-aria="qna.aria.tabnav">
-    <div class="container container-wide">
-      <div class="tabs-pill" data-tabs id="qnaTabs">
-        <button class="tab active" data-tab="list" type="button" data-i18n="qna.tab.list">전체 목록</button>
-        <button class="tab" data-tab="mine" type="button" data-i18n="qna.tab.mine">내 질문</button>
-      </div>
-    </div>
-  </nav>
-
-  <section class="section-sm">
-    <div class="container container-wide">
-
-      <!-- 전체 목록 -->
-      <div class="tab-content active" data-tab-content="list">
-
-        <div class="board-toolbar">
-          <div class="board-toolbar-filters">
-            <!-- [DEV] 카테고리 = 신설 대분류(major)+소분류(minor) 2단 코드그룹(js/qna-categories.js 단일 원천) · SFR-021+콜센터 분류표 확정안. 민원 현황 조회와 동일 코드 공유 -->
-            <div class="form-group">
-            <label class="form-label">대분류</label>
-            <select class="form-select" id="qnaMajor" aria-label="대분류 선택"></select>
-          </div>
-            <div class="form-group">
-            <label class="form-label">소분류</label>
-            <select class="form-select" id="qnaMinor" aria-label="소분류 선택"></select>
-          </div>
-            <div class="form-group">
-            <label class="form-label" data-i18n="qna.aria.state">답변 상태 선택</label>
-            <select class="form-select" id="qnaState" aria-label="답변 상태 선택" data-i18n-aria="qna.aria.state">
-              <option value="all" data-i18n="qna.f.allstate">답변 상태 전체</option>
-              <option value="done" data-i18n="qna.state.done">답변완료</option>
-              <option value="pending" data-i18n="qna.state.pending">답변대기</option>
-            </select>
-          </div>
-            <div class="board-search">
-              <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <input type="text" id="qnaSearch" placeholder="제목·내용 검색" aria-label="검색어 입력" data-i18n-attr="placeholder:qna.search.ph,aria-label:qna.aria.search">
-              <button type="button" id="qnaSearchBtn" data-i18n="qna.search.btn">검색</button>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>소통·지원</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>민원·문의</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>질의응답(건의사항)</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">질의응답(건의사항)</h1>
+              <p class="page-header__description">사용자 질문·건의사항을 공개 게시판 형식으로 운영합니다. 담당 부서가 공식적으로 답변하며, <br>다른 회원의 유사 문의도 함께 확인할 수 있습니다.</p>
             </div>
-            <button class="btn" type="button" id="qnaReset" aria-label="필터 초기화">초기화</button>
           </div>
         </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+            <!-- tab : PC버전 -->
+            <div class="tab tab--nav pc-only">
+              <ul class="tab__list">
+                <li class="tab__item tab__item--selected" data-tab="all"><button type="button" class="tab__button">전체 목록</button></li>
+                <li class="tab__item" data-tab="my"><button type="button" class="tab__button">내 질문</button></li>
+              </ul>
+            </div>
+            <!-- //tab -->
+            <!-- tab : MOBILE버전 -->
+            <div class="tab tab--mobile mobile-only">
+              <select title="탭메뉴" name="tabNavigation" id="tabNavigation" class="select">
+                <option value="all" selected>전체 목록</option>
+                <option value="my">내 질문</option>
+              </select>
+            </div>
+            <!-- //tab -->
 
-        <div class="board-result-meta">
-          <div data-i18n-html="qna.meta.total.html">전체 <strong id="qnaTotalCount">10</strong>건 중 <span id="qnaVisibleCount">10</span>건 표시</div>
-        </div>
-
-        <table class="board-table std-board" id="qnaTable">
-          <thead>
-            <tr>
-              <th class="num" data-i18n="qna.col.num">번호</th>
-              <th class="cat" data-i18n="qna.col.cat">카테고리</th>
-              <th data-i18n="qna.col.title">게시물명</th>
-              <th class="writer" data-i18n="qna.col.author">작성자</th>
-              <th class="date" data-i18n="qna.col.date">등록일</th>
-              <th class="num">조회수</th>
-              <th class="cat" data-i18n="qna.col.state">상태</th>
-            </tr>
-          </thead>
-          <tbody id="qnaList">
-            <!-- data-major/data-minor = js/qna-categories.js 코드 · 카테고리 배지는 JS가 "대분류 › 소분류"로 채움 -->
-            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2340" data-author="김민서" data-views="1342" style="cursor:pointer;">
-              <td class="num">2340</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>전기차 개인 구매 후 신청 가능한 보조금 종류가 어떻게 되나요?</b></div></td>
-              <td class="writer">김민서</td><td class="date">2026.04.22</td><td class="num views">1,342</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row is-secret" data-state="done" data-major="charger" data-minor="subsidy" data-no="2339" data-author="박준호" data-views="980" data-secret="1" style="cursor:pointer;">
-              <td class="num">2339</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b>공용 완속 충전기 직접 설치 신청 시 제출 서류 목록을 알려 주세요.</b></div></td>
-              <td class="writer">박준호</td><td class="date">2026.04.21</td><td class="num views">980</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="h2" data-minor="subsidy" data-no="2338" data-author="이서연" data-views="756" style="cursor:pointer;">
-              <td class="num">2338</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>수소차 취득세 감면 한도가 2026년에 변경되었나요?</b></div></td>
-              <td class="writer">이서연</td><td class="date">2026.04.20</td><td class="num views">756</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row" data-state="pending" data-major="etc" data-minor="etc" data-no="2337" data-author="정한별" data-views="210" style="cursor:pointer;">
-              <td class="num">2337</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>K-EV100 참여 선언 후 실질 이행 평가는 어떻게 이루어지나요?</b></div></td>
-              <td class="writer">정한별</td><td class="date">2026.04.19</td><td class="num views">210</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="charger" data-minor="card" data-no="2336" data-author="최도윤" data-views="1120" style="cursor:pointer;">
-              <td class="num">2336</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>통합카드 분실 신고 후 재발급 소요 기간이 얼마나 되나요?</b></div></td>
-              <td class="writer">최도윤</td><td class="date">2026.04.18</td><td class="num views">1,120</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2335" data-author="강하은" data-views="640" style="cursor:pointer;">
-              <td class="num">2335</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>보조금 접수 후 지급까지 실제 소요 기간이 어떻게 되나요?</b></div></td>
-              <td class="writer">강하은</td><td class="date">2026.04.17</td><td class="num views">640</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row is-secret" data-state="pending" data-major="charger" data-minor="subsidy" data-no="2334" data-author="윤지후" data-views="305" data-secret="1" style="cursor:pointer;">
-              <td class="num">2334</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b>전기이륜차 충전시설 공모에서 소상공인 우대 점수가 몇 점인가요?</b></div></td>
-              <td class="writer">윤지후</td><td class="date">2026.04.16</td><td class="num views">305</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="account" data-minor="login" data-no="2333" data-author="장예린" data-views="88" style="cursor:pointer;">
-              <td class="num">2333</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>마이페이지에서 비밀번호 변경 시 오류가 발생합니다.</b></div></td>
-              <td class="writer">장예린</td><td class="date">2026.04.15</td><td class="num views">88</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2332" data-author="한소율" data-views="512" style="cursor:pointer;">
-              <td class="num">2332</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>전기차 공채 매입 면제를 받으려면 어디에서 신청해야 하나요?</b></div></td>
-              <td class="writer">한소율</td><td class="date">2026.04.14</td><td class="num views">512</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="charger" data-minor="op" data-no="2331" data-author="오태경" data-views="430" style="cursor:pointer;">
-              <td class="num">2331</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>초급속 충전기(350kW)는 어떤 차량에서 사용이 가능한가요?</b></div></td>
-              <td class="writer">오태경</td><td class="date">2026.04.13</td><td class="num views">430</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <!-- 신설 카테고리 더미 (회원.계정 회원가입 1·로그인 1 포함) -->
-            <tr class="qna-row" data-state="pending" data-major="account" data-minor="auth" data-no="2330" data-author="서지안" data-views="47" style="cursor:pointer;">
-              <td class="num">2330</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>회원가입 시 휴대폰 본인인증이 반복해서 실패합니다. 확인 부탁드립니다.</b></div></td>
-              <td class="writer">서지안</td><td class="date">2026.04.12</td><td class="num views">47</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
-            </tr>
-            <tr class="qna-row" data-state="pending" data-major="ev" data-minor="subsidy" data-no="2329" data-author="문하준" data-views="203" style="cursor:pointer;">
-              <td class="num">2329</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>구매보조금 신청 자격(중위소득 기준) 확인 방법이 궁금합니다.</b></div></td>
-              <td class="writer">문하준</td><td class="date">2026.04.11</td><td class="num views">203</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="etc" data-minor="etc" data-no="2328" data-author="배시우" data-views="61" style="cursor:pointer;">
-              <td class="num">2328</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>누리집에서 엑셀 다운로드가 되지 않습니다. 브라우저 확인 부탁드립니다.</b></div></td>
-              <td class="writer">배시우</td><td class="date">2026.04.10</td><td class="num views">61</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row" data-state="pending" data-major="account" data-minor="signup" data-no="2327" data-author="남도현" data-views="33" style="cursor:pointer;">
-              <td class="num">2327</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>회원가입 절차 중 이메일 인증 메일이 오지 않습니다.</b></div></td>
-              <td class="writer">남도현</td><td class="date">2026.04.09</td><td class="num views">33</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
-            </tr>
-            <tr class="qna-row" data-state="done" data-major="account" data-minor="login" data-no="2326" data-author="조은서" data-views="52" style="cursor:pointer;">
-              <td class="num">2326</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b>로그인 시 계정 잠금이 반복됩니다. 해제 방법을 알려 주세요.</b></div></td>
-              <td class="writer">조은서</td><td class="date">2026.04.08</td><td class="num views">52</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="board-actions-bottom">
-          <a class="btn btn-primary" href="qna-write.html" data-i18n="qna.btn.write">질문 등록</a>
-        </div>
-
-        <div class="pagination" data-total="234" data-current="1" style="margin-top: 20px;"></div>
-      </div>
-
-      <!-- 내 질문 -->
-      <div class="tab-content" data-tab-content="mine">
-        <div class="alert alert-info mb-4">
-          <div class="alert-icon"></div>
-          <div class="alert-body" data-i18n-html="qna.mine.alert.html"><strong>로그인이 필요한 서비스</strong> 내 질문·답변 이력을 확인하려면 로그인해 주세요. 로그인 시 답변 등록 알림을 SMS·이메일로 받아보실 수 있습니다.</div>
-        </div>
-
-        <table class="board-table std-board" id="qnaMineTable">
-          <thead>
-            <tr>
-              <th class="num">번호</th>
-              <th class="cat">카테고리</th>
-              <th>게시물명</th>
-              <th class="writer">작성자</th>
-              <th class="date">등록일</th>
-              <th class="num">조회수</th>
-              <th class="cat">상태</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="qna-row" data-state="done" data-major="ev" data-minor="subsidy" data-no="2201" data-author="홍길동" data-views="342" style="cursor:pointer;">
-              <td class="num">2201</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><b data-i18n="qna.mine.q1.title">구매 후 지방비 지급이 지연되는데, 확인 가능한 방법이 있나요?</b></div></td>
-              <td class="writer">홍길동</td><td class="date">2026.04.02</td><td class="num views">342</td><td class="cat"><span class="qi-state done" data-i18n="qna.state.done">답변완료</span></td>
-            </tr>
-            <tr class="qna-row is-secret" data-state="pending" data-major="etc" data-minor="etc" data-no="2180" data-author="홍길동" data-views="120" data-secret="1" style="cursor:pointer;">
-              <td class="num">2180</td><td class="cat"><span class="qna-cat-chip" data-cat-chip></span></td>
-              <td><div class="title-cell"><span class="qna-lock" title="비공개 게시글">🔒 비공개</span><b data-i18n="qna.mine.q2.title">K-EV100 참여 기업에 대한 ESG 가점 세부 내용이 궁금합니다.</b></div></td>
-              <td class="writer">홍길동</td><td class="date">2026.03.28</td><td class="num views">120</td><td class="cat"><span class="qi-state pending" data-i18n="qna.state.pending">답변대기</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-  </section>
-</main>
-
-<!-- 상세 모달 -->
-<div class="modal" id="qnaDetailModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="qnaModalTitle">
-  <div class="modal-backdrop" data-close></div>
-  <div class="modal-dialog" style="max-width:720px;">
-    <div class="modal-head">
-      <h3 id="qnaModalTitle" style="font-size:18px;letter-spacing:-0.02em;" data-i18n="qna.modal.title">질문 상세</h3>
-      <button class="modal-close" data-close aria-label="닫기" data-i18n-aria="qna.modal.close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
-        <span class="chip chip-success" id="qmState" data-i18n="qna.state.done">답변완료</span>
-        <span style="font-size:12.5px;color:var(--color-gray-600);font-weight:600;" id="qmCat" data-i18n="qna.cat.subsidy">보조금</span>
-        <span style="font-size:12px;color:var(--color-gray-500);" id="qmMeta">작성자 김○○ · 2026.04.22 · 조회 1,342</span>
-      </div>
-
-      <h4 id="qmTitle" style="font-size:18px;letter-spacing:-0.02em;margin-bottom:16px;" data-i18n="qna.q1.title">전기차 개인 구매 후 신청 가능한 보조금 종류가 어떻게 되나요?</h4>
-      <div style="padding:16px;background:var(--color-gray-50);border-radius:10px;font-size:13.5px;line-height:1.8;color:var(--text-secondary);margin-bottom:20px;" data-i18n="qna.modal.body.html">
-        안녕하세요. 2026년 5월에 전기차(소형 SUV) 개인 구매를 계획 중입니다. 이때 신청 가능한 보조금이 국비·지방비 외에 추가로 있는지 알고 싶습니다. 또한 취득세 감면과 보조금의 연계 신청이 가능한지도 궁금합니다.
-      </div>
-
-      <!-- 답변 -->
-      <h5 style="font-size:14px;margin-bottom:10px;" data-i18n="qna.modal.h5">담당 부서 답변 (1)</h5>
-      <div style="padding:16px;background:var(--color-primary-50);border-radius:10px;border:1px solid rgba(26,173,108,0.2);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-          <span style="font-weight:700;color:var(--color-primary-700);" data-i18n="qna.modal.dept">보조금 정책과 · 담당자 김영희</span>
-          <span style="font-size:11.5px;color:var(--text-tertiary);">2026.04.22 17:40</span>
-        </div>
-        <div style="font-size:13.5px;line-height:1.8;color:var(--text-primary);" data-i18n-html="qna.modal.ans.html">
-          안녕하세요. 보조금 정책과입니다. 2026년 전기차 개인 구매 시 신청 가능한 주요 지원은 아래와 같습니다.
-          <ul style="margin:10px 0 10px 18px;">
-            <li><strong>국비 보조금</strong> 최대 650만원</li>
-            <li><strong>지방비 보조금</strong> 지자체별 상이 (평균 350~700만원)</li>
-            <li><strong>세제 감면</strong> 취득세 최대 140만원 + 개별소비세 최대 300만원</li>
-            <li><strong>공채 매입 면제</strong> 최대 250만원 상당</li>
-          </ul>
-          보조금과 세제 감면은 별도로 적용되며, 차량 구매·등록 시 자동 반영됩니다. 자세한 사항은 <a href="subsidy-region.html" style="color:var(--color-secondary-700);font-weight:600;">지자체별 보조금 현황</a>을 확인해 주세요.
+            <div class="board-wrapper">
+              <!-- 게시판 검색폼 -->
+              <div class="board-search">
+                <!-- 검색폼 -->
+                <div class="search-form">
+                  <div class="search-form__elements">
+                    <!-- 폼 항목 -->
+                    <div class="element-group">
+                      <div class="element-group__label">
+                        <label for="searchBoardItem00" class="element-label">대분류</label>
+                      </div>
+                      <div class="element-group__control">
+                        <select id="searchBoardItem00" class="select">
+                          <option value="">전체</option>
+                          
+                          <option value=""></option>
+                          
+                        </select>
+                      </div>
+                    </div>
+                    <!-- //폼 항목 -->
+                    <!-- 폼 항목 -->
+                    <div class="element-group">
+                      <div class="element-group__label">
+                        <label for="searchBoardItem01" class="element-label">소분류</label>
+                      </div>
+                      <div class="element-group__control">
+                        
+                        <select id="searchBoardItem01" class="select" disabled="disabled">
+                          <option value="">전체</option>
+                          
+                          <option value="" data-up=""></option>
+                          
+                        </select>
+                      </div>
+                    </div>
+                    <!-- //폼 항목 -->
+                    <!-- 폼 항목 -->
+                    <div class="element-group">
+                      <div class="element-group__label">
+                        <label for="searchBoardItem02" class="element-label">답변 상태</label>
+                      </div>
+                      <div class="element-group__control">
+                        
+                        <select id="searchBoardItem02" class="select">
+                          <option value="">전체</option>
+                          <option value="1">접수전</option>
+                          <option value="2">처리중</option>
+                          <option value="3">처리완료</option>
+                          <option value="4">처리불가</option>
+                        </select>
+                      </div>
+                    </div>
+                    <!-- //폼 항목 -->
+                    <!-- 폼 항목 -->
+                    <div class="element-group element-group--keyword">
+                      <div class="element-group__label">
+                        <label for="searchBoardItem03" class="element-label">검색어</label>
+                      </div>
+                      <div class="element-group__control">
+                        <input type="text" id="searchBoardItem03" placeholder="검색어 입력" class="text-input" />
+                      </div>
+                    </div>
+                    <!-- //폼 항목 -->
+                  </div>
+                  <div class="search-form__actions">
+                    <button type="button" class="button button--primary button--search">
+                      <span class="button__label">검색</span>
+                    </button>
+                    <button type="button" class="button button--secondary button--reset">
+                      <span class="button__label">초기화</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- //검색폼 -->
+              </div>
+              <!-- //게시판 검색폼 -->
+              <!-- 게시판 도구모음 -->
+              <div class="board-toolbar">
+                <div class="board-toolbar__total">
+                  <p class="total-number">전체 <b class="total-number__total">0</b>건 중 <span class="total-number__shown">0</span>건 표시</p>
+                </div>
+                <div class="board-toolbar__options">
+                  <button type="button" class="button button--secondary" id="btnNewQna">
+                    <span class="button__label">등록</span>
+                  </button>
+                </div>
+              </div>
+              <!-- //게시판 도구모음 -->
+              <!-- 게시판 목록 -->
+              <div class="board-list">
+                <div id="myGrid" class="ag-grid ag-theme-ev"></div>
+              </div>
+              <!-- //게시판 목록 -->
+              <!-- 페이징 -->
+              <div class="pagination pc-only">
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-first"></i>
+                  <span class="ir-pm">첫 페이지</span>
+                </button>
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-prev"></i>
+                  <span class="ir-pm">이전</span>
+                </button>
+                <div class="pagination__list"></div>
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-next"></i>
+                  <span class="ir-pm">다음</span>
+                </button>
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-last"></i>
+                  <span class="ir-pm">마지막 페이지</span>
+                </button>
+              </div>
+              <!-- 모바일 전용 -->
+              <div class="pagination pagination--fraction">
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-prev"></i>
+                  <span>이전</span>
+                </button>
+                <div class="pagination__text">
+                  <span class="pagination__current">1</span>
+                  <span class="pagination__total">1</span>
+                </div>
+                <button type="button" class="pagination__button">
+                  <span>다음</span>
+                  <i class="svg-icon arrow-next"></i>
+                </button>
+              </div>
+              <!-- //페이징 -->
+            </div>
         </div>
       </div>
 
-      <div class="divider" style="margin:22px 0 12px;"></div>
+<form id="frm" name="frm" method="post" style="display:none;">
+  <input type="hidden" id="BLBD_ID" name="BLBD_ID" value="qna"/>
+  <input type="hidden" id="ARTC_ID" name="ARTC_ID" value=""/>
+  <input type="hidden" id="MODE" name="MODE" value=""/>
+</form>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="font-size:12.5px;color:var(--color-gray-600);" data-i18n="qna.modal.helpful">이 답변이 도움되었나요?</div>
-        <div class="flex gap-2">
-          <button class="btn btn-ghost btn-sm" type="button" data-i18n="qna.modal.like">공감 248</button>
-          <button class="btn btn-primary btn-sm" type="button" data-close data-i18n="qna.modal.ok">확인</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<script type="application/json" id="pageInfo"></script>
 
-<div id="footer-slot"></div>
-<script src="js/partials.js?v=20260806g"></script>
-<script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260807a"></script>
-<script src="js/i18n-inquiry.js?v=20260806a"></script>
-<script src="js/main.js?v=20260724b"></script>
-<script src="js/board-standard.js"></script>
-<script src="js/qna-categories.js?v=20260716a"></script>
-<script src="js/ai-floating.js?v=20260807a"></script>
+<script src="assets/js/board-grid.js?v=20260821f"></script>
 <script>
-(function(){
-  // 전체 목록 필터링 — 대분류/소분류 2단(js/qna-categories.js 단일 원천)
-  const QC = window.QNA_CAT;
-  const major = document.getElementById('qnaMajor');
-  const minor = document.getElementById('qnaMinor');
-  const state = document.getElementById('qnaState');
-  const search = document.getElementById('qnaSearch');
-  const reset = document.getElementById('qnaReset');
-  const items = document.querySelectorAll('#qnaList .qna-row');
+$(function () {
+  var gridApi;
+  var curPage = 1;
+  var PER_PAGE = 10;
+  // 검색조건·로그인 상수: 컨트롤러 pageInfo 직렬화에서 획득
+  var PAGE_INFO = (function() {
+    try { return JSON.parse(document.getElementById('pageInfo').textContent) || {}; } catch (e) { return {}; }
+  })();
+  var isLogin = PAGE_INFO.loginYn === 'Y';
+  var myArtcYn = 'N'; // 내 질문 탭 여부
 
-  // 카테고리 배지 = "대분류 › 소분류" (전 탭) · 단일 원천 라벨로 채움
-  document.querySelectorAll('.qna-cat-chip[data-cat-chip]').forEach(function(chip){
-    const tr = chip.closest('.qna-row');
-    if (tr) chip.textContent = QC.badge(tr.dataset.major, tr.dataset.minor);
-  });
+  
+  var initPage = Number(PAGE_INFO.curPage) || 1;
+  var initSearch = PAGE_INFO.searchValue || '';
+  var initCtgry = PAGE_INFO.ctgryCd || '';
+  var initQnagbn = PAGE_INFO.qnagbn || '';
+  var initReplyState = PAGE_INFO.replyState || '';
 
-  // 대분류 select
-  if (major) major.innerHTML = QC.majorOptions('전체 대분류');
-  // 소분류 select (대분류 선택에 연동)
-  function fillMinor(mk){
-    if (!minor) return;
-    minor.innerHTML = (mk === 'all') ? '<option value="all">전체 소분류</option>' : QC.minorOptions(mk, '전체 소분류');
-    minor.disabled = (mk === 'all');
+  // 상세(selectQnaDtl.do) 이동 URL — 목록 복귀 파라미터 포함
+  function fnDtlUrl(artcId) {
+    return '/partcptn/selectQnaDtl.do'
+      + '?BLBD_ID=qna&ARTC_ID=' + encodeURIComponent(artcId)
+      + '&spageNo=' + curPage
+      + '&searchType=conAndtit'
+      + '&searchValue=' + encodeURIComponent($.trim($('#searchBoardItem03').val() || ''))
+      + '&CTGRY_CD=' + encodeURIComponent($('#searchBoardItem00').val() || '')
+      + '&QNAGBN=' + encodeURIComponent($('#searchBoardItem01').val() || '')
+      + '&S_REPLY_STATE=' + encodeURIComponent($('#searchBoardItem02').val() || '');
   }
-  fillMinor('all');
 
-  const totalCountEl = document.getElementById('qnaTotalCount');
-  const visibleCountEl = document.getElementById('qnaVisibleCount');
-  if (totalCountEl) totalCountEl.textContent = items.length;
-
-  function apply() {
-    const kw = (search.value || '').trim().toLowerCase();
-    const mk = major ? major.value : 'all', nk = minor ? minor.value : 'all', s = state.value;
-    let visible = 0;
-    items.forEach(it => {
-      const titleEl = it.querySelector('.title-cell');
-      const textOk = !kw || (titleEl && titleEl.textContent.toLowerCase().includes(kw));
-      const majorOk = mk === 'all' || it.dataset.major === mk;
-      const minorOk = nk === 'all' || (it.dataset.major === mk && it.dataset.minor === nk);
-      const stateOk = s === 'all' || it.dataset.state === s;
-      const ok = textOk && majorOk && minorOk && stateOk;
-      it.style.display = ok ? '' : 'none';
-      if (ok) visible++;
-    });
-    if (visibleCountEl) visibleCountEl.textContent = visible;
-  }
-  major && major.addEventListener('change', function(){ fillMinor(major.value); apply(); });
-  minor && minor.addEventListener('change', apply);
-  state && state.addEventListener('change', apply);
-  search && search.addEventListener('input', apply);
-  reset && reset.addEventListener('click', () => { if(major) major.value='all'; fillMinor('all'); state.value = 'all'; search.value = ''; apply(); });
-
-  // 질문 클릭 → 질문 상세 페이지 이동 (전체 목록 + 내 질문)
-  function goDetail(el){
-    var b = el.querySelector('.title-cell b') || el.querySelector('.qi-title strong');
-    var title = b ? b.textContent.trim() : '';
-    var catEl = el.querySelector('.qna-cat-chip') || el.querySelector('.qi-cat');
-    var category = catEl ? catEl.textContent.trim() : '';
-    var authorEl = el.querySelector('td.writer') || el.querySelector('.qi-author');
-    var author = authorEl ? authorEl.textContent.trim() : '';
-    var dateEl = el.querySelector('td.date') || el.querySelector('.qi-date');
-    var date = dateEl ? dateEl.textContent.trim() : '';
-    var numEl = el.querySelector('td.num') || el.querySelector('.qi-num');
-    var no = '#' + (el.dataset.no || (numEl ? numEl.textContent.replace('#','').trim() : ''));
-    var st = el.dataset.state || 'done';
-    location.href = 'qna-detail.html?no=' + encodeURIComponent(no) + '&title=' + encodeURIComponent(title) +
-      '&cat=' + encodeURIComponent(category) + '&author=' + encodeURIComponent(author) +
-      '&date=' + encodeURIComponent(date) + '&state=' + encodeURIComponent(st);
-  }
-  // 로그인 사용자(프로토타입) — 비공개 글은 작성자 본인만 열람/진입 가능
-  var CURRENT_USER = '홍길동';
-  try { var u = JSON.parse(sessionStorage.getItem('mp_user')||'null'); if (u && u.name) CURRENT_USER = u.name; } catch(e){}
-  document.querySelectorAll('.qna-row').forEach(function(el){
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', function(){
-      if (el.dataset.secret === '1' && el.dataset.author !== CURRENT_USER) {
-        var m = '비공개 게시글입니다. 작성자 본인만 열람할 수 있습니다.';
-        if (window.__toast) window.__toast(m, 'info'); else alert(m);
-        return;
+  // [질의응답] 그리드 컬럼 정의 (실데이터 필드 매핑)
+  var columnDefs = [
+    { field: "NUM", headerName: "번호", width: 80 },
+    // 카테고리: 대분류 > 소분류 결합 표시 (한쪽만 있으면 그 값만)
+    { colId: "CTGRY_NM", headerName: "카테고리", flex: 1,
+      valueGetter: function (p) {
+        var ctgry = p.data.CTGRY_NM || '';
+        var sub = p.data.QNAGBN_NM || '';
+        return ctgry && sub ? ctgry + ' > ' + sub : (ctgry || sub);
       }
-      goDetail(el);
-    });
+    },
+    { field: "TITL", headerName: "제목", flex: 3, cellClass: "ag-cell-link", cellStyle: { textAlign: 'left' },
+      cellRenderer: function (p) {
+        var titl = p.value == null ? '' : String(p.value);
+        // 비공개(비밀글) 글은 본인(OWNER_YN=Y)만 상세 열람 가능 — 그 외에는 링크 미제공 (서버에서도 재검증)
+        if (p.data.OPEN_YN === 'N' && p.data.OWNER_YN !== 'Y') {
+          return $('<span>', { text: titl })[0];
+        }
+        return $('<a>', { href: fnDtlUrl(p.data.ARTC_ID), 'class': 'link', text: titl })[0];
+      },
+      suppressKeyboardEvent: function (params) {
+        var key = params.event.key;
+        return key === 'Tab' || key === 'Enter' || key === ' ';
+      }
+    },
+    { field: "NM", headerName: "작성자", flex: 1 },
+    { field: "INS_DT", headerName: "등록일", width: 120 },
+    { field: "HIT", headerName: "조회수", width: 100 },
+    { field: "REPLY_STATE_NM", headerName: "상태", width: 100, cellClass: "ag-cell-status",
+      cellClassRules: {
+        'ag-cell-status--ready': function (params) { return params.value === '접수전'; },
+        'ag-cell-status--complete': function (params) { return params.value != null && params.value !== '접수전'; }
+      }
+    }
+  ];
+
+  var gridOptions = boardGridOptions({
+    columnDefs: columnDefs,
+    // 공개/비공개 구분 : OPEN_YN=N 행에 '비공개' 배지 (style.css .ag-row-lock)
+    rowClassRules: {
+      'ag-row-lock': function (params) { return params.data.OPEN_YN === 'N'; }
+    },
+    // 반응형 옵션 변경 (퍼블리싱 규칙 유지)
+    onGridSizeChanged: function (params) {
+      var isResponse = window.innerWidth < 1024;
+      var isMobile = window.innerWidth < 640;
+      var currentDefaultColDef = params.api.getGridOption('defaultColDef') || {};
+
+      // 컬럼 숨김
+      params.api.setColumnsVisible(['CTGRY_NM'], !isResponse);
+      params.api.setColumnsVisible(['HIT'], !isResponse);
+      params.api.setColumnsVisible(['NUM'], !isMobile);
+      params.api.setColumnsVisible(['NM'], !isMobile);
+      params.api.sizeColumnsToFit();
+
+      // 말줄임 제거 후 높이 자동조정
+      params.api.updateGridOptions({
+        defaultColDef: $.extend({}, currentDefaultColDef, { wrapText: isResponse, autoHeight: isResponse })
+      });
+
+      params.api.resetRowHeights();
+    }
   });
-})();
+
+  // 목록 조회 (기존 selectBBSList.ajax 서버사이드 페이징/검색 그대로 사용)
+  function fnGetList(pageNo) {
+    curPage = pageNo || 1;
+    $.ajax({
+      type: 'post',
+      url: '/infoGarden/selectBBSList.ajax',
+      dataType: 'json',
+      data: {
+        BLBD_ID: 'qna',
+        spageNo: curPage,
+        srecordCountPerPage: PER_PAGE,
+        spageSize: 10,
+        searchType: 'conAndtit',
+        searchValue: $.trim($('#searchBoardItem03').val() || ''),
+        CTGRY_CD: $('#searchBoardItem00').val() || '',
+        QNAGBN: $('#searchBoardItem01').val() || '',
+        S_REPLY_STATE: $('#searchBoardItem02').val() || '',
+        MY_ARTC_YN: myArtcYn
+      },
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        gridApi.setGridOption('rowData', list);
+        var page = (obj && obj.page) ? obj.page : {};
+        var total = Number(page._listCount) || 0;
+        $('.total-number__total').text(total);
+        $('.total-number__shown').text(list.length);
+        fnRenderPaging(total, Number(page._pageNo) || curPage, Number(page._recordCountPerPage) || PER_PAGE);
+      }
+    });
+  }
+
+  // 페이지네이션 렌더 (기존 마크업 재사용, 버튼순서 [첫,이전,다음,마지막])
+  function fnRenderPaging(listCount, current, perPage) {
+    var totalPages = Math.max(1, Math.ceil(listCount / perPage));
+    if (current > totalPages) current = totalPages;
+
+    var $pc = $('.board-wrapper .pagination.pc-only');
+    var $list = $pc.find('.pagination__list');
+    var block = Math.floor((current - 1) / 10);
+    var start = block * 10 + 1;
+    var end = Math.min(start + 9, totalPages);
+
+    var html = '';
+    for (var p = start; p <= end; p++) {
+      html += '<a href="#none" class="pagination__link' + (p === current ? ' pagination__link--selected' : '') + '" data-page="' + p + '">' + p + '</a>';
+    }
+    $list.html(html);
+
+    var $btns = $pc.find('.pagination__button');
+    $btns.eq(0).off('click.pg').on('click.pg', function () { if (current > 1) fnGetList(1); });
+    $btns.eq(1).off('click.pg').on('click.pg', function () { if (current > 1) fnGetList(current - 1); });
+    $btns.eq(2).off('click.pg').on('click.pg', function () { if (current < totalPages) fnGetList(current + 1); });
+    $btns.eq(3).off('click.pg').on('click.pg', function () { if (current < totalPages) fnGetList(totalPages); });
+    $list.find('.pagination__link').off('click.pg').on('click.pg', function (e) {
+      e.preventDefault(); fnGetList(Number($(this).data('page')));
+    });
+
+    var $frac = $('.board-wrapper .pagination--fraction');
+    $frac.find('.pagination__current').text(current);
+    $frac.find('.pagination__total').text(totalPages);
+    $frac.find('.pagination__button').eq(0).off('click.pg').on('click.pg', function () { if (current > 1) fnGetList(current - 1); });
+    $frac.find('.pagination__button').eq(1).off('click.pg').on('click.pg', function () { if (current < totalPages) fnGetList(current + 1); });
+  }
+
+  // 탭(전체 목록/내 질문) 전환 — 내 질문은 로그인 필요
+  function fnChangeTab(tab) {
+    if (tab === 'my' && !isLogin) {
+      alert('로그인 후 이용할 수 있습니다.');
+      return false;
+    }
+    myArtcYn = (tab === 'my') ? 'Y' : 'N';
+    $('.tab--nav .tab__item').removeClass('tab__item--selected')
+      .filter('[data-tab="' + tab + '"]').addClass('tab__item--selected');
+    $('#tabNavigation').val(tab);
+    fnGetList(1);
+    return true;
+  }
+
+  function bindTabs() {
+    $('.tab--nav .tab__item .tab__button').on('click', function () {
+      fnChangeTab($(this).closest('.tab__item').data('tab'));
+    });
+    $('#tabNavigation').on('change', function () {
+      if (!fnChangeTab($(this).val())) {
+        $(this).val(myArtcYn === 'Y' ? 'my' : 'all');
+      }
+    });
+  }
+
+  // 소분류 콤보 연동: 대분류 선택 시 UP_CODE 일치 항목만 노출, 대분류 전체면 비활성
+  var $subCtgryPool = $('#searchBoardItem01 option').not('[value=""]').detach();
+  function fnFilterSubCtgry(ctgry) {
+    var $sel = $('#searchBoardItem01');
+    $sel.find('option').not('[value=""]').detach();
+    if (ctgry) {
+      $sel.append($subCtgryPool.filter(function () { return $(this).attr('data-up') === ctgry; }));
+    }
+    $sel.val('').prop('disabled', !ctgry);
+  }
+
+  // 검색/초기화 바인딩
+  function bindSearch() {
+    $('.board-search .button--search').on('click', function () { fnGetList(1); });
+    $('#searchBoardItem00').on('change', function () { fnFilterSubCtgry($(this).val() || ''); });
+    $('.board-search .button--reset').on('click', function () {
+      $('#searchBoardItem00').val('');
+      fnFilterSubCtgry('');
+      $('#searchBoardItem02').val('');
+      $('#searchBoardItem03').val('');
+      fnGetList(1);
+    });
+    $('#searchBoardItem03').on('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); fnGetList(1); }
+    });
+  }
+
+  // 등록 → initQnaEditAction.do (기존 기능 유지)
+  $('#btnNewQna').on('click', function () {
+    var frm = document.frm;
+    frm.MODE.value = 'write';
+    frm.action = '/partcptn/initQnaEditAction.do';
+    frm.submit();
+  });
+
+  // 초기화
+  var gridDiv = document.querySelector('#myGrid');
+  gridApi = agGrid.createGrid(gridDiv, gridOptions);
+  bindTabs();
+  bindSearch();
+  if (initSearch) $('#searchBoardItem03').val(initSearch);
+  if (initCtgry) $('#searchBoardItem00').val(initCtgry);
+  fnFilterSubCtgry(initCtgry);
+  if (initQnagbn) $('#searchBoardItem01').val(initQnagbn);
+  if (initReplyState) $('#searchBoardItem02').val(initReplyState);
+  fnGetList(initPage);
+
+  // 진입 시 AI 헬프데스크 패널 자동 오픈 — openHelpdesk 를 붙이는 ui-common.js 의 ready 핸들러 뒤로 미뤄 실행한다
+  $(function () {
+    setTimeout(function () {
+      if (typeof window.openHelpdesk === 'function') { window.openHelpdesk(); }
+    }, 0);
+  });
+});
 </script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
 </body>
 </html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전기승합차(법인·개인사업자) 공모신청</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>구매·보조금</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>공모·신청</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>전기승합차 공모 신청</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">전기승합차(법인·개인사업자) 공모신청</h1>
+              <p class="page-header__description">법인·개인사업자가 보조금 지원대상 전기승합차를 신규 구매·등록하기 위해 지자체·제작수입사와 컨소시엄을 구성하여 공모에 참여하는 절차입니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+          <!-- tab : PC버전 -->
+          <div class="tab tab--nav pc-only">
+            <ul class="tab__list">
+              <li class="tab__item"><button type="button" class="tab__button" onclick="location.href='/buySupprt/initEcoEvaluationAction.do'">전기자동차 수행자 평가</button></li>
+              <li class="tab__item tab__item--selected"><button type="button" class="tab__button">전기승합차 공모</button></li>
+              <li class="tab__item"><button type="button" class="tab__button" onclick="location.href='/buySupprt/initEcoForkliftAction.do'">전기지게차 공모</button></li>
+              <li class="tab__item"><button type="button" class="tab__button" onclick="location.href='/buySupprt/initEcoEvaluationMotorAction.do'">전기이륜차 수행자 평가</button></li>
+            </ul>
+          </div>
+          <!-- //tab -->
+          <!-- tab : MOBILE버전 -->
+          <div class="tab tab--mobile mobile-only">
+            <select title="탭메뉴" name="tabNavigation" id="tabNavigation" class="select" onchange="if(this.value){location.href=this.value;}">
+              <option value="/buySupprt/initEcoEvaluationAction.do">전기자동차 수행자 평가</option>
+              <option value="" selected>전기승합차 공모</option>
+              <option value="/buySupprt/initEcoForkliftAction.do">전기지게차 공모</option>
+              <option value="/buySupprt/initEcoEvaluationMotorAction.do">전기이륜차 수행자 평가</option>
+            </select>
+          </div>
+          <!-- //tab -->
+
+          <!-- 공모신청 -->
+          <div class="contest-wrapper">
+            <div class="contest-content">
+              <div class="contest-catchphrase">
+                <strong class="contest-catchphrase__title">대중교통 공공성과 연계한<br />전기승합차 보급사업 공모</strong>
+                <p class="contest-catchphrase__description">전기승합차 보급사업은 대중교통 등 공공성과 연계되어 중요도가 높은 점을 고려, 관계법령 및 예산 목적에 부합한 지원이 이뤄지도록 공모 절차를 통해 지원합니다.<br />공고문·서식 확인과 공모 신청은 본 페이지에서 진행하며, 구매지원 신청은 무공해차 업무지원시스템에서 진행됩니다.</p>
+              </div>
+              <section class="section">
+                <div class="heading-group">
+                  <h2 class="heading-title">
+                    <i class="svg-icon symbol-electricity"></i>
+                    사업목적
+                  </h2>
+                </div>
+                <p class="section-description">전기승합차 보급사업은 대중교통 등 공공성과 연계되어 중요도가 높은 점을 고려, 관계법령 및 예산 목적에 부합한 지원이 이뤄지도록 공모 절차를 통해 지원</p>
+              </section>
+              <section class="section">
+                <div class="heading-group">
+                  <h2 class="heading-title">
+                    <i class="svg-icon symbol-electricity"></i>
+                    지원대상
+                  </h2>
+                </div>
+                <p class="section-description">법인, 개인사업자가 보조금 지원대상인 전기승합차를 신규 구매하여 국내에 신규 등록하는 경우</p>
+              </section>
+              <section class="section">
+                <div class="heading-group heading-group--row">
+                  <h2 class="heading-title">
+                    <i class="svg-icon symbol-electricity"></i>
+                    신청유형
+                  </h2>
+                  <p class="heading-description">충전인프라 구축 여부에 따라 A·B 유형으로 구분하여 신청</p>
+                </div>
+                <ul class="bullet bullet--dotted">
+                  <li>
+                    <b>A유형(충전인프라 기구축)</b>
+                    <p>①국비보조금 외 지방비 지원이 가능한 기초 또는 광역지자체, ②「2026년 전기자동차 보급사업 보조금 업무처리지침」에 따른 보조금 지원대상에 해당하는 전기승합차 보급이 가능한 제작·수입사 → ①+②의 컨소시엄 형태로 참여</p>
+                  </li>
+                  <li>
+                    <b>B유형(충전인프라 구축 필요)</b>
+                    <p>A유형에 추가로 ③「전기자동차 급속·중속충전시설 보조사업 보조금 및 설치·운영지침」에 따른 사업수행기관 포함 필요 → ①+②+③의 컨소시엄 형태로 참여</p>
+                  </li>
+                </ul>
+              </section>
+              <section class="section">
+                <div class="heading-group">
+                  <h2 class="heading-title">
+                    <i class="svg-icon symbol-electricity"></i>
+                    공모절차
+                  </h2>
+                </div>
+                <div class="process-wrapper">
+                  <div class="process-container">
+                    <ol class="process">
+                      <li class="process-item">
+                        <span class="process__icon"></span>
+                        <div class="process-content">
+                          <div class="process__label">구매지원신청 등록</div>
+                          <b class="process__date">구매자 또는 자동차 제작·수입사 → 공단</b>
+                          <p class="process__description">무공해차 업무지원시스템에서 구매지원 신청</p>
+                        </div>
+                      </li>
+                      <li class="process-item">
+                        <span class="process__icon"></span>
+                        <div class="process-content">
+                          <div class="process__label">제안서 제출</div>
+                          <b class="process__date">제안자 → 공단, 협회</b>
+                          <p class="process__description">공모 지원 신청서, 사업계획서 등 제반서류 접수</p>
+                        </div>
+                      </li>
+                      <li class="process-item">
+                        <span class="process__icon"></span>
+                        <div class="process-content">
+                          <div class="process__label">서류 검증</div>
+                          <b class="process__date">공단, 협회</b>
+                          <p class="process__description">제반서류 검증</p>
+                        </div>
+                      </li>
+                      <li class="process-item">
+                        <span class="process__icon"></span>
+                        <div class="process-content">
+                          <div class="process__label">지원사업 선정</div>
+                          <b class="process__date">평가위원회 및 공단</b>
+                          <p class="process__description">평가위원회 개최 및 평가, 선정발표(ev.or.kr)</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </section>
+              <div class="contest-notification">
+                <ul class="bullet bullet--refer">
+                  <li>평가일정 등은 사업추진 여건에 따라 변동 가능합니다.</li>
+                  <li>제안자는 기후에너지환경부 또는 한국환경공단의 서류 보완에 적극적으로 협조하여야 합니다.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="contest-aside">
+              <div class="contest-actions">
+                <div class="heading-group">
+                  <h2 class="heading-title">신청 및 확인</h2>
+                  <p class="heading-description">로그인 후 누리집에서 신청서를 작성·제출합니다.<br />공고문·신청유형·진행상태는 본 페이지에서 확인할 수 있습니다.</p>
+                </div>
+                <div class="button-group">
+                  
+                  <button type="button" id="btnApplyList" class="button button--secondary">
+                    <span class="button__label">공모신청 조회</span>
+                  </button>
+                  <a href="/file/zip/evVanApplyForm.zip" download="2026년 법인·개인사업자 전기승합차 보급사업 공모 공고.zip" class="button button--secondary">
+                    <i class="svg-icon download" aria-hidden="true"></i>
+                    <span class="button__label">공고 및 증빙자료 다운로드</span>
+                  </a>
+                </div>
+                <div class="contest-schedule">
+                  <h3 class="heading-content">주요일정</h3>
+                  <dl class="contest-schedule__list">
+                    <dt>공고기간</dt>
+                    <dd>(2차) </dd>
+                    <dt>제출처</dt>
+                    <dd>한국환경공단, 한국자동차환경협회</dd>
+                    <dt>선정발표</dt>
+                    <dd>ev.or.kr 공지</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- //공모신청 -->
+
+          <!-- alert : 접수기간 외 안내 -->
+          <div class="modal-container" id="alertContest" role="dialog" aria-modal="true">
+            <div class="alert w-600" tabindex="0">
+              <div class="alert__icon">
+                <i class="svg-icon infomation" aria-hidden="true"></i>
+              </div>
+              <div class="alert__body">
+                <h2 class="heading-subtitle">공모 접수기간이 아닙니다.</h2>
+                <p class="alert__description">현재는 공모 접수기간이 아닙니다.<br />공모 일정을 확인하시고, 접수기간에 다시 신청해 주시기 바랍니다.</p>
+                <p class="alert__description">공모 접수기간 : <b class="text-emphasis"></b></p>
+              </div>
+              <div class="alert__footer">
+                <button type="button" class="button button--large button--secondary button--close"><span>닫기</span></button>
+              </div>
+            </div>
+          </div>
+          <!-- //alert -->
+
+          <!-- modal : 신청유형 선택 -->
+          <div class="modal-container" id="modalTypeCheck" role="dialog" aria-modal="true">
+            <div class="modal" tabindex="0">
+              <div class="modal__header">
+                <h1 class="modal__header-title">신청유형 선택</h1>
+              </div>
+              <div class="modal__body">
+                <div class="option-type">
+                  <button type="button" class="option-type__button" data-reqtype="A">
+                    <div class="option-type__button-icon">A</div>
+                    <div class="heading-group">
+                      <h2 class="heading-subtitle">충전인프라 기구축</h2>
+                      <p class="heading-description">운행 지역에 전기승합차 충전인프라가 이미 구축되어 있는 경우</p>
+                    </div>
+                  </button>
+                  <button type="button" class="option-type__button" data-reqtype="B">
+                    <div class="option-type__button-icon">B</div>
+                    <div class="heading-group">
+                      <h2 class="heading-subtitle">충전인프라 구축 필요</h2>
+                      <p class="heading-description">충전사업자와 함께 충전시설을 신규 구축해야 하는 경우</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+              <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+              <div class="modal__close">
+                <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+                  <i class="svg-icon close"></i>
+                  <span class="button__label">팝업닫기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- //modal -->
+        </div>
+      </div>
+
+<form id="applyForm" name="applyForm" method="post" action="/buySupprt/initEvVanApplyEditAction.do">
+  <input type="hidden" name="MODE" id="MODE" value="write" />
+  <input type="hidden" name="REQ_TYPE" id="REQ_TYPE" value="" />
+  <input type="hidden" name="APPLY_ROUND" id="APPLY_ROUND" value="2" />
+</form>
+
+<script type="application/json" id="pageInfo"></script>
+
+<script>
+$(function () {
+  // 로그인 여부·접수기간 게이팅 값: 컨트롤러 pageInfo 직렬화에서 획득
+  var PAGE_INFO = (function () {
+    try { return JSON.parse(document.getElementById('pageInfo').textContent) || {}; } catch (e) { return {}; }
+  })();
+  var LOGIN_URL = '/login.do';
+  var LIST_URL = '/buySupprt/initEvVanApplyListAction.do';
+
+  function isLogin() {
+    if (PAGE_INFO.loginYn === 'Y') return true;
+    alert('로그인 정보가 없습니다.\n로그인 후 다시 시도하세요.');
+    location.href = LOGIN_URL;
+    return false;
+  }
+
+  // 공모신청: 미로그인 → 로그인, 접수기간 외 → 안내 알럿, 그 외 → 신청유형 선택
+  $('#btnApply').on('click', function () {
+    if (!isLogin()) return;
+    if (PAGE_INFO.applyOpenYn !== 'Y') {
+      window.openModal('#alertContest');
+      return;
+    }
+    window.openModal('#modalTypeCheck', { width: 648, opener: this });
+  });
+
+  $('#btnApplyList').on('click', function () {
+    if (!isLogin()) return;
+    location.href = LIST_URL;
+  });
+
+  // 신청유형(A/B) 선택 → 신청서 작성 화면
+  $('#modalTypeCheck').on('click', '.option-type__button', function () {
+    $('#REQ_TYPE').val($(this).data('reqtype'));
+    $('#applyForm')[0].submit();
+  });
+});
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
+</body>
+</html>

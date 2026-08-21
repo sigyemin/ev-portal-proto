@@ -1,519 +1,980 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>차종 비교 도구 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
-<link rel="stylesheet" href="css/amount-guard.css?v=20260802a">
-<style>
-.ctip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;margin-left:5px;border-radius:50%;background:#94a3b8;color:#fff;font-size:10px;line-height:1;cursor:help;vertical-align:middle;font-style:normal}
-.ctip:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:150%;transform:translateX(-50%);white-space:normal;width:250px;background:#1f2937;color:#fff;font-size:11.5px;font-weight:400;line-height:1.6;padding:9px 11px;border-radius:8px;z-index:50;box-shadow:0 6px 18px rgba(0,0,0,.2);text-align:left}
-.cmp-row-ctrl{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;}
-.cmp-row-ctrl select{flex:0 1 auto;min-width:90px;max-width:140px;height:34px;padding:0 10px;border:1px solid var(--border-medium);border-radius:8px;font-size:12.5px;font-family:inherit;font-weight:600;color:var(--text-primary);background:#fff;cursor:pointer;}
-.cmp-row-ctrl select:focus{outline:2px solid var(--color-primary-400,#5cc295);outline-offset:1px;}
-.ctip:hover::before{content:"";position:absolute;left:50%;bottom:150%;transform:translateX(-50%) translateY(100%);border:5px solid transparent;border-top-color:#1f2937;z-index:50}
-[data-modal-car-select] .radio-card{display:flex;align-items:center;cursor:pointer;}
-[data-modal-car-select] .radio-card:has(input:checked){border-color:var(--color-primary-500,#22c55e);box-shadow:0 0 0 2px var(--color-primary-100,#dcfce7);}
-#addCarModal .modal-body{flex:1 1 auto;min-height:0;}
-#cmpModalPager{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
-#cmpModalPager button{min-width:34px;height:34px;padding:0 10px;border:1px solid var(--border-light);border-radius:8px;background:#fff;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;}
-#cmpModalPager button.active{background:var(--color-primary-500,#22c55e);border-color:var(--color-primary-500,#22c55e);color:#fff;}
-#cmpModalPager button:disabled{opacity:.4;cursor:default;}
-.est-badge{font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;background:#fff3e0;color:#b45309;vertical-align:middle;margin-left:2px;}
-.dev-note{margin-top:28px;border:1px dashed #cbd5e1;border-radius:10px;background:#f8fafc;padding:14px 18px;font-size:12.5px;color:#475569;line-height:1.7;}
-.dev-note summary{font-weight:800;color:#334155;cursor:pointer;}
-.dev-note code{background:#e2e8f0;border-radius:4px;padding:1px 5px;font-size:11.5px;}
-</style>
+<title>차종 비교 도구</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
 </head>
 <body>
-<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
-<script>window.__activeNav = 'purchase';</script>
 <div id="header-slot"></div>
-
-<main id="main">
-  <section class="page-hero compact">
-    <div class="container">
-      <nav class="breadcrumb" aria-label="경로">
-        <a href="subsidy-target.html">구매·보조금</a><span class="sep" aria-hidden="true">›</span>
-        <a href="compare-tool.html">차량 비교</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" aria-current="page">차종 비교 도구</span>
+<style>
+/* 선택된 탭 강조 — 납품 CSS 는 상위 요소의 --selected 를 보므로 li 선택 상태가 반영되지 않는다 */
+.tab .tab__item--selected .tab__button {
+  background-color: #1BA877;
+  color: #ffffff;
+}
+</style>
+<div class="contents-wrapper">
+  <!-- 상단 공통 영역 -->
+  <div class="page-header">
+    <div class="page-header__inner">
+      <!-- breadcrumb -->
+      <nav class="breadcrumb">
+        <ol class="breadcrumb__list">
+          <li class="breadcrumb__item">
+            <a href="index.html" class="breadcrumb__link">
+              <i class="svg-icon home"></i>
+              <span class="hidden">홈</span>
+            </a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="#" class="breadcrumb__link">
+              <span>구매·보조금</span>
+            </a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="#" class="breadcrumb__link">
+              <span>차량 비교</span>
+            </a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="#" class="breadcrumb__link">
+              <span>차종 비교 도구</span>
+            </a>
+          </li>
+        </ol>
       </nav>
-      <h1 data-i18n="ctool.h1">차종 비교 도구</h1>
-      <p class="hero-lead" data-i18n-html="ctool.lead">관심 있는 무공해차를 <strong style="color:#fff;">나란히 놓고</strong> 스펙·보조금·비용을 비교합니다.</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-
-      <!-- 비교 대상 선택 -->
-      <div class="flex items-center justify-between mb-6" data-reveal>
-        <h2 style="font-size: 24px;" id="cmpSelTitle">선택한 차량 (2/3)</h2>
-        <div class="flex gap-2">
-          <button class="btn btn-ghost btn-sm" id="cmpReset" type="button" data-i18n="ctool.btn.reset">초기화</button>
-          <button class="btn btn-primary btn-sm" data-modal-open="addCarModal" data-i18n="ctool.btn.add">+ 차량 추가</button>
-        </div>
+      <!-- subject  -->
+      <div class="page-header__subject">
+        <h1 class="heading-subject">차종 비교 도구</h1>
+        <p class="page-header__description">관심 있는 무공해차를 나란히 놓고 스펙·보조금·비용을 비교합니다.</p>
       </div>
-
-      <div class="grid grid-3" style="gap: 20px;" id="cmpCards" data-reveal></div>
-
-      <!-- 세부 비교 -->
-      <div class="mt-8" data-reveal>
-        <div class="tabs-pill" data-tabs>
-          <button class="tab active" data-tab="basic" data-i18n="ctool.tab.basic">기본 스펙</button>
-          <button class="tab" data-tab="charging" data-i18n="ctool.tab.charging">충전·배터리</button>
-          <!-- [ISS-093 확정] 세제 항목 미노출로 탭명 '보조금'(ko)/'Subsidy'(en) 확정. '추정' 배지=지방비 거주지·개인조건 안내 취지로 유지 확정. -->
-          <button class="tab" data-tab="subsidy"><span data-i18n="ctool.tab.subsidy">보조금</span> <span class="est-badge">추정</span></button>
-          <button class="tab" data-tab="running"><span data-i18n="ctool.tab.running">유지비</span> <span class="est-badge">추정</span></button>
-        </div>
-
-        <div class="tab-content active" data-tab-content="basic"><div id="cmpBasic"></div></div>
-        <div class="tab-content" data-tab-content="charging"><div id="cmpCharging"></div></div>
-        <div class="tab-content" data-tab-content="subsidy">
-          <div style="display:flex;gap:10px;align-items:flex-start;background:#eef5ff;border:1px solid #bcd3f5;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1559c2;line-height:1.6;"><strong style="white-space:nowrap;">ℹ 안내</strong><span>차량별 단순 비교를 위해 특정 조건을 기준으로 최대치를 산정하였습니다. 실제 금액은 거주지·소득·기존 차량 등 개인 조건에 따라 달라집니다.</span></div>
-          <div id="cmpSubsidy"></div>
-        </div>
-        <div class="tab-content" data-tab-content="running">
-          <div style="display:flex;gap:10px;align-items:flex-start;background:#eef5ff;border:1px solid #bcd3f5;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1559c2;line-height:1.6;"><strong style="white-space:nowrap;">ℹ 안내</strong><span>차량별 단순 비교를 위해 특정 조건을 기준으로 최대치를 산정하였습니다.</span></div>
-          <div id="cmpRunning"></div>
-        </div>
-      </div>
-
-      <!-- [DEV] 원천 매핑 노트 (개발자용 · 대민 노출 아님) -->
-      <details class="dev-note">
-        <summary>[DEV] 데이터 원천 · 계산식 (개발 참고 — 대민 미노출)</summary>
-        <p><strong>원천 테이블 = <code>EVCS_CAR_INFO</code></strong>(대민 지급대상 차종, 55컬럼·EV-MAPS 실측). 아래 항목만 AS-IS 보유 → 그 외 제원(구동·크기·축거·토크·저공해등급·효율등급·충전시간·급속출력)은 컬럼 부재로 <strong>제거</strong>.</p>
-        <ul style="margin:6px 0 0 16px;">
-          <li>기본: 차종 <code>CAR_KIND+CAR_TYPE</code> · 차급 <code>CAR_TYPE_SUB</code>(화물·버스만) · 정원 <code>PERSONS</code> · 최고속도 <code>MAX_SPEED</code> · 연식 <code>YEAR</code> · 제조국 <code>MADE_IN</code> · 판매가 <code>SALE_PRICE</code> · (건설기계)<code>WEIGHT/RATED_OUTPUT/BUCKET_CAPACITY/MAX_EXCAVATION</code></li>
-          <li>충전: 배터리 <code>BATTERY</code>(종류+용량 텍스트) · 주행 <code>CHARGER_DISTANCE</code> · 충전포트 <code>CHARGER_PORT</code> · (수소)<code>STGK_CPCTY/ELCTC_PRESSR</code></li>
-          <li>복합효율/연료비 = <strong>추정</strong>: 전비 = 주행거리 ÷ 배터리용량(km/kWh), 수소 = 주행 ÷ 수소탱크(km/kg). 연료비 = 20,000km ÷ 전비 × 단가.</li>
-          <li>국비 = <strong><code>PS_MODEL_GOV.GAMT</code> ÷ 10000</strong>(기본국비, 연도·모델별 · WHERE YEAR=해당연도) · 가산 제외(<code>GAMT_ADIT</code>·<code>EXCHANGE_3YEAR_GAMT</code>·차상위·청년·택시·다자녀 미포함) / 지방비=지자체×차종 데이터 / <strong>총 보조금=국비+지방비(탭 노출)</strong> / 자동차세=용도별 정액. <span style="color:#b45309;">[DEV] 매칭: <code>EVCS_CAR_INFO.MODEL</code> ↔ <code>PS_MODEL(MODEL_CD)</code> 연계 필요.</span></li>
-          <li>[ISS-093 확정] <strong>세제 감면(=개소세300+교육세90+취득세140, 승용)·실 구매 가격(=판매가−국비−지방비)은 탭 미노출</strong> — 세제=추정값, 실구매가=SALE_PRICE 성격 §5 미정. 계산식은 참고로만 보존.</li>
-          <li>[ISS-093 확정] 세제 항목 미노출로 <strong>탭명='보조금'</strong>(ko)/'Subsidy'(en) 확정. '<strong>추정</strong>' 배지=지방비 거주지·개인조건 안내 취지로 <strong>유지</strong> 확정.</li>
-          <li>단가 <code>[미정]</code>: 전기 <code>ELEC_RATE</code>=300원/kWh(환경부 5밴드 대표), 수소 <code>H2_RATE</code>=8,800원/kg — 발주처 확정. SALE_PRICE 값 성격(판매가 vs 보조금)도 운영 확인.</li>
-        </ul>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- Add Car Modal -->
-  <div class="modal-backdrop" data-for="addCarModal"></div>
-  <div class="modal" id="addCarModal" role="dialog" aria-labelledby="addCarTitle" aria-hidden="true">
-    <div class="modal-header">
-      <h3 id="addCarTitle" data-i18n="ctool.modal.title">비교할 차량 선택</h3>
-      <button class="modal-close" data-modal-close aria-label="닫기" data-i18n-aria="ctool.aria.close">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="search-field mb-4">
-        <input type="text" class="form-input" id="cmpSearch" placeholder="제조사, 모델명 검색" data-i18n-attr="placeholder:ctool.modal.search">
-      </div>
-      <div class="tabs-pill" data-tabs style="flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">
-        <button class="tab active" data-tab="전기승용">전기승용</button>
-        <button class="tab" data-tab="전기승합">전기승합</button>
-        <button class="tab" data-tab="전기화물">전기화물</button>
-        <button class="tab" data-tab="전기이륜">전기이륜</button>
-        <button class="tab" data-tab="수소차">수소차</button>
-        <button class="tab" data-tab="건설기계">건설기계</button>
-      </div>
-      <div class="flex flex-col gap-2" data-modal-car-select id="cmpModalList"></div>
-      <p id="cmpModalEmpty" style="color:var(--text-tertiary);padding:16px;text-align:center;display:none;">해당 차종의 차량이 없습니다.</p>
-      <div id="cmpModalPager"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" data-modal-close type="button" data-i18n="ctool.btn.cancel">취소</button>
-      <button class="btn btn-primary" type="button" id="cmpApply" data-i18n="ctool.btn.applycmp">비교에 추가</button>
     </div>
   </div>
+  <!-- 하단 각 페이지별 컨텐츠 -->
+  <div class="contents">
+    <div class="comparison-wrapper">
+      <div class="board-wrapper">
+        <!-- 게시판 도구모음 -->
+        <div class="board-toolbar">
+          <div class="board-toolbar__options">
+            <button type="button" data-target="modalComparisonCar" data-target-size="1100" class="button button--secondary">
+              <i class="svg-icon plus" aria-hidden="true"></i>
+              <span class="button__label">차량추가</span>
+            </button>
+            <button type="button" class="button button--secondary">
+              <span class="button__label">초기화</span>
+            </button>
+          </div>
+        </div>
+        <!-- //게시판 도구모음 -->
+        <!-- 게시글 목록 -->
+        <div class="list-wrapper">
+          <ul class="column-list" id="carCompareCards">
+            <li class="column-list__item">
+              <button type="button" data-target="modalComparisonCar" data-target-size="1100" class="column-list__button-add">
+                <i class="svg-icon plus" aria-hidden="true"></i>
+                <b class="button__label">차량 추가</b>
+                <span class="text-info">최대 3개까지 비교 가능</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <!-- //게시글 목록 -->
+        <!-- tab -->
+        <div class="tab">
+          <ul class="tab__list" role="tablist">
+            <li id="tabMenu01" role="tab" aria-selected="true" aria-controls="tabPanel01" class="tab__item tab__item--selected">
+              <button type="button" class="tab__button">기본 스팩<i class="ir-pm"> 선택됨</i></button>
+            </li>
+            <li id="tabMenu02" role="tab" aria-selected="false" aria-controls="tabPanel02" class="tab__item">
+              <button type="button" class="tab__button">충전·배터리</button>
+            </li>
+            <li id="tabMenu03" role="tab" aria-selected="false" aria-controls="tabPanel03" class="tab__item">
+              <button type="button" class="tab__button">보조금·세제</button>
+            </li>
+            <li id="tabMenu04" role="tab" aria-selected="false" aria-controls="tabPanel04" class="tab__item">
+              <button type="button" class="tab__button">유지비</button>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-wrapper">
+          <!-- tab contents -->
+          <div class="tab-contents">
+            <section id="tabPanel01" role="tabpanel" aria-labelledby="tabMenu01" class="tab-content tab-content--current">
+              <div class="table-wrapper">
+                <div class="table-scroll table-scroll--horizontal">
+                  <table class="table table--data">
+                    <caption>항목별 차량 스펙 비교표</caption>
+                    <colgroup>
+                      <col>
+                      <col>
+                      <col>
+                      <col>
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">항목</th>
+                        <th scope="col" data-col="0">-</th>
+                        <th scope="col" data-col="1">-</th>
+                        <th scope="col" data-col="2">-</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr data-field="carTypeNm">
+                        <th scope="row">차종</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="madeCompanyNm">
+                        <th scope="row">제조사</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="carClass">
+                        <th scope="row">차급</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="persons">
+                        <th scope="row">승차정원</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="maxSpeed">
+                        <th scope="row">최고속도</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="year">
+                        <th scope="row">연식</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="madeIn">
+                        <th scope="row">제조국</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="efficiency">
+                        <th scope="row">
+                          복합효율<br>
+                          <span class="text-size-small">(전기 km/kWh &middot; 수소 km/kg)</span>
+                        </th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <section id="tabPanel02" role="tabpanel" aria-labelledby="tabMenu02" class="tab-content">
+              <div class="table-wrapper">
+                <div class="table-scroll table-scroll--horizontal">
+                  <table class="table table--data">
+                    <caption>항목별 차량 충전 및 배터리 비교표</caption>
+                    <colgroup>
+                      <col>
+                      <col>
+                      <col>
+                      <col>
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">항목</th>
+                        <th scope="col" data-col="0">-</th>
+                        <th scope="col" data-col="1">-</th>
+                        <th scope="col" data-col="2">-</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr data-field="chargerDistance">
+                        <th scope="row">1회 충전 주행</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="chargerPort">
+                        <th scope="row">충전 포트</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="battCap">
+                        <th scope="row">배터리 용량</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <section id="tabPanel03" role="tabpanel" aria-labelledby="tabMenu03" class="tab-content">
+              <div class="table-wrapper">
+                <div class="table-scroll table-scroll--horizontal">
+                  <table class="table table--data">
+                    <caption>항목별 차량 보조금 및 세제 혜택 비교표</caption>
+                    <colgroup>
+                      <col>
+                      <col>
+                      <col>
+                      <col>
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">항목</th>
+                        <th scope="col" data-col="0">-</th>
+                        <th scope="col" data-col="1">-</th>
+                        <th scope="col" data-col="2">-</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr data-field="govAmt">
+                        <th scope="row">국비 보조금</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="localAmt">
+                        <th scope="row">
+                          지방비
+                          <div class="element-group align-items-center">
+                            <select title="도/시 선택" name="address" id="carCompareDo" class="select w-160">
+                              <option value="">선택</option>
+                            </select>
+                            <select title="시/군/구 선택" name="address" id="carCompareSigungu" class="select w-160">
+                              <option value="">선택</option>
+                            </select>
+                          </div>
+                        </th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="totalAmt">
+                        <th scope="row">
+                          총 보조금<br>
+                          <span class="text-size-small">(국비+지방비)</span>
+                        </th>
+                        <td><b class="text-emphasis">-</b></td>
+                        <td><b class="text-emphasis">-</b></td>
+                        <td><b class="text-emphasis">-</b></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- 안내사항 -->
+              <div class="notifications">
+                <strong class="notifications__title">
+                  <i class="svg-icon info" aria-hidden="true"></i>
+                  알려드립니다.
+                </strong>
+                <div class="notifications__description">
+                  <ul class="bullet bullet--dotted">
+                    <li>차량별 단순 비교를 위해 특정 조건을 기준으로 최대치를 산정하였습니다. </li>
+                    <li>실제 금액은 거주지·소득·기존 차량 등 개인 조건에 따라 달라집니다.</li>
+                  </ul>
+                </div>
+              </div>
+              <!-- //안내사항 -->
+            </section>
+            <section id="tabPanel04" role="tabpanel" aria-labelledby="tabMenu04" class="tab-content">
+              <div class="table-wrapper">
+                <div class="table-scroll table-scroll--horizontal">
+                  <table class="table table--data">
+                    <caption>연간기준 항목별 차량 유지비와 비교표</caption>
+                    <colgroup>
+                      <col>
+                      <col>
+                      <col>
+                      <col>
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">연간 기준</th>
+                        <th scope="col" data-col="0">-</th>
+                        <th scope="col" data-col="1">-</th>
+                        <th scope="col" data-col="2">-</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr data-field="energyCost">
+                        <th scope="row">
+                          에너지 비용(2만km)
+                          <div class="tooltip">
+                            <button type="button" class="tooltip__message" data-tooltip="1년 2만km 가정 전기차는 충전료, 수소차는 수소료 단가 기준" aria-labelledby="tooltipSample">
+                              <span class="ir-pm">도움말</span>
+                              <i class="svg-icon help"></i>
+                            </button>
+                            <div id="tooltipSample" class="tooltip__popover" aria-hidden="true">
+                              1년 2만km 가정 전기차는 충전료,<br>수소차는 수소료 단가 기준
+                            </div>
+                          </div>
+                          <span class="text-size-small" id="energyFeeNote"></span>
+                        </th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="heading-group heading-group--row">
+                <h3 class="heading-subtitle">이용 혜택</h3>
+                <p class="heading-description">(무공해차 공통)</p>
+              </div>
+              <div class="table-wrapper">
+                <div class="table-scroll table-scroll--horizontal">
+                  <table class="table table--data">
+                    <caption>항목별 차량 이용 혜택 비교표</caption>
+                    <colgroup>
+                      <col>
+                      <col>
+                      <col>
+                      <col>
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">이용 혜택</th>
+                        <th scope="col" data-col="0">-</th>
+                        <th scope="col" data-col="1">-</th>
+                        <th scope="col" data-col="2">-</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr data-field="tollHighway">
+                        <th scope="row">고속도로 통행료</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="tollCongestion">
+                        <th scope="row">혼잡통행료(서울)</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="parkingPublic">
+                        <th scope="row">공영주차장</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr data-field="envCharge">
+                        <th scope="row">환경개선부담금</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- 안내사항 -->
+              <div class="notifications">
+                <strong class="notifications__title">
+                  <i class="svg-icon info" aria-hidden="true"></i>
+                  알려드립니다.
+                </strong>
+                <div class="notifications__description">
+                  <p>차량별 단순 비교를 위해 특정 조건을 기준으로 최대치를 산정하였습니다.</p>
+                </div>
+              </div>
+              <!-- //안내사항 -->
+            </section>
+          </div>
+          <!-- //tab contents -->
+        </div>
+        <!-- //tab -->
+      </div>
+    </div>
 
-</main>
-
-<!-- [ISS-092] 진입 팝업(매 진입) -->
-<template data-amount-guard="popup" data-ag-title="차종 비교 금액 안내"><p>비교에 표시되는 <strong>보조금·세제감면·연료비는 추정치</strong>이며 실제와 다를 수 있습니다.</p></template>
-
-<div id="footer-slot"></div>
-<script src="js/partials.js?v=20260806g"></script>
-<script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260807a"></script>
-<script src="js/i18n-extra.js?v=20260803a"></script>
-<script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260807a"></script>
-<script src="js/amount-guard.js?v=20260802b"></script>
+    <!-- modal -->
+    <div class="modal-container" id="modalComparisonCar" role="dialog" aria-modal="true">
+      <div class="modal" tabindex="0">
+        <div class="modal__header">
+          <h1 class="modal__header-title">비교할 차량 선택 <span class="text-info" id="compareSelectedCount"></span></h1>
+        </div>
+        <div class="modal__body">
+          <div class="board-wrapper">
+            <div class="board-search">
+              <!-- 검색폼 -->
+              <div class="search-form">
+                <div class="search-form__elements">
+                  <!-- 폼 항목 -->
+                  <div class="element-group">
+                    <div class="element-group__label">
+                      <label for="searchBoardItem02" class="element-label">차종</label>
+                    </div>
+                    <div class="element-group__control">
+                      <select id="searchBoardItem02" class="select">
+                        <option value="">전체</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                  <!-- 폼 항목 -->
+                  <div class="element-group element-group--keyword">
+                    <div class="element-group__label">
+                      <label for="searchBoardItem03" class="element-label">검색어</label>
+                    </div>
+                    <div class="element-group__control">
+                      <input type="text" id="searchBoardItem03" placeholder="검색어 입력" class="text-input" />
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                </div>
+                <div class="search-form__actions">
+                  <button type="button" class="button button--primary button--search">
+                    <span class="button__label">검색</span>
+                  </button>
+                  <button type="button" class="button button--secondary button--reset">
+                    <span class="button__label">초기화</span>
+                  </button>
+                </div>
+              </div>
+              <!-- //검색폼 -->
+            </div>
+            <div class="board-list">
+              <div id="myGrid" class="ag-grid ag-theme-ev"></div>
+            </div>
+            <!-- 페이징 -->
+            <div class="pagination pc-only" id="comparePcPagination">
+              <button type="button" class="pagination__button" data-page="first">
+                <i class="svg-icon arrow-first"></i>
+                <span class="ir-pm">첫 페이지</span>
+              </button>
+              <button type="button" class="pagination__button" data-page="prev">
+                <i class="svg-icon arrow-prev"></i>
+                <span class="ir-pm">이전</span>
+              </button>
+              <div class="pagination__list" id="comparePageList">
+                <a href="#none" class="pagination__link pagination__link--selected">1</a>
+              </div>
+              <button type="button" class="pagination__button" data-page="next">
+                <i class="svg-icon arrow-next"></i>
+                <span class="ir-pm">다음</span>
+              </button>
+              <button type="button" class="pagination__button" data-page="last">
+                <i class="svg-icon arrow-last"></i>
+                <span class="ir-pm">마지막 페이지</span>
+              </button>
+            </div>
+            <!-- 모바일 전용 -->
+            <div class="pagination pagination--fraction" id="compareFractionPagination">
+              <button type="button" class="pagination__button" data-page="prev">
+                <i class="svg-icon arrow-prev"></i>
+                <span>이전</span>
+              </button>
+              <div class="pagination__text">
+                <span class="pagination__current" id="comparePageCurrent">1</span>
+                <span class="pagination__total" id="comparePageTotal">1</span>
+              </div>
+              <button type="button" class="pagination__button" data-page="next">
+                <span>다음</span>
+                <i class="svg-icon arrow-next"></i>
+              </button>
+            </div>
+            <!-- //페이징 -->
+          </div>
+        </div>
+        <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+        <div class="modal__close">
+          <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+            <i class="svg-icon close"></i>
+            <span class="button__label">팝업닫기</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- //modal -->
+  </div>
+</div>
+<script type="application/json" id="pageInfo">{"maxCompare": "3", "year": "2026"}</script>
+<script type="application/json" id="doList">[{"LOCAL_CD": "11", "LOCAL_NM": "서울특별시"}, {"LOCAL_CD": "26", "LOCAL_NM": "부산광역시"}, {"LOCAL_CD": "27", "LOCAL_NM": "대구광역시"}, {"LOCAL_CD": "28", "LOCAL_NM": "인천광역시"}, {"LOCAL_CD": "29", "LOCAL_NM": "광주광역시"}, {"LOCAL_CD": "30", "LOCAL_NM": "대전광역시"}, {"LOCAL_CD": "31", "LOCAL_NM": "울산광역시"}, {"LOCAL_CD": "36", "LOCAL_NM": "세종특별자치시"}, {"LOCAL_CD": "41", "LOCAL_NM": "경기도"}, {"LOCAL_CD": "43", "LOCAL_NM": "충청북도"}, {"LOCAL_CD": "44", "LOCAL_NM": "충청남도"}, {"LOCAL_CD": "46", "LOCAL_NM": "전라남도"}, {"LOCAL_CD": "47", "LOCAL_NM": "경상북도"}, {"LOCAL_CD": "48", "LOCAL_NM": "경상남도"}, {"LOCAL_CD": "50", "LOCAL_NM": "제주특별자치도"}, {"LOCAL_CD": "51", "LOCAL_NM": "강원특별자치도"}, {"LOCAL_CD": "52", "LOCAL_NM": "전북특별자치도"}]</script>
+<script type="application/json" id="kindList">[{"CAR_KIND": "1C", "CAR_KIND_NM": "전기승용"}, {"CAR_KIND": "2T", "CAR_KIND_NM": "전기화물"}, {"CAR_KIND": "3B", "CAR_KIND_NM": "전기승합"}, {"CAR_KIND": "4M", "CAR_KIND_NM": "전기이륜차"}, {"CAR_KIND": "5C", "CAR_KIND_NM": "수소승용"}, {"CAR_KIND": "7B", "CAR_KIND_NM": "수소승합"}, {"CAR_KIND": "8T", "CAR_KIND_NM": "수소화물"}, {"CAR_KIND": "11E", "CAR_KIND_NM": "전기지게차"}]</script>
+<script type="application/json" id="feeInfo">{"EV_FEE": "347.2", "H2_FEE": "8800"}</script>
+<script src="assets/js/board-grid.js?v=20260821f"></script>
 <script>
-/* 차종 비교 도구 — EV-MAPS(EVCS_CAR_INFO 55컬럼) 기준 재구성 (2026-08-03)
-   · AS-IS 보유 컬럼 + 추정 계산 가능 항목만 노출. 없는 제원은 제거.
-   · 데이터는 더미(현실값), 실개발 시 EVCS_CAR_INFO 연동. 계산 단가는 [DEV] 상수. */
-(function(){
-  // ── 단가 상수([DEV] 발주처 확정) ──
-  var ELEC_RATE=300;   // 원/kWh — 환경부 충전요금 5밴드 대표값(대민 안내용 추정)
-  var H2_RATE=8800;    // 원/kg — 수소 판매단가(미정)
-  var YEAR_KM=20000;   // 연 주행 가정(km)
-
-  // ── 차량 데이터셋 (basic=AS-IS 보유 필드 / charging / subsidy / spec=건설기계 전용) ──
-  var CARS = {
-    // 전기승용 (차급=CAR_TYPE_SUB 승용 세분 없음 → '-')
-    ioniq6:{ name:'아이오닉 6', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-ioniq6.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'185 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 77.4 kWh', 주행거리:'524 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:650, 판매가:5200, 세제감면:530 } },
-    ev6:{ name:'EV6', maker:'기아', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'185 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 77.4 kWh', 주행거리:'475 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:650, 판매가:4995, 세제감면:530 } },
-    ioniq5:{ name:'아이오닉 5', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'185 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 84.0 kWh', 주행거리:'481 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:650, 판매가:5250, 세제감면:530 } },
-    toresEvx:{ name:'토레스 EVX', maker:'KG모빌리티', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-suv-torres.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'166 km/h' },
-      charging:{ 배터리:'리튬인산철(LFP) 73.4 kWh', 주행거리:'433 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:580, 판매가:4870, 세제감면:530 } },
-    kona:{ name:'코나 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-crossover-ev6.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'172 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 64.8 kWh', 주행거리:'417 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:640, 판매가:4735, 세제감면:530 } },
-    model3:{ name:'모델 3', maker:'테슬라', energy:'ev', chip:'전기승용', chipClass:'chip-success', img:'assets/cars/ev-sedan-model3.svg', year:'2024', origin:'미국',
-      basic:{ 차종:'전기승용', 차급:'-', 정원:'5명', 최고속도:'201 km/h' },
-      charging:{ 배터리:'리튬인산철(LFP) 57.5 kWh', 주행거리:'403 km', 충전포트:'NACS' },
-      subsidy:{ 국비:230, 판매가:5199, 세제감면:530 } },
-    // 전기승합 (차급=버스 세분)
-    elecCity:{ name:'일렉시티 (전기버스)', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승합', 차급:'버스대형', 정원:'49명', 최고속도:'90 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 384 kWh', 주행거리:'319 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:7000, 판매가:38000, 세제감면:0 } },
-    countyEv:{ name:'카운티 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기승합', chipClass:'chip-success', img:'assets/cars/ev-bus-elec-city.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기승합', 차급:'버스중형', 정원:'25명', 최고속도:'92 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 128 kWh', 주행거리:'161 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:6000, 판매가:15500, 세제감면:0 } },
-    // 전기화물 (차급=화물 세분)
-    porter2:{ name:'포터 II 일렉트릭', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기화물', 차급:'화물소형(1톤)', 정원:'3명', 최고속도:'130 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 58.8 kWh', 주행거리:'211 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:1100, 판매가:4350, 세제감면:460 } },
-    bongo3:{ name:'봉고3 EV', maker:'기아', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기화물', 차급:'화물소형(1톤)', 정원:'3명', 최고속도:'130 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 58.8 kWh', 주행거리:'211 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:1100, 판매가:4330, 세제감면:460 } },
-    evMighty:{ name:'이-마이티', maker:'현대자동차', energy:'ev', chip:'전기화물', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기화물', 차급:'화물경형(3.5톤)', 정원:'3명', 최고속도:'110 km/h' },
-      charging:{ 배터리:'리튬이온(NCM) 114.5 kWh', 주행거리:'202 km', 충전포트:'DC콤보' },
-      subsidy:{ 국비:1600, 판매가:9200, 세제감면:700 } },
-    // 전기이륜
-    smartEvz:{ name:'스마트 EV Z', maker:'그린모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기이륜', 차급:'-', 정원:'2명', 최고속도:'78 km/h' },
-      charging:{ 배터리:'리튬이온(탈착) 3.4 kWh', 주행거리:'95 km', 충전포트:'전용' },
-      subsidy:{ 국비:140, 판매가:430, 세제감면:0 } },
-    emVibe:{ name:'EM 바이브', maker:'대동모빌리티', energy:'ev', chip:'전기이륜', chipClass:'chip-success', img:'assets/cars/ev-moto.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'전기이륜', 차급:'-', 정원:'2명', 최고속도:'85 km/h' },
-      charging:{ 배터리:'리튬이온(탈착) 4.6 kWh', 주행거리:'120 km', 충전포트:'전용' },
-      subsidy:{ 국비:180, 판매가:560, 세제감면:0 } },
-    // 수소차 (charging=수소탱크·충전압력)
-    nexo:{ name:'NEXO', maker:'현대자동차', energy:'fcev', chip:'수소승용', chipClass:'chip-info', img:'assets/cars/fcev-suv-nexo.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'수소승용', 차급:'-', 정원:'5명', 최고속도:'179 km/h' },
-      charging:{ 수소탱크:'6.33 kg', 충전압력:'700 bar', 주행거리:'609 km', 충전포트:'수소' },
-      subsidy:{ 국비:2250, 판매가:7650, 세제감면:660 } },
-    h2bus:{ name:'일렉시티 수소전기버스', maker:'현대자동차', energy:'fcev', chip:'수소버스', chipClass:'chip-info', img:'assets/cars/ev-bus-elec-city.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'수소버스', 차급:'버스대형', 정원:'49명', 최고속도:'90 km/h' },
-      charging:{ 수소탱크:'34.5 kg', 충전압력:'350 bar', 주행거리:'474 km', 충전포트:'수소' },
-      subsidy:{ 국비:21000, 판매가:66000, 세제감면:0 } },
-    h2truck:{ name:'엑시언트 수소전기트럭', maker:'현대자동차', energy:'fcev', chip:'수소트럭', chipClass:'chip-info', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'수소트럭', 차급:'화물대형', 정원:'2명', 최고속도:'85 km/h' },
-      charging:{ 수소탱크:'31 kg', 충전압력:'350 bar', 주행거리:'570 km', 충전포트:'수소' },
-      subsidy:{ 국비:25000, 판매가:69000, 세제감면:0 } },
-    // 건설기계 (spec=총중량·모터출력·버켓·굴삭 · 주행=가동시간이라 연료비 추정 제외)
-    forkliftEv:{ name:'전동 지게차 3톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'건설기계', 차급:'지게차(3톤)', 정원:'1명', 최고속도:'18 km/h' },
-      charging:{ 배터리:'리튬이온(LFP) 51.2 kWh', 주행거리:'약 8시간 가동', 충전포트:'-' },
-      spec:{ 총중량:'4,900 kg', 모터출력:'2 × 11 kW' },
-      subsidy:{ 국비:500, 판매가:5200, 세제감면:0 } },
-    excavatorEv:{ name:'전동 굴착기 1.9톤', maker:'현대건설기계', energy:'ev', chip:'건설기계', chipClass:'chip-warning', img:'assets/cars/ev-truck-porter.svg', year:'2024', origin:'대한민국',
-      basic:{ 차종:'건설기계', 차급:'미니 굴착기(1.9톤)', 정원:'1명', 최고속도:'4.5 km/h' },
-      charging:{ 배터리:'리튬이온(LFP) 32 kWh', 주행거리:'약 4시간 가동', 충전포트:'-' },
-      spec:{ 총중량:'1,900 kg', 모터출력:'18 kW', 버켓용량:'0.05 ㎥', 최대굴삭력:'약 14 kN' },
-      subsidy:{ 국비:600, 판매가:8500, 세제감면:0 } }
-  };
-
-  // 시도 → [시군구, 지방비(만원)] · 자동차세 용도(만원) — 공통(같은 조건으로 차량 비교)
-  var REGION={
-    '서울특별시':[['강남구',430],['서초구',430],['송파구',430]],
-    '부산광역시':[['해운대구',500],['부산진구',500]],
-    '경기도':[['수원시',600],['성남시',600],['용인시',600]],
-    '충청남도':[['아산시',700],['천안시',680],['당진시',720]],
-    '충청북도':[['충주시',660],['청주시',650]],
-    '전라남도':[['여수시',600],['순천시',580]],
-    '제주특별자치도':[['제주시',500],['서귀포시',500]]
-  };
-  var TAX=[['비영업 승용',13],['영업용 승용',2],['전기화물',2.85],['전기승합(소형)',2]];
-
-  var DEFAULT=['ioniq6','ev6'];
-  var state=DEFAULT.slice();
-  var selSido='충청남도', selSgg=String((REGION['충청남도'][0]||[])[1]||0), selUse=String(TAX[0][1]);
-  var modalTab='전기승용', modalQuery='', modalPage=1;
-  var MODAL_PAGE_SIZE=3;
-
-  function won(n){ return Number(n).toLocaleString('ko-KR'); }
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-  function toast(m,t){ if(window.__toast) window.__toast(m,t); }
-  function tip(t){ return '<span class="ctip" data-tip="'+esc(t)+'">ⓘ</span>'; }
-  function na(){ return '<span style="color:var(--text-tertiary);">'+t('ctool.val.na')+'</span>'; }
-  function curLamt(){ return parseFloat(selSgg)||0; }
-  function $(id){ return document.getElementById(id); }
-
-  // [ISS-093] 페이지 로컬 i18n(ko/en) — JS 렌더 라벨·툴팁. 표시 데이터값(차명·스펙·지역)은 AS-IS라 키화 대상 아님.
-  var CT_I18N = {
-    'ctool.row.type':{ko:'차종',en:'Type'}, 'ctool.row.maker':{ko:'제조사',en:'Manufacturer'},
-    'ctool.row.class':{ko:'차급',en:'Class'}, 'ctool.row.seats':{ko:'승차정원',en:'Seats'},
-    'ctool.row.topspeed':{ko:'최고속도',en:'Top Speed'}, 'ctool.row.year':{ko:'연식',en:'Model Year'},
-    'ctool.row.origin':{ko:'제조국',en:'Country of Origin'}, 'ctool.row.eff':{ko:'복합효율',en:'Combined Efficiency'},
-    'ctool.row.weight':{ko:'총중량',en:'Gross Weight'}, 'ctool.row.motor':{ko:'모터 출력',en:'Motor Power'},
-    'ctool.row.bucket':{ko:'버켓 용량',en:'Bucket Capacity'}, 'ctool.row.excav':{ko:'최대 굴삭력',en:'Max Digging Force'},
-    'ctool.row.range':{ko:'1회 충전 주행',en:'Driving Range'}, 'ctool.row.port':{ko:'충전 포트',en:'Charging Port'},
-    'ctool.row.battery':{ko:'배터리',en:'Battery'}, 'ctool.row.h2tank':{ko:'수소탱크 용량',en:'H₂ Tank Capacity'},
-    'ctool.row.h2press':{ko:'충전 압력',en:'Fill Pressure'}, 'ctool.row.subNat':{ko:'국비 보조금',en:'National Subsidy'},
-    'ctool.row.subLoc':{ko:'지방비',en:'Local Subsidy'}, 'ctool.row.subTotal':{ko:'총 보조금',en:'Total Subsidy'},
-    'ctool.row.subTotalSub':{ko:'(국비+지방비)',en:'(National+Local)'}, 'ctool.row.taxcut':{ko:'세제 감면 (최대)',en:'Tax Reduction (max)'},
-    'ctool.row.net':{ko:'실 구매 가격',en:'Net Price'}, 'ctool.row.energy':{ko:'에너지 비용 (2만km)',en:'Energy Cost (20,000km)'},
-    'ctool.row.autotax':{ko:'자동차세',en:'Vehicle Tax'}, 'ctool.row.benefits':{ko:'이용 혜택',en:'Usage Benefits'},
-    'ctool.row.benefitsSub':{ko:'(무공해차 공통)',en:'(all ZEVs)'}, 'ctool.row.tollHwy':{ko:'고속도로 통행료',en:'Highway Toll'},
-    'ctool.row.tollCong':{ko:'혼잡통행료 (서울)',en:'Congestion Toll (Seoul)'}, 'ctool.row.parking':{ko:'공영주차장',en:'Public Parking'},
-    'ctool.row.envfee':{ko:'환경개선부담금',en:'Environment Fee'},
-    'ctool.hdr.item':{ko:'항목',en:'Item'}, 'ctool.hdr.annual':{ko:'연간 기준',en:'Per year'}, 'ctool.hdr.addcar':{ko:'추가 차량',en:'Add vehicle'},
-    'ctool.val.na':{ko:'해당없음',en:'N/A'}, 'ctool.val.reduce':{ko:'감면',en:'Reduced'}, 'ctool.val.exempt':{ko:'면제',en:'Exempt'}, 'ctool.val.est':{ko:'추정',en:'Est.'},
-    'ctool.card.price':{ko:'판매가',en:'Price'}, 'ctool.card.aftersub':{ko:'보조금 차감',en:'After subsidy'},
-    'ctool.card.add':{ko:'차량 추가',en:'Add vehicle'}, 'ctool.card.addhint':{ko:'최대 3대까지 비교 가능',en:'Compare up to 3'},
-    'ctool.tip.class':{ko:'화물·버스만 세분 분류가 있습니다(승용은 미분류).',en:'Only trucks and buses have sub-classes (passenger cars are not sub-classified).'},
-    'ctool.tip.eff':{ko:'주행거리 ÷ 배터리용량으로 산출한 추정 전비입니다(전기 km/kWh · 수소 km/kg).',en:'Estimated efficiency = range ÷ battery capacity (EV km/kWh · H₂ km/kg).'},
-    'ctool.tip.range':{ko:'AS-IS 1회충전주행거리(상온·저온이 한 항목에 기재될 수 있음).',en:'Single-charge range as recorded (normal/low temperature may be combined in one field).'},
-    'ctool.tip.battery':{ko:'AS-IS 배터리 항목(종류·용량이 한 텍스트로 기재).',en:'Battery field as recorded (type and capacity in one text).'},
-    'ctool.tip.taxcut':{ko:'개별소비세(최대300)+교육세(개소세30%·최대90)+취득세(최대140) 합. 승용 기준 최대 530만원(공채 별도).',en:'Individual consumption tax (max 300) + education tax (30% of ICT, max 90) + acquisition tax (max 140). Up to 5.3M KRW for passenger cars (bonds separate).'},
-    'ctool.tip.net':{ko:'판매가 − (국비+지방비). 세제감면은 별도 표시.',en:'Price − (national + local subsidy). Tax reduction shown separately.'},
-    'ctool.tip.energy':{ko:'연 2만km 가정 · 전비(주행÷배터리) × 단가로 추정. 전기 300원/kWh·수소 8,800원/kg(추정).',en:'Assumes 20,000km/yr · efficiency × unit price. EV 300 KRW/kWh · H₂ 8,800 KRW/kg (est.).'},
-    'ctool.tip.autotax':{ko:'차량 용도별 정액(지방교육세 포함). 아래에서 용도 선택. 비영업 13만·영업용 2만원.',en:'Flat rate by use (incl. local education tax). Select use below. Non-commercial 130k · commercial 20k KRW.'}
-  };
-  (function(){ if(window.__i18n && __i18n.register){ var ko={},en={}; Object.keys(CT_I18N).forEach(function(k){ko[k]=CT_I18N[k].ko;en[k]=CT_I18N[k].en;}); __i18n.register({ko:ko,en:en}); } })();
-  function ctIsEn(){ try{ return window.__i18n && __i18n.getLang && __i18n.getLang()==='en'; }catch(e){ return false; } }
-  function t(k){ try{ if(window.__i18n && __i18n.t){ var m=__i18n.t(k); if(m&&m!==k) return m; } }catch(e){} return CT_I18N[k]?(ctIsEn()?CT_I18N[k].en:CT_I18N[k].ko):k; }
-
-  // ── 숫자 파싱 · 전비/연료비 추정 ──
-  function pnum(s){ var m=String(s).replace(/,/g,'').match(/[\d.]+/); return m?parseFloat(m[0]):0; }
-  function battKwh(s){ var m=String(s).match(/([\d.]+)\s*kWh/); return m?parseFloat(m[1]):0; }
-  function isKm(s){ return /\bkm\b/.test(String(s)); }
-  function effOf(c){                         // 복합효율(추정) km/kWh (수소=km/kg)
-    var km=pnum(c.charging.주행거리); if(!isKm(c.charging.주행거리)||!km) return 0;
-    if(c.energy==='ev'){ var kwh=battKwh(c.charging.배터리); return kwh?km/kwh:0; }
-    var kg=pnum(c.charging.수소탱크); return kg?km/kg:0;
-  }
-  function effTxt(c){ var e=effOf(c); if(!e) return na();
-    return e.toFixed(1)+(c.energy==='ev'?' km/kWh':' km/kg')+' <span class="est-badge">'+t('ctool.val.est')+'</span>'; }
-  function fuelTxt(c){ var e=effOf(c); if(!e) return na();
-    var rate=c.energy==='ev'?ELEC_RATE:H2_RATE;
-    var cost=YEAR_KM/e*rate;                 // 원/년
-    return '약 '+won(Math.round(cost/10000))+'만원'+(c.energy==='ev'?' (전기)':' (수소)'); }
-
-  // ── 차량 카드 ──
-  function placeholderCard(){
-    return '<button class="car-card" data-modal-open="addCarModal" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;background:var(--color-gray-50);border-style:dashed;cursor:pointer;width:100%;">'
-      +'<div style="width:64px;height:64px;border-radius:50%;background:var(--gradient-primary-soft);display:grid;place-items:center;color:var(--color-primary-600);margin-bottom:16px;font-size:32px;">+</div>'
-      +'<h4>'+t('ctool.card.add')+'</h4><p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">'+t('ctool.card.addhint')+'</p></button>';
-  }
-  function cardHTML(key, idx){
-    if(!key) return placeholderCard();
-    // [ISS-093 후속] 카드 우측 = 파생 net(판매가−국비−지방비) 제거 → '국비 보조금' 개별 확정값 표기(탭과 일관). ※국비 자체 '대표조건'은 §5-1 미정 대기.
-    var c=CARS[key];
-    return '<div class="car-card selected">'
-      +'<div style="position:absolute;top:16px;right:16px;"><button class="btn btn-icon-only" style="width:32px;height:32px;" aria-label="제거" type="button" data-role="remove-car" data-idx="'+idx+'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'
-      +'<div class="car-image"><img src="'+c.img+'" alt="'+esc(c.name)+'"></div>'
-      +'<span class="chip '+c.chipClass+' mb-2">'+esc(c.chip)+'</span>'
-      +'<h3 style="font-size:22px;">'+esc(c.name)+'</h3>'
-      +'<p style="color:var(--text-tertiary);font-size:13px;margin-bottom:12px;">'+esc(c.maker)+' · '+esc(c.year)+'</p>'
-      +'<div style="padding:14px;background:var(--color-primary-50);border-radius:12px;"><div class="flex justify-between">'
-        +'<div><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.card.price')+'</div><div style="font-size:18px;font-weight:700;">'+won(c.subsidy.판매가)+'만원</div></div>'
-        +'<div style="text-align:right;"><div style="font-size:11px;color:var(--color-primary-700);font-weight:700;">'+t('ctool.row.subNat')+'</div><div style="font-size:18px;font-weight:700;color:var(--color-primary-700);">'+won(c.subsidy.국비)+'만원</div></div>'
-      +'</div></div></div>';
-  }
-
-  // ── 비교표 공통 빌더 ──
-  function headerRow(first){
-    var out='<div class="comparison-row header"><div>'+first+'</div>';
-    for(var i=0;i<3;i++) out+='<div>'+(state[i]?esc(CARS[state[i]].name):t('ctool.hdr.addcar'))+'</div>';
-    return out+'</div>';
-  }
-  function cells(fn, cellStyle){
-    var out='', white=cellStyle&&/color:#fff/.test(cellStyle);
-    for(var i=0;i<3;i++){ var k=state[i];
-      if(k) out+='<div'+(cellStyle?' style="'+cellStyle+'"':'')+'>'+fn(CARS[k])+'</div>';
-      else out+='<div style="color:'+(white?'rgba(255,255,255,.6)':'var(--text-tertiary)')+';">-</div>';
-    }
-    return out;
-  }
-  function row(label, fn, opt){ opt=opt||{};
-    var labStyle=opt.labelStyle||'color:var(--text-secondary);';
-    var lab='<div style="'+labStyle+'">'+label+(opt.tip?tip(opt.tip):'')+(opt.ctrl||'')+'</div>';
-    return '<div class="comparison-row"'+(opt.rowStyle?' style="'+opt.rowStyle+'"':'')+'>'+lab+cells(fn,opt.cellStyle)+'</div>';
-  }
-  function anySpec(key){ return state.some(function(k){return k&&CARS[k].spec&&CARS[k].spec[key]!=null;}); }
-  function specCell(c,key){ return (c.spec&&c.spec[key]!=null)?esc(c.spec[key]):na(); }
-
-  // ── 기본 스펙 탭 (AS-IS 보유 항목만) ──
-  function renderBasic(){
-    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
-    h+=row(t('ctool.row.type'), function(c){return esc(c.basic.차종);});
-    h+=row(t('ctool.row.maker'), function(c){return esc(c.maker);});
-    h+=row(t('ctool.row.class'), function(c){return c.basic.차급&&c.basic.차급!=='-'?esc(c.basic.차급):na();}, {tip:t('ctool.tip.class')});
-    h+=row(t('ctool.row.seats'), function(c){return esc(c.basic.정원);});
-    h+=row(t('ctool.row.topspeed'), function(c){return esc(c.basic.최고속도);});
-    h+=row(t('ctool.row.year'), function(c){return esc(c.year);});
-    h+=row(t('ctool.row.origin'), function(c){return esc(c.origin);});
-    h+=row(t('ctool.row.eff'), function(c){return effTxt(c);}, {tip:t('ctool.tip.eff')});
-    // 건설기계 전용 제원(값 있는 차량이 있을 때만)
-    if(anySpec('총중량')) h+=row(t('ctool.row.weight'), function(c){return specCell(c,'총중량');});
-    if(anySpec('모터출력')) h+=row(t('ctool.row.motor'), function(c){return specCell(c,'모터출력');});
-    if(anySpec('버켓용량')) h+=row(t('ctool.row.bucket'), function(c){return specCell(c,'버켓용량');});
-    if(anySpec('최대굴삭력')) h+=row(t('ctool.row.excav'), function(c){return specCell(c,'최대굴삭력');});
-    $('cmpBasic').innerHTML=h+'</div>';
-  }
-
-  // ── 충전·배터리 탭 ──
-  function renderCharging(){
-    var anyEv=state.some(function(k){return k&&CARS[k].energy==='ev';});
-    var anyF=state.some(function(k){return k&&CARS[k].energy==='fcev';});
-    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
-    h+=row(t('ctool.row.range'), function(c){return esc(c.charging.주행거리);}, {tip:t('ctool.tip.range')});
-    h+=row(t('ctool.row.port'), function(c){return c.charging.충전포트?esc(c.charging.충전포트):na();});
-    if(anyEv){
-      h+=row(t('ctool.row.battery'), function(c){return c.energy==='ev'?esc(c.charging.배터리):na();}, {tip:t('ctool.tip.battery')});
-    }
-    if(anyF){
-      h+=row(t('ctool.row.h2tank'), function(c){return c.energy==='fcev'?esc(c.charging.수소탱크):na();});
-      h+=row(t('ctool.row.h2press'), function(c){return c.energy==='fcev'?esc(c.charging.충전압력):na();});
-    }
-    $('cmpCharging').innerHTML=h+'</div>';
-  }
-
-  // ── 보조금·세제 탭 ──
-  function renderSubsidy(){
-    var lamt=curLamt();
-    var ctrl='<div class="cmp-row-ctrl"><select id="cmpSido" aria-label="거주지 시·도"></select><select id="cmpSigungu" aria-label="거주지 시·군·구"></select></div>';
-    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.item'));
-    h+=row(t('ctool.row.subNat'), function(c){return won(c.subsidy.국비)+'만원';});
-    h+=row(t('ctool.row.subLoc'), function(){return won(lamt)+'만원';}, {ctrl:ctrl});
-    // [ISS-093 후속 정정] 탭 = 국비/지방비/총 보조금 3행. 세제감면(추정)·실구매가(SALE_PRICE §5미정 파생) 제거. 총 보조금=국비+지방비(둘 다 DB 실값).
-    h+=row(t('ctool.row.subTotal')+' <span style="font-size:11.5px;color:var(--text-tertiary);">'+t('ctool.row.subTotalSub')+'</span>', function(c){return won(c.subsidy.국비+lamt)+'만원';}, {rowStyle:'background:var(--color-primary-50);', cellStyle:'font-weight:700;color:var(--color-primary-700);'});
-    $('cmpSubsidy').innerHTML=h+'</div>';
-    fillRegion();
-  }
-
-  // ── 유지비 탭 ──
-  function renderRunning(){
-    var tax=parseFloat(selUse)||0;
-    var ctrl='<div class="cmp-row-ctrl"><select id="cmpUse" aria-label="자동차세 용도"></select></div>';
-    var h='<div class="comparison-table">'+headerRow(t('ctool.hdr.annual'));
-    h+=row(t('ctool.row.energy'), function(c){return fuelTxt(c);}, {tip:t('ctool.tip.energy')});
-    h+=row(t('ctool.row.autotax'), function(){return won(tax)+'만원';}, {tip:t('ctool.tip.autotax'), ctrl:ctrl});
-    h+='<div class="comparison-row" style="background:var(--color-gray-50);"><div style="font-weight:700;grid-column:1 / -1;">'+t('ctool.row.benefits')+' <span style="font-size:11.5px;font-weight:400;color:var(--text-tertiary);">'+t('ctool.row.benefitsSub')+'</span></div></div>';
-    h+=row(t('ctool.row.tollHwy'), function(){return '<span class="chip chip-success">'+t('ctool.val.reduce')+'</span>';});
-    h+=row(t('ctool.row.tollCong'), function(){return '<span class="chip chip-success">'+t('ctool.val.exempt')+'</span>';});
-    h+=row(t('ctool.row.parking'), function(){return '<span class="chip chip-success">'+t('ctool.val.reduce')+'</span>';});
-    h+=row(t('ctool.row.envfee'), function(){return '<span class="chip chip-success">'+t('ctool.val.exempt')+'</span>';});
-    $('cmpRunning').innerHTML=h+'</div>';
-    fillUse();
-  }
-  function fillRegion(){
-    var sido=$('cmpSido'), sgg=$('cmpSigungu'); if(!sido||!sgg) return;
-    sido.innerHTML=Object.keys(REGION).map(function(s){return '<option'+(s===selSido?' selected':'')+'>'+s+'</option>';}).join('');
-    sgg.innerHTML=(REGION[selSido]||[]).map(function(g){return '<option value="'+g[1]+'"'+(String(g[1])===String(selSgg)?' selected':'')+'>'+g[0]+'</option>';}).join('');
-  }
-  function fillUse(){
-    var u=$('cmpUse'); if(!u) return;
-    u.innerHTML=TAX.map(function(t){return '<option value="'+t[1]+'"'+(String(t[1])===String(selUse)?' selected':'')+'>'+t[0]+'</option>';}).join('');
-  }
-
-  // ── 추가 모달 리스트 ──
-  function carCat(c){ return /^수소/.test(c.chip) ? '수소차' : c.chip; }
-  function renderModalList(){
-    var host=$('cmpModalList'); if(!host) return;
-    var avail=Object.keys(CARS).filter(function(k){return state.indexOf(k)<0;});
-    host.innerHTML=avail.map(function(k){ var c=CARS[k];
-      return '<label class="radio-card" data-car="'+k+'" data-cat="'+esc(carCat(c))+'">'
-        +'<input type="radio" name="addPick" value="'+k+'" style="margin-right:10px;">'
-        +'<div class="flex justify-between" style="flex:1;"><div><strong>'+esc(c.name)+'</strong><br><span style="font-size:13px;color:var(--text-tertiary);">'+esc(c.maker)+' · '+esc(c.chip)+'</span></div>'
-        +'<div style="text-align:right;"><span class="chip '+c.chipClass+'">국비 '+won(c.subsidy.국비)+'만원</span></div></div></label>';
-    }).join('');
-    modalPage=1;
-    applyModalFilter();
-  }
-  function renderModalPager(pages){
-    var pg=$('cmpModalPager'); if(!pg) return;
-    if(pages<=1){ pg.innerHTML=''; return; }
-    var h='<button type="button" data-pg="prev"'+(modalPage<=1?' disabled':'')+' aria-label="이전">‹</button>';
-    for(var i=1;i<=pages;i++){ h+='<button type="button" data-pg="'+i+'"'+(i===modalPage?' class="active"':'')+'>'+i+'</button>'; }
-    h+='<button type="button" data-pg="next"'+(modalPage>=pages?' disabled':'')+' aria-label="다음">›</button>';
-    pg.innerHTML=h;
-  }
-  function applyModalFilter(){
-    var cards=[].slice.call(document.querySelectorAll('#cmpModalList .radio-card'));
-    var matched=cards.filter(function(el){
-      var okTab = el.dataset.cat===modalTab;
-      var okQ = !modalQuery || el.textContent.toLowerCase().indexOf(modalQuery)>=0;
-      return okTab && okQ;
-    });
-    var pages=Math.max(1, Math.ceil(matched.length/MODAL_PAGE_SIZE));
-    if(modalPage>pages) modalPage=pages;
-    var start=(modalPage-1)*MODAL_PAGE_SIZE, end=start+MODAL_PAGE_SIZE;
-    cards.forEach(function(el){ el.style.display='none'; });
-    matched.forEach(function(el,i){ el.style.display=(i>=start&&i<end)?'':'none'; });
-    var empty=$('cmpModalEmpty'); if(empty) empty.style.display=matched.length?'none':'';
-    renderModalPager(pages);
-  }
-  function closeAddModal(){
-    var m=$('addCarModal'); if(!m) return;
-    m.classList.remove('show'); m.setAttribute('aria-hidden','true');
-    document.querySelectorAll('.modal-backdrop.show').forEach(function(b){b.classList.remove('show');});
-    document.body.style.overflow='';
-  }
-
-  // ── 전체 렌더 ──
-  function renderCards(){ var h=''; for(var i=0;i<3;i++) h+=cardHTML(state[i], i); $('cmpCards').innerHTML=h; }
-  function renderTitle(){ $('cmpSelTitle').textContent='선택한 차량 ('+state.length+'/3)'; }
-  function renderAll(){ renderTitle(); renderCards(); renderBasic(); renderCharging(); renderSubsidy(); renderRunning(); renderModalList(); }
-
-  // ── 이벤트 ──
-  document.addEventListener('change', function(e){
-    var t=e.target;
-    if(t.id==='cmpSido'){ selSido=t.value; selSgg=String((REGION[selSido][0]||[])[1]||0); renderSubsidy(); renderCards(); }
-    else if(t.id==='cmpSigungu'){ selSgg=t.value; renderSubsidy(); renderCards(); }
-    else if(t.id==='cmpUse'){ selUse=t.value; renderRunning(); }
-  });
-  document.addEventListener('click', function(e){
-    var rm=e.target.closest('[data-role="remove-car"]');
-    if(rm){ e.preventDefault(); state.splice(+rm.dataset.idx,1); renderAll(); toast('비교 목록에서 제거되었습니다.','info'); return; }
-    if(e.target.closest('[data-modal-open="addCarModal"]')){ renderModalList(); return; }
-    var mt=e.target.closest('#addCarModal .tab[data-tab]');
-    if(mt){ modalTab=mt.dataset.tab; modalPage=1; applyModalFilter(); return; }
-    var pgBtn=e.target.closest('#cmpModalPager button[data-pg]');
-    if(pgBtn){ var v=pgBtn.dataset.pg;
-      if(v==='prev') modalPage=Math.max(1, modalPage-1);
-      else if(v==='next') modalPage=modalPage+1;
-      else modalPage=parseInt(v,10);
-      applyModalFilter(); return; }
-  });
-  var searchEl=$('cmpSearch');
-  if(searchEl) searchEl.addEventListener('input', function(){ modalQuery=this.value.trim().toLowerCase(); modalPage=1; applyModalFilter(); });
-  var applyEl=$('cmpApply');
-  if(applyEl) applyEl.addEventListener('click', function(){
-    var picked=document.querySelector('#cmpModalList input[name=addPick]:checked');
-    if(!picked){ toast('추가할 차량을 선택해 주세요.','warning'); return; }
-    if(state.length>=3){ toast('최대 3대까지 비교할 수 있습니다.','warning'); return; }
-    state.push(picked.value); closeAddModal(); renderAll(); toast('비교 목록에 추가되었습니다.','success');
-  });
-  var resetEl=$('cmpReset');
-  if(resetEl) resetEl.addEventListener('click', function(){ state=DEFAULT.slice(); renderAll(); toast('기본 2대로 초기화했습니다.','info'); });
-
-  if(window.__i18n && __i18n.on) __i18n.on(function(){ renderAll(); });
-  renderAll();
+var PAGE_INFO = (function () {
+  try { return JSON.parse(document.getElementById('pageInfo').textContent) || {}; } catch (e) { return {}; }
 })();
+var DO_LIST = (function () {
+  try { return JSON.parse(document.getElementById('doList').textContent) || []; } catch (e) { return []; }
+})();
+var KIND_LIST = (function () {
+  try { return JSON.parse(document.getElementById('kindList').textContent) || []; } catch (e) { return []; }
+})();
+
+var FEE_INFO = (function () {
+  try { return JSON.parse(document.getElementById('feeInfo').textContent) || {}; } catch (e) { return {}; }
+})();
+
+var MAX_COMPARE = parseInt(PAGE_INFO.maxCompare, 10) || 3;
+var BASE_YEAR = PAGE_INFO.year || '';
+// 에너지 비용 산정 기준 주행거리
+var ANNUAL_KM = 20000;
+// 기후환경에너지부 완속 충전요금(원/kWh)
+var EV_FEE = Number(FEE_INFO.EV_FEE) || 0;
+// 수소충전소 평균 판매가(원/kg)
+var H2_FEE = Number(FEE_INFO.H2_FEE) || 0;
+var IMG_URL = 'assets/cars/';   /* [프로토] 서버 첨부 대신 로컬 이미지 */
+var selectedSeqs = [];
+
+// 값이 없으면 화면에는 '-'
+function dash(v) {
+  return (v === null || v === undefined || v === '') ? '-' : String(v);
+}
+
+// 3820000 -> '382만원' (만원 미만은 절사)
+function won(v) {
+  if (v === null || v === undefined || v === '' || isNaN(v)) { return '-'; }
+  var n = Math.floor(Number(v) / 10000);
+  if (n <= 0) { return '-'; }
+  return n.toLocaleString() + '만원';
+}
+
+// 자동차관리법상 자동차가 아니어서 통행료·주차료·환경개선부담금 혜택 대상이 아닌 계열(이륜/건설기계/지게차)
+var NON_VEHICLE_KINDS = ['4M', '6E', '10E', '11E'];
+// 차급(중형/대형)이 의미를 갖는 버스 계열. 나머지 차종은 차급을 표기하지 않는다
+var BUS_KINDS = ['3B', '7B'];
+// EVCS_CODE_DETAIL CAR_KIND_BIG 기준 수소 계열. 복합효율을 km/kg 으로 산정
+var H2_KINDS = ['5C', '7B', '8T', '9S', '10E'];
+
+function inArr(arr, v) {
+  return arr.indexOf(v) > -1;
+}
+
+// "82.56kWh" / "211km" / "2.1kg" 처럼 단위가 붙은 문자열에서 첫 숫자만 추출
+function numOf(v) {
+  if (v === null || v === undefined || v === '') { return 0; }
+  var m = String(v).match(/([0-9]+(?:\.[0-9]+)?)/);
+  return m ? parseFloat(m[1]) : 0;
+}
+
+// 복합효율 = 1회 충전 주행거리 / 에너지 저장량. 전기는 km/kWh, 수소는 km/kg
+// 표기와 에너지 비용 산정에 함께 쓰므로 반올림 전 숫자를 돌려준다
+function fnEfficiencyNum(car, isH2) {
+  var dist = numOf(car.distNormal);
+  if (!dist) { return 0; }
+  var cap = isH2 ? numOf(car.stgkCpcty) : numOf(car.battCap);
+  return cap ? dist / cap : 0;
+}
+
+// 차종별 파생 항목(차급, 복합효율, 에너지 비용, 이용혜택)을 덧붙인다
+function fnDeriveFields(car) {
+  var kind = car.carKind || '';
+  var isH2 = inArr(H2_KINDS, kind);
+
+  // 차급은 버스 계열에서만 노출
+  car.carClass = inArr(BUS_KINDS, kind) ? car.carTypeSubNm : null;
+
+  var eff = fnEfficiencyNum(car, isH2);
+  car.efficiency = eff ? (Math.round(eff * 10) / 10) + (isH2 ? 'km/kg' : 'km/kWh') : null;
+
+  // 에너지 비용 = 2만km 주행에 필요한 에너지량(주행거리 / 복합효율) x 단가
+  var fee = isH2 ? H2_FEE : EV_FEE;
+  car.energyCost = (eff && fee) ? Math.round(ANNUAL_KM / eff * fee) : null;
+
+  // 통행료·주차료·환경개선부담금 감면은 환경친화적 '자동차'에 한정
+  var benefit = !inArr(NON_VEHICLE_KINDS, kind);
+  car.tollHighway    = benefit ? '감면' : null;
+  car.tollCongestion = benefit ? '면제' : null;
+  car.parkingPublic  = benefit ? '감면' : null;
+  car.envCharge      = benefit ? '면제' : null;
+}
 </script>
+<script>
+function fnRenderCompare(list) {
+  // 파생 항목(차급·복합효율·에너지 비용·이용혜택) 계산
+  var hasBus = false;
+  for (var d = 0; d < list.length; d++) {
+    fnDeriveFields(list[d]);
+    if (inArr(BUS_KINDS, list[d].carKind || '')) { hasBus = true; }
+  }
+  // 차급은 버스 계열에만 의미가 있으므로 비교 대상에 버스가 없으면 행 자체를 감춘다
+  $('tr[data-field="carClass"]').css('display', hasBus ? '' : 'none');
+
+  // 표 헤더 차량명
+  for (var i = 0; i < MAX_COMPARE; i++) {
+    var car = list[i];
+    $('[data-col="' + i + '"]').text(car ? dash(car.model) : '-');
+  }
+
+  // 데이터 행
+  $('tr[data-field]').each(function () {
+    var field = $(this).data('field');
+    var cells = $(this).find('td');
+    for (var i = 0; i < cells.length; i++) {
+      var car = list[i];
+      var text = '-';
+      if (car) {
+        if (field === 'govAmt' || field === 'localAmt' || field === 'totalAmt' || field === 'energyCost') {
+          text = won(car[field]);
+        } else if (car[field] !== undefined) {
+          text = dash(car[field]);
+        }
+      }
+      var $cell = $(cells[i]);
+      var $inner = $cell.children().first();
+      ($inner.length ? $inner : $cell).text(text);
+    }
+  });
+
+  fnRenderCards(list);
+}
+
+// 카드 1건 생성 (문자열 결합 대신 jQuery 객체 생성 -> 자동 이스케이프)
+function fnBuildCard(car) {
+  var $item = $('<li>', { 'class': 'column-list__item' });
+  var $link = $('<div>', { 'class': 'column-list__link' });
+
+  // 썸네일
+  var $thumb = $('<div>', { 'class': 'column-list__thumb' });
+  if (car.attchId) {
+    $thumb.append($('<img>', {
+      'class': 'column-list__img',
+      src: IMG_URL + encodeURIComponent(car.attchId),
+      alt: (car.model || '') + ' 차량 이미지'
+    }));
+  }
+  $link.append($thumb);
+
+  // 제목 영역
+  var $heading = $('<div>', { 'class': 'column-list__heading' });
+  $heading.append($('<div>', { 'class': 'column-list__category' })
+    .append($('<span>', { 'class': 'badge badge--outline badge--primary', text: dash(car.carTypeNm) })));
+  $heading.append($('<strong>', { 'class': 'column-list__title', text: dash(car.model) }));
+  $heading.append($('<div>', {
+    'class': 'column-list__subtitle',
+    text: dash(car.madeCompanyNm) + (car.year ? ' · ' + car.year + '년형' : '')
+  }));
+  $link.append($heading);
+
+  // 가격 영역. 판매가 원천이 없어 실 구매 가격은 산출할 수 없으므로 총 보조금만 노출
+  var $dl = $('<dl>', { 'class': 'definition-list' });
+  $dl.append($('<dt>', { 'class': 'definition-list__label text-emphasis', text: '총 보조금' }));
+  $dl.append($('<dd>', { 'class': 'definition-list__description text-emphasis', text: won(car.totalAmt) }));
+  $link.append($('<div>', { 'class': 'column-list__content' }).append($dl));
+
+  // 삭제 버튼
+  var $del = $('<button>', {
+    type: 'button', title: '삭제',
+    'class': 'button button--xsmall button--icon button--delete',
+    'data-seq': car.seq
+  });
+  $del.append($('<i>', { 'class': 'svg-icon delete', 'aria-hidden': 'true' }));
+  $del.append($('<span>', { 'class': 'button__label', text: '해당 모델 삭제' }));
+  $link.append($del);
+
+  return $item.append($link);
+}
+
+// '차량 추가' 카드
+function fnBuildAddCard() {
+  var $btn = $('<button>', {
+    type: 'button',
+    'data-target': 'modalComparisonCar',
+    'data-target-size': '1100',
+    'class': 'column-list__button-add'
+  });
+  $btn.append($('<i>', { 'class': 'svg-icon plus', 'aria-hidden': 'true' }));
+  $btn.append($('<b>', { 'class': 'button__label', text: '차량 추가' }));
+  $btn.append($('<span>', { 'class': 'text-info', text: '최대 ' + MAX_COMPARE + '개까지 비교 가능' }));
+  return $('<li>', { 'class': 'column-list__item' }).append($btn);
+}
+
+function fnRenderCards(list) {
+  var $wrap = $('#carCompareCards').empty();
+  for (var i = 0; i < list.length; i++) {
+    $wrap.append(fnBuildCard(list[i]));
+  }
+  if (list.length < MAX_COMPARE) {
+    $wrap.append(fnBuildAddCard());
+  }
+}
+</script>
+<script>
+function fnLoadCompare() {
+  if (selectedSeqs.length === 0) {
+    fnRenderCompare([]);
+    return;
+  }
+  $.ajax({
+    url: '/buySupprt/selectCarCompare.ajax',
+    type: 'GET',
+    dataType: 'json',
+    data: {
+      seqs: selectedSeqs.join(','),
+      year: BASE_YEAR,
+      localCd: $('#carCompareSigungu').val() || ''
+    }
+  }).done(function (res) {
+    fnRenderCompare((res && res.list) ? res.list : []);
+  }).fail(function () {
+    alert('비교 정보를 불러오지 못했습니다.');
+  });
+}
+
+function fnAddCar(seq) {
+  seq = String(seq);
+  if (selectedSeqs.indexOf(seq) > -1) { return; }
+  if (selectedSeqs.length >= MAX_COMPARE) {
+    alert('최대 ' + MAX_COMPARE + '개까지 비교할 수 있습니다.');
+    return;
+  }
+  selectedSeqs.push(seq);
+  fnLoadCompare();
+}
+
+// 지역 셀렉트 채우기 (문자열 결합 대신 option 요소 생성 -> 자동 이스케이프)
+function fnFillLocalSelect($sel, list) {
+  $sel.empty().append($('<option>', { value: '', text: '선택' }));
+  for (var i = 0; i < list.length; i++) {
+    $sel.append($('<option>', {
+      value: (list[i].LOCAL_CD === null || list[i].LOCAL_CD === undefined) ? '' : String(list[i].LOCAL_CD),
+      text: (list[i].LOCAL_NM === null || list[i].LOCAL_NM === undefined) ? '' : String(list[i].LOCAL_NM)
+    }));
+  }
+}
+
+$(function () {
+  // 시도 셀렉트 채우기
+  fnFillLocalSelect($('#carCompareDo'), DO_LIST);
+
+  // 에너지 비용 산정 단가 안내
+  var feeNote = [];
+  if (EV_FEE) { feeNote.push('전기 ' + EV_FEE.toLocaleString() + '원/kWh'); }
+  if (H2_FEE) { feeNote.push('수소 ' + H2_FEE.toLocaleString() + '원/kg'); }
+  $('#energyFeeNote').text(feeNote.length ? '(' + feeNote.join(' · ') + ')' : '');
+
+  // 시도 변경 -> 시군구 조회
+  $('#carCompareDo').on('change', function () {
+    var doCd = $(this).val();
+    // 시군구를 '선택'으로 되돌리므로 이전 지자체의 지방비/총보조금/실구매가가 남지 않도록 즉시 재조회한다.
+    fnFillLocalSelect($('#carCompareSigungu'), []);
+    fnLoadCompare();
+    if (!doCd) { return; }
+    $.ajax({
+      url: '/buySupprt/getLocalCd1.ajax',
+      type: 'GET', dataType: 'json', data: { localDo_cd: doCd }
+    }).done(function (res) {
+      fnFillLocalSelect($('#carCompareSigungu'), (res && res.list) ? res.list : []);
+    });
+  });
+
+  // 시군구 변경 -> 재조회
+  $('#carCompareSigungu').on('change', fnLoadCompare);
+
+  // 카드 삭제 (동적 생성이라 위임 바인딩)
+  $('#carCompareCards').on('click', '.button--delete', function () {
+    var seq = String($(this).data('seq'));
+    var idx = selectedSeqs.indexOf(seq);
+    if (idx > -1) { selectedSeqs.splice(idx, 1); }
+    fnLoadCompare();
+  });
+
+  // 초기화
+  $('.board-toolbar__options .button--secondary').filter(function () {
+    return $(this).find('.button__label').text().indexOf('초기화') > -1;
+  }).on('click', function () {
+    selectedSeqs = [];
+    fnLoadCompare();
+  });
+
+  fnRenderCompare([]);
+});
+</script>
+<script>
+var compareGrid = null;
+var comparePageNo = 1;
+var comparePageCount = 1;
+var COMPARE_PAGE_SIZE = 10;
+
+// 비교 목록에 담긴 차량인지 판별 (모달 행 강조·버튼 상태에 사용)
+function fnIsSelectedCar(seq) {
+  return selectedSeqs.indexOf(String(seq)) > -1;
+}
+
+function fnRenderCompareSelectedCount() {
+  $('#compareSelectedCount').text('(' + selectedSeqs.length + ' / ' + MAX_COMPARE + ' 선택)');
+}
+
+function fnCompareColumnDefs() {
+  return [
+    { field: 'MODEL', headerName: '차량명', minWidth: 200, cellClass: 'text-left' },
+    { field: 'MADE_COMPANY_NM', headerName: '제조사' },
+    { field: 'CAR_TYPE_SUB_NM', headerName: '차종' },
+    { field: 'SALE_PRICE', headerName: '국비 보조금' },
+    {
+      field: 'SEQ', headerName: '선택', sortable: false, width: 90,
+      cellRenderer: function (params) {
+        var selected = fnIsSelectedCar(params.value);
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'button button--xsmall button--secondary';
+        btn.disabled = selected;
+        btn.innerHTML = '<span class="button__label">' + (selected ? '선택됨' : '선택') + '</span>';
+        btn.addEventListener('click', function () {
+          if (fnIsSelectedCar(params.value)) { return; }
+          fnAddCar(params.value);
+          // 선택 결과를 바로 보여주기 위해 모달을 닫지 않고 행 상태만 갱신
+          if (compareGrid) { compareGrid.redrawRows(); }
+          fnRenderCompareSelectedCount();
+        });
+        return btn;
+      }
+    }
+  ];
+}
+
+function fnOpenCompareModal() {
+  var opener = this;
+  // 모달이 닫힌 상태(display:none)에서 그리드를 만들면 컨테이너가 0x0 이므로 표시 후 생성한다.
+  openModal('#modalComparisonCar', { width: 1100, opener: opener || null });
+
+  // 모달 표시 후 그리드 생성/갱신
+  setTimeout(function () {
+    if (compareGrid === null) {
+      compareGrid = agGrid.createGrid(document.querySelector('#myGrid'),
+        boardGridOptions({
+          columnDefs: fnCompareColumnDefs(),
+          // 이미 담긴 차량 행 강조 (게시판 목록의 선택 행 강조와 동일한 tr--selected)
+          rowClassRules: {
+            'tr--selected': function (params) { return fnIsSelectedCar(params.data.SEQ); }
+          }
+        }));
+    }
+    fnRenderCompareSelectedCount();
+    fnLoadCompareTarget(1);
+  }, 100);
+}
+
+function fnLoadCompareTarget(pageNo) {
+  $.ajax({
+    url: '/buySupprt/selectCarCompareTarget.ajax',
+    type: 'GET', dataType: 'json',
+    data: {
+      spageNo: pageNo,
+      carKind: $('#searchBoardItem02').val() || '',
+      schModel: $('#searchBoardItem03').val() || ''
+    }
+  }).done(function (res) {
+    var list = (res && res.list) ? res.list : [];
+    if (compareGrid) {
+      compareGrid.setGridOption('rowData', list);
+      setTimeout(function () { if (compareGrid) { compareGrid.sizeColumnsToFit(); } }, 50);
+    }
+
+    var page = (res && res.page) ? res.page : {};
+    var size = parseInt(page._recordCountPerPage, 10) || COMPARE_PAGE_SIZE;
+    var listCount = parseInt(page._listCount, 10) || 0;
+    comparePageNo = parseInt(page._pageNo, 10) || pageNo || 1;
+    comparePageCount = Math.max(1, Math.ceil(listCount / size));
+    fnRenderComparePagination();
+  }).fail(function () {
+    alert('차량 목록을 불러오지 못했습니다.');
+  });
+}
+
+// 응답의 page 정보로 페이지네이션을 동적 렌더 (기존 .pagination 마크업에 값만 채움)
+function fnRenderComparePagination() {
+  var $list = $('#comparePageList').empty();
+  var start = Math.max(1, Math.min(comparePageNo - 2, comparePageCount - 4));
+  var end = Math.min(comparePageCount, start + 4);
+  for (var n = start; n <= end; n++) {
+    $list.append($('<a>', {
+      href: '#none',
+      'class': 'pagination__link' + (n === comparePageNo ? ' pagination__link--selected' : ''),
+      text: n,
+      'data-num': n
+    }));
+  }
+  $('#comparePageCurrent').text(comparePageNo);
+  $('#comparePageTotal').text(comparePageCount);
+}
+
+function fnGoComparePage(next) {
+  var n = next;
+  if (next === 'first') { n = 1; }
+  else if (next === 'prev') { n = comparePageNo - 1; }
+  else if (next === 'next') { n = comparePageNo + 1; }
+  else if (next === 'last') { n = comparePageCount; }
+  n = Math.min(Math.max(1, Number(n) || 1), comparePageCount);
+  if (n === comparePageNo) { return; }
+  fnLoadCompareTarget(n);
+}
+
+$(function () {
+  // 차량추가 버튼(정적/동적 카드 모두) - 위임 바인딩
+  $(document).on('click', '[data-target="modalComparisonCar"]', fnOpenCompareModal);
+
+  // 페이징 이동 (페이지 번호는 동적 생성이라 위임 바인딩)
+  $('#comparePcPagination, #compareFractionPagination').on('click', '.pagination__button', function () {
+    fnGoComparePage($(this).data('page'));
+  });
+  $('#comparePageList').on('click', '.pagination__link', function (e) {
+    e.preventDefault();
+    fnGoComparePage(Number($(this).data('num')));
+  });
+
+  // 모달 검색 / 초기화
+  $('#modalComparisonCar').on('click', '.button--search', function () {
+    fnLoadCompareTarget(1);
+  });
+  $('#modalComparisonCar').on('click', '.button--reset', function () {
+    $('#searchBoardItem02').val('');
+    $('#searchBoardItem03').val('');
+    fnLoadCompareTarget(1);
+  });
+  $('#searchBoardItem03').on('keydown', function (e) {
+    if (e.keyCode === 13) { e.preventDefault(); fnLoadCompareTarget(1); }
+  });
+
+  // 차종 셀렉트 채우기 (문자열 결합 대신 option 요소 생성 -> 자동 이스케이프)
+  var $kind = $('#searchBoardItem02').empty().append($('<option>', { value: '', text: '전체' }));
+  for (var k = 0; k < KIND_LIST.length; k++) {
+    $kind.append($('<option>', {
+      value: (KIND_LIST[k].CAR_KIND === null || KIND_LIST[k].CAR_KIND === undefined) ? '' : String(KIND_LIST[k].CAR_KIND),
+      text: (KIND_LIST[k].CAR_KIND_NM === null || KIND_LIST[k].CAR_KIND_NM === undefined) ? '' : String(KIND_LIST[k].CAR_KIND_NM)
+    }));
+  }
+});
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
 </body>
 </html>

@@ -1,0 +1,18 @@
+/* 게시판 ag-grid 보정 (style.css 오버라이드) */
+
+/* autoHeight 그리드가 max-height(681px)에 잘려 하단 안내문구와 겹치는 문제 해제 */
+.board-list .ag-grid {
+  height: auto;
+  max-height: none;
+}
+
+/* 그리드와 하단 안내문구 사이 여백 확보 */
+.board-list + .board-description {
+  margin-top: 0.75rem;
+}
+
+/* 링크 셀을 클릭해 상세를 열 때 남는 파란 포커스 링 제거, 키보드 포커스는 유지 */
+.ag-cell-link.ag-cell-focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}

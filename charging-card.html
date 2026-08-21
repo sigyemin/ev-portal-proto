@@ -1,1419 +1,2149 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>회원카드 관리 | 충전소·요금 정보 | 무공해차 통합누리집</title>
-<link rel="stylesheet" href="css/style.css?v=20260724a">
-<link rel="stylesheet" href="css/ai-floating.css?v=20260728a">
-<link rel="stylesheet" href="css/charging.css">
-<link rel="stylesheet" href="css/auth.css?v=20260520">
-<link rel="stylesheet" href="css/board.css">
-<style>
-  /* 탭별 필터바 (표준 board-toolbar 내부 정렬) */
-  .cf-flt{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
-  .cf-flt .fld{display:flex;flex-direction:column;gap:5px;}
-  .cf-flt .fld.grow{flex:1;min-width:200px;}
-  .cf-flt label{font-size:12px;font-weight:700;color:var(--text-secondary);}
-  .cf-flt select,.cf-flt input{height:42px;padding:0 12px;border:1px solid var(--border-medium);border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;}
-  .cf-flt input{width:100%;}
-  /* 결제구분 배지 (PAY_KIND) */
-  .pay-chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 9px;white-space:nowrap;}
-  .pk-pre{background:#e7f0fe;color:#1559c2;} .pk-post{background:#fef0e0;color:#a25b00;}
-  .pk-easy{background:#e6f6ee;color:#0f7a44;} .pk-field{background:#eef2f6;color:#54616e;}
-  #histBody tr,#pointBody tr{cursor:pointer;}
-  /* 명세서 영수증(상세) */
-  .rcpt-kv{display:grid;grid-template-columns:132px 1fr;gap:8px 12px;font-size:13.5px;margin-top:4px;}
-  .rcpt-kv dt{color:var(--text-tertiary);font-weight:600;} .rcpt-kv dd{margin:0;color:var(--text-primary);font-weight:600;}
-  .rcpt-total{margin-top:16px;padding-top:14px;border-top:1px dashed var(--border-light);display:flex;justify-content:space-between;align-items:baseline;}
-  .rcpt-total b{font-size:22px;color:var(--color-primary-700);}
-  /* ── 회원카드 허브 (리스트 중심) ── */
-  .cch-bar{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:0 0 14px;}
-  .cch-bar h3{margin:0;}
-  .cch-list{width:100%;border-collapse:collapse;font-size:13.5px;}
-  .cch-list th{background:var(--color-gray-100);border-top:2px solid var(--color-gray-700);border-bottom:1px solid var(--border-light);padding:13px 10px;font-weight:700;color:var(--text-primary);text-align:center;white-space:nowrap;}
-  .cch-list td{border-bottom:1px solid var(--border-light);padding:14px 10px;text-align:center;color:var(--text-secondary);vertical-align:middle;}
-  .cch-list .cardno{font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;}
-  .cch-list .carno{font-weight:600;color:var(--text-primary);}
-  .cch-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
-  .cch-acts .btn{white-space:nowrap;}
-  .cch-empty{padding:48px 20px;text-align:center;border:1px dashed var(--border-medium);border-radius:14px;background:var(--color-gray-50);}
-  .cch-empty .ico{font-size:40px;}
-  .cch-empty h4{margin:12px 0 6px;font-size:18px;color:var(--text-primary);}
-  .cch-empty p{color:var(--text-tertiary);font-size:14px;margin:0 0 18px;}
-  .st-chip{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.6;}
-  .st-normal{background:#e6f6ee;color:#0f7a44;} .st-ship{background:#e7f0fe;color:#1559c2;}
-  .st-temp{background:#fff4e0;color:#a25b00;} .st-suspend{background:#fde7e7;color:#b5341f;}
-  .st-lost{background:#fbe2e2;color:#a01b1b;} .st-cancel{background:#eef0f3;color:#8a93a0;}
-  .st-pay{background:#fdeede;color:#b5600a;} /* 미납정지 (신규) */
-  /* 상태 셀: 상태칩 + 이용가능/불가 USE 뱃지 + 발급 미니스텝 */
-  .st-cell{display:inline-flex;flex-direction:column;align-items:center;gap:4px;}
-  .use-badge{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:-.01em;padding:1px 7px;border-radius:6px;}
-  .use-ok{background:#e6f6ee;color:#0f7a44;} .use-no{background:#fce8e8;color:#b5341f;}
-  .cc-mini{display:flex;align-items:center;gap:3px;margin-top:2px;}
-  .cc-mini i{width:6px;height:6px;border-radius:50%;background:var(--border-medium);display:inline-block;}
-  .cc-mini i.on{background:var(--color-primary-500);}
-  .cc-mini small{font-size:10.5px;color:var(--text-tertiary);font-weight:600;margin-left:3px;}
-  @media (max-width:880px){ .cch-wrap{overflow-x:auto;} .cch-list{min-width:860px;} }
-  /* 개발자용 카드상태 정의 노트 */
-  .cc-devnote{margin-top:16px;border:1px dashed var(--border-medium);border-radius:12px;background:var(--color-gray-50,#f7f8fa);}
-  .cc-devnote>summary{cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--text-secondary);list-style:none;user-select:none;}
-  .cc-devnote>summary::-webkit-details-marker{display:none;}
-  .cc-devnote>summary::before{content:'▸';margin-right:8px;color:var(--text-tertiary);}
-  .cc-devnote[open]>summary::before{content:'▾';}
-  .cc-devnote-body{padding:2px 16px 16px;font-size:12.5px;color:var(--text-secondary);line-height:1.7;}
-  .cc-devnote code{font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);font-size:11.5px;background:#eef1f4;color:#334;padding:1px 5px;border-radius:5px;}
-  .cc-devnote .ccd-lead{margin:6px 0 12px;}
-  .cc-devnote .ccd-axes{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin:0 0 12px;}
-  @media (max-width:720px){ .cc-devnote .ccd-axes{grid-template-columns:1fr;} }
-  .cc-devnote .ccd-axes>div{background:#fff;border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;}
-  .cc-devnote .ccd-todo{display:block;margin-top:4px;color:#b5600a;font-size:11.5px;}
-  .cc-devnote .ccd-tbl{width:100%;border-collapse:collapse;font-size:12px;margin:2px 0 12px;background:#fff;}
-  .cc-devnote .ccd-tbl th,.cc-devnote .ccd-tbl td{border:1px solid var(--border-light);padding:7px 9px;text-align:left;vertical-align:middle;}
-  .cc-devnote .ccd-tbl th{background:var(--color-gray-100);font-weight:700;color:var(--text-primary);white-space:nowrap;}
-  .cc-devnote .ccd-new{color:#b5600a;font-weight:800;font-size:11px;}
-  .cc-devnote .ccd-notes{margin:0;padding-left:18px;list-style:disc;}
-  .cc-devnote .ccd-notes li{margin:3px 0;}
-
-  /* ===== 충전요금 조회 (후불/선불) ===== */
-  .btn-xs{padding:3px 9px !important;font-size:11.5px !important;border-radius:6px !important;line-height:1.4;}
-  /* 과금모드 세그먼트 */
-  .cfq-seg{display:inline-flex;gap:4px;background:var(--color-gray-100);border-radius:10px;padding:4px;margin:0 0 18px;}
-  .cfq-seg-btn{border:0;background:none;padding:8px 26px;border-radius:8px;font-size:14px;font-weight:800;color:var(--text-secondary);cursor:pointer;font-family:inherit;}
-  .cfq-seg-btn.active{background:#fff;color:var(--color-primary-700);box-shadow:0 1px 4px rgba(0,0,0,.1);}
-  .cfq-panel{display:none;}
-  .cfq-panel.active{display:block;}
-  /* 월 네비 */
-  .cfq-monthnav{display:flex;align-items:center;justify-content:center;gap:16px;margin:0 0 16px;}
-  .cfq-navbtn{width:34px;height:34px;border:1px solid var(--border-medium);background:#fff;border-radius:9px;font-size:18px;color:var(--text-secondary);cursor:pointer;line-height:1;}
-  .cfq-navbtn:hover{background:var(--color-primary-50);border-color:var(--color-primary-300);}
-  .cfq-month{font-size:16px;font-weight:800;color:var(--text-primary);min-width:120px;text-align:center;}
-  /* 후불 정산 요약 + 추이 */
-  .cfq-settle{display:grid;grid-template-columns:minmax(230px,1fr) 2fr;gap:18px;align-items:center;border:1px solid var(--border-light);border-radius:14px;background:linear-gradient(135deg,#f7fbff,#f4fff8);padding:20px 22px;}
-  @media(max-width:720px){ .cfq-settle{grid-template-columns:1fr;} }
-  .cfq-settle-label{font-size:13.5px;color:var(--text-secondary);font-weight:700;display:flex;align-items:center;gap:8px;}
-  .cfq-tentative{font-size:11px;font-weight:800;color:#b5600a;background:#fdeede;border-radius:6px;padding:1px 8px;}
-  .cfq-settle-amt{margin:6px 0 2px;font-size:30px;font-weight:800;letter-spacing:-.02em;color:var(--color-primary-700);}
-  .cfq-settle-amt .won{font-size:16px;font-weight:700;margin-left:4px;color:var(--text-secondary);}
-  .cfq-settle-sub{font-size:12px;color:var(--text-tertiary);}
-  .cfq-trend{display:flex;align-items:flex-end;gap:10px;height:96px;padding-top:6px;}
-  .cfq-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:5px;}
-  .cfq-bar-fill{width:60%;max-width:34px;background:var(--color-primary-200,#bfe3cf);border-radius:5px 5px 0 0;transition:height .3s;}
-  .cfq-bar.cur .cfq-bar-fill{background:var(--color-primary-600);}
-  .cfq-bar-lab{font-size:11px;color:var(--text-tertiary);}
-  .cfq-bar.cur .cfq-bar-lab{color:var(--color-primary-700);font-weight:800;}
-  .cfq-note{font-size:12.5px;color:var(--text-secondary);margin:12px 0 6px;}
-  .cfq-guide{display:flex;flex-wrap:wrap;gap:8px 10px;margin:6px 0 14px;padding:0;list-style:none;}
-  .cfq-guide li{font-size:12px;color:var(--text-secondary);background:var(--color-gray-50);border:1px solid var(--border-light);border-radius:999px;padding:5px 12px;}
-  .cfq-guide li::before{content:'✓';color:var(--color-primary-600);font-weight:800;margin-right:6px;}
-  .cfq-meta-note{font-size:11.5px;color:var(--text-tertiary);font-weight:500;}
-  .cfq-dl{display:flex;gap:8px;}
-  /* 세션 테이블 */
-  .cfq-table{width:100%;min-width:1080px;}
-  .cfq-table th{white-space:nowrap;text-align:center;vertical-align:middle;}
-  .cfq-table td{text-align:center;vertical-align:middle;}
-  .cfq-table td.cfq-l{text-align:left;font-weight:600;color:var(--text-primary);}
-  .cfq-table .cfq-dt{font-size:12px;color:var(--text-secondary);white-space:nowrap;}
-  .cfq-free{color:#b5600a;font-weight:700;}
-  .cfq-dash{color:var(--text-tertiary);}
-  .cfq-none{padding:30px;text-align:center;color:var(--text-tertiary);}
-  .cfq-sum{background:var(--color-gray-50);font-weight:800;color:var(--text-primary);}
-  .cfq-sum td{text-align:center;}
-  .cfq-noreceipt{font-size:11.5px;color:var(--text-tertiary);}
-  .cfq-hint{margin-top:10px;}
-  .cfq-hint a{color:var(--color-secondary-700,#1f5fa8);font-weight:700;}
-  /* 로밍/결제결과 칩 */
-  .rm-badge{display:inline-block;font-size:10px;font-weight:800;color:#6b3fb0;background:#f1ecfb;border-radius:5px;padding:1px 5px;margin-left:4px;vertical-align:middle;}
-  .pr-chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 9px;white-space:nowrap;}
-  .pr-wait{background:#eef0f3;color:#5f6b7a;} .pr-ok{background:#e6f6ee;color:#0f7a44;}
-  .pr-fail{background:#fdecec;color:#c0392b;} .pr-cancel{background:#f3eef6;color:#7a5aa0;} .pr-free{background:#fdeede;color:#b5600a;}
-  /* 상태 정규화 6종 칩 */
-  .stz-charging{background:#e7f0fe;color:#1559c2;} .stz-done{background:#e6f6ee;color:#0f7a44;}
-  .stz-wait{background:#eef0f3;color:#5f6b7a;} .stz-fail{background:#fdecec;color:#c0392b;}
-  .stz-cancel{background:#fdeede;color:#b5600a;} .stz-free{background:#f1f3f5;color:#6b7681;}
-  .pr-chip[title]{cursor:help;}
-  /* 영수증(16항목) 상세 */
-  .rcpt-kv.rcpt-16{grid-template-columns:120px 1fr;gap:7px 12px;}
-  .rcpt-16 dt{align-self:start;}
-  .rcpt-mut{color:var(--text-tertiary);font-weight:500;}
-  .rcpt-auth{font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);font-weight:700;letter-spacing:.3px;}
-  .rcpt-foot{margin-top:12px;font-size:12px;color:var(--text-tertiary);line-height:1.65;}
-  /* 월별 명세서 (인쇄용) */
-  .stmt-print{display:none;}
-  .stmt-doc{max-width:720px;margin:0 auto;color:#1f2937;font-size:13px;line-height:1.6;}
-  .stmt-head{border-bottom:2px solid var(--color-primary-600);padding-bottom:12px;margin-bottom:16px;}
-  .stmt-brand{font-size:11px;color:var(--color-primary-700);font-weight:800;letter-spacing:.02em;}
-  .stmt-title{font-size:26px;font-weight:800;margin:6px 0;letter-spacing:-.02em;}
-  .stmt-sub{font-size:12.5px;color:#5f6b7a;}
-  .stmt-member{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;border:1px solid #e2e6ea;border-radius:10px;padding:12px 16px;margin:0 0 16px;background:#fafcfb;}
-  .stmt-member dt{color:#5f6b7a;font-size:12px;} .stmt-member dd{margin:0;font-weight:700;}
-  .stmt-emph{display:flex;justify-content:space-between;align-items:center;gap:16px;border:1.2px solid #b7e4c7;background:linear-gradient(135deg,#f7fbff,#f4fff8);border-radius:12px;padding:16px 20px;margin-bottom:18px;flex-wrap:wrap;}
-  .stmt-emph-l span{display:block;font-size:12px;color:#5f6b7a;font-weight:700;} .stmt-emph-l b{font-size:28px;color:var(--color-primary-700);font-weight:800;}
-  .stmt-emph-r{text-align:right;font-size:13px;} .stmt-emph-r b{font-weight:800;}
-  .stmt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
-  .stmt-card{border:1px solid #e2e6ea;border-radius:10px;padding:14px;text-align:center;} .stmt-card span{display:block;font-size:12px;color:#5f6b7a;margin-bottom:6px;} .stmt-card b{font-size:18px;font-weight:800;}
-  .stmt-card.hl{background:#eefaf2;border-color:#b7e4c7;} .stmt-card.hl b{color:var(--color-primary-700);}
-  .stmt-table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:12.5px;}
-  .stmt-table caption{text-align:left;font-weight:800;font-size:13px;margin-bottom:6px;color:#1f2937;}
-  .stmt-table th{background:#eef2f0;border-top:1.4px solid #4a545f;border-bottom:1px solid #d7dbe0;padding:8px 10px;text-align:left;font-weight:700;}
-  .stmt-table td{border-bottom:1px solid #e5e8ec;padding:8px 10px;} .stmt-table .r{text-align:right;}
-  .stmt-table tfoot td{background:#f7f9f8;font-weight:800;border-top:1.4px solid #4a545f;}
-  .stmt-rm{display:inline-block;font-size:10px;font-weight:800;color:#6b3fb0;background:#f1ecfb;border-radius:5px;padding:1px 5px;margin-left:4px;}
-  .stmt-notes{border-top:1px solid #e5e8ec;padding-top:10px;} .stmt-notes p{margin:2px 0;font-size:11px;color:#5f6b7a;}
-  @media print{
-    body.stmt-printing > *:not(#stmtPrint){display:none !important;}
-    body.stmt-printing #stmtPrint{display:block !important;}
-    @page{margin:14mm;}
-  }
-  /* 표준 정렬 헤더 (.data-table th.sortable 스타일 재사용) */
-  .cfq-table th.sortable{cursor:pointer;user-select:none;}
-  .cfq-table th.sortable:hover{color:var(--color-primary-700);}
-  #pTable th.sortable{cursor:pointer;user-select:none;}
-  #pTable th.sortable:hover{color:var(--color-primary-700);}
-  /* 선불 요약 */
-  .cfq-presum{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start;margin-top:2px;}
-  @media(max-width:720px){ .cfq-presum{grid-template-columns:1fr;} }
-  .cfq-pre-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-  .cfq-pre-card{border:1px solid var(--border-light);border-radius:12px;background:#fff;padding:14px;text-align:center;}
-  .cfq-pre-card span{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;}
-  .cfq-pre-card b{font-size:18px;font-weight:800;color:var(--text-primary);}
-  .cfq-pre-card.hl{background:linear-gradient(135deg,#f4fff8,#eefaf2);border-color:#b7e4c7;}
-  .cfq-pre-card.hl b{color:var(--color-primary-700);}
-  .cfq-deposits{border:1px solid var(--border-light);border-radius:12px;background:#fff;padding:12px 14px;}
-  .cfq-sub-h{font-size:12.5px;font-weight:800;color:var(--text-secondary);margin-bottom:8px;}
-  .cfq-deplist{list-style:none;margin:0;padding:0;}
-  .cfq-deplist li{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed var(--border-light);font-size:13px;}
-  .cfq-deplist li:last-child{border-bottom:0;}
-  .cfq-deplist .dep-dt{color:var(--text-secondary);} .cfq-deplist .dep-amt{flex:1;font-weight:700;color:var(--color-primary-700);}
-  .cfq-empty{margin-top:14px;}
-  .cfq-norc{font-size:13.5px;color:var(--text-secondary);line-height:1.7;}
-  /* 개발 참고 패널 (§6) */
-  .dev-note{margin-top:22px;border:1px dashed var(--color-primary-300,#8fc9a8);border-radius:12px;background:#f6faf7;}
-  .dev-note>summary{cursor:pointer;padding:12px 16px;font-size:13px;font-weight:800;color:var(--color-primary-700);list-style:none;user-select:none;}
-  .dev-note>summary::-webkit-details-marker{display:none;}
-  .dev-note>summary::before{content:'▸';margin-right:8px;}
-  .dev-note[open]>summary::before{content:'▾';}
-  .dev-note-body{padding:2px 18px 18px;font-size:12.5px;color:var(--text-secondary);line-height:1.7;}
-  .dev-note .dn-lead{margin:6px 0 12px;color:var(--text-tertiary);}
-  .dev-note code{font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);font-size:11px;background:#e9f2ec;color:#245;padding:1px 5px;border-radius:5px;}
-  .dev-note .dn-list{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;margin:0;}
-  @media(max-width:640px){ .dev-note .dn-list{grid-template-columns:1fr;} .dev-note .dn-list dt{margin-top:8px;} }
-  .dev-note .dn-list dt{font-weight:800;color:var(--text-primary);}
-  .dev-note .dn-list dd{margin:0;}
-
-  /* 모달 */
-  .cc-modal-bd{position:fixed;inset:0;background:rgba(15,23,32,.46);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
-  .cc-modal-bd.open{display:flex;}
-  .cc-modal{background:#fff;border-radius:16px;max-width:600px;width:100%;max-height:88vh;overflow:auto;padding:26px 26px 22px;box-shadow:0 18px 50px rgba(0,0,0,.25);}
-  .cc-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;}
-  .cc-modal-head h3{margin:0;font-size:20px;}
-  .cc-modal-sub{color:var(--text-tertiary);font-size:13.5px;margin:2px 0 18px;}
-  .cc-modal-x{border:0;background:none;font-size:22px;line-height:1;color:#9aa3af;cursor:pointer;padding:2px 6px;}
-  .cc-modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap;}
-
-  /* 발급조회 스텝퍼 */
-  .cc-steps{display:flex;align-items:flex-start;margin:6px 0 4px;}
-  .cc-step{flex:1;text-align:center;position:relative;min-width:0;}
-  .cc-step::before{content:'';position:absolute;top:18px;left:-50%;width:100%;height:3px;background:var(--border-light);z-index:0;}
-  .cc-step:first-child::before{display:none;}
-  .cc-step.done::before,.cc-step.active::before{background:var(--color-primary-500);}
-  .cc-step .dot{position:relative;z-index:1;width:38px;height:38px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:#fff;border:2px solid var(--border-medium);color:var(--text-tertiary);}
-  .cc-step.done .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;}
-  .cc-step.active .dot{background:var(--color-primary-600);border-color:var(--color-primary-600);color:#fff;box-shadow:0 0 0 5px var(--color-primary-100,#e6f3ec);}
-  .cc-step .slabel{font-size:13px;font-weight:700;color:var(--text-secondary);}
-  .cc-step.done .slabel,.cc-step.active .slabel{color:var(--text-primary);}
-  .cc-step .sdate{font-size:11.5px;color:var(--text-tertiary);margin-top:3px;}
-  .cc-kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13.5px;margin-top:18px;}
-  .cc-kv dt{color:var(--text-tertiary);font-weight:600;} .cc-kv dd{margin:0;color:var(--text-primary);font-weight:600;}
-  /* 분실신고 2단계 */
-  .cc-lost-step{border:1px solid var(--border-light);border-radius:12px;padding:16px 18px;margin-top:12px;}
-  .cc-lost-step.muted{opacity:.5;}
-  .cc-lost-step .n{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--color-primary-600);color:#fff;font-weight:800;font-size:13px;align-items:center;justify-content:center;margin-right:8px;}
-  /* [ISS-042] 배송지 우편번호 찾기 — charging-card-apply.html(회원카드 신청) 컴포넌트 정의를 동일하게 이식(사이트 일관성) */
-  .cc-field { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
-  .cc-inline { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .cc-mini-btn { white-space:nowrap; padding:10px 16px; background:var(--color-gray-700); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-</style>
+<title>회원카드 관리</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
+  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
+  <script src="js/common/common_util.js?v=20260821f"></script>
+  <script src="js/proto-api.js?v=20260821f"></script>
+  <script src="js/proto-data.js?v=20260821f"></script>
+  <script src="js/proto-mock.js?v=20260821f"></script>
 </head>
 <body>
-<a href="#main" class="skip-link" data-i18n="skip.tocontent">본문 바로가기</a>
-<script>window.__activeNav = 'charging';</script>
 <div id="header-slot"></div>
-
-<main id="main">
-  <section class="page-hero compact">
-    <div class="container container-wide">
-      <nav class="breadcrumb" aria-label="경로">
-        <a href="charging-find.html?tab=map">충전소·요금 정보</a><span class="sep" aria-hidden="true">›</span>
-        <a href="charging-card.html?tab=mycard">회원카드 관리</a><span class="sep" aria-hidden="true">›</span>
-        <span class="current" aria-current="page">내 회원카드</span>
-      </nav>
-      <h1 data-i18n="charging.card.title">회원카드 관리</h1>
-      <p class="hero-lead" data-i18n-html="charging.card.lead">내 보유 카드를 한 곳에서 — <strong>발급조회·정보수정·분실신고·재발급</strong>을 카드별로 처리합니다.</p>
-    </div>
-  </section>
-
-  <nav class="tab-nav">
-    <div class="container container-wide" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <div class="tabs-pill" data-tabs id="cardTabs">
-        <button class="tab active" data-tab="mycard" type="button">내 회원카드</button>
-        <button class="tab" data-tab="history" type="button" data-i18n="charging.card.tab.history">충전요금 조회</button>
-        <!-- [ISS-076] 법인회원 전용 3번째 탭 — 개인회원 미노출(로그인 회원 사업자번호 유무 분기). 데모는 우측 회원유형 토글로 전환. -->
-        <button class="tab" data-tab="appwallet" type="button" id="tabAppWallet" data-i18n="charging.card.tab.appwallet" hidden>법인 앱 카드지갑 관리</button>
-      </div>
-      <!-- [ISS-076] ★데모 전용 회원유형 토글 — 실연동 시 제거(로그인 회원 사업자번호 유무로 자동 판정). 개인=탭 숨김 / 법인=탭 노출 -->
-      <button type="button" class="btn btn-ghost btn-sm" id="memTypeToggle" style="margin-left:auto;" title="데모: 개인/법인 회원 전환"><span data-i18n="charging.card.aw.memtype">회원유형</span>: <b id="memTypeLabel">법인회원</b> · <span data-i18n="charging.card.aw.switch">전환</span></button>
-    </div>
-  </nav>
-
-  <section class="section-sm">
-    <div class="container container-wide">
-
-      <!-- ===== 내 회원카드 (리스트 허브) ===== -->
-      <div class="tab-content active" data-tab-content="mycard">
-        <div class="cch-bar">
-          <div>
-            <h3 class="section-h">내 회원카드</h3>
-            <p style="color:var(--text-secondary);font-size:13.5px;margin:4px 0 0;">로그인한 회원정보 기준으로 보유 카드를 표시합니다. 카드별로 발급조회·정보수정·분실신고·재발급을 처리하세요.</p>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <button type="button" class="btn btn-ghost btn-sm" id="ccDemoToggle" title="데모: 빈 상태/보유 상태 전환">빈 상태 미리보기</button>
-            <button type="button" class="btn btn-secondary" id="ccBatchBtn" data-i18n="charging.card.batch">결제카드 일괄등록</button>
-            <!-- [ISS-077] 결제카드 등록해지(일괄해제) — AS-IS paymentCardRegister.jsp는 등록·해제 같은 화면/리스트/체크박스. ★'회원카드 해지'와 다른 개념(후불 빌링만 제거) -->
-            <button type="button" class="btn btn-ghost" id="ccUnbatchBtn" data-i18n="charging.card.unbatch">결제카드 일괄해제</button>
-            <a href="charging-card-apply.html" class="btn btn-primary">＋ 회원카드 신청</a>
-          </div>
-        </div>
-
-        <!-- 필터바 (표준) -->
-        <div class="board-toolbar">
-          <div class="cf-flt">
-            <div class="fld"><label for="mcType">카드유형</label>
-              <select id="mcType"><option value="">전체</option><option>실물카드</option><option>모바일카드</option><option>실물카드(EV등록)</option></select></div>
-            <div class="fld"><label for="mcStat">카드상태</label>
-              <!-- [ISS-089] 상태필터 '해지' 제거 — AS-IS EVCS_SMART_CARD DEL_YN·해지로직 부재 -->
-              <select id="mcStat"><option value="">전체</option><option value="normal">정상</option><option value="ship">발급중</option><option value="suspend">일시정지</option><option value="pay">미납정지</option><option value="lost">분실(정지)</option></select></div>
-            <div class="fld"><label for="mcPay">결제카드</label>
-              <select id="mcPay"><option value="">전체</option><option value="y">등록</option><option value="n">미등록</option></select></div>
-            <div class="fld grow"><label for="mcSearch">검색</label>
-              <input id="mcSearch" type="text" placeholder="카드번호·차량번호 검색"></div>
-            <button type="button" class="btn" id="mcReset">초기화</button>
-          </div>
-        </div>
-        <div class="board-result-meta"><div>전체 <strong id="mcCount">0</strong>건</div></div>
-
-        <!-- 리스트 (JS 렌더) — 2번째 이미지(회원카드 정보) 컬럼 반영 -->
-        <div class="cch-wrap" id="ccListWrap">
-          <table class="cch-list">
-            <thead>
-              <tr>
-                <th style="width:44px;text-align:center;"><input type="checkbox" id="ccSelectAll" aria-label="일괄등록 대상 전체 선택"></th><th>NO</th><th>회원카드번호</th><th>카드유형</th><th>차량번호</th><th>결제카드</th><th>카드상태</th><th>관리</th>
-              </tr>
-            </thead>
-            <tbody id="ccListBody"><!-- rendered --></tbody>
-          </table>
-        </div>
-
-        <ul style="font-size:12.5px;color:var(--text-tertiary);line-height:1.8;margin:12px 0 0;padding-left:16px;list-style:disc;">
-          <!-- TODO: 차량번호 중복은 한국자동차환경협회 소관 — 협회 전용 회원카드 문의번호가 확인되면 1661-0970 대신 그 번호로 교체 -->
-          <li>차량번호가 중복일 경우 누리집 콜센터 1661-0970로 문의 바랍니다.</li>
-          <li>'실물카드(EV등록)' 회원과 '결제실패 내역이 있는 카드'는 결제카드 일괄등록이 되지 않습니다.</li>
-        </ul>
-
-        <!-- 빈 상태 -->
-        <div class="cch-empty" id="ccEmpty" style="display:none;">
-          <div class="ico" aria-hidden="true">💳</div>
-          <h4>보유한 회원카드가 없습니다</h4>
-          <p>환경부 무공해차 통합 회원카드를 신청하면 전국 모든 충전소를 로밍 수수료 없이 이용할 수 있습니다.</p>
-          <a href="charging-card-apply.html" class="btn btn-primary btn-lg">회원카드 신청하기</a>
-        </div>
-
-        <div class="alert alert-info mt-6">
-          <div class="alert-icon"></div>
-          <div class="alert-body"><strong>차량번호 중복 안내</strong> 이미 다른 회원에게 발급된 차량번호로는 신규 발급이 제한됩니다(차량 1대당 1카드). <!-- TODO: 차량번호 중복은 한국자동차환경협회 소관 — 협회 전용 회원카드 문의번호가 확인되면 1661-0970 대신 그 번호로 교체 -->중복 시 발급이 불가하며, 자세한 사항은 누리집 콜센터(1661-0970)로 문의해 주세요. <span style="color:var(--text-tertiary);">※ 예외차량(중복확인 면제)은 기관 관리 영역으로 본 화면에서 등록·노출되지 않습니다.</span></div>
-        </div>
-
-        <!-- ===== 개발자용: 카드상태 정의 (레거시 2축 우선순위 판정) ===== -->
-        <details class="cc-devnote">
-          <summary>🛠 카드상태 정의 (개발자용) — 단일코드 아님, 2축 우선순위 판정</summary>
-          <div class="cc-devnote-body">
-            <p class="ccd-lead">표시 상태는 저장된 단일 상태코드가 아니라 <b>2축 플래그</b>를 <code>resolveStatus()</code>로 <b>위에서부터 먼저 매칭</b>해 결정합니다.</p>
-
-            <div class="ccd-axes">
-              <div><b>축1 · 발급진행</b> <code>issueStatCd</code><br>
-                <code>0001</code> 신청접수 → <code>0002</code> 발급(제작) → <code>0003</code> 발송(등기) → <code>0004</code> 수령완료 · <code>0005</code> 반려
-                <span class="ccd-todo">※ TODO: EVCS_CODE_DETAIL 확정 전 잠정 코드·라벨</span></div>
-              <div><b>축2 · 운영플래그</b> (Y/N)<br>
-                <code>lossYn</code> 분실 · <code>paymentYn</code> 미납 · <code>stopYn</code> 일시정지
-                <span class="ccd-todo">※ [ISS-089] delYn(해지)=AS-IS(EVCS_SMART_CARD) 컬럼·로직 부재로 제거</span></div>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>충전소·요금 정보</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>회원카드 관리</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>내 회원카드</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">회원카드 관리</h1>
+              <p class="page-header__description">내 보유 카드를 한 곳에서, 발급조회·정보수정·분실신고·재발급을 카드별로 처리합니다.</p>
             </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
 
-            <table class="ccd-tbl">
-              <thead><tr><th>우선순위</th><th>판정 조건</th><th>표시 상태</th><th>USE</th><th>노출 액션</th></tr></thead>
-              <!-- [ISS-089] delYn=Y(해지) 행 제거 + 전 행 액션에서 '해지' 제거 — AS-IS DEL_YN·해지로직 부재 -->
-              <tbody>
-                <tr><td>1</td><td><code>lossYn=Y</code></td><td><span class="st-chip st-lost">분실(정지)</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b></td></tr>
-                <tr><td>2</td><td><code>paymentYn=Y</code> <span class="ccd-new">★신규</span></td><td><span class="st-chip st-pay">미납정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b></td></tr>
-                <tr><td>3</td><td><code>stopYn=Y</code></td><td><span class="st-chip st-suspend">일시정지</span></td><td>이용불가</td><td>발급조회 · 정보수정 · <b>재발급</b></td></tr>
-                <tr><td>4</td><td><code>issueStatCd ≠ 0004</code></td><td><span class="st-chip st-ship">발급중</span></td><td>단계표시</td><td>발급조회 · <b>분실신고</b> · 정보수정</td></tr>
-                <tr><td>5</td><td>그 외 (수령완료·플래그 전부 N)</td><td><span class="st-chip st-normal">정상</span></td><td>이용가능</td><td>발급조회 · <b>분실신고</b> · 정보수정</td></tr>
-              </tbody>
-            </table>
-
-            <ul class="ccd-notes">
-              <li><b>우선순위 예:</b> 분실·미납·정지 플래그가 동시에 Y여도 위 순서상 <b>분실</b>로 판정(분실 &gt; 미납 &gt; 정지).</li>
-              <li><b>USE 뱃지:</b> 정상=이용가능 / 분실·미납·정지=이용불가. <b>발급중</b>은 가·불가 대신 진행단계(●●●○) 표시. (레거시 <code>USE_YN=(LOSS_YN=N &amp; STOP_YN=N)</code>에 미납 축 확장)</li>
-              <li><b>액션 매핑:</b> 발급조회=항상 · 분실신고=정상/발급중 · 정보수정=항상 · 재발급=일시정지/미납/분실.</li>
-              <li><b>상태 전이:</b> 분실신고→<code>lossYn='Y'</code> (단일 상태코드 재대입 없음). <span class="ccd-todo">※ [ISS-089] 해지(delYn) 전이 제거 — AS-IS 부재</span></li>
+          <!-- tab : PC버전 -->
+          <div class="tab tab--nav pc-only">
+            <ul class="tab__list">
+              <li class="tab__item tab__item--selected" data-tab="card"><button type="button" class="tab__button">내 회원카드</button></li>
+              <li class="tab__item" data-tab="wallet"><button type="button" class="tab__button">법인 앱 카드지갑 관리</button></li>
             </ul>
           </div>
-        </details>
+          <!-- //tab -->
+          <!-- tab : MOBILE버전 -->
+          <div class="tab tab--mobile mobile-only">
+            <select title="탭메뉴" name="tabNavigation" id="tabNavigation" class="select">
+              <option value="card" selected>내 회원카드</option>
+              <option value="wallet">법인 앱 카드지갑 관리</option>
+            </select>
+          </div>
+          <!-- //tab -->
+
+          <div class="tab-contents">
+          <section id="tabPanel01" class="tab-content tab-content--current">
+
+          <!-- 내 회원카드 -->
+          <div class="board-wrapper" id="sectionMyCard">
+            <div class="board-toolbar">
+              <div class="heading-group">
+                <h2 class="heading-title">
+                  <i class="svg-icon symbol-electricity" aria-hidden="true"></i>
+                  내 회원카드
+                </h2>
+                <p class="heading-description">보유 카드와 발급 대기 중인 신청 건을 함께 보여줍니다. 카드는 결제카드를 등록할 수 있고, 신청 건은 접수 상태에서만 변경·삭제할 수 있습니다.</p>
+              </div>
+            </div>
+            <!-- 게시판 검색폼 -->
+            <div class="board-search">
+              <!-- 검색폼 -->
+              <div class="search-form">
+                <div class="search-form__elements">
+                  <!-- 폼 항목 -->
+                  <div class="element-group">
+                    <div class="element-group__label">
+                      <label for="s_card_type" class="element-label">카드유형</label>
+                    </div>
+                    <div class="element-group__control">
+                      <select id="s_card_type" class="select">
+                        <option value="">전체</option>
+                        
+                        <option value=""></option>
+                        
+                      </select>
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                  <!-- 폼 항목 -->
+                  <div class="element-group">
+                    <div class="element-group__label">
+                      <label for="s_use_yn" class="element-label">카드상태</label>
+                    </div>
+                    <div class="element-group__control">
+                      <select id="s_use_yn" class="select">
+                        <option value="">전체</option>
+                        <option value="Y">사용가능</option>
+                        <option value="N">사용불가</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                  <!-- 폼 항목 -->
+                  <div class="element-group">
+                    <div class="element-group__label">
+                      <label for="s_bill_key_yn" class="element-label">결제카드</label>
+                    </div>
+                    <div class="element-group__control">
+                      <select id="s_bill_key_yn" class="select">
+                        <option value="">전체</option>
+                        <option value="Y">등록</option>
+                        <option value="N">미등록</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                  <!-- 폼 항목 -->
+                  <div class="element-group element-group--keyword">
+                    <div class="element-group__label">
+                      <label for="s_keyword" class="element-label">검색</label>
+                    </div>
+                    <div class="element-group__control">
+                      <input type="text" id="s_keyword" placeholder="카드번호 또는 차량번호" class="text-input" />
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                </div>
+                <div class="search-form__actions">
+                  <button type="button" class="button button--primary button--search">
+                    <span class="button__label">검색</span>
+                  </button>
+                  <button type="button" class="button button--secondary button--reset">
+                    <span class="button__label">초기화</span>
+                  </button>
+                </div>
+              </div>
+              <!-- //검색폼 -->
+            </div>
+            <!-- //게시판 검색폼 -->
+            <!-- 게시판 도구모음 -->
+            <div class="board-toolbar">
+              <div class="board-toolbar__total">
+                <p class="total-number">총 <strong class="total-number__total">0</strong>건</p>
+              </div>
+              <div class="board-toolbar__options">
+                <button type="button" class="button button--secondary" id="btnMultiRegist">
+                  <i class="svg-icon zoom-plus" aria-hidden="true"></i>
+                  <span class="button__label">결제카드 일괄등록</span>
+                </button>
+                <a href="/mngInqire/initMemberCardApplicationAction.do" class="button button--secondary">
+                  <i class="svg-icon card" aria-hidden="true"></i>
+                  <span class="button__label">회원카드 신청</span>
+                </a>
+              </div>
+            </div>
+            <!-- //게시판 도구모음 -->
+            <!-- 게시판 목록 -->
+            <div class="board-list">
+              <div class="table-scroll table-scroll--horizontal"><!-- 모바일 가로스크롤 -->
+                <table class="table">
+                  <caption>내 회원카드 목록</caption>
+                  <colgroup>
+                    <col style="width: 4%" />
+                    <col style="width: 5%" />
+                    <col style="width: 14%" />
+                    <col style="width: 10%" />
+                    <col style="width: 11%" />
+                    <col style="width: 13%" />
+                    <col style="width: 11%" />
+                    <col />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <div class="checkbox">
+                          <input type="checkbox" id="checkAllCards" class="checkbox__input" />
+                          <label for="checkAllCards" class="checkbox__label">
+                            <span class="blind">전체선택</span>
+                          </label>
+                        </div>
+                      </th>
+                      <th scope="col">번호</th>
+                      <th scope="col">회원카드 번호</th>
+                      <th scope="col">카드유형</th>
+                      <th scope="col">차량번호</th>
+                      <th scope="col">결제카드</th>
+                      <th scope="col">카드상태</th>
+                      <th scope="col">관리</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cardListBody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="board-description">
+              <ul class="bullet bullet--refer">
+                <li>차량번호가 중복일 경우 전기차 헬프데스크 1661-9408로 문의 바랍니다.</li>
+                <li>'한전등록회원'과 '결제실패 내역이 있는 카드'는 일괄등록이 되지 않습니다.</li>
+                <li>분실/정지 신청은 결제 실패 내역이 없는 사용가능 카드만 가능합니다.</li>
+                <li>발급 대기 중인 신청 건은 회원카드 번호가 '미발급'으로 표시되며, 결제카드는 카드 발급 후 등록할 수 있습니다.</li>
+                <li>발급이 완료된 카드의 신청·발급 이력은 관리의 '발급조회'에서 확인할 수 있습니다.</li>
+              </ul>
+            </div>
+            <!-- //게시판 목록 -->
+            <!-- 페이징 -->
+            <div class="pagination pc-only">
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-first"></i>
+                <span class="ir-pm">첫 페이지</span>
+              </button>
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-prev"></i>
+                <span class="ir-pm">이전</span>
+              </button>
+              <div class="pagination__list"></div>
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-next"></i>
+                <span class="ir-pm">다음</span>
+              </button>
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-last"></i>
+                <span class="ir-pm">마지막 페이지</span>
+              </button>
+            </div>
+            <!-- 모바일 전용 -->
+            <div class="pagination pagination--fraction">
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-prev"></i>
+                <span>이전</span>
+              </button>
+              <div class="pagination__text">
+                <span class="pagination__current">1</span>
+                <span class="pagination__total">1</span>
+              </div>
+              <button type="button" class="pagination__button">
+                <span>다음</span>
+                <i class="svg-icon arrow-next"></i>
+              </button>
+            </div>
+            <!-- //페이징 -->
+          </div>
+          <!-- //내 회원카드 -->
+
+          <div class="notifications">
+            <strong class="notifications__title">
+              <i class="svg-icon info" aria-hidden="true"></i>
+              차량번호 중복 안내
+            </strong>
+            <p class="notifications__description">
+              이미 다른 회원에게 발급된 차량번호로는 신규 발급이 제한됩니다.(차량 1대당 1카드)<br />
+              중복 시 발급이 불가하며, 자세한 사항은 누리집 콜센터(1661-0970)로 문의해 주세요.
+            </p>
+          </div>
+
+          </section>
+
+          <section id="tabPanel02" class="tab-content">
+          <!-- 법인 앱 카드지갑 -->
+          <div class="board-wrapper" id="sectionWallet">
+            <div class="board-toolbar">
+              <div class="heading-group">
+                <h2 class="heading-title">
+                  <i class="svg-icon symbol-electricity" aria-hidden="true"></i>
+                  법인 앱 카드지갑 관리
+                </h2>
+                <p class="heading-description">법인 회원카드가 등록된 앱 카드지갑 목록입니다. 등록된 핸드폰번호를 확인하고 삭제할 수 있습니다.</p>
+              </div>
+            </div>
+            <!-- 게시판 검색폼 -->
+            <div class="board-search">
+              <!-- 검색폼 -->
+              <div class="search-form">
+                <div class="search-form__elements">
+                  <!-- 폼 항목 -->
+                  <div class="element-group">
+                    <div class="element-group__label">
+                      <label for="s_card_no" class="element-label">카드번호</label>
+                    </div>
+                    <div class="element-group__control">
+                      <input type="text" id="s_card_no" maxlength="16" placeholder="카드번호 4자 이상" class="text-input" />
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                  <!-- 폼 항목 -->
+                  <div class="element-group">
+                    <div class="element-group__label">
+                      <label for="s_m_phone_no" class="element-label">핸드폰번호</label>
+                    </div>
+                    <div class="element-group__control">
+                      <input type="text" id="s_m_phone_no" maxlength="20" placeholder="핸드폰번호 4자 이상" class="text-input" />
+                    </div>
+                  </div>
+                  <!-- //폼 항목 -->
+                </div>
+                <div class="search-form__actions">
+                  <button type="button" class="button button--primary button--search">
+                    <span class="button__label">검색</span>
+                  </button>
+                  <button type="button" class="button button--secondary button--reset">
+                    <span class="button__label">초기화</span>
+                  </button>
+                </div>
+              </div>
+              <!-- //검색폼 -->
+            </div>
+            <!-- //게시판 검색폼 -->
+            <!-- 게시판 도구모음 -->
+            <div class="board-toolbar">
+              <div class="board-toolbar__total">
+                <p class="total-number">총 <strong class="total-number__total">0</strong>건</p>
+              </div>
+            </div>
+            <!-- //게시판 도구모음 -->
+            <!-- 게시판 목록 -->
+            <div class="board-list">
+              <div class="table-scroll table-scroll--horizontal"><!-- 모바일 가로스크롤 -->
+                <table class="table">
+                  <caption>법인 앱 카드지갑 목록</caption>
+                  <colgroup>
+                    <col style="width: 7%" />
+                    <col style="width: 13%" />
+                    <col style="width: 16%" />
+                    <col style="width: 20%" />
+                    <col style="width: 18%" />
+                    <col style="width: 12%" />
+                    <col />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th scope="col">순번</th>
+                      <th scope="col">카드유형</th>
+                      <th scope="col">발급기관</th>
+                      <th scope="col">회원카드 번호</th>
+                      <th scope="col">핸드폰번호</th>
+                      <th scope="col">상태</th>
+                      <th scope="col">삭제</th>
+                    </tr>
+                  </thead>
+                  <tbody id="walletListBody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- //게시판 목록 -->
+            <!-- 페이징 -->
+            <div class="pagination pc-only">
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-first"></i>
+                <span class="ir-pm">첫 페이지</span>
+              </button>
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-prev"></i>
+                <span class="ir-pm">이전</span>
+              </button>
+              <div class="pagination__list"></div>
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-next"></i>
+                <span class="ir-pm">다음</span>
+              </button>
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-last"></i>
+                <span class="ir-pm">마지막 페이지</span>
+              </button>
+            </div>
+            <!-- 모바일 전용 -->
+            <div class="pagination pagination--fraction">
+              <button type="button" class="pagination__button">
+                <i class="svg-icon arrow-prev"></i>
+                <span>이전</span>
+              </button>
+              <div class="pagination__text">
+                <span class="pagination__current">1</span>
+                <span class="pagination__total">1</span>
+              </div>
+              <button type="button" class="pagination__button">
+                <span>다음</span>
+                <i class="svg-icon arrow-next"></i>
+              </button>
+            </div>
+            <!-- //페이징 -->
+          </div>
+          <!-- //법인 앱 카드지갑 -->
+          </section>
+          </div>
+
+        </div>
       </div>
 
-      <!-- ===== 충전요금 조회 (후불/선불 통합) ===== -->
-      <div class="tab-content" data-tab-content="history">
-        <!-- [ISS-027] 과금모드 세그먼트(후불/선불) 제거 — 선불 결제(2018-02 종료) 대민 노출 제외, 후불 단일 -->
-
-        <!-- ============ 후불 패널 (기본) ============ -->
-        <section class="cfq-panel active" data-feepanel="post" aria-label="후불 충전요금">
-          <div class="cfq-monthnav">
-            <button class="cfq-navbtn" id="poPrev" type="button" aria-label="이전 달">‹</button>
-            <span class="cfq-month" id="poMonth">2026년 06월</span>
-            <button class="cfq-navbtn" id="poNext" type="button" aria-label="다음 달">›</button>
+      <!-- mu-modal : 결제수단 관리 -->
+      <div class="modal-container" id="modalPayment" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">결제수단 관리</h1>
           </div>
-
-          <!-- 상단: 월 확정 정산 요약 + 추이 차트 -->
-          <div class="cfq-settle">
-            <div class="cfq-settle-main">
-              <div class="cfq-settle-label">이번 달 총 이용금액</div>
-              <div class="cfq-settle-amt"><b id="poTotal">0</b><span class="won">원</span></div>
+          <div class="modal__body">
+            <div class="board-toolbar">
+              <div class="board-toolbar__total">
+                <p class="total-number">총 <strong class="total-number__total" id="paymentCnt">0</strong>건</p>
+              </div>
             </div>
-            <div class="cfq-trend" id="poTrend" aria-label="월별 이용금액 추이"></div>
-          </div>
-          <p class="cfq-note">※ 충전요금 명세서는 해당 기간 내 <b>과금설정 [후불]</b>인 충전소 이용금액의 합입니다.</p>
-
-          <!-- 필터: 카드번호·충전사업자·기간 -->
-          <div class="board-toolbar">
-            <div class="cf-flt">
-              <div class="fld"><label for="poCard">카드번호</label>
-                <select id="poCard"><option value="">전체</option><option>…4567 (12가 3456)</option><option>…7788 (34나 5678)</option></select></div>
-              <div class="fld"><label for="poBusi">충전사업자</label>
-                <select id="poBusi"><option value="">전체</option><option>환경부(KECO)</option><option>한전(KEPCO)</option><option>GS차지비</option><option>SK일렉링크</option></select></div>
-              <div class="fld"><label for="poPeriod">기간</label>
-                <select id="poPeriod"><option value="m">당월</option><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option></select></div>
-              <div class="fld grow"><label for="poSearch">검색</label>
-                <input id="poSearch" type="text" placeholder="충전소명 검색"></div>
-              <button type="button" class="btn btn-primary" id="poSearchBtn">검색</button>
-              <button type="button" class="btn" id="poReset">초기화</button>
-            </div>
-          </div>
-
-          <div class="board-result-meta">
-            <div>이용내역 <strong id="poCount">0</strong>건 <span class="cfq-meta-note">(기후에너지환경부 공단 + 로밍 타기관 통합)</span></div>
-            <div class="meta-aux cfq-dl">
-              <button class="btn btn-secondary btn-sm" id="poExcel">엑셀 다운로드</button>
-              <button class="btn btn-primary btn-sm" id="poPdf">명세서 PDF</button>
-              <a class="btn btn-ghost btn-sm" id="poSample" href="assets/statement-sample-postpaid-2026-06.pdf" download="충전요금명세서-예시-후불-2026-06.pdf">예시 명세서 내려받기</a>
+            <div class="table-scroll table-scroll--horizontal">
+              <table class="table">
+                <caption>결제카드 변경</caption>
+                <colgroup>
+                  <col style="width: 10%" />
+                  <col style="width: 22%" />
+                  <col style="width: 25%" />
+                  <col />
+                  <col style="width: 15%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">순번</th>
+                    <th scope="col">결제수단 구분</th>
+                    <th scope="col">카드사</th>
+                    <th scope="col">카드메모</th>
+                    <th scope="col">관리</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentList">
+                </tbody>
+              </table>
             </div>
           </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+            <button type="button" class="button button--primary" id="btnAddPayment"><span>+ 결제수단 추가하기</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
 
-          <div class="cch-wrap">
-            <table class="data-table cfq-table" id="poTable">
-              <thead>
+      <!-- mu-modal : 카드등록 (개별·일괄 공용) -->
+      <div class="modal-container" id="modalCardRegist" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">카드등록</h1>
+            <p class="modal__header-description">정보를 기입하신 후 확인버튼을 눌러주십시오. <span class="text-required">*</span> 는 필수 항목입니다.</p>
+          </div>
+          <div class="modal__body">
+            <form id="ini" name="ini" method="post" onsubmit="return false;">
+              <input type="hidden" id="mid" name="mid" value="aea0000000" />
+              <input type="hidden" id="currency" name="currency" value="WON" />
+              
+              <input type="hidden" id="authentification" name="authentification" value="00" />
+              <input type="hidden" id="acceptmethod" name="acceptmethod" value="SKIN(ORIGINAL):HPP(1)" />
+              <input type="hidden" id="multiYN2" name="multiYN" value="N" />
+              <input type="hidden" id="cardnumber" name="cardnumber" value="" />
+              <input type="hidden" id="buyername" name="buyername" value="ME" />
+              <input type="hidden" id="billYN" name="billYN" value="" />
+              <input type="hidden" id="billrstCode" name="billrstCode" value="" />
+              <input type="hidden" id="billrstMsg" name="billrstMsg" value="" />
+              <input type="hidden" id="memberCardNum" name="memberCardNum" value="" />
+              <input type="hidden" id="kpyn" name="kpyn" value="" />
+              <input type="hidden" id="fail_yn" name="fail_yn" value="" />
+              <input type="hidden" id="card_quota" name="card_quota" value="" />
+              <table class="table table--form">
+                <caption>결제카드 등록 정보 입력</caption>
+                <colgroup>
+                  <col style="width: 30%" />
+                  <col />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th scope="row">신용카드번호 <span class="text-required">*</span></th>
+                    <td>
+                      <div class="element-group">
+                        <div class="element-group__control">
+                          <input type="text" id="card_no1" name="card_no1" autocomplete="new-password" class="text-input w-80 card_no" maxlength="4" title="신용카드 첫번째 4자리" placeholder="0000" />
+                          <input type="password" id="card_no2" name="card_no2" autocomplete="new-password" class="text-input w-80 card_no" maxlength="4" title="신용카드 두번째 4자리" placeholder="0000" />
+                          <input type="password" id="card_no3" name="card_no3" autocomplete="new-password" class="text-input w-80 card_no" maxlength="4" title="신용카드 세번째 4자리" placeholder="0000" />
+                          <input type="text" id="card_no4" name="card_no4" autocomplete="new-password" class="text-input w-80 card_no" maxlength="4" title="신용카드 네번째 4자리" placeholder="0000" />
+                        </div>
+                        <div class="element-group__control">
+                          <div class="radio">
+                            <input type="radio" id="s_card_kind0" name="s_card_kind" value="0" class="radio__input" checked />
+                            <label for="s_card_kind0" class="radio__label">개인</label>
+                          </div>
+                          <div class="radio">
+                            <input type="radio" id="s_card_kind1" name="s_card_kind" value="1" class="radio__input" />
+                            <label for="s_card_kind1" class="radio__label">법인사업자</label>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">유효기간 <span class="text-required">*</span></th>
+                    <td>
+                      <div class="element-group">
+                        <div class="element-group__control">
+                          <select id="cardexpm" name="cardexpm" class="select w-120" title="유효기간 월 입력">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                          </select>
+                          <span>월</span>
+                          <select id="cardexpy" name="cardexpy" class="select w-120" title="유효기간 연도 입력">
+                            
+                            <option value="">20</option>
+                            
+                          </select>
+                          <span>년</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><span id="authField_label">생년월일</span> <span class="text-required">*</span></th>
+                    <td>
+                      <div class="element-group">
+                        <div class="element-group__control">
+                          <input type="text" id="authField1" name="authField1" class="text-input w-160" maxlength="6" title="주민등록번호 앞 6자리" placeholder="000000" />
+                          <span id="authField_txt">(주민등록번호 앞 6자리)</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">카드비밀번호 <span class="text-required">*</span></th>
+                    <td>
+                      <div class="element-group">
+                        <div class="element-group__control">
+                          <input type="password" id="authField2" name="authField2" autocomplete="new-password" class="text-input w-80" maxlength="2" title="카드 비밀번호 앞 2자리" placeholder="00" />
+                          <span>XX (앞 2자리)</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">카드메모 (10자이내)</th>
+                    <td>
+                      <div class="element-group">
+                        <div class="element-group__control">
+                          <input type="text" id="bill_card_memo" name="bill_card_memo" class="text-input" maxlength="10" title="카드 메모 입력" />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+            <button type="button" class="button button--primary" id="btnRegiBillCard"><span>확인</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
+
+      <!-- mu-modal : 재결제 할부 -->
+      <div class="modal-container" id="modalQuota" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">재결제 할부</h1>
+            <p class="modal__header-description">해당 카드에 결제 실패 <span id="spanFailCnt"></span>건, <span id="spanFailFee"></span>원이 있습니다.<br />카드등록 시 해당 요금이 청구됩니다. 카드등록을 진행하시겠습니까?</p>
+          </div>
+          <div class="modal__body">
+            <table class="table table--form">
+              <caption>재결제 할부 선택</caption>
+              <colgroup>
+                <col style="width: 30%" />
+                <col />
+              </colgroup>
+              <tbody>
                 <tr>
-                  <th class="sortable" data-sk="seq">순번</th><th class="sortable" data-sk="busi">충전사업자</th><th class="sortable" data-sk="station">충전소명</th><th class="sortable" data-sk="card">카드번호</th><th class="sortable" data-sk="start">충전 시작</th><th class="sortable" data-sk="end">충전 종료</th>
-                  <th class="num sortable" data-sk="kwh">충전량<br>(kWh)</th><th class="num sortable" data-sk="charge">충전금액<br>(원)</th><th class="num sortable" data-sk="payAmt">결제금액<br>(원)</th><th class="sortable" data-sk="status">상태</th><th class="sortable" data-sk="payDt">결제일시</th><th>영수증</th>
+                  <th scope="row">할부</th>
+                  <td>
+                    <div class="element-group">
+                      <div class="element-group__control">
+                        <select id="pop_card_quota" class="select w-160" title="할부 기간 선택">
+                          <option value="00">일시불</option>
+                          <option value="02">2개월</option>
+                          <option value="03">3개월</option>
+                        </select>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody id="poBody"></tbody>
-              <tfoot id="poFoot"></tfoot>
+              </tbody>
+            </table>
+            <div class="board-description">
+              <ul class="bullet bullet--refer">
+                <li>할부 수수료는 카드사의 정책에 따라 유동적으로 변경되오니 결제하신 카드사로 문의하여 주시기 바랍니다.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>취소</span></button>
+            <button type="button" class="button button--primary" id="btnSetQuota"><span>확인</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
+
+      <!-- mu-modal : 결제카드 상세조회 -->
+      <div class="modal-container" id="modalCardDetail" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">결제카드 상세조회</h1>
+            <p class="modal__header-description">기본 결제수단은 기타 결제수단을 기본으로 설정해야 삭제가 가능합니다.</p>
+          </div>
+          <div class="modal__body">
+            <table class="table table--form">
+              <caption>결제카드 상세정보</caption>
+              <colgroup>
+                <col style="width: 30%" />
+                <col />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">결제수단 구분</th>
+                  <td><span id="payYnTxt">-</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">카드사</th>
+                  <td><span id="billCardCdNm"></span></td>
+                </tr>
+                <tr>
+                  <th scope="row"><label for="billCardMemo">카드메모 (10자이내)</label></th>
+                  <td>
+                    <div class="element-group">
+                      <div class="element-group__control">
+                        <input type="text" id="billCardMemo" class="text-input" maxlength="10" title="카드메모 입력" />
+                        <button type="button" class="button button--secondary" id="btnSaveMemo">
+                          <span class="button__label">수정</span>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">카드등록일</th>
+                  <td><span id="billCardRegDt"></span></td>
+                </tr>
+              </tbody>
             </table>
           </div>
-          <div class="pagination cfq-pager" id="poPager" style="margin-top:16px;justify-content:center;"></div>
-          <p class="cc-notes cfq-hint">※ 결제방식은 실질 대부분 <b>간편결제(후불 자동결제)</b>입니다. 행의 <b>영수증</b>을 누르면 건별 증빙을 볼 수 있습니다.</p>
-        </section>
-
-        <!-- ★개발 참고 영역 (기획 회의 결과) — 프로덕션 배포 전 제거 가능 -->
-        <details class="dev-note">
-          <summary>🛠 개발 참고 — 영수증/이용내역 데이터 매핑 (2026-07-01 기획)</summary>
-          <div class="dev-note-body">
-            <p class="dn-lead">본 패널은 개발자용 참고입니다. <b>프로덕션 배포 전 제거 가능</b>(HTML 주석 <code>&lt;details class="dev-note"&gt;</code>).</p>
-            <dl class="dn-list">
-              <dt>이용내역(세션) 원천</dt>
-              <dd><code>EVCS_CHGE_TRADE_INFO</code>(공단) <b>∪</b> <code>R_TRADE_INFO</code>(로밍/타CPO) — 기존 app_payment_sqlmap의 <code>UNION ALL</code>. 로밍: <code>BID</code>(이용사업자)≠<code>TBID</code>(충전기소유), 충전소명=<code>R_STATION.CNAME</code>·사업자명=<code>R_BUSI.BNM</code>.</dd>
-              <dt>세션 컬럼</dt>
-              <dd><code>STAT_ID/CHGER_ID</code>, <code>CHGE_STRT/END_DATE</code>, <code>CHGE_TOT_TIME</code>, <code>CHGE_TOT_POW</code>(kWh), <code>POW_FEE</code>(충전요금), <code>MON</code>(결제금액), <code>CARD_AUTH_NO</code>(승인번호=영수증), <code>CHGER_PAY_YN</code>(<code>'N'</code>=무료).</dd>
-              <dt>영수증 필드 매핑</dt>
-              <dd><b>충전기</b> <code>CHGER_ID</code> · 출력값=정격출력(kW, <code>EVCS_CHARGER</code>) · 타입=<code>CHGE_TYPE_CD</code>(01 DC차데모/02 AC완속/03 DC+AC3상)·로밍 <code>R_CHARGER.CTYPE</code>. <b>일시/양</b> <code>CHGE_STRT_DATE</code>·<code>CHGE_END_DATE</code>·<code>CHGE_TOT_POW</code>. <b>금액</b> <code>POW_FEE</code>·<code>MON</code> — <b>실단가=POW_FEE/CHGE_TOT_POW</b>(할인 반영, 시간대 정가는 <code>EVCS_CHARGE_PRICE.PRICE_00~23</code>). <b>결제</b> <code>PAY_KIND</code>(대부분 4간편)·카드사 <code>BILL_CARD_CD</code>·끝4 <code>BILL_CARD_NUM</code>·승인번호 <code>CARD_AUTH_NO</code>(마스킹 없이 전체). <b>회원카드</b> <code>CARD_NO</code>(DB ARIA256 암호화·표시는 끝4)·<code>CARD_TYPE</code>(실물/모바일/회원번호/EV등록, 실코드 <code>EVCS_CODE_DETAIL 'CARD_TYPE'</code> 확인). ※충전사업자명=충전기 <b>소유</b> 사업자(<code>R_BUSI.BNM</code>/공단), <b>카드 발급소속(공단) 아님</b>.</dd>
-              <dt>할인 · 부가세</dt>
-              <dd>거래에 할인 컬럼 없음 — 요금제 할인(<code>EVCS_REMOTE_PRICE_PLAN.DISCOUNT_PRICE</code>)은 <code>POW_FEE</code>에 이미 반영. BC그린카드 할인=카드사 대금청구 시(거래 밖). <b>영수증 할인·부가세 라인 없음</b>(총액 표기).</dd>
-              <dt>결제방식·결과</dt>
-              <dd><code>PAY_KIND</code> 1선불/2후불/3현장/4간편/5포인트 — 실질 대부분 <b>4간편</b>.</dd>
-              <dt>상태 정규화 (대민 6종)</dt>
-              <dd><b>충전중</b>=<code>CHRG_STAT=2</code>(진행중, 미완료) · <b>완료</b>=공단 POS <code>PAY_RSLT=2</code> / 로밍 <code>PAYRESULT=3</code> · <b>결제대기</b>=공단 <code>1</code>(미결제) / 로밍 <code>0·1·2·6·9</code>(진행중이면 충전중 우선) · <b>결제실패</b>=공단 <code>3</code> / 로밍 <code>4</code>(사유=<code>PERRMSG</code>) · <b>취소</b>=로밍 <code>5</code>(환불, 공단 없음) · <b>무료</b>=<code>FREE_YN='Y'</code>/<code>CHGER_PAY_YN='N'</code>(PAYRESULT 아님). 원천: 공단 <code>EV2_RAW_CHRGRPT.PAY_RSLT</code>(1미결제/2완료/3실패) vs 로밍 <code>R_BUSI_STTL_DETAIL.PAY_RESULT</code>(0~9). 충전상태 <code>CHRG_STAT</code>(1대기/2충전중). ※요약 합계는 <b>완료건만</b> — <code>SUM(DECODE(CHGER_PAY_YN,'N',0,MON))</code> + 결과 필터. <b>[ISS-072]</b> 로밍 <code>PAYRESULT</code>: <code>3</code>성공(완료)·<code>4</code>실패·<code>5</code>취소·<code>0/1/2/6/9</code> 결제대기(<code>6</code>=전달, 성공 전 중간단계 — 대기 편입, 2026-07-24 확정) / 무료는 <code>PAYRESULT</code> 아님(<code>CHGER_PAY_YN='N'</code>·<code>FREE_YN='Y'</code>).</dd>
-              <dt>명세(정산)</dt>
-              <dd><b>후불</b>=<code>EVCS_AFTER_PAYMENT</code>(<code>MON</code>월·<code>PAY_FEE</code>입금액·<code>PAY_DATE</code>납부일·<code>PAY_YN</code>납부여부 Y/N=<b>미납정지 근거</b>·<code>PAY_GUBUN</code>·<code>SET_SDATE/EDATE</code>후불대상기간). <b>선불</b>=<code>EVCS_PRE_PAYMENT</code>(<code>DEPOSIT_AMOUNT/DATE/NAME/TOTAL</code>), 잔여=입금−사용.</dd>
-              <dt>월별 명세서(PDF) 설계</dt>
-              <dd><b>신규 설계</b> — 기존 ev.or.kr에 충전요금 명세서 다운로드 없음(nportal 미추출로 참조 서식 없음). 명세서=<b>결제 확정분 증빙</b>(세션 상세 리스트 없음, 상세는 엑셀). <b>후불 근거</b> <code>EVCS_AFTER_PAYMENT</code>(MON·PAY_GUBUN 월회차·PAY_YN 자동결제 성공여부·PAY_DATE) + 로밍 <code>R_BTRADE_DATA</code>(YMON·MON·<code>PAYEX</code> 결제제외)·<code>R_BTRADE_SCH</code>(월 스케줄)·<code>R_BTRADE_TOTAL</code>. 합계=PAYEX/미결제 제외. <b>“결제 완료”=배치 자동결제(승인) 성공</b>(PAY_YN) — 사용자 카드대금 납부는 카드사 소관(우리 아님, ‘납부여부’로 표기하지 않음). <b>선불</b>=<code>EVCS_PRE_PAYMENT</code> + 사용 세션 차감, 잔여=입금−사용.</dd>
-              <dt>CPO별 집계 · 제외 원칙</dt>
-              <dd>집계=충전기 <b>소유</b> 사업자(공단 EVCS / 로밍 <code>R_TRADE_INFO.TBID</code>→<code>R_BUSI.BNM</code>) 소계, <b>카드 발급소속(공단) 미표기</b>. <b>제외</b>: 결제실패·대기·취소·무료는 명세서 제외(상태로 이용내역/엑셀에서 확인). 부가세 분리 없음(총액). 다운로드=인쇄뷰+window.print(사용자 ‘PDF로 저장’) / 정적 예시 PDF(<code>assets/statement-sample-*</code>).</dd>
-              <dt>결제수단/빌키</dt>
-              <dd><code>EVCS_SMART_CARD_PAYMENT</code>(<code>BILL_KEY</code>·<code>BILL_CARD_CD</code>·<code>BILL_CARD_NUM</code>끝4자리·<code>PAY_YN</code>). 빌키 발급=PG(이니시스/NICE/KICC). 카드신청(협회 대행)≠결제라인 자동생성 — 간편결제 등록 별도 스텝. <b>화면엔 카드사+끝4자리만</b>(빌키 원문 노출 금지).</dd>
-              <dt>확정성</dt>
-              <dd>후불=정산 배치주기(매일 01:00~03:00 정산 수집, 월마감), 당월=<b>잠정</b>. 선불=입금(예치)/사용(차감).</dd>
-              <dt>탭 구분</dt>
-              <dd>탭=카드 과금모드(후불/선불, 후불대상설정 기준), <b>후불 default</b>. 선불 발행이력 유지·사용 거의 없음(<b>빈 상태 정상</b>).</dd>
-              <dt>미확보 (실연동 확인)</dt>
-              <dd>충전사업자 사업자번호 · <code>CARD_TYPE</code> 실코드값 · 부가세 분리(소스에 없음→총액). 위 mock 표기는 확정값 아님(TODO).</dd>
-            </dl>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+            <button type="button" class="button button--secondary" id="btnPay01"><span>기본 결제로 설정</span></button>
+            <button type="button" class="button button--primary" id="btnPay02"><span>삭제</span></button>
           </div>
-        </details>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
       </div>
+      <!-- //mu-modal -->
 
-      <!-- ===== [ISS-076] 법인 앱 카드지갑 관리 (법인회원 전용 · AS-IS memberCardApplication3.jsp 3번째 탭) =====
-           법인이 기 발급 회원카드에 매핑된 소속 직원 앱(모바일) 카드를 핸드폰번호별로 조회·매핑해제. 소속=대민 포털(nportal keco.portal.mngInqire.memberCard).
-           [DEV] ★3테이블 = APP_CARD_WALLET(지갑 카드마스터) + APP_CARD_USER_PHONE(핸드폰 매핑·SEQ) + EVCS_SMART_CARD(실물카드·상태원천). 근거 memberCard_sqlmap.xml:854~922.
-                 ★대민 웹 = 조회 + 매핑해제만(지갑 생성은 모바일 앱). 삭제 = 핸드폰 매핑만 물리 DELETE + 이력(EVENT='D') — 실물·지갑카드 유지. 프로토는 더미데이터. -->
-      <div class="tab-content" data-tab-content="appwallet">
-        <div class="cch-bar">
-          <div>
-            <h3 class="section-h" data-i18n="charging.card.aw.h3">법인 앱 카드지갑 관리</h3>
-            <p style="color:var(--text-secondary);font-size:13.5px;margin:4px 0 0;" data-i18n="charging.card.aw.desc">소속 직원 명의로 발급된 앱(모바일) 회원카드를 핸드폰번호로 조회하고 삭제할 수 있습니다.</p>
+      <!-- mu-modal : 결제 실패 내역 -->
+      <div class="modal-container" id="modalFail" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">결제 실패 내역</h1>
+          </div>
+          <div class="modal__body">
+            <div class="board-toolbar">
+              <div class="board-toolbar__total">
+                <p class="total-number">총 <strong class="total-number__total" id="failCnt">0</strong>건</p>
+              </div>
+            </div>
+            <div class="table-scroll table-scroll--horizontal">
+              <table class="table">
+                <caption>결제 실패 충전 내역</caption>
+                <colgroup>
+                  <col style="width: 8%" />
+                  <col style="width: 14%" />
+                  <col />
+                  <col style="width: 15%" />
+                  <col style="width: 15%" />
+                  <col style="width: 10%" />
+                  <col style="width: 12%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">순번</th>
+                    <th scope="col">충전사업자</th>
+                    <th scope="col">충전소명</th>
+                    <th scope="col">충전시작 일시</th>
+                    <th scope="col">충전종료 일시</th>
+                    <th scope="col">충전량(kW)</th>
+                    <th scope="col">충전금액(원)</th>
+                  </tr>
+                </thead>
+                <tbody id="failList">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
           </div>
         </div>
-
-        <!-- 검색 필터: 카드번호(maxlength 16) · 핸드폰번호(maxlength 20) + 조회 -->
-        <div class="card" style="padding:16px 18px;margin-bottom:14px;">
-          <div style="display:flex;gap:14px;align-items:end;flex-wrap:wrap;">
-            <div class="fld"><label for="awCard" data-i18n="charging.card.aw.f.card">카드번호</label>
-              <input id="awCard" type="text" maxlength="16" inputmode="numeric" placeholder="회원카드번호" data-i18n-attr="placeholder:charging.card.aw.f.cardph" style="min-width:210px;"></div>
-            <div class="fld"><label for="awPhone" data-i18n="charging.card.aw.f.phone">핸드폰번호</label>
-              <input id="awPhone" type="text" maxlength="20" inputmode="tel" placeholder="핸드폰번호" data-i18n-attr="placeholder:charging.card.aw.f.phoneph" style="min-width:210px;"></div>
-            <button type="button" class="btn btn-primary" id="awSearchBtn" data-i18n="charging.card.aw.f.btn">조회</button>
-          </div>
-        </div>
-
-        <!-- 목록 7컬럼: 순번 / 카드유형 / 발급기관 / 회원카드번호 / 핸드폰번호 / 상태 / 관리(삭제) -->
-        <div style="overflow-x:auto;">
-          <table class="data-table" id="awTable" style="min-width:820px;">
-            <caption class="sr-only">법인 앱 카드지갑 — 순번, 카드유형, 발급기관, 회원카드번호, 핸드폰번호, 상태, 관리</caption>
-            <thead><tr>
-              <th scope="col" style="width:56px;text-align:center;" data-i18n="charging.card.aw.th.seq">순번</th>
-              <th scope="col" style="text-align:center;" data-i18n="charging.card.aw.th.type">카드유형</th>
-              <th scope="col" data-i18n="charging.card.aw.th.org">발급기관</th>
-              <th scope="col" data-i18n="charging.card.aw.th.card">회원카드번호</th>
-              <th scope="col" data-i18n="charging.card.aw.th.phone">핸드폰번호</th>
-              <th scope="col" style="text-align:center;" data-i18n="charging.card.aw.th.status">상태</th>
-              <th scope="col" style="width:92px;text-align:center;" data-i18n="charging.card.aw.th.mng">관리</th>
-            </tr></thead>
-            <tbody id="awBody"></tbody>
-          </table>
-        </div>
-        <div class="pagination cfq-pager" id="awPager" style="margin-top:16px;justify-content:center;"></div>
       </div>
+      <!-- //mu-modal -->
 
-    </div>
-  </section>
-</main>
+      <!-- mu-modal : 재결제 내역 -->
+      <div class="modal-container" id="modalRepay" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">재결제 내역</h1>
+          </div>
+          <div class="modal__body">
+            <div class="board-toolbar">
+              <div class="board-toolbar__total">
+                <p class="total-number">총 <strong class="total-number__total" id="repayCnt">0</strong>건</p>
+              </div>
+            </div>
+            <div class="table-scroll table-scroll--horizontal">
+              <table class="table">
+                <caption>재결제 충전 내역</caption>
+                <colgroup>
+                  <col style="width: 7%" />
+                  <col style="width: 13%" />
+                  <col />
+                  <col style="width: 14%" />
+                  <col style="width: 14%" />
+                  <col style="width: 9%" />
+                  <col style="width: 11%" />
+                  <col style="width: 14%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">순번</th>
+                    <th scope="col">충전사업자</th>
+                    <th scope="col">충전소명</th>
+                    <th scope="col">충전시작 일시</th>
+                    <th scope="col">충전종료 일시</th>
+                    <th scope="col">충전량(kW)</th>
+                    <th scope="col">충전금액(원)</th>
+                    <th scope="col">결제 일시</th>
+                  </tr>
+                </thead>
+                <tbody id="rePayList">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
 
-<!-- ===== 모달: 발급조회 / 분실신고 / 정보수정 ===== -->
-<div class="cc-modal-bd" id="ccModal" role="dialog" aria-modal="true" aria-labelledby="ccModalTitle">
-  <div class="cc-modal">
-    <div class="cc-modal-head">
-      <h3 id="ccModalTitle">제목</h3>
-      <button type="button" class="cc-modal-x" data-cc-close aria-label="닫기">✕</button>
-    </div>
-    <p class="cc-modal-sub" id="ccModalSub"></p>
-    <div id="ccModalBody"></div>
-    <div class="cc-modal-foot" id="ccModalFoot"></div>
-  </div>
-</div>
+      <!-- mu-modal : 정보수정(차량번호 변경) -->
+      <div class="modal-container" id="modalCarId" role="dialog" aria-modal="true">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title">차량번호 변경</h1>
+            <p class="modal__header-description">변경할 차량번호의 중복확인 후 변경 하시기 바랍니다.<br />중복인 경우 전기차 헬프데스크 1661-9408로 유선 변경요청 바랍니다.</p>
+          </div>
+          <div class="modal__body">
+            <table class="table table--form">
+              <caption>회원카드 차량정보 변경</caption>
+              <colgroup>
+                <col style="width: 30%" />
+                <col />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">회원카드 번호</th>
+                  <td><span id="carIdCardNo"></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">현재 차량번호</th>
+                  <td><span id="carIdCurrent"></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">변경 차량모델</th>
+                  <td>
+                    <div class="element-group">
+                      <div class="element-group__control">
+                        <select id="carIdModel" class="select" title="차량모델 선택">
+                          <option value="">선택</option>
+                          
+                          <option value=""> : </option>
+                          
+                        </select>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row"><label for="carIdNew">변경 차량번호</label></th>
+                  <td>
+                    <div class="element-group" id="carIdInputGroup">
+                      <div class="element-group__control">
+                        <input type="text" id="carIdNew" maxlength="20" placeholder="차량번호 입력 (예: 12가3456)" class="text-input" />
+                        <button type="button" class="button button--secondary" id="btnCarIdDupCheck">
+                          <span class="button__label">중복확인</span>
+                        </button>
+                      </div>
+                      <p class="complete-message" id="carIdDupMsg"></p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="board-description">
+              <ul class="bullet bullet--refer">
+                <li>차량등록증 발급 당일은 등록 불가, 익일 저공해차량으로 조회되어 차량번호 등록이 가능합니다.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+            <button type="button" class="button button--primary" id="btnCarIdSave"><span>변경</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
 
-<div id="stmtPrint" class="stmt-print" aria-hidden="true"></div>
-<div id="footer-slot"></div>
-<script src="js/partials.js?v=20260806g"></script>
-<script src="js/i18n.js?v=20260520"></script>
-<script src="js/i18n-common.js?v=20260807a"></script>
-<script src="js/i18n-charging.js?v=20260807a"></script>
-<script src="js/main.js?v=20260724b"></script>
-<script src="js/ai-floating.js?v=20260807a"></script>
+      <!-- mu-modal : 발급조회 (선택한 회원카드의 신청·발급 이력) -->
+      <div class="modal-container" id="modalIssue" role="dialog" aria-modal="true">
+        <div class="modal">
+          <div class="modal__header">
+            <strong class="modal__header-title">발급조회</strong>
+            <p class="modal__header-description" id="issueCardNo"></p>
+          </div>
+          <div class="modal__body">
+            <div class="board-toolbar">
+              <div class="board-toolbar__total">
+                <p class="total-number">총 <strong class="total-number__total" id="issueTotal">0</strong>건</p>
+              </div>
+            </div>
+            <div class="table-scroll table-scroll--horizontal">
+              <table class="table">
+                <caption>회원카드 신청·발급 이력</caption>
+                <colgroup>
+                  <col style="width: 16%" />
+                  <col style="width: 16%" />
+                  <col style="width: 16%" />
+                  <col style="width: 16%" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">신청일자</th>
+                    <th scope="col">발급방법</th>
+                    <th scope="col">발급요청사유</th>
+                    <th scope="col">발급상태</th>
+                    <th scope="col">배송지</th>
+                  </tr>
+                </thead>
+                <tbody id="issueList"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--secondary"><span>닫기</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
+
+<form id="applyActionForm" name="applyActionForm" method="post" action="/mngInqire/memberCard/cud.do">
+  <input type="hidden" name="mode" value="" />
+  <input type="hidden" name="card_req_seq" value="" />
+</form>
+
+<form id="walletDelForm" name="walletDelForm" method="post" action="/mngInqire/memberCard/cardWalletCud.do">
+  <input type="hidden" name="seq_no" value="" />
+</form>
+
+<form id="reqPCCForm" name="reqPCCForm" method="post"></form>
+<script type="application/json" id="pageInfo">{"userName": "", "acceptYn": "N", "personalYn": "N"}</script>
 <script>
-/* ===== 회원카드 허브 — 리스트 + 카드별 액션 + 결제카드 일괄등록 (레거시 정합) =====
-   ── 상태모델: 단일코드(cardStCd) 폐기 → 레거시 2축(발급진행 + 운영플래그) 우선순위 판정.
-   [축1] 발급진행 issueStatCd (절차): 0001 신청접수 → 0002 발급(제작) → 0003 발송(등기) → 0004 수령완료
-        · TODO(EVCS_CODE_DETAIL 확보 전 잠정): 코드값/라벨 미확정. 0005=반려(예외)로 잠정 매핑. 수령완료(0004) 이전=발급중.
-   [축2] 운영플래그: lossYn(분실) · paymentYn(미납) · stopYn(일시정지)  ※Y/N
-        ※ [ISS-089] delYn(해지) 축 제거 — AS-IS EVCS_SMART_CARD에 DEL_YN 컬럼·대민 해지 액션 부재(창작 제거).
-   [표시상태] 아래 '우선순위'로 결정(레거시 CASE 정합) — 단일코드 재도입 금지:
-        1) lossYn=Y    → 분실(정지)·이용불가
-        2) paymentYn=Y → 미납정지·이용불가        ★신규 상태
-        3) stopYn=Y    → 일시정지·이용불가
-        4) issueStatCd 수령완료 전(≠0004) → 발급중(세부단계)
-        5) 그 외        → 정상·이용가능
-   [USE 뱃지] 레거시 USE_YN=(LOSS_YN=N & STOP_YN=N) 기준에 미납 축 확장 → 정상만 이용가능.
-   · CARD_TYPE: C 실물카드 / M 모바일카드 / T 실물카드(EV등록)
-   · 발급사유(ISSUE_REASON, 0005=기타): 신규(신차)/신규(중고)/분실/파손/기타  ※TODO: 실코드 미확정
-   · 결제카드 일괄등록: '실물카드(EV등록=한전등록회원)'·'결제실패 내역 카드' 제외. */
-(function () {
-  'use strict';
-  function toast(m, t){ if (window.__toast) window.__toast(m, t||'info'); }
-  function isY(v){ return v==='Y'; }
-
-  // 표시상태 정의 (우선순위 판정 결과 → {label, chip class, usable})
-  var STATUS = {
-    // [ISS-089] cancel(해지) 상태 제거 — AS-IS DEL_YN 부재
-    lost:    { label:'분실(정지)', cls:'st-lost',    usable:false },
-    pay:     { label:'미납정지',   cls:'st-pay',     usable:false }, // ★신규
-    suspend: { label:'일시정지',   cls:'st-suspend', usable:false },
-    ship:    { label:'발급중',     cls:'st-ship',    usable:false }, // 수령 전 → 이용불가
-    normal:  { label:'정상',       cls:'st-normal',  usable:true  }
-  };
-  // 발급상태(issueStatCd) → {label, step(1~4·반려0)}  ※TODO: EVCS_CODE_DETAIL 확정 전 잠정 라벨
-  var ISSUE_STAT = {
-    '0001': { label:'신청접수',   step:1 },
-    '0002': { label:'발급(제작)', step:2 },
-    '0003': { label:'발송(등기)', step:3 },
-    '0004': { label:'수령완료',   step:4 },
-    '0005': { label:'반려',       step:0 }  // TODO: 반려/예외 코드값 미확정
-  };
-  var STEP_LABELS = ['신청접수','발급(제작)','발송(등기)','수령완료'];
-  var ISSUE_DONE = '0004'; // 수령완료
-
-  // ── 우선순위 판정: 2축 플래그 → 표시상태 key (레거시 CASE 정합) ──
-  function resolveStatus(c){
-    // [ISS-089] delYn(해지) 판정 제거 — AS-IS DEL_YN 부재
-    if (isY(c.lossYn))     return 'lost';     // 1) 분실(정지)
-    if (isY(c.paymentYn))  return 'pay';      // 2) 미납정지 ★
-    if (isY(c.stopYn))     return 'suspend';  // 3) 일시정지
-    if (c.issueStatCd !== ISSUE_DONE) return 'ship'; // 4) 수령완료 전 → 발급중
-    return 'normal';                          // 5) 정상
-  }
-
-  // 보유 카드(mock) — 상태는 2축 플래그(issueStatCd + del/loss/payment/stopYn)로만 표현. 단일 상태코드 없음.
-  //   기본 플래그 N. 우선순위 판정(resolveStatus)으로 표시상태 결정.
-  var CARDS = [
-    // 1) 정상 (모든 플래그 N, 수령완료)
-    { cardNo:'EVCD-2024-0123-4567', cardType:'실물카드', carNo:'12가 3456', carNm:'아이오닉6',
-      applyDate:'2024-03-05', issueDate:'2024-03-12', carNoApply:'12가 3456',
-      reason:'신규(신차)', issueMethod:'등기배송', shipZip:'03175', shipAddr:'서울특별시 종로구 세종대로 209', reqName:'홍길동',
-      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'****-****-****-1234', cardCorp:'신한카드', kepco:false, payFail:false,
-      stepDates:['2024-03-05','2024-03-08','2024-03-10','2024-03-12'] },
-    // 2) 발급중 (수령완료 전 0003 발송단계, 플래그 N)
-    { cardNo:'EVCD-2026-0456-7788', cardType:'실물카드', carNo:'34나 5678', carNm:'EV6',
-      applyDate:'2026-06-16', issueDate:'—', carNoApply:'34나 5678',
-      reason:'신규(중고)', issueMethod:'등기배송', shipZip:'06236', shipAddr:'서울특별시 강남구 테헤란로 152', reqName:'홍길동',
-      issueStatCd:'0003', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'', cardCorp:'', kepco:false, payFail:false,
-      stepDates:['2026-06-16','2026-06-18','2026-06-20','—'] },
-    // 3) 미납정지 ★신규 (paymentYn=Y, 수령완료) — 이용불가
-    { cardNo:'EVCD-2025-0789-0011', cardType:'모바일카드', carNo:'78라 9012', carNm:'레이 EV',
-      applyDate:'2025-09-01', issueDate:'2025-09-01', carNoApply:'78라 9012',
-      reason:'신규(신차)', issueMethod:'모바일 즉시발급', shipZip:'—', shipAddr:'모바일 EV이음앱(NFC)', reqName:'홍길동',
-      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'Y', stopYn:'N',
-      payCard:'****-****-****-9012', cardCorp:'국민카드', kepco:false, payFail:true,
-      stepDates:['2025-09-01','2025-09-01','2025-09-01','2025-09-01'] },
-    // 4) 일시정지 (stopYn=Y) — 이용불가
-    { cardNo:'EVCD-2024-0640-1188', cardType:'실물카드', carNo:'56버 2200', carNm:'니로 EV',
-      applyDate:'2024-11-02', issueDate:'2024-11-09', carNoApply:'56버 2200',
-      reason:'신규(신차)', issueMethod:'등기배송', shipZip:'34123', shipAddr:'대전광역시 유성구 대학로 99', reqName:'홍길동',
-      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'Y',
-      payCard:'****-****-****-4455', cardCorp:'삼성카드', kepco:false, payFail:false,
-      stepDates:['2024-11-02','2024-11-05','2024-11-07','2024-11-09'] },
-    // 5) 우선순위 검증: loss=Y & payment=Y & stop=Y (동시) → '분실'이 최우선으로 판정되어야 함
-    { cardNo:'EVCD-2023-0321-6543', cardType:'실물카드', carNo:'11주 7788', carNm:'아이오닉5',
-      applyDate:'2023-02-14', issueDate:'2023-02-21', carNoApply:'11주 7788',
-      reason:'신규(중고)', issueMethod:'등기배송', shipZip:'48058', shipAddr:'부산광역시 해운대구 센텀중앙로 55', reqName:'홍길동',
-      issueStatCd:'0004', delYn:'N', lossYn:'Y', paymentYn:'Y', stopYn:'Y',
-      payCard:'****-****-****-6677', cardCorp:'현대카드', kepco:false, payFail:false,
-      stepDates:['2023-02-14','2023-02-17','2023-02-19','2023-02-21'] },
-    // 6) EV등록(한전) 정상 — 일괄등록 제외 대상(kepco)
-    { cardNo:'EVCD-2023-0555-3322', cardType:'실물카드(EV등록)', carNo:'90마 1357', carNm:'코나 일렉트릭',
-      applyDate:'2023-05-10', issueDate:'2023-05-18', carNoApply:'90마 1357',
-      reason:'기타', issueMethod:'등기배송', shipZip:'13529', shipAddr:'경기도 성남시 분당구 판교로 242', reqName:'홍길동',
-      issueStatCd:'0004', delYn:'N', lossYn:'N', paymentYn:'N', stopYn:'N',
-      payCard:'한전 통합 등록', cardCorp:'한전(EV등록)', kepco:true, payFail:false,
-      stepDates:['2023-05-10','2023-05-14','2023-05-16','2023-05-18'] }
-    // [ISS-089] 7) 해지(delYn=Y) 카드 제거 — AS-IS DEL_YN·해지로직 부재
-  ];
-
-  var body = document.getElementById('ccListBody');
-  var wrap = document.getElementById('ccListWrap');
-  var empty = document.getElementById('ccEmpty');
-
-  function mcVal(id){ var el=document.getElementById(id); return el ? el.value : ''; }
-  function filteredCards() {
-    var ty=mcVal('mcType'), st=mcVal('mcStat'), pay=mcVal('mcPay'), q=(mcVal('mcSearch')||'').trim().toLowerCase();
-    return CARDS.filter(function(c){
-      if (ty && c.cardType!==ty) return false;
-      if (st && resolveStatus(c)!==st) return false;
-      if (pay==='y' && !c.payCard) return false;
-      if (pay==='n' && c.payCard) return false;
-      if (q && (c.cardNo+' '+c.carNo+' '+c.carNm).toLowerCase().indexOf(q)<0) return false;
-      return true;
-    });
-  }
-  function render() {
-    var rows = filteredCards();
-    var cnt = document.getElementById('mcCount'); if (cnt) cnt.textContent = rows.length;
-    if (!CARDS.length) { wrap.style.display='none'; empty.style.display='block'; return; }
-    wrap.style.display=''; empty.style.display='none';
-    if (!rows.length) { body.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--text-tertiary);">조건에 맞는 회원카드가 없습니다.</td></tr>'; return; }
-    body.innerHTML = rows.map(function (c, di) {
-      var i = CARDS.indexOf(c);
-      var key = resolveStatus(c);
-      var s = STATUS[key] || STATUS.normal;
-      // 액션 노출 조건 (§3, 판정된 표시상태 기준) — [ISS-089] '해지' 액션 제거
-      var acts = [];
-      acts.push('<button class="btn btn-ghost btn-sm" data-act="check" data-i="'+i+'">발급조회</button>');           // 항상
-      if (key==='normal' || key==='ship') acts.push('<button class="btn btn-ghost btn-sm" data-act="lost" data-i="'+i+'">분실신고</button>');     // 정상/발급중
-      acts.push('<button class="btn btn-ghost btn-sm" data-act="edit" data-i="'+i+'">정보수정</button>');                       // 항상
-      if (c.payCard) acts.push('<button class="btn btn-ghost btn-sm" data-act="unpay" data-i="'+i+'" data-i18n="charging.card.unpay">결제해제</button>');       // [ISS-077] 개별 결제카드 등록해지(결제카드 등록된 행만) — 회원카드 해지와 무관
-      if (key==='suspend' || key==='pay' || key==='lost') acts.push('<a class="btn btn-primary btn-sm" href="charging-card-apply.html?reason=lost">재발급</a>'); // 일시정지/미납정지/분실
-      var payHtml = c.payCard
-        ? '<strong style="color:var(--text-primary);">'+c.cardCorp+'</strong><br><small style="color:var(--text-tertiary);">'+c.payCard+'</small>'
-        : '<span style="color:var(--color-danger,#b5341f);">미등록</span>';
-      // 카드상태 셀: 상태칩 + (발급중이면 미니스텝) + USE 뱃지
-      var info = ISSUE_STAT[c.issueStatCd] || { label:c.issueStatCd, step:0 };
-      var mini = '';
-      if (key==='ship') {
-        var dots = '';
-        for (var k=1;k<=4;k++) dots += '<i class="'+(k<=info.step?'on':'')+'"></i>';
-        mini = '<span class="cc-mini">'+dots+'<small>'+info.label+'</small></span>';
-      }
-      // USE 뱃지: 발급중은 진행단계로 대체(가/불가 미표기). 정상=이용가능/그 외=이용불가. [ISS-089] 해지=종료 분기 제거
-      var useBadge = '';
-      if (key!=='ship') useBadge = '<span class="use-badge '+(s.usable?'use-ok':'use-no')+'">'+(s.usable?'이용가능':'이용불가')+'</span>';
-      var statCell = '<div class="st-cell"><span class="st-chip '+s.cls+'">'+s.label+'</span>'+mini+useBadge+'</div>';
-      var chkCell = eligibleForBatch(c)
-        ? '<input type="checkbox" class="cc-row-chk" data-i="'+i+'" aria-label="일괄등록·해제 대상 선택">'
-        : '<input type="checkbox" disabled title="일괄등록 대상이 아닙니다 (EV등록·결제실패 등)" aria-label="선택 불가">';
-      return '<tr>'
-        + '<td style="text-align:center;">'+chkCell+'</td>'
-        + '<td>'+(di+1)+'</td>'
-        + '<td class="cardno">'+c.cardNo+'</td>'
-        + '<td>'+c.cardType+'</td>'
-        + '<td><span class="carno">'+c.carNo+'</span><br><small style="color:var(--text-tertiary);">'+c.carNm+'</small></td>'
-        + '<td>'+payHtml+'</td>'
-        + '<td>'+statCell+'</td>'
-        + '<td><div class="cch-acts">'+acts.join('')+'</div></td>'
-        + '</tr>';
-    }).join('');
-    var _sa = document.getElementById('ccSelectAll'); if (_sa) _sa.checked = false;
-  }
-  // 전체선택 체크박스 → 자격 있는 행 전체 토글
-  (function(){ var sa=document.getElementById('ccSelectAll'); if(!sa) return;
-    sa.addEventListener('change', function(){
-      Array.prototype.forEach.call(document.querySelectorAll('.cc-row-chk'), function(ch){ if(!ch.disabled) ch.checked = sa.checked; });
-    });
-  })();
-  // mycard 필터 바인딩
-  ['mcType','mcStat','mcPay'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('change', render); });
-  (function(){ var s=document.getElementById('mcSearch'); if(s) s.addEventListener('input', render);
-    var r=document.getElementById('mcReset'); if(r) r.addEventListener('click', function(){ ['mcType','mcStat','mcPay'].forEach(function(id){var e=document.getElementById(id); if(e)e.value='';}); var ss=document.getElementById('mcSearch'); if(ss)ss.value=''; render(); }); })();
-
-  /* ── 모달 헬퍼 ── */
-  var modal = document.getElementById('ccModal');
-  var mTitle = document.getElementById('ccModalTitle');
-  var mSub = document.getElementById('ccModalSub');
-  var mBody = document.getElementById('ccModalBody');
-  var mFoot = document.getElementById('ccModalFoot');
-  function openModal(title, sub, bodyHtml, footHtml) {
-    mTitle.textContent = title; mSub.textContent = sub || '';
-    mSub.style.display = sub ? '' : 'none';
-    mBody.innerHTML = bodyHtml; mFoot.innerHTML = footHtml || '';
-    modal.classList.add('open');
-  }
-  function closeModal(){ modal.classList.remove('open'); }
-  modal.addEventListener('click', function(e){ if (e.target===modal || e.target.hasAttribute('data-cc-close')) closeModal(); });
-  document.addEventListener('keydown', function(e){ if (e.key==='Escape') closeModal(); });
-
-  /* ── 발급조회: 발급상태(CARD_ISSUE_STAT) 스텝퍼 + 발급조회 항목(1번째 이미지) ── */
-  function actCheck(c) {
-    var info = ISSUE_STAT[c.issueStatCd] || { label:c.issueStatCd, step:0 };
-    var cur = info.step;
-    var rejected = (c.issueStatCd === '0005');
-    var steps = STEP_LABELS.map(function (lb, idx) {
-      var n = idx+1;
-      var cls = (cur > 0 && n < cur) ? 'done' : (n === cur ? 'active' : 'todo');
-      var d = (c.stepDates && c.stepDates[idx]) ? c.stepDates[idx] : '';
-      return '<div class="cc-step '+cls+'"><div class="dot">'+((cur>0&&n<cur)?'✓':n)+'</div><div class="slabel">'+lb+'</div><div class="sdate">'+d+'</div></div>';
-    }).join('');
-    var stepperHtml = rejected
-      ? '<div class="alert" style="background:#fff6e8;border:1px solid #f1c27a;border-radius:10px;padding:14px 16px;"><strong style="color:#9a5b00;">반려</strong> — 신청 내용 확인이 필요해 반려되었습니다. 사유 확인 후 재신청해 주세요.</div>'
-      : '<div class="cc-steps">'+steps+'</div>';
-    var body = stepperHtml
-      + '<dl class="cc-kv" style="grid-template-columns:130px 1fr;">'
-      + '<dt>신청일자</dt><dd>'+c.applyDate+'</dd>'
-      + '<dt>카드번호</dt><dd>'+c.cardNo+'</dd>'
-      + '<dt>차량번호(유효)</dt><dd>'+c.carNo+'</dd>'
-      + '<dt>차량번호(신청시)</dt><dd>'+(c.carNoApply||c.carNo)+'</dd>'
-      + '<dt>발급방법</dt><dd>'+c.issueMethod+'</dd>'
-      + '<dt>발급상태</dt><dd>'+info.label+' <small style="color:var(--text-tertiary);font-weight:500;">(issueStatCd '+c.issueStatCd+')</small></dd>'
-      + '<dt>발급요청사유</dt><dd>'+c.reason+'</dd>'
-      + '<dt>배송지</dt><dd>'+(c.shipZip && c.shipZip!=='—' ? '('+c.shipZip+') ' : '')+c.shipAddr+'</dd>'
-      + '<dt>회원카드</dt><dd>'+c.cardType+'</dd>'
-      + '</dl>';
-    openModal('회원카드/번호 발급조회', c.cardNo + ' · ' + c.carNo,
-      body, '<button class="btn btn-secondary" data-cc-close>닫기</button>');
-  }
-
-  /* ── 분실신고: ① 즉시 정지 → ② 재발급 ── */
-  function actLost(c, idx) {
-    function bodyFor(stopped) {
-      return '<div class="cc-lost-step'+(stopped?' muted':'')+'">'
-        + '<div><span class="n">1</span><strong>카드 즉시 정지</strong></div>'
-        + '<p style="margin:8px 0 0;color:var(--text-secondary);font-size:13.5px;">분실 카드를 즉시 정지하여 부정사용을 차단합니다. 정지 후에는 충전에 사용할 수 없습니다.</p>'
-        + (stopped ? '<p style="margin:8px 0 0;color:var(--color-primary-700);font-weight:700;">✔ 카드가 정지되었습니다.</p>' : '')
-        + '</div>'
-        + '<div class="cc-lost-step'+(stopped?'':' muted')+'" style="margin-top:10px;">'
-        + '<div><span class="n">2</span><strong>재발급 신청</strong></div>'
-        + '<p style="margin:8px 0 0;color:var(--text-secondary);font-size:13.5px;">발급요청사유 \'분실\'로 새 카드를 신청합니다. 배송지를 확인한 뒤 신청하면 발급조회에서 진행 상태를 추적할 수 있습니다.</p>'
-        + '</div>';
-    }
-    function footFor(stopped) {
-      return stopped
-        ? '<button class="btn btn-secondary" data-cc-close>나중에</button><a class="btn btn-primary" href="charging-card-apply.html?reason=lost">재발급 신청</a>'
-        : '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccLostStop">카드 정지하기</button>';
-    }
-    openModal('분실신고', c.cardNo + ' · ' + c.carNo, bodyFor(false), footFor(false));
-    var stopBtn = document.getElementById('ccLostStop');
-    if (stopBtn) stopBtn.addEventListener('click', function () {
-      // [ISS-077][DEV] updateCardLost (memberCard_sqlmap.xml:970~977): LOSS_YN='Y' · LOSS_DATE · CHANGE_REASON='분실/정지 신청'(★고정 문자열, 사용자 입력 아님).
-      //   ★AS-IS는 분실·정지 구분 없이 동일 처리. 프로토 팝업에 사유 자유입력칸 없음(자동 사유). ★미납 체크는 회원 탈퇴 시점에만 — 분실/정지엔 없음.
-      c.lossYn = 'Y'; // 분실신고 → LOSS_YN=Y (판정상 '분실(정지)')
-      render();
-      mBody.innerHTML = bodyFor(true); mFoot.innerHTML = footFor(true);
-      toast('카드가 정지되었습니다. 이어서 재발급을 신청할 수 있습니다.', 'success');
-    });
-  }
-
-  /* ── 정보수정: 배송지 + 연결 차량 ── */
-  function actEdit(c, idx) {
-    var body = '<div style="display:flex;flex-direction:column;gap:14px;">'
-      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">연결 차량번호</label>'
-      + '<input id="ccEditCar" class="form-input" type="text" value="'+c.carNo+'" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
-      + '<div class="cc-field" style="margin-bottom:0;">'
-      +   '<label for="ccEditZip" style="font-size:13px;font-weight:700;">배송지 주소</label>'
-      +   '<div class="cc-inline">'
-      +     '<input id="ccEditZip" class="form-input" type="text" value="'+c.shipZip+'" placeholder="우편번호" readonly style="flex:0 0 140px;">'
-      +     '<button type="button" class="cc-mini-btn" id="ccEditZipBtn">우편번호찾기</button>'
-      +   '</div>'
-      +   '<input id="ccEditAddr" class="form-input" type="text" value="'+c.shipAddr+'" placeholder="기본주소" readonly style="margin-top:8px;" aria-label="기본주소">'
-      +   '<input id="ccEditAddrDetail" class="form-input" type="text" placeholder="상세주소 입력" style="margin-top:8px;" aria-label="상세주소">'
-      + '</div>'
-      + '</div>';
-    openModal('카드 정보수정', c.cardNo,
-      body, '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccEditSave">저장</button>');
-    // [ISS-042] 우편번호 찾기 — 신청 페이지(charging-card-apply.html)와 동일한 더미 동작(토스트 + 예시 주소 채움)
-    var zipBtn = document.getElementById('ccEditZipBtn');
-    if (zipBtn) zipBtn.addEventListener('click', function () {
-      if (window.__toast) window.__toast('우편번호 찾기 창을 호출합니다.', 'info');
-      document.getElementById('ccEditZip').value = '22689';
-      document.getElementById('ccEditAddr').value = '인천광역시 서구 환경로 42';
-      var d = document.getElementById('ccEditAddrDetail'); if (d) d.focus();   // 다음 입력(상세주소)로 포커스 이동
-    });
-    var saveBtn = document.getElementById('ccEditSave');
-    if (saveBtn) saveBtn.addEventListener('click', function () {
-      c.carNo = (document.getElementById('ccEditCar').value || c.carNo).trim();
-      c.shipZip = (document.getElementById('ccEditZip').value || c.shipZip).trim();
-      // 기본주소 + 상세주소 → 기존 단일 필드(shipAddr)로 합성(데이터 구조 유지)
-      var base = (document.getElementById('ccEditAddr').value || '').trim();
-      var detail = (document.getElementById('ccEditAddrDetail').value || '').trim();
-      c.shipAddr = (base + (detail ? ' ' + detail : '')).trim() || c.shipAddr;
-      render(); closeModal();
-      toast('카드 정보가 수정되었습니다.', 'success');
-    });
-  }
-
-  /* ── [ISS-089] 회원카드 '해지'(actCancel) 제거 — AS-IS EVCS_SMART_CARD DEL_YN·해지 액션 부재 ── */
-
-  // 액션 위임
-  body.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-act]'); if (!btn) return;
-    var c = CARDS[parseInt(btn.getAttribute('data-i'), 10)]; if (!c) return;
-    var act = btn.getAttribute('data-act');
-    if (act==='check') actCheck(c);
-    else if (act==='lost') actLost(c, btn.getAttribute('data-i'));
-    else if (act==='edit') actEdit(c, btn.getAttribute('data-i'));
-    else if (act==='unpay') actUnpay(c);
-  });
-
-  /* ── 결제카드 일괄등록 (소스: 결제수단을 보유 회원카드에 일괄 등록) ── */
-  function eligibleForBatch(c){ var k=resolveStatus(c); return (k==='normal' || k==='ship') && !c.kepco && !c.payFail; }
-  function actBatch() {
-    // 체크박스로 선택한 대상 카드만 등록 (자격 없는 카드는 체크박스 비활성이라 선택 불가)
-    var checked = Array.prototype.slice.call(document.querySelectorAll('.cc-row-chk:checked'));
-    if (!checked.length) { toast('일괄등록할 대상 카드를 체크박스로 선택해 주세요.', 'warning'); return; }
-    var eligible = checked.map(function(ch){ return CARDS[parseInt(ch.getAttribute('data-i'),10)]; }).filter(Boolean);
-    var exNote = '<p style="margin:10px 0 0;font-size:12.5px;color:var(--text-tertiary);">※ 체크하신 '+eligible.length+'건에만 등록됩니다. (EV등록·결제실패 카드는 선택 불가)</p>';
-    var body = '<p style="font-size:13.5px;color:var(--text-secondary);line-height:1.7;margin:0 0 14px;">보유 회원카드 중 <strong style="color:var(--text-primary);">'+eligible.length+'건</strong>에 동일한 결제카드(간편결제)를 한 번에 등록합니다.</p>'
-      + '<div style="display:flex;flex-direction:column;gap:12px;">'
-      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">카드사</label>'
-      + '<select id="ccBatchCorp" class="form-input" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"><option value="">선택</option><option>신한카드</option><option>국민카드</option><option>삼성카드</option><option>현대카드</option><option>롯데카드</option><option>BC카드</option><option>NH농협카드</option><option>하나카드</option></select></div>'
-      + '<div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">카드번호 (16자리, -제외)</label>'
-      + '<input id="ccBatchNo" class="form-input" type="text" inputmode="numeric" maxlength="16" placeholder="0000000000000000" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div>'
-      + '<div style="display:flex;gap:10px;"><div style="flex:1;"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">유효기간 (MM/YY)</label>'
-      + '<input id="ccBatchExp" class="form-input" type="text" maxlength="5" placeholder="MM/YY" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border-light);border-radius:8px;"></div></div>'
-      + '</div>' + exNote;
-    openModal('결제카드 일괄등록', null, body,
-      '<button class="btn btn-secondary" data-cc-close>취소</button><button class="btn btn-primary" id="ccBatchOk">'+eligible.length+'건 등록</button>');
-    var ok = document.getElementById('ccBatchOk');
-    if (ok) ok.addEventListener('click', function () {
-      var corp = (document.getElementById('ccBatchCorp').value || '').trim();
-      var noVal = (document.getElementById('ccBatchNo').value || '').replace(/[^0-9]/g,'');
-      if (!corp) { toast('카드사를 선택해 주세요.', 'warning'); return; }
-      if (noVal.length < 15) { toast('카드번호를 정확히 입력해 주세요.', 'warning'); return; }
-      var masked = '****-****-****-' + noVal.slice(-4);
-      eligible.forEach(function(c){ c.payCard = masked; c.cardCorp = corp; });
-      render(); closeModal();
-      toast(eligible.length + '건에 결제카드가 일괄 등록되었습니다.' + (excluded.length ? ' (제외 ' + excluded.length + '건)' : ''), 'success');
-    });
-  }
-  var batchBtn = document.getElementById('ccBatchBtn');
-  if (batchBtn) batchBtn.addEventListener('click', actBatch);
-
-  /* ── [ISS-077] 결제카드 등록해지(일괄해제 + 개별해제) ──
-     [DEV] deleteBillCardInfo (paymentCardRegister.jsp:131·166·273~280·532~548):
-        BILL_KEY·BILL_CARD_* NULL · PAY_KIND='3' · PAYMENT_YN='Y'. ★회원카드는 유지, 후불 결제수단(빌링)만 제거.
-        ★'회원카드 해지(delYn=Y)'와 전혀 다른 개념. */
-  function actUnpay(c){
-    if(!c || !c.payCard){ toast('등록된 결제카드가 없습니다.', 'warning'); return; }
-    if(!window.confirm('카드등록 해제를 진행하시겠습니까?')) return;
-    c.payCard=''; c.cardCorp='';
-    render();
-    toast('결제카드 등록이 해제되었습니다.', 'info');
-  }
-  function actUnbatch(){
-    // 체크박스(일괄등록과 공유) 선택 → 결제카드가 등록된 행만 해제
-    var checked = Array.prototype.slice.call(document.querySelectorAll('.cc-row-chk:checked'));
-    if(!checked.length){ toast('등록해지할 카드를 체크박스로 선택해 주세요.', 'warning'); return; }
-    var withPay = checked.map(function(ch){ return CARDS[parseInt(ch.getAttribute('data-i'),10)]; }).filter(function(c){ return c && c.payCard; });
-    if(!withPay.length){ toast('선택한 카드 중 등록된 결제카드가 없습니다.', 'warning'); return; }
-    if(!window.confirm('카드등록 해제를 진행하시겠습니까?')) return;
-    withPay.forEach(function(c){ c.payCard=''; c.cardCorp=''; });
-    render();
-    toast(withPay.length+'건의 결제카드 등록이 해제되었습니다.', 'info');
-  }
-  var unbatchBtn = document.getElementById('ccUnbatchBtn');
-  if (unbatchBtn) unbatchBtn.addEventListener('click', actUnbatch);
-
-  // 데모: 빈 상태 토글
-  var demoOn = false, backup = null;
-  var demoBtn = document.getElementById('ccDemoToggle');
-  if (demoBtn) demoBtn.addEventListener('click', function () {
-    demoOn = !demoOn;
-    if (demoOn) { backup = CARDS.slice(); CARDS.length = 0; demoBtn.textContent = '보유 상태로 보기'; }
-    else { Array.prototype.push.apply(CARDS, backup); demoBtn.textContent = '빈 상태 미리보기'; }
-    render();
-  });
-
-  render();
+var PAGE_INFO = (function () {
+  try { return JSON.parse(document.getElementById('pageInfo').textContent) || {}; } catch (e) { return {}; }
 })();
-</script>
-<script>
-/* ===== 충전요금 조회 — [후불][선불] 통합(이용내역+명세서) + 영수증 =====
-   소스: 세션 = EVCS_CHGE_TRADE_INFO(공단) ∪ R_TRADE_INFO(로밍). 명세=EVCS_AFTER_PAYMENT(후불)/EVCS_PRE_PAYMENT(선불). */
-(function(){
-  function $(id){ return document.getElementById(id); }
-  function toast(m,t){ if(window.__toast) window.__toast(m, t||'info'); }
-  function won(n){ return Number(n).toLocaleString('ko-KR'); }
-  var __lastFocus=null;
-  function __trapKey(e){
-    var m=$('ccModal'); if(!m.classList.contains('open')||e.key!=='Tab') return;
-    var f=Array.prototype.filter.call(m.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'),function(el){return !el.disabled && el.offsetParent!==null;});
-    if(!f.length) return; var first=f[0], last=f[f.length-1];
-    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-  }
-  function openModal(title, sub, bodyHtml, footHtml){
-    __lastFocus=document.activeElement;
-    $('ccModalTitle').textContent = title;
-    var subEl=$('ccModalSub'); subEl.textContent = sub||''; subEl.style.display = sub?'':'none';
-    $('ccModalBody').innerHTML = bodyHtml; $('ccModalFoot').innerHTML = footHtml||'';
-    var m=$('ccModal'); m.classList.add('open');
-    document.addEventListener('keydown', __trapKey, true);
-    var ff=m.querySelector('button,[href],input,select,textarea'); if(ff) ff.focus();
-  }
-  (function(){ var m=$('ccModal'); if(!m) return;
-    new MutationObserver(function(){ if(!m.classList.contains('open')){ document.removeEventListener('keydown',__trapKey,true); if(__lastFocus&&__lastFocus.focus){ try{__lastFocus.focus();}catch(e){} __lastFocus=null; } } }).observe(m,{attributes:true,attributeFilter:['class']});
-  })();
-  function durSec(d){ var p=(d||'0:0:0').split(':').map(Number); return (p[0]||0)*3600+(p[1]||0)*60+(p[2]||0); }
-  function secHm(s){ var h=Math.floor(s/3600), m=Math.floor((s%3600)/60); return (h?h+'시간 ':'')+m+'분'; }
-  function rmBadge(r){ return r.roaming ? ' <span class="rm-badge">로밍</span>' : ''; }
-  // 상태 = 충전상태(CHRG_STAT) + 결제결과(공단 PAY_RSLT / 로밍 PAYRESULT) + 무료(FREE_YN) → 대민 6종 정규화
-  var STZ={ '충전중':'stz-charging','완료':'stz-done','결제대기':'stz-wait','결제실패':'stz-fail','취소':'stz-cancel','무료':'stz-free' };
-  function statusCell(r){
-    var s=r.status, c=STZ[s]||'stz-wait';
-    var tip=(s==='결제실패'&&r.failReason)?' title="'+r.failReason+'"':'';
-    var mk=(s==='결제실패'&&r.failReason)?' ⚠':'';
-    return '<span class="pr-chip '+c+'"'+tip+'>'+s+mk+'</span>';
-  }
-  function hasRcpt(r){ return !r.free && r.authNo && (r.status==='완료'||r.mode==='pre'); }
 
-  /* ── 표준 정렬(헤더 클릭) ── */
-  var poSort={key:'',dir:1}, prSort={key:'',dir:1};
-  var PO_PAGE_SIZE=5, poPage=1, poLastSig=null;
-  var PR_PAGE_SIZE=5, prPage=1, prLastSig=null;
-  var NUMKEY={seq:1,kwh:1,charge:1,payAmt:1,used:1,balAfter:1,amt:1};
-  function sortRows(rows,st){
-    if(!st.key) return rows;
-    return rows.slice().sort(function(a,b){
-      var va=a[st.key],vb=b[st.key];
-      if(NUMKEY[st.key]) return ((+va||0)-(+vb||0))*st.dir;
-      return String(va==null?'':va).localeCompare(String(vb==null?'':vb),'ko')*st.dir;
-    });
+// 실명인증 창(PCCV3Window)에서 호출하는 콜백 — 전역 노출 필요
+function setPcc(di, no1, no2, no3, username, ci) {
+  if (no3.length != 4) {
+    alert('본인 인증에 실패 하였습니다.');
+    return;
   }
-  function markSort(sel,st){
-    document.querySelectorAll(sel+' th.sortable').forEach(function(th){
-      th.classList.remove('sort-asc','sort-desc');
-      if(th.dataset.sk===st.key) th.classList.add(st.dir>0?'sort-asc':'sort-desc');
-    });
-  }
-  function wireSort(sel,st,render){
-    document.querySelectorAll(sel+' th.sortable').forEach(function(th){
-      th.addEventListener('click',function(){ var k=th.dataset.sk; if(st.key===k) st.dir=-st.dir; else { st.key=k; st.dir=1; } render(); });
-    });
+  if ((PAGE_INFO.userName || '') !== username) {
+    alert('본인 인증 실명과 회원가입 이름이 다릅니다.');
+    return;
   }
 
-  /* ── 후불 세션(mock): 공단+로밍 통합. payKind 실질 대부분 간편결제. free=CHGER_PAY_YN N ── */
-  var POST=[
-    // 완료(공단) — 결제완료. 영수증 O
-    {seq:1,busi:'환경부(KECO)',roaming:false,station:'환경부 강남구청',addr:'서울특별시 강남구 학동로 지하 426',chargerId:'ME-0451',output:100,speed:'급속',ctype:'DC차데모',card:'…4567',car:'12가 3456',start:'2026.06.22 08:15',end:'2026.06.22 08:57',startTs:'2026-06-22 08:15:07',endTs:'2026-06-22 08:57:38',dur:'0:42:31',kwh:24.5,unit:347.0,charge:8502,payKind:'신용카드',cardCorp:'신한카드',cardLast4:'1234',cardType:'실물카드',payAmt:8502,status:'완료',payDt:'2026.06.22 08:58',authNo:'30012345',free:false},
-    // 충전중(공단, CHRG_STAT=2) — 종료·결제 미정
-    {seq:2,busi:'환경부(KECO)',roaming:false,station:'환경부 세종청사',chargerId:'ME-0512',card:'…4567',car:'12가 3456',start:'2026.06.22 09:40',end:'충전 중',dur:'0:12:05',kwh:8.6,unit:347.0,charge:null,payKind:'-',payAmt:null,status:'충전중',payDt:'—',authNo:'',free:false},
-    {seq:3,busi:'GS차지비',roaming:true,station:'GS차지비 강남',addr:'서울특별시 강남구 테헤란로 152',chargerId:'PI-1188',output:200,speed:'급속',ctype:'DC+AC3상(콤보)',card:'…4567',car:'12가 3456',start:'2026.06.17 14:08',end:'2026.06.17 14:47',startTs:'2026-06-17 14:08:11',endTs:'2026-06-17 14:47:31',dur:'0:38:20',kwh:45.6,unit:392.0,charge:19244,payKind:'간편결제',cardCorp:'',cardLast4:'',cardType:'모바일카드',payAmt:19244,status:'완료',payDt:'2026.06.17 14:48',authNo:'30012347',free:false},
-    // 결제실패(로밍 SK) — 사유 툴팁
-    {seq:4,busi:'SK일렉링크',roaming:true,station:'SK시그넷 대치',chargerId:'ST-0922',card:'…7788',car:'34나 5678',start:'2026.06.14 19:33',end:'2026.06.14 19:47',dur:'0:13:52',kwh:12.4,unit:392.0,charge:4860,payKind:'간편결제',payAmt:0,status:'결제실패',failReason:'빌키(자동결제 수단) 미등록 — 결제라인 미생성',payDt:'—',authNo:'',free:false},
-    // 무료(공단, FREE_YN=Y / CHGER_PAY_YN=N)
-    {seq:5,busi:'환경부(KECO)',roaming:false,station:'환경부 양재 (무료개방)',chargerId:'ME-0210',card:'…7788',car:'34나 5678',start:'2026.06.07 13:20',end:'2026.06.07 13:39',dur:'0:19:10',kwh:15.1,unit:0,charge:0,payKind:'-',payAmt:0,status:'무료',payDt:'-',authNo:'',free:true},
-    // 결제대기(공단, 미결제 PAY_RSLT=1)
-    {seq:6,busi:'환경부(KECO)',roaming:false,station:'환경부 선릉',chargerId:'ME-0777',card:'…7788',car:'34나 5678',start:'2026.06.03 09:05',end:'2026.06.03 09:25',dur:'0:19:44',kwh:20.0,unit:347.0,charge:5240,payKind:'간편결제',payAmt:0,status:'결제대기',payDt:'—',authNo:'',free:false},
-    // 취소(로밍, PAY_RESULT=5 환불)
-    {seq:7,busi:'GS차지비',roaming:true,station:'차지비 서초',chargerId:'PI-0345',card:'…4567',car:'12가 3456',start:'2026.06.01 07:50',end:'2026.06.01 08:22',dur:'0:31:40',kwh:14.2,unit:240.0,charge:3408,payKind:'간편결제',payAmt:0,status:'취소',payDt:'2026.06.01 09:10',authNo:'',free:false},
-    // [ISS-072] 결제대기(로밍, PAYRESULT=6 전달) — 성공 전 중간단계 → 대기 편입(충전중 아님). 합계 미포함(payAmt=0)
-    {seq:8,busi:'SK일렉링크',roaming:true,station:'SK 판교테크노',chargerId:'SK-0450',card:'…7788',car:'34나 5678',start:'2026.05.28 18:12',end:'2026.05.28 18:41',dur:'0:29:03',kwh:16.7,unit:288.0,charge:4810,payKind:'간편결제',payAmt:0,status:'결제대기',payDt:'—',authNo:'',free:false}
-  ];
-  POST.forEach(function(r){ r.mode='post'; });
-  // 월 추이(mock, 최근 6개월 총 이용금액) — 마지막(당월)은 POST 합계로 동기화
-  var TREND=[{m:'01',v:38200},{m:'02',v:45100},{m:'03',v:52300},{m:'04',v:41800},{m:'05',v:58900},{m:'06',v:0}];
+  $.ajax({
+    type: 'POST',
+    url: '/member/updateCIAjax.do',
+    dataType: 'json',
+    data: { di: di, ci: ci },
+    success: function (data) {
+      var cnt = parseInt(data.result, 10);
+      if (cnt === 0) alert('가입 정보와 불일치합니다.');
+    }
+  });
 
-  function poVal(id){ var e=$(id); return e?e.value:''; }
-  function poRows(){
-    var card=poVal('poCard').split(' ')[0], busi=poVal('poBusi'), q=(poVal('poSearch')||'').trim().toLowerCase();
-    return POST.filter(function(r){
-      if(card && r.card!==card) return false;
-      if(busi && r.busi!==busi) return false;
-      if(q && r.station.toLowerCase().indexOf(q)<0) return false;
-      return true;
-    });
-  }
-  function rcptCell(r){
-    return hasRcpt(r) ? '<button class="btn btn-ghost btn-xs cfq-rcbtn" data-rc="'+r.mode+':'+r.seq+'">영수증</button>'
-                      : '<span class="cfq-noreceipt">미발급</span>';
-  }
-  function renderPoPager(pages){
-    var el=$('poPager'); if(!el) return;
-    if(pages<=1){ el.innerHTML=''; el.hidden=true; return; }
-    el.hidden=false;
-    var h='<button '+(poPage<=1?'disabled':'')+' data-p="prev" aria-label="이전 페이지">‹</button>';
-    for(var i=1;i<=pages;i++){ h+='<button class="'+(i===poPage?'active':'')+'" data-p="'+i+'" aria-label="'+i+'페이지"'+(i===poPage?' aria-current="page"':'')+'>'+i+'</button>'; }
-    h+='<button '+(poPage>=pages?'disabled':'')+' data-p="next" aria-label="다음 페이지">›</button>';
-    el.innerHTML=h;
-    Array.prototype.forEach.call(el.querySelectorAll('button'),function(b){
-      b.addEventListener('click',function(){
-        var p=b.dataset.p;
-        if(p==='prev') poPage=Math.max(1,poPage-1);
-        else if(p==='next') poPage=Math.min(pages,poPage+1);
-        else poPage=parseInt(p,10);
-        renderPost();
-      });
-    });
-  }
-  function renderPost(){
-    if(!$('poBody')) return;
-    // 상단 요약 — 총 이용금액(당월 결제금액 합, 잠정) + 추이 차트
-    var monthPay = POST.reduce(function(a,r){return a+(r.status==='완료'?r.payAmt:0);},0); // ★완료(결제완료)건만 합산
-    TREND[TREND.length-1].v = monthPay;
-    $('poTotal').textContent = won(monthPay);
-    var mx = Math.max.apply(null, TREND.map(function(t){return t.v;}))||1;
-    $('poTrend').innerHTML = TREND.map(function(t,i){
-      var cur=(i===TREND.length-1);
-      return '<div class="cfq-bar'+(cur?' cur':'')+'"><span class="cfq-bar-fill" style="height:'+Math.max(6,Math.round(t.v/mx*100))+'%"></span><span class="cfq-bar-lab">'+t.m+'</span></div>';
-    }).join('');
-    // 세션 리스트 (정렬 적용)
-    var rows=sortRows(poRows(),poSort); markSort('#poTable thead',poSort);
-    $('poCount').textContent=rows.length;
-    // 페이지네이션: 필터/정렬이 바뀌면 1페이지로, 페이저 클릭이면 현재 페이지 유지
-    var poSig = JSON.stringify([poVal('poCard'),poVal('poBusi'),(poVal('poSearch')||'').trim(),poSort.key,poSort.dir]);
-    if (poSig !== poLastSig) { poPage = 1; poLastSig = poSig; }
-    var poPages = Math.max(1, Math.ceil(rows.length / PO_PAGE_SIZE));
-    if (poPage > poPages) poPage = poPages;
-    var pageRows = rows.slice((poPage-1)*PO_PAGE_SIZE, poPage*PO_PAGE_SIZE);
-    $('poBody').innerHTML = rows.length ? pageRows.map(function(r){
-      var chargeTxt = r.free ? '<span class="cfq-free">무료</span>' : (r.charge==null ? '<span class="cfq-dash">—</span>' : won(r.charge));
-      var payTxt = r.free ? '<span class="cfq-free">무료</span>' : (r.status==='충전중' ? '<span class="cfq-dash">집계중</span>' : (r.payAmt>0 ? won(r.payAmt) : '<span class="cfq-dash">—</span>'));
-      return '<tr>'
-        +'<td>'+r.seq+'</td>'
-        +'<td>'+r.busi+rmBadge(r)+'</td>'
-        +'<td class="cfq-l">'+r.station+'</td>'
-        +'<td>'+r.card+'</td>'
-        +'<td class="cfq-dt">'+r.start+'</td>'
-        +'<td class="cfq-dt">'+r.end+'</td>'
-        +'<td class="num">'+r.kwh.toFixed(1)+'</td>'
-        +'<td class="num">'+chargeTxt+'</td>'
-        +'<td class="num">'+payTxt+'</td>'
-        +'<td>'+statusCell(r)+'</td>'
-        +'<td class="cfq-dt">'+r.payDt+'</td>'
-        +'<td>'+rcptCell(r)+'</td>'
-        +'</tr>';
-    }).join('') : '<tr><td colspan="12" class="cfq-none">조건에 맞는 이용내역이 없습니다.</td></tr>';
-    // 합계바: 총 충전시간·총 충전량·총 충전금액·총 결제금액
-    var tSec=rows.reduce(function(a,r){return a+durSec(r.dur);},0);
-    var tKwh=rows.reduce(function(a,r){return a+r.kwh;},0);
-    var tChg=rows.reduce(function(a,r){return a+(r.charge||0);},0);
-    var tPay=rows.reduce(function(a,r){return a+(r.status==='완료'?r.payAmt:0);},0); // 완료건만
-    $('poFoot').innerHTML = rows.length
-      ? '<tr class="cfq-sum"><td colspan="6">합계 · 총 충전시간 '+secHm(tSec)+'</td><td class="num">'+tKwh.toFixed(1)+'</td><td class="num">'+won(tChg)+'</td><td class="num">'+won(tPay)+'</td><td colspan="3">총 결제금액</td></tr>'
-      : '';
-    renderPoPager(poPages);
+  alert('본인인증을 완료하였습니다.');
+  window.location.reload();
+}
+
+$(function () {
+  var PER_PAGE = 10;
+  var TMP_CAR_ID = '00임0000';
+  var APPLY_URL = "/mngInqire/initMemberCardApplicationAction.do";
+  var MY_CARD_LIST_URL = "/mngInqire/memberCard/selectMyCardList.ajax";
+  var ISSUE_LIST_URL = "/mngInqire/memberCard/selectMemberCardList.ajax";
+  var LOST_URL = "/mngInqire/updateCardLost.ajax";
+  var CAR_ID_URL = "/mngInqire/updateCarId.ajax";
+  var DUP_URL = "/mngInqire/memberCard/dupCarCk.ajax";
+  var REGI_CARD_URL = "/mngInqire/memberCard/billCard/regiBillCard.ajax";
+  var CARD_DETAIL_URL = "/mngInqire/memberCard/billCard/cardDetailPopup.ajax";
+  var CARD_INFO_URL = "/mngInqire/memberCard/billCard/updateBillCardInfo.ajax";
+  var PCC_URL = "/member/authPccRequest.do";
+  var PAYMENT_LIST_URL = "/mngInqire/actionCardPaymentPopupList.ajax";
+  var FAIL_LIST_URL = "/mngInqire/actionFailCardInfoPopupList.ajax";
+  var REPAY_LIST_URL = "/mngInqire/actionRepayCardInfoPopupList.ajax";
+  var INFO_ACCEPT_URL = "/portal/member/infoAccept.do";
+  var WALLET_LIST_URL = "/mngInqire/memberCard/selectCardWalletList.ajax";
+
+  var cardPage = 1;
+  var walletPage = 1;
+  var cardMap = {};       // 카드번호(하이픈 제외) → 보유 카드 행
+  var applyMap = {};      // 신청번호 → 발급 대기 신청 행
+  var carIdTarget = null;
+  var carIdDupOk = false;
+  var detailCardNo = '';  // 결제카드 상세조회 대상
+  var detailBillKey = '';
+  var detailPayYn = '';
+  var regiBillCardBusy = false;  // 카드등록 요청 진행 중 (중복 요청·중복 청구 방지)
+
+  // ui-common 은 openModal 만 전역으로 노출하므로 닫기는 공통 닫기 버튼 클릭으로 트리거한다
+  function fnCloseModal() {
+    $('.modal-container.is-active').find('.modal__close .button--close').trigger('click');
   }
 
-  /* ── 선불 데이터(mock): 예치금 입금 − 사용 차감. 잔여=입금−사용 ── */
-  var PRE_DEP=[
-    {date:'2026.06.02',amt:50000,receipt:'DEP-2026-0012'},
-    {date:'2026.05.10',amt:30000,receipt:'DEP-2026-0009'}
-  ];
-  var PRE_USE=[
-    {seq:1,mode:'pre',busi:'환경부(KECO)',roaming:false,station:'환경부 선릉',addr:'서울특별시 강남구 테헤란로 401',chargerId:'ME-0777',output:7,speed:'완속',ctype:'AC완속',card:'…4567',car:'12가 3456',start:'2026.06.03 09:05',end:'2026.06.03 09:25',startTs:'2026-06-03 09:05:02',endTs:'2026-06-03 09:25:46',dur:'0:19:44',kwh:20.0,unit:347.0,charge:6940,used:6940,balAfter:66325,payKind:'선불(예치금) 차감',cardType:'실물카드(EV등록)',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.06.03 09:26',authNo:'40012001',free:false},
-    {seq:2,mode:'pre',busi:'GS차지비',roaming:true,station:'차지비 서초',addr:'서울특별시 서초구 서초대로 396',chargerId:'PI-0345',output:50,speed:'급속',ctype:'DC차데모',card:'…4567',car:'12가 3456',start:'2026.05.20 16:40',end:'2026.05.20 20:32',startTs:'2026-05-20 16:40:19',endTs:'2026-05-20 20:32:29',dur:'3:52:10',kwh:28.3,unit:240.0,charge:6735,used:6735,balAfter:23265,payKind:'선불(예치금) 차감',cardType:'회원번호',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.05.20 20:33',authNo:'40012002',free:false},
-    {seq:3,mode:'pre',busi:'환경부(KECO)',roaming:false,station:'환경부 역삼',addr:'서울특별시 강남구 역삼로 172',chargerId:'ME-0912',output:7,speed:'완속',ctype:'AC완속',card:'…4567',car:'12가 3456',start:'2026.05.14 08:10',end:'2026.05.14 08:44',startTs:'2026-05-14 08:10:03',endTs:'2026-05-14 08:44:51',dur:'0:34:48',kwh:12.1,unit:347.0,charge:4199,used:4199,balAfter:19066,payKind:'선불(예치금) 차감',cardType:'실물카드(EV등록)',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.05.14 08:45',authNo:'40012003',free:false},
-    {seq:4,mode:'pre',busi:'SK일렉링크',roaming:true,station:'SK 판교테크노',addr:'경기도 성남시 분당구 판교역로 235',chargerId:'SK-0450',output:100,speed:'급속',ctype:'DC콤보',card:'…4567',car:'12가 3456',start:'2026.05.06 13:22',end:'2026.05.06 13:51',startTs:'2026-05-06 13:22:40',endTs:'2026-05-06 13:51:11',dur:'0:28:31',kwh:24.6,unit:288.0,charge:7085,used:7085,balAfter:11981,payKind:'선불(예치금) 차감',cardType:'회원번호',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.05.06 13:52',authNo:'40012004',free:false},
-    {seq:5,mode:'pre',busi:'차지비',roaming:true,station:'차지비 강남',addr:'서울특별시 강남구 테헤란로 152',chargerId:'PI-0781',output:50,speed:'급속',ctype:'DC차데모',card:'…4567',car:'12가 3456',start:'2026.04.28 19:05',end:'2026.04.28 19:40',startTs:'2026-04-28 19:05:12',endTs:'2026-04-28 19:40:33',dur:'0:35:21',kwh:15.4,unit:240.0,charge:3696,used:3696,balAfter:8285,payKind:'선불(예치금) 차감',cardType:'실물카드(EV등록)',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.04.28 19:41',authNo:'40012005',free:false},
-    {seq:6,mode:'pre',busi:'환경부(KECO)',roaming:false,station:'환경부 강남구청',addr:'서울특별시 강남구 학동로 426',chargerId:'ME-0333',output:7,speed:'완속',ctype:'AC완속',card:'…4567',car:'12가 3456',start:'2026.04.20 07:50',end:'2026.04.20 08:30',startTs:'2026-04-20 07:50:41',endTs:'2026-04-20 08:30:20',dur:'0:39:39',kwh:9.8,unit:347.0,charge:3400,used:3400,balAfter:4885,payKind:'선불(예치금) 차감',cardType:'실물카드(EV등록)',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.04.20 08:31',authNo:'40012006',free:false},
-    {seq:7,mode:'pre',busi:'SK일렉링크',roaming:true,station:'SK 서초',addr:'서울특별시 서초구 강남대로 373',chargerId:'SK-0208',output:100,speed:'급속',ctype:'DC콤보',card:'…4567',car:'12가 3456',start:'2026.04.11 21:15',end:'2026.04.11 21:38',startTs:'2026-04-11 21:15:08',endTs:'2026-04-11 21:38:52',dur:'0:23:44',kwh:10.0,unit:288.0,charge:2880,used:2880,balAfter:2005,payKind:'선불(예치금) 차감',cardType:'회원번호',cardCorp:'',cardLast4:'',payResult:'성공',payDt:'2026.04.11 21:39',authNo:'40012007',free:false}
-  ];
-  function renderPre(){
-    if(!$('prBody')) return;
-    var dep=PRE_DEP.reduce(function(a,d){return a+d.amt;},0);
-    var used=PRE_USE.reduce(function(a,u){return a+u.used;},0);
-    $('prDeposit').textContent = won(dep)+'원';
-    $('prUsed').textContent = won(used)+'원';
-    $('prRest').textContent = won(dep-used)+'원';
-    $('prDepList').innerHTML = PRE_DEP.map(function(d){
-      return '<li><span class="dep-dt">'+d.date+'</span><span class="dep-amt">+'+won(d.amt)+'원</span><button class="btn btn-ghost btn-xs" data-dep="'+d.receipt+'">입금 영수증</button></li>';
-    }).join('');
-    var rows=sortRows(PRE_USE,prSort); markSort('#prTable thead',prSort);
-    $('prCount').textContent=rows.length;
-    var has=rows.length>0;
-    $('prTable').style.display = has?'':'none';
-    $('prEmpty').hidden = has;
-    // 페이지네이션: 정렬 변경 시 1페이지로, 페이저 클릭 시 유지
-    var prSig = JSON.stringify([prSort.key,prSort.dir]);
-    if (prSig !== prLastSig) { prPage = 1; prLastSig = prSig; }
-    var prPages = Math.max(1, Math.ceil(rows.length / PR_PAGE_SIZE));
-    if (prPage > prPages) prPage = prPages;
-    var prPageRows = rows.slice((prPage-1)*PR_PAGE_SIZE, prPage*PR_PAGE_SIZE);
-    $('prBody').innerHTML = prPageRows.map(function(r){
-      return '<tr>'
-        +'<td>'+r.seq+'</td><td>'+r.busi+rmBadge(r)+'</td><td class="cfq-l">'+r.station+'</td><td>'+r.card+'</td>'
-        +'<td class="cfq-dt">'+r.start+'</td><td class="num">'+r.kwh.toFixed(1)+'</td>'
-        +'<td class="num">'+won(r.used)+'</td><td class="num">'+won(r.balAfter)+'</td>'
-        +'<td>'+rcptCell(r)+'</td></tr>';
-    }).join('');
-    renderPrPager(prPages);
-  }
-  function renderPrPager(pages){
-    var el=$('prPager'); if(!el) return;
-    if(pages<=1){ el.innerHTML=''; el.hidden=true; return; }
-    el.hidden=false;
-    var h='<button '+(prPage<=1?'disabled':'')+' data-p="prev" aria-label="이전 페이지">‹</button>';
-    for(var i=1;i<=pages;i++){ h+='<button class="'+(i===prPage?'active':'')+'" data-p="'+i+'" aria-label="'+i+'페이지"'+(i===prPage?' aria-current="page"':'')+'>'+i+'</button>'; }
-    h+='<button '+(prPage>=pages?'disabled':'')+' data-p="next" aria-label="다음 페이지">›</button>';
-    el.innerHTML=h;
-    Array.prototype.forEach.call(el.querySelectorAll('button'),function(b){
-      b.addEventListener('click',function(){
-        var p=b.dataset.p;
-        if(p==='prev') prPage=Math.max(1,prPage-1);
-        else if(p==='next') prPage=Math.min(pages,prPage+1);
-        else prPage=parseInt(p,10);
-        renderPre();
-      });
-    });
+  function fnEsc(v) {
+    return $('<div>').text(v == null ? '' : v).html();
   }
 
-  /* ── 영수증(건별 증빙) 모달 — 무료·미승인건은 영수증 없음 ── */
-  function findSession(key){
-    var p=key.split(':'), arr=(p[0]==='pre'?PRE_USE:POST);
-    for(var i=0;i<arr.length;i++) if(String(arr[i].seq)===p[1]) return arr[i];
-    return null;
+  function fnPlainNo(cardNo) {
+    return String(cardNo == null ? '' : cardNo).replace(/-/g, '');
   }
-  // 실적용 단가 = 충전요금 ÷ 충전량 (정가 아님, 할인 반영)
-  function fmtUnit(r){ return (r.kwh>0 ? (Math.round(r.charge/r.kwh*10)/10).toFixed(1) : '0.0'); }
-  function payMethod(r){
-    if(r.mode==='pre') return r.payKind||'선불(예치금) 차감';
-    if(r.payKind==='신용카드') return '신용카드 · '+(r.cardCorp||'')+' ****-'+(r.cardLast4||'****');
-    return r.payKind||'-';
+
+  function fnComma(v) {
+    return String(Number(v) || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
-  function openRcpt(r){
-    if(!hasRcpt(r)){
-      openModal('영수증', r.station, '<div class="cfq-norc"><p><b>영수증이 발급되지 않는 건입니다.</b></p><p><b>완료(결제완료)</b>건만 영수증이 발급됩니다. 무료·미결제·결제대기·결제실패·취소건은 카드 승인번호가 없어 증빙(영수증)이 발급되지 않습니다.</p></div>',
-        '<button class="btn btn-secondary" data-cc-close>닫기</button>');
+
+  function fnNvl(v) {
+    return (v == null || v === 'null') ? '' : v;
+  }
+
+  // 제3자정보제공 미동의 시 결제카드 등록 불가 (동의 화면으로 이동)
+  function fnCheckAccept() {
+    if (PAGE_INFO.acceptYn === 'Y') return true;
+    if (confirm('제3자정보제공에 동의하신 후 이용이 가능합니다.\n동의 화면으로 이동하시겠습니까?')) {
+      location.href = INFO_ACCEPT_URL;
+    }
+    return false;
+  }
+
+  function fnDataNone(colspan, extraHtml) {
+    return '<tr><td colspan="' + colspan + '">'
+         + '<div class="data-none">'
+         + '<span class="data-none__icon"><i class="svg-icon infomation" aria-hidden="true"></i></span>'
+         + '<strong class="data-none__title">조회된 내용이 없습니다.</strong>'
+         + (extraHtml || '')
+         + '</div>'
+         + '</td></tr>';
+  }
+
+  function fnListError(colspan) {
+    return '<tr><td colspan="' + colspan + '">'
+         + '<div class="data-none">'
+         + '<span class="data-none__icon"><i class="svg-icon infomation" aria-hidden="true"></i></span>'
+         + '<strong class="data-none__title">조회 중 오류가 발생하였습니다. 관리자에게 문의하세요.</strong>'
+         + '</div>'
+         + '</td></tr>';
+  }
+
+  // 공통 페이지네이션 렌더 (버튼순서 [첫,이전,다음,마지막])
+  function fnRenderPaging($section, listCount, current, loader) {
+    var totalPages = Math.max(1, Math.ceil(listCount / PER_PAGE));
+    if (current > totalPages) current = totalPages;
+
+    var $pc = $section.find('.pagination.pc-only');
+    var $list = $pc.find('.pagination__list');
+    var block = Math.floor((current - 1) / 10);
+    var start = block * 10 + 1;
+    var end = Math.min(start + 9, totalPages);
+
+    var html = '';
+    for (var p = start; p <= end; p++) {
+      html += '<a href="#none" class="pagination__link' + (p === current ? ' pagination__link--selected' : '') + '" data-page="' + p + '">' + p + '</a>';
+    }
+    $list.html(html);
+
+    var $btns = $pc.find('.pagination__button');
+    $btns.eq(0).off('click.pg').on('click.pg', function () { if (current > 1) loader(1); });
+    $btns.eq(1).off('click.pg').on('click.pg', function () { if (current > 1) loader(current - 1); });
+    $btns.eq(2).off('click.pg').on('click.pg', function () { if (current < totalPages) loader(current + 1); });
+    $btns.eq(3).off('click.pg').on('click.pg', function () { if (current < totalPages) loader(totalPages); });
+    $list.find('.pagination__link').off('click.pg').on('click.pg', function (e) {
+      e.preventDefault(); loader(Number($(this).data('page')));
+    });
+
+    var $frac = $section.find('.pagination--fraction');
+    $frac.find('.pagination__current').text(current);
+    $frac.find('.pagination__total').text(totalPages);
+    $frac.find('.pagination__button').eq(0).off('click.pg').on('click.pg', function () { if (current > 1) loader(current - 1); });
+    $frac.find('.pagination__button').eq(1).off('click.pg').on('click.pg', function () { if (current < totalPages) loader(current + 1); });
+  }
+
+  /* ---------------- 보유 카드 목록 ---------------- */
+
+  // 결제카드: 카드사명·메모 + 등록/변경 버튼 (한전등록회원은 등록만)
+  function fnBillCell(row) {
+    var key = fnEsc(fnPlainNo(row.CARD_NO));
+    var html = '';
+
+    if (row.BILL_KEY) {
+      html += fnEsc(row.BILL_CARD_CD_NM) || '등록';
+      var memo = $.trim(fnNvl(row.BILL_CARD_MEMO));
+      if (memo) html += '<span class="text-description">' + fnEsc(memo) + '</span>';
+    } else {
+      html += '<span class="text-warning">미등록</span>';
+    }
+
+    var showRegist = (row.KP_YN !== 'Y') ? (!row.BILL_KEY && row.USE_YN === 'Y') : (row.USE_YN === 'Y');
+
+    html += '<div class="button-group">';
+    if (showRegist) {
+      html += '<button type="button" class="button button--tertiary js-bill-regist" data-key="' + key + '"><span class="button__label">등록필요</span></button>';
+    }
+    if (row.KP_YN !== 'Y' && row.BILL_KEY) {
+      html += '<button type="button" class="button button--tertiary js-bill-change" data-key="' + key + '"><span class="button__label">변경</span></button>';
+    }
+    html += '</div>';
+
+    return html;
+  }
+
+  // 카드상태: 사용가능/사용불가(분실·정지) + 결제실패·재결제 내역
+  function fnStatusCell(row) {
+    var key = fnEsc(fnPlainNo(row.CARD_NO));
+    var html;
+
+    if (row.USE_YN === 'Y') {
+      html = '<div class="badge badge--light badge--primary"><span class="badge__label">사용가능</span></div>';
+    } else {
+      var reason = [];
+      if (row.LOSS_YN === 'Y') reason.push(row.CAR_ID === TMP_CAR_ID ? '차량번호 등록필요' : '분실');
+      if (row.STOP_YN === 'Y') reason.push('정지');
+
+      html = '<div class="badge badge--light badge--error"><span class="badge__label">사용불가</span></div>';
+      if (reason.length) html += '<span class="badge-description text-error">' + fnEsc(reason.join('·')) + '</span>';
+    }
+
+    var actions = '';
+    if (Number(row.CNT) > 0) {
+      actions += '<button type="button" class="button button--tertiary js-fail-list" data-key="' + key + '"><span class="button__label">결제실패 ' + fnEsc(row.CNT) + '건</span></button>';
+    }
+    if (row.RE_SEQ != null && row.RE_SEQ !== '') {
+      actions += '<button type="button" class="button button--tertiary js-repay-list" data-key="' + key + '"><span class="button__label">재결제 조회</span></button>';
+    }
+    if (actions) html += '<div class="button-group">' + actions + '</div>';
+
+    return html;
+  }
+
+  // 관리: 사용가능 카드는 발급조회·분실신고·정보수정, 사용불가 카드는 재발급만
+  // 임시 차량번호 상태는 정보수정으로 차량번호를 등록해야 분실이 해제되므로 예외로 남긴다
+  function fnCardManageCell(row) {
+    var key = fnEsc(fnPlainNo(row.CARD_NO));
+    var modify = '<button type="button" class="button button--tertiary js-card-modify" data-key="' + key + '"><span class="button__label">정보수정</span></button>';
+    var html = '<div class="button-group">';
+
+    if (row.USE_YN === 'Y') {
+      html += '<button type="button" class="button button--tertiary js-card-issue" data-key="' + key + '"><span class="button__label">발급조회</span></button>'
+            + '<button type="button" class="button button--tertiary js-card-lost" data-key="' + key + '"><span class="button__label">분실신고</span></button>'
+            + modify;
+    } else {
+      if (row.LOSS_YN === 'Y' && row.CAR_ID === TMP_CAR_ID) html += modify;
+      html += '<button type="button" class="button button--secondary js-card-reissue"><span class="button__label">재발급</span></button>';
+    }
+
+    return html + '</div>';
+  }
+
+  function fnCheckCell(i, key) {
+    return '<div class="checkbox">'
+         + '<input type="checkbox" id="chkCard' + i + '" class="checkbox__input js-card-check" data-key="' + fnEsc(key) + '" />'
+         + '<label for="chkCard' + i + '" class="checkbox__label"><span class="blind">선택</span></label>'
+         + '</div>';
+  }
+
+  // 발급 대기 신청 건은 카드번호 대신 미발급 + 신청일자
+  function fnApplyNoCell(row) {
+    return '<span class="text-warning">미발급</span>'
+         + '<span class="text-description">신청 ' + fnEsc(row.REG_DATE) + '</span>';
+  }
+
+  // 발급 대기 신청 건의 카드상태 = 발급상태 + 발급요청사유
+  function fnApplyStatusCell(row) {
+    var html = fnIssueBadge(row.ISSUE_STAT_CD, row.ISSUE_STAT_CD_NM);
+    if (row.ISSUE_REASON_NM) html += '<span class="badge-description">' + fnEsc(row.ISSUE_REASON_NM) + '</span>';
+    return html;
+  }
+
+  // 보유 카드와 발급 대기 신청 건을 같은 표에 그린다 (관리 열만 다르게)
+  function fnDrawCardList(list) {
+    var $body = $('#cardListBody');
+    cardMap = {};
+    applyMap = {};
+    $('#checkAllCards').prop('checked', false);
+
+    if (!list.length) {
+      $body.html(fnDataNone(8,
+        '<p class="data-none__description">보유한 회원카드와 진행 중인 신청 건이 없습니다.<br>기후에너지환경부 무공해차 통합 회원카드를 신청하면 전국 모든 충전소를 로밍 수수료 없이 이용할 수 있습니다.</p>'
+        + '<div class="button-group">'
+        + '<a href="' + APPLY_URL + '" class="button button--tertiary button--large"><span class="button__label">회원카드 신청하기</span></a>'
+        + '</div>'));
       return;
     }
-    var amt = r.mode==='pre' ? r.used : r.payAmt;
-    var busiTxt = r.busi + (r.roaming ? ' <span class="rm-badge">로밍</span>' : '');
-    function row(k,v){ return '<dt>'+k+'</dt><dd>'+v+'</dd>'; }
-    var b='';
-    b+=row('충전소', r.station+'<br><small class="rcpt-mut">'+(r.addr||'')+'</small>');
-    b+=row('충전사업자', busiTxt+(r.roaming?' <small class="rcpt-mut">(충전기 소유 사업자)</small>':''));
-    b+=row('충전기 ID', r.chargerId);
-    b+=row('출력 · 타입', (r.speed||'')+' '+(r.output||'')+'kW <small class="rcpt-mut">('+(r.ctype||'')+')</small>');
-    b+=row('충전 시작', r.startTs||r.start);
-    b+=row('충전 종료', r.endTs||r.end);
-    b+=row('충전량', r.kwh.toFixed(1)+' kWh');
-    b+=row('충전단가', fmtUnit(r)+' 원/kWh <small class="rcpt-mut">(실적용 단가)</small>');
-    b+=row('충전요금', won(r.charge)+' 원');
-    b+=row('결제금액', '<b>'+won(amt)+' 원</b>');
-    b+=row('결제수단', payMethod(r));
-    b+=row('카드타입', r.cardType||'-');
-    b+=row('카드번호', r.card);
-    b+=row('카드 승인번호', '<span class="rcpt-auth">'+r.authNo+'</span>');
-    b+=row('결제일시', r.payDt);
-    var body='<dl class="rcpt-kv rcpt-16">'+b+'</dl>'
-      +'<div class="rcpt-total"><span style="font-weight:800;">결제금액 (총액)</span><b>'+won(amt)+'원</b></div>'
-      +'<p class="rcpt-foot">※ 표시 금액은 <b>할인이 반영된 실 결제금액</b>입니다(별도 할인·부가세 항목 없음, 총액 표기). BC그린카드 간편결제 할인은 <b>카드사 대금청구 시</b> 적용됩니다.</p>';
-    openModal('충전 영수증 (건별 증빙)', (r.startTs||r.start)+' · '+r.station, body,
-      '<button class="btn btn-secondary" data-cc-close>닫기</button><button class="btn btn-ghost" id="rcptPrint">인쇄</button><button class="btn btn-primary" id="rcptDl">영수증 다운로드</button>');
-    var dl=$('rcptDl'); if(dl) dl.addEventListener('click',function(){ toast('영수증(PDF)을 다운로드합니다. (프로토타입: 실제 발행 없음)','success'); });
-    var pr=$('rcptPrint'); if(pr) pr.addEventListener('click',function(){ toast('인쇄 미리보기를 엽니다. (프로토타입)','info'); });
+
+    var noPayment = '<span class="text-description">카드 발급 후 등록</span>';
+    var html = '';
+
+    for (var i = 0; i < list.length; i++) {
+      var row = list[i];
+      var isApply = (row.SECTION === 'APPLY');
+      var key = fnPlainNo(row.CARD_NO);
+      if (isApply) applyMap[String(row.CARD_REQ_SEQ)] = row;
+      else cardMap[key] = row;
+
+      var carId = fnEsc(row.CAR_ID) || '-';
+      if (row.CAR_INFO_NM) carId += '<span class="text-description">' + fnEsc(row.CAR_INFO_NM) + '</span>';
+
+      html += '<tr>'
+            + '<td>' + (isApply ? '' : fnCheckCell(i, key)) + '</td>'
+            + '<td>' + fnEsc(row.RNUM) + '</td>'
+            + '<td>' + (isApply ? fnApplyNoCell(row) : (fnEsc(row.CARDNO) || fnEsc(row.CARD_NO))) + '</td>'
+            + '<td>' + (fnEsc(row.CARD_TYPE_NM) || '-') + '</td>'
+            + '<td>' + carId + '</td>'
+            + '<td>' + (isApply ? noPayment : fnBillCell(row)) + '</td>'
+            + '<td>' + (isApply ? fnApplyStatusCell(row) : fnStatusCell(row)) + '</td>'
+            + '<td>' + (isApply ? fnApplyManageCell(row) : fnCardManageCell(row)) + '</td>'
+            + '</tr>';
+    }
+    $body.html(html);
   }
 
-  /* ── 월별 명세서(인쇄용) — 결제 확정분 증빙. 세션 상세 리스트 없음(엑셀 담당) ── */
-  function stmtDate(){ var d=new Date(); function p(n){return (n<10?'0':'')+n;} return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
-  function aggByBusi(rows, key){
-    var m={}, order=[];
-    rows.forEach(function(r){ var k=r.busi+'|'+(r.roaming?1:0); if(!m[k]){ m[k]={busi:r.busi,roaming:r.roaming,cnt:0,amt:0}; order.push(k); } m[k].cnt++; m[k].amt+=r[key]; });
-    return order.map(function(k){ return m[k]; });
-  }
-  function cpoBody(g){ return g.map(function(x){ return '<tr><td>'+x.busi+(x.roaming?' <span class="stmt-rm">로밍</span>':'')+'</td><td class="r">'+x.cnt+'건</td><td class="r">'+won(x.amt)+'원</td></tr>'; }).join(''); }
-  function stmtShell(kind, memberHtml, inner, notes){
-    return '<div class="stmt-doc">'
-      + '<div class="stmt-head"><div class="stmt-brand">무공해차 통합누리집 ///EV</div>'
-      + '<h1 class="stmt-title">충전요금 명세서</h1>'
-      + '<div class="stmt-sub">과금구분 <b>'+kind+'</b> · 대상 년월 <b>2026-06</b> · 발행일 '+stmtDate()+'</div></div>'
-      + '<dl class="stmt-member">'+memberHtml+'</dl>' + inner
-      + '<div class="stmt-notes">'+notes.map(function(n){return '<p>· '+n+'</p>';}).join('')+'</div></div>';
-  }
-  function mrow(k,v){ return '<dt>'+k+'</dt><dd>'+v+'</dd>'; }
-  function buildPostStmt(){
-    var comp=POST.filter(function(r){return r.status==='완료';});
-    var amt=comp.reduce(function(a,r){return a+r.payAmt;},0), kwh=comp.reduce(function(a,r){return a+r.kwh;},0);
-    var g=aggByBusi(comp,'payAmt'), tc=comp.length;
-    var member=mrow('회원명','홍길동')+mrow('회원카드번호','…4567')+mrow('결제수단','신한카드 ****-1234')+mrow('결제','완료');
-    var inner='<div class="stmt-emph"><div class="stmt-emph-l"><span>월 확정 결제금액 (결제 완료분)</span><b>'+won(amt)+'원</b></div>'
-      +'<div class="stmt-emph-r"><div>결제 건수 <b>'+tc+'건</b></div><div>총 충전량 <b>'+kwh.toFixed(1)+' kWh</b></div></div></div>'
-      +'<table class="stmt-table"><caption>충전사업자(CPO)별 집계</caption><thead><tr><th>충전사업자</th><th class="r">건수</th><th class="r">금액</th></tr></thead>'
-      +'<tbody>'+cpoBody(g)+'</tbody><tfoot><tr><td>합계</td><td class="r">'+tc+'건</td><td class="r">'+won(amt)+'원</td></tr></tfoot></table>';
-    return stmtShell('후불', member, inner, [
-      '금액은 총액(부가세 포함)이며, 결제 완료분입니다.',
-      '세부 이용내역은 [이용요금 조회]·엑셀에서 확인하세요.']);
-  }
-  function buildPreStmt(){
-    var dep=PRE_DEP.reduce(function(a,d){return a+d.amt;},0);
-    var used=PRE_USE.reduce(function(a,u){return a+u.used;},0), rest=dep-used;
-    var g=aggByBusi(PRE_USE,'used'), tc=PRE_USE.length;
-    var member=mrow('회원명','홍길동')+mrow('회원카드번호','…4567');
-    var cards='<div class="stmt-cards"><div class="stmt-card"><span>총 입금(예치)</span><b>'+won(dep)+'원</b></div>'
-      +'<div class="stmt-card"><span>사용(차감)</span><b>'+won(used)+'원</b></div>'
-      +'<div class="stmt-card hl"><span>잔여금액</span><b>'+won(rest)+'원</b></div></div>';
-    var depT='<table class="stmt-table"><caption>입금 내역</caption><thead><tr><th>입금일</th><th>입금자</th><th class="r">금액</th></tr></thead><tbody>'
-      +PRE_DEP.map(function(d){return '<tr><td>'+d.date+'</td><td>홍길동</td><td class="r">'+won(d.amt)+'원</td></tr>';}).join('')
-      +'</tbody><tfoot><tr><td>합계</td><td></td><td class="r">'+won(dep)+'원</td></tr></tfoot></table>';
-    var useT='<table class="stmt-table"><caption>사용(충전) 집계 · 충전사업자(CPO)별</caption><thead><tr><th>충전사업자</th><th class="r">건수</th><th class="r">금액</th></tr></thead>'
-      +'<tbody>'+cpoBody(g)+'</tbody><tfoot><tr><td>합계</td><td class="r">'+tc+'건</td><td class="r">'+won(used)+'원</td></tr></tfoot></table>';
-    return stmtShell('선불', member, cards+depT+useT, [
-      '선불은 예치금(입금) 차감 방식이며, 잔여금액 = 총 입금 - 사용입니다.',
-      '입금 영수증은 별도로 제공됩니다.',
-      '세부 사용내역은 [이용요금 조회]·엑셀에서 확인하세요.']);
-  }
-  function printStmt(html){ var el=$('stmtPrint'); if(!el) return; el.innerHTML=html; document.body.classList.add('stmt-printing'); window.print(); }
-  window.addEventListener('afterprint', function(){ document.body.classList.remove('stmt-printing'); });
+  // 검색어는 하이픈 제거 후 숫자 12자 이상이면 카드번호, 그 외는 차량번호로 조회
+  function fnCardSearchParams() {
+    var keyword = $.trim($('#s_keyword').val() || '');
+    var digits = keyword.replace(/-/g, '');
+    var isCardNo = digits.length >= 12 && /^[0-9]+$/.test(digits);
 
-  /* ── 과금모드 세그먼트(후불/선불) — 전역 [data-tabs]와 분리된 자체 토글 ── */
-  function initSeg(){
-    var btns=document.querySelectorAll('.cfq-seg-btn');
-    if(!btns.length) return;
-    Array.prototype.forEach.call(btns,function(b){
-      b.addEventListener('click',function(){
-        var key=b.dataset.feetab;
-        Array.prototype.forEach.call(btns,function(x){ var on=(x===b); x.classList.toggle('active',on); x.setAttribute('aria-selected',on?'true':'false'); });
-        document.querySelectorAll('.cfq-panel').forEach(function(p){ p.classList.toggle('active', p.dataset.feepanel===key); });
-      });
-    });
+    return {
+      s_card_type: $('#s_card_type').val() || '',
+      s_use_yn: $('#s_use_yn').val() || '',
+      s_bill_key_yn: $('#s_bill_key_yn').val() || '',
+      s_card_no: isCardNo ? digits : '',
+      s_car_id: isCardNo ? '' : keyword
+    };
   }
-  /* ── 월 네비(프로토타입: 라벨 토글) ── */
-  function initMonthNav(){
-    [['poPrev','poMonth'],['poNext','poMonth'],['prPrev','prMonth'],['prNext','prMonth']].forEach(function(x){
-      var b=$(x[0]); if(b) b.addEventListener('click',function(){ toast('선택한 월의 내역을 조회합니다. (프로토타입: 표시 데이터는 고정)','info'); });
+
+  function fnGetCardList(pageNo) {
+    var data = fnCardSearchParams();
+    data.spageNo = pageNo || 1;
+    data.srecordCountPerPage = PER_PAGE;
+
+    return $.ajax({
+      type: 'post',
+      url: MY_CARD_LIST_URL,
+      dataType: 'json',
+      data: data,
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+        var totalCount = Number(page._listCount) || 0;
+        cardPage = Number(page._pageNo) || 1;
+
+        fnDrawCardList(list);
+        $('#sectionMyCard > .board-toolbar .total-number__total').text(totalCount);
+        fnRenderPaging($('#sectionMyCard'), totalCount, cardPage, fnGetCardList);
+      },
+      error: function () {
+        $('#cardListBody').html(fnListError(8));
+      }
     });
   }
 
-  if($('poBody')){
-    // 영수증/입금영수증 위임
-    ['poBody','prBody'].forEach(function(id){ var el=$(id); if(el) el.addEventListener('click',function(e){
-      var b=e.target.closest('[data-rc]'); if(b){ var s=findSession(b.dataset.rc); if(s) openRcpt(s); }
-    }); });
-    var pdl=$('prDepList'); if(pdl) pdl.addEventListener('click',function(e){ var b=e.target.closest('[data-dep]'); if(b) toast('입금 영수증('+b.dataset.dep+')을 다운로드합니다.','success'); });
-    // 후불 필터
-    ['poCard','poBusi','poPeriod'].forEach(function(id){ var e=$(id); if(e) e.addEventListener('change',renderPost); });
-    var ps=$('poSearch'); if(ps){ ps.addEventListener('input',renderPost); ps.addEventListener('keydown',function(e){ if(e.key==='Enter') renderPost(); }); }
-    var psb=$('poSearchBtn'); if(psb) psb.addEventListener('click',renderPost);
-    var pr=$('poReset'); if(pr) pr.addEventListener('click',function(){ ['poCard','poBusi'].forEach(function(id){var e=$(id);if(e)e.value='';}); $('poPeriod').value='m'; $('poSearch').value=''; renderPost(); });
-    var px=$('poExcel'); if(px) px.addEventListener('click',function(){ toast(poRows().length+'건(세션 raw)을 Excel로 저장합니다.','success'); });
-    var pp=$('poPdf'); if(pp) pp.addEventListener('click',function(){ printStmt(buildPostStmt()); });
-    var qp=$('prPdf'); if(qp) qp.addEventListener('click',function(){ printStmt(buildPreStmt()); });
-    initSeg(); initMonthNav(); wireSort('#poTable thead',poSort,renderPost); wireSort('#prTable thead',prSort,renderPre); renderPost(); renderPre();
+  /* ---------------- 회원카드 신청 내역 ---------------- */
+
+  // 발급상태 배지: 발급완료(0005) 만 primary, 진행중 단계는 secondary
+  function fnIssueBadge(code, name) {
+    var cls = 'badge badge--light';
+    if (code === '0005') cls += ' badge--primary';
+    else if (code) cls += ' badge--secondary';
+    return '<div class="' + cls + '"><span class="badge__label">' + fnEsc(name) + '</span></div>';
   }
 
-})();
-</script>
-<script>
-/* 탭 라우팅 (?tab=) — 구버전 apply/check 진입은 허브(mycard)로 흡수 */
-(function(){
-  var tab = new URL(location.href).searchParams.get('tab');
-  var map = { apply:'mycard', check:'mycard', mycard:'mycard', history:'history', appwallet:'appwallet' };  // [ISS-076] 법인 앱 카드지갑
-  var target = map[tab];
-  if (target) { var btn = document.querySelector('#cardTabs .tab[data-tab="'+target+'"]'); if (btn) btn.click(); }
-})();
-</script>
-<script>
-/* 브레드크럼 3뎁스 = 활성 탭 라벨 동기화 (탭 전환·언어변경 모두 반영) */
-(function(){
-  var crumb = document.querySelector('.breadcrumb .current');
-  var tabs = document.getElementById('cardTabs');
-  if(!crumb || !tabs) return;
-  function sync(){ var a = tabs.querySelector('.tab.active'); if(a){ var s=(a.textContent||'').trim(); if(s) crumb.textContent = s; } }
-  new MutationObserver(sync).observe(tabs, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['class']});
-  sync();
-})();
-</script>
-<script>
-/* [ISS-076] 법인 앱 카드지갑 관리 — 법인회원 전용 탭. 개인/법인 분기(데모 토글) + 검색·목록·행별 삭제·페이징. */
-(function(){
-  var tabBtn = document.getElementById('tabAppWallet');
-  var toggle = document.getElementById('memTypeToggle');
-  var label  = document.getElementById('memTypeLabel');
-  var body   = document.getElementById('awBody');
-  var pager  = document.getElementById('awPager');
-  if(!tabBtn || !body) return;
+  // 신청 건 관리: 발급조회는 항상, 변경·삭제는 접수 상태에서만 처리
+  function fnApplyManageCell(row) {
+    var seq = fnEsc(row.CARD_REQ_SEQ);
+    var stat = fnEsc(row.ISSUE_STAT_CD);
+    return '<div class="button-group">'
+         + '<button type="button" class="button button--tertiary js-apply-issue" data-seq="' + seq + '"><span class="button__label">발급조회</span></button>'
+         + '<button type="button" class="button button--tertiary js-apply-modify" data-seq="' + seq + '" data-stat="' + stat + '"><span class="button__label">변경</span></button>'
+         + '<button type="button" class="button button--tertiary js-apply-delete" data-seq="' + seq + '" data-stat="' + stat + '"><span class="button__label">삭제</span></button>'
+         + '</div>';
+  }
 
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-  function tt(key, fb){ return (window.__i18n && __i18n.t) ? __i18n.t(key) : fb; }
-  function onlyDigits(s){ return (s||'').replace(/\D/g,''); }
+  /* ---------------- 결제카드 등록 ---------------- */
 
-  /* [DEV] ★3테이블 구조 (memberCard_sqlmap.xml:854~922):
-       APP_CARD_WALLET(지갑 카드마스터) + APP_CARD_USER_PHONE(핸드폰 매핑·SEQ) + EVCS_SMART_CARD(실물카드·상태 원천).
-       ★기 발급 회원카드에 핸드폰번호를 매핑하는 구조(카드 신규생성 아님). 실물카드 ↔ 앱지갑 ↔ 핸드폰.
-       ★지갑 등록(생성)은 모바일 앱에서만 — 대민 웹은 '조회 + 매핑해제'만.
-       컬럼 원천: 카드유형=CARD_TYPE코드→명 · 발급기관=R_BUSI.BNM(BID) · 회원카드번호/핸드폰=암호화→복호화(대민 ★마스킹) · 상태=★계산값(실물카드 LOSS_YN/STOP_YN → 정상/분실/정지) · 순번=ROW_NUMBER(등록 최신순).
-       아래는 시연용 더미(상태 정상/분실/정지 혼재). */
-  var WALLET = [
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-7788', phone:'010-1234-****', status:'정상'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-8291', phone:'010-2345-****', status:'정상'},
-    {type:'모바일', org:'한국전력(KEPCO)',  card:'2200-11##-####-3417', phone:'010-3456-****', status:'분실'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-5540', phone:'010-4567-****', status:'정상'},
-    {type:'모바일', org:'GS차지비',        card:'3050-77##-####-1120', phone:'010-5678-****', status:'정상'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-9982', phone:'010-6789-****', status:'정상'},
-    {type:'모바일', org:'SK일렉링크',       card:'4102-33##-####-6673', phone:'010-7890-****', status:'정지'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-2214', phone:'010-8901-****', status:'정상'},
-    {type:'모바일', org:'한국전력(KEPCO)',  card:'2200-11##-####-4408', phone:'010-9012-****', status:'정상'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-7051', phone:'010-1023-****', status:'정상'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-3390', phone:'010-2134-****', status:'분실'},
-    {type:'모바일', org:'GS차지비',        card:'3050-77##-####-8845', phone:'010-3245-****', status:'정지'},
-    {type:'모바일', org:'환경부(KECO)',    card:'1234-56##-####-1177', phone:'010-4356-****', status:'정상'}
-  ];
-  var PAGE=10, page=1, filtered=WALLET.slice();
+  // 카드등록 모달 오픈 — 결제실패 금액이 50만원 이상이면 할부 선택을 먼저 받는다
+  function fnOpenCardRegist(cardNo, multiYN, kpyn, failCnt, failFee, opener) {
+    if (!fnCheckAccept()) return;
 
-  function isCorp(){ return document.body.getAttribute('data-member') !== 'personal'; }
+    $('#multiYN2').val(multiYN);
+    $('#fail_yn').val('');
+    $('#kpyn').val(multiYN === 'N' ? (kpyn || '') : '');
 
-  function applyMemberType(){
-    var corp = isCorp();
-    tabBtn.hidden = !corp;
-    if(label){ var mk = corp ? 'charging.card.aw.memlabel.corp' : 'charging.card.aw.memlabel.personal';
-      label.setAttribute('data-i18n', mk); label.textContent = tt(mk, corp?'법인회원':'개인회원'); }  // data-i18n로 언어전환 자동 반영
-    // 개인 전환 시 앱카드 탭이 활성 상태였다면 '내 회원카드'로 복귀
-    if(!corp && tabBtn.classList.contains('active')){
-      var my = document.querySelector('#cardTabs .tab[data-tab="mycard"]'); if(my) my.click();
+    //일괄등록은 호출부에서 선택한 회원카드번호 목록을 미리 채우므로 덮어쓰지 않는다
+    if (multiYN !== 'Y' && cardNo !== 'ADD') $('#memberCardNum').val(cardNo);
+
+    var txt = '카드등록을 진행하시겠습니까?';
+    if (cardNo === 'ADD') txt += '\n추가하는 결제수단이 기본 결제로 설정됩니다.';
+
+    if (failCnt > 0) {
+      txt = '해당 카드에 결제 실패 ' + failCnt + '건, ' + fnComma(failFee) + '원이 있습니다.\n'
+          + '카드등록 시 해당 요금이 청구됩니다.\n카드등록을 진행하시겠습니까?\n(*휴대폰번호 현행화 필요)';
+    }
+
+    if (failCnt > 0 && failFee >= 500000) {
+      $('#fail_yn').val('Y');
+      $('#spanFailCnt').text(failCnt);
+      $('#spanFailFee').text(fnComma(failFee));
+      $('#pop_card_quota').val('00');
+      openModal('#modalQuota', { width: 560, opener: opener });
+      return;
+    }
+
+    if (!confirm(txt)) return;
+    if (failCnt > 0) $('#fail_yn').val('Y');
+
+    openModal('#modalCardRegist', { width: 720, opener: opener });
+  }
+
+  // 개인/법인 선택에 따라 인증필드(생년월일/사업자등록번호) 전환
+  function fnCardKindSelect() {
+    var kind = $('input[name=s_card_kind]:checked').val();
+    $('#authField1').val('');
+
+    if (kind === '1') {
+      $('#authField_label').text('사업자등록번호');
+      $('#authField_txt').text('(사업자등록번호 10자리)');
+      $('#authField1').attr('maxlength', '10');
+    } else {
+      $('#authField_label').text('생년월일');
+      $('#authField_txt').text('(주민등록번호 앞 6자리)');
+      $('#authField1').attr('maxlength', '6');
     }
   }
 
-  function render(){
-    var total = filtered.length;
-    var pages = Math.max(1, Math.ceil(total/PAGE));
-    if(page>pages) page=pages;
-    if(total===0){
-      body.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-tertiary);padding:32px 0;" data-i18n="charging.card.aw.empty">조회된 내역이 없습니다</td></tr>';
-      pager.innerHTML=''; if(window.__i18n) __i18n.applyLang(__i18n.getLang()); return;   // ★현재 언어 전달(무인자 호출 시 ko로 되돌아감)
+  function fnRegiBillCard() {
+    var no1 = $('#card_no1').val(), no2 = $('#card_no2').val();
+    var no3 = $('#card_no3').val(), no4 = $('#card_no4').val();
+    var authField1 = $('#authField1').val(), authField2 = $('#authField2').val();
+    var cardkind = $('input[name=s_card_kind]:checked').val();
+    var regex = /^[0-9]*$/;
+
+    if (!no1 || no1.length !== 4 || !no2 || no2.length !== 4 || !no3 || no3.length !== 4 || !no4) {
+      alert('카드번호를 입력해주세요.');
+      return false;
     }
-    var start=(page-1)*PAGE;
-    var delTxt = tt('charging.card.aw.del','삭제');
-    body.innerHTML = filtered.slice(start, start+PAGE).map(function(r,i){
-      var stCls = r.status!=='정상' ? 'color:#d64545;' : 'color:var(--color-primary-700);';   // 분실·정지=적색, 정상=녹색
-      return '<tr>'
-        + '<td style="text-align:center;">'+(start+i+1)+'</td>'
-        + '<td style="text-align:center;">'+esc(r.type)+'</td>'
-        + '<td>'+esc(r.org)+'</td>'
-        + '<td style="font-variant-numeric:tabular-nums;">'+esc(r.card)+'</td>'
-        + '<td style="font-variant-numeric:tabular-nums;">'+esc(r.phone)+'</td>'
-        + '<td style="text-align:center;font-weight:700;'+stCls+'">'+esc(r.status)+'</td>'
-        + '<td style="text-align:center;"><button type="button" class="btn btn-secondary btn-sm aw-del" data-idx="'+(start+i)+'" data-i18n="charging.card.aw.del">'+esc(delTxt)+'</button></td>'
-        + '</tr>';
-    }).join('');
-    var ph='';
-    for(var p=1;p<=pages;p++){ ph += '<button type="button" class="'+(p===page?'active':'')+'" data-p="'+p+'">'+p+'</button>'; }
-    pager.innerHTML = ph;
-    if(window.__i18n) __i18n.applyLang(__i18n.getLang());   // ★현재 언어 전달
-  }
+    if (!regex.test(no1) || !regex.test(no2) || !regex.test(no3) || !regex.test(no4)) {
+      alert('숫자만 입력하세요.');
+      $('#card_no1').focus();
+      return false;
+    }
+    if (!regex.test(authField1)) {
+      alert(cardkind === '1' ? '사업자등록번호는 숫자만 입력하세요.' : '생년월일은 숫자만 입력하세요.');
+      $('#authField1').focus();
+      return false;
+    }
+    if (!regex.test(authField2)) {
+      alert('카드비밀번호는 숫자만 입력하세요.');
+      $('#authField2').focus();
+      return false;
+    }
+    if (cardkind === '0' && (!authField1 || authField1.length !== 6)) {
+      alert('생년월일 6자리를 정확히 입력해주세요.');
+      return false;
+    }
+    if (cardkind === '1' && (!authField1 || authField1.length !== 10)) {
+      alert('사업자등록번호 10자리를 정확히 입력해주세요.');
+      return false;
+    }
+    if (!authField2 || authField2.length !== 2) {
+      alert('카드비밀번호 2자리를 정확히 입력해주세요.');
+      return false;
+    }
+    if (regiBillCardBusy) {
+      alert('카드등록을 처리하고 있습니다. 잠시만 기다려 주세요.');
+      return false;
+    }
+    if (!confirm('카드 등록을 진행하시겠습니까?')) return false;
 
-  function doSearch(){
-    var cardRaw = document.getElementById('awCard').value.trim();
-    var phoneRaw = document.getElementById('awPhone').value.trim();
-    // ★각 항목 4자 이상만 검색(1~3자 입력 시 차단) — AS-IS 검증. 빈칸은 전체(조건 없음).
-    if(cardRaw && cardRaw.length<4){ alert(tt('charging.card.aw.min4.card','카드번호 검색은 4자 이상입니다.')); return; }
-    if(phoneRaw && phoneRaw.length<4){ alert(tt('charging.card.aw.min4.phone','핸드폰번호 검색은 4자 이상입니다.')); return; }
-    var cardQ = onlyDigits(cardRaw);
-    var phoneQ = onlyDigits(phoneRaw);
-    filtered = WALLET.filter(function(r){
-      var okc = !cardQ  || onlyDigits(r.card).indexOf(cardQ)>=0;
-      var okp = !phoneQ || onlyDigits(r.phone).indexOf(phoneQ)>=0;
-      return okc && okp;
+    $('#cardnumber').val(no1 + '-' + no2 + '-' + no3 + '-' + no4);
+    regiBillCardBusy = true;
+    $('#btnRegiBillCard').prop('disabled', true);
+
+    $.ajax({
+      type: 'POST',
+      url: REGI_CARD_URL,
+      dataType: 'json',
+      data: $('#ini').serialize(),
+      // 카드사(PG) 응답 지연 시 무한 대기하지 않도록 상한을 둔다
+      timeout: 90000,
+      success: function (data) {
+        fnRegiBillCardDone();
+
+        if (data && data.resultCode === '00') {
+          alert('간편결제 카드등록이 완료 되었습니다.\n기후에너지환경부 충전기는 즉시 결제가 가능하며\n충전사업자 로밍 결제는 익일부터 가능합니다.\n(최대 24시간 소요)');
+        } else {
+          alert((data && data.resultMsg ? data.resultMsg : '카드등록에 실패했습니다.') + ' 해당 카드사로 문의 부탁드립니다.');
+        }
+
+        fnResetCardForm();
+        fnCloseModal();
+        fnGetCardList(cardPage);
+      },
+      error: function (request, textStatus) {
+        fnRegiBillCardDone();
+
+        if (textStatus === 'timeout') {
+          alert('카드사 응답이 지연되어 등록을 완료하지 못했습니다.\n등록 여부는 결제카드 목록에서 확인 후 다시 시도해 주세요.');
+          fnGetCardList(cardPage);
+          return;
+        }
+        alert('카드등록 처리 중 오류가 발생했습니다. (' + request.status + ')');
+      },
+      complete: fnRegiBillCardDone
     });
-    page=1; render();
+
+    return true;
   }
 
-  document.getElementById('awSearchBtn').addEventListener('click', doSearch);
-  ['awCard','awPhone'].forEach(function(id){
-    document.getElementById(id).addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); doSearch(); } });
-  });
-  body.addEventListener('click', function(e){
-    var del = e.target.closest('.aw-del'); if(!del) return;
-    if(!window.confirm('삭제하시겠습니까?')) return;   // AS-IS confirm 그대로
-    var idx = parseInt(del.getAttribute('data-idx'),10);
-    var row = filtered[idx];
-    var wi = WALLET.indexOf(row); if(wi>=0) WALLET.splice(wi,1);   // [DEV] 실제 = 핸드폰 매핑(APP_CARD_USER_PHONE) 물리 DELETE + 이력(HIS, EVENT='D'). ★실물카드·지갑카드는 유지 — 지갑에서 매핑만 해제(카드 삭제 아님)
-    doSearch();
-    if(window.__toast) window.__toast('지갑에서 핸드폰 매핑이 해제되었습니다.', 'info');   // 실물카드·회원카드는 유지
-  });
-  pager.addEventListener('click', function(e){ var b=e.target.closest('button[data-p]'); if(b){ page=parseInt(b.getAttribute('data-p'),10); render(); } });
-  if(toggle) toggle.addEventListener('click', function(){
-    document.body.setAttribute('data-member', isCorp()?'personal':'corp');
-    applyMemberType();
+  // 등록 요청 종료 처리 — 전역 로딩 표시는 ajaxStop 에 묶여 있어 다른 요청이 물려 있으면 남는다
+  function fnRegiBillCardDone() {
+    regiBillCardBusy = false;
+    $('#btnRegiBillCard').prop('disabled', false);
+    $('.data-loading').hide();
+  }
+
+  function fnResetCardForm() {
+    $('#card_no1, #card_no2, #card_no3, #card_no4').val('');
+    $('#cardexpm').val('01');
+    $('#cardexpy').val('21');
+    $('#authField1').val('');
+    $('#authField2').val('');
+    $('#bill_card_memo').val('');
+    $('#cardnumber').val('');
+  }
+
+  /* ---------------- 결제수단 관리 / 상세 ---------------- */
+
+  function fnOpenPayment(row, opener) {
+    var cardNo = row.CARDNO || row.CARD_NO;
+    $('#memberCardNum').val(cardNo);   // 결제수단 추가 시 사용
+    $('#paymentList').html('');
+
+    $.ajax({
+      type: 'post',
+      url: PAYMENT_LIST_URL,
+      dataType: 'json',
+      data: { card_no: cardNo },
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+        $('#paymentCnt').text(Number(page._listCount) || 0);
+
+        if (!list.length) {
+          $('#paymentList').html(fnDataNone(5));
+        } else {
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            var r = list[i];
+            var billCardCdNm = fnEsc(r.BILL_CARD_CD_NM);
+            if (r.BILL_CARD_NUM != null) billCardCdNm += '(' + fnEsc(r.BILL_CARD_NUM) + ')';
+
+            html += '<tr>'
+                  + '<td>' + fnEsc(r.RNUM) + '</td>'
+                  + '<td>' + (r.PAY_YN === 'Y' ? '<span class="text-primary">' + fnEsc(r.PAY_YN_NM) + '</span>' : fnEsc(r.PAY_YN_NM)) + '</td>'
+                  + '<td>' + billCardCdNm + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.BILL_CARD_MEMO)) + '</td>'
+                  + '<td><div class="button-group">'
+                  + '<button type="button" class="button button--tertiary js-card-detail" data-cardno="' + fnEsc(r.CARD_NO) + '" data-billkey="' + fnEsc(r.BILL_KEY) + '"><span class="button__label">수정</span></button>'
+                  + '</div></td>'
+                  + '</tr>';
+          }
+          $('#paymentList').html(html);
+        }
+
+        openModal('#modalPayment', { width: 900, opener: opener });
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  function fnOpenCardDetail(cardNo, billKey, opener) {
+    $.ajax({
+      type: 'post',
+      url: CARD_DETAIL_URL,
+      dataType: 'json',
+      data: { card_no: cardNo, billKey: billKey },
+      success: function (obj) {
+        var map = (obj && obj.map) ? obj.map : {};
+
+        detailCardNo = cardNo;
+        detailBillKey = map.BILL_KEY || billKey;
+        detailPayYn = map.PAY_YN || '';
+
+        $('#billCardMemo').val(fnNvl(map.BILL_CARD_MEMO));
+        $('#billCardRegDt').text(fnNvl(map.BILL_CARD_REGDT));
+        $('#payYnTxt').text(fnNvl(map.PAY_YN_NM));
+
+        var billCardCdNm = fnNvl(map.BILL_CARD_CD_NM);
+        if (map.BILL_CARD_NUM != null) billCardCdNm += '(' + map.BILL_CARD_NUM + ')';
+        $('#billCardCdNm').text(billCardCdNm);
+
+        if (map.PAY_YN === 'Y') {
+          $('#btnPay01').hide();
+          $('#btnPay02').hide();
+        } else {
+          $('#btnPay01').show();
+          $('#btnPay02').show();
+        }
+
+        openModal('#modalCardDetail', { width: 640, opener: opener });
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  // 카드메모 수정 / 삭제 / 기본결제 설정 공용 (gubun: update|delete|setup)
+  function fnSaveCardInfo(gubun, successMsg) {
+    $.ajax({
+      type: 'post',
+      url: CARD_INFO_URL,
+      dataType: 'json',
+      data: {
+        card_no: detailCardNo,
+        payYn: gubun === 'setup' ? 'Y' : detailPayYn,
+        billKey: detailBillKey,
+        billCardMemo: $('#billCardMemo').val(),
+        gubun: gubun
+      },
+      success: function (obj) {
+        if (obj && Number(obj.rsltCnt) > 0) {
+          alert(successMsg);
+          fnCloseModal();
+          fnGetCardList(cardPage);
+        } else {
+          alert('처리된 내역이 없습니다.');
+        }
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  // 실명인증(CI) 확인용 팝업
+  function fnOpenPccWindow() {
+    var pccWindow = window.open('', 'PCCV3Window', 'width=300, height=400, resizable=1, scrollbars=no, status=0, titlebar=0, toolbar=0, left=300, top=200');
+    if (pccWindow == null) {
+      alert(' ※ 화면 상단에 있는 팝업 차단 알림줄을 클릭하여 팝업을 허용해 주시기 바랍니다. \n\n※ MSN,야후,구글 팝업 차단 툴바가 설치된 경우 팝업허용을 해주시기 바랍니다.');
+    }
+
+    var frm = document.reqPCCForm;
+    frm.action = PCC_URL;
+    frm.target = 'PCCV3Window';
+    frm.submit();
+  }
+
+  /* ---------------- 결제실패 / 재결제 내역 ---------------- */
+
+  function fnOpenFailList(row, opener) {
+    $('#failList').html('');
+
+    $.ajax({
+      type: 'post',
+      url: FAIL_LIST_URL,
+      dataType: 'json',
+      data: {
+        card_no: row.CARDNO || row.CARD_NO,
+        spageNo: 1,
+        srecordCountPerPage: 100,
+        spageSize: 10
+      },
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+        $('#failCnt').text(Number(page._listCount) || 0);
+
+        if (!list.length) {
+          $('#failList').html(fnDataNone(7));
+        } else {
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            var r = list[i];
+            html += '<tr>'
+                  + '<td>' + fnEsc(r.RNUM) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.BID_NM)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.CNAME)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.TSDT)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.TEDT)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.POW_KW)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.MON)) + '</td>'
+                  + '</tr>';
+          }
+          $('#failList').html(html);
+        }
+
+        openModal('#modalFail', { width: 900, opener: opener });
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  function fnOpenRepayList(row, opener) {
+    $('#rePayList').html('');
+
+    $.ajax({
+      type: 'post',
+      url: REPAY_LIST_URL,
+      dataType: 'json',
+      data: {
+        card_no: row.CARDNO || row.CARD_NO,
+        re_seq: row.RE_SEQ,
+        spageNo: 1,
+        srecordCountPerPage: 100,
+        spageSize: 10
+      },
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+        $('#repayCnt').text(Number(page._listCount) || 0);
+
+        if (!list.length) {
+          $('#rePayList').html(fnDataNone(8));
+        } else {
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            var r = list[i];
+            html += '<tr>'
+                  + '<td>' + fnEsc(r.RNUM) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.BID_NM)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.SNAME)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.TSDT_1)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.TEDT_1)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.POW_KW)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.MON)) + '</td>'
+                  + '<td>' + fnEsc(fnNvl(r.INS_DT)) + '</td>'
+                  + '</tr>';
+          }
+          $('#rePayList').html(html);
+        }
+
+        openModal('#modalRepay', { width: 1000, opener: opener });
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  /* ---------------- 카드별 처리 (발급조회·분실·정보수정) ---------------- */
+
+  function fnIssueRow(row) {
+    return '<tr>'
+         + '<td>' + fnEsc(row.REG_DATE) + '</td>'
+         + '<td>' + (fnEsc(row.ISSUE_MTHD_CD_NM) || '-') + '</td>'
+         + '<td>' + (fnEsc(row.ISSUE_REASON_NM) || '-') + '</td>'
+         + '<td>' + fnIssueBadge(row.ISSUE_STAT_CD, row.ISSUE_STAT_CD_NM) + '</td>'
+         + '<td>' + (fnEsc(row.SHIP_ADDR_1) || '-') + '</td>'
+         + '</tr>';
+  }
+
+  // 발급조회(발급 대기 신청 건) — 목록에 이미 있는 신청 내용을 그대로 보여준다
+  function fnOpenApplyIssue(row, opener) {
+    $('#issueCardNo').text('신청번호 ' + fnNvl(row.CARD_REQ_SEQ) + ' (회원카드 미발급)');
+    $('#issueTotal').text(1);
+    $('#issueList').html(fnIssueRow(row));
+    openModal('#modalIssue', { width: 800, opener: opener });
+  }
+
+  // 발급조회(보유 카드) — 선택한 카드의 신청·발급 이력을 조회
+  function fnOpenIssue(row, opener) {
+    $('#issueCardNo').text('회원카드 번호 ' + (row.CARDNO || row.CARD_NO || ''));
+    $('#issueTotal').text(0);
+    $('#issueList').html('');
+
+    $.ajax({
+      type: 'post',
+      url: ISSUE_LIST_URL,
+      dataType: 'json',
+      data: {
+        spageNo: 1,
+        srecordCountPerPage: 100,
+        spageSize: 100,
+        s_card_no: fnPlainNo(row.CARD_NO)
+      },
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+
+        $('#issueTotal').text(Number(page._listCount) || 0);
+
+        if (!list.length) {
+          $('#issueList').html(fnDataNone(5));
+        } else {
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            html += fnIssueRow(list[i]);
+          }
+          $('#issueList').html(html);
+        }
+
+        openModal('#modalIssue', { width: 800, opener: opener });
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  // 분실/정지 신청 — 결제실패 건이 있으면 처리 불가
+  function fnLostCard(row) {
+    if (Number(row.CNT) > 0) {
+      alert('분실/정지 신청이 불가합니다.\n해당 카드에 결제 실패 ' + row.CNT + '건, ' + fnComma(row.S_MON) + '원이 있습니다.');
+      return;
+    }
+    if (!confirm('해당 회원카드를 분실/정지 신청하시겠습니까?')) return;
+
+    $.ajax({
+      type: 'post',
+      url: LOST_URL,
+      dataType: 'json',
+      data: { card_no: row.CARDNO || row.CARD_NO },
+      success: function (obj) {
+        if (obj && Number(obj.rsltCnt) > 0) {
+          alert('회원카드를 분실/정지 처리하였습니다.');
+          fnGetCardList(cardPage);
+        } else {
+          alert('처리된 내역이 없습니다. 카드상태를 확인해 주세요.');
+        }
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  }
+
+  function fnOpenCarId(row, opener) {
+    carIdTarget = row;
+    carIdDupOk = false;
+
+    $('#carIdCardNo').text(row.CARDNO || row.CARD_NO || '');
+    $('#carIdCurrent').text(row.CAR_ID || '');
+    $('#carIdModel').val(row.CAR_MODEL_CD || '');
+    $('#carIdNew').val('');
+    fnSetDupMessage('', '');
+
+    openModal('#modalCarId', { width: 640, opener: opener });
+  }
+
+  function fnSetDupMessage(message, state) {
+    var $group = $('#carIdInputGroup');
+    $group.removeClass('element-group--success element-group--error');
+    if (state === 'success') $group.addClass('element-group--success');
+    else if (state === 'error') $group.addClass('element-group--error');
+
+    $('#carIdDupMsg').text(message);
+    carIdDupOk = (state === 'success');
+  }
+
+  function fnCarIdDupCheck() {
+    var carId = $.trim($('#carIdNew').val() || '');
+
+    if (!carId) {
+      alert('차량번호를 입력하세요.');
+      $('#carIdNew').focus();
+      return;
+    }
+    if (carId === TMP_CAR_ID) {
+      fnSetDupMessage('등록 가능한 차량번호입니다.', 'success');
+      return;
+    }
+
+    $.ajax({
+      type: 'post',
+      url: DUP_URL,
+      dataType: 'json',
+      data: { car_id: carId, mode: 'C' },
+      success: function (data) {
+        var resultCnt = data.resultCnt;
+        var resultVims = data.resultVims;
+
+        if (resultCnt == 0 && resultVims > 0) {
+          fnSetDupMessage('등록 가능한 차량번호입니다.', 'success');
+        } else if (resultVims < 1) {
+          fnSetDupMessage('등록 불가 차량번호입니다. (전기차, 하이브리드만 등록 가능)', 'error');
+        } else if (resultCnt > 0) {
+          fnSetDupMessage('이미 등록된 차량번호입니다.', 'error');
+        } else {
+          fnSetDupMessage('등록 불가 차량번호입니다.', 'error');
+        }
+      },
+      error: function (request) {
+        fnSetDupMessage('중복확인 중 오류가 발생했습니다. (' + request.status + ')', 'error');
+      }
+    });
+  }
+
+  /* ---------------- 이벤트 (ajax 로 그린 행 — 위임 바인딩) ---------------- */
+
+  function fnRowOf(el) {
+    return cardMap[$(el).data('key')];
+  }
+
+  $('#cardListBody')
+    .on('click', '.js-card-issue', function () { var r = fnRowOf(this); if (r) fnOpenIssue(r, this); })
+    .on('click', '.js-card-lost', function () { var r = fnRowOf(this); if (r) fnLostCard(r); })
+    .on('click', '.js-card-modify', function () { var r = fnRowOf(this); if (r) fnOpenCarId(r, this); })
+    .on('click', '.js-card-reissue', function () {
+      if (confirm('회원카드를 재발급 신청하시겠습니까?\n신청서 화면으로 이동합니다.')) location.href = APPLY_URL;
+    })
+    .on('click', '.js-bill-regist', function () {
+      var r = fnRowOf(this);
+      if (r) fnOpenCardRegist(r.CARDNO || r.CARD_NO, 'N', r.KP_YN, Number(r.CNT) || 0, Number(r.S_MON) || 0, this);
+    })
+    .on('click', '.js-bill-change', function () { var r = fnRowOf(this); if (r) fnOpenPayment(r, this); })
+    .on('click', '.js-fail-list', function () { var r = fnRowOf(this); if (r) fnOpenFailList(r, this); })
+    .on('click', '.js-repay-list', function () { var r = fnRowOf(this); if (r) fnOpenRepayList(r, this); });
+
+  // 전체선택
+  $('#checkAllCards').on('click', function () {
+    $('#cardListBody .js-card-check').prop('checked', $(this).prop('checked'));
   });
 
-  applyMemberType();
-  render();
-  // ★언어 변경 리스너 제거 — render()가 applyLang을 호출하므로 재귀됨. 라벨·빈 메시지·삭제버튼은 data-i18n로 전역 applyLang이 처리.
-})();
+  // 결제카드 일괄등록 — 결제실패 건이 포함되면 불가, 이미 등록된 카드가 있으면 재확인
+  $('#btnMultiRegist').on('click', function () {
+    var $checked = $('#cardListBody .js-card-check:checked');
+
+    if (!$checked.length) {
+      alert('일괄등록할 회원카드번호를 하나 이상 선택해주세요.');
+      return;
+    }
+
+    var cardNoList = [];
+    var hasBillKey = false;
+    var hasFail = false;
+
+    $checked.each(function () {
+      var row = cardMap[$(this).data('key')];
+      if (!row) return;
+      if (Number(row.CNT) > 0) hasFail = true;
+      if (row.BILL_KEY) hasBillKey = true;
+      cardNoList.push(fnPlainNo(row.CARD_NO));
+    });
+
+    if (hasFail) {
+      alert("결제 실패 건수가 있는 카드가 포함되어 '결제카드 일괄등록'이 불가합니다.\n결제 실패 건수가 있는 카드는 개별로 등록하세요.");
+      return;
+    }
+    if (hasBillKey && !confirm('이미 결제카드가 등록된 회원카드가 있습니다.\n계속 진행하시겠습니까?')) return;
+
+    $('#memberCardNum').val(cardNoList.join(','));
+    fnOpenCardRegist('', 'Y', '', 0, 0, this);
+  });
+
+  // 결제수단 관리 목록 → 카드 상세조회
+  $('#paymentList').on('click', '.js-card-detail', function () {
+    fnOpenCardDetail($(this).data('cardno'), $(this).data('billkey'), this);
+  });
+
+  // 결제수단 추가하기 (모달 전환 — ui-common 의 footer 자동 닫힘 차단)
+  $('#btnAddPayment').on('click', function (e) {
+    e.stopImmediatePropagation();
+    fnOpenCardRegist('ADD', 'N', '', 0, 0, this);
+  });
+
+  // 할부 선택 확인 → 카드등록 모달로 전환
+  $('#btnSetQuota').on('click', function (e) {
+    e.stopImmediatePropagation();
+    $('#card_quota').val($('#pop_card_quota').val());
+    openModal('#modalCardRegist', { width: 720, opener: this });
+  });
+
+  // 카드등록 확인 (검증 실패 시 모달 유지)
+  $('#btnRegiBillCard').on('click', function (e) {
+    e.stopImmediatePropagation();
+    fnRegiBillCard();
+  });
+
+  $('input[name=s_card_kind]').on('change', fnCardKindSelect);
+
+  // 신용카드번호 4자리 자동 이동
+  $('.card_no').on('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+    if (this.value.length === 4) {
+      var $next = $('.card_no').eq($('.card_no').index(this) + 1);
+      if ($next.length) $next.focus();
+    }
+  }).on('keydown', function (e) {
+    if (e.key === 'Backspace' && this.value === '') {
+      var $prev = $('.card_no').eq($('.card_no').index(this) - 1);
+      if ($prev.length) $prev.focus();
+    }
+  });
+
+  // 결제카드 상세 — 메모 수정 / 기본결제 설정 / 삭제
+  $('#btnSaveMemo').on('click', function () {
+    fnSaveCardInfo('update', '카드메모를 수정하였습니다.');
+  });
+
+  $('#btnPay01').on('click', function (e) {
+    e.stopImmediatePropagation();
+    if (!confirm('기본 결제로 설정하시겠습니까?\n현재 등록된 기본 결제수단을 해제하고 새로 설정합니다.')) return;
+    fnSaveCardInfo('setup', '기본 결제로 설정을 완료하였습니다.');
+  });
+
+  $('#btnPay02').on('click', function (e) {
+    e.stopImmediatePropagation();
+    if (!confirm('해당 결제카드 정보를 삭제하시겠습니까?')) return;
+    fnSaveCardInfo('delete', '결제카드 정보를 삭제하였습니다.');
+  });
+
+  // 발급 대기 신청 건 관리 (변경·삭제)
+  $('#cardListBody').on('click', '.js-apply-issue', function () {
+    var r = applyMap[String($(this).data('seq'))];
+    if (r) fnOpenApplyIssue(r, this);
+  });
+
+  $('#cardListBody').on('click', '.js-apply-modify', function () {
+    if (String($(this).data('stat')) !== '0001') {
+      alert('발급상태가 접수일 경우만 변경이 가능합니다.');
+      return;
+    }
+    location.href = APPLY_URL + '?cardReqSeq=' + $(this).data('seq');
+  });
+
+  $('#cardListBody').on('click', '.js-apply-delete', function () {
+    if (String($(this).data('stat')) !== '0001') {
+      alert('발급상태가 접수일 경우만 삭제가 가능합니다.');
+      return;
+    }
+    if (!confirm('삭제하시겠습니까?')) return;
+
+    var frm = document.applyActionForm;
+    frm.mode.value = 'delete';
+    frm.card_req_seq.value = $(this).data('seq');
+    frm.submit();
+  });
+
+  // 정보수정 저장 (검증 실패 시 모달 유지)
+  $('#btnCarIdDupCheck').on('click', fnCarIdDupCheck);
+
+  $('#btnCarIdSave').on('click', function (e) {
+    var carId = $.trim($('#carIdNew').val() || '');
+
+    if (!carIdTarget) { e.stopImmediatePropagation(); return; }
+    if (!carId) {
+      alert('차량번호를 입력하세요.');
+      $('#carIdNew').focus();
+      e.stopImmediatePropagation();
+      return;
+    }
+    if (!carIdDupOk) {
+      alert('차량번호 중복확인을 해주세요.\n중복된 차량번호는 등록할 수 없습니다.');
+      e.stopImmediatePropagation();
+      return;
+    }
+    if (!$('#carIdModel').val()) {
+      alert('차량모델을 선택하여 주세요.');
+      $('#carIdModel').focus();
+      e.stopImmediatePropagation();
+      return;
+    }
+    if (!confirm('차량번호를 변경하시겠습니까?')) {
+      e.stopImmediatePropagation();
+      return;
+    }
+
+    $.ajax({
+      type: 'post',
+      url: CAR_ID_URL,
+      dataType: 'json',
+      data: {
+        card_no: carIdTarget.CARDNO || carIdTarget.CARD_NO,
+        car_id: carId,
+        car_model_cd: $('#carIdModel').val(),
+        caCarId: carIdTarget.CAR_ID || ''
+      },
+      success: function (obj) {
+        if (obj && Number(obj.rsltCnt) > 0) {
+          alert('차량번호를 변경하였습니다.');
+          fnGetCardList(cardPage);
+        } else {
+          alert('변경된 내역이 없습니다. 카드상태를 확인해 주세요.');
+        }
+      },
+      error: function () {
+        alert('처리 중 오류가 발생하였습니다. 관리자에게 문의하세요.');
+      }
+    });
+  });
+
+  // 검색/초기화 바인딩
+  $('#sectionMyCard .button--search').on('click', function () { fnGetCardList(1); });
+  $('#sectionMyCard .button--reset').on('click', function () {
+    $('#s_card_type, #s_use_yn, #s_bill_key_yn').val('');
+    $('#s_keyword').val('');
+    fnGetCardList(1);
+  });
+  $('#s_keyword').on('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); fnGetCardList(1); }
+  });
+
+  /* ---------------- 법인 앱 카드지갑 ---------------- */
+
+  function fnDrawWalletList(list) {
+    var $body = $('#walletListBody');
+
+    if (!list.length) {
+      $body.html(fnDataNone(7));
+      return;
+    }
+
+    var html = '';
+    for (var i = 0; i < list.length; i++) {
+      var row = list[i];
+      html += '<tr>';
+      html += '<td>' + fnEsc(row.RNUM) + '</td>';
+      html += '<td>' + fnEsc(fnNvl(row.CARD_TYPE_NM)) + '</td>';
+      html += '<td>' + fnEsc(fnNvl(row.BNM)) + '</td>';
+      html += '<td>' + fnEsc(fnNvl(row.CARD_NO)) + '</td>';
+      html += '<td>' + fnEsc(fnNvl(row.M_PHONE_NO)) + '</td>';
+      html += '<td>' + fnEsc(fnNvl(row.CARD_STAT)) + '</td>';
+      html += '<td><button type="button" class="button button--tertiary js-wallet-delete" data-seq="' + fnEsc(row.SEQ) + '"><span class="button__label">삭제</span></button></td>';
+      html += '</tr>';
+    }
+    $body.html(html);
+  }
+
+  function fnGetWalletList(pageNo) {
+    var cardNo = $.trim($('#s_card_no').val() || '');
+    var phoneNo = $.trim($('#s_m_phone_no').val() || '');
+
+    if (cardNo.length >= 1 && cardNo.length <= 3) {
+      alert('카드번호 검색은 4자 이상입니다.');
+      $('#s_card_no').focus();
+      return false;
+    }
+    if (phoneNo.length >= 1 && phoneNo.length <= 3) {
+      alert('핸드폰번호 검색은 4자 이상입니다.');
+      $('#s_m_phone_no').focus();
+      return false;
+    }
+
+    return $.ajax({
+      type: 'post',
+      url: WALLET_LIST_URL,
+      dataType: 'json',
+      data: {
+        s_card_no: cardNo,
+        s_m_phone_no: phoneNo,
+        spageNo: pageNo || 1,
+        srecordCountPerPage: PER_PAGE,
+        spageSize: PER_PAGE
+      },
+      success: function (obj) {
+        var list = (obj && obj.list) ? obj.list : [];
+        var page = (obj && obj.page) ? obj.page : {};
+        var totalCount = Number(page._listCount) || 0;
+        walletPage = Number(page._pageNo) || 1;
+
+        fnDrawWalletList(list);
+        $('#sectionWallet > .board-toolbar .total-number__total').text(totalCount);
+        fnRenderPaging($('#sectionWallet'), totalCount, walletPage, fnGetWalletList);
+      },
+      error: function () {
+        $('#walletListBody').html(fnListError(7));
+      }
+    });
+  }
+
+  $('#sectionWallet .button--search').on('click', function () { fnGetWalletList(1); });
+  $('#sectionWallet .button--reset').on('click', function () {
+    $('#s_card_no, #s_m_phone_no').val('');
+    fnGetWalletList(1);
+  });
+  $('#s_card_no, #s_m_phone_no').on('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); fnGetWalletList(1); }
+  });
+
+  $('#walletListBody').on('click', '.js-wallet-delete', function () {
+    if (!confirm('삭제하시겠습니까?')) return;
+
+    var frm = document.walletDelForm;
+    frm.seq_no.value = $(this).data('seq');
+    frm.submit();
+  });
+
+  // 탭 전환 — 법인 앱 카드지갑은 법인회원만 이용 가능
+  function fnChangeTab(tab) {
+    if (tab === 'wallet' && PAGE_INFO.personalYn !== 'N') {
+      alert('법인 앱 카드지갑은 법인회원만 이용할 수 있습니다.');
+      return false;
+    }
+    $('.tab--nav .tab__item').removeClass('tab__item--selected')
+      .filter('[data-tab="' + tab + '"]').addClass('tab__item--selected');
+    $('#tabNavigation').val(tab);
+    $('.tab-contents .tab-content').removeClass('tab-content--current');
+    $(tab === 'wallet' ? '#tabPanel02' : '#tabPanel01').addClass('tab-content--current');
+    return true;
+  }
+
+  $('.tab--nav .tab__item .tab__button').on('click', function () {
+    fnChangeTab($(this).closest('.tab__item').data('tab'));
+  });
+  $('#tabNavigation').on('change', function () {
+    if (!fnChangeTab($(this).val())) {
+      $(this).val($('#tabPanel02').hasClass('tab-content--current') ? 'wallet' : 'card');
+    }
+  });
+
+  fnGetCardList(1);
+  if (PAGE_INFO.personalYn === 'N') fnGetWalletList(1);
+});
 </script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
+<script src="assets/js/ui-common.js?v=20260821f"></script>
+<script src="js/common/fileAttach.js?v=20260821f"></script>
+<script src="js/menu-data.js?v=20260821f"></script>
+<script src="js/shell.js?v=20260821f"></script>
+</body>
 </html>
