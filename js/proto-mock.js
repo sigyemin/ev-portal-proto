@@ -361,7 +361,34 @@
         }
       };
     }
-    if (/chargeTradeReceipt|postStatement/i.test(url)) {
+    /* 후불 명세서 — 요청한 연월에 맞춰 집계해 내려준다(연월을 바꾸면 값도 바뀌어야 함) */
+    if (/postStatement/i.test(url)) {
+      var sym = String(p.yyyymm || '');
+      var H2 = (window.PROTO_DATA || {}).chargeTrade || [];
+      var seed = hash(sym);
+      var base = H2.filter(function (r) { return r.PERRMSG !== '결제실패'; });
+      var take = base.length ? (2 + seed % Math.max(1, base.length - 1)) : 0;
+      var picked = base.slice(0, take);
+      var byBusi = {}, sumPay = 0, sumKwh = 0;
+      picked.forEach(function (r) {
+        var f = 0.7 + (hash(sym, r.BID) % 60) / 100;      // 월별로 값이 달라지게
+        var pay = Math.round(r.PAYMON * f);
+        sumPay += pay; sumKwh += Math.round(r.POW * f);
+        if (!byBusi[r.BUSI_NM]) byBusi[r.BUSI_NM] = { BUSI_NM: r.BUSI_NM, CNT: 0, SUM_PAY: 0 };
+        byBusi[r.BUSI_NM].CNT += 1;
+        byBusi[r.BUSI_NM].SUM_PAY += pay;
+      });
+      var busiStat = Object.keys(byBusi).map(function (k) {
+        return { BUSI_NM: k, CNT: comma(byBusi[k].CNT), SUM_PAY: comma(byBusi[k].SUM_PAY) };
+      }).sort(function (a, b) { return b.SUM_PAY.length - a.SUM_PAY.length; });
+      return {
+        resultCode: 'OK', yyyymm: sym,
+        issueDate: sym.substring(0, 4) + '-' + sym.substring(4, 6) + '-05',
+        sum: { PAY_CNT: comma(picked.length), SUM_PAY: comma(sumPay), SUM_KWH: sumKwh.toLocaleString('ko-KR') },
+        busiStat: busiStat
+      };
+    }
+    if (/chargeTradeReceipt/i.test(url)) {
       return { resultCode: 'OK', html: '<p>프로토타입에서는 영수증 원본을 제공하지 않습니다.</p>' };
     }
 

@@ -12,14 +12,15 @@
   <link rel="stylesheet" href="assets/css/map-list.css">
   <link rel="stylesheet" href="assets/css/i18n-en.css">
   <link rel="stylesheet" href="assets/css/aiChat.css">
-  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
-  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
-  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
-  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
-  <script src="js/common/common_util.js?v=20260821f"></script>
-  <script src="js/proto-api.js?v=20260821f"></script>
-  <script src="js/proto-data.js?v=20260821f"></script>
-  <script src="js/proto-mock.js?v=20260821f"></script>
+  <link rel="stylesheet" href="assets/css/proto-intro.css?v=20260825d">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260825d"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260825d"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260825d"></script>
+  <script src="js/swiper-bundle.min.js?v=20260825d"></script>
+  <script src="js/common/common_util.js?v=20260825d"></script>
+  <script src="js/proto-api.js?v=20260825d"></script>
+  <script src="js/proto-data.js?v=20260825d"></script>
+  <script src="js/proto-mock.js?v=20260825d"></script>
 </head>
 <body>
 <div id="header-slot"></div>
@@ -106,17 +107,80 @@
                 </div>
               </div>
               <div class="introduction-content">
+                <!-- [AS-IS 이관] 수소전기차 : 기존 프로토 도입 문단을 요약 리드로 앞에 두고 AS-IS 원문을 본문으로 배치 -->
+                <h2 class="heading-title">수소전기차</h2>
                 <p class="introduction-content__description" data-i18n="h2car.intro">수소전기자동차(Fuel Cell Electric Vehicle, FCEV)는 수소와 공기 중 산소를 연료전지에서 반응시켜 전기를 생산하고, 이 전기로 모터를 구동하는 자동차입니다. 주행 중 배출물은 순수한 물(H&#8322;O)뿐이며, 오히려 흡입된 공기를 정화하는 효과까지 있어 '달리는 공기청정기'로도 불립니다.</p>
+                <p class="introduction-content__description">수소전기차는 수소와 공기중의 산소를 직접 반응시켜 전기를 생산하는 연료전지를 이용하는 자동차로서 물 이외의 배출가스를 발생시키지 않기 때문에 각종 유해 물질이나 온실가스에 의한 환경피해를 해결할 수 있는 환경친화적 자동차입니다. </p>
+
+                <!-- [기존 프로토] 작동 원리 + [AS-IS 이관] 수소전기차의 작동원리 (주제 중복 → 한 섹션에 병치, 프로토 문구는 요약 리드) -->
                 <h2 class="heading-title" data-i18n="encyc.howItWorks">작동 원리</h2>
                 <p class="introduction-content__description" data-i18n="h2car.howItWorks">수소탱크에 저장된 고압 수소 기체를 연료전지 스택에 공급하면, 공기 중의 산소와 전기화학 반응을 일으켜 전기·열·물을 생성합니다. 생성된 전기는 모터를 구동하거나 보조 배터리에 저장되며, 물은 배기구를 통해 수증기 형태로 배출됩니다.</p>
+                <h3 class="heading-subtitle">수소전기차의 작동원리</h3>
+                <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L287~294 : .subConBox.sub01-Box3
+                     빈 div 2개는 장식 전용(배경 이미지 subImg01-1-26 / subImg01-1-27) — 원본대로 유지 -->
+                <div class="asis-intro">
+                  <div class="sub01-Box3">
+                    <div class="">
+                      <p class="subConTxt">수소가 연료전지에 공급되면 전자와 수소이온으로 분리되고 이 때 발생한 전자들은 외부 회로로 전달되어 연료전지 자동차의 모터를 구성하는 동력원인 전기에너지로 사용됩니다. 또한 수소에서 분리된 수소이온들은 전해질 막을 통과해 막 반대편의 연료전지에 공급된 공기중의 산소와 반응하여 물을 생성하게 됩니다. 이 때 생성된 물은 수소전기차의 유일한 배출물로서 남은 공기와 함께 대기 중으로 배출됩니다.</p>
+                      <div></div>
+                    </div>
+                    <div></div>
+                  </div>
+                </div>
+
+                <!-- [AS-IS 이관] 시스템의 구동 원리 / 수소전기차 구성과 기능 -->
+                <h2 class="heading-title">시스템의 구동 원리</h2>
+                <p class="introduction-content__description">수소전기차는 내연기관차와 달리 엔진이 없으며, 전기차와 달리 전기공급 없이 내부에서 전기를 생산합니다.</p>
+                <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L298~329 : .subCon + .innerTxt/.dlBox/.dl03
+                     원본의 .dlBox > h4 는 프로토 헤딩 레벨(h3) 유지를 위해 h3 로만 바꿔 달았다(문구·스타일 동일). -->
+                <div class="asis-intro">
+                  <div class="subCon">
+                    <div class="division m-w100"><img class="w-auto m-maxW50" src="img/sub/subImg01-1-5.png" alt="시스템의 구동 원리 이미지"></div>
+                    <div class="division">
+                      <div>
+                        <div class="innerTxt">
+                          <div class="flexBox">
+                            <div><img class="m-maxW80" src="img/sub/subImg01-1-6.png" alt="수소전기차 구성과 기능"></div>
+
+                            <div class="dlBox">
+                              <h3>수소전기차 구성과 기능</h3>
+                              <dl class="dl03">
+                                <dt>수소탱크</dt>
+                                <dd>충전소에서 충전한 수소를 고압(700bar)으로 저장</dd>
+                              </dl>
+                              <dl class="dl03">
+                                <dt>연료전지</dt>
+                                <dd>수소와 산소를 화학반응시켜 전기를 생산</dd>
+                              </dl>
+                              <dl class="dl03">
+                                <dt>배터리</dt>
+                                <dd>연료전지에서 생산된 전기를 저장</dd>
+                              </dl>
+                              <dl class="dl03">
+                                <dt>모터</dt>
+                                <dd>배터리에 저장된 전기를 이용하여 자동차 바퀴를 구동</dd>
+                              </dl>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [기존 프로토] 충전 방식 (AS-IS에 대응 섹션 없음 → 그대로 유지) -->
                 <h2 class="heading-title" data-i18n="encyc.charging">충전 방식</h2>
                 <p class="introduction-content__description" data-i18n="h2car.charging">수소 충전은 700bar(승용차)와 350bar(상용차) 두 가지 압력 표준을 사용합니다. 충전 시간은 승용차 기준 5분 내외로 내연기관 주유 시간과 유사하며, 1회 충전으로 600km 이상 주행이 가능합니다.</p>
+
+                <!-- [기존 프로토] 주요 차종 -->
                 <h2 class="heading-title" data-i18n="h2car.modelsTitle">주요 차종</h2>
                 <ul class="bullet bullet--dotted">
                   <li data-i18n="h2car.model1">현대 NEXO ― 국내 대표 수소 승용차, 1회 충전 609km 주행</li>
                   <li data-i18n="h2car.model2">현대 일렉시티 수소버스 ― 시내·고속버스용 상용 모델, 전국 주요 도시 도입 확대</li>
                   <li data-i18n="h2car.model3">현대 엑시언트 수소트럭 ― 물류·화물 분야 탄소중립 핵심 차종</li>
                 </ul>
+
+                <!-- [기존 프로토] 수소차 장점 -->
                 <h2 class="heading-title" data-i18n="h2car.prosTitle">수소차 장점</h2>
                 <ul class="bullet bullet--dotted">
                   <li data-i18n="h2car.pro1">빠른 충전 ― 5분 이내 완충, 내연기관 주유와 동일한 체감</li>
@@ -125,8 +189,12 @@
                   <li data-i18n="h2car.pro4">무거운 화물 적재 ― 상용 트럭·버스 분야에서 전기차 대비 강점</li>
                   <li data-i18n="h2car.pro5">정부 지원 ― 차량 구매 보조금 최대 2,250만원 + 세제 감면</li>
                 </ul>
+
+                <!-- [기존 프로토] 인프라 현황 -->
                 <h2 class="heading-title" data-i18n="h2car.infraTitle">인프라 현황</h2>
                 <p class="introduction-content__description" data-i18n="h2car.infra">전국 145개소의 수소충전소가 운영 중이며, 수도권·영남권을 중심으로 확대되고 있습니다. 운영사별 장애 현황과 정비 일정은 수소충전소 Help Desk에서 실시간 확인할 수 있고, 장애 시 대체 충전소를 안내받을 수 있습니다.</p>
+
+                <!-- [기존 프로토] 알아두세요 -->
                 <h2 class="heading-title" data-i18n="encyc.notesTitle">알아두세요</h2>
                 <p class="introduction-content__description" data-i18n="h2car.notes">수소차는 아직 충전 인프라가 전기차보다 제한적이어서 거주지·주요 이동 경로상 충전소 위치를 사전에 확인하시는 것이 중요합니다. 또한 장거리 출퇴근·장거리 화물 운송 등 주행거리 요구가 큰 용도에 특히 적합합니다.</p>
               </div>
@@ -134,10 +202,10 @@
          </div>
       </div>
 <div id="footer-slot"></div>
-<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
-<script src="assets/js/ui-common.js?v=20260821f"></script>
-<script src="js/common/fileAttach.js?v=20260821f"></script>
-<script src="js/menu-data.js?v=20260821f"></script>
-<script src="js/shell.js?v=20260821f"></script>
+<script src="assets/js/i18n/i18n.js?v=20260825d"></script>
+<script src="assets/js/ui-common.js?v=20260825d"></script>
+<script src="js/common/fileAttach.js?v=20260825d"></script>
+<script src="js/menu-data.js?v=20260825d"></script>
+<script src="js/shell.js?v=20260825d"></script>
 </body>
 </html>

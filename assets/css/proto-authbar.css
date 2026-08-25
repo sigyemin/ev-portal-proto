@@ -1,0 +1,162 @@
+/* ============================================================
+   [EVAX 프로토타입 v1.01] 로그인 상태 전환 바 — 프로토타입 전용
+   - 실 서비스에 없는 시연용 컨트롤. 우하단 고정, 기본 접힘.
+   - 모든 클래스는 proto-authbar 접두사(퍼블 원본과 충돌 없음).
+   - z-index 8500 : 헤더(.header 8000) · 플로팅메뉴(7500) 위,
+                    딤드(9000) · 모달/패널(9010) 아래.
+   ============================================================ */
+.proto-authbar {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 8500;
+  font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #f4f6f8;
+}
+
+/* --- 접힌 상태 탭 --- */
+.proto-authbar__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 999px;
+  background-color: rgba(24, 32, 44, 0.88);
+  color: #f4f6f8;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+.proto-authbar__tab:hover {
+  background-color: rgba(24, 32, 44, 1);
+}
+.proto-authbar:not(.proto-authbar--collapsed) .proto-authbar__tab {
+  display: none;
+}
+
+.proto-authbar__badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background-color: #e0483c;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.proto-authbar--on .proto-authbar__badge {
+  background-color: #1ba877;
+}
+
+/* --- 펼친 패널 --- */
+.proto-authbar__panel {
+  width: 208px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(24, 32, 44, 0.94);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+}
+.proto-authbar--collapsed .proto-authbar__panel {
+  display: none;
+}
+
+.proto-authbar__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.proto-authbar__state {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+}
+.proto-authbar__close {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background-color: transparent;
+  color: #c9d1da;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+.proto-authbar__close:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.proto-authbar__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.proto-authbar__label {
+  flex: 0 0 auto;
+  color: #b6c0cc;
+  font-size: 12px;
+}
+.proto-authbar__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 12px;
+}
+.proto-authbar__input:focus {
+  outline: 1px solid #1ba877;
+}
+
+.proto-authbar__toggle {
+  display: block;
+  width: 100%;
+  height: 30px;
+  border: 0;
+  border-radius: 4px;
+  background-color: #1ba877;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.proto-authbar__toggle:hover {
+  background-color: #17936a;
+}
+.proto-authbar--on .proto-authbar__toggle {
+  background-color: #5a6675;
+}
+.proto-authbar--on .proto-authbar__toggle:hover {
+  background-color: #4b5663;
+}
+
+.proto-authbar__note {
+  margin: 6px 0 0;
+  color: #9aa5b1;
+  font-size: 10px;
+}
+
+@media print {
+  .proto-authbar {
+    display: none !important;
+  }
+}
+
+
+/* ── GNB '업무지원시스템'(로그인 시 노출) ───────────────────────
+   프로토 style.css 에 없는 클래스. 운영 ev.or.kr 실측값 그대로. */
+.gnb__item--admin .gnb__link { color: #1BA877; }

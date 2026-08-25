@@ -12,14 +12,14 @@
   <link rel="stylesheet" href="assets/css/map-list.css">
   <link rel="stylesheet" href="assets/css/i18n-en.css">
   <link rel="stylesheet" href="assets/css/aiChat.css">
-  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
-  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
-  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
-  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
-  <script src="js/common/common_util.js?v=20260821f"></script>
-  <script src="js/proto-api.js?v=20260821f"></script>
-  <script src="js/proto-data.js?v=20260821f"></script>
-  <script src="js/proto-mock.js?v=20260821f"></script>
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260825d"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260825d"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260825d"></script>
+  <script src="js/swiper-bundle.min.js?v=20260825d"></script>
+  <script src="js/common/common_util.js?v=20260825d"></script>
+  <script src="js/proto-api.js?v=20260825d"></script>
+  <script src="js/proto-data.js?v=20260825d"></script>
+  <script src="js/proto-mock.js?v=20260825d"></script>
 <script>
 /* [프로토] 운영의 공통 쿠키 유틸(common.js)이 없어 최소 스텁만 둔다 */
 function getCookie(n) {
@@ -252,22 +252,12 @@ function setCookie(n, v, d) {
 $(document).ready(function() {
 
   
+  /* [프로토타입] 실제 인증 없이 로그인 상태만 켜고 메인으로 이동한다.
+     운영에서는 fnValAjax('/portal/loginAction.do', 'mainForm', 'fnCallback') 호출. */
   $('#moveLogin').click(function() {
-    document.mainForm.vno.value = "";
-    document.mainForm.dno.value = "";
-    document.mainForm.sns_kind.value = "";
-    document.mainForm.sns_id.value = "";
-
-    if ($('#loginId').val() == "") {
-      alert("아이디를 입력해 주세요");
-      return false;
-    }
-    if ($('#loginPwd').val() == "") {
-      alert("비밀번호를 입력해 주세요");
-      return false;
-    }
-
-    fnValAjax('/portal/loginAction.do', 'mainForm', 'fnCallback');
+    if (window.EVAX_PROTO_AUTH) window.EVAX_PROTO_AUTH.login();
+    location.href = 'index.html';
+    return false;
   });
 
   $('#loginId, #loginPwd').keypress(function(event) {
@@ -439,10 +429,10 @@ function loginWithKakao() {
 }
 </script>
 <div id="footer-slot"></div>
-<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
-<script src="assets/js/ui-common.js?v=20260821f"></script>
-<script src="js/common/fileAttach.js?v=20260821f"></script>
-<script src="js/menu-data.js?v=20260821f"></script>
-<script src="js/shell.js?v=20260821f"></script>
+<script src="assets/js/i18n/i18n.js?v=20260825d"></script>
+<script src="assets/js/ui-common.js?v=20260825d"></script>
+<script src="js/common/fileAttach.js?v=20260825d"></script>
+<script src="js/menu-data.js?v=20260825d"></script>
+<script src="js/shell.js?v=20260825d"></script>
 </body>
 </html>

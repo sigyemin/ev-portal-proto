@@ -12,14 +12,15 @@
   <link rel="stylesheet" href="assets/css/map-list.css">
   <link rel="stylesheet" href="assets/css/i18n-en.css">
   <link rel="stylesheet" href="assets/css/aiChat.css">
-  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
-  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
-  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
-  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
-  <script src="js/common/common_util.js?v=20260821f"></script>
-  <script src="js/proto-api.js?v=20260821f"></script>
-  <script src="js/proto-data.js?v=20260821f"></script>
-  <script src="js/proto-mock.js?v=20260821f"></script>
+  <link rel="stylesheet" href="assets/css/proto-intro.css?v=20260825d">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260825d"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260825d"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260825d"></script>
+  <script src="js/swiper-bundle.min.js?v=20260825d"></script>
+  <script src="js/common/common_util.js?v=20260825d"></script>
+  <script src="js/proto-api.js?v=20260825d"></script>
+  <script src="js/proto-data.js?v=20260825d"></script>
+  <script src="js/proto-mock.js?v=20260825d"></script>
 </head>
 <body>
 <div id="header-slot"></div>
@@ -101,9 +102,217 @@
                 </div>
               </div>
               <div class="introduction-content">
+                <!-- [AS-IS 이관] 전기차 개요 : 기존 프로토 도입 문단을 본문으로 유지 -->
+                <h2 class="heading-title">전기차 개요</h2>
                 <p class="introduction-content__description" data-i18n="evcar.intro">전기차(Electric Vehicle, EV)는 내연기관을 사용하지 않고 배터리에 저장된 전기에너지로 전기모터를 구동하여 주행하는 자동차입니다. 주행 중 대기오염물질이나 온실가스를 전혀 배출하지 않아 친환경 모빌리티의 중심으로 자리 잡고 있습니다.</p>
+
+                <!-- [기존 프로토] 작동 원리 + [AS-IS 이관] 전기차의 작동원리 (주제 중복 → 한 섹션에 병치, 프로토 문구는 요약 리드) -->
                 <h2 class="heading-title" data-i18n="encyc.howItWorks">작동 원리</h2>
                 <p class="introduction-content__description" data-i18n="evcar.howItWorks">전기차는 크게 배터리·전기모터·감속기·인버터·충전기로 구성됩니다. 고전압 배터리에 저장된 직류(DC) 전기를 인버터가 교류(AC)로 변환해 모터를 구동하며, 감속 시에는 회생제동 기술로 운동에너지를 다시 전기로 변환하여 배터리에 저장합니다.</p>
+                <h3 class="heading-subtitle">전기차의 작동원리</h3>
+                <p class="introduction-content__description">전기차는 고전압 배터리에서 전기에너지를 전기모터로 공급하여 구동력을 발생시키는 차량으로, 화석연료를 전혀 사용하지 않는 무공해 차량입니다.</p>
+                <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L27~62 : .subCon.sub01Box -->
+                <div class="asis-intro">
+                  <div class="subCon sub01Box">
+                    <div class="division">
+                      <div class="flexBox itemCenter">
+                        <div class="sub01-icon icon01 web">
+                          <p class="icon1"></p>
+                          <span>엔진이 없으므로 대기오염물질과 <br>
+                            온실가스를 배출하지 않음</span>
+                        </div>
+                        <img class="web" src="img/sub/subImg01-1-1.png" alt="전기차의 작동원리 이미지"/>
+                        <img class="mobile" src="img/sub/subImg01-1-1-m.png" alt="전기차의 작동원리 이미지"/>
+                        <div class="sub01-icon icon02 web">
+                          <p class="icon2"></p>
+                          <span>배터리 용량에 따라 <br>
+                            주행가능 거리에 차이가 있음</span>
+                        </div>
+                      </div>
+                      <div class="sub01-icon icon03 web">
+                        <p class="icon3"></p>
+                        <span>내연기관차와 달리 엔진이 없이 배터리와 모터만으로 차량 구동</span>
+                      </div>
+                      <div class="sub01-icon-m">
+                        <div class="sub01-icon icon01 mobile">
+                          <p class="icon1"></p>
+                          <span>구분점  엔진이 없으므로 대기오염물질과 온실가스를 배출하지 않음</span>
+                        </div>
+                        <div class="sub01-icon icon02 mobile">
+                          <p class="icon2"></p>
+                          <span>구분점  배터리 용량에 따라 주행가능 거리에 차이가 있음</span>
+                        </div>
+                        <div class="sub01-icon icon03 mobile">
+                          <p class="icon3"></p>
+                          <span>내연기관차와 달리 엔진이 없이 배터리와 모터만으로 차량 구동</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [AS-IS 이관] 전기차 내부구조 -->
+                <h2 class="heading-title">전기차 내부구조</h2>
+                <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L66~86 : .subCon.sub02Box
+                     JSP 인라인 style="margin-top:1rem" 은 AS-IS 기준 10px → px 로 고정 -->
+                <div class="asis-intro">
+                  <div class="subCon sub02Box">
+                    <div class="web division"><img class="w-auto" src="img/sub/subImg01-1-2.png" alt="전기차의 내부구조 이미지"/></div>
+                    <div class="division">
+                      <div>
+                        <ul class="innerTxt innerTxt680">
+                          <li>외부 전력 공급을 통한 충전 필요</li>
+                          <li>급속충전기는 50kW급으로 완전방전상태에서 80%충전까지 30분이 소요되며, 완속충전기는
+                            약 6~7kW급으로 완전방전에서 완전충전까지4~5시간이 소요됨</li>
+                        </ul>
+                      </div>
+                      <div class="mobile division" style="margin-top: 10px;"><img class="w-auto m-maxW50" src="img/sub/subImg01-1-2-m.png" alt="전기차의 내부구조 이미지"/></div>
+                      <div>
+                        <ul class="innerTxt innerTxt680">
+                          <li>내연기관 엔진없이 충전된 배터리에서 공급되는 전기에너지만을 동력원으로 전기모터를 구동</li>
+                          <li>회생제동 기능을 이용한 운행 중 배터리 충전으로 제동횟수가 많은 도심에서 에너지 효율성 극대화</li>
+                          <p class="comment">* 회생제동 : 브레이크 제동 시 모터가 발전기로 전환되어 역으로 배터리를 충전</p>
+                        </ul>
+                        <p class="source web">[출처] 기후에너지환경부 친환경 자동차(2015.12) -구조그림 포함-</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [AS-IS 이관] 전기차 주행상황별 작동방식 -->
+                <h2 class="heading-title">전기차 주행상황별 작동방식</h2>
+                <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L90~215 : .subCon.sub01-Box1
+                     원본의 p.bg-navy-tit 는 프로토 헤딩 개수를 유지하기 위해 h3 로만 바꿔 달았다(문구·스타일 동일). -->
+                <div class="asis-intro">
+                  <div class="subCon sub01-Box1">
+                    <div>
+                      <div class="top">
+                        <h3 class="bg-navy-tit">주행 상황별 제어</h3>
+                        <ul>
+                          <li>
+                            <div>
+                              <div>
+                                <p>전기차 고유의 발진 가속</p>
+                                <span>전기모터 특유의 우수한 초기 발진 토크로 혼잡한 도심에서 가속력을 높여줍니다.</span>
+                              </div>
+                              <div class="subImg">
+                                <img src="img/sub/subImg01-1-14.png" alt="전기차 고유의 발진 가속">
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <div>
+                              <div>
+                                <p>회생 제동</p>
+                                <span>브레이크를 밟으면 모터가 발전기로 전환되어 반대로 배터리가 충전되는 기능으로 특히 제동 횟수가 많은 도심에서 주행 효율성을 높여줍니다.</span>
+                              </div>
+                              <div class="subImg">
+                                <img src="img/sub/subImg01-1-15.png" alt="회생 제동">
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <div>
+                              <div>
+                                <p>급속충전</p>
+                                <span>주행 중 배터리 잔량이 부족할 경우, 공공충전소를 통해 24-33분 내외의 짧은 시간에 급속 충전이 가능합니다.</span>
+                              </div>
+                              <div class="subImg">
+                                <img src="img/sub/subImg01-1-16.png" alt="급속충전">
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <div>
+                              <div>
+                                <p>완속충전 상태에서의 예냉/예열</p>
+                                <span>충전기 플러그인 상태에서 공조장치를 미리 가동시키면 쾌적한 상태로 드라이빙
+                                  이 가능하며, 출발 시 에너지 소비를 줄여 주행 거리를 연장하는데 도움이 된다.</span>
+                              </div>
+                              <div class="subImg">
+                                <img src="img/sub/subImg01-1-17.png" alt="완속충전 상태에서의 예냉/예열">
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                        <em>* 상기 사양구성은 차급 및 전력 사양에 따라 다르게 적용</em>
+                      </div>
+                      <div class="mid">
+                        <span>용어설명</span>
+                        <div>
+                          <p>1. OBC-탑재형 충전기(On Board Charge) : <span>전기자동차 내부에 탑재되어 그 자동차에만 작동되도록 설계된 충전기</span></p>
+                          <p>2. 인버터(Inverter) : <span>전기모터에서 생산된 교류를 직류로 변환시켜 배터리에 저장하고, 전기모터를 구동할 때는 배터리에 저장된 직류를 역으로 교류로 변환시켜 전기모터에 공급하는 장치</span></p>
+                          <p>3. 공조장치 : <span>차 내의 온도, 습도 등을 조절하여 쾌적하게 하는 공기 장치</span></p>
+                        </div>
+                      </div>
+                      <div class="btm">
+                        <div class="r-btm">
+                          <div class="driving">
+                            <p>주행<br>모드</p>
+                            <div>
+                              <img src="img/sub/subImg01-1-18.png" alt="차량이 평지→오르막→내리막을 주행하는 모습을 통해, 출발/가속–모터 구동–감속–회생제동의 전기차 주행 원리를 단계적으로 표현한 이미지">
+                              <ul>
+                                <li>출발/가속</li>
+                                <li>감속</li>
+                                <li>모터</li>
+                                <li>회생제동</li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="basics">
+                            <p>작동<br>원리</p>
+                            <div>
+                              <ul>
+                                <li>
+                                  <img src="img/sub/subImg01-1-21.png" alt="배터리 → 인버터 → 모터 → 감속기 → 바퀴로 이어지는 흐름을 통해 전기차가 출발하고 가속하는 과정 이미지">
+                                </li>
+                                <li>
+                                  <img src="img/sub/subImg01-1-22.png" alt="바퀴 → 감속기 → 모터(발전) → 인버터 → 배터리로 에너지가 역방향 흐르며 감속과 충전이 동시에 이루어지는 과정 이미지">
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="l-btm">
+                          <div class="driving">
+                            <p class="mobile">주행<br>모드</p>
+                            <div>
+                              <div class="dri-img">
+                                <div>
+                                  <img src="img/sub/subImg01-1-19.png" alt="완속충전 배터리충전 6시간">
+                                </div>
+                                <div>
+                                  <img src="img/sub/subImg01-1-20.png" alt="급속충전 배터리충전 25분">
+                                </div>
+                              </div>
+                              <ul>
+                                <li>완속충전</li>
+                                <li>급속충전</li>
+                                <li>배터리 충전(6시간)</li>
+                                <li>배터리 충전(25분)</li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="basics">
+                            <p class="mobile">작동<br>원리</p>
+                            <div>
+                              <ul>
+                                <li>
+                                  <img class="m-h90" src="img/sub/subImg01-1-23.png" alt="완속 충전기의 AC 전력이 차량 내부 충전기로 들어와 DC로 변환된 후 배터리에 저장되는 과정 이미지">
+                                </li>
+                                <li>
+                                  <img class="m-h90" src="img/sub/subImg01-1-24.png" alt="급속 충전기에서 공급된 DC 전력이 차량 내부 충전기를 우회해 배터리로 직접 전달되는 방식을 보여주는 이미지">
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [기존 프로토] 전기차 종류 -->
                 <h2 class="heading-title" data-i18n="evcar.typesTitle">전기차 종류</h2>
                 <ul class="bullet bullet--dotted">
                   <li data-i18n="evcar.type1">전기승용차(BEV) ― 현대 아이오닉 5/6, 기아 EV6/EV9, 테슬라 모델 3/Y, 현대 코나 EV 등</li>
@@ -112,8 +321,12 @@
                   <li data-i18n="evcar.type4">전기버스 ― 시내·마을버스 중심 보급, 서울·부산 등 주요 도시 전환 가속화</li>
                   <li data-i18n="evcar.type5">전기건설기계 ― 굴착기·지게차 등 친환경 건설 현장 도입 확대</li>
                 </ul>
+
+                <!-- [기존 프로토] 충전 방식 (AS-IS에 대응 섹션 없음 → 그대로 유지) -->
                 <h2 class="heading-title" data-i18n="encyc.charging">충전 방식</h2>
                 <p class="introduction-content__description" data-i18n="evcar.charging">충전 속도에 따라 완속(AC, 7kW 수준), 급속(DC, 50~100kW), 초급속(DC, 350kW 이상)으로 구분됩니다. 완속은 자택·직장에서 6~8시간 동안 충전하며, 급속은 고속도로 휴게소·공공 충전소에서 30분 내 80%까지 충전이 가능합니다. 초급속은 15분 내외의 짧은 시간에 장거리 주행에 필요한 전력을 확보할 수 있습니다. 충전 요금은 속도 구간별로 차등 적용됩니다.</p>
+
+                <!-- [기존 프로토] 주요 장점 + [AS-IS 이관] 전기차 특징 (주제 중복 → 한 섹션에 병치, 프로토 목록은 요약 리드) -->
                 <h2 class="heading-title" data-i18n="evcar.prosTitle">주요 장점</h2>
                 <ul class="bullet bullet--dotted">
                   <li data-i18n="evcar.pro1">환경 ― 주행 중 배출가스 제로, 도심 대기질 개선에 직접 기여</li>
@@ -122,17 +335,434 @@
                   <li data-i18n="evcar.pro4">세제 ― 취득세·개별소비세·교육세 감면 최대 530만원</li>
                   <li data-i18n="evcar.pro5">보조금 ― 국비·지방비 합산 최대 1,350만원 지원</li>
                 </ul>
+                <h3 class="heading-subtitle">전기차 특징</h3>
+                <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L219~277 : .subCon.sub01-Box2 -->
+                <div class="asis-intro">
+                  <div class="subCon sub01-Box2" style="justify-content:normal">
+                    <div>
+                      <div class="carPoint">
+                        <div>
+                          <div class="bigCircle">
+                            <div class="smallCircle">
+                              <div class="icon01"></div>
+                              <p>친환경적</p>
+                            </div>
+                          </div>
+                        </div>
+                        <ul>
+                          <li>주행시 화석연료를 사용하지 않아 CO2나 NOx를 배출하지 않음</li>
+                          <li>엔진 소음이 적고, 진동이 적음</li>
+                        </ul>
+                      </div>
+                      <div class="carPoint">
+                        <div>
+                          <div class="bigCircle">
+                            <div class="smallCircle">
+                              <div class="icon02"></div>
+                              <p>경제적</p>
+                            </div>
+                          </div>
+                        </div>
+                        <ul>
+                          <li>전기모터로만 구동할 경우 운행비용이 가장 저렴하고, 심야 전기를 이용할 경우 비용을 더 낮출 수 있음</li>
+                          <li>차량 수명이 상대적으로 김</li>
+                        </ul>
+                      </div>
+                      <div class="carPoint">
+                        <div>
+                          <div class="bigCircle">
+                            <div class="smallCircle">
+                              <div class="icon03"></div>
+                              <p>안전성</p>
+                            </div>
+                          </div>
+                        </div>
+                        <ul>
+                          <li>사고 시 폭발의 위험성이 적음</li>
+                        </ul>
+                      </div>
+                      <div class="carPoint">
+                        <div>
+                          <div class="bigCircle">
+                            <div class="smallCircle">
+                              <div class="icon04"></div>
+                              <p>편의성</p>
+                            </div>
+                          </div>
+                        </div>
+                        <ul>
+                          <li>심야 전력으로 자택에서 충전 가능</li>
+                          <li>기어를 바꿔줄 필요가 없어 운전 조작이 간편</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [기존 프로토] 알아두세요 (AS-IS에 대응 섹션 없음 → 그대로 유지) -->
                 <h2 class="heading-title" data-i18n="encyc.notesTitle">알아두세요</h2>
                 <p class="introduction-content__description" data-i18n="evcar.notes">전기차 구매 시 거주 지자체의 예산 잔여 현황을 먼저 확인하시고, 의무운행기간 2년을 준수해야 보조금 환수를 피할 수 있습니다. 자세한 모델별 주행거리·보조금·충전 시간은 차종 비교 도구에서 확인하실 수 있습니다.</p>
+
+                <!-- [AS-IS 이관] 그 외 차종 : 하이브리드차 / 플러그인하이브리드차 -->
+                <h2 class="heading-title">그 외 차종</h2>
+                <div>
+                  <h3 class="heading-subtitle">하이브리드차</h3>
+                  <p class="introduction-content__description">하이브리드차는 엔진과 모터동력을 조합하여 구동하는 자동차입니다.</p>
+
+                  <h4 class="heading-content">하이브리드차 작동원리</h4>
+                  <p>연료 소모는 최소화하면서 주행 성능은 극대화하기 위해 출발과 저속주행, 가속주행, 고속주행, 감속주행, 정지 등 5가지 주행 형태별로 모터주행과 엔진주행을 적절히 조합한 주행모드로 주행합니다.</p>
+                  <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L342~363 : .subCon.subCon1-3 -->
+                  <div class="asis-intro">
+                    <div class="subCon subCon1-3">
+                      <div class="division">
+                        <img class="web w-auto" src="img/sub/subImg01-1-7.png" alt="하이브리드차 작동원리 이미지">
+                        <img class="mobile w-auto m-maxW50" src="img/sub/subImg01-1-7-m.png" alt="하이브리드차 작동원리 이미지">
+                      </div>
+                      <div class="division">
+                        <div>
+                          <div class="innerTxt">
+                            <div class="flexBox">
+                              <div class="ulBox">
+                                <ul>
+                                  <li>엔진에 모터의 동력을 더해 큰 힘으로 구동</li>
+                                  <li>차량 감속시 회생제동으로 충전하였다가 출발, 저속주행시 모터 동력만으로 주행하기 때문에 가솔린차 대비 연비 40% 이상 좋음</li>
+                                  <p class="comment">* 인버터(Inverter) : 전기모터에서 생산된 교류를 직류로 변환시켜 배터리에 저장하고, 전기모터를 구동할 때는 배터리에 저장된 직류를 역(易)으로 교류로 변환시켜 전기모터에 공급하는 장치
+                                  </p>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 class="heading-content">하이브리드 시스템</h4>
+                  <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L367~435 : .subCon.subCon1-3_1 -->
+                  <div class="asis-intro">
+                    <div class="subCon subCon1-3_1">
+                      <div class="division"><img class="web w1024" src="img/sub/subImg01-1-8.png" alt="하이브리드 시스템 이미지"></div>
+                      <div class="division">
+                        <ul class="web w1024">
+                          <li>
+                            <img src="img/sub/subImg01-1-8_2.png" alt="모터주행 (전기차모드)">
+                            <p class="top">1.출발/저속 모터만 구동</p>
+                            <div class="con">
+                              <div class="img01"></div>
+                              <div>
+                                <p>1.모터 주행(전기차 모드)</p>
+                                <span>큰 구동력이 필요치 않은 출발이나 서서히 가속 시 전기모터 사용
+                                  합니다.</span>
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <img src="img/sub/subImg01-1-8_3.png" alt="엔진+모터 주행">
+                            <p class="top">2. 가속 엔진 작동 &amp; 모터보조</p>
+                            <div class="con">
+                              <div class="img02"></div>
+                              <div>
+                                <p>2. 엔진+모터 주행</p>
+                                <span>속도 증가로 큰 구동력이 필요시 엔진 시동하거나 오르막길, 급고속 등으로 매우 큰 구동력이 필요
+                                  시 엔진과 전기모터를 동시 사용
+                                  합니다.</span>
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <img src="img/sub/subImg01-1-8_4.png" alt="엔진 주행">
+                            <p class="top">3. 중/고속 정속 엔진만 구동</p>
+                            <div class="con">
+                              <div class="img03"></div>
+                              <div>
+                                <p>3. 엔진 주행</p>
+                                <span>엔진 효율이 가장 좋은 고속 정속 주행시는 엔진만 사용&nbsp;합니다.</span>
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <img src="img/sub/subImg01-1-8_5.png" alt="모터 충전">
+                            <p class="top">4. 감속 배터리 충전</p>
+                            <div class="con">
+                              <div class="img04"></div>
+                              <div>
+                                <p>4. 모터 충전</p>
+                                <span>감속이나 제동 시 발생되는 에너지를 전기 모터를 이용한 전기에너지를 전환시켜 배터리를 충전
+                                  합니다.</span>
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <img src="img/sub/subImg01-1-8_6.png" alt="엔진 정지">
+                            <p class="top">5. 정지</p>
+                            <div class="con">
+                              <div class="img05"></div>
+                              <div>
+                                <p>5. 엔진 정지</p>
+                                <span>신호대기 등 정차 시 엔진이 정지
+                                  됩니다.</span>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                        <img class="mobile w1024" src="img/sub/subImg01-1-8-m.png" alt="하이브리드 시스템 작동원리">
+                        <p>* 배터리 충전 상태에 따라 모터와 엔진작동 상태가 변경될 수 있습니다.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 class="heading-subtitle">플러그인하이브리드차</h3>
+                  <p class="introduction-content__description">
+                    플러그인하이브리드차는 엔진과 모터동력을 조합하여 차량을 구동하는 면에서 하이브리드차와 동일하지만 플러그인하이브리드차는 외부 전원을 연결하여 배터리를 충전할 수 있고,
+                    하이브리드차는 감속시 생산한 전기만으로 충전한다는 점에서 다릅니다. 외부 전원으로 배터리를 충전할 수 있기 때문에 하이브리드차보다 긴 구간을 모터만으로 주행할 수
+                    있습니다.
+                  </p>
+
+                  <h4 class="heading-content">플러그인하이브리드차 작동원리</h4>
+                  <p>
+                    배터리를 가득 충전한 후 출발하면 처음 40km 전후까지 배터리 전원의 힘만으로 가는 전기차모드로 주행하고, 그 이후는 배터리 충전량을 일정 수준으로 유지하면서
+                    하이브리드 모드로 주행합니다.
+                  </p>
+                  <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L454~476 : .subCon.subCon1-3 -->
+                  <div class="asis-intro">
+                    <div class="subCon subCon1-3">
+                      <div class="division">
+                        <img class="web w-auto" src="img/sub/subImg01-1-9.png"
+                          alt="플러그인하이브리드차 작동원리 이미지">
+                        <img class="mobile w-auto m-maxW50" src="img/sub/subImg01-1-9-m.png"
+                          alt="플러그인하이브리드차 작동원리 이미지">
+                      </div>
+                      <div class="division">
+                        <div>
+                          <div class="innerTxt mT8">
+                            <div class="flexBox">
+                              <div class="ulBox">
+                                <ul>
+                                  <li>전기차 모드와 하이브리드차 모드로 주행이 가능하여 전기차의 짧은 주행 거리를 극복</li>
+                                  <li>출퇴근거리(30~40km)를 연료 소모없이 전기차 모드로만 주행 가능</li>
+                                  <li>전기차 모드의 주행기능 강화로 하이브리드차 대비 배출가스 40~50% 저감</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 class="heading-content">플러그인하이브리드 시스템</h4>
+                  <!-- [AS-IS 원본 마크업 그대로] evcarSummaryTab.jsp L480~676 : .subCon.subCon1-3_1.subCon1-3_2
+                       원본의 div.rectangle(CD/CS/충전) 은 프로토 헤딩 개수를 유지하기 위해 h5 로만 바꿔 달았다(문구·스타일 동일).
+                       모바일(.mobile.w1024) 블록의 rectangle 은 원본대로 div 유지. -->
+                  <div class="asis-intro">
+                    <div class="subCon subCon1-3_1 subCon1-3_2">
+                      <div class="division">
+                        <img class="web w1024" src="img/sub/subImg01-1-10.png"
+                          alt="플러그인하이브리드 시스템 이미지">
+                        <img class="web w1240" src="img/sub/subImg01-1-10-s.png"
+                          alt="플러그인하이브리드 시스템 이미지">
+                      </div>
+                      <div class="division">
+                        <div>
+                          <h5 class="rectangle web w1024">CD(Charge Depleting) 모드<span></span></h5>
+                          <ul>
+                            <li class="w478">
+                              <img class="w1024" src="img/sub/subImg01-1-10_2.png"
+                                alt="모터주행 (전기차모드)">
+                              <img class="web w1240" src="img/sub/subImg01-1-10_2-m.png"
+                                alt="모터주행 (전기차모드)">
+                              <p class="top">&#8192; </p>
+                              <div class="con">
+                                <div class="img01"></div>
+                                <div>
+                                  <p>1.모터 주행</p>
+                                  <span>배터리를 일정량 사용할 때까지 모터만으로 전 구간 주행을 합니다.</span>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 class="rectangle web w1024">CS(Charge Sustaining) 모드<span></span></h5>
+                          <ul>
+                            <li>
+                              <img class="w1024" src="img/sub/subImg01-1-10_3.png"
+                                alt="출발 저속 모터만 구동">
+                              <img class="web w1240" src="img/sub/subImg01-1-10_3-pc.png"
+                                alt="출발 저속 모터만 구동">
+                              <p class="top">2. 출발/저속 <br> 모터만 구동</p>
+                              <div class="con">
+                                <div class="img02"></div>
+                                <div>
+                                  <p>2. 모터 주행 <br> (전기차모드)</p>
+                                  <span>큰 구동력이 필요치 않은 출발이나 서서히 가속 시 전기모터를 사용합니다.</span>
+                                </div>
+                              </div>
+                            </li>
+                            <li>
+                              <img class="w1024" src="img/sub/subImg01-1-10_4.png"
+                                alt="가속엔진 작동 모터 보조">
+                              <img class="web w1240" src="img/sub/subImg01-1-10_4-pc.png"
+                                alt="가속엔진 작동 모터 보조">
+                              <p class="top">3. 가속엔진 작동 <br> &amp; 모터 보조</p>
+                              <div class="con">
+                                <div class="img03"></div>
+                                <div>
+                                  <p>3. 엔진+모터 <br>주행</p>
+                                  <span>속도 증가로 큰 구동력이 필요시 엔진 시동하거나 오르막길, 급고속 등으로 매우 큰 구동력이 필요시 엔진과
+                                    전기모터를 동시에 사용합니다.</span>
+                                </div>
+                              </div>
+                            </li>
+                            <li>
+                              <img class="w1024" src="img/sub/subImg01-1-10_5.png"
+                                alt="중고속 정속 엔진만 구동">
+                              <img class="web w1240" src="img/sub/subImg01-1-10_5-pc.png"
+                                alt="중고속 정속 엔진만 구동">
+                              <p class="top">4. 중/고속 정속 <br>엔진만 구동</p>
+                              <div class="con">
+                                <div class="img04"></div>
+                                <div>
+                                  <p>4. 엔진 주행</p>
+                                  <span>엔진 효율이 가장 좋은 고속 정속 주행시는 엔진만 사용합니다.</span>
+                                </div>
+                              </div>
+                            </li>
+                            <li>
+                              <img class="w1024" src="img/sub/subImg01-1-10_6.png"
+                                alt="감속 배터리 충전">
+                              <img class="web w1240" src="img/sub/subImg01-1-10_6-pc.png"
+                                alt="감속 배터리 충전">
+                              <p class="top">5. 감속 배터리 <br>충전</p>
+                              <div class="con">
+                                <div class="img05"></div>
+                                <div>
+                                  <p>5. 배터리 충전</p>
+                                  <span>감속이나 제동 시 발생되는 에너지를 전기에너지로 전환시켜 배터리를 충전합니다.</span>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 class="rectangle web w1024">충전<span></span></h5>
+                          <ul>
+                            <li class="w181">
+                              <img class="w1024" src="img/sub/subImg01-1-10_7.png"
+                                alt="외부 충전">
+                              <img class="web w1240" src="img/sub/subImg01-1-10_7-m.png"
+                                alt="외부 충전">
+                              <p class="top">6. 외부 충전</p>
+                              <div class="con">
+                                <div class="imgNo"></div>
+                                <div>
+                                  <p>6. 외부 충전</p>
+                                  <span>외부에서 배터리 충전이 가능합니다.</span>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="mobile w1024">
+                          <div>
+                            <div><img src="img/sub/subImg01-1-10-m_1.png" alt="플러그인하이브리드 시스템"></div>
+                            <div class="rectangle">CD(Charge Depleting) 모드<span></span></div>
+                            <ul>
+                              <li class="">
+                                <img class="" src="img/sub/subImg01-1-10_2.png" alt="모터주행 (전기차모드)">
+                                <p class="top">&#8192; </p>
+                                <div class="con">
+                                  <div class="img01"></div>
+                                  <div>
+                                    <p>1.모터 주행</p>
+                                    <span>배터리를 일정량 사용할 때까지 모터만으로 전 구간 주행을 합니다.</span>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <div>
+                            <img src="img/sub/subImg01-1-10-m_2.png" alt="플러그인하이브리드 시스템">
+                            <div class="rectangle">CS(Charge Sustaining) 모드<span></span></div>
+                            <ul>
+                              <li>
+                                <img class="" src="img/sub/subImg01-1-10_3-m.png" alt="출발 저속 모터만 구동">
+                                <p class="top">2. 출발/저속 모터만 구동</p>
+                                <div class="con">
+                                  <div class="img02"></div>
+                                  <div>
+                                    <p>2. 모터 주행 (전기차모드)</p>
+                                    <span>큰 구동력이 필요치 않은 출발이나 서서히 가속 시 전기모터를 사용합니다.</span>
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <img class="" src="img/sub/subImg01-1-10_4-m.png" alt="가속엔진 작동 모터 보조">
+                                <p class="top">3. 가속엔진 작동 &amp; 모터 보조</p>
+                                <div class="con">
+                                  <div class="img03"></div>
+                                  <div>
+                                    <p>3. 엔진+모터 <br>주행</p>
+                                    <span>속도 증가로 큰 구동력이 필요시 엔진 시동하거나 오르막길, 급고속 등으로 매우 큰 구동력이 필요시 엔진과
+                                      전기모터를 동시에 사용합니다.</span>
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <img class="" src="img/sub/subImg01-1-10_5-m.png" alt="중고속 정속 엔진만 구동">
+                                <p class="top">4. 중/고속 정속 엔진만 구동</p>
+                                <div class="con">
+                                  <div class="img04"></div>
+                                  <div>
+                                    <p>4. 엔진 주행</p>
+                                    <span>엔진 효율이 가장 좋은 고속 정속 주행시는 엔진만 사용합니다.</span>
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <img class="" src="img/sub/subImg01-1-10_6-m.png"  alt="감속 배터리 충전">
+                                <p class="top">5. 감속 배터리 충전</p>
+                                <div class="con">
+                                  <div class="img05"></div>
+                                  <div>
+                                    <p>5. 배터리 충전</p>
+                                    <span>감속이나 제동 시 발생되는 에너지를 전기에너지로 전환시켜 배터리를 충전합니다.</span>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <div>
+                            <img src="img/sub/subImg01-1-10-m_3.png" alt="플러그인하이브리드 시스템">
+                            <div class="rectangle">충전<span></span></div>
+                            <ul>
+                              <li class="">
+                                <img src="img/sub/subImg01-1-10_6-m.png" alt="외부 충전">
+                                <p class="top">6. 외부 충전</p>
+                                <div class="con">
+                                  <div class="imgNo"></div>
+                                  <div>
+                                    <p>6. 외부 충전</p>
+                                    <span>외부에서 배터리 충전이 가능합니다.</span>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
          </div>
       </div>
 <div id="footer-slot"></div>
-<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
-<script src="assets/js/ui-common.js?v=20260821f"></script>
-<script src="js/common/fileAttach.js?v=20260821f"></script>
-<script src="js/menu-data.js?v=20260821f"></script>
-<script src="js/shell.js?v=20260821f"></script>
+<script src="assets/js/i18n/i18n.js?v=20260825d"></script>
+<script src="assets/js/ui-common.js?v=20260825d"></script>
+<script src="js/common/fileAttach.js?v=20260825d"></script>
+<script src="js/menu-data.js?v=20260825d"></script>
+<script src="js/shell.js?v=20260825d"></script>
 </body>
 </html>

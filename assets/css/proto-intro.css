@@ -1,0 +1,460 @@
+@charset "utf-8";
+/* ============================================================
+   proto-intro.css  ―  AS-IS 소개(무공해차 백과) 원본 레이아웃 이식
+   ------------------------------------------------------------
+   출처 : 98. 소스/asis/.../webapp/css/style.css
+          + WEB-INF/jsp/evcarInfo/evcarSummaryTab.jsp
+   범위 : evcarSummaryTab.jsp 가 실제로 쓰는 클래스 규칙만 발췌.
+
+   [1] 스코프 격리
+       모든 규칙은 `.asis-intro` 하위로 한정한다.
+       프로토 assets/css/style.css(퍼블 원본)는 수정하지 않는다.
+
+   [2] rem 기준 보정  ★가장 중요
+       AS-IS  : html{font-size:10px}  → 1rem = 10px
+       프로토 : html font-size 미선언 → 1rem = 16px
+       그대로 붙이면 모든 치수가 1.6배로 부푼다.
+       그래서 AS-IS 의 `Nrem` 을 전부 `calc(N * var(--r))` 로 치환했다.
+       --r 이 AS-IS 의 root font-size 를 그대로 대신하는 단위다.
+         기본        --r: 10px   (AS-IS html{font-size:10px})
+         max-720px   --r:  9px   (AS-IS html{font-size:9px}  L2927)
+         max-410px   --r:  8px   (AS-IS html{font-size:8px}  L3319)
+       → AS-IS 가 root 축소로 얻던 전체 스케일링이 수치까지 동일하게 재현된다.
+       프로토의 html{font-size} 는 건드리지 않는다.
+
+   [3] 컨테이너 폭
+       AS-IS .pageBox = 1320px 고정. 안쪽 .sub01-Box1 > div 가 좌우 6.5rem(65px)
+       패딩을 먹어 실제 콘텐츠 폭 = 1190px 이고, 이미지(subImg01-1-8.png 1190px,
+       subImg01-1-10.png 1188px)가 그 폭에 맞춰 제작돼 있다.
+       그래서 .asis-intro 자체를 max-width:1320px 로 고정한다.
+   ============================================================ */
+
+/* ---- 스코프 컨테이너 + AS-IS rem 단위(--r) ---- */
+.asis-intro {
+  --r: 10px;
+  /* .introduction-content 가 column flex 라, width 를 주지 않으면 auto margin 탓에
+     플렉스 아이템이 fit-content 로 줄어든다. 100% + max-width 로 고정. */
+  width: 100%;
+  max-width: 1320px;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: calc(1.6 * var(--r));   /* AS-IS .subConBox{font-size:1.6rem} */
+  letter-spacing: -0.03em;           /* AS-IS body letter-spacing */
+  text-align: justify;               /* AS-IS .subConBox{text-align:justify} */
+  color: #333;
+}
+@media (max-width: 720px) { .asis-intro { --r: 9px; } }
+@media (max-width: 410px) { .asis-intro { --r: 8px; } }
+
+/* ---- AS-IS 엘리먼트 리셋 재현 (style.css L42: line-height:1 / color:#333) ----
+   프로토 style.css 는 body{line-height:1.5} 라 그대로 두면 AS-IS 대비 행간이
+   벌어진다. AS-IS 와 동일하게 line-height 기준을 1 로 되돌린다.            */
+.asis-intro div,
+.asis-intro ol,
+.asis-intro ul,
+.asis-intro li,
+.asis-intro dl,
+.asis-intro dt,
+.asis-intro dd,
+.asis-intro h3,
+.asis-intro h4,
+.asis-intro h5,
+.asis-intro p,
+.asis-intro em,
+.asis-intro span,
+.asis-intro img,
+.asis-intro a,
+.asis-intro label {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  word-break: keep-all;
+  color: #333;
+  line-height: 1;
+}
+.asis-intro em { font-style: normal; }      /* AS-IS strong, em, address{font-style:normal} */
+.asis-intro ul, .asis-intro ol { list-style: none; }
+.asis-intro p { word-break: keep-all; word-wrap: break-word; }
+
+/* ---- 기본(=AS-IS root, html font-size:10px) ---- */
+.asis-intro .mobile {display: none;}
+.asis-intro .web {display: block;}
+.asis-intro .subCon {display: flex; align-items:center; margin-top: calc(3.5 * var(--r)); text-align: center; justify-content:space-around}
+.asis-intro .subCon1-3 {justify-content: center;}
+.asis-intro .subCon1-3 img {width: 100%;}
+.asis-intro .subCon1-3 .innerTxt {margin-left: calc(3.5 * var(--r));}
+.asis-intro .subCon1-3 .innerTxt.mT8 {margin-top: calc(8.6 * var(--r));}
+.asis-intro .subCon1-3_1 {flex-direction: column;}
+.asis-intro .subCon1-3_1 .division:first-child {margin-bottom: calc(3.5 * var(--r));}
+.asis-intro .subCon1-3_1 .division ul {width: 1190px; display: flex; justify-content: space-between;}
+.asis-intro .subCon1-3_1 .division li {width: calc(20% - calc(1.5 * var(--r)));}
+.asis-intro .subCon1-3_1 .division li img {margin-bottom: calc(1.5 * var(--r));}
+.asis-intro .subCon1-3_1 .top {background-color: #212e4e; color: #fff; font-size: calc(1.6 * var(--r)); border-radius: 3px; padding: calc(1.15 * var(--r)) 0; margin-bottom: calc(.5 * var(--r));}
+.asis-intro .subCon1-3_1 .con {min-height: calc(31.8 * var(--r)); max-height: calc(31.8 * var(--r)); border: 1px solid #dddddd; border-radius: 3px; padding: calc(2.5 * var(--r)) calc(2 * var(--r));}
+.asis-intro .subCon1-3_1 .con div:first-child {width: calc(15.3 * var(--r)); height: calc(6.9 * var(--r)); background: url(../../img/sub/subImg01-1-8_1.png) no-repeat; margin: 0 auto calc(2.4 * var(--r)) auto; background-size: calc(15.3 * var(--r)) auto;}
+.asis-intro .subCon1-3_1 .con div.img01 {background-position: 0 0;}
+.asis-intro .subCon1-3_1 .con div.img02 {background-position: 0 calc(-7.7 * var(--r));}
+.asis-intro .subCon1-3_1 .con div.img03 {background-position: 0 calc(-15.3 * var(--r));}
+.asis-intro .subCon1-3_1 .con div.img04 {background-position: 0 calc(-23 * var(--r));}
+.asis-intro .subCon1-3_1 .con div.img05 {background-position: 0 calc(-30.6 * var(--r));}
+.asis-intro .subCon1-3_1 .con div:last-child {border-top: 1px solid #aeaeae; text-align: left;}
+.asis-intro .subCon1-3_1 .con div:last-child p {font-size: calc(1.6 * var(--r)); color: #212e4e; font-weight: 500; padding:calc(2 * var(--r)) 0 calc(1.2 * var(--r)) 0;}
+.asis-intro .subCon1-3_1 .con div:last-child span {font-size: calc(1.5 * var(--r)); line-height: calc(2.5 * var(--r));}
+.asis-intro .subCon1-3_1 .division > p {font-size: calc(1.5 * var(--r)); text-align: left; margin-top: calc(2 * var(--r));}
+.asis-intro .subCon1-3_2 .division:first-child {margin-bottom: calc(2.5 * var(--r));}
+/* AS-IS style.css L783 끝에 오타 "12" 가 붙어 있어(`...2.5rem;}12`),
+   바로 다음 규칙 `.subCon1-3_2 .division:nth-child(2){display:flex}` 는
+   실제 브라우저 CSS 파서에서 선택자 오류로 통째로 버려진다.
+   → 운영 화면에서 CD/CS/충전 그룹이 가로 3열이 아니라 세로로 쌓이는 이유.
+   원본 렌더 결과를 그대로 재현하기 위해 이 규칙은 이식하지 않는다.
+.asis-intro .subCon1-3_2 .division:nth-child(2) {display: flex;} */
+.asis-intro .subCon1-3_2 .division > div + div {margin-top: 0;}
+.asis-intro .subCon1-3_2 .division ul {width: auto;  margin: calc(1.9 * var(--r)) calc(.25 * var(--r)) 0 calc(.25 * var(--r));}
+.asis-intro .subCon1-3_2 .division > div:first-child ul {margin-left: 0;}
+.asis-intro .subCon1-3_2 .division > div:last-child ul {margin-right: 0;}
+.asis-intro .subCon1-3_2 .division li {width: calc(12.6 * var(--r)); margin-right: calc(.5 * var(--r));}
+.asis-intro .subCon1-3_2 .division li:last-child {margin-right: 0;}
+.asis-intro .subCon1-3_2 .division li.w478 {width: calc(47.8 * var(--r));}
+.asis-intro .subCon1-3_2 .division li.w181 {width: calc(18.1 * var(--r));}
+.asis-intro .subCon1-3_2 .top {min-height: calc(6.4 * var(--r)); display: flex; align-items: center; justify-content: center; line-height: 1.3;}
+.asis-intro .subCon1-3_2 .con {min-height: calc(42 * var(--r)); padding: calc(2 * var(--r)) calc(1.8 * var(--r));}
+.asis-intro .subCon1-3_2 .con div:first-child {width: calc(8.8 * var(--r)); height: calc(4 * var(--r)); margin:0 auto calc(2 * var(--r)) auto; background: url(../../img/sub/subImg01-1-10_1.png) no-repeat; background-size: calc(8.8 * var(--r)) auto;}
+.asis-intro .subCon1-3_2 .con div.img01 {background-position: 0 0;}
+.asis-intro .subCon1-3_2 .con div.img02 {background-position: 0 calc(-4.5 * var(--r));}
+.asis-intro .subCon1-3_2 .con div.img03 {background-position: 0 calc(-9 * var(--r));}
+.asis-intro .subCon1-3_2 .con div.img04 {background-position: 0 calc(-13.5 * var(--r));}
+.asis-intro .subCon1-3_2 .con div.img05 {background-position: 0 calc(-18 * var(--r));}
+.asis-intro .subCon1-3_2 .con div.imgNo {background-image: none}
+.asis-intro .subCon1-3_2 .con div:last-child p {height: calc(6.2 * var(--r)); padding: calc(1.2 * var(--r)) 0 0 0; line-height: calc(2.5 * var(--r));}
+.asis-intro .subCon1-3_2 .con div:last-child span {word-break: normal;}
+.asis-intro .rectangle {height: calc(4 * var(--r)); background-color: #2c7fdf; font-size: calc(1.7 * var(--r));color: #fff; line-height: calc(4 * var(--r)); position: relative; margin-right: calc(3.6 * var(--r));}
+.asis-intro .rectangle:nth-child(2) {width: calc(48.1 * var(--r));}
+.asis-intro .rectangle:last-child {width: calc(14.5 * var(--r));}
+.asis-intro .rectangle span {display: inline-block; border-top: 20px solid transparent; border-left: 36px solid #2c7fdf; border-bottom: 20px solid transparent; position: absolute; right: calc(-3.6 * var(--r));}
+.asis-intro .subCon1-3_2 .division img.web.w1240 {display: none;}
+.asis-intro .subCon2-3 {flex-direction: column;}
+.asis-intro .subConTxt {line-height: calc(2.6 * var(--r));}
+.asis-intro .innerTxt {padding: calc(2.6 * var(--r)) calc(3.5 * var(--r)) ; font-size: calc(1.6 * var(--r));;border-radius: 15px; background-color: #f6fcfe; border: 1px solid #cae4ed; text-align: left; max-width: calc(80 * var(--r));}
+.asis-intro .innerTxt.innerTxt680 {max-width: calc(68 * var(--r));}
+.asis-intro .division > div + div {margin-top: calc(11 * var(--r));}
+.asis-intro .innerTxt li {padding-left: calc(1 * var(--r)); line-height: calc(2.8 * var(--r)); margin-bottom: calc(0.4 * var(--r)); position: relative;}
+.asis-intro .innerTxt li:last-of-type {margin-bottom: 0;}
+.asis-intro .innerTxt li:before {content: ''; display: block; width: 4px; height: 4px; background-color: #333; border-radius: 50px; position: absolute; left: 0; top: calc(1.4 * var(--r));}
+.asis-intro .comment {font-size: calc(1.4 * var(--r)); color: #212e4e; padding: calc(1 * var(--r)) 0 0 calc(1 * var(--r)); line-height: calc(2.2 * var(--r));}
+.asis-intro .source {font-size: calc(1.4 * var(--r)); color: #666; text-align: right; margin-top: calc(2 * var(--r));}
+.asis-intro .flexBox {display: flex; align-items: flex-end; justify-content: center; justify-content:space-around}
+.asis-intro .flexBox.normal {justify-content:normal}
+.asis-intro .flexBox.itemCenter {align-items: center;}
+.asis-intro .flexBox.jusCenter {justify-content: center;}
+.asis-intro .subCon.spacBetw {justify-content:space-between}
+.asis-intro .flexBox.dirColumn {flex-direction: column;}
+.asis-intro .flexBox > div,
+.asis-intro .flexBox > dl {margin-right: calc(4 * var(--r));}
+.asis-intro .flexBox > div:last-of-type,
+.asis-intro .flexBox > dl:last-of-type {margin-right: calc(0 * var(--r));}
+.asis-intro .sub01Box .flexBox > .sub01 {margin-right: 0;}
+.asis-intro .dlBox h4 {color: #011533; font-size: calc(2.5 * var(--r)); font-weight: 600; text-align: center; border-bottom: 1px solid #011533; padding-bottom: calc(2.1 * var(--r)); margin-bottom: calc(3 * var(--r));}
+.asis-intro .dl03 {display: flex; margin-bottom: calc(0.5 * var(--r)); font-size: calc(1.6 * var(--r)); align-items: center; padding: 0 calc(0.7 * var(--r));}
+.asis-intro .dl03>dt {margin-right: calc(1.2 * var(--r));;color: #fff; padding: calc(1.15 * var(--r)) ; background-color: #011533; border-radius: 50px; min-width: calc(11 * var(--r)); text-align: center;}
+.asis-intro .dl03>dd {line-height: calc(2.2 * var(--r));}
+.asis-intro .sub01Box .sub01-icon {display: flex; flex-direction: column; align-items: center;}
+.asis-intro .sub01Box .sub01-icon.icon01 {margin-right: calc(-2.5 * var(--r));}
+.asis-intro .sub01Box .sub01-icon.icon02 {margin-left: calc(5.2 * var(--r));}
+.asis-intro .sub01Box .sub01-icon.icon03 {flex-direction: row; justify-content: center; margin-top: calc(-4 * var(--r));}
+.asis-intro .sub01Box .sub01-icon p {width: calc(14.4 * var(--r)); height: calc(14.4 * var(--r));  position: relative;}
+.asis-intro .sub01Box .sub01-icon span {font-size: calc(1.6 * var(--r)); color: #333; line-height: calc(2.7 * var(--r)); margin-top: calc(1.9 * var(--r));}
+.asis-intro .sub01-icon-m {display: none;}
+.asis-intro .sub01-icon-m .sub01-icon {flex-direction: row;}
+.asis-intro .sub01-icon-m .sub01-icon.icon02 {margin-left: 0;}
+.asis-intro .sub01-icon-m .sub01-icon.icon03 {margin-top: 0; justify-content: normal;}
+.asis-intro .sub01Box .sub01-icon-m span {margin-left: calc(1.1 * var(--r));}
+.asis-intro .sub01Box p.icon1 {background: url(../../img/sub/subImg01-1-13.png) no-repeat; background-size: calc(14.4 * var(--r)) auto;}
+.asis-intro .sub01Box p.icon2 {background: url(../../img/sub/subImg01-1-11.png) no-repeat; background-size: calc(14.4 * var(--r)) auto;}
+.asis-intro .sub01Box p.icon3 {background: url(../../img/sub/subImg01-1-12.png) no-repeat; background-size: calc(14.4 * var(--r)) auto; margin-top: calc(1.9 * var(--r));}
+.asis-intro .sub01Box .icon03 span {position: relative; margin-left: calc(1.1 * var(--r));}
+.asis-intro .sub02Box {align-items: flex-start; justify-content: center;}
+.asis-intro .sub02Box .division {margin-left: calc(3.5 * var(--r));}
+.asis-intro .sub02Box .division > div + div {margin-top: calc(13.4 * var(--r));}
+.asis-intro .sub01-Box1 {display: block;}
+.asis-intro .sub01-Box1 > div {padding: 0 calc(6.5 * var(--r));}
+.asis-intro .bg-navy-tit,
+.asis-intro .bg-black-tit {color: #fefeff; font-size: calc(1.8 * var(--r)); border-top-left-radius: 13px; border-bottom-right-radius: 13px; padding: calc(1.6 * var(--r)) 0;}
+.asis-intro .bg-navy-tit,
+.asis-intro .bg-black-tit {background-color: #0d232c;}
+.asis-intro .sub01-Box1 .top ul {display: flex;}
+.asis-intro .sub01-Box1 .top ul li {width: 25%; height: calc(31.2 * var(--r)); padding: calc(2.5 * var(--r)) 0 0 0; position: relative;}
+.asis-intro .sub01-Box1 .top ul li::before {content: ""; display: block; width: 1px; height: calc(19.4 * var(--r)); background-color: #ddd; position: absolute; top: calc(2.5 * var(--r));}
+.asis-intro .sub01-Box1 .top ul li:first-child:before {display: none;}
+.asis-intro .sub01-Box1 .top ul li > div {padding: 0 calc(2 * var(--r));}
+.asis-intro .sub01-Box1 .top ul p {color: #2c7fdf; font-size: calc(1.8 * var(--r)); margin: calc(.3 * var(--r)) 0 calc(1.6 * var(--r)) 0; font-weight: 500;}
+.asis-intro .sub01-Box1 .top ul span {color: #333; font-size: calc(1.6 * var(--r)); display: block; line-height: calc(2.6 * var(--r)); text-align: left;}
+.asis-intro .sub01-Box1 .top ul img {position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);}
+.asis-intro .sub01-Box1 .top ul + em {display: block; text-align: left; font-size: calc(1.5 * var(--r)); margin-top: calc(2.6 * var(--r)); line-height: calc(2.4 * var(--r));}
+.asis-intro .sub01-Box1 .mid {border: 1px solid #ddd; border-radius: 5px; margin-top: calc(3.7 * var(--r)); position: relative; padding: calc(2.1 * var(--r)) calc(3 * var(--r)) calc(1.7 * var(--r)) calc(3 * var(--r))}
+.asis-intro .sub01-Box1 .mid > span {background-color: #212e4e; color: #fff; font-size: calc(1.5 * var(--r)); padding: calc(.8 * var(--r)) calc(2.6 * var(--r)); border-radius: 25px; position: absolute; top: calc(-1.7 * var(--r)); left: calc(1.4 * var(--r));}
+.asis-intro .sub01-Box1 .mid div p {text-align: left; line-height: calc(2.7 * var(--r)); font-size: calc(1.5 * var(--r));}
+.asis-intro .sub01-Box1 .mid div p  span {color: #666;}
+.asis-intro .sub01-Box1 .btm {margin-top: calc(3 * var(--r)); display: flex;}
+.asis-intro .sub01-Box1 .btm .r-btm {margin-right: calc(1 * var(--r));}
+.asis-intro .sub01-Box1 .btm > div > div {height: calc(18.3 * var(--r)); display: flex; align-items: flex-end;}
+.asis-intro .sub01-Box1 .btm > div .driving {margin-bottom: calc(1.5 * var(--r));}
+.asis-intro .sub01-Box1 .btm > div > div > div {width: calc(55.2 * var(--r));}
+.asis-intro .sub01-Box1 .driving ul {display: grid; grid-template-columns: repeat(2, 1fr); gap: calc(.5 * var(--r)) calc(1 * var(--r)); margin-top: calc(1.1 * var(--r));}
+.asis-intro .sub01-Box1 .driving ul li {width: 100%; background-color: #f1f1f1; border: 1px solid #ddd; border-radius: 5px; font-size: calc(1.5 * var(--r)); font-weight: 500; padding: calc(.9 * var(--r)) 0;}
+.asis-intro .sub01-Box1 .btm p {width: calc(6.5 * var(--r)); height: 100%; border-top-left-radius: 13px; border-bottom-right-radius: 13px; background-color: #f3f5fa; color: #2c7fdf; border: 1px solid #2c7fdf; font-size: calc(1.5 * var(--r)); font-weight: bold; margin-right: calc(1 * var(--r)); display: flex; align-items: center; justify-content: center; line-height: calc(2.2 * var(--r));}
+.asis-intro .sub01-Box1 .btm p.mobile {display: none;}
+.asis-intro .dri-img {display: flex;}
+.asis-intro .dri-img > div {width: calc(26.7 * var(--r));}
+.asis-intro .sub01-Box1 .basics ul {display: flex; justify-content: space-between;}
+.asis-intro .sub01-Box1 .basics ul li {width: calc(50% - calc(.5 * var(--r))); height: calc(18.3 * var(--r)); background-color: #f1f1f1; border: 1px solid #ddd; border-radius: 5px; display: flex; align-items: center; justify-content: center;}
+.asis-intro .sub01-Box2 > div {padding: 0 calc(4.6 * var(--r)); display: flex; align-items: flex-start; justify-content: space-between;}
+.asis-intro .sub01-Box2 ul {margin: calc(2.1 * var(--r)) calc(.8 * var(--r)) 0 calc(.8 * var(--r));}
+.asis-intro .sub01-Box2 ul li {display: inline-block; font-size: calc(1.5 * var(--r)); line-height: calc(2.6 * var(--r)); position: relative; padding-left: calc(1 * var(--r));}
+.asis-intro .sub01-Box2 ul li::before {display: block; content: ''; background-color: #333; width: calc(0.4 * var(--r)); height: calc(0.4 * var(--r)); border-radius: 50px; position: absolute; left: 0; top: calc(1 * var(--r));}
+.asis-intro .sub01-Box2 .carPoint {width: calc(25% - calc(2.5 * var(--r)));}
+.asis-intro .sub01-Box2 .carPoint > div {display: grid; justify-content: center;}
+.asis-intro .sub01-Box2 .carPoint .icon01 {width: calc(6.7 * var(--r)); height: calc(6 * var(--r)); background: url(../../img/sub/subImg01-1-25.png) no-repeat 0 0; background-size: calc(6.7 * var(--r)) auto;}
+.asis-intro .sub01-Box2 .carPoint .icon02 {width: calc(6.2 * var(--r)); height: calc(5.1 * var(--r)); background: url(../../img/sub/subImg01-1-25.png) no-repeat 0 calc(-6.9 * var(--r)); background-size: calc(6.7 * var(--r)) auto;}
+.asis-intro .sub01-Box2 .carPoint .icon03 {width: calc(6.7 * var(--r)); height: calc(3.9 * var(--r)); background: url(../../img/sub/subImg01-1-25.png) no-repeat 0 calc(-12.9 * var(--r)); background-size: calc(6.7 * var(--r)) auto;}
+.asis-intro .sub01-Box2 .carPoint .icon04 {width: calc(6.4 * var(--r)); height: calc(5.5 * var(--r)); background: url(../../img/sub/subImg01-1-25.png) no-repeat 0 calc(-17.7 * var(--r)); background-size: calc(6.7 * var(--r)) auto;}
+.asis-intro .sub01-Box2 .carPoint p {font-weight: bold; font-size: calc(2 * var(--r)); margin-top: calc(2.4 * var(--r)); color: #000;}
+.asis-intro .sub01-Box3 > div {position: relative;}
+.asis-intro .sub01-Box3 .subConTxt {width: calc(100% - calc(53.4 * var(--r))); text-align: left;}
+.asis-intro .sub01-Box3 > div > div {width: calc(47.1 * var(--r)); height: calc(39.5 * var(--r)); background: url(../../img/sub/subImg01-1-26.png) no-repeat; background-size: cover; position: absolute; top: calc(-5.5 * var(--r)); right: 0;}
+.asis-intro .sub01-Box3 > div + div {width: calc(95 * var(--r)); height: calc(14.8 * var(--r)); background: url(../../img/sub/subImg01-1-27.png) no-repeat; background-size: cover; margin: calc(9.6 * var(--r)) 0 0 calc(1.5 * var(--r));}
+.asis-intro .bigCircle,
+.asis-intro .smallCircle {border: 1px solid #e8eff6; border-radius: 50%;  display: flex; align-items: center; justify-content: center;}
+.asis-intro .bigCircle {width: calc(27 * var(--r)); height: calc(27 * var(--r)); background-color: #f5f9fb;}
+.asis-intro .smallCircle {width: calc(17.7 * var(--r)); height: calc(17.7 * var(--r)); background-color: #fff; flex-direction: column;}
+
+/* ---- AS-IS @media (max-width:1365px) ---- */
+@media (max-width: 1365px) {
+  .asis-intro .sub01-Box1 > div {padding: 0 calc(3.5 * var(--r));}
+  .asis-intro .sub01-Box1 .btm .r-btm,
+  .asis-intro .sub01-Box1 .btm .l-btm {width: 100%;}
+  .asis-intro .sub01-Box1 .btm > div > div > div {width: 100%;}
+  .asis-intro .dri-img > div {width: 100%;}
+}
+
+/* ---- AS-IS @media (max-width:1240px)  ← .web/.mobile 전환점 ---- */
+@media (max-width: 1240px) {
+  .asis-intro .mobile {display: block;}
+  .asis-intro .web {display: none;}
+  .asis-intro .sub02Box {align-items: center;}
+  .asis-intro .sub02Box .division > div:last-of-type {margin-top: calc(1 * var(--r));}
+  .asis-intro .subCon1-3 {align-items: center;}
+  .asis-intro .subCon2-3 .imgSource {margin-right: calc(18.8 * var(--r));}
+  .asis-intro .subCon {flex-direction: column}
+  .asis-intro .subCon1-3 {align-items: center;}
+  .asis-intro .subCon1-3 > .division:first-child {width: 100%;}
+  .asis-intro .subCon1-3_2 .division img.w1024,
+  .asis-intro .rectangle.web.w1024 {display: block;}
+  .asis-intro .mobile.w1024,
+  .asis-intro .subCon1-3_2 .division img.web.w1240 {display: none;}
+  .asis-intro .subCon1-3 .innerTxt,
+  .asis-intro .subCon1-3 .innerTxt.mT8 {margin: 0;}
+  .asis-intro .subCon1-3_1 img {display: block; width: 100%;}
+  .asis-intro .subCon1-3_1 .division ul {width: 100%;}
+  .asis-intro .subCon1-3_1 .division li {width: calc(20% - calc(1 * var(--r)));}
+  .asis-intro .subCon1-3_1 .con {padding: calc(2 * var(--r)) calc(1.5 * var(--r));}
+  .asis-intro .subCon1-3_1 .top,
+  .asis-intro .subCon1-3_1 .con div:last-child p {font-size: calc(1.4 * var(--r));}
+  .asis-intro .subCon1-3_1 .con div:last-child span {font-size: calc(1.3 * var(--r));}
+  .asis-intro .subCon1-3_2 .division > div ul {width: auto;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) {justify-content: center; width: 90%;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) > div:first-child {width: 41%;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) > div:nth-child(2) {width: 44%;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) > div:nth-child(3) {width: 15%;}
+  .asis-intro .subCon1-3_2 .division:first-child img {margin: 0 auto;}
+  .asis-intro .subCon1-3_2 .con {padding: calc(1 * var(--r)) calc(.5 * var(--r)); min-height: calc(37 * var(--r));}
+  .asis-intro .subCon1-3_2 .top {padding: 0 calc(.5 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div:last-child p {height: calc(5.2 * var(--r)); line-height: calc(2 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div:last-child p br {display: none;}
+  .asis-intro .subCon1-3_2 .con div:last-child span {/*font-size: calc(1.2 * var(--r));*/ line-height: calc(2.3 * var(--r));}
+  .asis-intro .subCon1-3_2 img {width: 100%;}
+  .asis-intro .subCon1-3_2 .division {width: 100%;}
+  .asis-intro .subCon1-3_2 .division:first-child {width: 90%; margin-bottom: calc(1.6 * var(--r));}
+  .asis-intro .subCon1-3_2 .division:first-child img {width: 100%;}
+  .asis-intro .subCon1-3_2 .con div:first-child {width: calc(5.5 * var(--r)); height: calc(2.6 * var(--r)); margin: 0 auto calc(1 * var(--r)) auto; background: url(../../img/sub/subImg01-1-10_1-m.png) no-repeat; background-size: calc(5.5 * var(--r)) auto;}
+  .asis-intro .rectangle {height: 25px; margin-right: 23px; font-size: calc(1.058 * var(--r)); line-height: 25px;}
+  .asis-intro .rectangle:nth-child(2) {width: calc(31 * var(--r));}
+  .asis-intro .rectangle:last-child {width: calc(9.1 * var(--r)); margin-right: 0;}
+  .asis-intro .rectangle span {height: 25px; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-left: 24px solid #2c7fdf; right:-23px;}
+  .asis-intro .subCon1-3_2 .con div.img01 {background-position: 0 0;}
+  .asis-intro .subCon1-3_2 .con div.img02 {background-position: 0 calc(-2.8 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.img03 {background-position: 0 calc(-5.6 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.img04 {background-position: 0 calc(-8.4 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.img05 {background-position: 0 calc(-11.2 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.imgNo {background-image: none}
+  .asis-intro .subCon > .division {margin-bottom: calc(4.5 * var(--r));}
+  .asis-intro .subCon > .division:last-of-type {margin-bottom: calc(0 * var(--r));}
+  .asis-intro .flexBox > dl {margin-right: 0;}
+  .asis-intro .innerTxt {max-width: 1400px;}
+  .asis-intro .sub01Box p.icon1,
+  .asis-intro .sub01Box p.icon2,
+  .asis-intro .sub01Box p.icon3 {background-size: cover;}
+  .asis-intro .sub01Box .sub01-icon p {width: calc(13 * var(--r)); height: calc(13 * var(--r));}
+  .asis-intro .sub01Box p.icon3 {margin-top: 0;}
+  .asis-intro .sub01Box .sub01-icon.web {display: none;}
+  .asis-intro .sub02Box .division {margin-left: 0;}
+  .asis-intro .sub01-Box1 .btm p.mobile {display: flex;}
+  .asis-intro .sub01Box .division > div + div {margin-top: calc(1.6 * var(--r));}
+  .asis-intro .sub01-icon-m {display: block;}
+  .asis-intro .sub01Box .sub01-icon.icon01 {margin-right: 0;}
+  .asis-intro .sub01-Box1 .btm .r-btm,
+  .asis-intro .sub01-Box1 .btm .l-btm {width: 50%;}
+  .asis-intro .sub01-Box1 .btm .r-btm {margin-right: 0%;}
+  .asis-intro .sub01Box .sub01-icon span {margin-top: 0;}
+  .asis-intro .sub01-Box1>div,
+  .asis-intro .sub01-Box2>div {padding: 0;}
+  .asis-intro .sub01-Box1 .top ul {flex-direction: column;}
+  .asis-intro .sub01-Box1 .top ul li {width: 100%; height: auto; padding: calc(2.5 * var(--r)) 0;}
+  .asis-intro .sub01-Box1 .top ul li::before {width: 100%; height: 1px; top: 0;}
+  .asis-intro .sub01-Box1 .top ul li>div {display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: center;}
+  .asis-intro .sub01-Box1 .top ul li>div > div:first-child {text-align: left;}
+  .asis-intro .sub01-Box1 .top ul img {position: static; transform: translateX(0);}
+  .asis-intro .sub01-Box1 .subImg {/*min-width: calc(26.8 * var(--r));*/ min-width: calc(20 * var(--r)); max-width: calc(20 * var(--r));}
+  .asis-intro .sub01-Box1 .top ul img {display: block; margin:0 auto; width: 80%;}
+  .asis-intro .sub01-Box1 .btm > div > div > div {width: 100%;}
+  .asis-intro .dri-img > div {width: 100%;}
+  .asis-intro .sub01-Box1 .btm {flex-direction: column;}
+  .asis-intro .sub01-Box1 .btm .r-btm,
+  .asis-intro .sub01-Box1 .btm .l-btm {width: 100%;}
+  .asis-intro .sub01-Box1 .r-btm .basics {margin-bottom: calc(2 * var(--r));}
+  .asis-intro .sub01-Box1 .btm > div .driving {margin-bottom: calc(1 * var(--r));}
+  .asis-intro .sub01-Box1 .top ul+em {margin-top: calc(1 * var(--r));}
+  .asis-intro .sub01-Box2 {align-items: flex-start;}
+  .asis-intro .sub01-Box2>div {flex-direction: column;}
+  .asis-intro .sub01-Box2 .carPoint {width: 100%; display: flex; align-items: center; margin-bottom: calc(2.1 * var(--r));}
+  .asis-intro .sub01-Box2 .carPoint:last-child {margin-bottom: 0;}
+  .asis-intro .sub01-Box2 ul {margin: 0 0 0 calc(2.2 * var(--r));}
+  .asis-intro .sub01-Box2 ul li {display: block; text-align: left;}
+  .asis-intro .sub01-Box2 .carPoint p {margin-top: calc(1 * var(--r)); font-size: calc(1.5 * var(--r));}
+  .asis-intro .sub01-Box2 .carPoint .icon01 {width: calc(4.2 * var(--r)); height: calc(3.8 * var(--r)); background: url(../../img/sub/subImg01-1-25-m.png) no-repeat 0 0; background-size: calc(4.2 * var(--r)) auto;}
+  .asis-intro .sub01-Box2 .carPoint .icon02 {width: calc(3.9 * var(--r)); height: calc(3.2 * var(--r)); background: url(../../img/sub/subImg01-1-25-m.png) no-repeat 0 calc(-4.4 * var(--r)); background-size: calc(4.2 * var(--r)) auto;}
+  .asis-intro .sub01-Box2 .carPoint .icon03 {width: calc(4.2 * var(--r)); height: calc(2.5 * var(--r)); background: url(../../img/sub/subImg01-1-25-m.png) no-repeat 0 calc(-8.2 * var(--r)); background-size: calc(4.2 * var(--r)) auto;}
+  .asis-intro .sub01-Box2 .carPoint .icon04 {width: calc(4.0 * var(--r)); height: calc(3.4 * var(--r)); background: url(../../img/sub/subImg01-1-25-m.png) no-repeat 0 calc(-11.3 * var(--r)); background-size: calc(4.2 * var(--r)) auto;}
+  .asis-intro .sub01-Box3 > div {display: flex;}
+  .asis-intro .sub01-Box3 .subConTxt {width: calc(100% - calc(27.5 * var(--r)));}
+  .asis-intro .sub01-Box3 > div > div {position: static; width: calc(27.5 * var(--r)); height: calc(23.2 * var(--r));}
+  .asis-intro .sub01-Box3 > div + div {width: 100%; height: calc(12.8 * var(--r)); margin: 0; display: block; background-size: contain;}
+  .asis-intro .sub01-Box3 {padding: 0 0 calc(4 * var(--r)) 0;}
+  .asis-intro .subCon1-3_2 .division li.w478 {width: calc(29.8 * var(--r));}
+  .asis-intro .subCon1-3_2 .division li {flex: 1;}
+  .asis-intro .subCon1-3_2 .division li.w181 {width: calc(11.4 * var(--r));}
+  .asis-intro .bigCircle {width: calc(13.7 * var(--r)); height: calc(13.7 * var(--r));}
+  .asis-intro .smallCircle {width: calc(10.1 * var(--r)); height: calc(10.1 * var(--r));}
+  .asis-intro .subCon > img {display: block; width: 100%; max-width: calc(90 * var(--r));}
+  .asis-intro .subCon div img.w-auto {width: auto; margin: 0 auto;}
+}
+
+/* ---- AS-IS @media (max-width:1024px) ---- */
+@media (max-width: 1024px) {
+  .asis-intro .mobile.w1024 {display: block;}
+  .asis-intro .web.w1024,
+  .asis-intro .subCon1-3_1 .division ul {display: none;}
+  .asis-intro .m-w100 {width: 100%;}
+  .asis-intro .subCon {margin-top: calc(3 * var(--r));}
+  .asis-intro .subCon div img.m-maxW50 {max-width: 50%;}
+  .asis-intro .subCon div img.m-maxW80 {max-width: 80%; display: block; margin: auto;}
+  .asis-intro .subCon1-3_1 .division:first-child {margin-bottom: 0;}
+  .asis-intro .subCon1-3_2 .division:first-child img.w1024 {display: none;}
+  .asis-intro .subCon1-3_2 .division img.w1024 {display: block; margin: 0 auto; width:100%}
+  .asis-intro .subCon1-3_2 .division img.web.w1240 {display: none;}
+  .asis-intro .subCon1-3_2 .division > div.mobile {width: calc(51.5 * var(--r));}
+  .asis-intro .subCon1-3_2 .division > div.mobile ul {display: block; margin: calc(.9 * var(--r)) 0 0 0;}
+  .asis-intro .subCon1-3_2 .division div.mobile li {width: 100%; margin-bottom: calc(1 * var(--r));}
+  .asis-intro .subCon1-3_2 .division div.mobile img {width: 100%;}
+  .asis-intro .subCon1-3_2 .division li img {margin-bottom: calc(.5 * var(--r));}
+  .asis-intro .subCon1-3_2 .top {min-height: auto; padding: calc(1 * var(--r)) 0;}
+  .asis-intro .subCon1-3_2 .con {min-height: auto; padding: calc(2 * var(--r)) calc(1.8 * var(--r));}
+  .asis-intro .rectangle:nth-child(2) {width: calc(49.1 * var(--r)); margin-top: calc(1 * var(--r));}
+  .asis-intro .subCon1-3_2 .top,
+  .asis-intro .subCon1-3_2 .con div:last-child p,
+  .asis-intro .rectangle:nth-child(2) {font-size: calc(1.4 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div:last-child p {height: auto; padding: calc(1 * var(--r)) 0;}
+  .asis-intro .subCon1-3_2 .con div:last-child span {font-size: calc(1.3 * var(--r)); word-break: keep-all;}
+  .asis-intro .subCon1-3_2 .con div:first-child {width: calc(8.8 * var(--r)); height: calc(4 * var(--r)); margin: 0 auto calc(2 * var(--r)) auto; background: url(../../img/sub/subImg01-1-10_1.png) no-repeat; background-size: calc(8.8 * var(--r)) auto;}
+  .asis-intro .subCon1-3_2 .con div.img01 {background-position: 0 0;}
+  .asis-intro .subCon1-3_2 .con div.img02 {background-position: 0 calc(-4.5 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.img03 {background-position: 0 calc(-9 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.img04 {background-position: 0 calc(-13.5 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.img05 {background-position: 0 calc(-18 * var(--r));}
+  .asis-intro .subCon1-3_2 .con div.imgNo {background-image: none}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) {width: 100%;}
+  .asis-intro .rectangle.web.w1024 {display: none;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) > div:first-child {width: auto;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) > div:nth-child(2) {width: auto;}
+  .asis-intro .subCon1-3_2 .division:nth-child(2) > div:nth-child(3) {width: auto;}
+}
+
+/* ---- AS-IS @media (max-width:800px) ---- */
+@media (max-width: 800px) {
+  .asis-intro .sub01-Box3 {padding: 0 0 calc(2 * var(--r)) 0;}
+}
+
+/* ---- AS-IS @media (max-width:720px)  ← 원본 html{font-size:9px} ---- */
+@media (max-width: 720px) {
+  .asis-intro .flexBox {flex-direction: column; align-items: center;}
+  .asis-intro .flexBox > div {margin: 0 0 calc(3 * var(--r)) 0;}
+  .asis-intro .flexBox > div:last-of-type {margin: 0 ;}
+  .asis-intro .innerTxt,
+  .asis-intro .innerTxt.innerTxt680,
+  .asis-intro .subCon > .division {width: 100%}
+  .asis-intro .sub01Box .sub01-icon p {width: calc(11.4 * var(--r)); height: calc(11.4 * var(--r));}
+  .asis-intro .sub01-Box1 .btm img {max-width: 100%;}
+  .asis-intro .sub01-Box1 .btm img.m-h90 {height: 90%;}
+}
+
+/* ---- AS-IS @media (max-width:660px) ---- */
+@media (max-width: 660px) {
+  .asis-intro .innerTxt {padding:calc(2.4 * var(--r));}
+  .asis-intro .sub01Box .sub01-icon.icon01 {margin-right: 0;}
+  .asis-intro .sub01Box .sub01-icon-m span {width: calc(100% - calc(15 * var(--r))); text-align: left; display: block;}
+  .asis-intro .sub01-Box1 .r-btm .driving img {width: 100%;}
+  .asis-intro .sub01-Box3 > div + div {height: calc(11.8 * var(--r));}
+}
+
+/* ---- AS-IS @media (max-width:570px) ---- */
+@media (max-width: 570px) {
+  .asis-intro .division > img,
+  .asis-intro .subCon div img {width: 100%;}
+  .asis-intro .sub01-Box1 .top ul li>div {padding: 0 0;}
+  .asis-intro .sub01-Box1 .subImg {min-width: calc(16.8 * var(--r));}
+  .asis-intro .sub01-Box1 .basics ul li {padding: 0 calc(1 * var(--r));}
+  .asis-intro .sub01-Box1 .btm img.m-h90 {height: auto;}
+  .asis-intro .dri-img>div:first-child {margin-right: calc(1 * var(--r));}
+  .asis-intro .sub01-Box3 .subConTxt {width: calc(100% - calc(24.5 * var(--r)));}
+  .asis-intro .sub01-Box3 > div > div {width: calc(24.5 * var(--r)); height: calc(20.2 * var(--r));}
+  .asis-intro .sub01-Box3 > div + div {height: calc(10.8 * var(--r));}
+  .asis-intro .subCon1-3_2 .division > div.mobile {width: 100%;}
+  .asis-intro .rectangle:nth-child(2) {width: auto;}
+}
+
+/* ---- AS-IS @media (max-width:480px) ---- */
+@media (max-width: 480px) {
+  .asis-intro .sub01-Box1 .btm>div>div,
+  .asis-intro .sub01-Box1 .basics ul li {height: calc(16.3 * var(--r));}
+  .asis-intro .sub01-Box3 > div {flex-direction: column; align-items: center;}
+  .asis-intro .sub01-Box3 .subConTxt {width: 100%;}
+  .asis-intro .sub01-Box3 > div > div {margin: calc(1 * var(--r)) 0;}
+  .asis-intro .sub01-Box3 > div + div {height: calc(8.8 * var(--r));}
+}
+
+/* ---- AS-IS @media (max-width:410px)  ← 원본 html{font-size:8px} ---- */
+@media (max-width: 410px) {
+  .asis-intro .sub01-Box1 .subImg {min-width: calc(16.8 * var(--r));}
+}
+
+/* ============================================================
+   프로토 이식에 따른 최소 보정 (AS-IS 값은 그대로, 셀렉터만 확장)
+   ------------------------------------------------------------
+   - 프로토는 h3/h4/h5 헤딩 개수를 유지해야 해서, AS-IS 에서 p/div 이던
+     장식 요소(.bg-navy-tit, .rectangle, .dlBox 제목)를 헤딩 태그로 달았다.
+     브라우저 기본 h 스타일(굵기/크기)만 상쇄해 원본과 동일하게 보이도록 한다.
+   ============================================================ */
+.asis-intro h3,
+.asis-intro h4,
+.asis-intro h5 { font-size: inherit; font-weight: normal; }
+.asis-intro .dlBox h3 { color: #011533; font-size: calc(2.5 * var(--r)); font-weight: 600; text-align: center; border-bottom: 1px solid #011533; padding-bottom: calc(2.1 * var(--r)); margin-bottom: calc(3 * var(--r));}

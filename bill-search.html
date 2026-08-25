@@ -12,14 +12,49 @@
   <link rel="stylesheet" href="assets/css/map-list.css">
   <link rel="stylesheet" href="assets/css/i18n-en.css">
   <link rel="stylesheet" href="assets/css/aiChat.css">
-  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260821f"></script>
-  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260821f"></script>
-  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
-  <script src="js/swiper-bundle.min.js?v=20260821f"></script>
-  <script src="js/common/common_util.js?v=20260821f"></script>
-  <script src="js/proto-api.js?v=20260821f"></script>
-  <script src="js/proto-data.js?v=20260821f"></script>
-  <script src="js/proto-mock.js?v=20260821f"></script>
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260825d"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260825d"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260825d"></script>
+  <script src="js/swiper-bundle.min.js?v=20260825d"></script>
+  <script src="js/common/common_util.js?v=20260825d"></script>
+  <script src="js/proto-api.js?v=20260825d"></script>
+  <script src="js/proto-data.js?v=20260825d"></script>
+  <script src="js/proto-mock.js?v=20260825d"></script>
+<style>
+/* 명세서 대상 연월 선택 — 신규 컴포넌트(원본 퍼블 규칙은 재선언하지 않음) */
+.stmt-month { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+.stmt-month__value {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: none; border: 0; padding: 0 2px;
+  font: inherit; color: inherit; cursor: pointer;
+  border-bottom: 1px dashed #B9C0C8;
+}
+.stmt-month__value:hover { border-bottom-color: #1BA877; color: #148055; }
+.stmt-month__picker {
+  position: absolute; top: 100%; left: 0; z-index: 30; margin-top: 8px; padding: 12px;
+  width: 252px; background: #fff; border: 1px solid #E2E6EC; border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(20, 30, 45, .14);
+}
+.stmt-month__picker-head {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+}
+.stmt-month__picker-head strong { font-size: 15px; }
+.stmt-month__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.stmt-month__grid button {
+  padding: 8px 0; border: 1px solid #E2E6EC; border-radius: 6px; background: #fff;
+  font: inherit; font-size: 13px; cursor: pointer;
+}
+.stmt-month__grid button:hover:not(:disabled) { border-color: #1BA877; color: #148055; }
+.stmt-month__grid button[aria-pressed="true"] {
+  background: #1BA877; border-color: #1BA877; color: #fff; font-weight: 700;
+}
+.stmt-month__grid button:disabled { color: #B9C0C8; background: #F5F7F9; cursor: default; }
+@media print {
+  /* 인쇄물에는 확정된 연월 텍스트만 남긴다 */
+  .stmt-month .button, .stmt-month__picker { display: none !important; }
+  .stmt-month__value { border-bottom: 0; padding: 0; }
+}
+</style>
 </head>
 <body>
 <div id="header-slot"></div>
@@ -397,7 +432,36 @@
                   <div class="data-set-group">
                     <dl class="data-set">
                       <dt class="data-set__label">명세서 대상 연월</dt>
-                      <dd class="data-set__figure"><span id="stmtMonth">-</span></dd>
+                      <dd class="data-set__figure">
+                        <div class="stmt-month">
+                          <button type="button" class="button button--icon button--secondary js-stmt-prev" title="이전 달">
+                            <i class="svg-icon arrow-prev" aria-hidden="true"></i>
+                            <span class="button__label">이전 달</span>
+                          </button>
+                          <button type="button" class="stmt-month__value js-stmt-pick" aria-haspopup="true" aria-expanded="false" title="연월 선택">
+                            <span id="stmtMonth">-</span>
+                          </button>
+                          <button type="button" class="button button--icon button--secondary js-stmt-next" title="다음 달">
+                            <i class="svg-icon arrow-next" aria-hidden="true"></i>
+                            <span class="button__label">다음 달</span>
+                          </button>
+                          <!-- 연/월 선택 팝오버 (월 단위이므로 일 그리드 없음) -->
+                          <div class="stmt-month__picker" id="stmtMonthPicker" hidden>
+                            <div class="stmt-month__picker-head">
+                              <button type="button" class="button button--icon button--borderless js-stmt-year-prev" title="이전 해">
+                                <i class="svg-icon arrow-prev" aria-hidden="true"></i>
+                                <span class="button__label">이전 해</span>
+                              </button>
+                              <strong id="stmtPickYear">-</strong>
+                              <button type="button" class="button button--icon button--borderless js-stmt-year-next" title="다음 해">
+                                <i class="svg-icon arrow-next" aria-hidden="true"></i>
+                                <span class="button__label">다음 해</span>
+                              </button>
+                            </div>
+                            <div class="stmt-month__grid" id="stmtMonthGrid"></div>
+                          </div>
+                        </div>
+                      </dd>
                     </dl>
                     <dl class="data-set">
                       <dt class="data-set__label">명세서 발행일자</dt>
@@ -487,9 +551,9 @@
 <script type="application/json" id="monthSum">[{"MON": "202601", "SUM_CG_PAY": 41200}, {"MON": "202602", "SUM_CG_PAY": 39800}, {"MON": "202603", "SUM_CG_PAY": 46500}, {"MON": "202604", "SUM_CG_PAY": 51300}, {"MON": "202605", "SUM_CG_PAY": 38400}, {"MON": "202606", "SUM_CG_PAY": 52100}, {"MON": "202607", "SUM_CG_PAY": 47300}, {"MON": "202608", "SUM_CG_PAY": 61200}, {"MON": "202609", "SUM_CG_PAY": 0}, {"MON": "202610", "SUM_CG_PAY": 0}, {"MON": "202611", "SUM_CG_PAY": 0}, {"MON": "202612", "SUM_CG_PAY": 0}]</script>
 
 
-<script src="assets/js/vendors/ag-grid-community.min.js?v=20260821f"></script>
-<script src="assets/js/board-grid.js?v=20260821f"></script>
-<script src="js/echarts/echarts.js?v=20260821f"></script>
+<script src="assets/js/vendors/ag-grid-community.min.js?v=20260825d"></script>
+<script src="assets/js/board-grid.js?v=20260825d"></script>
+<script src="js/echarts/echarts.js?v=20260825d"></script>
 <script>
 $(function () {
   var PAGE_INFO = (function () {
@@ -842,16 +906,65 @@ $(function () {
     }
   ];
 
+  /* ── 명세서 대상 연월 ─────────────────────────────────────
+     상단 월 이동(setMonth/shiftMonth)은 연도가 바뀌면 페이지를 재요청하므로,
+     모달이 닫히지 않도록 명세서는 전용 상태값(stmtYyyymm)으로 분리해 조회만 다시 한다. */
+  var NOW_YM = String(PAGE_INFO.nowYyyymm || curYyyymm);
+  // 하한: 기준월 연도 - 2 (최근 3개 연도). 서비스 개시 시점 근거가 없어 임의 확대는 하지 않음
+  var MIN_YM = String(Number(NOW_YM.substring(0, 4)) - 2) + '01';
+  var stmtYyyymm = curYyyymm;
+  var stmtPickYear = Number(curYyyymm.substring(0, 4));
+
+  function ymShift(ym, diff) {
+    var y = Number(ym.substring(0, 4));
+    var m = Number(ym.substring(4, 6)) + diff;
+    while (m < 1) { y -= 1; m += 12; }
+    while (m > 12) { y += 1; m -= 12; }
+    return String(y) + pad2(m);
+  }
+  function ymInRange(ym) { return ym >= MIN_YM && ym <= NOW_YM; }
+
+  function renderMonthPicker() {
+    $('#stmtPickYear').text(stmtPickYear + '년');
+    var $g = $('#stmtMonthGrid').empty();
+    for (var m = 1; m <= 12; m++) {
+      var ym = String(stmtPickYear) + pad2(m);
+      $g.append($('<button>', {
+        type: 'button', text: m + '월', 'data-ym': ym,
+        disabled: !ymInRange(ym),
+        'aria-pressed': String(ym === stmtYyyymm)
+      }));
+    }
+    $('.js-stmt-year-prev').prop('disabled', stmtPickYear - 1 < Number(MIN_YM.substring(0, 4)));
+    $('.js-stmt-year-next').prop('disabled', stmtPickYear + 1 > Number(NOW_YM.substring(0, 4)));
+  }
+
+  function toggleMonthPicker(open) {
+    var $p = $('#stmtMonthPicker');
+    var show = (open === undefined) ? !!$p.prop('hidden') : !!open;
+    if (show) { stmtPickYear = Number(stmtYyyymm.substring(0, 4)); renderMonthPicker(); }
+    $p.prop('hidden', !show);
+    $('.js-stmt-pick').attr('aria-expanded', String(show));
+  }
+
+  function syncStmtArrows() {
+    $('.js-stmt-prev').prop('disabled', !ymInRange(ymShift(stmtYyyymm, -1)));
+    $('.js-stmt-next').prop('disabled', !ymInRange(ymShift(stmtYyyymm, 1)));
+  }
+
   // 명세서(후불) — 선택한 월의 결제 완료분 요약과 충전사업자별 집계
-  function openStatement(opener) {
+  function loadStatement(ym, onDone) {
+    if (!ymInRange(ym)) return;
     $.ajax({
       type: 'post',
       url: STATEMENT_URL,
       dataType: 'json',
-      data: { yyyymm: curYyyymm },
+      data: { yyyymm: ym },
       success: function (obj) {
+        stmtYyyymm = ym;
         renderStatement(obj || {});
-        openModal('#modalPostStatement', { width: 720, opener: opener });
+        syncStmtArrows();
+        if (typeof onDone === 'function') onDone();
       },
       error: function () {
         alert('명세서를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
@@ -859,10 +972,17 @@ $(function () {
     });
   }
 
+  function openStatement(opener) {
+    loadStatement(curYyyymm, function () {
+      toggleMonthPicker(false);
+      openModal('#modalPostStatement', { width: 720, opener: opener });
+    });
+  }
+
   function renderStatement(obj) {
     var sum = obj.sum || {};
     var list = obj.busiStat || [];
-    var month = String(obj.yyyymm || curYyyymm);
+    var month = String(obj.yyyymm || stmtYyyymm);
     var monthLabel = month.substring(0, 4) + '-' + month.substring(4, 6);
     var cnt = sum.PAY_CNT || '0';
     var pay = sum.SUM_PAY || '0';
@@ -892,6 +1012,25 @@ $(function () {
   function bindEvents() {
     $('.button--month-prev').on('click', function () { shiftMonth(-1); });
     $('.button--month-next').on('click', function () { shiftMonth(1); });
+
+    /* 명세서 대상 연월 — 모달 안에서만 동작(상단 월 이동과 무관) */
+    $('.js-stmt-prev').on('click', function () { toggleMonthPicker(false); loadStatement(ymShift(stmtYyyymm, -1)); });
+    $('.js-stmt-next').on('click', function () { toggleMonthPicker(false); loadStatement(ymShift(stmtYyyymm, 1)); });
+    $('.js-stmt-pick').on('click', function (e) { e.stopPropagation(); toggleMonthPicker(); });
+    $('.js-stmt-year-prev').on('click', function () { stmtPickYear -= 1; renderMonthPicker(); });
+    $('.js-stmt-year-next').on('click', function () { stmtPickYear += 1; renderMonthPicker(); });
+    $('#stmtMonthGrid').on('click', 'button', function () {
+      var ym = $(this).attr('data-ym');
+      if (!ym) return;
+      loadStatement(String(ym), function () { toggleMonthPicker(false); });
+    });
+    // 팝오버 밖 클릭·ESC 로 닫기
+    $(document).on('click', function (e) {
+      if (!$(e.target).closest('.stmt-month').length) toggleMonthPicker(false);
+    });
+    $(document).on('keydown', function (e) {
+      if (e.key === 'Escape') toggleMonthPicker(false);
+    });
 
     $('.board-search .button--search').on('click', function () { fnGetList(1); });
     $('.board-search .button--reset').on('click', function () {
@@ -950,10 +1089,10 @@ $(function () {
 });
 </script>
 <div id="footer-slot"></div>
-<script src="assets/js/i18n/i18n.js?v=20260821f"></script>
-<script src="assets/js/ui-common.js?v=20260821f"></script>
-<script src="js/common/fileAttach.js?v=20260821f"></script>
-<script src="js/menu-data.js?v=20260821f"></script>
-<script src="js/shell.js?v=20260821f"></script>
+<script src="assets/js/i18n/i18n.js?v=20260825d"></script>
+<script src="assets/js/ui-common.js?v=20260825d"></script>
+<script src="js/common/fileAttach.js?v=20260825d"></script>
+<script src="js/menu-data.js?v=20260825d"></script>
+<script src="js/shell.js?v=20260825d"></script>
 </body>
 </html>
