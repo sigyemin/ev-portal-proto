@@ -12,14 +12,14 @@
   <link rel="stylesheet" href="assets/css/map-list.css">
   <link rel="stylesheet" href="assets/css/i18n-en.css">
   <link rel="stylesheet" href="assets/css/aiChat.css">
-  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260825d"></script>
-  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260825d"></script>
-  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260825d"></script>
-  <script src="js/swiper-bundle.min.js?v=20260825d"></script>
-  <script src="js/common/common_util.js?v=20260825d"></script>
-  <script src="js/proto-api.js?v=20260825d"></script>
-  <script src="js/proto-data.js?v=20260825d"></script>
-  <script src="js/proto-mock.js?v=20260825d"></script>
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260827a"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260827a"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260827a"></script>
+  <script src="js/swiper-bundle.min.js?v=20260827a"></script>
+  <script src="js/common/common_util.js?v=20260827a"></script>
+  <script src="js/proto-api.js?v=20260827a"></script>
+  <script src="js/proto-data.js?v=20260827a"></script>
+  <script src="js/proto-mock.js?v=20260827a"></script>
 <style>
 /* 프로토타입 전용 안내 배너 — 운영 화면에는 없는 요소(로그아웃 상태 리다이렉트 대체) */
 .proto-guest-notice {
@@ -312,6 +312,15 @@
                       <span class="badge badge--outline">이용신청</span>
                     </div>
                   </button>
+                  <!-- 빅데이터 플랫폼(TNCM_DMN.DMN_ID=D0016, 빅데이터 관리시스템) — 상세화면 bigdata-apply.html 연결.
+                       미신청 기본상태(MODE_WRITE) 이므로 '이용신청' 배지로 표시 -->
+                  <button type="button" class="business-system__button" onclick="location.href='bigdata-apply.html'">
+                    <span class="business-system__icon"><i class="svg-icon chart-bar" aria-hidden="true"></i></span>
+                    <b class="business-system__title">빅데이터 플랫폼<br />이용신청</b>
+                    <div class="business-system__status">
+                      <span class="badge badge--outline">이용신청</span>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -369,10 +378,10 @@
 })();
 </script>
 <div id="footer-slot"></div>
-<script src="assets/js/i18n/i18n.js?v=20260825d"></script>
-<script src="assets/js/ui-common.js?v=20260825d"></script>
-<script src="js/common/fileAttach.js?v=20260825d"></script>
-<script src="js/menu-data.js?v=20260825d"></script>
-<script src="js/shell.js?v=20260825d"></script>
+<script src="assets/js/i18n/i18n.js?v=20260827a"></script>
+<script src="assets/js/ui-common.js?v=20260827a"></script>
+<script src="js/common/fileAttach.js?v=20260827a"></script>
+<script src="js/menu-data.js?v=20260827a"></script>
+<script src="js/shell.js?v=20260827a"></script>
 </body>
 </html>

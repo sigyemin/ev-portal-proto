@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+/* [프로토] 통합지도(전기차) 검색폼 다중선택 — 기존 dropdown + checkbox 조립.
+   색/보더/열림 스타일은 style.css 의 .dropdown--select · .checkbox 에 위임하고,
+   여기서는 검색폼 셀에 맞춘 레이아웃(폭·목록 여백)만 최소로 보정한다. (charging-find.html 전용) */
+
+/* 드롭다운이 기존 select 와 같은 폭을 차지하도록 컨트롤 셀을 채운다 */
+.search-form .element-group__control > .dropdown {
+  width: 100%;
+}
+
+/* 목록 항목(li) 은 checkbox 한 줄 — 기본 리스트 마커 제거, 세로 간격만 */
+.search-form .dropdown-container__list > li {
+  list-style: none;
+}
+.search-form .dropdown-container__list > li + li {
+  margin-top: 2px;
+}

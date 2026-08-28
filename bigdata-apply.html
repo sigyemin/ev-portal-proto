@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>빅데이터 플랫폼 이용신청</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260827a"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260827a"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260827a"></script>
+  <script src="js/swiper-bundle.min.js?v=20260827a"></script>
+  <script src="js/common/common_util.js?v=20260827a"></script>
+  <script src="js/proto-api.js?v=20260827a"></script>
+  <script src="js/proto-data.js?v=20260827a"></script>
+  <script src="js/proto-mock.js?v=20260827a"></script>
+<style>
+/* 프로토타입 전용 안내 배너 — 운영 화면에는 없는 요소(로그아웃 상태 리다이렉트 대체)
+   member-auth.html / mypage.html 의 동일 규칙을 그대로 사용(공유 CSS 미변경 목적) */
+.proto-guest-notice {
+  margin: 0 0 24px;
+  padding: 14px 18px;
+  border: 1px solid #D8DEE5;
+  border-left: 4px solid #1BA877;
+  border-radius: 8px;
+  background: #F5F8FA;
+  color: #414A54;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+/* 프로토타입 전용 인라인 안내 — 실제 신청 연동이 없으므로 alert/confirm 대신 화면 내 표시 */
+.proto-inline-notice {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border: 1px solid #D8DEE5;
+  border-left: 4px solid #1BA877;
+  border-radius: 8px;
+  background: #F5F8FA;
+  color: #414A54;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+/* 프로토타입 전용 개발자 상태 토글 — 신규(MODE_WRITE)/수정(MODE_MODIFY) 회의용 전환.
+   운영 화면에는 없는 요소(컨트롤러 authMember 존재여부로 서버에서 분기). */
+.proto-mode-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border: 1px dashed #B7C0CA;
+  border-radius: 8px;
+  background: #FBFCFD;
+}
+.proto-mode-toggle__label {
+  margin-right: 4px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #6B7683;
+}
+.proto-mode-toggle__btn {
+  padding: 6px 14px;
+  border: 1px solid #C6CDD5;
+  border-radius: 999px;
+  background: #FFF;
+  color: #414A54;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.proto-mode-toggle__btn[aria-current="true"] {
+  border-color: #1BA877;
+  background: #1BA877;
+  color: #FFF;
+  font-weight: 700;
+}
+/* 프로토타입 전용 상태 배너(신청 승인 상태) — 브랜드사업 레이아웃의 상단 상태 표시.
+   운영은 authMember.APPR_KIND 로 서버 렌더. style.css 미변경 위해 페이지 로컬 클래스 사용. */
+.proto-status {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 0 20px; padding: 16px 20px; border-radius: 10px;
+  font-size: 0.9375rem; line-height: 1.5;
+}
+.proto-status__ico {
+  width: 24px; height: 24px; flex: none; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; font-size: 14px; font-weight: 900;
+}
+.proto-status--done { background: #EAF7F0; border: 1px solid #A9E0C6; color: #0F7A4F; }
+.proto-status--done .proto-status__ico { background: #1BA877; }
+.proto-status--new { background: #F1F4F7; border: 1px solid #D8DEE5; color: #5A6570; }
+.proto-status--new .proto-status__ico { background: #98A4B0; }
+.proto-status__date { margin-left: auto; font-size: 0.875rem; opacity: .85; }
+/* 프로토타입 전용 안내 박스(회색) — 신청 절차 안내(원문 문구) */
+.proto-guidebox {
+  margin: 0 0 24px; padding: 16px 20px; border-radius: 10px;
+  background: #F5F7F9; border: 1px solid #E3E8ED; color: #4A535D;
+  font-size: 0.9375rem; line-height: 1.7;
+}
+.proto-guidebox p { margin: 0; }
+</style>
+</head>
+<body>
+<div id="header-slot"></div>
+      <div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="mypage.html" class="breadcrumb__link">
+                    <span>마이페이지</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>업무지원시스템 이용신청</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>빅데이터 플랫폼 이용신청</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">빅데이터 플랫폼 이용신청</h1>
+              <p class="page-header__description">빅데이터 플랫폼 이용을 위해 사용자유형을 선택하여 신청합니다. 신청 후 한국환경공단 관리자의 승인을 받아야 이용할 수 있습니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+
+          <!-- 프로토타입 전용: 비로그인 진입 안내(운영은 로그인 화면으로 이동하나 프로토타입은 리다이렉트하지 않음) -->
+          <p class="proto-guest-notice" id="protoGuestNotice" hidden>프로토타입 안내: 로그인하지 않은 상태입니다. 우측 하단 PROTO 토글로 로그인 상태를 켜면 실제 데이터 화면을 볼 수 있습니다.</p>
+
+          <!-- 프로토타입 전용: 개발자 상태 전환(운영은 서버에서 authMember 존재여부로 신규/수정 분기) -->
+          <div class="proto-mode-toggle" role="group" aria-label="화면 상태 전환(프로토타입 전용)">
+            <span class="proto-mode-toggle__label">화면 상태(개발용)</span>
+            <button type="button" class="proto-mode-toggle__btn" data-mode="write" aria-current="true">신규 신청</button>
+            <button type="button" class="proto-mode-toggle__btn" data-mode="modify" aria-current="false">신청정보 수정</button>
+          </div>
+
+          <!-- ② 상태 배너(신규/수정에 따라 전환) — 브랜드사업 레이아웃 기준. 승인완료 문구는 사용자 확정 layout, 신규 상태 문구는 소스 근거 없어 [DEV] 미정 -->
+          <div class="proto-status proto-status--new" id="protoStatusBanner" role="status">
+            <span class="proto-status__ico" id="protoStatusIco" aria-hidden="true">!</span>
+            <span id="protoStatusText">이용신청 전 상태입니다.</span><!-- [DEV] 신규 상태 배너 문구 미정(개발 협의) -->
+            <span class="proto-status__date" id="protoStatusDate" hidden></span>
+          </div>
+
+          <!-- ③ 안내 박스(회색) — 원본(bigDataAppl.jsp) formTxt 문구 그대로 -->
+          <div class="proto-guidebox">
+            <p>* 신청 후 관리자(한국환경공단)에게 승인을 받아야 이용이 가능합니다.<br>* 동시 로그인이 안되니 개인별로 가입하여 이용합니다.</p>
+          </div>
+
+          <form id="editForm" name="editForm" method="post" onsubmit="return false;">
+            <section class="section">
+              <!-- ④ 신청정보 섹션: 아이콘 + 제목 + 우측 '* 는 필수 항목입니다.' -->
+              <div class="heading-group" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <h2 class="heading-title">
+                  <i class="svg-icon symbol-electricity" aria-hidden="true"></i>
+                  신청정보
+                </h2>
+                <p class="section-description" style="margin:0;"><span class="required">*</span> 는 <b>필수 항목</b>입니다.</p>
+              </div>
+
+              <!-- ⑤ 입력 테이블 — 5항목(이름·아이디·사용자유형*·승인여부·신청일자). 사업수행기관 select·약관 체크박스 제외(이번 요구 항목 아님) -->
+              <table class="table table--form">
+                <caption>빅데이터 플랫폼 이용신청 - 이름, 아이디, 사용자유형, 승인여부, 신청일자</caption>
+                <colgroup>
+                  <col style="width: 20%" />
+                  <col />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th scope="row">이름</th>
+                    <!-- 운영: ${member.NAME} (로그인 회원명) — 프로토타입 더미값 -->
+                    <td id="p_name">홍길동</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">아이디</th>
+                    <!-- 운영: ${member.LOGIN_ID} — 프로토타입 더미값 -->
+                    <td id="p_login_id">hong01</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">사용자유형 <span class="required">*</span></th>
+                    <td>
+                      <div class="radios">
+                        <!-- 운영 관리자: 소스(bigDataAppl.jsp)에 코드값 없음 → value 미정(개발 협의). 임의 코드 미부여 -->
+                        <div class="radio">
+                          <input type="radio" id="bdGubun0" name="bdGubun" value="" data-undef="1" class="radio__input bdGubun" />
+                          <label for="bdGubun0" class="radio__label"><span>운영 관리자</span></label>
+                        </div>
+                        <!-- 한국환경공단 관리자 = 원본 value 'ME' (AUTH_ID 0002) -->
+                        <div class="radio">
+                          <input type="radio" id="bdGubun1" name="bdGubun" value="ME" class="radio__input bdGubun" checked />
+                          <label for="bdGubun1" class="radio__label"><span>한국환경공단 관리자</span></label>
+                        </div>
+                        <!-- 충전사업자 관리자 = 원본 value 'ETC' (AUTH_ID 0003) -->
+                        <div class="radio">
+                          <input type="radio" id="bdGubun2" name="bdGubun" value="ETC" class="radio__input bdGubun" />
+                          <label for="bdGubun2" class="radio__label"><span>충전사업자 관리자</span></label>
+                        </div>
+                        <!-- 지자체 관리자: 소스에 코드값 없음 → value 미정(개발 협의). 임의 코드 미부여 -->
+                        <div class="radio">
+                          <input type="radio" id="bdGubun3" name="bdGubun" value="" data-undef="1" class="radio__input bdGubun" />
+                          <label for="bdGubun3" class="radio__label"><span>지자체 관리자</span></label>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">승인여부</th>
+                    <!-- 운영: ${authMember.APPR_KIND_NM} (읽기 전용) — 프로토타입 더미값(상태별) -->
+                    <td id="p_appr">미신청</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">신청일자</th>
+                    <!-- 운영: ${authMember.UPD_DT} (읽기 전용) — 프로토타입 더미값(상태별) -->
+                    <td id="p_regdt">-</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- 프로토타입 전용: 제출 시 페이지 이동/alert 없이 인라인 안내만 표시 -->
+              <p class="proto-inline-notice" id="protoNoticeSave" role="status" hidden>프로토타입 안내: 실제 신청은 연동 후 동작합니다.</p>
+            </section>
+
+            <!-- ⑥ 버튼: 마이페이지(보조) / 신청·수정(주). 원본 modify 버튼 라벨은 '재신청'이나 사용자 확정 layout은 '수정' -->
+            <div class="button-group">
+              <a href="mypage.html" class="button button--large button--secondary">
+                <span class="button__label">마이페이지</span>
+              </a>
+              <button type="button" id="btnApply" class="button button--large button--primary">
+                <span class="button__label" id="btnApplyLabel">신청</span>
+              </button>
+            </div>
+
+            <!-- 원본(bigDataAppl.jsp) 재신청 안내 문구 그대로 -->
+            <ul class="bullet bullet--refer">
+              <li>재신청은 승인여부가 '정지'인 경우만 가능합니다.</li>
+            </ul>
+
+            <!-- ⑦ 하단 승인 요청 연락처 박스 — 원본(bigDataAppl.jsp) blueBox/blueBox02 문구 그대로.
+                 ★브랜드사업(qckchrgrInstlSbsidy) 연락처(충전인프라지원부 032-590-5014)를 복사하지 않음. -->
+            <div class="proto-guidebox">
+              <p style="margin:0 0 8px;">신청 후 관리자 승인을 받아야 이용이 가능합니다.</p>
+              <!-- '연락초'는 원본 표기(오탈자로 추정), 전화번호는 원본 더미값. 실제 담당부서/연락처는 미정(개발·기획 협의) -->
+              <dl style="display:flex;gap:8px;margin:0;">
+                <dt style="font-weight:700;">승인 요청</dt>
+                <dd style="margin:0;">연락초 필수 | 012-345-6789</dd>
+              </dl>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+<script>
+/* 프로토타입 전용 스크립트
+   - 운영 bigDataAppl.jsp 의 신청 로직(bigDataCud.do 전송·confirm·alert)은 연동 대상이 없으므로
+     호출하지 않고, 화면 내 인라인 안내만 표시한다.
+   - 신규(MODE_WRITE)/수정(MODE_MODIFY)은 운영에서 서버가 authMember 존재여부로 분기하나,
+     프로토타입은 회의 검토를 위해 화면 상단 토글로 전환한다.
+   - 로그인 상태 규격은 shell.js(evax.proto.auth)와 동일 · 읽기 전용. */
+(function () {
+  'use strict';
+  var AUTH_KEY = 'evax.proto.auth';
+  var DEFAULT_NAME = '홍길동';
+  var PROTO_MSG = '프로토타입 안내: 실제 신청은 연동 후 동작합니다.';
+
+  function readAuth() {
+    try {
+      var raw = window.localStorage.getItem(AUTH_KEY);
+      if (!raw) return { loggedIn: false, name: DEFAULT_NAME };
+      var v = JSON.parse(raw);
+      if (!v || typeof v !== 'object') return { loggedIn: false, name: DEFAULT_NAME };
+      return { loggedIn: v.loggedIn === true, name: (typeof v.name === 'string' && v.name) ? v.name : DEFAULT_NAME };
+    } catch (e) {
+      return { loggedIn: false, name: DEFAULT_NAME };
+    }
+  }
+
+  function applyAuth() {
+    var auth = readAuth();
+    // 운영: ${member.NAME}. 로그인 이름을 회원명 칸에 반영(비로그인 시 기본 더미값 유지)
+    var nameEl = document.getElementById('p_name');
+    if (nameEl) nameEl.textContent = auth.name;
+
+    // 운영은 비로그인 시 로그인 화면으로 이동하나, 검토 중 화면이 튀지 않도록 안내만 노출한다
+    var notice = document.getElementById('protoGuestNotice');
+    if (notice) notice.hidden = auth.loggedIn;
+  }
+
+  // 상태 배너 갱신(신규/수정)
+  var STATUS_DATE = '2026-08-20'; // [DEV] 더미 신청일자
+  function setStatusBanner(mode) {
+    var banner = document.getElementById('protoStatusBanner');
+    var ico = document.getElementById('protoStatusIco');
+    var txt = document.getElementById('protoStatusText');
+    var dateEl = document.getElementById('protoStatusDate');
+    if (!banner) return;
+    if (mode === 'modify') {
+      banner.classList.remove('proto-status--new');
+      banner.classList.add('proto-status--done');
+      if (ico) ico.textContent = '✓'; // ✓
+      if (txt) txt.textContent = '이용신청이 승인 완료 되었습니다.'; // 사용자 확정 문구
+      if (dateEl) { dateEl.textContent = '신청일자 ' + STATUS_DATE; dateEl.hidden = false; }
+    } else { // write
+      banner.classList.remove('proto-status--done');
+      banner.classList.add('proto-status--new');
+      if (ico) ico.textContent = '!';
+      if (txt) txt.textContent = '이용신청 전 상태입니다.'; // [DEV] 신규 상태 문구 미정(개발 협의)
+      if (dateEl) { dateEl.textContent = ''; dateEl.hidden = true; }
+    }
+  }
+
+  // 화면 상태 전환: write(신규) / modify(수정)
+  //  - write : 사용자유형 '한국환경공단 관리자'(ME) 기본, 승인여부 '미신청'·신청일자 '-', 버튼 '신청', 상태배너=신규
+  //  - modify: 사용자유형 '충전사업자 관리자'(ETC) 선택, 승인여부 '승인완료'·신청일자 더미, 버튼 '수정', 상태배너=승인완료
+  //    (운영 버튼 라벨: APPR_KIND F/null→'신청', Y·N→원본 '재신청'이나 사용자 확정 layout='수정')
+  function setMode(mode) {
+    var me = document.getElementById('bdGubun1');
+    var etc = document.getElementById('bdGubun2');
+    var label = document.getElementById('btnApplyLabel');
+    var appr = document.getElementById('p_appr');
+    var regdt = document.getElementById('p_regdt');
+
+    if (mode === 'modify') {
+      if (etc) etc.checked = true;
+      if (me) me.checked = false;
+      if (label) label.textContent = '수정';
+      if (appr) appr.textContent = '승인완료';   // [DEV] 더미
+      if (regdt) regdt.textContent = STATUS_DATE; // [DEV] 더미
+    } else { // write
+      if (me) me.checked = true;
+      if (etc) etc.checked = false;
+      if (label) label.textContent = '신청';
+      if (appr) appr.textContent = '미신청';      // [DEV] 더미
+      if (regdt) regdt.textContent = '-';
+    }
+    setStatusBanner(mode);
+
+    var notice = document.getElementById('protoNoticeSave');
+    if (notice) notice.hidden = true;
+
+    var btns = document.querySelectorAll('.proto-mode-toggle__btn');
+    Array.prototype.forEach.call(btns, function (b) {
+      b.setAttribute('aria-current', b.getAttribute('data-mode') === mode ? 'true' : 'false');
+    });
+  }
+
+  function init() {
+    applyAuth();
+    setMode('write'); // 기본 신규 상태
+
+    // 개발용 상태 토글
+    var modeBtns = document.querySelectorAll('.proto-mode-toggle__btn');
+    Array.prototype.forEach.call(modeBtns, function (b) {
+      b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
+    });
+
+    // 신청/재신청: 페이지 이동·alert 없이 인라인 안내만 표시
+    var btnApply = document.getElementById('btnApply');
+    if (btnApply) btnApply.addEventListener('click', function () {
+      var notice = document.getElementById('protoNoticeSave');
+      if (!notice) return;
+      notice.textContent = PROTO_MSG;
+      notice.hidden = false;
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  // shell.js 의 PROTO 토글로 로그인 상태가 바뀌면 이름·안내를 즉시 갱신
+  window.addEventListener('storage', applyAuth);
+  /* 같은 탭에서 PROTO 토글로 바꾼 경우 (storage 는 다른 탭에서만 발생) */
+  window.addEventListener('evax:auth', applyAuth);
+})();
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260827a"></script>
+<script src="assets/js/ui-common.js?v=20260827a"></script>
+<script src="js/common/fileAttach.js?v=20260827a"></script>
+<script src="js/menu-data.js?v=20260827a"></script>
+<script src="js/shell.js?v=20260827a"></script>
+</body>
+</html>

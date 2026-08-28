@@ -348,6 +348,19 @@
         if (p.searchChargingItem02 && r.BID !== p.searchChargingItem02) return false;
         return true;
       });
+      /* 시연용 파생 필드 — 목록(포인트)·상세영수증(회원명/차량/결제수단/승인번호)에서 쓴다.
+         ※ POINT 산정 근거는 미정 → 충전량 1kWh당 1P 로 가정한 더미값. 나머지도 카드번호 기준 더미. */
+      var TRADE_CARMAP = { '1204': '12가3456', '2277': '34나7890', '3391': '56다1234' };
+      var TRADE_NAMEMAP = { '1204': '김전기', '2277': '이충전', '3391': '박그린' };
+      tl.forEach(function (r) {
+        var ok = r.PAYRESULT === 'Y';
+        var last4 = String(r.CARD_NO_RAW || '').slice(-4);
+        r.POINT = ok ? Math.round(r.POW) : 0;
+        r.NAME = TRADE_NAMEMAP[last4] || '회원';
+        r.CAR_ID = TRADE_CARMAP[last4] || '-';
+        r.CALCULATE = ok ? 'BC그린카드(간편결제)' : '-';
+        r.AUTH_CD = ok ? ('3' + last4 + ('0000' + ((r.NUM * 37) % 9000 + 1000)).slice(-4)) : '-';
+      });
       var sumKwh = 0, sumFee = 0, sumPay = 0, sumMin = 0;
       tl.forEach(function (r) { sumKwh += r.POW; sumFee += r.MON; sumPay += r.PAYMON; sumMin += r.MIN; });
       return {
@@ -361,17 +374,26 @@
         }
       };
     }
-    /* 후불 명세서 — 요청한 연월에 맞춰 집계해 내려준다(연월을 바꾸면 값도 바뀌어야 함) */
+    /* 후불 명세서 — 지정 기간(s_date_str~s_date_end)에 맞춰 집계해 내려준다(기간을 바꾸면 값도 바뀐다).
+       ISS-132로 월 단위→기간 조회 전환. 구 yyyymm 파라미터도 하위호환으로 받는다. */
     if (/postStatement/i.test(url)) {
-      var sym = String(p.yyyymm || '');
+      var pstart = String(p.s_date_str || '');
+      var pend = String(p.s_date_end || '');
+      // 하위호환: 기간이 없고 yyyymm 만 오면 그 달 전체로 간주
+      if ((!pstart || !pend) && p.yyyymm) {
+        var ym0 = String(p.yyyymm);
+        pstart = ym0.substring(0, 4) + '-' + ym0.substring(4, 6) + '-01';
+        pend = pstart.substring(0, 8) + '28';
+      }
+      var seedKey = pstart + '~' + pend;                   // 기간별로 값이 달라지게
       var H2 = (window.PROTO_DATA || {}).chargeTrade || [];
-      var seed = hash(sym);
+      var seed = hash(seedKey);
       var base = H2.filter(function (r) { return r.PERRMSG !== '결제실패'; });
       var take = base.length ? (2 + seed % Math.max(1, base.length - 1)) : 0;
       var picked = base.slice(0, take);
       var byBusi = {}, sumPay = 0, sumKwh = 0;
       picked.forEach(function (r) {
-        var f = 0.7 + (hash(sym, r.BID) % 60) / 100;      // 월별로 값이 달라지게
+        var f = 0.7 + (hash(seedKey, r.BID) % 60) / 100;
         var pay = Math.round(r.PAYMON * f);
         sumPay += pay; sumKwh += Math.round(r.POW * f);
         if (!byBusi[r.BUSI_NM]) byBusi[r.BUSI_NM] = { BUSI_NM: r.BUSI_NM, CNT: 0, SUM_PAY: 0 };
@@ -382,8 +404,8 @@
         return { BUSI_NM: k, CNT: comma(byBusi[k].CNT), SUM_PAY: comma(byBusi[k].SUM_PAY) };
       }).sort(function (a, b) { return b.SUM_PAY.length - a.SUM_PAY.length; });
       return {
-        resultCode: 'OK', yyyymm: sym,
-        issueDate: sym.substring(0, 4) + '-' + sym.substring(4, 6) + '-05',
+        resultCode: 'OK', s_date_str: pstart, s_date_end: pend,
+        issueDate: pend || '-',                            // 발행일자=조회 종료일(프로토)
         sum: { PAY_CNT: comma(picked.length), SUM_PAY: comma(sumPay), SUM_KWH: sumKwh.toLocaleString('ko-KR') },
         busiStat: busiStat
       };

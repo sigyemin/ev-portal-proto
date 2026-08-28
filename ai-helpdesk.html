@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 헬프데스크</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <link rel="stylesheet" href="assets/css/aiHelpdeskPage.css?v=20260828a">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260828a"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260828a"></script>
+  <script src="js/common/common_util.js?v=20260828a"></script>
+  <script src="js/proto-api.js?v=20260828a"></script>
+  <script src="js/proto-data.js?v=20260828a"></script>
+  <script src="js/proto-mock.js?v=20260828a"></script>
+  <script src="js/echarts/echarts.js?v=20260828a"></script>
+  <script src="js/ai/aiChatMd.js?v=20260828a"></script>
+  <script src="js/ai/aiChatRender.js?v=20260828a"></script>
+  <script src="js/ai/aiHelpdeskTags.js?v=20260828a"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+  <!-- 상단 공통 영역 -->
+  <div class="page-header">
+    <div class="page-header__inner">
+      <!-- breadcrumb -->
+      <nav class="breadcrumb">
+        <ol class="breadcrumb__list">
+          <li class="breadcrumb__item">
+            <a href="index.html" class="breadcrumb__link">
+              <i class="svg-icon home"></i>
+              <span class="hidden">홈</span>
+            </a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="#" class="breadcrumb__link"><span>소통·지원</span></a>
+          </li>
+          <li class="breadcrumb__item">
+            <a href="ai-helpdesk.html" class="breadcrumb__link"><span data-i18n="menu.aiHelpDesk">AI 헬프데스크</span></a>
+          </li>
+        </ol>
+      </nav>
+      <!-- subject -->
+      <div class="page-header__subject">
+        <h1 class="heading-subject">AI 헬프데스크</h1>
+        <p class="page-header__description">충전·보조금 궁금증을 AI와 대화하듯 물어보세요. 답변과 함께 근거 문서·관련 화면을 바로 안내합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하단 컨텐츠 : 3영역(탭 · 대화 · 입력 도크) -->
+  <div class="contents">
+    <!-- 상담 유형 탭 (퍼블 표준 .tab · .contents 안). charging-near.html 처럼 래퍼로 감싼다 —
+         style.css 의 `.contents > .tab:first-child { transform:translateY(-40px) }` 규칙이 탭을 배너에 붙이므로,
+         래퍼로 감싸 first-child 대상에서 빼면 .contents 표준 상단 여백(40px)이 그대로 적용된다. CSS 미변경. -->
+    <div class="aihd-tabbar">
+      <!-- [ISS-149] 상담 유형 탭 — 무공해차 백과(info-evcar) 밑줄형 tab--nav 방식. 단, 페이지 이동이 아니라
+           같은 화면에서 대화 영역만 전환한다(location.href 미사용, 기존 chatType/selectTab 로직 유지). -->
+      <!-- PC: 밑줄형 탭 -->
+      <div class="tab tab--nav pc-only" id="aihdModeTabs">
+        <ul class="tab__list">
+          <li class="tab__item tab__item--selected">
+            <button type="button" class="tab__button" data-chat-type="helpConsult" data-i18n="sm.aiConsult">충전 도우미</button>
+          </li>
+          <li class="tab__item">
+            <button type="button" class="tab__button" data-chat-type="subsidy" data-i18n="sm.subsidyCurator">보조금 도우미</button>
+          </li>
+        </ul>
+      </div>
+      <!-- 모바일: 셀렉트(페이지 이동 아니라 탭 전환) -->
+      <div class="tab tab--mobile mobile-only">
+        <label for="aihdModeSelect" class="ir-pm hidden">상담 유형 선택</label>
+        <select id="aihdModeSelect" class="select" title="상담 유형 선택">
+          <option value="helpConsult" data-i18n="sm.aiConsult">충전 도우미</option>
+          <option value="subsidy" data-i18n="sm.subsidyCurator">보조금 도우미</option>
+        </select>
+      </div>
+    </div>
+    <div class="aihd" id="aihd">
+      <!-- 본문 : 대화 영역 (단일 영역 — 좌측 이력 사이드바 제거) -->
+      <section class="aihd-main" aria-label="AI 대화">
+        <div class="aihd-main__bar">
+          <strong class="aihd-main__title">AI 헬프데스크</strong>
+          <button type="button" class="button button--small button--primary aihd-main__new" id="aihdNew">
+            <i class="svg-icon plus" aria-hidden="true"></i>
+            <span class="button__label">새로운 대화</span>
+          </button>
+        </div>
+
+        <div class="aihd-main__scroll" id="aihdScroll">
+          <!-- 배치안 C : 대화영역 안 자주 찾는 질문(첫 진입 시 크게 → 대화 시작 후 입력창 위로 축소) -->
+          <div class="aihd-welcome" id="aihdWelcome">
+            <div class="aihd-welcome__inner">
+              <i class="svg-icon ai-sparkle" aria-hidden="true"></i>
+              <p class="aihd-welcome__title">무엇을 도와드릴까요?</p>
+              <p class="aihd-welcome__desc">아래 자주 찾는 질문을 선택하거나, 궁금한 점을 직접 입력해 주세요.</p>
+              <div class="aihd-welcome__cards" id="aihdWelcomeCards"></div>
+            </div>
+          </div>
+          <div class="chat__content" id="aihdContent" aria-live="polite"></div>
+        </div>
+
+        <!-- ③ 하단 입력 도크 -->
+        <div class="aihd-composer">
+          <div class="aihd-composer__chips" id="aihdChips"></div>
+          <div class="aihd-dock">
+            <button type="button" class="button button--icon button--borderless button--small aihd-dock__attach" title="파일 첨부">
+              <i class="svg-icon attachment" aria-hidden="true"></i>
+              <span class="button__label hidden">파일 첨부</span>
+            </button>
+            <label for="aihdInput" class="ir-pm hidden">메시지 입력</label>
+            <textarea rows="1" id="aihdInput" class="aihd-dock__input" placeholder="궁금한 점을 자유롭게 물어보세요." maxlength="2000"></textarea>
+            <button type="button" class="button button--icon button--send aihd-dock__send" id="aihdSend">
+              <i class="svg-icon send" aria-hidden="true"></i>
+              <span class="button__label hidden">보내기</span>
+            </button>
+          </div>
+          <p class="aihd-composer__foot">인공지능법상 투명성 안내 · Gemma 기반 AI로, 민감정보 입력 시 응답이 거부되며 제공 정보에 오류가 있을 수 있습니다.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- 개발 안내 아코디언 — 프로토 전용(실제 화면 비노출 · 인쇄 숨김 · 기본 접힘). subsidy-region.html 동일 패턴 -->
+    <details class="dev-note">
+      <summary><span class="dev-note__tag">개발 안내</span> [ISS-143] AI 헬프데스크 화면 결정 &mdash; 실제 화면에는 노출하지 않습니다</summary>
+      <div class="dev-note__inner">
+        <h3>① 상담 유형 탭 &amp; 대화 이력</h3>
+        <ul>
+          <li>[ISS-149] 상단 상담 유형 = 무공해차 백과(<code>info-evcar</code>)와 동일한 <b>밑줄형 <code>tab--nav</code></b>(PC) + <b>셀렉트 <code>tab--mobile</code></b>(모바일). 선택 상태 <code>tab__item--selected</code>. ★백과는 <code>location.href</code>로 페이지 이동하지만 헬프데스크는 <b>같은 화면에서 대화 영역만 전환</b>(껍데기만 이식, 전환 로직은 기존 <code>chatType</code>/<code>selectTab</code> 유지). PC 밑줄탭↔모바일 셀렉트 선택 상태 동기화.</li>
+          <li><b>[ISS-142] 딥링크 유지</b> : 메가메뉴 소통·지원 &gt; AI 헬프데스크 &gt; 충전 도우미(<code>?tab=charge</code>) / 보조금 도우미(<code>?tab=subsidy</code>) 진입이 각 탭으로 열린다. 값이 없거나 오타면 기본(충전 도우미). 탭 전환 시 <code>history.replaceState</code>로 주소도 갱신(<code>?tab=charge|subsidy</code>).</li>
+          <li><b>대화 이력 목록 UI는 두지 않는다.</b> 운영상 이력은 <b>스레드ID 유지 · 동시 정원 40명 · 유휴 30초 시 스레드 해제</b>로, <b>항구 저장이 아니다</b>. 따라서 좌측 이력 사이드바(목록·접기/펼치기·드로어)를 제거하고 <b>현재 스레드만</b> 표시한다. &lsquo;새로운 대화&rsquo;는 현재 스레드를 초기화(비움 + 첫 진입 카드 재노출)한다.</li>
+        </ul>
+        <h3>② 자주 찾는 질문 배치 &mdash; C안 확정(대화영역 안)</h3>
+        <ul>
+          <li>자주 찾는 질문은 <b>대화영역 안</b>에 둔다(C안). 첫 진입 시 대화영역 중앙에 <b>큰 카드</b>로 노출한다(사용자 확정, 유지). <b>[ISS-150] 입력창 위 가로 칩은 상시 노출</b> &mdash; <code>is-chat-started</code> 게이팅 제거로 <b>첫 진입·새 대화 직후·대화 중·붐빔 응답 중 모든 상태에서 표시</b>(세로 1줄 · 넘치면 가로 스크롤 · 접기 토글 없음). 붐빔 응답 시 <b>자주 찾는 질문이 유일한 탈출로</b>이기 때문. 칩/카드 클릭 시 질문이 입력창(<code>#aihdInput</code>)에 채워진다. 데이터는 기존 <code>aiHelpdeskTags(AI_HELPDESK_TAGS)</code>의 <code>helpConsult</code>/<code>subsidy</code>를 재사용.</li>
+          <li>★[ISS-150 알림] 칩 상시 노출로, <b>첫 진입 화면에서는 웰컴 큰 카드와 입력창 위 칩이 동일한 자주 찾는 질문을 두 번 노출</b>한다. 웰컴 큰 카드(C안, 사용자 확정)는 <b>임의로 지우지 않고 그대로</b> 두었다 &mdash; 이 중복 표시 조정 여부는 사용자가 화면을 보고 판단(미정).</li>
+        </ul>
+        <h3>③ 정원 초과(붐빔) 응답 표시 &mdash; 미정(개발 협의)</h3>
+        <ul>
+          <li><b>배경(서버 제약)</b> : 동시 접속 <b>정원 40명</b>, <b>유휴 30초 시 스레드 해제</b>. 정원 초과 시 서버가 <b>붐빔 안내를 응답 메시지로 반환</b>하며, 화면은 <b>그 응답 표시만</b> 담당(감지 로직 없음). 붐빔 응답은 경고 톤 말풍선 + 재시도 + 대안 경로(자주 찾는 질문 · 질의응답 <code>inquiry-qna.html</code> · 콜센터 <code>1661-0970</code>)로 설계됐다.</li>
+          <li><b>[ISS-143 후속] 붐빔 응답 표시 복원</b> : 트리거가 배치안 비교 바에 얹혀 있던 게 실수였을 뿐 기능 자체는 운영 실동작이므로, 경고 톤 말풍선 · 다시 시도(직전 질문 재전송) · 대안 경로를 복원했다. 트리거는 배치안 바가 아니라 <b>아래 시연 토글</b>로 분리했다. <b>붐빔 응답의 실제 안내 문구·트리거 조건은 서버 연동 후 확정 필요(미정 · 개발 협의)</b> &mdash; 화면에는 자리표시자만, 임의 문구를 창작하지 않았다.</li>
+        </ul>
+        <div class="aihd-demo">
+          <label class="aihd-demo__toggle" for="aihdBusyToggle">
+            <input type="checkbox" id="aihdBusyToggle">
+            <span><b>시연 : 정원 초과(붐빔) 상태 재현</b> &mdash; 프로토타입 전용. 이 항목을 켠 상태로 질문을 보내면 정상 답변 대신 <b>붐빔 응답</b>이 표시됩니다(입력창은 계속 사용 가능).</span>
+          </label>
+        </div>
+        <h3>④ 이번 범위 밖(별도 협의 필요)</h3>
+        <ul>
+          <li><b>유휴 30초 스레드 해제로 인한 맥락 단절</b> : 이용자가 답변을 읽는 동안 30초가 지나 스레드가 끊기면, 이어지는 후속 질문에서 앞 대화 맥락이 이어지지 않을 수 있다. 세션 유지·재연결·맥락 복원 등 <b>화면 처리 방식은 이번 설계 범위 밖 &mdash; 별도 협의 필요</b>.</li>
+        </ul>
+        <h3>⑤ 그 밖의 규칙 &mdash; 메인 페이지와 동일</h3>
+        <ul>
+          <li>이 문서는 <b>전용 페이지에서 달라지는 점만</b> 기술한다. 여기에 적지 않은 나머지 동작 규칙(문답 렌더링 · 마크다운 처리 · 참고 문서 표기 · 전송 동작 등)은 <b>메인 페이지 AI 헬프데스크</b>(<code>index.html</code> 의 <code>&lt;section id="AIhelpdesk"&gt;</code>, 422행 부근)의 작동 규칙과 <b>동일</b>하다. 공통 렌더러 <code>AiChatRender</code> 와 <code>assets/css/aiChat.css</code> 를 그대로 사용한다. 중복 기술은 나중에 어긋나므로 메인 규칙을 여기에 옮겨 적지 않고 <b>참조만</b> 남긴다.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- 차트 확대 모달 -->
+<div class="aihd-modal" id="aihdChartModal" role="dialog" aria-modal="true" aria-labelledby="aihdChartModalTitle">
+  <div class="aihd-modal__box">
+    <div class="aihd-modal__head">
+      <h2 class="aihd-modal__title" id="aihdChartModalTitle">차트 확대 보기</h2>
+      <button type="button" class="button button--icon button--borderless button--close" id="aihdChartModalClose" title="닫기">
+        <i class="svg-icon close" aria-hidden="true"></i>
+        <span class="button__label hidden">닫기</span>
+      </button>
+    </div>
+    <div class="aihd-modal__body">
+      <div class="aihd-modal__chart" id="aihdChartModalCanvas"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   AI 헬프데스크 전용 페이지 스크립트 (프로토 전용 · 인라인)
+   - 대화 렌더는 공용 파이프라인 재사용 : AiChatRender.finalize(el) 가
+     data-md(Markdown+Highcharts JSON)를 마크다운·ECharts 로 렌더한다.
+   - 로그인 상태는 mypage.html 과 동일 규격 (evax.proto.auth) 을 읽는다.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  // ---------- 상담 유형(퍼블 표준 .tab) ----------
+  // 선택된 탭 버튼(#aihdModeTabs .tab__item--selected .tab__button)의 data-chat-type 값.
+  function chatType() {
+    var btn = document.querySelector('#aihdModeTabs .tab__item--selected .tab__button');
+    return (btn && btn.getAttribute('data-chat-type') === 'subsidy') ? 'subsidy' : 'helpConsult';
+  }
+
+  // 지정 상담 유형 탭을 선택 상태(tab__item--selected)로 세팅. PC 밑줄탭·모바일 셀렉트를 함께 동기화한다.
+  function selectTab(type) {
+    var wantSubsidy = (type === 'subsidy');
+    jQuery('#aihdModeTabs .tab__item').removeClass('tab__item--selected');
+    jQuery('#aihdModeTabs .tab__button').each(function () {
+      var isSubsidy = this.getAttribute('data-chat-type') === 'subsidy';
+      if (isSubsidy === wantSubsidy) { jQuery(this).closest('.tab__item').addClass('tab__item--selected'); }
+    });
+    // [ISS-149] 모바일 셀렉트 값도 맞춘다(PC↔모바일 선택 상태 동기화)
+    var sel = document.getElementById('aihdModeSelect');
+    var val = wantSubsidy ? 'subsidy' : 'helpConsult';
+    if (sel && sel.value !== val) { sel.value = val; }
+  }
+
+  // [ISS-149] 탭 전환 공용 — PC 밑줄탭 클릭·모바일 셀렉트 change 가 함께 쓴다.
+  // 선택 동기화(selectTab) + FAQ 갱신 + 스레드 전환 + 딥링크 replaceState.
+  function switchChatTab(raw) {
+    var t = (raw === 'subsidy') ? 'subsidy' : 'helpConsult';
+    selectTab(t);
+    renderAllFaq();
+    showThread(t);
+    try { history.replaceState(null, '', '?tab=' + (t === 'subsidy' ? 'subsidy' : 'charge')); } catch (e) {}
+  }
+
+  // [ISS-142] 딥링크 ?tab= 값을 상담 유형으로 매핑. 충전 도우미=charge(내부 helpConsult), 보조금 도우미=subsidy.
+  //   없거나 잘못된 값은 기본 탭(충전 도우미)으로 폴백 — 에러 내지 않는다.
+  function tabFromQuery() {
+    var raw = '';
+    try { raw = (new URLSearchParams(location.search).get('tab') || '').toLowerCase(); } catch (e) { raw = ''; }
+    if (raw === 'subsidy') return 'subsidy';
+    return 'helpConsult';   // charge · helpConsult · 빈값 · 오타 → 기본(충전 도우미)
+  }
+
+  // ---------- 시각 문자열 ----------
+  function nowStamp() {
+    var d = new Date();
+    var hh = ('0' + d.getHours()).slice(-2);
+    var mm = ('0' + d.getMinutes()).slice(-2);
+    return d.getFullYear() + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + ('0' + d.getDate()).slice(-2) + ' ' + hh + ':' + mm;
+  }
+
+  // ---------- 말풍선 생성 ----------
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) { e.className = cls; }
+    if (html != null) { e.innerHTML = html; }
+    return e;
+  }
+
+  // 사용자 발화
+  function appendUserTurn(type, text, stamp) {
+    var thread = AiChatRender.getThread(document.getElementById('aihdContent'), type);
+    var turn = el('div', 'aihd-turn aihd-turn--user');
+    turn.appendChild(el('div', 'aihd-turn__meta',
+      '<span class="aihd-turn__who">나</span><span>' + (stamp || nowStamp()) + '</span>'));
+    var msg = el('div', 'chat__message chat__message--user aihd-turn__bubble');
+    var bubble = el('div', 'chat__bubble');
+    var inner = el('div', 'chat__inner');
+    inner.textContent = text;
+    bubble.appendChild(inner);
+    msg.appendChild(bubble);
+    turn.appendChild(msg);
+    thread.appendChild(turn);
+    return turn;
+  }
+
+  // AI 응답 (md : Markdown + (선택)Highcharts JSON, opts : {refs, guides, proto})
+  function appendBotTurn(type, md, opts, stamp) {
+    opts = opts || {};
+    var thread = AiChatRender.getThread(document.getElementById('aihdContent'), type);
+    var turn = el('div', 'aihd-turn aihd-turn--bot');
+    turn.appendChild(el('div', 'aihd-turn__meta',
+      '<span class="aihd-turn__who"><i class="svg-icon ai-sparkle" aria-hidden="true"></i>AI 답변</span><span>' + (stamp || nowStamp()) + '</span>'));
+    var msg = el('div', 'chat__message chat__message--bot aihd-turn__bubble');
+    var bubble = el('div', 'chat__bubble');
+    var inner = el('div', 'chat__inner');
+
+    if (opts.proto) {
+      // 프로토 안내(전송 시) — 마크다운 렌더 없이 안내 박스
+      inner.appendChild(el('div', 'aihd-proto-note',
+        '<i class="svg-icon ai-sparkle" aria-hidden="true"></i><span><strong>프로토타입 안내</strong> · 실제 응답은 AI 서버 연동 후 동작합니다. 아래 추천 질문이나 예시 대화를 참고해 주세요.</span>'));
+    } else {
+      // 공용 렌더 파이프라인 : data-md → Markdown/ECharts
+      inner.setAttribute('data-md', md);
+    }
+    bubble.appendChild(inner);
+
+    // 참고 문서 블록
+    if (opts.refs && opts.refs.length) {
+      var refs = el('div', 'aihd-refs');
+      refs.appendChild(el('p', 'aihd-refs__title', '참고 문서 (' + opts.refs.length + '건)'));
+      opts.refs.forEach(function (r) {
+        var row = el('div', 'aihd-ref');
+        row.appendChild(el('span', 'aihd-ref__doc', '<i class="svg-icon file" aria-hidden="true"></i>' + r.doc));
+        row.appendChild(el('span', 'aihd-ref__page', 'p.' + r.page + ' | 기준일 ' + r.date));
+        var links = el('div', 'aihd-ref__links');
+        links.appendChild(el('a', 'button button--xsmall button--secondary', '<span class="button__label">원문 보기</span>'))
+          .setAttribute('href', '#');
+        links.appendChild(el('a', 'button button--xsmall button--secondary', '<span class="button__label">다운로드</span>'))
+          .setAttribute('href', '#');
+        row.appendChild(links);
+        refs.appendChild(row);
+      });
+      bubble.appendChild(refs);
+    }
+
+    // 이용 안내(관련 누리집 바로가기) 블록 — 실제 프로토 페이지로 연결
+    if (opts.guides && opts.guides.length) {
+      var guide = el('div', 'aihd-guide');
+      guide.appendChild(el('p', 'aihd-guide__title', '<i class="svg-icon link" aria-hidden="true"></i>관련 화면 바로가기'));
+      var list = el('div', 'aihd-guide__list');
+      opts.guides.forEach(function (g) {
+        var row = el('div', 'aihd-guide__row');
+        row.appendChild(el('span', 'aihd-guide__path', g.path));
+        var a = el('a', 'aihd-guide__go', '<span>바로가기</span><i class="svg-icon angle-right" aria-hidden="true"></i>');
+        a.setAttribute('href', g.href);
+        row.appendChild(a);
+        list.appendChild(row);
+      });
+      guide.appendChild(list);
+      bubble.appendChild(guide);
+    }
+
+    msg.appendChild(bubble);
+    turn.appendChild(msg);
+    thread.appendChild(turn);
+
+    if (!opts.proto) {
+      AiChatRender.finalize(inner);   // 마크다운 + 차트 초기화(CSV/이미지 tools 포함)
+      enhanceCharts(inner);           // 확대 버튼 추가
+    }
+    return turn;
+  }
+
+  // ---------- [ISS-143 후속] 붐빔(정원 초과) 응답 ----------
+  // 운영: 동시 40명 정원·30초 유휴 해제. 정원 초과 시 서버가 붐빔 안내를 '응답'으로 반환 → 화면은 표시만.
+  // 프로토는 dev-note 안 시연 토글(busyDemo)로 이 상태를 재현한다. 실제 안내 문구는 서버 연동 후 확정(미정·개발 협의) → 임의 창작 금지, 자리표시자만.
+  var busyDemo = false;                          // dev-note 시연 토글 상태
+  var lastQuestion = { helpConsult: '', subsidy: '' };  // 재시도용 직전 질문
+
+  function appendBusyTurn(type, retryText) {
+    var thread = AiChatRender.getThread(document.getElementById('aihdContent'), type);
+    var turn = el('div', 'aihd-turn aihd-turn--bot');
+    turn.appendChild(el('div', 'aihd-turn__meta',
+      '<span class="aihd-turn__who"><i class="svg-icon ai-sparkle" aria-hidden="true"></i>AI 답변</span><span>' + nowStamp() + '</span>'));
+    var msg = el('div', 'chat__message chat__message--bot aihd-turn__bubble');
+    var bubble = el('div', 'chat__bubble aihd-busy');
+    // 경고 톤 안내 — 실제 붐빔 문구는 미정(개발 협의), 자리표시자만 노출
+    bubble.appendChild(el('div', 'aihd-busy__head',
+      '<i class="svg-icon caution" aria-hidden="true"></i><strong>서비스가 붐빔</strong>'));
+    bubble.appendChild(el('p', 'aihd-busy__body',
+      '프로토타입 안내 · 정원 초과(붐빔) 상태 재현입니다. 실제 안내 문구는 서버 연동 후 확정됩니다(미정 · 개발 협의). 잠시 후 다시 시도하거나 아래 대안을 이용해 주세요.'));
+    var retry = el('button', 'button button--small button--primary aihd-busy__retry',
+      '<i class="svg-icon ai-sparkle" aria-hidden="true"></i><span class="button__label">다시 시도</span>');
+    retry.setAttribute('type', 'button');
+    retry.setAttribute('data-retry', retryText || '');
+    bubble.appendChild(retry);
+    // 대안 경로 — 붐빔일 때 자주 찾는 질문이 유일 탈출로(칩 상시 노출과 연결)
+    var alt = el('div', 'aihd-busy__alt');
+    alt.appendChild(el('p', 'aihd-busy__alt-title', '대안 경로'));
+    var list = el('div', 'aihd-busy__alt-list');
+    var faq = el('button', 'button button--xsmall button--secondary aihd-busy__faq', '<span class="button__label">자주 찾는 질문</span>');
+    faq.setAttribute('type', 'button');
+    list.appendChild(faq);
+    var qna = el('a', 'button button--xsmall button--secondary', '<span class="button__label">질의응답 게시판</span>');
+    qna.setAttribute('href', 'inquiry-qna.html');
+    list.appendChild(qna);
+    var call = el('a', 'button button--xsmall button--secondary', '<span class="button__label">콜센터 1661-0970</span>');
+    call.setAttribute('href', 'tel:1661-0970');
+    list.appendChild(call);
+    alt.appendChild(list);
+    bubble.appendChild(alt);
+    msg.appendChild(bubble);
+    turn.appendChild(msg);
+    thread.appendChild(turn);
+    return turn;
+  }
+
+  // ---------- 차트 확대 버튼 ----------
+  function enhanceCharts(root) {
+    var charts = root.querySelectorAll('.chatbot-chart[data-chart-init="1"]');
+    Array.prototype.forEach.call(charts, function (c) {
+      if (c.getAttribute('data-expand-added') === '1') { return; }
+      c.setAttribute('data-expand-added', '1');
+      var tools = c.nextSibling && c.nextSibling.className === 'chatbot-chart-tools'
+        ? c.nextSibling : null;
+      var btn = el('button', 'button button--xsmall button--secondary aihd-chart-expand',
+        '<span class="button__label">확대</span>');
+      btn.setAttribute('type', 'button');
+      btn.addEventListener('click', function () { openChartModal(c); });
+      if (tools) { tools.appendChild(btn); }
+      else if (c.parentNode) { c.parentNode.insertBefore(btn, c.nextSibling); }
+    });
+  }
+
+  var modalChart = null;
+  function openChartModal(chartEl) {
+    var modal = document.getElementById('aihdChartModal');
+    var canvas = document.getElementById('aihdChartModalCanvas');
+    var hc = chartEl.chartConfig;
+    if (!hc || !window.echarts || !window.AiChatMd) { return; }
+    var title = document.getElementById('aihdChartModalTitle');
+    if (title && hc.title && hc.title.text) { title.textContent = hc.title.text; }
+    modal.classList.add('is-open');
+    var options = window.AiChatMd.convertHighchartsToEcharts(hc);
+    if (modalChart) { modalChart.dispose(); modalChart = null; }
+    canvas.innerHTML = '';
+    modalChart = window.echarts.init(canvas);
+    modalChart.setOption(options);
+  }
+  function closeChartModal() {
+    var modal = document.getElementById('aihdChartModal');
+    modal.classList.remove('is-open');
+    if (modalChart) { modalChart.dispose(); modalChart = null; }
+  }
+
+  // ---------- 더미 대화 정의 ----------
+  // 수치는 proto-api(cars.gov) · 충전요금 밴드(charging-fee) 와 정합. 근거 없는 값은 넣지 않음.
+  var CHART_SUBSIDY = JSON.stringify({
+    chart: { type: 'column' },
+    title: { text: '2026년 전기승용 대표 모델별 국비 보조금' },
+    xAxis: { categories: ['아이오닉 6', '아이오닉 5', 'EV6', '코나 일렉트릭', 'EV3'] },
+    yAxis: { title: { text: '국비(만원)' } },
+    series: [{ name: '국비 보조금', data: [650, 650, 650, 640, 600] }]
+  });
+
+  var SEED = {
+    helpConsult: [
+      {
+        user: '결제는 되었지만 충전이 시작되지 않을 때 어떻게 처리하나요?',
+        userStamp: '2026.08.27 09:58',
+        botStamp: '2026.08.27 09:58',
+        md: [
+          '결제 승인 후에도 충전이 시작되지 않으면 **이중 결제가 아니므로 우선 아래 순서로 확인**해 주세요.',
+          '',
+          '1. 커넥터를 다시 체결하고 충전기 화면의 **재시도** 버튼을 누릅니다.',
+          '2. 그래도 시작되지 않으면 충전기 전면의 **고장/문의 번호**로 신고합니다.',
+          '3. 승인만 되고 충전이 안 된 건은 통상 **자동 취소(승인 취소)** 처리되며, 실제 청구되지 않습니다.',
+          '',
+          '충전 건별 결제·승인 내역은 **충전요금 조회** 화면에서 카드번호로 확인할 수 있습니다.'
+        ].join('\n'),
+        refs: [
+          { doc: '전기차 충전 이용 안내서', page: '12', date: '2026-06-26' },
+          { doc: '충전 결제·환불 처리 지침', page: '3', date: '2026-05-30' }
+        ],
+        guides: [
+          { path: '충전소·요금 정보 > 회원카드 관리 > 충전요금 조회', href: 'bill-search.html' },
+          { path: '충전소·요금 정보 > 충전소 찾기', href: 'charging-find.html' }
+        ]
+      }
+    ],
+    subsidy: [
+      {
+        user: '2026년 서울시 전기승용차 구매보조금은 중·대형, 소형, 초소형 차량별로 최대 얼마인가요?',
+        userStamp: '2026.08.27 10:02',
+        botStamp: '2026.08.27 10:02',
+        md: [
+          '전기승용 구매보조금은 **국비 + 지방비**로 구성됩니다. 국비는 전국 공통 기준이고, **지방비는 지자체(서울시)별로 달라** 실제 수령액은 지역에 따라 차이가 있습니다.',
+          '',
+          '- **국비**: 차량 성능·가격 등에 따라 산정되며, 전기승용 기준 상한이 적용됩니다.',
+          '- **지방비**: 서울시 예산·차급별 단가에 따라 별도 지급됩니다.',
+          '',
+          '아래는 **대표 모델별 국비 보조금(2026, 단위: 만원)** 예시입니다.',
+          '',
+          CHART_SUBSIDY,
+          '',
+          '정확한 **차종·모델별 국비·지방비·소계**와 서울시 지방비는 아래 화면에서 지자체를 펼쳐 확인해 주세요.'
+        ].join('\n'),
+        refs: [
+          { doc: '2026년 전기자동차 보급사업 보조금 업무처리지침', page: '18', date: '2026-06-26' },
+          { doc: '서울특별시 전기차 민간보급 공고', page: '2', date: '2026-06-10' }
+        ],
+        guides: [
+          { path: '보조금 안내 > 지자체별 보조금 현황(차종·모델별)', href: 'subsidy-local.html' },
+          { path: '보조금 안내 > 보조금 계산기', href: 'subsidy-calc.html' }
+        ]
+      }
+    ]
+  };
+
+  var seeded = { helpConsult: false, subsidy: false };
+  function seedThread(type) {
+    if (seeded[type]) { return; }
+    seeded[type] = true;
+    (SEED[type] || []).forEach(function (turn) {
+      appendUserTurn(type, turn.user, turn.userStamp);
+      appendBotTurn(type, turn.md, { refs: turn.refs, guides: turn.guides }, turn.botStamp);
+    });
+  }
+
+  // ---------- FAQ 칩/카드 (세 배치안 공통 데이터 : AI_HELPDESK_TAGS) ----------
+  function renderChips() {
+    if (typeof renderAiHelpdeskTags !== 'function') { return; }
+    renderAiHelpdeskTags(jQuery('#aihdChips'), chatType());
+  }
+
+  // 대화영역 안 큰 카드(배치안 C 첫 진입)
+  function renderWelcomeCards(type) {
+    var $wrap = jQuery('#aihdWelcomeCards');
+    if (!$wrap.length || typeof AI_HELPDESK_TAGS === 'undefined') { return; }
+    var list = AI_HELPDESK_TAGS[type] || AI_HELPDESK_TAGS.helpConsult || [];
+    var isEn = (typeof aiHelpdeskLang === 'function') && aiHelpdeskLang() === 'en';
+    $wrap.empty();
+    list.forEach(function (it) {
+      var label = (isEn && it.tagEn) ? it.tagEn : it.tag;
+      var $b = jQuery('<button>', { type: 'button', 'class': 'aihd-welcome__card', title: it.q });
+      $b.attr('data-q', it.q);
+      $b.append(jQuery('<span>', { 'class': 'aihd-welcome__card-tag', text: label }));
+      $b.append(jQuery('<span>', { 'class': 'aihd-welcome__card-q', text: it.q }));
+      $wrap.append($b);
+    });
+  }
+
+  // 현재 상담 유형 기준으로 두 위치(입력창 위 칩 · 대화영역 큰 카드) 갱신
+  function renderAllFaq() {
+    var t = chatType();
+    renderChips();
+    renderWelcomeCards(t);
+  }
+
+  function fillInput(q) {
+    var input = document.getElementById('aihdInput');
+    if (!input) { return; }
+    input.value = q || '';
+    input.focus();
+  }
+
+  // 대화 시작 표시(자주 찾는 질문 : 큰 카드 → 입력창 위 칩으로 축소)
+  function markChatStarted() {
+    var aihd = document.getElementById('aihd');
+    if (aihd) { aihd.classList.add('is-chat-started'); }
+  }
+  function resetChatStarted() {
+    var aihd = document.getElementById('aihd');
+    if (aihd) { aihd.classList.remove('is-chat-started'); }
+  }
+
+  // ---------- 스레드 전환 ----------
+  function showThread(type) {
+    seedThread(type);
+    AiChatRender.showThread(document.getElementById('aihdContent'), type);
+    scrollBottom();
+  }
+
+  function scrollBottom() {
+    var s = document.getElementById('aihdScroll');
+    if (s) { s.scrollTop = s.scrollHeight; }
+  }
+
+  // ---------- 전송 ----------
+  function sendChat(text) {
+    text = (text || '').replace(/^\s+|\s+$/g, '');
+    if (!text) { return; }
+    var type = chatType();
+    markChatStarted();               // 자주 찾는 질문 : 큰 카드 → 입력창 위 칩 축소
+    lastQuestion[type] = text;       // 재시도용 직전 질문 보관
+    appendUserTurn(type, text);
+    if (busyDemo) {
+      // [ISS-143 후속] 정원 초과 재현 — 붐빔 응답. 입력창은 계속 사용 가능(막지 않음).
+      appendBusyTurn(type, text);
+    } else {
+      // 실제 응답 불가 → 프로토 안내(더미) 노출. alert 미사용.
+      appendBotTurn(type, '', { proto: true });
+    }
+    scrollBottom();
+  }
+
+  // ---------- 이벤트 바인딩 ----------
+  function bind() {
+    // 상담 유형 탭 전환(퍼블 표준 .tab · ui-common은 role="tab" 탭만 자동처리하므로 직접 토글)
+    jQuery('#aihdModeTabs .tab__button').on('click', function () {
+      switchChatTab(this.getAttribute('data-chat-type'));
+    });
+    // [ISS-149] 모바일 셀렉트 — 페이지 이동 아니라 탭 전환(백과의 onchange location.href 는 쓰지 않는다)
+    jQuery('#aihdModeSelect').on('change', function () {
+      switchChatTab(this.value);
+    });
+
+    // FAQ 칩 클릭(입력창 위 축소 칩) → 입력창에 질문 채움
+    jQuery(document).on('click', '#aihdChips .tag', function (e) {
+      e.preventDefault();
+      var q = this.getAttribute('data-q') || jQuery(this).find('.tag__label').text().replace(/^#/, '');
+      fillInput(q);
+    });
+    // 자주 찾는 질문 큰 카드(첫 진입) 클릭 → 입력창에 질문 채움
+    jQuery(document).on('click', '#aihdWelcomeCards .aihd-welcome__card', function (e) {
+      e.preventDefault();
+      fillInput(this.getAttribute('data-q') || '');
+    });
+
+    // [ISS-143 후속] 붐빔 응답 — 다시 시도(직전 질문 그대로 재전송)
+    jQuery(document).on('click', '.aihd-busy__retry', function () {
+      var t = this.getAttribute('data-retry') || '';
+      if (t) { sendChat(t); }
+    });
+    // 붐빔 대안 경로 '자주 찾는 질문' → 입력창 위 상시 칩으로 이동(유일 탈출로)
+    jQuery(document).on('click', '.aihd-busy__faq', function () {
+      var chips = document.getElementById('aihdChips');
+      if (chips) { chips.scrollIntoView({ block: 'nearest' }); chips.classList.add('is-flash'); setTimeout(function () { chips.classList.remove('is-flash'); }, 900); }
+    });
+    // 시연 토글(정원 초과 재현) — dev-note 안. ON 상태로 질문 전송 시 붐빔 응답 반환.
+    jQuery(document).on('change', '#aihdBusyToggle', function () { busyDemo = this.checked; });
+
+    // 전송
+    jQuery('#aihdSend').on('click', function () {
+      var input = document.getElementById('aihdInput');
+      sendChat(input.value);
+      input.value = '';
+    });
+    jQuery('#aihdInput').on('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChat(this.value);
+        this.value = '';
+      }
+    });
+
+    // 새로운 대화 (현재 스레드를 완전히 비운다 → 웰컴 큰 카드 재노출 + 최상단)
+    // [ISS-143 후속4] 이력을 제공하지 않으므로(스레드ID·40명 정원·30초 유휴 해제) 새 대화는 완전히 빈 상태가 맞다.
+    // 시드 예시 문답을 다시 채우지 않는다: seedThread 호출 제거 + seeded=true 로 잠가 이후 경로(탭 전환 등)에서도 재주입 차단.
+    jQuery('#aihdNew').on('click', function () {
+      var type = chatType();
+      var thread = AiChatRender.getThread(document.getElementById('aihdContent'), type);
+      thread.innerHTML = '';
+      seeded[type] = true;           // 시드 잠금 — 비운 뒤 어떤 경로로도 예시 문답이 되살아나지 않게
+      resetChatStarted();            // is-chat-started 해제 → 첫 진입 큰 카드 재노출
+      AiChatRender.showThread(document.getElementById('aihdContent'), type);
+      var s = document.getElementById('aihdScroll');
+      if (s) { s.scrollTop = 0; }
+    });
+
+    // 첨부(프로토) : 동작 없음 안내는 생략, 클릭 무반응
+    jQuery('.aihd-dock__attach').on('click', function (e) { e.preventDefault(); });
+
+    // 차트 확대 모달 닫기
+    jQuery('#aihdChartModalClose').on('click', closeChartModal);
+    jQuery('#aihdChartModal').on('click', function (e) {
+      if (e.target === this) { closeChartModal(); }
+    });
+    jQuery(document).on('keydown', function (e) {
+      if (e.key === 'Escape') { closeChartModal(); }
+    });
+  }
+
+  jQuery(function () {
+    // [ISS-142] 딥링크: ?tab=charge|subsidy 로 시작 탭 결정. 없거나 잘못된 값이면 기본(충전 도우미).
+    var startTab = tabFromQuery();
+    selectTab(startTab);             // 시작 탭을 tab__item--selected 로 세팅
+    renderAllFaq();                  // 선택된 상담 유형에 맞춰 FAQ 칩·카드 갱신
+    showThread(startTab);            // 기본 탭 = 충전 도우미(helpConsult)
+    bind();
+  });
+})();
+</script>
+
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260828a"></script>
+<script src="assets/js/ui-common.js?v=20260828a"></script>
+<script src="js/common/fileAttach.js?v=20260828a"></script>
+<script src="js/menu-data.js?v=20260828a"></script>
+<script src="js/shell.js?v=20260828a"></script>
+</body>
+</html>

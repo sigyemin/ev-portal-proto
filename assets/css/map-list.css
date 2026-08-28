@@ -37,3 +37,50 @@
   background-color: #1BA877;
   color: #ffffff;
 }
+
+/* 목록 하단 '더보기' — data.html 사업자현황과 동일한 chart-more 패턴(가운데 정렬), 남은 건수 안내 */
+.search-result__list .structured-list__more {
+  padding: 0.75rem 1rem;
+}
+.search-result__list .chart-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+.search-result__list .structured-list__more-count {
+  margin-top: 6px;
+  text-align: center;
+  color: #6B7683;
+}
+
+/* [ISS-147] 카드리스트 접기/펴기 — 접으면 지도 영역이 넓어진다. style.css .map-grid(grid 30.32%/1fr) 위에 얹는다(style.css 미변경).
+   grid-template-columns 는 Chrome 에서 %↔0/fr 트랜지션이 신뢰성 없이 적용을 막아, 트랜지션 없이 스냅한다(JS 가 다음 프레임에 map.updateSize 호출). */
+.map-grid { position: relative; }
+.map-grid.is-list-collapsed { grid-template-columns: 0 1fr; }
+.map-grid.is-list-collapsed .search-result__list { border-width: 0; }
+.map-grid.is-list-collapsed .search-result__map { border-radius: 2rem; }
+/* 접기 버튼 아이콘: angle-left 자산이 없어 angle-right 를 회전해 왼쪽(접기) 방향 표시 */
+.list-collapse__ico { transform: rotate(180deg); }
+/* 펴기 손잡이 — 접혔을 때만 지도 좌측 가장자리에 노출(접힌 상태에서 다시 펼 손잡이) */
+.list-expand-handle { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); z-index: 5; display: none; box-shadow: 0 2px 8px rgba(20, 30, 45, .18); }
+.map-grid.is-list-collapsed .list-expand-handle { display: inline-flex; }
+/* 모바일/태블릿(≤64rem)은 style.css 에서 .map-grid 가 단일 컬럼(목록이 지도 위로 세로 스택)이라 측면 접기가 무의미
+   → 접기 UI 를 데스크톱 전용으로 두고, 접힘 상태가 남아도 스택 레이아웃을 그대로 유지한다. */
+@media (max-width: 64rem) {
+  .js-list-collapse, .list-expand-handle { display: none !important; }
+  .map-grid.is-list-collapsed { grid-template-columns: 1fr; }
+}
+
+/* [ISS-148] 위치사진 — 상세 패널 최하단 썸네일 그리드 + 클릭 확대 오버레이 (AS-IS .photos 이식, 프로토 클래스) */
+.station-photos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.station-photos__item { padding: 0; border: 1px solid #D5DAE0; border-radius: 8px; overflow: hidden; cursor: pointer; background: #fff; line-height: 0; }
+.station-photos__img { width: 96px; height: 96px; object-fit: cover; display: block; }
+.station-photos--empty { display: block; margin-top: 8px; }
+.station-photos__empty { margin: 0; padding: 16px; text-align: center; color: #6B7683; background: #F4F6F8; border-radius: 8px; }
+
+/* 확대 오버레이: dim + 중앙 이미지(폭은 JS 가 naturalWidth 기준 200~500px 로 지정) */
+.station-photo-zoom { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.station-photo-zoom__dim { position: absolute; inset: 0; background: rgba(20, 30, 45, .6); }
+.station-photo-zoom__body { position: relative; z-index: 1; max-width: 92vw; max-height: 92vh; }
+.station-photo-zoom__img { display: block; max-width: 100%; max-height: 92vh; border-radius: 4px; background: #fff; box-shadow: 0 8px 32px rgba(0, 0, 0, .4); }
+.station-photo-zoom__close { position: absolute; top: -14px; right: -14px; width: 32px; height: 32px; border: none; border-radius: 50%; background: #fff; color: #141E2D; font-size: 20px; line-height: 1; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, .3); }

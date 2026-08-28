@@ -5,6 +5,16 @@ var EvMapEvView = (function () {
 		'F0': '차량정비시설', 'G0': '기타시설', 'H0': '공동주택시설', 'I0': '근린생활시설', 'J0': '교육문화시설'
 	};
 
+	// 충전기 타입(ctp) 코드표 — 운영 evMapEvView.js:10~12 코드표 원문 그대로, 노출 순서 01→11
+	// (완속 취급 코드는 02·08 = evMapMarker.js:37 기준, 나머지 9종은 급속)
+	var CHARGER_TYPE = {
+		'01': 'DC차데모', '02': 'AC완속', '03': 'DC차데모+AC3상', '04': 'DC콤보',
+		'05': 'DC차데모+DC콤보', '06': 'DC차데모+AC3상+DC콤보', '07': 'AC3상', '08': 'DC콤보(완속)',
+		'09': 'NACS', '10': 'DC콤보+NACS', '11': 'DC콤보2(버스전용)'
+	};
+	// 노출 순서 고정용 코드 배열 — Object.keys 는 '10'·'11'(정수 인덱스 키)을 앞으로 끌어올리므로 명시 순서 사용
+	var CHARGER_TYPE_ORDER = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
+
 	var BAND_ORDER = ['slow', 'mid', 'fast', 'fastplus', 'ultra'];
 	var BAND_LABEL = { slow: '완속', mid: '중속', fast: '급속', fastplus: '급속+', ultra: '초급속' };
 	var BAND_RANGE = { slow: '~30kW', mid: '30~50kW', fast: '50~100kW', fastplus: '100~200kW', ultra: '200kW~' };
@@ -232,6 +242,40 @@ var EvMapEvView = (function () {
 			+ '<div class="board-write"><div class="textarea">' + etc + '</div></div>';
 	}
 
+	// 위치사진(AS-IS evMapInfo.jsp:237~249 이식) — ATCH 첨부(/file/viewImage.do?atch_id=)를 썸네일 나열, 없으면 '이미지 준비중'
+	// 섹션 제목·alt·빈 상태 문구는 운영 원문 그대로, 마크업 클래스는 프로토 체계(.station-photos)
+	function photosHtml(imgList) {
+		var list = imgList || [];
+		var body = list.length
+			? '<div class="station-photos">'
+				+ list.map(function (img) {
+					var src = (img && img.src) ? img.src : '';
+					return '<button type="button" class="station-photos__item js-station-photo">'
+						+ '<img src="' + esc(src) + '" alt="충전소 사진" class="station-photos__img" /></button>';
+				}).join('')
+				+ '</div>'
+			: '<div class="station-photos station-photos--empty"><p class="station-photos__empty">이미지 준비중</p></div>';
+		return '<div class="board-toolbar"><div class="heading-group"><h2 class="heading-subtitle">위치사진</h2></div></div>'
+			+ body;
+	}
+
+	// 썸네일 클릭 확대 오버레이 — 폭 = min(500, max(200, naturalWidth)) (AS-IS detailImage() 상한500·하한200)
+	function openPhotoZoom(src) {
+		var $ov = $('<div class="station-photo-zoom"><div class="station-photo-zoom__dim"></div>'
+			+ '<div class="station-photo-zoom__body"><img alt="충전소 사진" class="station-photo-zoom__img" />'
+			+ '<button type="button" class="station-photo-zoom__close" aria-label="닫기">&times;</button></div></div>');
+		var img = $ov.find('.station-photo-zoom__img')[0];
+		img.onload = function () {
+			img.style.width = Math.min(500, Math.max(200, img.naturalWidth || 0)) + 'px';
+		};
+		img.src = src;
+		function onKey(e) { if (e.key === 'Escape' || e.keyCode === 27) close(); }
+		function close() { $ov.remove(); $(document).off('keydown.photozoom', onKey); }
+		$ov.find('.station-photo-zoom__dim, .station-photo-zoom__close').on('click', close);
+		$(document).on('keydown.photozoom', onKey);
+		$('body').append($ov);
+	}
+
 	// cm: 마커/목록 클릭에서 넘어온 사업자 코드(EvMapPanel.open 의 3번째 인자) — 없으면 보정 없이 계산
 	function renderPanel(el, res, cm) {
 		var list = res.chargerList || [];
@@ -244,6 +288,7 @@ var EvMapEvView = (function () {
 			+ legendHtml(hiddenCount)
 			+ facilityHtml(res.statInfo)
 			+ remarkHtml(res.statInfo)
+			+ photosHtml(res.imgList)
 			+ '</div></div>';
 		el.innerHTML = html;
 
@@ -257,12 +302,20 @@ var EvMapEvView = (function () {
 			$(el).find('.js-charger-more').removeAttr('hidden');
 			$(this).closest('.button-group').remove();
 		});
+
+		// 위치사진 썸네일 → 확대 오버레이
+		$(el).find('.js-station-photo').on('click', function () {
+			openPhotoZoom($(this).find('img').attr('src'));
+		});
 	}
 
-	// 시설유형(zs) 코드표 — 추후 필터 패널이 체크박스 구성에 사용
+	// 시설유형(zs) / 충전기타입(ctp) 코드표 — 필터 패널이 체크박스 구성에 사용
 	var filterFields = {
 		stationType: Object.keys(STATION_TYPE).map(function (code) {
 			return { code: code, label: STATION_TYPE[code] };
+		}),
+		chargerType: CHARGER_TYPE_ORDER.map(function (code) {
+			return { value: code, label: CHARGER_TYPE[code] };
 		})
 	};
 

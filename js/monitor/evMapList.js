@@ -6,8 +6,9 @@ var EvMapList = (function () {
 
 	var BAND_LABEL = { slow: '완속', mid: '중속', fast: '급속', fastplus: '급속+', ultra: '초급속' };
 
-	// 한 번에 그리는 항목 상한 — 초과분은 클릭 불가 안내 항목 1개로 대체한다
-	var RENDER_LIMIT = 500;
+	// 목록 초기 노출 건수와 '더보기' 증가 단위 — 정렬된 lastStations 를 앞에서부터 잘라 누적 표시한다
+	var PAGE_SIZE = 10;
+	var shownCount = PAGE_SIZE;
 
 	function esc(v) {
 		return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
@@ -132,29 +133,62 @@ var EvMapList = (function () {
 			+ '</li>';
 	}
 
+	// 어댑터가 listItemHtml 을 제공하면 그것을, 없으면 기존 itemHtml 을 쓴다
+	function itemsHtml(list) {
+		return list.map(function (s) {
+			return (adapter && adapter.listItemHtml) ? adapter.listItemHtml(s) : itemHtml(s);
+		}).join('');
+	}
+
+	// data.html 사업자현황과 동일한 chart-more 패턴(button--secondary + arrow-down, 남은 건수는 별도 span)
+	function moreRowHtml(total, shown) {
+		return '<li class="structured-list__item structured-list__more">'
+			+ '<div class="chart-more" aria-live="polite">'
+			+ '<button type="button" class="button button--secondary js-list-more">'
+			+ '<span class="button__label">더보기 <span class="js-list-more-rest">(' + (total - shown) + '건 남음)</span></span>'
+			+ '<i class="svg-icon arrow-down" aria-hidden="true"></i>'
+			+ '</button>'
+			+ '<p class="structured-list__more-count text-size-small">총 ' + total + '건 중 ' + shown + '건</p>'
+			+ '</div></li>';
+	}
+
 	// 워커가 필터 통과 전건을 보내므로 총건수는 배열 길이와 같다
 	function render(stations) {
 		lastStations = stations || [];
 		// 항목 클릭 시 지도 이동에 쓸 좌표 — data-sid 는 jQuery 가 숫자로 바꾸므로 문자열 키로 둔다
 		stationBySid = {};
 		lastStations.forEach(function (s) { stationBySid[String(s.sid)] = s; });
-		var list = lastStations;
-		var totalCount = list.length;
-		$root.find('.total-number__total').text(totalCount);
+		shownCount = PAGE_SIZE;   // 재검색·필터 변경으로 render 가 재호출될 때마다 초기 10건으로 리셋
+		paint();
+	}
 
-		if (!list.length) {
+	// 현재 shownCount 기준으로 목록 전체를 다시 그린다(첫 렌더 및 재검색 시)
+	function paint() {
+		var total = lastStations.length;
+		$root.find('.total-number__total').text(total);
+		if (!total) {
 			$root.find('.structured-list').html('<li class="structured-list__item"><p class="data-none">조회된 내용이 없습니다.</p></li>');
 			return;
 		}
-		// 어댑터가 listItemHtml 을 제공하면 그것을, 없으면 기존 itemHtml 을 쓴다
-		var shown = (list.length > RENDER_LIMIT) ? list.slice(0, RENDER_LIMIT) : list;
-		var html = shown.map(function (s) {
-			return (adapter && adapter.listItemHtml) ? adapter.listItemHtml(s) : itemHtml(s);
-		}).join('');
-		if (totalCount > shown.length) {
-			html += '<li class="structured-list__item"><p class="data-none">이하 생략...</p></li>';
-		}
+		var shown = Math.min(shownCount, total);
+		var html = itemsHtml(lastStations.slice(0, shown));
+		if (shown < total) html += moreRowHtml(total, shown);   // 전부 표시되면 더보기 미노출
 		$root.find('.structured-list').html(html);
+	}
+
+	// 더보기: 재정렬·재요청 없이 다음 PAGE_SIZE 건만 이어 붙인다(스크롤 위치 유지)
+	function loadMore() {
+		var total = lastStations.length;
+		var prev = shownCount;
+		shownCount = Math.min(shownCount + PAGE_SIZE, total);
+		var $more = $root.find('.structured-list__more');
+		$(itemsHtml(lastStations.slice(prev, shownCount))).insertBefore($more);
+		if (shownCount < total) {
+			$more.find('.js-list-more-rest').text('(' + (total - shownCount) + '건 남음)');
+			$more.find('.structured-list__more-count').text('총 ' + total + '건 중 ' + shownCount + '건');
+		} else {
+			$more.remove();
+		}
 	}
 
 	// 화면이 확보한 즐겨찾기 맵을 넘겨받는다 — 이미 그려진 목록은 별표 상태를 반영해 다시 그린다
@@ -179,6 +213,11 @@ var EvMapList = (function () {
 		$root.on('click', '.js-list-bookmark', function (e) {
 			e.stopPropagation();
 			toggleBookmark($(this));
+		});
+
+		// 더보기 — 다음 10건 이어 붙이기(재검색과 무관, 정렬 유지)
+		$root.on('click', '.js-list-more', function () {
+			loadMore();
 		});
 	}
 

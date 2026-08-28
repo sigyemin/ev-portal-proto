@@ -1,0 +1,325 @@
+/* ============================================================
+   AI 헬프데스크 전용 페이지 레이아웃 (프로토 전용)
+   - style.css 무변경 원칙: 말풍선(.chat__message/.chat__bubble/.chat__inner)·
+     마크다운(.ai-chat-rendered)·차트(.chatbot-chart)는 style.css / aiChat.css 재사용,
+     3영역 셸(사이드바·대화·입력 도크)만 이 파일에서 정의한다.
+   - 대상 파일: ai-helpdesk.html 전용. 다른 페이지에 영향 없음(.aihd 스코프).
+   ============================================================ */
+
+.aihd {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: clamp(560px, calc(100vh - 300px), 900px);
+  margin-top: 8px;
+}
+
+/* ---------- 본문(대화) 영역 (단일 영역 — 좌측 이력 사이드바 제거) ---------- */
+.aihd-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  border: 1px solid #E3E8ED;
+  border-radius: 16px;
+  background: #F4F7FA;
+  overflow: hidden;
+}
+/* 대화 영역 헤더 : 제목(좌) + 새로운 대화(우) */
+.aihd-main__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #E7ECF1;
+  background: #fff;
+}
+.aihd-main__title { font-size: 14px; color: #2A3140; }
+.aihd-main__new { flex: 0 0 auto; }
+.aihd-main__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 8px 8px;
+}
+.aihd-main__scroll .chat__content {
+  gap: 28px;
+  padding: 0 20px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* 말풍선 상단 타임스탬프·발화자 */
+.aihd-turn { display: flex; flex-direction: column; }
+.aihd-turn--user { align-items: flex-end; }
+.aihd-turn--bot { align-items: flex-start; }
+.aihd-turn__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 6px 6px;
+  font-size: 12px;
+  color: #8A94A2;
+}
+.aihd-turn__who { font-weight: 700; color: #6B7480; }
+.aihd-turn__who .svg-icon { width: 15px; height: 15px; vertical-align: -2px; margin-right: 3px; }
+.aihd-turn__bubble { max-width: 100%; }
+.aihd-turn--user .aihd-turn__bubble { max-width: 78%; }
+.aihd-turn--bot .aihd-turn__bubble { max-width: 92%; }
+
+/* 참고 문서 블록 */
+.aihd-refs {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed #D8E0E8;
+}
+.aihd-refs__title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #495060;
+}
+.aihd-ref {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 8px 10px;
+  border: 1px solid #E7ECF1;
+  border-radius: 10px;
+  background: #fff;
+}
+.aihd-ref + .aihd-ref { margin-top: 6px; }
+.aihd-ref__doc { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #2A3140; }
+.aihd-ref__doc .svg-icon { width: 16px; height: 16px; }
+.aihd-ref__page { font-size: 12px; color: #8A94A2; }
+.aihd-ref__links { margin-left: auto; display: flex; gap: 6px; }
+
+/* 이용 안내(관련 누리집 바로가기) 블록 */
+.aihd-guide {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid #DCE7FF;
+  border-radius: 10px;
+  background: #F3F7FF;
+}
+.aihd-guide__title {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #2C5CE0;
+}
+.aihd-guide__list { display: flex; flex-direction: column; gap: 6px; }
+.aihd-guide__row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+  font-size: 13px; color: #384150;
+}
+.aihd-guide__path { color: #5A6472; }
+.aihd-guide__go {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 999px;
+  border: 1px solid #B9CCFF; background: #fff; color: #2C5CE0;
+  font-size: 12px; font-weight: 700; text-decoration: none;
+}
+.aihd-guide__go:hover { background: #EAF1FF; }
+.aihd-guide__go .svg-icon { width: 13px; height: 13px; }
+
+/* 프로토타입 안내(전송 시 더미 응답) */
+.aihd-proto-note {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 14px; color: #5A6472; line-height: 1.5;
+}
+.aihd-proto-note strong { color: #2C5CE0; }
+
+/* 차트 확대 버튼 (기존 CSV/이미지 tools 옆) */
+.aihd-chart-expand {
+  display: inline-flex; align-items: center; gap: 4px;
+}
+
+/* ---------- 하단 입력 도크 ---------- */
+.aihd-composer {
+  border-top: 1px solid #E3E8ED;
+  background: #fff;
+  padding: 12px 16px 14px;
+}
+.aihd-composer__chips {
+  display: flex;                 /* [ISS-150] 상시 노출 — is-chat-started 게이팅 제거(첫 진입·새 대화·대화 중·붐빔 모두) */
+  flex-wrap: nowrap;             /* 세로 1줄 유지 */
+  gap: 8px;
+  margin-bottom: 10px;
+  overflow-x: auto;              /* 넘치면 가로 스크롤 */
+  padding-bottom: 2px;
+}
+.aihd-composer__chips .tag { margin: 0; flex: 0 0 auto; white-space: nowrap; }
+.aihd-dock {
+  display: flex; align-items: flex-end; gap: 8px;
+  border: 1px solid #CFD8E3; border-radius: 16px;
+  background: #F7F9FB; padding: 8px 8px 8px 12px;
+}
+.aihd-dock:focus-within { border-color: #5D87FF; background: #fff; }
+.aihd-dock__attach {
+  flex: 0 0 auto;
+}
+.aihd-dock__input {
+  flex: 1; min-width: 0;
+  border: 0; background: transparent; resize: none;
+  font-family: inherit; font-size: 15px; line-height: 1.5;
+  color: #1F2530; padding: 6px 4px; max-height: 140px;
+}
+.aihd-dock__input:focus { outline: none; }
+.aihd-dock__send { flex: 0 0 auto; }
+.aihd-composer__foot {
+  margin: 8px 2px 0;
+  font-size: 12px; color: #9AA4B2; line-height: 1.4;
+}
+
+/* ---------- 확대 모달 ---------- */
+.aihd-modal {
+  position: fixed; inset: 0; z-index: 1200;
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+  background: rgba(20, 28, 40, 0.5);
+}
+.aihd-modal.is-open { display: flex; }
+.aihd-modal__box {
+  width: min(860px, 100%);
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.aihd-modal__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid #EDF1F5;
+}
+.aihd-modal__title { margin: 0; font-size: 15px; font-weight: 700; color: #2A3140; }
+.aihd-modal__body { padding: 16px 18px 22px; }
+.aihd-modal__chart { width: 100%; height: 440px; }
+
+/* ============================================================
+   반응형
+   ============================================================ */
+@media (max-width: 48rem) {           /* ~768px : 대화 영역 높이 조정 */
+  .aihd { height: clamp(520px, calc(100vh - 260px), 820px); }
+}
+
+@media (max-width: 30rem) {           /* ~480px */
+  .aihd-main__scroll .chat__content { padding: 0 10px 16px; }
+  .aihd-turn--user .aihd-turn__bubble { max-width: 88%; }
+  .aihd-turn--bot .aihd-turn__bubble { max-width: 100%; }
+  .aihd-ref__links, .aihd-guide__go { margin-left: 0; }
+}
+
+/* ============================================================
+   [ISS-143] 자주 찾는 질문 — C안 확정(대화영역 안 큰 카드 → 대화 시작 후 입력창 위 칩)
+   — 모두 .aihd 스코프. (A·B안·사이드바·PROTO 배치안 바·붐빔 시연은 제거)
+   ============================================================ */
+
+/* ---------- 대화영역 안 자주 찾는 질문(첫 진입 큰 카드) ---------- */
+.aihd-welcome { display: none; }
+.aihd:not(.is-chat-started) .aihd-welcome { display: block; }
+.aihd-welcome__inner {
+  max-width: 760px; margin: 0 auto;
+  padding: 28px 20px 8px; text-align: center;
+}
+.aihd-welcome__inner > .svg-icon { width: 40px; height: 40px; opacity: 0.7; }
+.aihd-welcome__title { margin: 10px 0 4px; font-size: 20px; font-weight: 700; color: #26303A; }
+.aihd-welcome__desc { margin: 0 0 18px; font-size: 14px; color: #6B7480; }
+.aihd-welcome__cards {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px; text-align: left;
+}
+.aihd-welcome__card {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid #E3E8ED; border-radius: 12px;
+  background: #fff; cursor: pointer;
+}
+.aihd-welcome__card:hover { border-color: #5D87FF; background: #F7F9FF; }
+.aihd-welcome__card-tag { font-size: 12px; font-weight: 700; color: #2C5CE0; }
+.aihd-welcome__card-q { font-size: 14px; color: #384150; line-height: 1.45; }
+
+/* ---------- 개발 안내 아코디언 — 프로토 전용(실제 화면 비노출). subsidy-region.html 동일 패턴 ---------- */
+.dev-note {
+  margin-top: 1.125rem;
+  border: 1px dashed #B9C4CE;
+  border-radius: 0.625rem;
+  background-color: #FAFBFC;
+}
+.dev-note > summary {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #3B4652;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.dev-note > summary::-webkit-details-marker { display: none; }
+.dev-note > summary::before { content: "\25B8"; color: #7A8794; }
+.dev-note[open] > summary::before { content: "\25BE"; }
+.dev-note__tag {
+  background-color: #7A8794;
+  color: #fff;
+  border-radius: 0.25rem;
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.4375rem;
+  font-weight: 700;
+}
+.dev-note__inner {
+  padding: 0 1.125rem 1.125rem;
+  font-size: 0.875rem;
+  color: #41505E;
+  line-height: 1.8;
+  border-top: 1px solid #E4E9ED;
+}
+.dev-note__inner h3 {
+  margin: 0.875rem 0 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #26303A;
+}
+.dev-note__inner ul { margin: 0; padding-left: 1.125rem; list-style: disc; }
+.dev-note__inner code {
+  background-color: #EEF1F4;
+  border-radius: 0.25rem;
+  padding: 0.0625rem 0.375rem;
+  font-size: 0.8125rem;
+  color: #1B5E9E;
+}
+
+/* ---------- 모바일 : 자주 찾는 질문 카드 1열 ---------- */
+@media (max-width: 48rem) {
+  .aihd-welcome__cards { grid-template-columns: 1fr; }
+}
+
+/* ---------- [ISS-143 후속] 붐빔(정원 초과) 응답 — 경고 톤 말풍선 ---------- */
+/* 봇 버블 기본 배경을 이기도록 .chat__message--bot 결합(aiHelpdeskPage.css 가 aiChat.css 뒤 로드) */
+.chat__message--bot .aihd-busy {
+  background: #FFF6EE;
+  border: 1px solid #F1C7A0;
+}
+.aihd-busy__head {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 0 6px; font-size: 0.9375rem; font-weight: 700; color: #B4540A;
+}
+.aihd-busy__head .svg-icon { background-color: #E07A1F; }
+.aihd-busy__body { margin: 0 0 10px; font-size: 0.875rem; line-height: 1.55; color: #5A4632; }
+.aihd-busy__alt { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #EAD3BC; }
+.aihd-busy__alt-title { margin: 0 0 6px; font-size: 0.8125rem; font-weight: 700; color: #8A6A4A; }
+.aihd-busy__alt-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* 입력창 위 상시 칩 강조(붐빔 대안 '자주 찾는 질문' 클릭 시 잠깐) */
+.aihd-composer__chips.is-flash { outline: 2px solid #1BA877; outline-offset: 2px; border-radius: 8px; }
+
+/* dev-note 안 시연 토글 */
+.aihd-demo { margin-top: 12px; padding-top: 12px; border-top: 1px solid #E4E9ED; }
+.aihd-demo__toggle { display: flex; gap: 8px; align-items: flex-start; font-size: 0.8125rem; line-height: 1.5; color: #41505E; cursor: pointer; }
+.aihd-demo__toggle input { margin-top: 2px; flex: 0 0 auto; }
+
+/* ---------- 인쇄 : 프로토 전용 UI 숨김 ---------- */
+@media print {
+  .dev-note { display: none !important; }
+}

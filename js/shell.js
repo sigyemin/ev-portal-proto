@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var CACHE_V = '20260825b';
+  var CACHE_V = '20260827a';
 
   /* ------------------------------------------------------------
      로그인 상태(프로토타입 전용 · localStorage)
@@ -100,25 +100,57 @@
 
   /* 로그인 상태에서만 GNB 맨 뒤에 '업무지원시스템' 노출
      근거: 운영 ev.or.kr 로그인 DOM = li.gnb__item.gnb__item--admin > a.gnb__link (정보 자료실 다음 6번째)
-     지시: 클릭 무반응 — 하위 메뉴 없음, 이동 없음 */
+     드롭다운: 중분류 제목 '시스템 바로가기' + 하위 11종(운영 실측 · targetSiteId)
+     운영 링크는 /nportal/sendSSO.do?targetSiteId=D00NN 이며 전부 본인인증 화면으로
+     리다이렉트되므로, 프로토타입에서는 11개 모두 member-auth.html 로 보낸다. */
+  var ADMIN_MENU_TITLE = '시스템 바로가기';
+  var ADMIN_MENU = [
+    { t: '통합관리시스템', id: 'D0002' },
+    { t: '의무구매임차제', id: 'D0003' },
+    { t: '보급목표제', id: 'D0005' },
+    { t: '구매보조금신청', id: 'D0006' },
+    { t: '저공해차 표지발급', id: 'D0010' },
+    { t: '급속 충전시설 지점관리', id: 'D0011' },
+    { t: '완속 충전시설 지점관리', id: 'D0012' },
+    { t: '브랜드사업 설치보조금', id: 'D0013' },
+    { t: '완속충전기 설치보조금', id: 'D0014' },
+    { t: '수소차 충전인프라 구축관리', id: 'D0015' },
+    { t: '충전기 관리 시스템', id: 'D0017' }
+  ];
+
+  function adminGnbHtml(label) {
+    var h = ['<a href="#" class="gnb__link">' + esc(label) + '</a>'];
+    h.push('<div class="gnb__sub"><div class="gnb__sub-inner">');
+    h.push('<h2 class="gnb__sub-title">' + esc(label) + '</h2>');
+    h.push('<ul class="gnb__sub-list">');
+    /* 운영은 '시스템 바로가기'가 링크 없는 중분류 제목(href="#")이고 그 아래 11종이 붙는다 */
+    h.push('<li class="gnb__sub-item">');
+    h.push('<a href="#" class="gnb__sub-link">' + esc(ADMIN_MENU_TITLE) + '</a>');
+    h.push('<ul class="gnb__sub2-list">');
+    ADMIN_MENU.forEach(function (m) {
+      h.push('<li><a href="member-auth.html?targetSiteId=' + esc(m.id) + '">' + esc(m.t) + '</a></li>');
+    });
+    h.push('</ul></li>');
+    h.push('</ul></div></div>');
+    return h.join('');
+  }
+
   function renderAdminGnb() {
     var gnb = document.querySelector('#gnb .gnb');
     if (!gnb) return;
     var exist = gnb.querySelector('.gnb__item--admin');
     if (!readAuth().loggedIn) {
+      /* 로그아웃 시 항목째 제거 — 리스너도 노드와 함께 사라지므로 재로그인 시 중복 바인딩이 없다 */
       if (exist && exist.parentNode) exist.parentNode.removeChild(exist);
       return;
     }
     if (exist) return;
     var li = document.createElement('li');
     li.className = 'gnb__item gnb__item--admin';
-    var a = document.createElement('a');
-    a.href = '#';
-    a.className = 'gnb__link';
-    a.textContent = (currentLang() === 'en') ? 'Work Support System' : '업무지원시스템';
-    a.addEventListener('click', function (e) { e.preventDefault(); });
-    li.appendChild(a);
+    li.innerHTML = adminGnbHtml((currentLang() === 'en') ? 'Work Support System' : '업무지원시스템');
     gnb.appendChild(li);
+    /* bindGnb() 는 inject() 시점의 항목만 훑는다. 뒤늦게 붙는 이 항목은 직접 바인딩한다. */
+    bindGnbItem(li);
   }
 
   function setAuth(loggedIn, name) {
@@ -239,26 +271,36 @@
     if (a) a.setAttribute('aria-expanded', on ? 'true' : 'false');
   }
 
+  /* 형제 닫기는 '그때그때 DOM 에서' 찾는다.
+     로그인 시 뒤늦게 추가되는 .gnb__item--admin 도 대상에 포함되어야
+     일반 메뉴 ↔ 업무지원시스템 사이에서 양방향으로 서로 닫힌다. */
+  function gnbCloseOthers(keep) {
+    var items = document.querySelectorAll('.gnb__item');
+    Array.prototype.forEach.call(items, function (li) { if (li !== keep) gnbSet(li, false); });
+  }
+
+  /* 항목 1개 바인딩. 같은 노드에 두 번 걸리지 않도록 플래그로 막는다. */
+  function bindGnbItem(li) {
+    if (!li || li.getAttribute('data-gnb-bound') === '1') return;
+    li.setAttribute('data-gnb-bound', '1');
+    var a = li.querySelector('.gnb__link');
+    if (a) {
+      a.setAttribute('aria-haspopup', 'true');
+      a.setAttribute('aria-expanded', 'false');
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var wasOpen = li.classList.contains(GNB_ON);
+        gnbCloseOthers(li);
+        gnbSet(li, !wasOpen);
+      });
+    }
+    li.addEventListener('mouseenter', function () { gnbCloseOthers(li); gnbSet(li, true); });
+    li.addEventListener('mouseleave', function () { gnbSet(li, false); });
+  }
+
   function bindGnb() {
     var items = document.querySelectorAll('.gnb__item');
-    function closeOthers(keep) {
-      Array.prototype.forEach.call(items, function (li) { if (li !== keep) gnbSet(li, false); });
-    }
-    Array.prototype.forEach.call(items, function (li) {
-      var a = li.querySelector('.gnb__link');
-      if (a) {
-        a.setAttribute('aria-haspopup', 'true');
-        a.setAttribute('aria-expanded', 'false');
-        a.addEventListener('click', function (e) {
-          e.preventDefault();
-          var wasOpen = li.classList.contains(GNB_ON);
-          closeOthers(li);
-          gnbSet(li, !wasOpen);
-        });
-      }
-      li.addEventListener('mouseenter', function () { closeOthers(li); gnbSet(li, true); });
-      li.addEventListener('mouseleave', function () { gnbSet(li, false); });
-    });
+    Array.prototype.forEach.call(items, bindGnbItem);
   }
 
   /* 헤더 로그아웃 링크: 이동 없이 상태만 해제 */
@@ -439,6 +481,9 @@
     wrapMain();
 
     bindGnb();
+    /* 로그인 상태로 '새로고침' 했을 때도 업무지원시스템 항목이 나와야 한다.
+       (기존에는 renderAuthZone() 경유 — PROTO 토글로 전환할 때만 붙었다) */
+    renderAdminGnb();
     bindAuthZone();
     injectAuthbarCss();
     buildAuthbar();

@@ -54,9 +54,9 @@ window.EV_MENU = [
     ]}
   ]},
   { t: "소통·지원", mids: [
-    { t: "AI 헬프데스크", h: "index.html#AIhelpdesk", kids: [
-      { t: "충전 도우미", h: "index.html#AIhelpdesk" },
-      { t: "보조금 도우미", h: "index.html#AIhelpdesk" }
+    { t: "AI 헬프데스크", h: "ai-helpdesk.html", kids: [
+      { t: "충전 도우미", h: "ai-helpdesk.html?tab=charge" },
+      { t: "보조금 도우미", h: "ai-helpdesk.html?tab=subsidy" }
     ]},
     { t: "알림·공지", h: "notice-list.html", kids: [
       { t: "공지사항", h: "notice-list.html" },

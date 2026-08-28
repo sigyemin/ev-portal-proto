@@ -188,6 +188,17 @@ var Station = function (sid, snm, x, y, hol, park, utime, ctp, chgeMange, skindt
 
 // --- Worker Logic ---
 
+// zcode/zscode/statType 는 스칼라(단일 문자열)와 배열(전기 다중선택) 을 모두 받는다 — 하위호환
+// 값이 없으면(빈 문자열·빈 배열·null) 전건 통과, 배열이면 포함 여부, 스칼라면 기존대로 equality
+function hasFilterVal(v) {
+    return Array.isArray(v) ? v.length > 0 : (v != null && v !== '');
+}
+function matchesFilterVal(v, target) {
+    if (!hasFilterVal(v)) return true;
+    if (Array.isArray(v)) return v.indexOf(target) !== -1;
+    return v === target;
+}
+
 // 목록/지도 공통 충전소 필터 판정 — 두 경로가 같은 술어를 쓰게 한다(미지정 시 전건 통과)
 function passesFilters(st, filters) {
     filters = filters || {};
@@ -198,9 +209,19 @@ function passesFilters(st, filters) {
         var stationName = String(st.snm == null ? '' : st.snm).replace(/\s+/g, "").toLowerCase();
         if (stationName.indexOf(cleanQuery) === -1) return false;
     }
-    if (filters.zscode && st.zscode !== filters.zscode) return false;
-    else if (filters.zcode && st.zcode !== filters.zcode) return false;
-    if (filters.statType && st.skindt !== filters.statType) return false;
+    // zscode(시군구) 가 지정되면 zcode(시도) 는 무시 — 기존 우선순위 유지
+    if (hasFilterVal(filters.zscode)) {
+        if (!matchesFilterVal(filters.zscode, st.zscode)) return false;
+    } else if (hasFilterVal(filters.zcode)) {
+        if (!matchesFilterVal(filters.zcode, st.zcode)) return false;
+    }
+    if (hasFilterVal(filters.statType) && !matchesFilterVal(filters.statType, st.skindt)) return false;
+    // 충전기 타입(chgerType) — 선택 타입 충전기를 하나라도 보유한 충전소만 통과(include, 배열). 전체(빈배열)면 무시.
+    if (filters.chgerType && filters.chgerType.length) {
+        var hit = false;
+        for (var cid in st.chargers) { if (filters.chgerType.indexOf(st.chargers[cid].ctp) >= 0) { hit = true; break; } }
+        if (!hit) return false;
+    }
     if (filters.is24 && st.utime != "24시간 이용가능") return false;
     if (filters.isSmart && st.smt != "Y") return false;
     // 즐겨찾기만 보기 — bookmarkMap 은 { STAT_ID: 1 } 형태로 전달된다
