@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지역별 무공해차 전환 브랜드 사업 공모 신청 - 신청서 작성</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260827a"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260827a"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260827a"></script>
+  <script src="js/swiper-bundle.min.js?v=20260827a"></script>
+  <script src="js/common/common_util.js?v=20260827a"></script>
+  <script src="js/proto-api.js?v=20260827a"></script>
+  <script src="js/proto-data.js?v=20260827a"></script>
+  <script src="js/proto-mock.js?v=20260827a"></script>
+  <!-- [DEV][공모신청 폼] 브랜드 사업 신청서 작성 페이지 전용 스코프 스타일 (근거: 화면 목업, charging-install-brand.html 상세페이지에서 진입) -->
+  <style>
+    .apply-note{color:#6b7280;font-size:13px;margin-top:8px;line-height:1.5}
+    .apply-required-guide{text-align:right;color:#6b7280;font-size:13px}
+    .apply-required-guide .req{color:#e5484d;font-weight:700}
+    /* 라벨-입력 2열 그리드 (라벨/입력 · 라벨/입력) */
+    .apply-fieldset{border-top:2px solid #111827;margin-top:12px}
+    .apply-row{display:grid;grid-template-columns:180px 1fr 200px 1fr;border-bottom:1px solid #eef0f2;align-items:stretch}
+    .apply-row--full{grid-template-columns:180px 1fr}
+    .apply-row .lb{padding:14px 18px;font-weight:700;font-size:14px;color:#1f2937;display:flex;align-items:center;gap:2px}
+    .apply-row .lb .req{color:#e5484d}
+    .apply-row .fd{padding:10px 18px;display:flex;align-items:center;gap:10px;min-width:0}
+    .apply-input{width:100%;height:42px;border:1px solid #d0d5dd;border-radius:6px;padding:0 12px;font-size:14px;color:#1f2937;background:#fff}
+    .apply-input::placeholder{color:#9ca3af}
+    .apply-input[readonly],.apply-input:disabled{background:#f5f6f7;color:#6b7280}
+    .apply-static{font-size:14px;color:#374151}
+    .apply-input--num{text-align:right}
+    @media (max-width:900px){.apply-row,.apply-row--full{grid-template-columns:120px 1fr}}
+    /* 수량 표 */
+    .qty-table input{width:100%;height:40px;border:1px solid #d0d5dd;border-radius:6px;padding:0 10px;text-align:center;font-size:14px}
+    /* 입력 내용 확인 / 첨부 확인 박스 */
+    .confirm-box{border:1px solid #fde68a;background:#fffbeb;border-radius:10px;padding:18px 20px;margin-top:18px}
+    .confirm-box__title{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:#92400e;margin:0 0 6px}
+    .confirm-box__desc{color:#92400e;font-size:13.5px;margin:0 0 12px;line-height:1.55}
+    .confirm-box__list{display:flex;flex-direction:column;gap:10px}
+    .confirm-item{display:flex;align-items:flex-start;gap:10px}
+    .confirm-item .checkbox{flex:none;margin-top:1px}
+    .confirm-item__text{font-size:14px;color:#374151;line-height:1.5}
+    .confirm-item__text b{color:#92400e}
+    /* 첨부 행 */
+    .attach-row{display:grid;grid-template-columns:280px 1fr auto;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid #eef0f2}
+    .attach-row__label{font-weight:700;font-size:14px;color:#1f2937}
+    .attach-row__label .no{display:block;color:#6b7280;font-weight:600;font-size:13px;margin-bottom:2px}
+    .attach-row__label .req{color:#e5484d}
+    .attach-row__file{height:44px;border:1px solid #d0d5dd;border-radius:6px;display:flex;align-items:center;padding:0 14px;color:#9ca3af;font-size:14px;background:#fff}
+    .attach-row__file.is-selected{color:#1f2937}
+    .attach-row__note{grid-column:2 / 4;color:#6b7280;font-size:13px}
+    .submit-lead{text-align:center;font-weight:800;font-size:18px;color:#1f2937;margin:28px 0 16px}
+  </style>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+  <!-- 상단 공통 영역 -->
+  <div class="page-header">
+    <div class="page-header__inner">
+      <nav class="breadcrumb">
+        <ol class="breadcrumb__list">
+          <li class="breadcrumb__item">
+            <a href="index.html" class="breadcrumb__link"><i class="svg-icon home"></i><span class="hidden">홈</span></a>
+          </li>
+          <li class="breadcrumb__item"><a href="#" class="breadcrumb__link"><span>충전소·요금 정보</span></a></li>
+          <li class="breadcrumb__item"><a href="#" class="breadcrumb__link"><span>충전시설 설치</span></a></li>
+          <li class="breadcrumb__item"><a href="charging-install-brand.html" class="breadcrumb__link"><span>무공해차 전환 브랜드 사업 공모 신청</span></a></li>
+        </ol>
+      </nav>
+      <div class="page-header__subject">
+        <h1 class="heading-subject">지역별 무공해차 전환 브랜드 사업 공모 신청</h1>
+        <p class="page-header__description">사업수행기관·컨소시엄 정보와 사업내용을 입력하고 증빙서류를 첨부해 신청서를 제출합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하단 각 페이지별 컨텐츠 -->
+  <div class="contents">
+    <!-- 진행 단계 -->
+    <div class="step-wrapper">
+      <ol class="step step--number">
+        <li class="step__item step__item--current"><span class="step__icon"></span><div class="step__label">신청서 작성</div></li>
+        <li class="step__item"><span class="step__icon"></span><div class="step__label">신청서 심사</div></li>
+        <li class="step__item"><span class="step__icon"></span><div class="step__label">신청완료</div></li>
+      </ol>
+    </div>
+
+    <div class="register-wrapper">
+
+      <!-- 사업수행기관 정보 -->
+      <section class="section">
+        <div class="heading-group heading-group--between">
+          <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>사업수행기관 정보</h2>
+          <p class="apply-required-guide"><span class="req">*</span> 는 필수 항목입니다.</p>
+        </div>
+        <div class="apply-fieldset">
+          <div class="apply-row">
+            <div class="lb">컨소시엄 여부 <span class="req">*</span></div>
+            <div class="fd">
+              <div class="radios">
+                <div class="radio"><input type="radio" id="conso0" name="conso" class="radio__input" checked /><label for="conso0" class="radio__label"><span>사업수행기관 단독 신청</span></label></div>
+                <div class="radio"><input type="radio" id="conso1" name="conso" class="radio__input" /><label for="conso1" class="radio__label"><span>컨소시엄 신청</span></label></div>
+              </div>
+            </div>
+            <div class="lb">전기승합차 보급사업 연계 사업 여부 <span class="req">*</span></div>
+            <div class="fd">
+              <div class="radios">
+                <div class="radio"><input type="radio" id="evvan0" name="evvan" class="radio__input" /><label for="evvan0" class="radio__label"><span>해당</span></label></div>
+                <div class="radio"><input type="radio" id="evvan1" name="evvan" class="radio__input" /><label for="evvan1" class="radio__label"><span>비해당</span></label></div>
+              </div>
+            </div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">구분</div>
+            <div class="fd"><span class="apply-static">사업수행기관</span></div>
+            <div class="lb">사업자구분 <span class="req">*</span></div>
+            <div class="fd">
+              <div class="radios">
+                <div class="radio"><input type="radio" id="bizType0" name="bizType" class="radio__input" checked /><label for="bizType0" class="radio__label"><span>신규사업자</span></label></div>
+                <div class="radio"><input type="radio" id="bizType1" name="bizType" class="radio__input" /><label for="bizType1" class="radio__label"><span>기등록 사업자</span></label></div>
+              </div>
+            </div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">업체명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="업체명" /></div>
+            <div class="lb">대표자명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="대표자명" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">사업자등록번호 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력 (10자리)" /></div>
+            <div class="lb">법인등록번호 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력 (13자리)" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">담당자명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자명" /></div>
+            <div class="lb">연락처 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">이메일 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자 이메일" /></div>
+            <div class="lb">담당자2 명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자2 명" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">담당자2 연락처 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력" /></div>
+            <div class="lb">담당자2 이메일 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자2 이메일" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 컨소시엄 정보 -->
+      <section class="section">
+        <div class="heading-group heading-group--between">
+          <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>컨소시엄 정보</h2>
+          <div class="button-group">
+            <button type="button" class="button button--secondary button--small"><span class="button__label">컨소시엄 추가</span></button>
+            <button type="button" class="button button--secondary button--small"><span class="button__label">컨소시엄 삭제</span></button>
+          </div>
+        </div>
+        <h3 class="heading-content">공동사업자 1</h3>
+        <div class="apply-fieldset">
+          <div class="apply-row">
+            <div class="lb">구분</div>
+            <div class="fd"><span class="apply-static">공동사업자</span></div>
+            <div class="lb">사업자구분 <span class="req">*</span></div>
+            <div class="fd">
+              <div class="radios">
+                <div class="radio"><input type="radio" id="cbizType0" name="cbizType" class="radio__input" disabled /><label for="cbizType0" class="radio__label"><span>신규사업자</span></label></div>
+                <div class="radio"><input type="radio" id="cbizType1" name="cbizType" class="radio__input" disabled /><label for="cbizType1" class="radio__label"><span>기등록 사업자</span></label></div>
+              </div>
+            </div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">업체명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="업체명" /></div>
+            <div class="lb">대표자명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="대표자명" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">사업자등록번호 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력 (10자리)" /></div>
+            <div class="lb">법인등록번호</div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력 (13자리)" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">담당자명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자명" /></div>
+            <div class="lb">연락처 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">이메일 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자 이메일" /></div>
+            <div class="lb">담당자2 명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자2 명" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">담당자2 연락처 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="숫자만 입력" /></div>
+            <div class="lb">담당자2 이메일 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="담당자2 이메일" /></div>
+          </div>
+        </div>
+        <ul class="bullet bullet--refer" style="margin-top:12px">
+          <li>컨소시엄 구성 시 최대 5개사까지 참여할 수 있습니다.</li>
+          <li>사업수행기관은 지방자치단체(광역 또는 기초)와 컨소시엄을 구성할 수 있습니다.</li>
+        </ul>
+      </section>
+
+      <!-- 사업내용 -->
+      <section class="section">
+        <div class="heading-group heading-group--between">
+          <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>사업내용</h2>
+          <p class="apply-required-guide"><span class="req">*</span> 는 필수 항목입니다.</p>
+        </div>
+        <div class="apply-fieldset">
+          <div class="apply-row">
+            <div class="lb">공모연도</div>
+            <div class="fd"><span class="apply-static">2026년 3차</span></div>
+            <div class="lb">접수기관 <span class="req">*</span></div>
+            <div class="fd">
+              <div class="radios">
+                <div class="radio"><input type="radio" id="recv0" name="recv" class="radio__input" checked /><label for="recv0" class="radio__label"><span>한국환경공단</span></label></div>
+                <div class="radio"><input type="radio" id="recv1" name="recv" class="radio__input" /><label for="recv1" class="radio__label"><span>한국자동차환경협회</span></label></div>
+              </div>
+            </div>
+          </div>
+          <div class="apply-row apply-row--full">
+            <div class="lb">사업명 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input" placeholder="사업명" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">급속 충전시설 설치개소 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input apply-input--num" value="0" /></div>
+            <div class="lb">중속 충전시설 설치개소 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input apply-input--num" value="0" /></div>
+          </div>
+          <div class="apply-row">
+            <div class="lb">완속 충전시설 설치개소 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input apply-input--num" value="0" /></div>
+            <div class="lb">전체 충전시설 설치개소 <span class="req">*</span></div>
+            <div class="fd"><input type="text" class="apply-input apply-input--num" value="0" readonly /></div>
+          </div>
+          <div class="apply-row apply-row--full">
+            <div class="lb">전기승합 공모신청번호</div>
+            <div class="fd" style="flex-direction:column;align-items:stretch">
+              <input type="text" class="apply-input" placeholder="260101001,260101002" />
+              <p class="apply-note">※ 여러 개의 신청번호를 입력하려면 공백없이 콤마로 구분해 주세요. (예 : 260101001,260101002,260101003)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 급속충전기 설치 수량 -->
+      <section class="section">
+        <div class="heading-group"><h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>급속충전기 설치 수량</h2></div>
+        <div class="table-wrapper" style="overflow-x:auto">
+          <table class="table text-center qty-table" style="min-width:960px">
+            <caption>급속충전기 용량별 설치수량 및 보조금액 입력표</caption>
+            <thead>
+              <tr>
+                <th scope="col" style="width:120px">구분</th>
+                <th scope="col">50kW 초과~100kW 미만</th><th scope="col">100kW</th><th scope="col">100kW(2ch)</th>
+                <th scope="col">200kW</th><th scope="col">200kW(2ch)</th><th scope="col">350kW</th><th scope="col">600kW</th>
+                <th scope="col" style="width:90px">합계</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">설치수량</th>
+                <td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td>
+                <td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <th scope="row">보조금액</th>
+                <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 중속충전기 설치 수량 -->
+      <section class="section">
+        <div class="heading-group"><h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>중속충전기 설치 수량</h2></div>
+        <div class="table-wrapper">
+          <table class="table text-center qty-table">
+            <caption>중속충전기 용량별 설치수량 및 보조금액 입력표</caption>
+            <thead><tr><th scope="col" style="width:160px">구분</th><th scope="col">30kW</th><th scope="col">50kW</th><th scope="col" style="width:140px">합계</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">설치수량</th><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td>0</td></tr>
+              <tr><th scope="row">보조금액</th><td><input type="text" value="0" /></td><td>0</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 완속충전기 설치 수량 -->
+      <section class="section">
+        <div class="heading-group"><h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>완속충전기 설치 수량</h2></div>
+        <div class="table-wrapper">
+          <table class="table text-center qty-table">
+            <caption>완속충전기 용량별 설치수량 및 보조금액 입력표</caption>
+            <thead><tr><th scope="col" style="width:160px">구분</th><th scope="col">7kW</th><th scope="col">11kW</th><th scope="col" style="width:140px">합계</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">설치수량</th><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td>0</td></tr>
+              <tr><th scope="row">보조금액</th><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 입력 내용 확인 (재구성: 체크박스 3개 유지 · 각 문구 명확화) -->
+        <div class="confirm-box">
+          <p class="confirm-box__title"><i class="svg-icon info" aria-hidden="true"></i>입력 내용 확인</p>
+          <p class="confirm-box__desc">신청서 제출 전, 입력한 사업내용을 아래 항목에 따라 확인해 주세요.</p>
+          <div class="confirm-box__list">
+            <div class="confirm-item">
+              <div class="checkbox"><input type="checkbox" id="cfmReview" class="checkbox__input" /><label for="cfmReview" class="checkbox__label"><span class="hidden">검토완료</span></label></div>
+              <span class="confirm-item__text"><b>[검토완료]</b> 입력한 사업내용을 최종 검토하였습니다.</span>
+            </div>
+            <div class="confirm-item">
+              <div class="checkbox"><input type="checkbox" id="cfmMatch" class="checkbox__input" /><label for="cfmMatch" class="checkbox__label"><span class="hidden">확인</span></label></div>
+              <span class="confirm-item__text"><b>[확인]</b> 입력한 사업내용이 제출서류(공모신청서 별첨서류(엑셀) 등)와 일치함을 확인합니다.</span>
+            </div>
+            <div class="confirm-item">
+              <div class="checkbox"><input type="checkbox" id="cfmResp" class="checkbox__input" /><label for="cfmResp" class="checkbox__label"><span class="hidden">확인</span></label></div>
+              <span class="confirm-item__text"><b>[확인]</b> 시스템 입력값과 제출파일 간 상이로 발생하는 문제의 책임이 신청자에게 있음을 확인합니다.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 신청자격 증빙서류 (사업수행기관) -->
+      <section class="section">
+        <div class="heading-group heading-group--between">
+          <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>신청자격 증빙서류 (사업수행기관)</h2>
+          <a href="/file/zip/brndBsnsZip_20260529.zip" download class="button button--secondary"><i class="svg-icon download" aria-hidden="true"></i><span class="button__label">제출 서류 양식 다운로드</span></a>
+        </div>
+        <div class="confirm-box">
+          <p class="confirm-box__title"><i class="svg-icon info" aria-hidden="true"></i>첨부파일 제출 전 확인사항</p>
+          <div class="confirm-item" style="margin-bottom:10px">
+            <div class="checkbox"><input type="checkbox" id="atchConfirm" class="checkbox__input" /><label for="atchConfirm" class="checkbox__label"><span class="hidden">확인</span></label></div>
+            <span class="confirm-item__text"><b>[확인]</b> 본인은 첨부파일 용량 제한(총 900MB 이하) 및 임시저장 등 입력 유의사항을 확인하였으며, 이에 따라 첨부파일을 제출하겠습니다.</span>
+          </div>
+          <ul class="bullet bullet--dotted" style="color:#92400e">
+            <li>첨부파일의 총합 용량이 900MB를 초과할 경우 업로드가 제한될 수 있으므로, 압축·해상도 조정 등을 통해 용량을 축소하여 제출해 주시기 바랍니다.</li>
+            <li>작성 중 입력 내용의 유실을 방지하기 위해, 수시로 [임시 저장] 기능을 활용해 주시기 바랍니다.</li>
+          </ul>
+        </div>
+        <div class="attach-list" style="margin-top:8px">
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부1]</span>전기신사업자등록증 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부2]</span>콜센터 및 유지관리 위탁 계약서 등 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부3]</span>충전정보시스템 연계 화면 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부4]</span>OCPP 1.6 인증서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부5]</span>토지(건축물)등기부등본 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부6]</span>EV이음 협약서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부7]</span>공동수급협정서 등</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부8]</span>전기승합차 보급사업 신청서</div><div class="attach-row__note">※ 해당 공모에 신청한 경우에만 제출합니다.</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+        </div>
+      </section>
+
+      <!-- 평가 증빙서류 -->
+      <section class="section">
+        <div class="heading-group heading-group--between">
+          <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>평가 증빙서류</h2>
+          <p class="apply-required-guide"><span class="req">*</span> 는 필수 항목입니다.</p>
+        </div>
+        <div class="attach-list">
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부1]</span>공모신청서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부2]</span>사업계획서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부3]</span>현장조사 보고서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부4]</span>정량평가 항목 자가 평가표 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부5]</span>성능개선 실적 및 충전시설 운영계획 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부6]</span>사업자등록증 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부7]</span>법인 등기부등본 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부8]</span>법인 인감증명서, 사용인감계 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부9]</span>신용평가등급 확인서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부10]</span>CILI 부지등급 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부11]</span>충전기 공동이용(로밍) 협약서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부12]</span>설치지점별 설계도면 등</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부13]</span>제품 사양설명서, 원가산출내역서 등 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부14]</span>제품 KC인증서, 형식승인인증서 등 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부15]</span>기타 증명 서류</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부16]</span>원본파일</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+        </div>
+        <ul class="bullet bullet--refer" style="margin-top:12px"><li>지방자치단체는 [첨부 6, 7] 서류 제출 및 평가에서 제외됩니다.</li></ul>
+      </section>
+
+      <!-- 제출 -->
+      <p class="submit-lead">상기 내용을 확인하였으며, 사업 공모에 신청합니다.</p>
+      <div class="button-group button-group--center">
+        <button type="button" class="button button--large button--secondary" onclick="location.href='charging-install-brand.html';"><span class="button__label">이전</span></button>
+        <button type="button" class="button button--large button--secondary"><span class="button__label">임시 저장</span></button>
+        <button type="button" class="button button--large button--primary" onclick="fnSubmitApply();"><span class="button__label">신청서 제출</span></button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // [DEV][공모신청 폼] 제출 — 입력 내용 확인 3종 + 첨부 확인 체크 후 진행(프로토타입 안내)
+  function fnSubmitApply() {
+    if (!($('#cfmReview').is(':checked') && $('#cfmMatch').is(':checked') && $('#cfmResp').is(':checked'))) {
+      alert('입력 내용 확인 항목에 모두 체크해 주세요.');
+      return;
+    }
+    if (!$('#atchConfirm').is(':checked')) {
+      alert('첨부파일 제출 전 확인사항에 체크해 주세요.');
+      return;
+    }
+    alert('신청서가 제출되었습니다. (프로토타입)');
+  }
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260827a"></script>
+<script src="assets/js/ui-common.js?v=20260827a"></script>
+<script src="js/common/fileAttach.js?v=20260827a"></script>
+<script src="js/menu-data.js?v=20260827a"></script>
+<script src="js/shell.js?v=20260827a"></script>
+</body>
+</html>

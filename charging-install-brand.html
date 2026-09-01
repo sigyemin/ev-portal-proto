@@ -263,9 +263,13 @@
                   <p class="heading-description">로그인 후 누리집에서 신청서를 작성·제출합니다.<br />제출한 신청 건의 진행상태는 공모 신청 조회에서 확인할 수 있습니다.</p>
                 </div>
                 <div class="button-group">
-                  
-                  
-                    
+                  <!-- [DEV] 공모 신청 → 신청서 작성 폼(charging-install-brand-apply.html) 연결 -->
+                  <button type="button" class="button button--primary" onclick="fnGoBrandApply();">
+                    <span class="button__label">공모 신청</span>
+                  </button>
+
+
+
                       <button type="button" class="button button--secondary" onclick="fnNeedLogin();">
                         <span class="button__label">공모 신청 조회</span>
                       </button>
@@ -383,6 +387,11 @@
     var frm = document.applyForm;
     frm.action = '/buySupprt/fcBsnsApplyPreAction.do';
     frm.submit();
+  }
+
+  // [DEV] 프로토타입: 공모 신청 → 신청서 작성 폼으로 이동
+  function fnGoBrandApply() {
+    location.href = 'charging-install-brand-apply.html';
   }
 
   function fnFcBsnsMyApply() {
