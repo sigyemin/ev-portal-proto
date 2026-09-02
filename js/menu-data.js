@@ -89,6 +89,7 @@ window.EV_MENU = [
       { t: "전기차 소개", h: "info-evcar.html" },
       { t: "수소차 소개", h: "info-h2car.html" },
       { t: "배터리 정보", h: "info-battery.html" },
+      { t: "PnC 안내", h: "info-pnc.html" },
       { t: "용어사전", h: "info-dictionary.html" }
     ]},
     { t: "사이트 안내", h: "sitemap.html", kids: [
