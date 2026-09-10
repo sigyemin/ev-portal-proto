@@ -7,6 +7,8 @@ var EvMapNear = (function () {
 	var radiusKm = 5;
 	var $root = null;
 	var configs = [];
+	// [ISS-129 모바일] 반경 결과(withinRadius)를 페이지(지도·바텀시트 카드)에서 받도록 하는 선택 콜백 — 미설정 시 무동작
+	var onResultsCb = null;
 
 	// 한 번에 그리는 항목 상한 — 초과분은 안내 항목 1개로 대체한다
 	var RENDER_LIMIT = 300;
@@ -129,6 +131,9 @@ var EvMapNear = (function () {
 		var list = stations || [];
 		$root.find('.total-number__total').text(list.length);
 		setNotice();
+
+		// [ISS-129 모바일] 반경 결과를 페이지 콜백으로 전달(지도 마커·바텀시트 카드 렌더). 목록 렌더는 그대로 유지.
+		if (onResultsCb) { try { onResultsCb(list, sessions[activeKey].conf.key, coords, radiusKm); } catch (e) { console.error('[내 주변 충전소] onResults 콜백 오류', e); } }
 
 		if (!list.length) {
 			$root.find('.structured-list').html('<li class="structured-list__item"><p class="data-none">조회된 내용이 없습니다.</p></li>');
@@ -256,9 +261,10 @@ var EvMapNear = (function () {
 	// 위치 권한은 보안 컨텍스트(HTTPS/localhost)에서만 허용된다
 	function locate(onDone) {
 		if (!navigator.geolocation) {
-			coords = null;
-			console.log('[내 주변 충전소] 이 브라우저에서 Geolocation 을 지원하지 않습니다.');
-			setMessage('이 브라우저에서는 현재 위치를 사용할 수 없습니다.');
+			// [ISS-129 모바일] 미지원(비보안 컨텍스트 등)에도 목록이 비지 않도록 기본 위치(서울시청)로 폴백
+			coords = coords || { lat: 37.566571, lng: 126.978028 };
+			console.log('[내 주변 충전소] Geolocation 미지원 → 기본 위치(서울시청)로 조회');
+			if (onDone) onDone();
 			return;
 		}
 		setMessage('현재 위치를 확인하는 중입니다.');
@@ -307,14 +313,22 @@ var EvMapNear = (function () {
 			locate(search);
 		});
 
+		// [ISS-129 모바일] 로드 시 기본 위치(서울시청) 기준으로 즉시 조회 — 목록·지도 공백 방지.
+		// ★자동 GPS 전환은 하지 않는다(사용자 실제 위치엔 예시 데이터가 희소해 0건이 되던 문제).
+		//   실제 현재 위치는 [현재 위치] 버튼(relocate)에서만 요청한다.
+		if (!coords) coords = { lat: 37.566571, lng: 126.978028 };
 		activate(configs.length ? configs[0].key : null);
-		locate(search);
 	}
 
 	return {
 		init: init,
 		search: search,
 		activate: activate,
-		getCoords: function () { return coords; }
+		getCoords: function () { return coords; },
+		getRadius: function () { return radiusKm; },
+		// [ISS-129 모바일] 실제 현재 위치 요청(버튼 전용) — 위치 확인 후 재조회
+		relocate: function () { locate(search); },
+		// [ISS-129 모바일] 반경 결과 콜백 등록 — (results, key, coords, radiusKm)
+		onResults: function (fn) { onResultsCb = fn; }
 	};
 })();

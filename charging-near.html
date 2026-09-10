@@ -12,14 +12,109 @@
   <link rel="stylesheet" href="assets/css/map-list.css">
   <link rel="stylesheet" href="assets/css/i18n-en.css">
   <link rel="stylesheet" href="assets/css/aiChat.css">
-  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260827a"></script>
-  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260827a"></script>
-  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260827a"></script>
-  <script src="js/swiper-bundle.min.js?v=20260827a"></script>
-  <script src="js/common/common_util.js?v=20260827a"></script>
-  <script src="js/proto-api.js?v=20260827a"></script>
-  <script src="js/proto-data.js?v=20260827a"></script>
-  <script src="js/proto-mock.js?v=20260827a"></script>
+  <link rel="stylesheet" href="assets/css/openlayers/ol.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260910b"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260910b"></script>
+  <script src="assets/js/vendors/ag-grid-community.min.js?v=20260910b"></script>
+  <script src="js/swiper-bundle.min.js?v=20260910b"></script>
+  <script src="js/common/common_util.js?v=20260910b"></script>
+  <script src="js/proto-api.js?v=20260910b"></script>
+  <script src="js/proto-data.js?v=20260910b"></script>
+  <script src="js/proto-mock.js?v=20260910b"></script>
+  <!-- [ISS-129 내주변 모바일 개선] 시안 기반 재구성 — 지도(OL)+칩+바텀시트+카드+필터시트. 기존 기조(색·컴포넌트) 준수, 페이지 스코프 스타일 -->
+  <style>
+    html, body { background:#ffffff; }
+    :root{ --near-g:#1BA877; --near-g-d:#0f7a55; --near-line:#e3e7eb; --near-ink:#1f2937; --near-sub:#5b6470; }
+    /* 앱형 컨테이너: 지도 위에 검색/칩/바텀시트를 올린다 */
+    .near-app{ position:relative; height:calc(100dvh - 220px); min-height:520px; border:1px solid var(--near-line); border-radius:14px; overflow:hidden; background:#eef2f4; }
+    /* 상단 검색 */
+    .near-top{ position:absolute; z-index:30; top:12px; left:12px; right:12px; display:flex; align-items:center; gap:8px; }
+    .near-top__search{ flex:1; display:flex; align-items:center; gap:8px; height:46px; padding:0 12px; background:#fff; border:1px solid var(--near-line); border-radius:24px; box-shadow:0 2px 10px rgba(20,30,40,.10); }
+    .near-top__search input{ flex:1; border:0; outline:0; font-size:14.5px; color:var(--near-ink); background:transparent; }
+    .near-top__search .near-ic{ width:20px; height:20px; flex:none; color:var(--near-sub); }
+    .near-top__search .near-search-btn{ border:0; background:transparent; padding:0; cursor:pointer; color:var(--near-g-d); display:flex; }
+    .near-top__back{ width:40px; height:40px; flex:none; border:1px solid var(--near-line); background:#fff; border-radius:50%; display:none; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(20,30,40,.10); cursor:pointer; }
+    /* 칩 필터(가로 스크롤) */
+    .near-chips{ position:absolute; z-index:30; top:66px; left:0; right:0; display:flex; gap:8px; padding:6px 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .near-chips::-webkit-scrollbar{ display:none; }
+    .near-chip{ flex:none; display:inline-flex; align-items:center; gap:5px; height:34px; padding:0 13px; border-radius:18px; border:1px solid var(--near-g); background:var(--near-g); color:#fff; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 1px 4px rgba(20,30,40,.12); white-space:nowrap; }
+    .near-chip[aria-pressed="false"], .near-chip.is-off{ background:#fff; color:var(--near-g-d); }
+    .near-chip .near-ic{ width:14px; height:14px; }
+    .near-chip--filter{ background:#fff; color:var(--near-ink); border-color:var(--near-line); }
+    .near-chip--filter .near-badge{ background:var(--near-g); color:#fff; border-radius:10px; font-size:11px; padding:0 6px; margin-left:2px; }
+    /* 지도 */
+    .near-map{ position:absolute; inset:0; }
+    .near-map-wrap{ position:absolute; inset:0; }
+    /* 지도 우측 컨트롤(확대·축소·현재위치) — 시트 높이에 맞춰 위로 밀림 */
+    .near-mapctrl{ position:absolute; z-index:20; right:14px; bottom:calc(46% + 14px); display:flex; flex-direction:column; gap:8px; transition:bottom .22s ease; }
+    .near-mbtn{ width:44px; height:44px; border-radius:50%; border:1px solid var(--near-line); background:#fff; box-shadow:0 2px 10px rgba(20,30,40,.16); display:flex; align-items:center; justify-content:center; cursor:pointer; color:#3b4652; font-size:24px; font-weight:600; line-height:1; padding:0; }
+    .near-mbtn:active{ background:#f2f4f6; }
+    .near-zoomgroup{ display:flex; flex-direction:column; border-radius:22px; overflow:hidden; box-shadow:0 2px 10px rgba(20,30,40,.16); }
+    .near-zoomgroup .near-mbtn{ box-shadow:none; border-radius:0; }
+    .near-zoomgroup .near-mbtn+.near-mbtn{ border-top:0; }
+    .near-locate{ color:var(--near-g-d); }
+    .near-legend{ position:absolute; z-index:20; left:14px; bottom:calc(46% + 14px); display:flex; flex-wrap:wrap; gap:5px 10px; max-width:72%; padding:7px 10px; background:rgba(255,255,255,.95); border:1px solid var(--near-line); border-radius:10px; font-size:10.5px; color:var(--near-sub); transition:bottom .22s ease; }
+    .near-legend span{ white-space:nowrap; }
+    .near-legend b{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+    /* 바텀시트 */
+    .near-sheet{ position:absolute; z-index:25; left:0; right:0; bottom:0; height:46%; background:#fff; border-radius:18px 18px 0 0; box-shadow:0 -6px 24px rgba(20,30,40,.16); display:flex; flex-direction:column; transition:height .22s ease; }
+    .near-sheet[data-snap="peek"]{ height:132px; }
+    .near-sheet[data-snap="half"]{ height:46%; }
+    .near-sheet[data-snap="full"]{ height:calc(100% - 116px); }
+    .near-sheet.is-dragging{ transition:none; }
+    .near-sheet__grabber{ display:flex; align-items:center; justify-content:center; height:30px; cursor:grab; touch-action:none; flex:none; }
+    .near-sheet__grabber:active{ cursor:grabbing; }
+    .near-sheet__grabber::before{ content:""; width:44px; height:5px; border-radius:3px; background:#cfd6dc; }
+    .near-sheet__head{ display:flex; align-items:center; justify-content:space-between; padding:2px 18px 10px; border-bottom:1px solid var(--near-line); flex:none; }
+    .near-sheet__total{ font-size:14px; font-weight:800; color:var(--near-ink); }
+    .near-sheet__total b{ color:var(--near-g-d); }
+    .near-sheet__sort{ font-size:12.5px; color:var(--near-sub); }
+    .near-sheet__body{ flex:1; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; padding:6px 0 16px; }
+    /* 결과 카드 */
+    .near-cards{ list-style:none; margin:0; padding:0; }
+    .near-card{ display:grid; grid-template-columns:1fr auto; gap:6px 12px; padding:15px 18px; border-bottom:1px solid #f0f2f4; cursor:pointer; }
+    .near-card:hover{ background:#fafcfb; }
+    .near-card__name{ grid-column:1; font-size:15.5px; font-weight:800; color:var(--near-ink); margin:0; }
+    .near-card__addr{ grid-column:1; font-size:12.5px; color:var(--near-sub); margin:0; }
+    .near-card__time{ grid-column:1; font-size:12px; color:#8a939c; margin:2px 0 0; }
+    .near-card__nav{ grid-column:2; grid-row:1 / span 3; align-self:start; display:flex; flex-direction:column; align-items:center; gap:2px; }
+    .near-card__nav button{ width:44px; height:44px; border-radius:12px; border:1px solid var(--near-line); background:#f2faf6; color:var(--near-g-d); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    .near-card__nav .near-dist{ font-size:12px; font-weight:700; color:var(--near-sub); }
+    .near-card__meta{ grid-column:1; display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:6px; font-size:12.5px; color:var(--near-sub); }
+    .near-card__meta .sep{ color:#cfd6dc; }
+    .near-card__stat{ grid-column:1; display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+    .near-stat{ display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; padding:2px 8px; border-radius:12px; background:#f4f6f8; color:var(--near-sub); }
+    .near-stat b{ width:7px; height:7px; border-radius:50%; }
+    .near-card__fee{ grid-column:1; display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .near-fee{ display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:800; color:var(--near-ink); }
+    .near-fee em{ font-style:normal; font-size:11px; font-weight:800; color:#fff; background:var(--near-g); border-radius:10px; padding:1px 7px; }
+    .near-fee.is-slow em{ background:#3aa0d8; }
+    .near-empty{ padding:34px 18px; text-align:center; color:#8a939c; font-size:13.5px; }
+    /* 고급 필터 시트(모달) */
+    .near-filter{ position:fixed; inset:0; z-index:1200; display:none; }
+    .near-filter.is-open{ display:block; }
+    .near-filter__dim{ position:absolute; inset:0; background:rgba(20,28,38,.42); }
+    .near-filter__panel{ position:absolute; left:0; right:0; bottom:0; max-height:88vh; display:flex; flex-direction:column; background:#fff; border-radius:18px 18px 0 0; }
+    .near-filter__head{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--near-line); }
+    .near-filter__head strong{ font-size:16px; font-weight:800; color:var(--near-ink); }
+    .near-filter__close{ border:0; background:transparent; font-size:22px; line-height:1; color:var(--near-sub); cursor:pointer; }
+    .near-filter__body{ overflow-y:auto; padding:6px 18px 12px; }
+    .near-filter__foot{ display:flex; gap:10px; padding:14px 18px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--near-line); }
+    .near-filter__foot .button{ flex:1; justify-content:center; }
+    .near-filter .element-group{ padding:12px 0; border-bottom:1px solid #f0f2f4; }
+    .near-filter .element-label{ display:block; font-size:13px; font-weight:800; color:var(--near-ink); margin-bottom:8px; }
+    /* 5단계 안내(충전방식은 급속/완속 필터 + 카드/범례에서 5단계 정보 유지) */
+    .near-bandnote{ margin-top:6px; font-size:11.5px; color:#8a939c; line-height:1.5; }
+    /* EvMapNear 원본 목록 substrate — 엔진 렌더 대상. 화면 비노출(모바일 카드로 대체) */
+    .near-legacy{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    /* 데스크톱: 앱 컨테이너 폭 제한(모바일 시안 중심 프로토) */
+    @media (min-width:1025px){ .near-app{ max-width:520px; margin:0 auto; height:760px; } }
+    @media (max-width:768px){
+      .near-app{ height:calc(100dvh - 150px); border:0; border-radius:0; }
+      .near-top__back{ display:flex; }
+      .page-header{ display:none; }
+    }
+  </style>
 </head>
 <body>
 <div id="header-slot"></div>
@@ -54,18 +149,18 @@
     </nav>
     <!-- subject  -->
     <div class="page-header__subject">
-      <h1 class="heading-subject">충전소 찾기</h1>
-      <p class="page-header__description">전기·수소 충전소를 통합 검색하고, 반경·경로 기반으로 최적의 충전소를 찾습니다.</p>
+      <h1 class="heading-subject">내 주변 충전소</h1>
+      <p class="page-header__description">현재 위치를 기준으로 반경 내 충전소를 지도와 목록에서 한눈에 찾습니다.</p>
     </div>
   </div>
 </div>
 
 <div class="contents">
 
-<!-- 충전소 찾기 -->
+<!-- 충전소 찾기(내 주변) -->
 <div class="energy-station">
-  <!-- tab : 충전 유형 전환(같은 화면에서 데이터만 교체) -->
-  <div class="tab">
+  <!-- 유형 전환 탭(전기/수소) — EvMapNear 가 data-near-type 로 바인딩. 시안 칩(전기)과 동기화 -->
+  <div class="tab" hidden>
     <ul class="tab__list">
       <li class="tab__item tab__item--selected">
         <button type="button" class="tab__button" data-near-type="ev">전기차 충전소</button>
@@ -75,182 +170,176 @@
       </li>
     </ul>
   </div>
-  <!-- //tab -->
+
   <!-- 내 주변 충전소 -->
   <div class="around-station">
-    <!-- 검색폼 -->
-    <div class="search-form search-form--column">
-      <div class="search-form__elements">
-        <!-- 폼 항목 -->
-        <div class="element-group">
-          <div class="element-group__label">
-            <span class="element-label">검색 반경</span>
-          </div>
-          <div class="element-group__control">
-            <div class="radios">
-              <div class="radio radio--chip">
-                <input type="radio" id="kilometer1" name="kilometer" value="1" class="radio__input" />
-                <label for="kilometer1" class="radio__label"><span>1km</span></label>
-              </div>
-              <div class="radio radio--chip">
-                <input type="radio" id="kilometer5" name="kilometer" value="5" checked class="radio__input" />
-                <label for="kilometer5" class="radio__label"><span>5km</span></label>
-              </div>
-              <div class="radio radio--chip">
-                <input type="radio" id="kilometer10" name="kilometer" value="10" class="radio__input" />
-                <label for="kilometer10" class="radio__label"><span>10km</span></label>
-              </div>
-              <div class="radio radio--chip">
-                <input type="radio" id="kilometer20" name="kilometer" value="20" class="radio__input" />
-                <label for="kilometer20" class="radio__label"><span>20km</span></label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- //폼 항목 -->
-        <!-- 전기차 전용 검색 항목 -->
-        <div data-filter-type="ev">
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <label for="evStatType" class="element-label">충전소 분류</label>
-            </div>
-            <div class="element-group__control">
-              <select id="evStatType" class="select">
-                <option value="">전체</option>
-              </select>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <label for="evBand" class="element-label">충전방식</label>
-            </div>
-            <div class="element-group__control">
-              <select id="evBand" class="select">
-                <option value="">전체</option>
-                <option value="fast">급속</option>
-                <option value="slow">완속</option>
-              </select>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <span class="element-label">기관 구분</span>
-            </div>
-            <div class="element-group__control">
-              <div class="checkboxs">
-                <div class="checkbox">
-                  <input type="checkbox" id="orgme" class="checkbox__input" checked />
-                  <label for="orgme" class="checkbox__label"><span>기후부</span></label>
-                </div>
-                <div class="checkbox">
-                  <input type="checkbox" id="orgetc" class="checkbox__input" checked />
-                  <label for="orgetc" class="checkbox__label"><span>타기관</span></label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <span class="element-label">기타</span>
-            </div>
-            <div class="element-group__control">
-              <div class="checkboxs">
-                <div class="checkbox">
-                  <input type="checkbox" id="serviceCheck1" name="serviceCheck" class="checkbox__input" />
-                  <label for="serviceCheck1" class="checkbox__label">
-                    <span>24시간 이용</span>
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <input type="checkbox" id="serviceCheck2" name="serviceCheck" class="checkbox__input" />
-                  <label for="serviceCheck2" class="checkbox__label">
-                    <span>스마트충전기</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-        </div>
-        <!-- //전기차 전용 검색 항목 -->
-        <!-- 수소차 전용 검색 항목 -->
-        <div data-filter-type="h2">
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <label for="h2Oper" class="element-label">영업상태</label>
-            </div>
-            <div class="element-group__control">
-              <select id="h2Oper" class="select">
-                <option value="">전체</option>
-              </select>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <label for="h2Ctp" class="element-label">충전압력</label>
-            </div>
-            <div class="element-group__control">
-              <select id="h2Ctp" class="select">
-                <option value="">전체</option>
-              </select>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-          <!-- 폼 항목 -->
-          <div class="element-group">
-            <div class="element-group__label">
-              <label for="h2Vk" class="element-label">충전대상</label>
-            </div>
-            <div class="element-group__control">
-              <select id="h2Vk" class="select">
-                <option value="">전체</option>
-              </select>
-            </div>
-          </div>
-          <!-- //폼 항목 -->
-        </div>
-        <!-- //수소차 전용 검색 항목 -->
-      </div>
-      <div class="search-form__actions">
-        <button type="button" class="button button--primary button--search">
-          <i class="svg-icon locate" aria-hidden="true"></i>
-          <span class="button__label">현재 위치로 검색</span>
+
+    <!-- ===================== 모바일 시안 UI ===================== -->
+    <div class="near-app">
+      <!-- 상단 검색 -->
+      <div class="near-top">
+        <button type="button" class="near-top__back" title="뒤로" onclick="history.back()">
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <button type="button" class="button button--secondary button--reset">
-          <span class="button__label">초기화</span>
+        <div class="near-top__search">
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-3.5-3.5"/></svg>
+          <input type="text" id="nearSearch" placeholder="충전소 검색 (충전소명, 시/군/구)" />
+          <button type="button" class="near-search-btn" id="nearSearchBtn" title="검색">
+            <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 칩 필터 -->
+      <div class="near-chips" id="nearChips">
+        <button type="button" class="near-chip" data-chip="energy" aria-pressed="true">전기
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button type="button" class="near-chip is-off" data-chip="band" data-val="">충전방식
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button type="button" class="near-chip" data-chip="radius">10km 이내
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button type="button" class="near-chip" data-chip="sort">거리순
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button type="button" class="near-chip near-chip--filter" data-chip="filter">
+          <svg class="near-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+          필터<span class="near-badge" id="nearFilterCount" hidden>0</span>
         </button>
       </div>
-    </div>
-    <!-- //검색폼 -->
-    <!-- 검색결과 -->
-    <div class="search-result">
-      <div class="board-wrapper">
-        <div class="board-toolbar">
-          <div class="board-toolbar__total">
-            <p class="total-number">총 <b class="total-number__total">0</b>건</p>
-          </div>
-          <p class="board-toolbar__notice"></p>
+
+      <!-- 지도 -->
+      <div class="near-map-wrap">
+        <div class="near-map" id="nearMap"></div>
+        <!-- 상태 범례 — 통합지도(charging-find)와 동일: EvMapMarker.STAT_COLOR 5종 -->
+        <div class="near-legend" aria-hidden="true">
+          <span><b style="background:#1BA877"></b>사용가능</span>
+          <span><b style="background:#5D87FF"></b>사용중</span>
+          <span><b style="background:#F85950"></b>사용불가</span>
+          <span><b style="background:#FCA42D"></b>상태미확인</span>
+          <span><b style="background:#747E90"></b>이용자제한</span>
         </div>
-        <div class="board-list">
-          <ul class="structured-list">
-            <li class="structured-list__item">
-              <p class="data-none">현재 위치를 확인하는 중입니다.</p>
-            </li>
+        <div class="near-mapctrl">
+          <div class="near-zoomgroup">
+            <button type="button" class="near-mbtn" id="nearZoomIn" title="확대" aria-label="지도 확대">＋</button>
+            <button type="button" class="near-mbtn" id="nearZoomOut" title="축소" aria-label="지도 축소">－</button>
+          </div>
+          <button type="button" class="near-mbtn near-locate" id="nearLocate" title="현재 위치로" aria-label="현재 위치로">
+            <svg class="near-ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 바텀시트 -->
+      <div class="near-sheet" id="nearSheet" data-snap="half">
+        <div class="near-sheet__grabber" id="nearGrabber" role="button" tabindex="0" aria-label="목록 시트 크기 조절"></div>
+        <div class="near-sheet__head">
+          <span class="near-sheet__total">총 <b id="nearTotal">0</b>곳</span>
+          <span class="near-sheet__sort" id="nearSortLabel">거리순</span>
+        </div>
+        <div class="near-sheet__body">
+          <ul class="near-cards" id="nearCards">
+            <li class="near-empty">현재 위치를 확인하는 중입니다.</li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- //검색결과 -->
+    <!-- =================== //모바일 시안 UI =================== -->
+
+    <!-- 고급 필터 시트 — 상용 필터 11종 보존(검색 반경·충전소분류·충전방식·기관·기타 + 수소 전용). EvMapNear 가 이 입력들을 읽는다 -->
+    <div class="near-filter" id="nearFilter" aria-hidden="true">
+      <div class="near-filter__dim" data-close></div>
+      <div class="near-filter__panel" role="dialog" aria-modal="true" aria-label="상세 필터">
+        <div class="near-filter__head">
+          <strong>상세 필터</strong>
+          <button type="button" class="near-filter__close" data-close aria-label="닫기">&times;</button>
+        </div>
+        <div class="near-filter__body">
+          <div class="search-form search-form--column">
+            <div class="search-form__elements">
+              <!-- 검색 반경 -->
+              <div class="element-group">
+                <span class="element-label">검색 반경</span>
+                <div class="element-group__control">
+                  <div class="radios">
+                    <div class="radio radio--chip"><input type="radio" id="kilometer1" name="kilometer" value="1" class="radio__input" /><label for="kilometer1" class="radio__label"><span>1km</span></label></div>
+                    <div class="radio radio--chip"><input type="radio" id="kilometer5" name="kilometer" value="5" class="radio__input" /><label for="kilometer5" class="radio__label"><span>5km</span></label></div>
+                    <div class="radio radio--chip"><input type="radio" id="kilometer10" name="kilometer" value="10" checked class="radio__input" /><label for="kilometer10" class="radio__label"><span>10km</span></label></div>
+                    <div class="radio radio--chip"><input type="radio" id="kilometer20" name="kilometer" value="20" class="radio__input" /><label for="kilometer20" class="radio__label"><span>20km</span></label></div>
+                  </div>
+                </div>
+              </div>
+              <!-- 전기차 전용 -->
+              <div data-filter-type="ev">
+                <div class="element-group">
+                  <label for="evStatType" class="element-label">충전소 분류</label>
+                  <div class="element-group__control"><select id="evStatType" class="select"><option value="">전체</option></select></div>
+                </div>
+                <div class="element-group">
+                  <label for="evBand" class="element-label">충전방식</label>
+                  <div class="element-group__control">
+                    <select id="evBand" class="select"><option value="">전체</option><option value="fast">급속</option><option value="slow">완속</option></select>
+                    <p class="near-bandnote">※ 충전방식은 실제 <b>5단계</b>(완속 · 중속 · 급속 50~99 · 급속+ 100~199 · 초급속 200↑)로 구분되며, 세부 단계는 카드의 충전기 구성과 지도 범례에서 확인됩니다. 필터는 상위 급속/완속으로 좁혀 선택합니다.</p>
+                  </div>
+                </div>
+                <div class="element-group">
+                  <span class="element-label">기관 구분</span>
+                  <div class="element-group__control">
+                    <div class="checkboxs">
+                      <div class="checkbox"><input type="checkbox" id="orgme" class="checkbox__input" checked /><label for="orgme" class="checkbox__label"><span>기후부</span></label></div>
+                      <div class="checkbox"><input type="checkbox" id="orgetc" class="checkbox__input" checked /><label for="orgetc" class="checkbox__label"><span>타기관</span></label></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="element-group">
+                  <span class="element-label">기타</span>
+                  <div class="element-group__control">
+                    <div class="checkboxs">
+                      <div class="checkbox"><input type="checkbox" id="serviceCheck1" name="serviceCheck" class="checkbox__input" /><label for="serviceCheck1" class="checkbox__label"><span>24시간 이용</span></label></div>
+                      <div class="checkbox"><input type="checkbox" id="serviceCheck2" name="serviceCheck" class="checkbox__input" /><label for="serviceCheck2" class="checkbox__label"><span>스마트충전기</span></label></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 수소차 전용 -->
+              <div data-filter-type="h2">
+                <div class="element-group">
+                  <label for="h2Oper" class="element-label">영업상태</label>
+                  <div class="element-group__control"><select id="h2Oper" class="select"><option value="">전체</option></select></div>
+                </div>
+                <div class="element-group">
+                  <label for="h2Ctp" class="element-label">충전압력</label>
+                  <div class="element-group__control"><select id="h2Ctp" class="select"><option value="">전체</option></select></div>
+                </div>
+                <div class="element-group">
+                  <label for="h2Vk" class="element-label">충전대상</label>
+                  <div class="element-group__control"><select id="h2Vk" class="select"><option value="">전체</option></select></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="near-filter__foot">
+          <button type="button" class="button button--secondary button--reset"><span class="button__label">초기화</span></button>
+          <button type="button" class="button button--primary" id="nearFilterApply"><span class="button__label">적용</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EvMapNear 원본 목록 substrate(엔진 렌더 대상, 화면 비노출) — 상세 패널·즐겨찾기·건수 등 기존 동작 유지 -->
+    <div class="search-result near-legacy" aria-hidden="true">
+      <div class="board-wrapper">
+        <div class="board-toolbar">
+          <div class="board-toolbar__total"><p class="total-number">총 <b class="total-number__total">0</b>건</p></div>
+          <p class="board-toolbar__notice"></p>
+        </div>
+        <div class="board-list">
+          <ul class="structured-list"><li class="structured-list__item"><p class="data-none">현재 위치를 확인하는 중입니다.</p></li></ul>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- //내 주변 충전소 -->
 </div>
@@ -258,7 +347,7 @@
 </div>
 </div>
 
-<!-- 충전소보기 패널: 유형(전기/수소) 전환 화면이라 즐겨찾기 푸터 없이 본문만 둔다 -->
+<!-- 충전소보기 패널 -->
 <div class="side-panel" id="energyStationDetail" aria-hidden="true">
   <div class="side-panel__header">
     <strong class="side-panel__header-title"></strong>
@@ -273,37 +362,23 @@
   </div>
 </div>
 
-<script src="js/monitor/evMapMarker.js?v=20260827a"></script>
-<script src="js/monitor/evMapPanel.js?v=20260827a"></script>
+<script src="js/openlayers/ol.js?v=20260910b"></script>
+<script src="js/monitor/evMapMarker.js?v=20260910b"></script>
+<script src="js/monitor/evMapPanel.js?v=20260910b"></script>
 <script>
 var EV_MAP_URLS = (function () {
-    var base = location.href.replace(/[^/]*$/, '');   // 워커에서도 해석되도록 절대 URL
-    return {
-      list: base + 'data/chlist.json',
-      stat: base + 'data/stat.json',
-      info: 'MOCK_INFO',
-      bookmark: 'MOCK_BOOKMARK',
-      bookList: 'MOCK_BOOKLIST',
-      priceGuide: 'charging-fee.html',
-      worker: base + 'js/monitor/evMapWorker2.js'
-    };
+    var base = location.href.replace(/[^/]*$/, '');
+    return { list: base + 'data/chlist.json', stat: base + 'data/stat.json', info: 'MOCK_INFO', bookmark: 'MOCK_BOOKMARK', bookList: 'MOCK_BOOKLIST', priceGuide: 'charging-fee.html', worker: base + 'js/monitor/evMapWorker2.js' };
   })();
 var H2_MAP_URLS = (function () {
-    var base = location.href.replace(/[^/]*$/, '');   // 워커에서도 해석되도록 절대 URL
-    return {
-      list: base + 'data/h2list.json',
-      stat: base + 'data/h2stat.json',
-      info: 'MOCK_INFO',
-      bookmark: 'MOCK_BOOKMARK',
-      bookList: 'MOCK_BOOKLIST',
-      worker: base + 'js/monitor/evMapH2Worker.js'
-    };
+    var base = location.href.replace(/[^/]*$/, '');
+    return { list: base + 'data/h2list.json', stat: base + 'data/h2stat.json', info: 'MOCK_INFO', bookmark: 'MOCK_BOOKMARK', bookList: 'MOCK_BOOKLIST', worker: base + 'js/monitor/evMapH2Worker.js' };
   })();
 </script>
 
-<script src="js/monitor/evMapEvView.js?v=20260827a"></script>
-<script src="js/monitor/evMapH2View.js?v=20260827a"></script>
-<script src="js/monitor/evMapNear.js?v=20260827a"></script>
+<script src="js/monitor/evMapEvView.js?v=20260910b"></script>
+<script src="js/monitor/evMapH2View.js?v=20260910b"></script>
+<script src="js/monitor/evMapNear.js?v=20260910b"></script>
 
 <script type="application/json" id="pageInfo">{"sidoList": [{"zcode": "11", "sido": "서울특별시"}, {"zcode": "26", "sido": "부산광역시"}, {"zcode": "27", "sido": "대구광역시"}, {"zcode": "28", "sido": "인천광역시"}, {"zcode": "29", "sido": "광주광역시"}, {"zcode": "30", "sido": "대전광역시"}, {"zcode": "31", "sido": "울산광역시"}, {"zcode": "36", "sido": "세종특별자치시"}, {"zcode": "41", "sido": "경기도"}, {"zcode": "43", "sido": "충청북도"}, {"zcode": "44", "sido": "충청남도"}, {"zcode": "46", "sido": "전라남도"}, {"zcode": "47", "sido": "경상북도"}, {"zcode": "48", "sido": "경상남도"}, {"zcode": "50", "sido": "제주특별자치도"}, {"zcode": "51", "sido": "강원특별자치도"}, {"zcode": "52", "sido": "전북특별자치도"}], "gugunList": [{"code": "11010", "gugun": "종로구"}, {"code": "11020", "gugun": "중구"}, {"code": "11030", "gugun": "성동구"}, {"code": "11040", "gugun": "강남구"}, {"code": "11050", "gugun": "송파구"}, {"code": "11060", "gugun": "마포구"}, {"code": "11070", "gugun": "노원구"}, {"code": "26010", "gugun": "해운대구"}, {"code": "26020", "gugun": "부산진구"}, {"code": "26030", "gugun": "사하구"}, {"code": "26040", "gugun": "남구"}, {"code": "26050", "gugun": "기장군"}, {"code": "27010", "gugun": "수성구"}, {"code": "27020", "gugun": "달서구"}, {"code": "27030", "gugun": "북구"}, {"code": "27040", "gugun": "동구"}, {"code": "27050", "gugun": "달성군"}, {"code": "28010", "gugun": "남동구"}, {"code": "28020", "gugun": "연수구"}, {"code": "28030", "gugun": "서구"}, {"code": "28040", "gugun": "부평구"}, {"code": "28050", "gugun": "강화군"}, {"code": "29010", "gugun": "동구"}, {"code": "29020", "gugun": "서구"}, {"code": "29030", "gugun": "남구"}, {"code": "29040", "gugun": "북구"}, {"code": "29050", "gugun": "광산구"}, {"code": "30010", "gugun": "유성구"}, {"code": "30020", "gugun": "서구"}, {"code": "30030", "gugun": "중구"}, {"code": "30040", "gugun": "대덕구"}, {"code": "31010", "gugun": "남구"}, {"code": "31020", "gugun": "북구"}, {"code": "31030", "gugun": "중구"}, {"code": "31040", "gugun": "울주군"}, {"code": "36010", "gugun": "세종특별자치시"}, {"code": "41010", "gugun": "수원시"}, {"code": "41020", "gugun": "성남시"}, {"code": "41030", "gugun": "고양시"}, {"code": "41040", "gugun": "용인시"}, {"code": "41050", "gugun": "화성시"}, {"code": "41060", "gugun": "부천시"}, {"code": "41070", "gugun": "안산시"}, {"code": "43010", "gugun": "청주시"}, {"code": "43020", "gugun": "충주시"}, {"code": "43030", "gugun": "제천시"}, {"code": "43040", "gugun": "음성군"}, {"code": "44010", "gugun": "천안시"}, {"code": "44020", "gugun": "아산시"}, {"code": "44030", "gugun": "서산시"}, {"code": "44040", "gugun": "당진시"}, {"code": "46010", "gugun": "목포시"}, {"code": "46020", "gugun": "여수시"}, {"code": "46030", "gugun": "순천시"}, {"code": "46040", "gugun": "나주시"}, {"code": "47010", "gugun": "포항시"}, {"code": "47020", "gugun": "구미시"}, {"code": "47030", "gugun": "경주시"}, {"code": "47040", "gugun": "안동시"}, {"code": "48010", "gugun": "창원시"}, {"code": "48020", "gugun": "김해시"}, {"code": "48030", "gugun": "진주시"}, {"code": "48040", "gugun": "양산시"}, {"code": "50010", "gugun": "제주시"}, {"code": "50020", "gugun": "서귀포시"}, {"code": "51010", "gugun": "춘천시"}, {"code": "51020", "gugun": "원주시"}, {"code": "51030", "gugun": "강릉시"}, {"code": "51040", "gugun": "속초시"}, {"code": "52010", "gugun": "전주시"}, {"code": "52020", "gugun": "익산시"}, {"code": "52030", "gugun": "군산시"}, {"code": "52040", "gugun": "정읍시"}]}</script>
 <script>
@@ -312,22 +387,13 @@ var PAGE_INFO = (function () {
     catch (e) { return {}; }
 })();
 
-// 전기차 목록은 주소 없이 zcode/zscode 만 오므로 지역명 맵을 채워 목록에 표기한다
 function populateRegionMaps() {
-    (PAGE_INFO.sidoList || []).forEach(function (row) {
-        EvMapEvView.sidoList[row.zcode] = row.sido;
-    });
-    (PAGE_INFO.gugunList || []).forEach(function (row) {
-        EvMapEvView.gugunList[row.code] = row.gugun;
-    });
+    (PAGE_INFO.sidoList || []).forEach(function (row) { EvMapEvView.sidoList[row.zcode] = row.sido; });
+    (PAGE_INFO.gugunList || []).forEach(function (row) { EvMapEvView.gugunList[row.code] = row.gugun; });
 }
-
 function populateCodeSelect($select, fields, labelKey) {
-    (fields || []).forEach(function (item) {
-        $select.append($('<option/>').val(item.code).text(item[labelKey]));
-    });
+    (fields || []).forEach(function (item) { $select.append($('<option/>').val(item.code).text(item[labelKey])); });
 }
-
 function buildEvFilters() {
     return {
         orgme: $('#orgme').is(':checked') ? 'Y' : 'N',
@@ -335,16 +401,283 @@ function buildEvFilters() {
         statType: $('#evStatType').val(),
         band: $('#evBand').val(),
         is24: $('#serviceCheck1').is(':checked'),
-        isSmart: $('#serviceCheck2').is(':checked')
+        isSmart: $('#serviceCheck2').is(':checked'),
+        search: $('#nearSearch').val()
     };
 }
-
 function buildH2Filters() {
+    return { oper: $('#h2Oper').val(), ctp: $('#h2Ctp').val(), vk: $('#h2Vk').val(), search: $('#nearSearch').val() };
+}
+
+// ========================= [ISS-129] 모바일 내주변: 지도·카드·칩·바텀시트 =========================
+var NearMobile = (function () {
+    // 상태 색·명칭은 통합지도(EvMapMarker)와 동일 — 5종
+    var STAT_COLOR = (typeof EvMapMarker !== 'undefined' && EvMapMarker.STAT_COLOR) || { available:'#1BA877', charging:'#5D87FF', unavailable:'#F85950', unknown:'#FCA42D', limited:'#747E90' };
+    var STAT_LABEL = { available:'사용가능', charging:'사용중', unavailable:'사용불가', unknown:'상태미확인', limited:'이용자제한' };
+    var STAT_KEYS = ['available', 'charging', 'unavailable', 'unknown', 'limited'];
+    var chargersBySid = null;     // chlist.json 색인(sid -> [charger])
+    var lastResults = [];
+    var lastCoords = null;
+    var sortMode = 'dist';        // dist | avail | price
+    var map = null, vsource = null, meFeat = null;
+
+    // charger 상태 정규화 — 통합지도와 동일 규칙(EvMapMarker.normalizeStat: cst/lm/cm → 5종)
+    function statOf(c) {
+        return (typeof EvMapMarker !== 'undefined' && EvMapMarker.normalizeStat)
+            ? EvMapMarker.normalizeStat(c.cst, c.lm, c.cm)
+            : (c.cst === 2 ? 'available' : c.cst === 3 ? 'charging' : 'unknown');
+    }
+    function feeText(v) { return (v == null || isNaN(v)) ? '' : Math.round(v).toLocaleString() + '원'; }
+    function distanceText(km) {
+        if (km == null || isNaN(km)) return '';
+        return km < 1 ? Math.round(km * 1000) + 'm' : (Math.round(km * 10) / 10) + 'km';
+    }
+    function regionLabel(s) {
+        var sido = EvMapEvView.sidoList && EvMapEvView.sidoList[s.zcode];
+        var gugun = EvMapEvView.gugunList && EvMapEvView.gugunList[s.zscode || s.zs];
+        var region = gugun ? ((sido && gugun.indexOf(sido) !== 0) ? sido + ' ' + gugun : gugun) : (sido || '');
+        return s.fl ? (region ? region + ' · ' + s.fl : s.fl) : (region || '지역 정보 없음');
+    }
+
+    // chlist.json 을 1회 색인 — 카드 enrich(상태·요금·충전기 구성)용. 워커/엔진과 별개(읽기 전용)
+    function ensureChargers() {
+        if (chargersBySid) return $.Deferred().resolve(chargersBySid).promise();
+        return $.getJSON('data/chlist.json').then(function (d) {
+            chargersBySid = {};
+            (d.chargerList || []).forEach(function (c) {
+                (chargersBySid[c.sid] = chargersBySid[c.sid] || []).push(c);
+            });
+            return chargersBySid;
+        });
+    }
+
+    // 충전소 1곳 요약: 총대수/급속·완속 대수/상태 카운트/급속·완속 최저요금(회원)
+    function summarize(sid) {
+        var list = (chargersBySid && chargersBySid[sid]) || [];
+        var o = { total:list.length, fast:0, slow:0, feeFast:null, feeSlow:null, available:0, charging:0, unavailable:0, unknown:0, limited:0 };
+        list.forEach(function (c) {
+            var isSlow = (c.po != null && c.po < 30);
+            if (isSlow) { o.slow++; if (c.fem != null && (o.feeSlow == null || c.fem < o.feeSlow)) o.feeSlow = c.fem; }
+            else { o.fast++; if (c.fem != null && (o.feeFast == null || c.fem < o.feeFast)) o.feeFast = c.fem; }
+            o[statOf(c)]++;
+        });
+        return o;
+    }
+    // 대표 상태(마커색) — 통합지도 우선순위: 사용가능>사용중>이용자제한>사용불가>상태미확인
+    function repState(sum) {
+        return sum.available ? 'available' : sum.charging ? 'charging' : sum.limited ? 'limited' : sum.unavailable ? 'unavailable' : 'unknown';
+    }
+
+    function cardHtml(s) {
+        var sum = summarize(s.sid);
+        var util = s.ut || s.utime || '';
+        var chgParts = [];
+        if (sum.fast) chgParts.push('급속 ' + sum.fast + '대');
+        if (sum.slow) chgParts.push('완속 ' + sum.slow + '대');
+        var statParts = STAT_KEYS.filter(function (k) { return sum[k]; }).map(function (k) {
+            return '<span class="near-stat"><b style="background:' + STAT_COLOR[k] + '"></b>' + STAT_LABEL[k] + ' ' + sum[k] + '</span>';
+        });
+        var feeParts = [];
+        if (sum.feeFast != null) feeParts.push('<span class="near-fee"><em>급속</em>' + feeText(sum.feeFast) + '</span>');
+        if (sum.feeSlow != null) feeParts.push('<span class="near-fee is-slow"><em>완속</em>' + feeText(sum.feeSlow) + '</span>');
+        return '<li class="near-card" data-sid="' + s.sid + '" data-cm="' + (s.chgeMange || '') + '" data-lat="' + s.x + '" data-lng="' + s.y + '" data-name="' + encodeURIComponent(s.snm || '') + '">'
+            + '<p class="near-card__name">' + (s.snm || '충전소') + '</p>'
+            + '<p class="near-card__addr">' + regionLabel(s) + '</p>'
+            + (util ? '<p class="near-card__time">' + util + '</p>' : '')
+            + '<div class="near-card__nav">'
+            + '<button type="button" class="near-nav-btn" title="길찾기">'
+            + '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>'
+            + '</button><span class="near-dist">' + distanceText(s.dist) + '</span>'
+            + '</div>'
+            + (chgParts.length ? '<div class="near-card__meta"><span>보유충전기 ' + sum.total + '대</span><span class="sep">|</span><span>' + chgParts.join(' · ') + '</span></div>' : '')
+            + (statParts.length ? '<div class="near-card__stat">' + statParts.join('') + '</div>' : '')
+            + (feeParts.length ? '<div class="near-card__fee">' + feeParts.join('') + '</div>' : '')
+            + '</li>';
+    }
+
+    function applySort(list) {
+        var arr = list.slice();
+        if (sortMode === 'avail') arr.sort(function (a, b) { return summarize(b.sid).available - summarize(a.sid).available || (a.dist - b.dist); });
+        else if (sortMode === 'price') arr.sort(function (a, b) {
+            var pa = minFee(a), pb = minFee(b);
+            if (pa == null) return 1; if (pb == null) return -1;
+            return pa - pb || (a.dist - b.dist);
+        });
+        else arr.sort(function (a, b) { return a.dist - b.dist; });
+        return arr;
+    }
+    function minFee(s) { var o = summarize(s.sid); var arr = [o.feeFast, o.feeSlow].filter(function (v) { return v != null; }); return arr.length ? Math.min.apply(null, arr) : null; }
+
+    function renderCards() {
+        var $ul = $('#nearCards');
+        if (!lastResults.length) { $ul.html('<li class="near-empty">반경 내 충전소가 없습니다. 반경을 넓히거나 필터를 조정해 보세요.</li>'); $('#nearTotal').text(0); return; }
+        var arr = applySort(lastResults);
+        $('#nearTotal').text(arr.length);
+        $ul.html(arr.map(cardHtml).join(''));
+    }
+
+    // ---- 지도 ----
+    function initMap(center) {
+        if (map || typeof ol === 'undefined') return;
+        vsource = new ol.source.Vector();
+        map = new ol.Map({
+            target: 'nearMap',
+            layers: [ new ol.layer.Tile({ source: new ol.source.OSM() }), new ol.layer.Vector({ source: vsource }) ],
+            view: new ol.View({ center: ol.proj.fromLonLat(center), zoom: 13 }),
+            controls: ol.control.defaults({ attribution:false, zoom:false, rotate:false })
+        });
+        map.on('click', function (e) {
+            var hit = map.forEachFeatureAtPixel(e.pixel, function (f) { return f; });
+            if (hit && hit.get('sid')) {
+                try { EvMapPanel.open(hit.get('sid'), hit.get('cm')); } catch (err) {}
+            }
+        });
+    }
+    function stationStyle(color) {
+        return new ol.style.Style({ image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color: color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+    }
+    function meStyle() {
+        return new ol.style.Style({ image: new ol.style.Circle({ radius: 7, fill: new ol.style.Fill({ color: '#2b6cff' }), stroke: new ol.style.Stroke({ color: 'rgba(43,108,255,.25)', width: 8 }) }) });
+    }
+    function drawMap() {
+        if (!map || !vsource) return;
+        vsource.clear();
+        if (lastCoords) {
+            meFeat = new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat([lastCoords.lng, lastCoords.lat])) });
+            meFeat.setStyle(meStyle());
+            vsource.addFeature(meFeat);
+        }
+        lastResults.forEach(function (s) {
+            var lat = parseFloat(s.x), lng = parseFloat(s.y);
+            if (isNaN(lat) || isNaN(lng)) return;
+            var f = new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat])) });
+            f.set('sid', s.sid); f.set('cm', s.chgeMange || '');
+            f.setStyle(stationStyle(STAT_COLOR[repState(summarize(s.sid))]));
+            vsource.addFeature(f);
+        });
+        if (lastCoords) {
+            map.getView().animate({ center: ol.proj.fromLonLat([lastCoords.lng, lastCoords.lat]), duration: 300 });
+            var r = (typeof EvMapNear !== 'undefined' && EvMapNear.getRadius) ? EvMapNear.getRadius() : 10;
+            map.getView().setZoom(r <= 1 ? 15 : r <= 5 ? 13 : r <= 10 ? 12 : 11);
+        }
+        setTimeout(function () { if (map) map.updateSize(); }, 60);
+    }
+
+    // EvMapNear 결과 수신 → enrich 후 카드·지도 갱신
+    function onResults(results, key, coords, radiusKm) {
+        lastResults = results || [];
+        lastCoords = coords || lastCoords;
+        if (key === 'h2') { // 수소는 chlist 색인 대상 아님 — 카드 요약 없이 기본 정보만
+            $('#nearTotal').text(lastResults.length);
+        }
+        ensureChargers().always(function () { renderCards(); drawMap(); });
+    }
+
     return {
-        oper: $('#h2Oper').val(),
-        ctp: $('#h2Ctp').val(),
-        vk: $('#h2Vk').val()
+        init: function () {
+            initMap([126.978028, 37.566571]);   // 기본 중심(서울시청) — 위치 확인되면 이동
+            EvMapNear.onResults(onResults);
+        },
+        setSort: function (m, label) { sortMode = m; $('#nearSortLabel').text(label); renderCards(); },
+        getSort: function () { return sortMode; },
+        redraw: function () { renderCards(); drawMap(); },
+        zoom: function (d) { if (map) { var v = map.getView(); v.animate({ zoom: (v.getZoom() || 12) + d, duration: 200 }); } },
+        recenter: function () { if (map && lastCoords) map.getView().animate({ center: ol.proj.fromLonLat([lastCoords.lng, lastCoords.lat]), duration: 300 }); }
     };
+})();
+
+// ---- 바텀시트 스냅(peek/half/full) — grabber 드래그 + 클릭 순환 ----
+function initBottomSheet() {
+    var sheet = document.getElementById('nearSheet');
+    var grab = document.getElementById('nearGrabber');
+    var app = document.querySelector('.near-app');
+    var names = ['peek', 'half', 'full'];
+    function snapPx() { var h = app.clientHeight || 600; return { peek: 132, half: Math.round(h * 0.46), full: h - 116 }; }
+    function liftControls(px) {
+        var b = (px + 14) + 'px';
+        var lc = document.querySelector('.near-mapctrl'); if (lc) lc.style.bottom = b;
+        var lg = document.querySelector('.near-legend'); if (lg) lg.style.bottom = b;
+    }
+    function setSnapName(name) {
+        sheet.style.height = '';                 // 인라인 높이 제거 → CSS data-snap 이 관장(트랜지션 복귀)
+        sheet.setAttribute('data-snap', name);
+        liftControls(snapPx()[name]);
+        setTimeout(function () { if (window.NearMobile && NearMobile.recenter) NearMobile.recenter(); }, 240);
+    }
+    function nearestName(px) {
+        var s = snapPx(), best = 'half', bd = 1e9;
+        names.forEach(function (k) { var d = Math.abs(s[k] - px); if (d < bd) { bd = d; best = k; } });
+        return best;
+    }
+    var dragging = false, startY = 0, startH = 0, moved = false;
+    function down(y, e) { dragging = true; moved = false; startY = y; startH = sheet.getBoundingClientRect().height; sheet.classList.add('is-dragging'); if (e && grab.setPointerCapture) { try { grab.setPointerCapture(e.pointerId); } catch (x) {} } }
+    function move(y) {
+        if (!dragging) return;
+        var dy = startY - y; if (Math.abs(dy) > 4) moved = true;
+        var h = app.clientHeight || 600;
+        var nh = Math.max(90, Math.min(h - 96, startH + dy));
+        sheet.style.height = nh + 'px';
+        liftControls(nh);
+    }
+    function up() {
+        if (!dragging) return;
+        dragging = false; sheet.classList.remove('is-dragging');
+        if (!moved) {                                            // 탭 → 다음 단계 순환
+            var i = names.indexOf(sheet.getAttribute('data-snap'));
+            setSnapName(names[(i + 1) % names.length]);
+            return;
+        }
+        setSnapName(nearestName(sheet.getBoundingClientRect().height));   // 드래그 → 가장 가까운 스냅
+    }
+    grab.addEventListener('pointerdown', function (e) { down(e.clientY, e); e.preventDefault(); });
+    grab.addEventListener('pointermove', function (e) { move(e.clientY); });
+    grab.addEventListener('pointerup', function () { up(); });
+    grab.addEventListener('pointercancel', function () { up(); });
+    grab.addEventListener('keydown', function (e) {
+        var i = names.indexOf(sheet.getAttribute('data-snap'));
+        if (e.key === 'ArrowUp' && i < names.length - 1) { setSnapName(names[i + 1]); e.preventDefault(); }
+        if (e.key === 'ArrowDown' && i > 0) { setSnapName(names[i - 1]); e.preventDefault(); }
+    });
+}
+
+// ---- 칩 팝오버(간이 선택) ----
+function closeChipMenu() {
+    document.querySelectorAll('.near-chip-menu').forEach(function (m) { m.remove(); });
+    document.querySelectorAll('.near-chip[data-open]').forEach(function (c) { c.removeAttribute('data-open'); });
+}
+// 칩 팝오버 — position:fixed + body 부착으로 near-app(overflow:hidden) 클리핑/스태킹 문제 제거. 같은 칩 재클릭=닫기
+function chipMenu(anchor, options, onPick, currentVal) {
+    var wasOpen = anchor.getAttribute('data-open') === '1';
+    closeChipMenu();
+    if (wasOpen) return;
+    anchor.setAttribute('data-open', '1');
+    var menu = document.createElement('div');
+    menu.className = 'near-chip-menu';
+    menu.style.cssText = 'position:fixed;z-index:3000;background:#fff;border:1px solid #e3e7eb;border-radius:12px;box-shadow:0 8px 28px rgba(20,30,40,.22);padding:6px;min-width:152px;max-height:60vh;overflow:auto;';
+    options.forEach(function (o) {
+        var on = (currentVal !== undefined && String(o.val) === String(currentVal));
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.innerHTML = '<span>' + o.label + '</span>' + (on ? '<span style="color:#1BA877;font-weight:800">✓</span>' : '');
+        b.style.cssText = 'display:flex;justify-content:space-between;gap:18px;align-items:center;width:100%;text-align:left;border:0;background:' + (on ? '#f2faf6' : 'transparent') + ';padding:10px 12px;border-radius:8px;font-size:13.5px;color:#1f2937;cursor:pointer;white-space:nowrap;';
+        b.onmouseover = function () { b.style.background = '#f2faf6'; };
+        b.onmouseout = function () { b.style.background = on ? '#f2faf6' : 'transparent'; };
+        b.onclick = function () { closeChipMenu(); onPick(o); };
+        menu.appendChild(b);
+    });
+    document.body.appendChild(menu);
+    var r = anchor.getBoundingClientRect();
+    var left = Math.min(r.left, window.innerWidth - menu.offsetWidth - 8);
+    menu.style.left = Math.max(8, left) + 'px';
+    menu.style.top = (r.bottom + 6) + 'px';
+    setTimeout(function () {
+        function cleanup() { document.removeEventListener('click', h, true); window.removeEventListener('resize', close); window.removeEventListener('scroll', close, true); }
+        function close() { closeChipMenu(); cleanup(); }
+        function h(ev) { if (!menu.contains(ev.target) && ev.target !== anchor && !anchor.contains(ev.target)) close(); }
+        document.addEventListener('click', h, true);
+        window.addEventListener('resize', close);
+        window.addEventListener('scroll', close, true);
+    }, 0);
 }
 
 $(function () {
@@ -354,26 +687,121 @@ $(function () {
     populateCodeSelect($('#h2Ctp'), EvMapH2View.filterFields.ctp, 'name');
     populateCodeSelect($('#h2Vk'), EvMapH2View.filterFields.vk, 'name');
 
+    NearMobile.init();
+
     EvMapNear.init(PAGE_INFO, [
-        // 적재 파일은 전국 전량 고정 — 반경 판정은 워커가 좌표로 한다
         { key: 'ev', adapter: EvMapEvView, buildFilters: buildEvFilters, loadFilters: { orgme: 'Y', orgetc: 'Y' } },
         { key: 'h2', adapter: EvMapH2View, buildFilters: buildH2Filters, loadFilters: {} }
     ]);
 
-    $('.search-form .button--reset').on('click', function () {
-        $('#kilometer5').prop('checked', true);
+    initBottomSheet();
+
+    // 검색
+    $('#nearSearchBtn').on('click', function () { EvMapNear.search(); });
+    $('#nearSearch').on('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); EvMapNear.search(); } });
+
+    // 현재 위치 — 실제 GPS 요청(권한 필요). 예시 데이터가 희소한 지역이면 반경을 넓혀 안내
+    $('#nearLocate').on('click', function () { EvMapNear.relocate(); });
+    // 지도 확대/축소
+    $('#nearZoomIn').on('click', function () { NearMobile.zoom(1); });
+    $('#nearZoomOut').on('click', function () { NearMobile.zoom(-1); });
+
+    // 칩: 전기/수소
+    $('.near-chip[data-chip="energy"]').on('click', function () {
+        var isEv = $(this).text().trim().indexOf('전기') === 0;
+        var next = isEv ? 'h2' : 'ev';
+        EvMapNear.activate(next);
+        $(this).contents().first()[0].textContent = (next === 'ev' ? '전기' : '수소');
+    });
+    // 칩: 충전방식(급속/완속)
+    $('.near-chip[data-chip="band"]').on('click', function () {
+        var el = this;
+        chipMenu(el, [
+            { label: '전체', val: '' }, { label: '급속', val: 'fast' }, { label: '완속', val: 'slow' }
+        ], function (o) {
+            $('#evBand').val(o.val);
+            el.classList.toggle('is-off', o.val === '');
+            el.childNodes[0].textContent = (o.val === '' ? '충전방식' : o.label) + ' ';
+            if (window.__updateFilterCount) window.__updateFilterCount();
+            EvMapNear.search();
+        }, $('#evBand').val());
+    });
+    // 칩: 반경
+    $('.near-chip[data-chip="radius"]').on('click', function () {
+        var el = this;
+        chipMenu(el, [
+            { label: '1km 이내', val: '1' }, { label: '5km 이내', val: '5' }, { label: '10km 이내', val: '10' }, { label: '20km 이내', val: '20' }
+        ], function (o) {
+            $('#kilometer' + o.val).prop('checked', true).trigger('change');
+            el.childNodes[0].textContent = o.label + ' ';
+        }, $('input[name="kilometer"]:checked').val());
+    });
+    // 칩: 정렬
+    $('.near-chip[data-chip="sort"]').on('click', function () {
+        var el = this;
+        chipMenu(el, [
+            { label: '거리순', val: 'dist' }, { label: '이용 가능 순', val: 'avail' }, { label: '가격순(회원 최저)', val: 'price' }
+        ], function (o) {
+            var short = o.label.replace('(회원 최저)', '');
+            NearMobile.setSort(o.val, short);
+            el.childNodes[0].textContent = short + ' ';
+        }, NearMobile.getSort());
+    });
+    // 칩: 필터 → 시트
+    $('.near-chip[data-chip="filter"]').on('click', function () { $('#nearFilter').addClass('is-open').attr('aria-hidden', 'false'); });
+    $('#nearFilter').on('click', '[data-close]', function () { $('#nearFilter').removeClass('is-open').attr('aria-hidden', 'true'); });
+    $('#nearFilterApply').on('click', function () {
+        $('#nearFilter').removeClass('is-open').attr('aria-hidden', 'true');
+        updateFilterCount();
+        EvMapNear.search();
+    });
+
+    // 카드 클릭 → 상세 패널
+    $('#nearCards').on('click', '.near-card', function (e) {
+        if ($(e.target).closest('.near-nav-btn').length) return;   // 네비 버튼은 별도
+        EvMapPanel.open($(this).data('sid'), $(this).data('cm'));
+    });
+    // 네비 딥링크(외부 앱) — 좌표 전달. 데스크톱은 카카오맵 길찾기 웹으로 폴백
+    $('#nearCards').on('click', '.near-nav-btn', function (e) {
+        e.stopPropagation();
+        var $c = $(this).closest('.near-card');
+        var lat = $c.data('lat'), lng = $c.data('lng'), nm = decodeURIComponent($c.data('name') || '충전소');
+        var kakao = 'kakaomap://route?ep=' + lat + ',' + lng + '&by=CAR';
+        var web = 'https://map.kakao.com/link/to/' + encodeURIComponent(nm) + ',' + lat + ',' + lng;
+        // 프로토: 모바일이면 앱 딥링크 시도 후 웹 폴백, 아니면 웹 길찾기
+        if (/Android|iPhone|iPad/i.test(navigator.userAgent)) { window.location.href = kakao; setTimeout(function () { window.open(web, '_blank'); }, 700); }
+        else { window.open(web, '_blank'); }
+    });
+
+    // 상세 필터 초기화
+    $('.near-filter .button--reset').on('click', function () {
+        $('#kilometer10').prop('checked', true);
         $('#evStatType, #evBand, #h2Oper, #h2Ctp, #h2Vk').val('');
         $('#orgme, #orgetc').prop('checked', true);
         $('#serviceCheck1, #serviceCheck2').prop('checked', false);
+        $('.near-chip[data-chip="band"]').addClass('is-off').get(0).childNodes[0].textContent = '급속/완속 ';
+        updateFilterCount();
         EvMapNear.search();
     });
+
+    function updateFilterCount() {
+        var n = 0;
+        if ($('#evStatType').val()) n++;
+        if ($('#evBand').val()) n++;
+        if (!($('#orgme').is(':checked') && $('#orgetc').is(':checked'))) n++;
+        if ($('#serviceCheck1').is(':checked')) n++;
+        if ($('#serviceCheck2').is(':checked')) n++;
+        var $b = $('#nearFilterCount');
+        if (n > 0) $b.text(n).prop('hidden', false); else $b.prop('hidden', true);
+    }
+    window.__updateFilterCount = updateFilterCount;
 });
 </script>
 <div id="footer-slot"></div>
-<script src="assets/js/i18n/i18n.js?v=20260827a"></script>
-<script src="assets/js/ui-common.js?v=20260827a"></script>
-<script src="js/common/fileAttach.js?v=20260827a"></script>
-<script src="js/menu-data.js?v=20260827a"></script>
-<script src="js/shell.js?v=20260827a"></script>
+<script src="assets/js/i18n/i18n.js?v=20260910b"></script>
+<script src="assets/js/ui-common.js?v=20260910b"></script>
+<script src="js/common/fileAttach.js?v=20260910b"></script>
+<script src="js/menu-data.js?v=20260910b"></script>
+<script src="js/shell.js?v=20260910b"></script>
 </body>
 </html>
