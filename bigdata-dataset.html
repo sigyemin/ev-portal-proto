@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터셋 분석·신청 · 무공해차 빅데이터 플랫폼</title>
+  <!-- ① 상용 컴포넌트 원본(전수 추출) → ② 페이지 전용 보정 순서 -->
+  <link rel="stylesheet" href="assets/css/bd-ui.css?v=20260911c">
+  <link rel="stylesheet" href="assets/css/bd-platform.css?v=20260911k">
+</head>
+<body class="bd-body" data-bd-active="dataset">
+  <header id="bd-header"></header>
+
+  <main class="bd-main">
+    <div class="page-layout">
+      <!-- 좌측 LNB -->
+      <aside class="portal-lnb" aria-label="데이터 스토어 메뉴">
+        <div class="portal-lnb__title">데이터 스토어</div>
+        <nav><ul class="portal-lnb__list">
+          <li class="portal-lnb__item portal-lnb__item--current">
+            <a class="portal-lnb__depth2" aria-current="page">데이터셋 분석·신청</a></li>
+        </ul></nav>
+      </aside>
+
+      <!-- 우측 메인 -->
+      <div class="page-layout__content portal-main">
+        <p class="portal-bc"><span class="portal-bc__home">⌂</span> <b>데이터 스토어</b> <span aria-hidden="true">⌄</span></p>
+        <h1 class="portal-main__title">데이터셋 분석·신청</h1>
+
+        <div class="contents contents--data-store">
+          <!-- 조회 조건 -->
+          <section class="ds-filter-bar" role="search" aria-label="데이터셋 검색">
+            <div class="ds-filter-bar__title"><strong>조회 조건</strong></div>
+            <label class="ds-filter-control ds-filter-control--select">
+              <span class="ds-filter-control__label">구분</span>
+              <select id="dsUse" aria-label="사용 유형">
+                <option value="">사용 유형 전체</option>
+                <option value="SIMPLE">간편</option>
+                <option value="ADVANCED">고급</option>
+              </select>
+            </label>
+            <label class="ds-filter-control ds-filter-control--keyword">
+              <span class="ds-filter-control__label">검색어</span>
+              <span class="ds-filter-control__input">
+                <input type="search" id="dsKeyword" aria-label="데이터셋명 또는 설명 검색어" placeholder="데이터셋명 또는 설명을 입력해주세요.">
+              </span>
+            </label>
+            <div class="ds-filter-actions">
+              <button type="button" class="ds-filter-action ds-filter-action--primary" id="dsGo">조회</button>
+              <button type="button" class="ds-filter-action" id="dsReset">초기화</button>
+            </div>
+          </section>
+
+          <!-- 건수 · 정렬 -->
+          <div class="ds-report-section-head">
+            <div class="total-number">총 <strong class="total-number__count" id="dsTotal">0</strong> 건</div>
+            <div class="ds-sort-bar">
+              <span>목록 표시 개수</span>
+              <select id="dsSize" aria-label="목록 표시 개수"><option value="5">5개</option><option value="10">10개</option></select>
+              <span>정렬기준</span>
+              <select id="dsSort" aria-label="정렬기준"><option value="desc">최신순</option><option value="asc">과거순</option></select>
+            </div>
+          </div>
+
+          <!-- 목록 + 상세 -->
+          <div class="ds-layout">
+            <div><div class="ds-card-list" id="dsList"></div></div>
+            <aside class="ds-detail" id="dsDetail"></aside>
+          </div>
+
+          <!-- 작업공간 (모드별로 본문이 달라짐) -->
+          <section class="ds-workspace-section">
+            <div class="ds-workspace-head">
+              <div>
+                <div class="ds-workspace-title">작업공간</div>
+                <div class="ds-workspace-sub">핵심 분석 화면은 하단 전체폭에서 크게 확인하고, 신청 설정은 상단에서 분리해 관리합니다.</div>
+              </div>
+            </div>
+            <div class="ds-workspace-body" id="dsWorkspace"></div>
+          </section>
+        </div>
+
+        <p class="bd-exnote">※ 상용 「무공해차 빅데이터 플랫폼」 <b>데이터 스토어(데이터셋 분석·신청)</b> 재현. 레이아웃·문구·모드별 작업공간(간편=피벗 / 고급=조인 / 일반=자유서술+SQL)은 상용 실화면 실측이며, <b>데이터셋 목록은 상용이 현재 0건이라 예시 데이터</b>입니다(원천=관리자포털 「데이터셋 관리」). 실제 신청·승인·My Data 연동은 개발 협의 대상입니다.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bd-footer" id="bd-footer"></footer>
+
+  <script src="js/bd-shell.js?v=20260911k"></script>
+  <script>
+  (function(){
+    function el(id){ return document.getElementById(id); }
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    /* 예시 데이터셋 (상용 목록 0건 → 프로토 탐색용. 원천=관리자포털 데이터셋 관리) */
+    var DATASETS = [
+      { id:'DS001', n:'충전기 상태정보 이력', d:'충전기별 상태코드 변경 이력. 이상탐지 P01~P10 산출의 원천입니다.', modes:['SIMPLE','ADVANCED'], up:'2026.09.10',
+        tags:['충전인프라','상태정보','일배치'], f:['기준일','사업자','충전소ID','충전기ID','상태코드','상태변경시각','통신상태'] },
+      { id:'DS002', n:'충전 이용정보(거래)', d:'충전 거래 단위 이용 기록. 충전량·충전시간·요금 분석에 사용합니다.', modes:['SIMPLE','ADVANCED'], up:'2026.09.10',
+        tags:['충전이용','거래','일배치'], f:['거래일시','사업자','충전소ID','충전기ID','충전량(kWh)','충전시간(분)','요금(원)','단가'] },
+      { id:'DS003', n:'충전기 마스터', d:'등록·폐기를 포함한 충전기 기본 정보와 설치 속성입니다.', modes:['SIMPLE'], up:'2026.09.02',
+        tags:['충전인프라','마스터','월배치'], f:['충전기ID','충전소ID','사업자','충전기타입','용량(kW)','설치연도','보조금구분','운영상태'] },
+      { id:'DS004', n:'충전소 마스터', d:'충전소 위치·시설구분·공개여부 등 충전소 단위 기본 정보입니다.', modes:['SIMPLE'], up:'2026.09.02',
+        tags:['충전인프라','마스터','월배치'], f:['충전소ID','충전소명','시도','시군구','주소','시설구분','공개여부','좌표'] },
+      { id:'DS005', n:'전기차 등록 현황', d:'지역·차종·용도별 전기차 누적 등록 및 신규·말소 현황입니다.', modes:['SIMPLE','ADVANCED'], up:'2026.09.01',
+        tags:['전기차','등록','월배치'], f:['기준연월','시도','시군구','차종','용도','제작사','모델','등록대수','말소대수'] },
+      { id:'DS006', n:'구매보조금 지급 현황', d:'차종·지자체별 구매보조금 지급 대수와 지급액 집행 현황입니다.', modes:['SIMPLE','ADVANCED'], up:'2026.09.01',
+        tags:['보조금','정책','월배치'], f:['기준연월','시도','시군구','차종','모델','지급대수','국비','지방비','지급액'] },
+      { id:'DS007', n:'연계 API 호출 로그', d:'사업자 연계 API의 요청·응답 로그. A01~A06 이상 판정의 원천입니다.', modes:['ADVANCED'], up:'2026.09.10',
+        tags:['연계API','로그','일배치'], f:['호출시각','사업자','호출URL','구분','요청수','응답수','결과코드'] },
+      { id:'DS008', n:'이상탐지 결과', d:'충전기 상태·이용·연계 API 이상 패턴 탐지 결과 집계입니다.', modes:['SIMPLE','ADVANCED'], up:'2026.09.10',
+        tags:['이상탐지','품질','일배치'], f:['기준일','패턴코드','패턴명','사업자','충전기ID','탐지값','비고'] }
+    ];
+    var MODE_LABEL = { SIMPLE:'간편', ADVANCED:'고급' };
+
+    /* 상용 실측 문구 */
+    var TXT = {
+      infoDefault:'데이터 스토어의 데이터셋은 관리자포털의 `데이터셋 관리`에서 등록된 데이터셋 기준으로 노출됩니다.',
+      infoNormal:'일반신청은 관리자 등록 데이터셋과 무관하게 운영자 검토를 거쳐 생성됩니다.필요한 데이터 조건을 자유롭게 기술하거나 SQL을 직접 입력하고, 승인 후 My Data에서 결과를 받습니다.',
+      modeNote:{
+        SIMPLE:'간편분석은 단일 데이터셋 기준으로 피벗 구성을 저장하고, 승인 후 결과를 My Data에서 받아봅니다.',
+        ADVANCED:'고급분석은 두 개 이상의 데이터셋을 조인 키로 결합해 피벗을 구성하고, 그 결과 기준으로 신청서를 생성합니다.'
+      },
+      wsNote:{
+        SIMPLE:'피벗 구성을 검토한 뒤 이 아래에서 바로 간편분석 신청을 진행합니다. 승인 후 결과를 My Data에서 받아봅니다.',
+        NORMAL:'요청 내용을 확인한 뒤 이 아래에서 바로 일반신청을 등록합니다. 승인 후 결과를 My Data에서 받아봅니다.'
+      },
+      btn:{ SIMPLE:'간편분석 신청', NORMAL:'일반신청 등록' },
+      joinTitle:'고급분석 데이터 구성',
+      joinDesc:'데이터셋 2개를 조인 키(키 필드)로 결합해 하나의 분석 대상처럼 피벗을 구성합니다.',
+      joinInfo:'조인 키 필드가 지정된 데이터셋이 2개 이상 있어야 고급분석을 구성할 수 있습니다.',
+      pivotHint:'값 필드와 집계 방식을 고른 뒤, 아래에서 행·열 필드를 드래그해 분석 표를 완성하세요. 행·열은 합쳐서 최대 5개까지 지정할 수 있습니다.'
+    };
+
+    var use='', kw='', size=5, sort='desc', sel=null, mode='SIMPLE';
+
+    function filtered(){
+      var list = DATASETS.filter(function(x){
+        if(use && x.modes.indexOf(use)<0) return false;
+        if(kw){ var q=kw.toLowerCase(); if((x.n+' '+x.d).toLowerCase().indexOf(q)<0) return false; }
+        return true;
+      });
+      list = list.slice().sort(function(a,b){ return sort==='desc' ? b.up.localeCompare(a.up) : a.up.localeCompare(b.up); });
+      return list.slice(0, size);
+    }
+
+    function renderList(){
+      var list = filtered();
+      el('dsTotal').textContent = list.length;
+      if(!list.length){ el('dsList').innerHTML = '<div class="ds-info-box">조건에 맞는 데이터셋이 없습니다.</div>'; return; }
+      el('dsList').innerHTML = list.map(function(x){
+        var tags = x.tags.map(function(t){ return '<span class="ds-card-tag">'+esc(t)+'</span>'; }).join('');
+        var modes = x.modes.map(function(m){ return MODE_LABEL[m]; }).join(' · ');
+        return '<div class="ds-card'+(sel===x.id?' ds-card--active':'')+'" data-id="'+x.id+'">'
+          + '<button type="button" class="ds-card-select" aria-label="'+esc(x.n)+' 선택"></button>'
+          + '<div class="ds-card-status"><span class="ds-chip ds-chip--blue">'+esc(x.id)+'</span>'
+          +   '<span class="ds-card-meta">최근 갱신 '+esc(x.up)+'</span></div>'
+          + '<div class="ds-card-main">'
+          +   '<div><div class="ds-card-title">'+esc(x.n)+'</div>'
+          +     '<div class="ds-card-desc">'+esc(x.d)+'</div>'
+          +     '<div class="ds-card-tags">'+tags+'</div></div>'
+          +   '<div class="ds-card-meta">필드 '+x.f.length+'개</div>'
+          +   '<div class="ds-card-meta">신청 가능 '+esc(modes)+'</div>'
+          + '</div></div>';
+      }).join('');
+    }
+
+    function modeSwitch(){
+      var modes=[['SIMPLE','간편분석'],['ADVANCED','고급분석'],['NORMAL','일반신청']];
+      return '<div class="ds-mode-switch">' + modes.map(function(m){
+        return '<button type="button" class="ds-mode-btn'+(mode===m[0]?' ds-mode-btn--active':'')+'" data-mode="'+m[0]+'">'+m[1]+'</button>';
+      }).join('') + '</div>';
+    }
+
+    /* 상세 패널 — 상용 구조: info-box → mode-switch → info-box(모드 설명) */
+    function renderDetail(){
+      var x = DATASETS.filter(function(d){return d.id===sel;})[0];
+      var head, body='';
+      if(mode==='NORMAL'){
+        head = '<div class="ds-detail-title">일반신청</div>'
+             + '<div class="ds-detail-sub">데이터셋 선택 없이 필요한 데이터를 직접 기술해 신청합니다.</div>';
+        body = '<div class="ds-info-box">'+esc(TXT.infoNormal)+'</div>' + modeSwitch();
+      } else if(!x){
+        head = '<div class="ds-detail-title">데이터셋을 선택하세요.</div>'
+             + '<div class="ds-detail-sub">관리자포털에서 등록된 데이터셋의 필드 구성과 신청 가능 유형을 확인할 수 있습니다.</div>';
+        body = '<div class="ds-info-box">'+esc(TXT.infoDefault)+'</div>' + modeSwitch()
+             + '<div class="ds-info-box">'+esc(TXT.modeNote[mode])+'</div>';
+      } else {
+        head = '<div class="ds-detail-title">'+esc(x.n)+'</div><div class="ds-detail-sub">'+esc(x.d)+'</div>';
+        body = '<div class="ds-info-box">필드 '+x.f.length+'개 · 신청 가능 '
+             + x.modes.map(function(m){return MODE_LABEL[m];}).join(' · ')+' · 최근 갱신 '+esc(x.up)+'</div>'
+             + '<div class="ds-card-tags">'+x.f.map(function(f){return '<span class="ds-card-tag">'+esc(f)+'</span>';}).join('')+'</div>'
+             + modeSwitch()
+             + '<div class="ds-info-box">'+esc(TXT.modeNote[mode])+'</div>';
+      }
+      el('dsDetail').innerHTML = '<div class="ds-detail-head">'+head+'</div><div class="ds-detail-body">'+body+'</div>';
+    }
+
+    function applyGrid(){
+      return '<div class="ds-apply-grid">'
+        + '<div class="ds-field"><label for="apTitle">신청 제목</label><input id="apTitle" maxlength="50"></div>'
+        + '<div class="ds-field"><label for="apPublic">공개 여부</label>'
+        +   '<select id="apPublic"><option value="false">비공개</option><option value="true">공개</option></select></div>'
+        + '<div class="ds-field"><label for="apCycle">생성 주기</label><div class="ds-cycle-picker">'
+        +   '<select id="apCycle" aria-label="생성 주기"><option value="ONCE">단발 (1회 생성)</option>'
+        +   '<option value="DAILY">매일</option><option value="WEEKLY">매주</option><option value="MONTHLY">매월</option></select>'
+        + '</div></div></div>';
+    }
+    function requestActions(m){
+      return '<div class="ds-request-actions">'
+        + '<div class="ds-request-note">'+esc(TXT.wsNote[m])+'</div>'
+        + '<button type="button" class="button button--primary button--sm" id="apSubmit">'+esc(TXT.btn[m])+'</button></div>';
+    }
+
+    /* 작업공간 — 모드별 본문이 상용과 동일하게 달라짐 */
+    function renderWorkspace(){
+      var x = DATASETS.filter(function(d){return d.id===sel;})[0];
+      if(mode==='ADVANCED'){
+        el('dsWorkspace').innerHTML =
+          '<div class="ds-join-box">'
+          + '<div class="ds-pivot-head"><strong>'+esc(TXT.joinTitle)+'</strong></div>'
+          + '<p style="font-size:.75rem;color:#556274;margin:.5rem 0">'+esc(TXT.joinDesc)+'</p>'
+          + '<div class="ds-info-box">'+esc(TXT.joinInfo)+'</div>'
+          + '</div>';
+        return;
+      }
+      if(mode==='NORMAL'){
+        el('dsWorkspace').innerHTML =
+          '<div class="ds-free-box">' + applyGrid()
+          + '<div class="ds-field"><label for="apFree">요청 내용 (필수) — 필요한 데이터를 자유롭게 기술해주세요</label>'
+          +   '<textarea id="apFree" placeholder="필요한 데이터 조건을 자유롭게 기술해주세요."></textarea></div>'
+          + '<div class="ds-field"><label for="apSql">사용자 SQL (선택) — 직접 작성한 SELECT를 첨부할 수 있습니다</label>'
+          +   '<textarea id="apSql" placeholder="SELECT ..."></textarea></div>'
+          + '</div>'
+          + '<div class="ds-workspace-request">' + requestActions('NORMAL') + '</div>';
+        return;
+      }
+      // SIMPLE
+      var opts = x ? x.f.map(function(f){ return '<option>'+esc(f)+'</option>'; }).join('')
+                   : '<option value="">데이터셋을 먼저 선택하세요</option>';
+      el('dsWorkspace').innerHTML =
+        '<div class="ds-pivot-toolbar">'
+        + '<div class="ds-pivot-toolbar__field"><label class="ds-toolbar-label" for="pvValue">값 필드</label>'
+        +   '<div class="ds-toolbar-select"><span class="ds-toolbar-select__icon" aria-hidden="true">Σ</span>'
+        +   '<select id="pvValue">'+opts+'</select></div></div>'
+        + '<div class="ds-pivot-toolbar__field ds-pivot-toolbar__field--aggregation">'
+        +   '<label class="ds-toolbar-label" for="pvAgg">집계 방식</label>'
+        +   '<div class="ds-toolbar-select"><span class="ds-toolbar-select__icon" aria-hidden="true">ƒ</span>'
+        +   '<select id="pvAgg"><option value="Count">건수 (COUNT)</option><option value="Sum">합계 (SUM)</option><option value="Avg">평균 (AVG)</option></select></div></div>'
+        + '<div class="ds-toolbar-hint"><strong>피벗 구성 안내</strong><span> '+esc(TXT.pivotHint)+'</span></div>'
+        + '</div>'
+        + '<div class="ds-pivot-frame"><div class="ds-pivot-head">피벗 구성</div>'
+        +   '<div class="ds-pivot-wrap">' + (x
+              ? '<div class="ds-info-box" style="margin:.75rem">「'+esc(x.n)+'」 행·열 필드를 드래그해 분석 표를 완성하세요. (프로토타입)</div>'
+              : '<div class="ds-info-box" style="margin:.75rem">데이터셋을 선택하면 피벗 구성 영역이 활성화됩니다.</div>')
+        +   '</div></div>'
+        + '<div class="ds-workspace-request">' + applyGrid()
+        +   '<div class="ds-field"><label for="apPurpose">신청 목적 (필수)</label>'
+        +     '<textarea id="apPurpose" placeholder="신청 사유와 필요한 피벗 조건을 입력해주세요."></textarea></div>'
+        +   requestActions('SIMPLE')
+        + '</div>';
+    }
+
+    function renderAll(){ renderList(); renderDetail(); renderWorkspace(); }
+
+    /* 이벤트 */
+    el('dsList').addEventListener('click', function(e){
+      var c=e.target.closest('.ds-card'); if(!c) return;
+      var id=c.getAttribute('data-id');
+      sel = (sel===id) ? null : id;
+      renderAll();
+    });
+    el('dsDetail').addEventListener('click', function(e){
+      var b=e.target.closest('.ds-mode-btn'); if(!b) return;
+      mode=b.getAttribute('data-mode'); renderDetail(); renderWorkspace();
+    });
+    el('dsWorkspace').addEventListener('click', function(e){
+      if(!e.target.closest('#apSubmit')) return;
+      if(mode!=='NORMAL' && !sel){ alert('데이터셋을 먼저 선택해주세요.'); return; }
+      var need = (mode==='NORMAL') ? el('apFree') : el('apPurpose');
+      if(need && !need.value.trim()){ alert((mode==='NORMAL'?'요청 내용':'신청 목적')+'은 필수입니다.'); return; }
+      alert('「'+TXT.btn[mode==='NORMAL'?'NORMAL':'SIMPLE']+'」이 접수되었습니다. 승인 후 My Data에서 확인할 수 있습니다. (프로토타입)');
+    });
+    el('dsGo').addEventListener('click', function(){ use=el('dsUse').value; kw=el('dsKeyword').value.trim(); renderAll(); });
+    el('dsReset').addEventListener('click', function(){ el('dsUse').value=''; el('dsKeyword').value=''; use=''; kw=''; sel=null; renderAll(); });
+    el('dsKeyword').addEventListener('keydown', function(e){ if(e.key==='Enter'){ el('dsGo').click(); } });
+    el('dsSize').addEventListener('change', function(){ size=parseInt(this.value,10); renderList(); });
+    el('dsSort').addEventListener('change', function(){ sort=this.value; renderList(); });
+
+    renderAll();
+  })();
+  </script>
+</body>
+</html>

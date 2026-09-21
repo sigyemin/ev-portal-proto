@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무공해차 빅데이터 플랫폼</title>
+  <!-- ① 상용 컴포넌트 원본(전수 추출) → ② 페이지 전용 보정 순서 -->
+  <link rel="stylesheet" href="assets/css/bd-ui.css?v=20260911a">
+  <link rel="stylesheet" href="assets/css/bd-platform.css?v=20260911k">
+  <script src="assets/js/vendors/echarts.min.js?v=20260911a"></script>
+</head>
+<body class="bd-body" data-bd-active="main">
+  <header id="bd-header"></header>
+
+  <main class="bd-main">
+    <!-- 상용 페이지 래퍼: .main-dashboard (스코프 토큰 --ink/--amber/--trend-* 활성) -->
+    <div class="bd-wrap main-dashboard">
+      <div class="bd-pagehd">
+        <div>
+          <h1>무공해차 통합 현황</h1>
+          <p>충전기와 전기차의 월별 주요 현황을 한눈에 확인합니다.</p>
+        </div>
+        <div class="bd-basis">
+          <label for="basisMonth">통계 기준월</label>
+          <select id="basisMonth" aria-label="통계 기준월">
+            <option value="2026-09">2026년 9월 (잠정)</option>
+            <option value="2026-08">2026년 8월</option>
+            <option value="2026-07">2026년 7월</option>
+            <option value="2026-06">2026년 6월</option>
+            <option value="2026-05">2026년 5월</option>
+            <option value="2026-04">2026년 4월</option>
+          </select>
+          <button type="button" class="bd-basis__btn" id="basisBtn">데이터 기준</button>
+        </div>
+      </div>
+      <p class="bd-basisnote" id="basisNote"></p>
+
+      <h2 class="bd-secttl">핵심 운영 지표</h2>
+      <div class="bd-kpis" id="kpis"></div>
+
+      <h2 class="bd-secttl" style="margin-top:30px">상세 현황</h2>
+      <div class="bd-tabs">
+        <button type="button" class="bd-tab is-active" data-tab="field">분야별 상세 현황</button>
+        <button type="button" class="bd-tab" data-tab="busi">충전 사업자별 상세 현황</button>
+      </div>
+
+      <div class="bd-detail">
+        <section class="bd-col c-blue">
+          <div class="bd-col__head"><span class="bd-col__title">충전 인프라 변동</span><span class="bd-badge b-blue">월별 증감 현황</span></div>
+          <div class="bd-col__stats">
+            <div class="bd-stat"><div class="bd-stat__num" data-k="infraStart"></div><div class="bd-stat__label">월초 충전기</div></div>
+            <div class="bd-stat"><div class="bd-stat__num" data-k="infraEnd"></div><div class="bd-stat__label">월말 충전기</div></div>
+            <div class="bd-stat"><div class="bd-stat__num neg" data-k="infraNet"></div><div class="bd-stat__label">월 순증감</div></div>
+          </div>
+          <div class="bd-mini" id="miniInfra"></div>
+          <p class="bd-col__desc">월초와 월말의 충전기 수와 당월 증감 현황을 비교합니다.</p>
+          <div class="bd-svc"><div class="bd-svc__hd"><span class="bd-svc__ttl">충전기 설치 현황</span><span class="bd-svc__badge">서비스 준비 중</span></div><p class="bd-svc__desc">설치연도, 지역, 사업자 기준으로 충전기 설치 현황을 조회합니다.</p><button type="button" class="bd-svc__btn" data-prep="충전기 설치 현황">안내 보기</button></div>
+          <div class="bd-svc"><div class="bd-svc__hd"><span class="bd-svc__ttl">충전기 폐기 현황</span><span class="bd-svc__badge">서비스 준비 중</span></div><p class="bd-svc__desc">폐기 충전기의 지역, 사업자, 폐기 여부와 이력을 조회합니다.</p><button type="button" class="bd-svc__btn" data-prep="충전기 폐기 현황">안내 보기</button></div>
+        </section>
+
+        <section class="bd-col c-orange">
+          <div class="bd-col__head"><span class="bd-col__title">충전소 품질 진단</span><span class="bd-badge b-orange">이상 탐지 현황</span></div>
+          <div class="bd-col__stats">
+            <div class="bd-stat"><div class="bd-stat__num" data-k="qcRate"></div><div class="bd-stat__label">탐지율</div></div>
+            <div class="bd-stat"><div class="bd-stat__num" data-k="qcAnom"></div><div class="bd-stat__label">이상 충전기</div></div>
+            <div class="bd-stat"><div class="bd-stat__num" data-k="qcEval"></div><div class="bd-stat__label">평가 충전기</div></div>
+          </div>
+          <div class="bd-mini bd-mini--none">추이 없음</div>
+          <p class="bd-col__desc">이상 충전기 수와 전체 충전기 대비 탐지 비율을 확인합니다.</p>
+          <div class="bd-svc"><div class="bd-svc__hd"><span class="bd-svc__ttl">충전기 이상 탐지</span></div><p class="bd-svc__desc">충전기 상태 이상 탐지 화면으로 이동해 패턴별 대상을 확인합니다.</p><a href="bigdata-anomaly.html" class="bd-svc__btn is-live" data-prep="이상탐지">상세 조회</a></div>
+          <div class="bd-svc"><div class="bd-svc__hd"><span class="bd-svc__ttl">충전 인프라 운영이력 카드</span><span class="bd-svc__badge">서비스 준비 중</span></div><p class="bd-svc__desc">운영이력 카드 목록에서 충전기 상태 변경과 이력을 확인합니다.</p><button type="button" class="bd-svc__btn" data-prep="충전 인프라 운영이력 카드">안내 보기</button></div>
+        </section>
+
+        <section class="bd-col c-green">
+          <div class="bd-col__head"><span class="bd-col__title">전기차·정책</span><span class="bd-badge b-green">등록·보조금 현황</span></div>
+          <div class="bd-col__stats">
+            <div class="bd-stat"><div class="bd-stat__num" data-k="policyReg"></div><div class="bd-stat__label">누적 등록</div></div>
+            <div class="bd-stat"><div class="bd-stat__num pos" data-k="policyDelta"></div><div class="bd-stat__label">당월 증감</div></div>
+            <div class="bd-stat"><div class="bd-stat__num" data-k="policyRate"></div><div class="bd-stat__label">보조금 집행률</div></div>
+          </div>
+          <div class="bd-mini" id="miniEv"></div>
+          <p class="bd-col__desc">전기차 등록과 구매보조금 지급 현황을 함께 확인합니다.</p>
+          <div class="bd-svc"><div class="bd-svc__hd"><span class="bd-svc__ttl">전기차 등록 현황</span><span class="bd-svc__badge">서비스 준비 중</span></div><p class="bd-svc__desc">지역, 차종, 용도 기준으로 전기차 등록 현황을 조회합니다.</p><button type="button" class="bd-svc__btn" data-prep="전기차 등록 현황">안내 보기</button></div>
+          <div class="bd-svc"><div class="bd-svc__hd"><span class="bd-svc__ttl">배터리 정보 분석</span><span class="bd-svc__badge">서비스 준비 중</span></div><p class="bd-svc__desc">전기차 배터리 정보를 확인하는 서비스를 준비하고 있습니다.</p><button type="button" class="bd-svc__btn" data-prep="배터리 정보 분석">안내 보기</button></div>
+        </section>
+      </div>
+
+      <p class="bd-exnote">※ 상용 「무공해차 빅데이터 플랫폼」 <b>무공해차 통합 현황</b> 메인 재현. <b>2026년 9월(잠정)</b>만 실화면 스냅샷이며, 다른 기준월은 프로토타입 예시값입니다. 실데이터 연동·산식은 개발 협의 대상.</p>
+    </div>
+  </main>
+
+  <footer class="bd-footer" id="bd-footer"></footer>
+
+  <!-- 데이터 기준 팝오버(경량) -->
+  <div id="bdPop" class="bd-pop" hidden><div class="bd-pop__ttl" id="bdPopTtl"></div><div class="bd-pop__body" id="bdPopBody"></div></div>
+
+  <!-- (i) 지표 설명 모달 -->
+  <div id="bdHelp" class="bd-modal-dim" hidden role="presentation">
+    <div class="bd-hmodal" role="dialog" aria-modal="true" aria-labelledby="bdHelpTtl">
+      <div class="bd-hmodal__hd">
+        <div><div class="bd-hmodal__eyebrow">핵심 운영 지표</div><h2 class="bd-hmodal__title" id="bdHelpTtl"></h2></div>
+        <button type="button" class="bd-modal__close" data-close>닫기</button>
+      </div>
+      <div id="bdHelpBody"></div>
+    </div>
+  </div>
+
+  <!-- 메뉴 정책 결정 가이드 모달 -->
+  <div id="bdGuide" class="bd-modal-dim" hidden role="presentation">
+    <div class="bd-pmodal" role="dialog" aria-modal="true" aria-labelledby="bdGuideTtl">
+      <div class="bd-pmodal__hd">
+        <div><div class="bd-pmodal__eyebrow">메뉴 정책 결정 가이드</div><h2 class="bd-pmodal__title" id="bdGuideTtl"></h2></div>
+        <button type="button" class="bd-modal__close" data-close>닫기</button>
+      </div>
+      <div class="bd-pmodal__body" id="bdGuideBody"></div>
+      <div class="bd-pmodal__foot">
+        <button type="button" class="bd-pbtn bd-pbtn--ghost" data-close>내용 확인</button>
+        <button type="button" class="bd-pbtn bd-pbtn--primary" data-locate>관련 분야 위치 보기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/bd-shell.js?v=20260911e"></script>
+  <script>
+  (function () {
+    /* 기준월별 데이터 — 2026-09 = 실화면 스냅샷, 그 외 = 결정적 예시(월 인덱스 기반) */
+    var BASE = {
+      chgReg:532559, chgNew:1825, chgDel:3365, operRate:93.1, useRate:9.9, anomalyRate:70.0,
+      evReg:1152342, evDelta:10804, evRate:4.3, subCnt:8666, subRate:77.0,
+      infraStart:534099, qcRate:70.0, qcAnom:441720, qcEval:631003
+    };
+    var MONTHS = ['2026-09','2026-08','2026-07','2026-06','2026-05','2026-04'];
+    var NOTE_DATE = '2026.09.11 02:52';
+    function cnt(base, i){ return Math.round(base * (1 - i*0.012)); }
+    function pct(base, i){ var v = base - i*0.7; return Math.max(0, Math.round(v*10)/10); }
+
+    function model(month){
+      var i = Math.max(0, MONTHS.indexOf(month));
+      var chgReg = cnt(BASE.chgReg, i), chgNew = cnt(BASE.chgNew, i), chgDel = cnt(BASE.chgDel, i);
+      var chgDelta = chgNew - chgDel;
+      var infraStart = chgReg - chgDelta, infraEnd = chgReg;
+      var evReg = cnt(BASE.evReg, i), evDelta = cnt(BASE.evDelta, i) - i*120;
+      var qcAnom = cnt(BASE.qcAnom, i), qcEval = cnt(BASE.qcEval, i);
+      return {
+        i:i, prov:(i===0),
+        kpi:{
+          chgReg:chgReg, chgDelta:chgDelta, chgNew:chgNew, chgDel:chgDel,
+          operRate:pct(BASE.operRate,i), useRate:pct(BASE.useRate,i)*1, anomalyRate:pct(BASE.anomalyRate,i),
+          evReg:evReg, evDelta:evDelta, evRate:Math.round((BASE.evRate - i*0.05)*10)/10, subCnt:cnt(BASE.subCnt,i), subRate:pct(BASE.subRate,i)
+        },
+        detail:{
+          infraStart:infraStart, infraEnd:infraEnd, infraNet:chgDelta,
+          qcRate:pct(BASE.qcRate,i), qcAnom:qcAnom, qcEval:qcEval,
+          policyReg:evReg, policyDelta:evDelta, policyRate:pct(BASE.subRate,i)
+        }
+      };
+    }
+
+    function n(v){ return v.toLocaleString(); }
+    function sgn(v){ return (v>=0?'+':'') + v.toLocaleString(); }
+
+    var KPI = [
+      { k:'chgReg', label:'충전기 등록 현황', unit:'대', sub:'기준월 말 등록 충전기', tone:'', def:'기준월 마지막 날 기준으로 등록된 전체 충전기 수입니다.', fmt:function(m){return n(m.chgReg);} },
+      { k:'chgDelta', label:'당월 증감대수', unit:'대', tone:'', def:'당월 신규 등록에서 삭제를 뺀 순증감 대수입니다.', sub:function(m){return '신규 '+n(m.chgNew)+'대 · 삭제 '+n(m.chgDel)+'대';}, fmt:function(m){return sgn(m.chgDelta);} },
+      { k:'operRate', label:'운영률', unit:'%', tone:'t-teal', sub:'기준월 운영 충전기 비율', def:'전체 충전기 중 정상 운영 중인 충전기의 비율입니다.', fmt:function(m){return m.operRate;} },
+      { k:'useRate', label:'이용률', unit:'%', tone:'t-teal', sub:'기준월 충전기 이용 비율', def:'기준월 동안 실제 이용(충전)된 충전기의 비율입니다.', fmt:function(m){return m.useRate;} },
+      { k:'anomalyRate', label:'이상탐지율', unit:'%', tone:'t-teal', sub:'기준월 이상 충전기 비율', def:'평가 대상 충전기 중 이상이 탐지된 충전기의 비율입니다.', fmt:function(m){return m.anomalyRate;} },
+      { k:'evReg', label:'전기차 등록 현황', unit:'대', tone:'t-green', sub:'기준월 누적 등록 전기차', def:'기준월 기준 누적 등록된 전기차 대수입니다.', fmt:function(m){return n(m.evReg);} },
+      { k:'evDelta', label:'당월 증감대수', unit:'대', tone:'t-green', sub:'당월 전기차 등록·말소', def:'당월 전기차 신규 등록에서 말소를 뺀 순증감 대수입니다.', fmt:function(m){return sgn(m.evDelta);} },
+      { k:'evRate', label:'전기차 보급률', unit:'%', tone:'t-green', sub:'전체 차량 대비 전기차 비율', def:'전체 자동차 등록 대수 대비 전기차 비율입니다.', fmt:function(m){return m.evRate;} },
+      { k:'subCnt', label:'구매보조금 지급 대수', unit:'대', tone:'t-green', sub:'당월 보조금 지급 완료 차량', def:'당월 구매보조금 지급이 완료된 차량 대수입니다.', fmt:function(m){return n(m.subCnt);} },
+      { k:'subRate', label:'구매보조금 집행률', unit:'%', tone:'t-green', sub:'기준월 누적 지급액 / 연간 예산', def:'연간 예산 대비 기준월까지 누적 지급액의 비율입니다.', fmt:function(m){return m.subRate;} }
+    ];
+
+    /* ===== (i) 지표 설명 모달 콘텐츠 — 상용 kpi-help-layer 원문 그대로 ===== */
+    var KPI_HELP = {
+      chgReg:{ desc:'선택한 기준월 말에 등록 상태인 충전기 수입니다.' },
+      chgDelta:{ desc:'기준월에 새로 등록된 충전기와 삭제된 충전기의 순변동입니다.', facts:['계산 방법','신규 등록 대수 − 삭제 대수'], notes:['양수는 순증가, 음수는 순감소를 의미합니다.'] },
+      operRate:{ desc:'기준월 등록 충전기 중 운영 상태로 집계된 충전기의 비율입니다.', facts:['계산 방법','운영 충전기 수 ÷ 등록 충전기 수 × 100'], notes:['운영 상태 판정은 기준월 월 집계값을 따릅니다.'] },
+      useRate:{ desc:'기준월 충전 이용 기록을 바탕으로 집계한 충전기 이용 비율입니다.', facts:['집계 기준','월 충전기 통계에 저장된 이용률을 표시합니다.'], notes:['운영률과 이용률은 서로 다른 지표입니다.'] },
+      anomalyRate:{ desc:'평가 대상 충전기 중 상태·이용 이상이 탐지된 등록 충전기의 비율입니다.', facts:['계산 방법','상태·이용 이상 고유 충전기 수 ÷ 평가 충전기 수 × 100'], notes:['같은 충전기가 여러 이상 유형에 해당해도 한 대로 계산합니다.','미등록 충전기와 연계 API 이상 사업자는 이 지표에 합산하지 않습니다.'] },
+      evReg:{ desc:'선택한 기준월까지 등록과 말소를 반영한 누적 전기차 수입니다.' },
+      evDelta:{ desc:'기준월 전기차 등록과 말소의 순변동입니다.', facts:['계산 방법','전기차 등록 대수 − 전기차 말소 대수'], notes:['양수는 누적 등록 전기차가 증가했음을 의미합니다.'] },
+      evRate:{ desc:'전체 등록 차량 중 전기차가 차지하는 비율입니다.', facts:['계산 방법','누적 등록 전기차 수 ÷ 전체 등록 차량 수 × 100'] },
+      subCnt:{ desc:'선택한 기준월에 구매보조금 지급이 완료된 차량 수입니다.' },
+      subRate:{ desc:'기준연도 구매보조금 예산 중 기준월까지 지급된 금액의 비율입니다.', facts:['계산 방법','기준월 누적 지급액 ÷ 기준연도 예산 × 100'], notes:['지급 대수는 월간 값이고 집행률의 지급액은 연도 누적값입니다.'] }
+    };
+
+    /* ===== 메뉴 정책 결정 가이드 모달 콘텐츠 — 상용 policy-modal 원문 그대로 ===== */
+    var G_REC = '현재 확인된 방법은 위 추천 기준입니다.';
+    var G_HELP = '회의에서 확정되지 않으면 화면·API 구현을 시작하지 않습니다.';
+    var G_TXT = {
+      flowIntro:'사용자가 이 메뉴에 들어와 결과를 확인하기까지의 기본 흐름입니다.',
+      deployIntro:'첫 배포는 아래 조회·비교 기능으로 제한하고, 추가 기능은 기준서에 승인된 뒤 포함합니다.',
+      decideIntro:'질문마다 추천안과 대안을 비교합니다. 회의에서 확정한 내용은 기준 문서에 반영합니다.',
+      devIntro:'기획 결정이 끝나면 개발자는 아래 입력·출력·원천·연결 조건을 기준으로 API와 화면을 설계합니다.',
+      summaryNote:'현재는 메뉴 기획을 검토하는 단계이며 상세 화면으로 이동하지 않습니다.',
+      nextStep:'화면 경로 · API · 권한 설계'
+    };
+    var GUIDES = {
+      '충전기 설치 현황':{ badge:['move','기존 메뉴 이동'], tech:'기존 페이지가 있으므로 메인 라우팅만으로 적용 가능합니다.',
+        summary:'충전기 설치 현황은 이미 존재하는 상세 메뉴입니다. 메인에서는 요약을 반복하지 않고 해당 메뉴로 바로 이동합니다.',
+        flow:['분야별 상세 현황에서 충전기 설치 현황을 선택합니다.','기존 설치 현황 메뉴로 이동합니다.','설치연도, 지역, 사업자 조건으로 상세 목록을 조회합니다.'],
+        deploy:['기존 설치 현황 메뉴 이동','설치연도·지역·사업자·충전소명 조건 유지','신규 상세 화면 구현 없음'],
+        decisions:['메인에서 이동할 경로를 /ui/station-qc/install/status로 사용할지은 어떻게 정할까요?','메인에서 별도 사전 모달 없이 바로 이동할지은 어떻게 정할까요?'],
+        route:'/ui/station-qc/install/status', action:'카드 선택 시 Vue Router로 이동', exclude:'신규 API, DB, 설치 현황 화면 개편' },
+      '충전기 폐기 현황':{ badge:['move','기존 메뉴 이동'], tech:'기존 페이지가 있으므로 메인 라우팅만으로 적용 가능합니다.',
+        summary:'충전기 폐기 현황은 이미 존재하는 상세 메뉴입니다. 메인에서는 충전 인프라 변동의 삭제 흐름을 확인하는 이동점으로 사용합니다.',
+        flow:['분야별 상세 현황에서 충전기 폐기 현황을 선택합니다.','기존 폐기 현황 메뉴로 이동합니다.','지역, 사업자, 폐기 여부 조건으로 상세 목록을 조회합니다.'],
+        deploy:['기존 폐기 현황 메뉴 이동','지역·사업자·폐기 여부 조건 유지','신규 상세 화면 구현 없음'],
+        decisions:['메인에서 이동할 경로를 /ui/station-qc/transition/disposal로 사용할지은 어떻게 정할까요?','설치 현황과 폐기 현황을 충전 인프라 변동 묶음으로 유지할지은 어떻게 정할까요?'],
+        route:'/ui/station-qc/transition/disposal', action:'카드 선택 시 Vue Router로 이동', exclude:'신규 API, DB, 폐기 현황 화면 개편' },
+      '충전 인프라 운영이력 카드':{ badge:['move','기존 메뉴 이동'], tech:'기존 페이지가 있으므로 메인 라우팅만으로 적용 가능합니다.',
+        summary:'충전 인프라 운영이력 카드는 이미 존재하는 운영이력 상세 메뉴입니다. 메인에서는 품질 진단의 원인 확인 이동점으로 사용합니다.',
+        flow:['분야별 상세 현황에서 충전 인프라 운영이력 카드를 선택합니다.','기존 운영이력 카드 메뉴로 이동합니다.','충전기 상태 변경과 운영 이력 목록을 조회합니다.'],
+        deploy:['기존 운영이력 카드 메뉴 이동','지역·사업자·폐기 여부 조건 유지','신규 상세 화면 구현 없음'],
+        decisions:['메인에서 이동할 경로를 /ui/station-qc/operation/history로 사용할지은 어떻게 정할까요?','품질 진단 묶음에서 운영이력 카드를 함께 보여줄지은 어떻게 정할까요?'],
+        route:'/ui/station-qc/operation/history', action:'카드 선택 시 Vue Router로 이동', exclude:'신규 API, DB, 운영이력 화면 개편' },
+      '전기차 등록 현황':{ badge:['move','기존 메뉴 이동'], tech:'기존 페이지가 있으므로 메인 라우팅만으로 적용 가능합니다.',
+        summary:'전기차 등록 현황은 이미 존재하는 상세 메뉴입니다. 메인에서는 전기차 등록 지표의 원장 확인 이동점으로 사용합니다.',
+        flow:['분야별 상세 현황에서 전기차 등록 현황을 선택합니다.','기존 전기차 등록 현황 메뉴로 이동합니다.','연도, 지역, 차종, 용도 조건으로 상세 목록을 조회합니다.'],
+        deploy:['기존 전기차 등록 현황 메뉴 이동','연도·지역·차종·용도 조건 유지','신규 상세 화면 구현 없음'],
+        decisions:['메인에서 이동할 경로를 /ui/ev-info/status/registration으로 사용할지은 어떻게 정할까요?','전기차·정책 묶음에서 전기차 등록 현황을 첫 이동 메뉴로 둘지은 어떻게 정할까요?'],
+        route:'/ui/ev-info/status/registration', action:'카드 선택 시 Vue Router로 이동', exclude:'신규 API, DB, 전기차 등록 화면 개편' },
+      '배터리 정보 분석':{ badge:['need','정책 결정 필요'], tech:'현재 메뉴가 없으므로 라우팅할 수 없습니다. 메뉴 경로와 데이터 범위를 먼저 확정해야 합니다.',
+        summary:'배터리 정보 분석은 현재 이동할 메뉴가 없습니다. 메인에서는 존재하지 않는 경로를 만들지 않고 메뉴 신설 필요 상태로만 표시합니다.',
+        flow:['분야별 상세 현황에서 배터리 정보 분석을 확인합니다.','현재는 이동하지 않고 메뉴 신설 필요 상태를 확인합니다.','추후 메뉴 경로와 데이터 범위가 확정되면 라우팅을 연결합니다.'],
+        deploy:['메인 카드 표시','메뉴 신설 필요 상태 표시','신규 상세 화면 구현 없음'],
+        decisions:['배터리 정보 분석 메뉴는 어느 상위 메뉴에 둘까요?','첫 배포 데이터 범위는 어디까지로 할까요?','기존 배터리 화면을 재사용할까요, 새 메뉴를 만들까요?'],
+        route:'미정', action:'현재는 상세 메뉴로 이동하지 않음', exclude:'신규 화면, API, DB, MART 구현' }
+    };
+
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    /* (i) 지표 설명 모달 렌더 */
+    var help = document.getElementById('bdHelp'), helpTtl = document.getElementById('bdHelpTtl'), helpBody = document.getElementById('bdHelpBody');
+    function openHelp(k, label){
+      var h = KPI_HELP[k]; if(!h) return;
+      helpTtl.textContent = label;
+      var html = '<p class="bd-hmodal__desc">'+esc(h.desc)+'</p>';
+      if(h.facts) html += '<div class="bd-hbox"><div class="bd-hbox__label">'+esc(h.facts[0])+'</div><div class="bd-hbox__val">'+esc(h.facts[1])+'</div></div>';
+      if(h.notes) html += '<div class="bd-hbox"><div class="bd-hbox__label">확인 사항</div><div class="bd-hbox__val">'+h.notes.map(esc).join('<br>')+'</div></div>';
+      helpBody.innerHTML = html;
+      openModal(help);
+    }
+
+    /* 메뉴 정책 결정 가이드 모달 렌더 */
+    var guide = document.getElementById('bdGuide'), guideTtl = document.getElementById('bdGuideTtl'), guideBody = document.getElementById('bdGuideBody');
+    var guideCur = null;
+    function li(arr){ return '<ul class="bd-list">'+arr.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>'; }
+    function openGuide(key){
+      var g = GUIDES[key]; if(!g) return; guideCur = key;
+      guideTtl.textContent = key;
+      var warn = (g.badge[0]==='need');
+      var h = '';
+      // 기술 검토 배너
+      h += '<div class="bd-pnote'+(warn?' warn':'')+'"><span class="bd-pchip k">'+esc(g.badge[1])+'</span><b>기술 검토</b><span>'+esc(g.tech)+'</span></div>';
+      // 30초 요약
+      h += '<section class="bd-psec"><h3 class="bd-psec__ttl">30초 요약</h3>'
+        + '<p class="bd-psec__lead">'+esc(g.summary)+'</p>'
+        + '<div class="bd-two"><div class="bd-kv"><div class="bd-kv__k">지금 정할 것</div><div class="bd-kv__v">'+g.decisions.length+'개 정책 항목</div></div>'
+        + '<div class="bd-kv"><div class="bd-kv__k">결정 후 다음 단계</div><div class="bd-kv__v">'+esc(G_TXT.nextStep)+'</div></div></div>'
+        + '<p class="bd-psec__warn">'+esc(G_TXT.summaryNote)+'</p></section>';
+      // 사용자 흐름
+      h += '<section class="bd-psec"><h3 class="bd-psec__ttl">사용자 흐름</h3><p class="bd-psec__lead">'+esc(G_TXT.flowIntro)+'</p>'+li(g.flow)+'</section>';
+      // 추천 배포 범위
+      h += '<section class="bd-psec"><h3 class="bd-psec__ttl">추천 배포 범위</h3><p class="bd-psec__lead">'+esc(G_TXT.deployIntro)+'</p>'+li(g.deploy)+'</section>';
+      // 회의에서 결정할 항목
+      h += '<section class="bd-psec"><h3 class="bd-psec__ttl">회의에서 결정할 항목</h3><p class="bd-psec__lead">'+esc(G_TXT.decideIntro)+'</p>';
+      g.decisions.forEach(function(q, i){
+        h += '<div class="bd-decide"><div class="bd-decide__q"><span class="bd-decide__no">결정 '+(i+1)+'</span><span>'+esc(q)+'</span></div>'
+          + '<div class="bd-rec"><div class="bd-rec__hd"><span class="bd-rec__t">추천안</span><span class="bd-rec__tag">추천</span></div>'
+          + '<div class="bd-rec__d">'+esc(G_REC)+'</div></div>'
+          + '<div class="bd-rec__note">'+esc(G_HELP)+'</div></div>';
+      });
+      h += '</section>';
+      // 개발 시작 체크
+      h += '<section class="bd-psec"><h3 class="bd-psec__ttl">개발 시작 체크</h3><p class="bd-psec__lead">'+esc(G_TXT.devIntro)+'</p>'
+        + '<div class="bd-kv" style="margin-bottom:8px"><div class="bd-kv__k">경로</div><div class="bd-kv__v">'+esc(g.route)+'</div></div>'
+        + '<div class="bd-kv" style="margin-bottom:8px"><div class="bd-kv__k">동작</div><div class="bd-kv__v">'+esc(g.action)+'</div></div>'
+        + '<div class="bd-kv"><div class="bd-kv__k">제외</div><div class="bd-kv__v">'+esc(g.exclude)+'</div></div></section>';
+      guideBody.innerHTML = h; guideBody.scrollTop = 0;
+      openModal(guide);
+    }
+
+    /* 공통 모달 열기/닫기 */
+    var openModals = [];
+    function openModal(el){ el.hidden = false; document.body.style.overflow='hidden'; openModals.push(el); }
+    function closeModal(el){ el.hidden = true; openModals = openModals.filter(function(x){return x!==el;}); if(!openModals.length) document.body.style.overflow=''; }
+    function closeAllModals(){ [help, guide].forEach(function(el){ el.hidden = true; }); openModals=[]; document.body.style.overflow=''; }
+    [help, guide].forEach(function(dim){
+      dim.addEventListener('click', function(e){ if(e.target===dim || e.target.hasAttribute('data-close')) closeModal(dim); });
+    });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && openModals.length) closeModal(openModals[openModals.length-1]); });
+    // 관련 분야 위치 보기 → 상세 현황 영역으로 스크롤
+    guide.querySelector('[data-locate]').addEventListener('click', function(){
+      closeModal(guide);
+      var t = document.querySelector('.bd-detail'); if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    var pop = document.getElementById('bdPop'), popTtl = document.getElementById('bdPopTtl'), popBody = document.getElementById('bdPopBody');
+    function showPop(anchor, title, body){
+      popTtl.textContent = title; popBody.textContent = body; pop.hidden = false;
+      var r = anchor.getBoundingClientRect();
+      pop.style.left = Math.min(r.left, window.innerWidth - pop.offsetWidth - 12) + 'px';
+      pop.style.top = (window.scrollY + r.bottom + 8) + 'px';
+    }
+    function hidePop(){ pop.hidden = true; }
+    document.addEventListener('click', function(e){ if(!pop.hidden && !pop.contains(e.target) && !e.target.classList.contains('bd-kpi__i') && e.target.id!=='basisBtn') hidePop(); });
+
+    function renderKpis(m){
+      document.getElementById('kpis').innerHTML = KPI.map(function(d){
+        var val = d.fmt(m.kpi); if(d.unit==='%') val = Number(val).toFixed(1);
+        var unit = (d.unit==='%') ? '%' : '<span class="u">'+d.unit+'</span>';
+        var sub = (typeof d.sub==='function') ? d.sub(m.kpi) : d.sub;
+        return '<div class="bd-kpi '+d.tone+'"><div class="bd-kpi__label">'+d.label
+          +'<button type="button" class="bd-kpi__i" data-k="'+d.k+'" title="설명">i</button></div>'
+          +'<div class="bd-kpi__num">'+val+unit+'</div><div class="bd-kpi__sub">'+sub+'</div></div>';
+      }).join('');
+    }
+    function setStat(k, txt){ var el = document.querySelector('.bd-stat__num[data-k="'+k+'"]'); if(el) el.textContent = txt; }
+    function renderDetail(m){
+      var d = m.detail;
+      setStat('infraStart', n(d.infraStart)); setStat('infraEnd', n(d.infraEnd)); setStat('infraNet', sgn(d.infraNet));
+      setStat('qcRate', Number(d.qcRate).toFixed(1)+'%'); setStat('qcAnom', n(d.qcAnom)); setStat('qcEval', n(d.qcEval));
+      setStat('policyReg', n(d.policyReg)); setStat('policyDelta', sgn(d.policyDelta)); setStat('policyRate', Number(d.policyRate).toFixed(1)+'%');
+    }
+    function miniBar(id, data, color){
+      var el = document.getElementById(id); if(!el || typeof echarts==='undefined') return;
+      var inst = echarts.getInstanceByDom(el) || echarts.init(el);
+      inst.setOption({ grid:{left:0,right:0,top:6,bottom:0}, xAxis:{type:'category',show:false,data:data.map(function(_,i){return i;})},
+        yAxis:{type:'value',show:false}, series:[{type:'bar',data:data,itemStyle:{color:color,borderRadius:[3,3,0,0]},barWidth:'62%'}] });
+    }
+    function renderMini(m){
+      // 인프라: 완만 감소 / 전기차: 증가 (기준월 인덱스로 살짝 변형)
+      var s = m.i;
+      miniBar('miniInfra', [96,94,92,90,88,86,84, 60].map(function(v,idx){ return idx===7? 60 : v - s; }), '#2C7FDF');
+      miniBar('miniEv', [70,74,78,82,86,90,94, 60].map(function(v,idx){ return idx===7? 60 : v - s; }), '#2fb36b');
+    }
+    function renderNote(m){
+      document.getElementById('basisNote').innerHTML = (m.prov ? '<span class="prov">잠정</span>현재월 자료를 집계한 수치입니다. · ' : '확정치입니다. · ')
+        + '공통 반영 ' + NOTE_DATE;
+    }
+
+    function render(month){ var m = model(month); renderKpis(m); renderDetail(m); renderMini(m); renderNote(m); }
+
+    // 초기 렌더
+    render('2026-09');
+
+    // 기준월 변경 → 전체 갱신
+    document.getElementById('basisMonth').addEventListener('change', function(){ hidePop(); render(this.value); });
+
+    // (i) 지표 설명 모달
+    document.getElementById('kpis').addEventListener('click', function(e){
+      var b = e.target.closest('.bd-kpi__i'); if(!b) return;
+      e.stopPropagation(); hidePop();
+      var d = KPI.filter(function(x){return x.k===b.getAttribute('data-k');})[0];
+      if(d) openHelp(d.k, d.label);
+    });
+    // 데이터 기준 안내
+    document.getElementById('basisBtn').addEventListener('click', function(e){
+      e.stopPropagation();
+      if(!pop.hidden && popTtl.textContent==='데이터 기준'){ hidePop(); return; }
+      showPop(this, '데이터 기준', '통계 기준월 말일 자료를 집계합니다. 「잠정」은 현재월 집계 중 수치로 익월 확정됩니다. 공통 반영 시각 '+NOTE_DATE+'.');
+    });
+    // 상세 현황 탭
+    var tabs = document.querySelectorAll('.bd-tab');
+    tabs.forEach(function(t){ t.addEventListener('click', function(){
+      tabs.forEach(function(x){x.classList.remove('is-active');}); t.classList.add('is-active');
+      if(t.getAttribute('data-tab')==='busi') alert('충전 사업자별 상세 현황은 준비 중입니다. (프로토타입)');
+    }); });
+    // 안내 보기 → 메뉴 정책 결정 가이드 모달
+    document.querySelectorAll('.bd-svc__btn').forEach(function(b){
+      if(b.classList.contains('is-live')) return; // 이상탐지 상세 조회는 링크 유지
+      b.addEventListener('click', function(){
+        var key = b.getAttribute('data-prep');
+        if(GUIDES[key]) openGuide(key);
+        else alert('「'+(key||'해당 기능')+'」은(는) 서비스 준비 중입니다. (프로토타입)');
+      });
+    });
+    window.addEventListener('resize', function(){ ['miniInfra','miniEv'].forEach(function(id){ var i=echarts.getInstanceByDom(document.getElementById(id)); if(i) i.resize(); }); hidePop(); });
+    window.addEventListener('scroll', hidePop, true);
+  })();
+  </script>
+</body>
+</html>

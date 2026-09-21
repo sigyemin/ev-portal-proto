@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정기 보고서 · 무공해차 빅데이터 플랫폼</title>
+  <!-- ① 상용 컴포넌트 원본(전수 추출) → ② 페이지 전용 보정 순서 -->
+  <link rel="stylesheet" href="assets/css/bd-ui.css?v=20260911a">
+  <link rel="stylesheet" href="assets/css/bd-platform.css?v=20260911k">
+</head>
+<body class="bd-body" data-bd-active="report">
+  <header id="bd-header"></header>
+
+  <main class="bd-main">
+    <div class="page-layout">
+      <!-- 좌측 LNB -->
+      <aside class="portal-lnb" aria-label="정기 보고서 메뉴">
+        <div class="portal-lnb__title">정기 보고서</div>
+        <nav><ul class="portal-lnb__list" id="rpLnb"></ul></nav>
+      </aside>
+
+      <!-- 우측 메인 (상용 래퍼: page-layout__content + contents--regular-report) -->
+      <div class="page-layout__content contents--regular-report portal-main">
+        <p class="portal-bc"><span class="portal-bc__home">⌂</span> <b>홈</b> › <b>정기 보고서</b> › <span id="rpCrumbTab"></span></p>
+        <h1 class="portal-main__title" id="rpTitle"></h1>
+        <p class="portal-main__lead" id="rpLead"></p>
+
+      <!-- 목록 뷰 -->
+      <div id="rpListView">
+        <div class="rp-filter">
+          <select id="rpType" aria-label="보고서 유형">
+            <option value="">전체 보고서 유형</option>
+            <option value="일간보고">일간보고</option>
+            <option value="월간보고">월간보고</option>
+            <option value="주간보고">주간보고</option>
+          </select>
+          <button type="button" class="an-btn an-btn--go" id="rpGo">조회</button>
+          <button type="button" class="an-btn an-btn--reset" id="rpReset">초기화</button>
+        </div>
+        <p class="rp-total" id="rpTotal"></p>
+        <div class="ds-report-list" id="rpList"></div>
+        <div class="an-pager" id="rpPager"></div>
+      </div>
+
+      <!-- 상세 뷰 -->
+      <div id="rpDetail" hidden></div>
+
+      <p class="bd-exnote">※ 상용 「무공해차 빅데이터 플랫폼」 <b>정기 보고서</b>(개별/그룹·상세) 재현. 보고서 제목·설명·태그·메타·파일 목록은 상용 실측이며, 실제 파일 다운로드는 개발 협의 대상입니다.</p>
+      </div><!-- /portal-main -->
+    </div><!-- /page-layout -->
+  </main>
+
+  <footer class="bd-footer" id="bd-footer"></footer>
+
+  <script src="js/bd-shell.js?v=20260911h"></script>
+  <script>
+  (function () {
+    function el(id){ return document.getElementById(id); }
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    var SUBTABS = [
+      { key:'indiv', t:'개별 정기보고서', lead:'월간 정기보고서의 붙임 단위 데이터 항목을 조회합니다.' },
+      { key:'group', t:'그룹 정기보고서', lead:'월별로 묶인 정기보고서 그룹을 조회합니다.' }
+    ];
+
+    /* ===== 개별 정기보고서 — 상용 실측(총 46건) ===== */
+    // 붙임1(31건): 제목에서 시트/주제 파싱 → 동일 설명 템플릿 적용(상용 확인)
+    var B1_TITLES = [
+      '붙임1 - 기관별-타입별 충전기 개수(지자체 현황)',
+      '붙임1 - 기관별-타입별 충전기 개수(타기관 기관별 현황)',
+      '붙임1 - 기관별-타입별 충전기 개수(타기관-보조금 기관별 현황)',
+      '붙임1 - 기관별-지역별 충전기 개수',
+      '붙임1 - 기관별-지역별 충전기 개수(지자체 기관별 현황)',
+      '붙임1 - 기관별-지역별 충전기 개수(타기관 기관별 현황)',
+      '붙임1 - 기관별-지역별 충전기 개수(타기관-보조금 기관별 현황)',
+      '붙임1 - 연도별 공용충전시설 운영현황(환경부)',
+      '붙임1 - 연도별 충전시설 운영현황(지자체)',
+      '붙임1 - 기관별-타입별 충전기 개수',
+      '붙임1 - 보조금 지급년도별 충전시설 운영현황(타기관보조금 사업자 완속-급속 구분)',
+      '붙임1 - 보조금 지급년도별 충전시설 운영현황(보조금 사업자 공개-비공개 구분)',
+      '붙임1 - 전기자동차 충전시설 현황 - 지역별-설치연도별 충전기현황',
+      '붙임1 - 충전소 구분 - 기관별-충전소구분별 충전기 개수',
+      '붙임1 - 충전소 구분 - 기관별-충전소구분별 충전기 개수(지자체 현황)',
+      '붙임1 - 충전소 구분 - 기관별-충전소구분별 충전기 개수(타기관 업체현황)',
+      '붙임1 - 충전소 구분 - 기관별-충전소구분별 충전기 개수(타기관 보조금 업체현황)',
+      '붙임1 - 충전소 구분 - 연도별-충전소구분별 충전기 개수(환경부)',
+      '붙임1 - 충전소 구분 - 연도별-충전소구분별 충전기 개수(지자체)',
+      '붙임1 - 기관별-타입별 충전기 개수',
+      '붙임1 - 충전소 구분 - 연도별-충전소구분별 충전기 개수(타기관)',
+      '붙임1 - 충전소 구분 - 연도별-충전소구분별 충전기 개수(타기관-보조금)',
+      '붙임1 - 상태정보수신현황 - 충전소 위치정보 공개여부',
+      '붙임1 - 타기관철거 - 타기관 충전시설 리스트',
+      '붙임1 - 환경부 - 환경부 충전시설 리스트',
+      '붙임1 - 지자체 - 타기관 충전시설 리스트(지자체)',
+      '붙임1 - 타기관 - 보조금 충전시설 리스트',
+      '붙임1 - 타기관(보조금) - 환경부 급속충전시설 리스트',
+      '붙임1 - 환경부철거 - 환경부 철거 충전시설 리스트',
+      '붙임1 - 환경부교체 - 환경부 교체 충전시설 리스트',
+      '붙임1 - 타기관(보조금)철거 - 완속보조금 충전시설 리스트'
+    ];
+    function b1card(t){
+      var rest = t.replace(/^붙임1 - /,''), parts = rest.split(' - '), sheet, subject;
+      if(parts.length>1){ sheet=parts[0]; subject=parts.slice(1).join(' - '); }
+      else { sheet='총괄'; subject=parts[0]; }
+      return { t:t, grp:'붙임1', sheet:sheet, cycle:'월간보고',
+        d:'기준월 충전기현황 파일의 '+sheet+' 시트에 들어가는 '+subject+' 데이터입니다. 충전기 수, 설치 현황, 공개 여부, 상세 목록을 표 단위로 제공합니다.' };
+    }
+    // 붙임2~9(15건): 설명 상용 실측 그대로
+    var NB = [
+      { t:'붙임2 - 전기차 충전시설 구축실적 - 전기차 충전시설(이용가능기준)', grp:'붙임2', sheet:'전기차 충전시설 구축실적', d:'기준월 전기차 충전시설 구축실적 문서에 들어가는 전기차 충전시설(이용가능기준) 표 데이터입니다. 이용가능 기준과 전체 공개 기준의 충전시설 현황을 제공합니다.' },
+      { t:'붙임2 - 전기차 충전시설 구축실적 - 전기차 충전시설(공개,비공개 전체기준)', grp:'붙임2', sheet:'전기차 충전시설 구축실적', d:'기준월 전기차 충전시설 구축실적 문서에 들어가는 전기차 충전시설(공개,비공개 전체기준) 표 데이터입니다. 이용가능 기준과 전체 공개 기준의 충전시설 현황을 제공합니다.' },
+      { t:'붙임3 - 홈페이지 공개(이용자제한제외) 기준', grp:'붙임3', sheet:'총괄', d:'기준월 충전기 증감 문서의 홈페이지 공개(이용자제한제외) 기준 데이터입니다. 전월 대비 당월 충전기 수 변화를 총괄 기준으로 제공합니다.' },
+      { t:'붙임4 - 지역별 시설별 충전소갯수 - 지역별 시설별 충전소', grp:'붙임4', sheet:'지역별_시설별_충전소갯수', d:'기준월 지역별 시설별 충전소 현황 데이터입니다. 시도와 시설구분별 충전소 수를 표 형태로 제공합니다.' },
+      { t:'붙임5 - 충전소 현황 원천 목록', grp:'붙임5', sheet:'워크시트 익스포트', d:'기준월 충전소 현황 원천 목록 데이터입니다. 충전소와 충전기 상세 항목을 워크시트로 제공합니다.' },
+      { t:'붙임6 - 전기차 충전기 운영 현황 - 충전 실적 현황', grp:'붙임6', sheet:'전기차 충전기 운영 현황', d:'기준월 전기차 충전기 운영 현황 문서의 충전 실적 표 데이터입니다. 급속과 완속의 실적 유무, 충전기 수, 충전량을 제공합니다.' },
+      { t:'붙임7 - 급속(기관별) - 급속 충전기', grp:'붙임7', sheet:'급속(기관별)', d:'기준월 충전사업자 이용정보 현황 파일의 급속(기관별) 시트에 들어가는 급속 충전기 데이터입니다. 기관별 또는 지역별 대수, 충전횟수, 충전량을 제공합니다.' },
+      { t:'붙임7 - 완속(기관별) - 완속 충전기', grp:'붙임7', sheet:'완속(기관별)', d:'기준월 충전사업자 이용정보 현황 파일의 완속(기관별) 시트에 들어가는 완속 충전기 데이터입니다. 기관별 또는 지역별 대수, 충전횟수, 충전량을 제공합니다.' },
+      { t:'붙임7 - 지역별(급속) - 급속 충전기', grp:'붙임7', sheet:'지역별(급속)', d:'기준월 충전사업자 이용정보 현황 파일의 지역별(급속) 시트에 들어가는 급속 충전기 데이터입니다. 기관별 또는 지역별 대수, 충전횟수, 충전량을 제공합니다.' },
+      { t:'붙임7 - 지역별(완속) - 완속 충전기', grp:'붙임7', sheet:'지역별(완속)', d:'기준월 충전사업자 이용정보 현황 파일의 지역별(완속) 시트에 들어가는 완속 충전기 데이터입니다. 기관별 또는 지역별 대수, 충전횟수, 충전량을 제공합니다.' },
+      { t:'붙임8 - 급속(기관별) - 충전 실적 업체개수', grp:'붙임8', sheet:'급속(기관별)', d:'기준월 충전사업자 충전실적 현황 파일의 급속(기관별) 시트에 들어가는 충전 실적 업체개수 데이터입니다. 사업자별 충전기 수와 충전실적 유무를 제공합니다.' },
+      { t:'붙임8 - 급속(기관별) - 급속 충전기', grp:'붙임8', sheet:'급속(기관별)', d:'기준월 충전사업자 충전실적 현황 파일의 급속(기관별) 시트에 들어가는 급속 충전기 데이터입니다. 사업자별 충전기 수와 충전실적 유무를 제공합니다.' },
+      { t:'붙임8 - 완속(기관별) - 충전 실적 업체개수', grp:'붙임8', sheet:'완속(기관별)', d:'기준월 충전사업자 충전실적 현황 파일의 완속(기관별) 시트에 들어가는 충전 실적 업체개수 데이터입니다. 사업자별 충전기 수와 충전실적 유무를 제공합니다.' },
+      { t:'붙임8 - 완속(기관별) - 완속 충전기', grp:'붙임8', sheet:'완속(기관별)', d:'기준월 충전사업자 충전실적 현황 파일의 완속(기관별) 시트에 들어가는 완속 충전기 데이터입니다. 사업자별 충전기 수와 충전실적 유무를 제공합니다.' },
+      { t:'붙임9 - 시도별 전기차 및 충전기 보급 현황', grp:'붙임9', sheet:'시도별 전기차 및 충전기 보급 현황', d:'기준월 시도별 전기차 및 충전기 보급 현황 문서의 표 데이터입니다. 시도별 충전기 보급 현황을 제공합니다.' }
+    ];
+    NB.forEach(function(o){ o.cycle='월간보고'; });
+    var INDIV = B1_TITLES.map(b1card).concat(NB);
+
+    /* ===== 그룹 정기보고서 — 상용 실측(총 3건) ===== */
+    var GROUP = [
+      { t:'월간보고 2026.08', cycle:'월간보고', unit:'월별', period:'2026.08', count:'25', dl:'25', gen:'2026.09.02 09:28' },
+      { t:'월간보고 2026.07', cycle:'월간보고', unit:'월별', period:'2026.07', count:'25', dl:'25', gen:'2026.08.07 16:02' },
+      { t:'월간보고 2026.06', cycle:'월간보고', unit:'월별', period:'2026.06', count:'9', dl:'9', gen:'2026.08.07 16:02' }
+    ];
+
+    // 그룹 상세 = 월별 파일 번들(상용 2026.08 실측 25종). 월 접미사는 조회 월로 치환.
+    var GROUP_FILES = [
+      { f:'[붙임1] 충전기현황', n:'붙임1 충전기현황', s:'65.7 MB', g:'.02 09:28' },
+      { f:'[붙임5] 충전소 현황 원천 목록', n:'붙임5 충전소 현황 원천 목록', s:'39.3 MB', g:'.02 09:24' },
+      { f:'[붙임7] 충전사업자 이용정보 현황', n:'붙임7 충전사업자 이용정보 현황', s:'17.3 KB', g:'.02 09:24' },
+      { f:'[붙임8] 충전사업자 충전실적 현황', n:'붙임8 충전사업자 충전실적 현황', s:'16.7 KB', g:'.02 09:24' },
+      { f:'[붙임4] 지역별 시설별 충전소', n:'붙임4 지역별 시설별 충전소', s:'6.61 KB', g:'.02 09:24' },
+      { f:'[붙임3] 충전기 증감 현황', n:'붙임3 충전기 증감 현황', s:'11.2 KB', g:'.02 09:24' },
+      { f:'[붙임2] 전기차 충전시설 통계', n:'붙임2 전기차 충전시설 통계', s:'5.99 KB', g:'.02 09:24' },
+      { f:'[붙임6] 전기차 충전기 운영 현황', n:'붙임6 전기차 충전기 운영 현황', s:'5.59 KB', g:'.02 09:24' },
+      { f:'[붙임9] 지역별 충전기 통계', n:'붙임9 지역별 충전기 통계', s:'6.46 KB', g:'.02 09:24' },
+      { f:'전기차 지역별_종별_제작사별_모델별_신규등록', n:'전기차 지역별 종별 제작사별 모델별 신규등록', s:'160.7 KB', g:'.01 06:04' },
+      { f:'전기이륜차 광역시도별_폐차지원금 지급건수 및 지급액', n:'전기이륜차 광역시도별 폐차지원금 지급건수 및 지급액', s:'5.67 KB', g:'.01 06:04' },
+      { f:'전기이륜차_모델별_지급현황', n:'전기이륜차 모델별 지급현황', s:'11.2 KB', g:'.01 06:04' },
+      { f:'전기버스 지역별_종별_제작사별_모델별 신규등록', n:'전기버스 지역별 종별 제작사별 모델별 신규등록', s:'32.2 KB', g:'.01 06:04' },
+      { f:'전기화물 광역시도별_폐차대수', n:'전기화물 광역시도별 폐차대수', s:'6.10 KB', g:'.01 06:04' },
+      { f:'17개 지자체 차종별_보조금 공고대수', n:'17개 지자체 차종별 보조금 공고대수', s:'7.88 KB', g:'.01 06:04' },
+      { f:'전기화물 보조금 지급대수', n:'전기화물 보조금 지급대수', s:'12.6 KB', g:'.01 06:04' },
+      { f:'전기화물 지역별_종별_제작사별_모델별 신규등록', n:'전기화물 지역별 종별 제작사별 모델별 신규등록', s:'54.4 KB', g:'.01 06:04' },
+      { f:'전기이륜차 지급현황', n:'전기이륜차 지급현황', s:'13.5 KB', g:'.01 06:04' },
+      { f:'전기차 구매보조금 지급_월별 지급대수', n:'전기차 구매보조금 지급 월별 지급대수', s:'59.5 KB', g:'.01 06:04' },
+      { f:'17개 지자체 차종별_보조금 지금대수 및 지급금액', n:'17개 지자체 차종별 보조금 지급대수 및 지급금액', s:'11.4 KB', g:'.01 06:04' },
+      { f:'전기차_수소차_하이브리드 지역별_종별_월별 신규 등록', n:'전기차 수소차 하이브리드 지역별 종별 월별 신규등록', s:'19.3 KB', g:'.01 06:04' },
+      { f:'전기승용 제작사별_월별 신규등록', n:'전기승용 제작사별 월별 신규등록', s:'7.25 KB', g:'.01 06:04' },
+      { f:'테슬라 모델별_월별 전기차 등록대수 및 보조금액(월간통계)', n:'테슬라 모델별 월별 전기차 등록대수 및 보조금액(월간통계)', s:'8.51 KB', g:'.01 06:04' },
+      { f:'전기승용 제작사별_모델별_월별 신규등록', n:'전기승용 제작사별 모델별 월별 신규등록', s:'16.6 KB', g:'.01 06:04' },
+      { f:'수소차_모델별_월별_신규등록', n:'수소차 모델별 월별 신규등록', s:'17.5 KB', g:'.01 06:04' }
+    ];
+    // 개별 상세 = 최근 3개월 파일(상용 실측 생성일)
+    var INDIV_FILES = [ { m:'202608', g:'2026.09.02 06:04' }, { m:'202607', g:'2026.08.04 09:48' }, { m:'202606', g:'2026.07.29 14:09' } ];
+    function nextMonth(ym){ var y=+ym.slice(0,4), m=+ym.slice(4)+1; if(m>12){m=1;y++;} return y+'.'+('0'+m).slice(-2); }
+    function hash(s){ var h=0; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h; }
+    function indivSize(t){ var h=hash(t); return (8+h%42)+'.'+('0'+(h%97)).slice(-2)+' KB'; }
+
+    var PAGE_SIZE = 10;
+    var cur = 'indiv', type = '', page = 1;
+    var detail = null, dPage = 1;   // 상세 상태
+
+    function curList(){
+      var base = (cur==='indiv') ? INDIV : GROUP;
+      return type ? base.filter(function(x){ return x.cycle===type; }) : base;
+    }
+
+    function renderLnb(){
+      el('rpLnb').innerHTML = SUBTABS.map(function(s){
+        return '<li class="portal-lnb__item'+(s.key===cur?' portal-lnb__item--current':'')+'">'
+          + '<a class="portal-lnb__depth2" role="button" tabindex="0" data-tab="'+s.key+'"'+(s.key===cur?' aria-current="page"':'')+'>'+s.t+'</a></li>';
+      }).join('');
+    }
+    function indivChips(c){
+      var chips = [['월간보고','blue'],['월간통계','gray'],['충전인프라','gray'],['정기보고서','gray'],['붙임파일','gray'],[c.grp,'gray'],[c.sheet,'gray'],[c.t,'gray']];
+      return chips.map(function(p){ return '<span class="ds-chip ds-chip--'+p[1]+'">'+esc(p[0])+'</span>'; }).join('');
+    }
+    function indivCardHTML(c){
+      return '<article class="ds-report-item" role="link" tabindex="0" aria-label="'+esc(c.t)+' 상세 화면으로 이동" data-t="'+esc(c.t)+'">'
+        + '<div class="ds-report-item__main">'
+        +   '<div class="ds-report-title">'+esc(c.t)+'</div>'
+        +   '<div class="ds-report-desc">'+esc(c.d)+'</div>'
+        +   '<div class="ds-meta-row">'+indivChips(c)+'</div>'
+        + '</div>'
+        + '<dl class="ds-report-item__meta">'
+        +   '<div class="ds-report-meta"><dt>보고서 생성일</dt><dd>2026.07.29</dd></div>'
+        +   '<div class="ds-report-meta ds-report-meta--period"><dt>파일 생성 기간</dt><dd>2026.07.29 ~ 2026.09.02</dd></div>'
+        +   '<div class="ds-report-meta"><dt>제공 형식</dt><dd>XLSX</dd></div>'
+        + '</dl></article>';
+    }
+    function groupCardHTML(c){
+      return '<article class="ds-report-item" role="link" tabindex="0" aria-label="'+esc(c.t)+' 그룹 상세 보기" data-t="'+esc(c.t)+'">'
+        + '<div class="ds-report-item__main">'
+        +   '<div class="ds-report-title">'+esc(c.t)+'</div>'
+        +   '<div class="ds-meta-row"><span class="ds-chip ds-chip--blue">'+esc(c.cycle)+'</span><span class="ds-chip ds-chip--gray">'+esc(c.unit)+'</span></div>'
+        + '</div>'
+        + '<dl class="ds-report-item__meta ds-report-item__meta--group">'
+        +   '<div class="ds-report-meta"><dt>대상 기간</dt><dd>'+esc(c.period)+'</dd></div>'
+        +   '<div class="ds-report-meta"><dt>보고서 수</dt><dd>'+esc(c.count)+'</dd></div>'
+        +   '<div class="ds-report-meta"><dt>다운로드 가능</dt><dd>'+esc(c.dl)+'</dd></div>'
+        +   '<div class="ds-report-meta"><dt>최근 데이터 생성일</dt><dd>'+esc(c.gen)+'</dd></div>'
+        + '</dl></article>';
+    }
+    function renderList(){
+      var list = curList(), total = list.length, pages = Math.max(1, Math.ceil(total/PAGE_SIZE));
+      if(page>pages) page = pages;
+      el('rpTotal').innerHTML = '총 <b>'+total+'</b> 건';
+      var slice = list.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
+      if(!slice.length){ el('rpList').innerHTML = '<div class="an-empty">조회 결과가 없습니다.</div>'; el('rpPager').innerHTML=''; return; }
+      el('rpList').innerHTML = slice.map(cur==='indiv'?indivCardHTML:groupCardHTML).join('');
+      renderPager(pages);
+    }
+    function renderPager(pages){
+      if(pages<=1){ el('rpPager').innerHTML=''; return; }
+      var h='<button data-p="prev"'+(page<=1?' disabled':'')+'>‹ 이전</button>';
+      for(var i=1;i<=pages;i++) h+='<button data-p="'+i+'"'+(i===page?' class="is-active"':'')+'>'+i+'</button>';
+      h+='<button data-p="next"'+(page>=pages?' disabled':'')+'>다음 ›</button>';
+      el('rpPager').innerHTML=h;
+    }
+    /* ===== 상세 뷰 ===== */
+    var DFILE_SIZE = 10;
+    function fileRow(fname, desc, gen, size){
+      return '<article class="ds-report-item ds-report-item--file">'
+        + '<div class="ds-report-item__main"><div class="ds-report-title">'+esc(fname)+'</div><div class="ds-report-desc">'+esc(desc)+'</div></div>'
+        + '<dl class="ds-report-item__meta">'
+        +   '<div class="ds-report-meta"><dt>생성일</dt><dd>'+esc(gen)+'</dd></div>'
+        +   '<div class="ds-report-meta"><dt>크기</dt><dd>'+esc(size)+'</dd></div>'
+        +   '<div class="ds-group-download"><button type="button" class="rd-btn rd-btn--light" data-dl="'+esc(fname)+'">다운로드</button></div>'
+        + '</dl></article>';
+    }
+    function detailChips(c){
+      var chips=[['월간보고','blue'],['월간통계','gray'],[c.t,'gray'],['정기보고서','gray'],['붙임파일','gray'],[c.grp,'gray'],['충전인프라','gray'],[c.sheet,'gray']];
+      return chips.map(function(p){ return '<span class="ds-chip ds-chip--'+p[1]+'">'+esc(p[0])+'</span>'; }).join('');
+    }
+    function renderIndivDetail(c){
+      var files = INDIV_FILES.map(function(fm){ return fileRow(c.t+'_'+fm.m+'.xlsx','xlsx',fm.g,indivSize(c.t)); }).join('');
+      el('rpDetail').innerHTML =
+        '<button type="button" class="rd-back" id="rpBack">‹ 목록</button>'
+        + '<div class="rd-detailhd"><h2 class="bd-secttl" style="margin:0">'+esc(c.t)+'</h2></div>'
+        + '<section class="rd-section"><h3 class="rd-section__ttl">보고서 개요</h3>'
+        +   '<div class="ds-meta-row" style="margin-bottom:16px">'+detailChips(c)+'</div>'
+        +   '<dl class="rd-overview-grid">'
+        +     '<div class="rd-overview-field"><dt>보고서명</dt><dd>'+esc(c.t)+'</dd></div>'
+        +     '<div class="rd-overview-field"><dt>보고서 등록일</dt><dd>2026.07.29</dd></div>'
+        +     '<div class="rd-overview-field"><dt>생성주기</dt><dd>매월 2일 06:00</dd></div>'
+        +     '<div class="rd-overview-field"><dt>파일 생성일</dt><dd>2026.09.02 06:04</dd></div>'
+        +     '<div class="rd-overview-field rd-overview-field--wide"><dt>제공 형식</dt><dd>XLSX</dd></div>'
+        +     '<div class="rd-overview-field rd-overview-field--wide"><dt>설명</dt><dd>'+esc(c.d)+'</dd></div>'
+        +   '</dl></section>'
+        + '<section class="rd-section"><h3 class="rd-section__ttl">제공 파일</h3>'
+        +   '<div class="rd-filesbar"><input type="text" placeholder="파일명 검색" aria-label="파일명 검색"><button type="button" class="an-btn an-btn--go">검색</button><button type="button" class="an-btn an-btn--reset">초기화</button></div>'
+        +   '<p class="rp-total">총 <b>'+INDIV_FILES.length+'</b>건</p>'
+        +   '<div class="ds-report-list">'+files+'</div>'
+        + '</section>';
+    }
+    function renderGroupDetail(c){
+      var ym = c.period.replace(/\./g,''), ny = nextMonth(ym);
+      var n = parseInt(c.count,10), src = GROUP_FILES.slice(0, n);
+      var pages = Math.max(1, Math.ceil(src.length/DFILE_SIZE));
+      if(dPage>pages) dPage=pages;
+      var slice = src.slice((dPage-1)*DFILE_SIZE, dPage*DFILE_SIZE);
+      var rows = slice.map(function(g){ return fileRow(g.f+'_'+ym+'.xlsx', g.n, ny+g.g, g.s); }).join('');
+      var pager='';
+      if(pages>1){ pager='<div class="an-pager" id="rpDPager"><button data-p="prev"'+(dPage<=1?' disabled':'')+'>‹ 이전</button>';
+        for(var i=1;i<=pages;i++) pager+='<button data-p="'+i+'"'+(i===dPage?' class="is-active"':'')+'>'+i+'</button>';
+        pager+='<button data-p="next"'+(dPage>=pages?' disabled':'')+'>다음 ›</button></div>'; }
+      el('rpDetail').innerHTML =
+        '<button type="button" class="rd-back" id="rpBack">‹ 목록</button>'
+        + '<div class="rd-detailhd"><h2 class="bd-secttl" style="margin:0">'+esc(c.t)+'</h2>'
+        +   '<button type="button" class="rd-btn rd-btn--primary" id="rpBulk">일괄 다운로드</button></div>'
+        + '<section class="rd-section">'
+        +   '<div class="rd-filesbar"><input type="text" placeholder="파일명 검색" aria-label="파일명 검색"><button type="button" class="an-btn an-btn--go">검색</button><button type="button" class="an-btn an-btn--reset">초기화</button></div>'
+        +   '<p class="rp-total">총 <b>'+src.length+'</b>건</p>'
+        +   '<div class="ds-report-list">'+rows+'</div>'+pager
+        + '</section>';
+    }
+    function renderDetail(){
+      if(detail.mode==='indiv') renderIndivDetail(detail.data); else renderGroupDetail(detail.data);
+      el('rpListView').hidden = true; el('rpDetail').hidden = false;
+      window.scrollTo(0,0);
+    }
+    function openDetail(mode, data){ detail={mode:mode, data:data}; dPage=1; renderDetail(); }
+    function closeDetail(){ detail=null; el('rpDetail').hidden=true; el('rpDetail').innerHTML=''; el('rpListView').hidden=false; }
+
+    function renderAll(){
+      var s = SUBTABS.filter(function(x){return x.key===cur;})[0];
+      el('rpTitle').textContent = s.t; el('rpCrumbTab').textContent = s.t; el('rpLead').textContent = s.lead;
+      document.title = s.t + ' · 무공해차 빅데이터 플랫폼';
+      closeDetail(); renderLnb(); renderList();
+    }
+
+    /* 이벤트 */
+    el('rpLnb').addEventListener('click', function(e){
+      var b=e.target.closest('.portal-lnb__depth2'); if(!b) return;
+      cur=b.getAttribute('data-tab'); page=1; renderAll();
+    });
+    el('rpLnb').addEventListener('keydown', function(e){
+      var b=e.target.closest('.portal-lnb__depth2'); if(!b) return;
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); cur=b.getAttribute('data-tab'); page=1; renderAll(); }
+    });
+    function goDetail(title){
+      var data = curList().filter(function(x){return x.t===title;})[0]; if(!data) return;
+      openDetail(cur, data);
+    }
+    el('rpList').addEventListener('click', function(e){
+      var c=e.target.closest('.ds-report-item'); if(!c) return;
+      goDetail(c.getAttribute('data-t'));
+    });
+    el('rpList').addEventListener('keydown', function(e){
+      var c=e.target.closest('.ds-report-item'); if(!c) return;
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goDetail(c.getAttribute('data-t')); }
+    });
+    // 상세 뷰 이벤트(위임)
+    el('rpDetail').addEventListener('click', function(e){
+      if(e.target.closest('#rpBack')){ closeDetail(); return; }
+      if(e.target.closest('#rpBulk')){ alert('일괄 다운로드는 준비 중입니다. (프로토타입)'); return; }
+      var dl=e.target.closest('[data-dl]'); if(dl){ alert('「'+dl.getAttribute('data-dl')+'」 다운로드는 준비 중입니다. (프로토타입)'); return; }
+      var pg=e.target.closest('#rpDPager button'); if(pg && !pg.disabled){
+        var p=pg.getAttribute('data-p'), n=parseInt(detail.data.count,10), pages=Math.max(1,Math.ceil(Math.min(n,GROUP_FILES.length)/DFILE_SIZE));
+        if(p==='prev') dPage=Math.max(1,dPage-1); else if(p==='next') dPage=Math.min(pages,dPage+1); else dPage=parseInt(p,10);
+        renderDetail();
+      }
+    });
+    el('rpGo').addEventListener('click', function(){ type=el('rpType').value; page=1; renderList(); });
+    el('rpReset').addEventListener('click', function(){ el('rpType').value=''; type=''; page=1; renderList(); });
+    el('rpPager').addEventListener('click', function(e){
+      var b=e.target.closest('button'); if(!b||b.disabled) return;
+      var p=b.getAttribute('data-p'), pages=Math.max(1,Math.ceil(curList().length/PAGE_SIZE));
+      if(p==='prev') page=Math.max(1,page-1); else if(p==='next') page=Math.min(pages,page+1); else page=parseInt(p,10);
+      renderList();
+    });
+
+    renderAll();
+  })();
+  </script>
+</body>
+</html>

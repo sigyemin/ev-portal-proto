@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>빅데이터 플랫폼 컴포넌트 가이드</title>
+  <link rel="stylesheet" href="assets/css/bd-ui.css?v=20260911a">
+<style>
+  /* 카탈로그 페이지 자체 크롬(컴포넌트가 아님) */
+  body{ margin:0; background:#f6f7f8; color:#0f172b; font-family:Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif; font-size:14px; line-height:1.6; }
+  .cat-hd{ background:#061039; color:#fff; padding:26px 32px; }
+  .cat-hd h1{ margin:0 0 6px; font-size:24px; font-weight:800; }
+  .cat-hd p{ margin:0; font-size:13.5px; color:#aab6d4; }
+  .cat-wrap{ max-width:1240px; margin:0 auto; padding:26px 32px 80px; display:grid; grid-template-columns:200px 1fr; gap:32px; align-items:start; }
+  .cat-nav{ position:sticky; top:20px; }
+  .cat-nav a{ display:block; padding:7px 8px; font-size:13.5px; color:#0f172b; text-decoration:none; border-radius:6px; }
+  .cat-nav a:hover{ background:#eef2ff; color:#5d87ff; }
+  .cat-sec{ background:#fff; border:1px solid #e6e6e6; border-radius:10px; padding:22px 24px; margin-bottom:18px; }
+  .cat-sec > h2{ margin:0 0 4px; font-size:18px; font-weight:800; color:#0f172b; }
+  .cat-sec > .note{ margin:0 0 18px; font-size:12.5px; color:#6b7683; }
+  .cat-item{ border-top:1px solid #f0f0f0; padding:18px 0 0; margin-top:18px; }
+  .cat-item:first-of-type{ border-top:0; margin-top:0; padding-top:0; }
+  .cat-item h3{ margin:0 0 10px; font-size:14px; font-weight:800; color:#061039; }
+  .cat-demo{ background:#fbfcfe; border:1px dashed #dbe3ef; border-radius:8px; padding:18px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .cat-demo.col{ display:block; }
+  pre.cat-code{ margin:10px 0 0; background:#0f172b; color:#d7e3ff; border-radius:8px; padding:12px 14px; font-size:11.5px; line-height:1.65; overflow-x:auto; white-space:pre; font-family:Consolas,"D2Coding",monospace; }
+  .tok{ display:flex; align-items:center; gap:10px; border:1px solid #eee; border-radius:8px; padding:9px 12px; font-size:12.5px; }
+  .tok i{ width:26px; height:26px; border-radius:6px; display:block; border:1px solid rgba(0,0,0,.08); }
+  .tok b{ font-family:Consolas,monospace; font-weight:700; }
+  .cat-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; }
+</style>
+</head>
+<body>
+  <header class="cat-hd">
+    <h1>무공해차 빅데이터 플랫폼 — 컴포넌트 가이드</h1>
+    <p>상용 <b>ev.or.kr/evbd_web</b> 배포 CSS 6개 청크(entry·default·header·footer·report·dataset, 약 1MB) 전수 추출 → 클래스명·수치 그대로. 새 화면은 여기 마크업을 복사해서 만든다.</p>
+  </header>
+
+  <div class="cat-wrap">
+    <nav class="cat-nav">
+      <a href="#tok">디자인 토큰</a>
+      <a href="#scope">페이지 래퍼 (필수)</a>
+      <a href="#btn">버튼</a>
+      <a href="#form">폼</a>
+      <a href="#nav">레이아웃 · LNB · 브레드크럼</a>
+      <a href="#card">카드</a>
+      <a href="#chip">칩 · 뱃지</a>
+      <a href="#tbl">테이블 · 페이지네이션</a>
+      <a href="#item">보고서 · 파일 아이템</a>
+    </nav>
+
+    <main>
+      <!-- 토큰 -->
+      <section class="cat-sec" id="tok">
+        <h2>디자인 토큰</h2>
+        <p class="note">상용 <code>:root</code> 실제 정의값. 프로토타입 전 화면이 이 값을 따른다.</p>
+        <div class="cat-grid">
+          <div class="tok"><i style="background:#5d87ff"></i><div><b>--color-primary</b><br>#5d87ff</div></div>
+          <div class="tok"><i style="background:#f3f7ff"></i><div><b>--color-primary-light</b><br>#f3f7ff</div></div>
+          <div class="tok"><i style="background:#061039"></i><div><b>--color-secondary</b><br>#061039</div></div>
+          <div class="tok"><i style="background:#0f172b"></i><div><b>--color-title</b><br>#0f172b</div></div>
+          <div class="tok"><i style="background:#f33737"></i><div><b>--color-negative</b><br>#f33737</div></div>
+          <div class="tok"><i style="background:#5cbe7d"></i><div><b>--color-positive</b><br>#5cbe7d</div></div>
+          <div class="tok"><i style="background:#d4d4d4"></i><div><b>--color-border</b><br>#d4d4d4</div></div>
+          <div class="tok"><i style="background:#f6f7f8"></i><div><b>페이지 배경</b><br>#f6f7f8</div></div>
+          <div class="tok"><i style="background:#fff;border-radius:6px"></i><div><b>--radius</b><br>6px</div></div>
+        </div>
+      </section>
+
+      <!-- 페이지 래퍼 -->
+      <section class="cat-sec" id="scope">
+        <h2>페이지 래퍼 (필수 규칙)</h2>
+        <p class="note">상용 CSS는 상당수 컴포넌트를 <b>페이지 단위 래퍼에 스코프</b>해 두었다. 래퍼를 안 씌우면 스타일이 먹지 않는다.</p>
+        <div class="cat-grid">
+          <div class="tok"><b>.main-dashboard</b><br>무공해차 통합 현황(메인)</div>
+          <div class="tok"><b>.anomaly-dashboard</b><br>이상탐지 3화면</div>
+          <div class="tok"><b>.contents--regular-report</b><br>정기 보고서</div>
+          <div class="tok"><b>.contents--data-store</b><br>데이터 스토어</div>
+        </div>
+        <pre class="cat-code">&lt;div class="page-layout"&gt;                &lt;!-- grid 199px + 본문, gap 40px, max 1440px --&gt;
+  &lt;aside class="portal-lnb"&gt;…&lt;/aside&gt;
+  &lt;div class="page-layout__content"&gt;
+    &lt;div class="anomaly-dashboard"&gt;        &lt;!-- ★ 페이지 래퍼 --&gt;
+       … mini-card 등 페이지 컴포넌트 …
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      </section>
+
+      <!-- 버튼 -->
+      <section class="cat-sec" id="btn">
+        <h2>버튼</h2>
+        <p class="note">기본 <code>.button</code>(높이 40px · 14px · radius 6px · 테두리 #061039) + 변형/크기 조합.</p>
+
+        <div class="cat-item">
+          <h3>변형 (variant)</h3>
+          <div class="cat-demo">
+            <button type="button" class="button">기본</button>
+            <button type="button" class="button button--primary">주요(primary)</button>
+            <button type="button" class="button button--primary-light">연한 주요</button>
+            <button type="button" class="button button--secondary">보조(secondary)</button>
+            <button type="button" class="button button--primary button--outline">외곽선</button>
+            <button type="button" class="button" disabled>비활성</button>
+          </div>
+          <pre class="cat-code">&lt;button type="button" class="button"&gt;기본&lt;/button&gt;
+&lt;button type="button" class="button button--primary"&gt;주요&lt;/button&gt;
+&lt;button type="button" class="button button--primary-light"&gt;연한 주요&lt;/button&gt;
+&lt;button type="button" class="button button--secondary"&gt;보조&lt;/button&gt;
+&lt;button type="button" class="button button--primary button--outline"&gt;외곽선&lt;/button&gt;
+&lt;button type="button" class="button" disabled&gt;비활성&lt;/button&gt;</pre>
+        </div>
+
+        <div class="cat-item">
+          <h3>크기 (size)</h3>
+          <div class="cat-demo">
+            <button type="button" class="button button--primary button--lg">큰 버튼 (lg · 60px)</button>
+            <button type="button" class="button button--primary">기본 (40px)</button>
+            <button type="button" class="button button--primary button--sm">작은 (sm · 28px)</button>
+            <button type="button" class="button button--primary button--rounded">둥근</button>
+          </div>
+          <pre class="cat-code">&lt;button class="button button--primary button--lg"&gt;큰 버튼&lt;/button&gt;
+&lt;button class="button button--primary button--sm"&gt;작은&lt;/button&gt;
+&lt;button class="button button--primary button--rounded"&gt;둥근&lt;/button&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 폼 -->
+      <section class="cat-sec" id="form">
+        <h2>폼</h2>
+        <p class="note">상용 셀렉트박스는 <code>&lt;select&gt;</code>가 아니라 <code>.selectbox</code> + <code>.select-container</code> 커스텀 드롭다운이다.</p>
+
+        <div class="cat-item">
+          <h3>셀렉트박스 (.selectbox)</h3>
+          <div class="cat-demo col">
+            <div class="selectbox" role="select" style="max-width:260px">
+              <button type="button" class="selectbox__button"><span class="selectbox__button-label">전체 사업자 (161)</span></button>
+            </div>
+          </div>
+          <pre class="cat-code">&lt;div class="selectbox" role="select"&gt;
+  &lt;button type="button" class="selectbox__button"&gt;
+    &lt;span class="selectbox__button-label"&gt;전체 사업자 (161)&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;div class="select-container" aria-haspopup="true"&gt;
+    &lt;ul class="select-container__list"&gt;
+      &lt;li class="select-container__item"&gt;
+        &lt;button type="button" class="select-container__button"&gt;옵션A&lt;/button&gt;
+      &lt;/li&gt;
+      &lt;li class="select-container__item select-container__item--selected"&gt;
+        &lt;button type="button" class="select-container__button"&gt;선택된 옵션&lt;/button&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 레이아웃 -->
+      <section class="cat-sec" id="nav">
+        <h2>레이아웃 · LNB · 브레드크럼</h2>
+        <p class="note">서브페이지 공통 뼈대. <code>.page-layout</code>은 <b>grid 199px + 본문</b>, gap 40px, max-width 1440px.</p>
+
+        <div class="cat-item">
+          <h3>좌측 LNB (.portal-lnb)</h3>
+          <div class="cat-demo col">
+            <aside class="portal-lnb">
+              <div class="portal-lnb__title">이상탐지</div>
+              <nav><ul class="portal-lnb__list">
+                <li class="portal-lnb__item portal-lnb__item--current"><a class="portal-lnb__depth2" aria-current="page">충전기 상태정보</a></li>
+                <li class="portal-lnb__item"><a class="portal-lnb__depth2">충전 이용정보</a></li>
+                <li class="portal-lnb__item"><a class="portal-lnb__depth2">연계 API</a></li>
+              </ul></nav>
+            </aside>
+          </div>
+          <pre class="cat-code">&lt;div class="page-layout"&gt;
+  &lt;aside class="portal-lnb"&gt;
+    &lt;div class="portal-lnb__title"&gt;이상탐지&lt;/div&gt;
+    &lt;nav&gt;&lt;ul class="portal-lnb__list"&gt;
+      &lt;li class="portal-lnb__item portal-lnb__item--current"&gt;
+        &lt;a class="portal-lnb__depth2" aria-current="page"&gt;충전기 상태정보&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="portal-lnb__item"&gt;&lt;a class="portal-lnb__depth2"&gt;충전 이용정보&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;&lt;/nav&gt;
+  &lt;/aside&gt;
+  &lt;div class="page-layout__content"&gt; … 본문 … &lt;/div&gt;
+&lt;/div&gt;</pre>
+        </div>
+
+        <div class="cat-item">
+          <h3>브레드크럼 (.breadcrumb)</h3>
+          <p class="note">상용은 각 단계가 <b>드롭다운(.selectbox)</b>이다 — 단순 텍스트가 아님.</p>
+          <pre class="cat-code">&lt;nav class="breadcrumb" aria-label="현재 위치"&gt;
+  &lt;ol class="breadcrumb__list"&gt;
+    &lt;li class="breadcrumb__item breadcrumb__item--home"&gt;
+      &lt;a href="/ui/main" class="breadcrumb__link" aria-label="홈으로 이동"&gt;
+        &lt;svg class="svg-icon"&gt;…&lt;/svg&gt;&lt;span class="hidden"&gt;홈&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breadcrumb__item breadcrumb__item--menu"&gt;
+      &lt;div class="selectbox" role="select"&gt;…&lt;/div&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 카드 -->
+      <section class="cat-sec" id="card">
+        <h2>카드</h2>
+
+        <div class="cat-item">
+          <h3>패턴 카드 (.mini-card) — 이상탐지 패턴 선택</h3>
+          <p class="note">⚠ <b>.anomaly-dashboard 안에서만</b> 스타일이 적용된다(스코프 규칙).</p>
+          <div class="cat-demo anomaly-dashboard">
+            <button type="button" class="mini-card" aria-pressed="false">
+              <span class="mini-pat"><span class="mini-code">P01</span><span>빠른 전환</span></span>
+              <strong class="mini-cnt">26,863 대</strong><span class="mini-rate">4.3%</span>
+            </button>
+            <button type="button" class="mini-card active" aria-pressed="true">
+              <span class="mini-pat"><span class="mini-code">P02</span><span>통신이상 종일</span></span>
+              <strong class="mini-cnt">12,339 대</strong><span class="mini-rate">2.0%</span>
+            </button>
+          </div>
+          <pre class="cat-code">&lt;div class="anomaly-dashboard"&gt;
+  &lt;button type="button" class="mini-card" aria-pressed="false"&gt;
+    &lt;span class="mini-pat"&gt;&lt;span class="mini-code"&gt;P01&lt;/span&gt;&lt;span&gt;빠른 전환&lt;/span&gt;&lt;/span&gt;
+    &lt;strong class="mini-cnt"&gt;26,863 대&lt;/strong&gt;
+    &lt;span class="mini-rate"&gt;4.3%&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;!-- 선택 상태: class="mini-card active" aria-pressed="true" --&gt;
+&lt;/div&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 칩 -->
+      <section class="cat-sec" id="chip">
+        <h2>칩 · 뱃지</h2>
+        <div class="cat-item">
+          <h3>칩 (.ds-chip)</h3>
+          <div class="cat-demo">
+            <span class="ds-chip ds-chip--blue">월간보고</span>
+            <span class="ds-chip ds-chip--gray">월간통계</span>
+            <span class="ds-chip ds-chip--gray">충전인프라</span>
+            <span class="ds-chip ds-chip--gray">붙임1</span>
+          </div>
+          <pre class="cat-code">&lt;span class="ds-chip ds-chip--blue"&gt;월간보고&lt;/span&gt;
+&lt;span class="ds-chip ds-chip--gray"&gt;월간통계&lt;/span&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 테이블 -->
+      <section class="cat-sec" id="tbl">
+        <h2>테이블 · 페이지네이션</h2>
+        <div class="cat-item">
+          <h3>테이블 (.table)</h3>
+          <div class="cat-demo col">
+            <table class="table">
+              <thead><tr><th>패턴</th><th>사업자</th><th>충전소명</th><th>충전기 타입</th></tr></thead>
+              <tbody>
+                <tr><td>P01</td><td>바이온에버</td><td>바이온에버 본사 충전소</td><td>AC완속</td></tr>
+                <tr><td>P02</td><td>블루네트웍스</td><td>한국무역보험공사 종로</td><td>DC콤보</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <pre class="cat-code">&lt;table class="table"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;패턴&lt;/th&gt;&lt;th&gt;사업자&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;P01&lt;/td&gt;&lt;td&gt;바이온에버&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;
+&lt;/table&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 보고서 아이템 -->
+      <section class="cat-sec" id="item">
+        <h2>보고서 · 파일 아이템 (.ds-report-item)</h2>
+        <p class="note">정기 보고서 목록/상세, 데이터 스토어에서 공통으로 쓰는 행 카드. <code>--clickable</code>이면 상세 이동.</p>
+        <div class="cat-item">
+          <div class="cat-demo col">
+            <article class="ds-report-item ds-report-item--clickable" role="link" tabindex="0">
+              <div class="ds-report-item__main">
+                <div class="ds-report-title">붙임1 - 기관별-타입별 충전기 개수(지자체 현황)</div>
+                <div class="ds-report-desc">기준월 충전기현황 파일의 총괄 시트에 들어가는 데이터입니다.</div>
+                <div class="ds-meta-row">
+                  <span class="ds-chip ds-chip--blue">월간보고</span>
+                  <span class="ds-chip ds-chip--gray">붙임1</span>
+                </div>
+              </div>
+              <dl class="ds-report-item__meta">
+                <div class="ds-report-meta"><dt>보고서 생성일</dt><dd>2026.07.29</dd></div>
+                <div class="ds-report-meta"><dt>제공 형식</dt><dd>XLSX</dd></div>
+              </dl>
+            </article>
+          </div>
+          <pre class="cat-code">&lt;article class="ds-report-item ds-report-item--clickable" role="link" tabindex="0"&gt;
+  &lt;div class="ds-report-item__main"&gt;
+    &lt;div class="ds-report-title"&gt;제목&lt;/div&gt;
+    &lt;div class="ds-report-desc"&gt;설명&lt;/div&gt;
+    &lt;div class="ds-meta-row"&gt;&lt;span class="ds-chip ds-chip--blue"&gt;월간보고&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;dl class="ds-report-item__meta"&gt;
+    &lt;div class="ds-report-meta"&gt;&lt;dt&gt;보고서 생성일&lt;/dt&gt;&lt;dd&gt;2026.07.29&lt;/dd&gt;&lt;/div&gt;
+  &lt;/dl&gt;
+&lt;/article&gt;</pre>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

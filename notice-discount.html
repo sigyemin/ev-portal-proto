@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>추석 추가할인 알림</title>
+  <link rel="stylesheet" href="assets/css/style.css?v=20260921a">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260827a"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260827a"></script>
+  <script src="js/swiper-bundle.min.js?v=20260827a"></script>
+  <script src="js/common/common_util.js?v=20260827a"></script>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>소통·지원</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>알림·공지</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>추석 추가할인 알림</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">추석 추가할인 알림</h1>
+              <p class="page-header__description">충전사업자가 충전요금 추가할인 계획을 안내합니다. 게시글을 읽고 댓글로 의견을 남길 수 있습니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+            <div class="board-wrapper">
+              <!-- 게시판 검색폼 -->
+              <div class="board-search">
+                <div class="search-form">
+                  <div class="search-form__elements">
+                    <div class="element-group">
+                      <div class="element-group__label">
+                        <label for="searchCpo" class="element-label">충전사업자</label>
+                      </div>
+                      <div class="element-group__control">
+                        <select id="searchCpo" class="select">
+                          <option value="">전체</option>
+                          <option value="OO충전(주)">OO충전(주)</option>
+                          <option value="△△에너지">△△에너지</option>
+                          <option value="□□모빌리티">□□모빌리티</option>
+                          <option value="한국환경공단">한국환경공단</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="element-group element-group--keyword">
+                      <div class="element-group__label">
+                        <label for="searchKeyword" class="element-label">검색어</label>
+                      </div>
+                      <div class="element-group__control">
+                        <input type="text" id="searchKeyword" placeholder="검색어 입력" class="text-input" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="search-form__actions">
+                    <button type="button" class="button button--primary button--search">
+                      <span class="button__label">검색</span>
+                    </button>
+                    <button type="button" class="button button--secondary button--reset">
+                      <span class="button__label">초기화</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- //게시판 검색폼 -->
+
+              <!-- 게시판 도구모음 -->
+              <div class="board-toolbar">
+                <div class="board-toolbar__total">
+                  <p class="total-number">총 <b class="total-number__total">4</b>건</p>
+                </div>
+              </div>
+              <!-- //게시판 도구모음 -->
+
+              <!-- 게시판 목록 -->
+              <div class="board-list">
+                <table class="table text-center">
+                  <caption>추석 추가할인 알림 목록 — 번호, 제목, 작성자, 등록일, 용량, 다운로드</caption>
+                  <colgroup>
+                    <col style="width: 9%" />
+                    <col />
+                    <col style="width: 16%" />
+                    <col style="width: 13%" />
+                    <col style="width: 9%" />
+                    <col style="width: 10%" />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th scope="col">번호</th>
+                      <th scope="col">제목</th>
+                      <th scope="col">작성자</th>
+                      <th scope="col">등록일</th>
+                      <th scope="col">용량</th>
+                      <th scope="col">다운로드</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>4</td>
+                      <td class="text-left"><a href="notice-discount-view.html">OO충전(주) 추석연휴기간 전기차 충전요금 추가할인 안내</a></td>
+                      <td>OO충전(주)</td>
+                      <td>2026.09.22</td>
+                      <td>-</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td class="text-left"><a href="notice-discount-view.html">△△에너지 추석연휴 충전요금 할인 대상 충전소 안내</a></td>
+                      <td>△△에너지</td>
+                      <td>2026.09.22</td>
+                      <td>182.4 KB</td>
+                      <td><button type="button" class="button button--small button--icon button--secondary js-board-download" data-fileid="F25700" title="다운로드"><i class="svg-icon download"></i><span class="button__label ir-pm">다운로드</span></button></td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td class="text-left"><a href="notice-discount-view.html">□□모빌리티 고속도로 휴게소 충전기 할인 안내</a></td>
+                      <td>□□모빌리티</td>
+                      <td>2026.09.21</td>
+                      <td>-</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td class="text-left"><a href="notice-discount-view.html">추석 추가할인 알림 게시판 이용 안내</a></td>
+                      <td>한국환경공단</td>
+                      <td>2026.09.21</td>
+                      <td>-</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- //게시판 목록 -->
+
+              <!-- 페이징 -->
+              <div class="pagination pc-only">
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-first"></i>
+                  <span class="ir-pm">첫 페이지</span>
+                </button>
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-prev"></i>
+                  <span class="ir-pm">이전</span>
+                </button>
+                <div class="pagination__list">
+                  <button type="button" class="pagination__button pagination__button--selected">1</button>
+                </div>
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-next"></i>
+                  <span class="ir-pm">다음</span>
+                </button>
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-last"></i>
+                  <span class="ir-pm">마지막 페이지</span>
+                </button>
+              </div>
+              <!-- 모바일 전용 -->
+              <div class="pagination pagination--fraction">
+                <button type="button" class="pagination__button">
+                  <i class="svg-icon arrow-prev"></i>
+                  <span>이전</span>
+                </button>
+                <div class="pagination__text">
+                  <span class="pagination__current">1</span>
+                  <span class="pagination__total">1</span>
+                </div>
+                <button type="button" class="pagination__button">
+                  <span>다음</span>
+                  <i class="svg-icon arrow-next"></i>
+                </button>
+              </div>
+              <!-- //페이징 -->
+            </div>
+         </div>
+      </div>
+
+<script>
+$(function () {
+  var $rows = $('.board-list tbody tr');
+
+  function apply() {
+    var cpo = $('#searchCpo').val();
+    var kw = $.trim($('#searchKeyword').val());
+    var n = 0;
+    $rows.each(function () {
+      var $tr = $(this);
+      var writer = $.trim($tr.find('td').eq(2).text());
+      var title = $tr.find('td').eq(1).text();
+      var ok = (!cpo || writer === cpo) && (!kw || title.indexOf(kw) > -1);
+      $tr.toggle(ok);
+      if (ok) n++;
+    });
+    $('.total-number__total').text(n);
+  }
+
+  // 다운로드 버튼 (운영은 행별 FILE_ID 로 첨부파일 다운로드 모달을 연다)
+  $(document).on('click', '.js-board-download', function () {
+    alert('프로토타입입니다. 실제 다운로드는 동작하지 않습니다.');
+  });
+
+  $('.board-search .button--search').on('click', apply);
+  $('#searchKeyword').on('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); apply(); } });
+  $('.board-search .button--reset').on('click', function () {
+    $('#searchCpo').val(''); $('#searchKeyword').val('');
+    apply();
+  });
+});
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260827a"></script>
+<script src="assets/js/ui-common.js?v=20260827a"></script>
+<script src="js/common/fileAttach.js?v=20260827a"></script>
+<script src="js/menu-data.js?v=20260921a"></script>
+<script src="js/shell.js?v=20260827a"></script>
+</body>
+</html>

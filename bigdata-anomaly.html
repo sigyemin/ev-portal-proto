@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이상탐지 · 무공해차 빅데이터 플랫폼</title>
+  <!-- ① 상용 컴포넌트 원본(전수 추출) → ② 페이지 전용 보정 순서 -->
+  <link rel="stylesheet" href="assets/css/bd-ui.css?v=20260911a">
+  <link rel="stylesheet" href="assets/css/bd-platform.css?v=20260911k">
+  <script src="assets/js/vendors/echarts.min.js?v=20260911a"></script>
+</head>
+<body class="bd-body" data-bd-active="anomaly">
+  <header id="bd-header"></header>
+
+  <main class="bd-main">
+    <div class="page-layout">
+      <!-- 좌측 LNB -->
+      <aside class="portal-lnb" aria-label="이상탐지 메뉴">
+        <div class="portal-lnb__title">이상탐지</div>
+        <nav><ul class="portal-lnb__list" id="anLnb"></ul></nav>
+      </aside>
+
+      <!-- 우측 메인 (상용 래퍼: page-layout__content + anomaly-dashboard) -->
+      <div class="page-layout__content anomaly-dashboard portal-main">
+        <p class="portal-bc"><span class="portal-bc__home">⌂</span> <b>홈</b> › <b>이상탐지</b> › <span id="anCrumbTab"></span></p>
+        <h1 class="portal-main__title" id="anTitle"></h1>
+
+      <!-- 조회 조건 -->
+      <div class="an-filter">
+        <p class="an-filter__ttl">조회 조건</p>
+        <div class="an-filter__row">
+          <label class="an-field"><span>월</span><select id="fMonth"></select></label>
+          <label class="an-field"><span>일</span><select id="fDay"></select></label>
+          <label class="an-field"><span>사업자</span><select id="fBiz"></select></label>
+          <label class="an-field"><span>이상패턴</span><select id="fPat"></select></label>
+          <div class="an-filter__btns">
+            <button type="button" class="an-btn an-btn--go" id="fGo">조회</button>
+            <button type="button" class="an-btn an-btn--reset" id="fReset">초기화</button>
+          </div>
+        </div>
+        <div class="an-filter__links" style="margin-top:12px">
+          <button type="button" class="an-link" id="anGuideBtn">이상탐지 기준</button>
+          <button type="button" class="an-link" id="anListBtn">목록 조회</button>
+        </div>
+      </div>
+
+      <!-- 요약 3지표 -->
+      <div class="an-summary" id="anSummary"></div>
+      <p class="an-subnote" id="anSubnote"></p>
+
+      <!-- 패턴 카드 -->
+      <h2 class="bd-secttl">이상 패턴별 탐지 현황</h2>
+      <div class="mini-kpi-grid mini-kpi-grid--5" id="anPatterns"></div>
+
+      <!-- 차트 3종 -->
+      <div class="an-charts">
+        <div class="an-chart">
+          <div class="an-chart__hd">
+            <div><div class="an-chart__ttl" id="chTop15Ttl"></div><div class="an-chart__sub" id="chTop15Sub"></div></div>
+            <div class="an-toggle" data-toggle="top15"><button class="is-active" data-v="cnt">탐지 수</button><button data-v="rate">탐지율</button></div>
+          </div>
+          <div class="an-chart__canvas tall" id="chTop15"></div>
+        </div>
+        <div class="an-chart">
+          <div class="an-chart__hd">
+            <div><div class="an-chart__ttl" id="chRegionTtl"></div><div class="an-chart__sub" id="chRegionSub"></div></div>
+            <div class="an-toggle" data-toggle="region"><button class="is-active" data-v="cnt">탐지 수</button><button data-v="rate">탐지율</button></div>
+          </div>
+          <div class="an-chart__canvas tall" id="chRegion"></div>
+        </div>
+        <div class="an-chart wide">
+          <div class="an-chart__hd">
+            <div><div class="an-chart__ttl" id="chTrendTtl">패턴별 추이</div><div class="an-chart__sub" id="chTrendSub">최근 7일 · 집계 기준일 기준</div></div>
+            <div class="an-toggle" data-toggle="trend"><button class="is-active" data-v="7">최근 7일</button><button data-v="30">최근 1달</button><button data-v="90">최근 3개월</button></div>
+          </div>
+          <div class="an-chart__canvas" id="chTrend"></div>
+        </div>
+      </div>
+
+      <!-- 목록(표) 뷰 -->
+      <div class="an-list" id="anList" hidden>
+        <div class="an-list__hd">
+          <div><div class="an-list__title" id="anListTitle">충전기 리스트</div><div class="an-list__sub" id="anListSub"></div></div>
+          <button type="button" class="an-excel" id="anExcel">Excel 다운로드</button>
+        </div>
+        <div class="an-tablewrap">
+          <table class="an-table">
+            <thead id="anListHead"></thead>
+            <tbody id="anListBody"></tbody>
+          </table>
+        </div>
+        <div class="an-pager" id="anPager"></div>
+      </div>
+
+      <p class="bd-exnote">※ 상용 「무공해차 빅데이터 플랫폼」 <b>이상탐지</b>(충전기 상태정보·충전 이용정보·연계 API) 재현. <b>요약 지표·패턴별 탐지 건수·이상탐지 기준(패턴 정의/측정 방법)은 2026-09-10 실화면 스냅샷 값</b>입니다. 하단 3개 차트의 개별 시리즈(사업자·지역·추이 세부값)는 프로토타입 예시이며 실데이터 연동은 개발 협의 대상입니다.</p>
+      </div><!-- /portal-main -->
+    </div><!-- /page-layout -->
+  </main>
+
+  <footer class="bd-footer" id="bd-footer"></footer>
+
+  <!-- 이상탐지 기준 모달 -->
+  <div id="anGuide" class="bd-modal-dim" hidden role="presentation">
+    <div class="an-gmodal" role="dialog" aria-modal="true" aria-labelledby="anGuideTtl">
+      <div class="an-gmodal__hd">
+        <div>
+          <div class="an-gmodal__eyebrow">이상탐지 기준</div>
+          <h2 class="an-gmodal__title" id="anGuideTtl"></h2>
+          <div class="an-gmodal__sub" id="anGuideSub"></div>
+        </div>
+        <button type="button" class="bd-modal__close" data-close>닫기</button>
+      </div>
+      <div class="an-gmodal__body">
+        <div class="an-gcats" id="anGuideCats"></div>
+        <table class="an-gtable">
+          <thead><tr><th>코드</th><th>패턴명</th><th>정의</th><th>측정 방법</th></tr></thead>
+          <tbody id="anGuideRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/bd-shell.js?v=20260911e"></script>
+  <script>
+  (function () {
+    /* ===== 상용 이상탐지 3탭 실측 데이터 (2026-09-10 기준) ===== */
+    var DAYS = ['2026-09-10','2026-09-09','2026-09-08','2026-09-07','2026-09-06','2026-09-05','2026-09-04','2026-09-03','2026-09-02','2026-09-01'];
+    var SIDO = ['서울','부산','대구','인천','광주','대전','울산','세종','경기','강원','충북','충남','전북','전남','경북','경남','제주'];
+    var BIZ = ['LG유플러스 볼트업','이지차저','에버온','현대엔지니어링','SK일렉링크','신세계아이앤씨','NICE인프라','GS차지비','이엘일렉트릭','플러그링크','파워큐브','이카플러그','한국전기차충전서비스','스타코프','차지인','펌프킨','기후에너지환경부','블루네트웍스','채비','한국전력공사','휴맥스이브이','엘에스이링크','아이파킹','이브이시스','SK시그넷','이마트','모던텍','한전케이디엔','GS칼텍스','현대오일뱅크'];
+
+    var TABS = {
+      infra:{
+        name:'충전기 상태정보', months:['2026-09','2026-08','2026-07'], patCount:10,
+        summary:[
+          {label:'전체 충전기 (등록·폐기 포함)', val:'631,003', unit:'대'},
+          {label:'이상 충전기 (중복 패턴 제외)', val:'151,717', unit:'대'},
+          {label:'탐지율', val:'20.5', unit:'%'}
+        ],
+        subnote:'기준일 2026-09-10 · 전체 사업자 · 10 패턴 전체',
+        patterns:[
+          {c:'P01',n:'빠른 전환',v:'26,863',u:'대',r:'4.3%',t:1},
+          {c:'P02',n:'통신이상 종일',v:'12,339',u:'대',r:'2.0%',t:2},
+          {c:'P03',n:'충전중 고착',v:'5,022',u:'대',r:'0.8%',t:2},
+          {c:'P04',n:'운영중지·점검 종일',v:'6,983',u:'대',r:'1.1%',t:2},
+          {c:'P05',n:'상태 전이 이상',v:'15,022',u:'대',r:'2.4%',t:3},
+          {c:'P06',n:'과다 STATUS 변경',v:'12,086',u:'대',r:'1.9%',t:3},
+          {c:'P07',n:'상태제공건수 이상',v:'46,800',u:'대',r:'7.4%',t:3},
+          {c:'P08',n:'미등록 송출',v:'22,404',u:'대',r:null,t:4},
+          {c:'P09',n:'폐기 후 송출',v:'7,822',u:'대',r:'1.2%',t:4},
+          {c:'P10',n:'상태 미전송',v:'18,968',u:'대',r:'3.0%',t:4}
+        ],
+        charts:{ topTtl:'사업자별 이상 충전기 Top 15', topSub:'탐지 수 · 탐지율',
+                 regTtl:'지역별 이상 충전기 분포', regSub:'17개 구분 · 탐지 수 · 탐지율', reg:SIDO },
+        guide:{ title:'충전기 상태정보 이상탐지 기준 — 10 패턴 가이드', sub:'P01~P10 실제 운영 판정 기준 · 조회 기준일 2026-09-10',
+          cats:'10 패턴 카테고리 &nbsp; ① 시간 패턴(P01) &nbsp; ② 지속 패턴(P02~P04) &nbsp; ③ 변화 패턴(P05~P07) &nbsp; ④ 마스터 패턴(P08~P10)',
+          rows:[
+            ['P01','빠른 전환','STATUS 변경 직후 지속시간이 1분 미만 — 충전기 오류·플리커링 의심','충전기 상태정보 테이블의 상태 지속 시간이 1분 미만인 행을 추출하여, 같은 충전기의 직전 행과 충전기 상태 코드가 다른 경우만 카운트'],
+            ['P02','통신이상 종일','하루 종일 통신이상 상태만 송출',"충전기별 1일 단위 그룹화 · 충전기 상태 코드가 '통신이상'(1) 단일 + 상태 지속 시간 합이 23시간 이상"],
+            ['P03','충전중 고착','하루 종일 충전중 상태만 송출 — 고장·이상 종료 의심',"충전기별 1일 단위 그룹화 · 충전기 상태 코드가 '충전중'(3) 단일 + 상태 지속 시간 합이 23시간 이상"],
+            ['P04','운영중지·점검 종일','하루 종일 운영중지·점검·알수없음(0·4·5·9) 상태만 송출','충전기별 1일 그룹화 · 충전기 상태 코드가 알수없음(0)·운영중지(4)·점검중(5)·상태미확인(9) 중 하나만 + 정상 상태(충전대기·충전중·예약중) 없음 + 지속시간 23시간 이상'],
+            ['P05','상태 전이 이상','비논리적 STATUS 변화 (예: 충전중→알수없음, 점검중→충전중)','같은 충전기의 연속 행 비교 · 충전기 상태 코드 전이 매트릭스에서 비정상 전이 8종에 해당하는 변화 카운트\n비정상 전이: 3→0/1/4/9, 0→3, 6→0/1, 5→3'],
+            ['P06','과다 STATUS 변경','하루 동안 STATUS가 10회 이상 변경','충전기·일별 행 수(= 상태 구간 수)에서 1을 뺀 값이 10회 이상인 충전기 식별'],
+            ['P07','상태제공건수 이상','일 송출 건수가 통계 이상치','충전기·일자별 상태 제공 건수 합 → 전체 분포의 사분위 범위(IQR) 1.5배 초과 또는 표준편차 3배 초과 충전기 식별'],
+            ['P08','미등록 송출','송출은 있지만 충전기 마스터에 등록 안 됨','충전기 상태정보 테이블의 사업자ID·충전소ID·충전기ID를 충전기 마스터와 비교 · 마스터에 없는 송출 행 식별'],
+            ['P09','폐기 후 송출','폐기 처리된 충전기가 상태 송출 지속','충전기 마스터의 폐기일이 기준일 이하인 충전기에서 상태정보가 송출된 경우 식별'],
+            ['P10','상태 미전송',"활성 마스터인데 송출 데이터 없음 — 통신 단절·미설치 의심","충전기 마스터에서 삭제 여부가 'N'(활성)인 충전기 중 송출에 한 건도 없는 충전기 · 활성 마스터 집합 − 송출 충전기 집합"]
+          ] }
+      },
+      usage:{
+        name:'충전 이용정보', months:['2026-09','2026-08','2026-07'], patCount:8,
+        summary:[
+          {label:'전체 충전기 (등록·폐기 포함)', val:'631,003', unit:'대'},
+          {label:'이상 충전기 (중복 패턴 제외)', val:'229,865', unit:'대'},
+          {label:'탐지율', val:'36.4', unit:'%'}
+        ],
+        subnote:'기준일 2026-09-10 · 전체 사업자 · 8 패턴 전체',
+        patterns:[
+          {c:'U01',n:'충전요금 이상',v:'0',u:'건',r:'0.0%',t:1},
+          {c:'U02',n:'단가 이상',v:'0',u:'건',r:'0.0%',t:1},
+          {c:'U03',n:'충전 시간 이상',v:'0',u:'건',r:'0.0%',t:2},
+          {c:'U04',n:'충전 효율 이상',v:'0',u:'건',r:'0.0%',t:2},
+          {c:'U05',n:'여러번 충전 시도',v:'0',u:'건',r:'0.0%',t:3},
+          {c:'U06',n:'미등록 충전기 충전',v:'0',u:'대',r:null,t:4},
+          {c:'U07',n:'폐기 충전기 충전',v:'0',u:'대',r:'0.0%',t:4},
+          {c:'U08',n:'이용정보 없는 충전기',v:'229,865',u:'대',r:'36.4%',t:4}
+        ],
+        charts:{ topTtl:'사업자별 이상탐지 Top 15', topSub:'탐지 수 · 충전기 영향률',
+                 regTtl:'지역별 이상탐지 분포', regSub:'16개 구분 · 탐지 수 · 충전기 영향률', reg:SIDO.slice(0,16) },
+        guide:{ title:'충전 이용정보 이상탐지 기준 — 8 패턴 가이드', sub:'U01~U08 실제 운영 판정 기준 · 조회 기준일 2026-09-10',
+          cats:'8 패턴 카테고리 &nbsp; ① 요금·금액(U01·U02) &nbsp; ② 시간·효율(U03·U04) &nbsp; ③ 카운팅(U05) &nbsp; ④ 마스터 정합성(U06~U08)',
+          rows:[
+            ['U01','충전요금 이상','충전요금 값이 비정상 범위 — 음수·0원·과대·충전 없는데 요금','충전요금이 0원 이하 또는 10만원 초과이거나, 충전량이 0인데 요금이 발생한 거래 식별'],
+            ['U02','단가 이상','kWh당 단가가 사업자 시장 범위 벗어남 — 단가 하한·상한 위반','단가 = 충전요금 ÷ 충전량(kWh) · 100원/kWh 미만 또는 500원/kWh 초과 거래 식별'],
+            ['U03','충전 시간 이상','충전 시간이 너무 짧거나 너무 김 — 5분 미만(카드 뺐꽂) 또는 24시간 초과(종료 누락)','충전 시간 = 종료시각 − 시작시각 · 5분 미만 또는 24시간 초과 거래 식별'],
+            ['U04','충전 효율 이상','실측 출력(kW)이 충전기 정격 용량 대비 비정상 저효율','실측 출력이 5kW 미만이거나 정격출력을 확인할 수 있는 충전기에서 정격의 50% 미만인 거래 식별'],
+            ['U05','여러번 충전 시도 (재시도)','동일 충전기에서 직전 종료와 겹치거나 5분 이내 다음 충전 시작','같은 사업자ID·충전소ID·충전기ID 거래를 시간순으로 정렬해 직전 종료시각과 다음 시작시각의 간격이 5분 이하인 거래 식별'],
+            ['U06','미등록 충전기 충전','거래의 사업자ID·충전소ID·충전기ID 가 충전기 마스터에 등록 안 됨','기준일 이용정보의 사업자ID·충전소ID·충전기ID를 충전기 마스터와 비교해 일치 항목이 없는 충전기 식별'],
+            ['U07','폐기 충전기 충전',"폐기 처리된 충전기(마스터 삭제 여부 'Y')인데 거래 계속 발생 — 제거 누락 의심",'충전기 마스터의 폐기일보다 늦은 시작시각을 가진 이용정보가 존재하는 충전기 식별'],
+            ['U08','이용정보 없는 충전기','활성 충전기인데 최근 7개 완료일 동안 이용정보가 0건 — 사업자 미송출','최근 7개 날짜의 이용정보 적재가 모두 완료된 경우에만, 해당 기간 이용정보가 한 건도 없는 활성 충전기 식별']
+          ] }
+      },
+      api:{
+        name:'연계 API', months:['2026-09','2026-08'], patCount:6,
+        summary:[
+          {label:'활성 마스터 사업자 (연계 대상)', val:'151', unit:'사업자'},
+          {label:'이상 사업자 (중복 패턴 제외)', val:'118', unit:'사업자'},
+          {label:'탐지율', val:'78.1', unit:'%'}
+        ],
+        subnote:'기준일 2026-09-10 · 전체 사업자 · 6 패턴 전체',
+        patterns:[
+          {c:'A01',n:'응답 누락',v:'1,235,890',u:'건',r:'78.1%',t:1},
+          {c:'A02',n:'오류 응답 다발',v:'44,883',u:'건',r:'53.0%',t:1},
+          {c:'A03',n:'대량 호출 (CNT 이상)',v:'3,628',u:'건',r:'23.2%',t:2},
+          {c:'A04',n:'r1 구버전 API 사용',v:'117,695',u:'건',r:'11.9%',t:2},
+          {c:'A05',n:'미연계 사업자',v:'-',u:'',r:null,t:4},
+          {c:'A06',n:'상태정보 미송출 사업자',v:'-',u:'',r:null,t:4}
+        ],
+        charts:{ topTtl:'사업자별 이상 API Top 15', topSub:'호출 수 · 오류율',
+                 regTtl:'URL 카테고리별 이상 분포', regSub:'5개 구분 · 호출 수 · 오류율',
+                 reg:['상태정보 조회','상태 갱신','충전소 정보','이용내역','기타'] },
+        guide:{ title:'연계 API 이상탐지 기준 — 6 패턴 가이드', sub:'A01~A06 실제 운영 판정 기준 · 조회 기준일 2026-09-10',
+          cats:'6 패턴 카테고리 &nbsp; ① 응답·오류(A01·A02) &nbsp; ② 호출 패턴(A03·A04) &nbsp; ③ 사업자 연계(A05·A06)',
+          rows:[
+            ['A01','응답 누락','사업자·URL별 일 요청 수보다 응답 수가 적음','기준일의 사업자·정규화 URL별 요청 수 − 응답 수가 0보다 큰 경우 그 차이를 누락 응답 수로 판정'],
+            ['A02','오류 응답 다발',"응답 결과 코드가 정상('0')이 아님 — 코드 '1', '2' 또는 미정의",'기준일 응답 중 정규식으로 추출한 결과 값이 0이 아닌 응답을 사업자·URL별로 집계'],
+            ['A03','대량 호출 (CNT 이상)','단일 호출의 응답 데이터 건수가 비정상적으로 많음 — DoS·비효율 폴링 의심','기준일 응답의 데이터 건수(CNT)가 1,000을 초과한 호출 식별'],
+            ['A04','r1 구버전 API 사용','r2 표준 대신 r1 구버전 엔드포인트 호출 — 업그레이드 미적용','기준일 요청 URL의 접두사가 /r1/인 사업자·URL 식별'],
+            ['A05','미연계 사업자','충전기 마스터에 활성 충전기 보유한 사업자인데 R2 API 호출 자체가 3개월간 0건 — 시스템 미가입 의심','활성 충전기 보유 사업자 중 기준일을 포함한 최근 3개월간 r2 요청이 0건인 사업자 식별'],
+            ['A06','상태정보 미송출 사업자','충전기 활성 보유 사업자인데 상태 갱신(status/update) API 호출 0건 — 충전기 상태 미보고','활성 충전기 보유 사업자 중 기준일을 포함한 최근 3개월간 상태 갱신 요청이 0건인 사업자 식별']
+          ] }
+      }
+    };
+
+    /* 패턴별 비고(상용 목록 '비고' 열 원문) */
+    var BIGO = {
+      P01:'1분 이내 상태가 빠르게 전환됨', P02:'통신이상 상태가 23시간 이상 지속됨', P03:'충전중 상태가 23시간 이상 지속됨',
+      P04:'운영중지·점검 상태가 23시간 이상 지속됨', P05:'프로토타입의 상태 전이 이상 조합이 탐지됨', P06:'하루 상태 변경이 10회 이상 발생함',
+      P07:'상태 제공건수가 IQR 또는 3표준편차 범위를 벗어남', P08:'충전기 마스터에 없는 상태정보가 송출됨', P09:'폐기일 이후 상태정보가 송출됨', P10:'활성 충전기의 기준일 상태정보가 없음',
+      U08:'최근 7개 완료일 동안 충전기 원천 이용정보가 없음',
+      A01:'요청 수보다 응답 수가 적음', A02:'정상 result=0을 확인할 수 없는 응답이 존재함', A03:'응답 CNT가 1000을 초과함', A04:'구버전(/r/, /r1/) API 요청이 존재함', A05:'', A06:''
+    };
+    /* 탭별 목록 구성(상용 목록 열/섹션명) */
+    var LIST = {
+      infra:{ sec:'충전기 리스트', total:174309, cols:['패턴','사업자','충전소ID','충전소명','충전기ID','설치 주소','충전기 타입','용량(kW)','보조금','비고'] },
+      usage:{ sec:'충전기 리스트', total:229865, cols:['코드','패턴명','사업자','충전소ID','충전소명','충전기ID','충전 시각','시간(분)','충전량(kWh)','효율(kW)','요금(원)','단가(원/kWh)','비고'] },
+      api:{ sec:'로그 리스트', total:961, apiTotals:{A01:747,A02:114,A03:47,A04:53,A05:0,A06:0}, cols:['코드','패턴명','사업자','호출 URL','시각','구분','탐지 값','비고'] }
+    };
+    /* 목록 데모 행 재료(대표 실사업자 + 현실적 예시값) */
+    var STA = ['본사 충전소','공영주차장','제1주차장','환승센터','근린공원','문화센터','시청 별관','종합운동장','아파트 상가','물류센터'];
+    var ADDR = ['경기도 과천시 과천대로7나길 60','서울특별시 종로구 종로 14','전남광주통합특별시 동구 제봉로 153-4','인천광역시 서구 환경로 42','부산광역시 해운대구 센텀중앙로 79','대전광역시 유성구 대덕대로 480','경상남도 창원시 의창구 중앙대로 300','충청남도 천안시 동남구 만남로 43','강원특별자치도 춘천시 중앙로 1','제주특별자치도 제주시 문연로 6'];
+    var TYPE = ['AC완속','DC콤보','DC차데모','DC콤보+차데모'];
+    var CAP = ['7','50','100','200'];
+    var SUBS = ['타기관 계열','공단 보조','자부담','-'];
+    var URLS = ['/r2/charger/status','/r2/station/info','/r1/charger/status','/r2/charge/history','/r/code/list','/r2/code/list'];
+
+    var cur = 'infra';
+    var sel = null;              // 선택된 이상패턴 코드(null = 전체)
+    var view = 'chart';          // 'chart' | 'list'
+    var page = 1;
+    var toggles = { top15:'cnt', region:'cnt', trend:'7' };
+
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function el(id){ return document.getElementById(id); }
+    function seed(str){ var h=0; for(var i=0;i<str.length;i++){ h=(h*31 + str.charCodeAt(i))>>>0; } return h; }
+    function rnd(s){ s=(s*9301+49297)%233280; return s/233280; }
+
+    /* ===== 좌측 LNB ===== */
+    function renderSubtabs(){
+      var keys=['infra','usage','api'];
+      el('anLnb').innerHTML = keys.map(function(k){
+        return '<li class="portal-lnb__item'+(k===cur?' portal-lnb__item--current':'')+'">'
+          + '<a class="portal-lnb__depth2" role="button" tabindex="0" data-tab="'+k+'"'+(k===cur?' aria-current="page"':'')+'>'+TABS[k].name+'</a></li>';
+      }).join('');
+    }
+
+    /* ===== 필터 ===== */
+    function renderFilters(){
+      var T = TABS[cur];
+      el('fMonth').innerHTML = T.months.map(function(m){ return '<option>'+m+'</option>'; }).join('');
+      el('fDay').innerHTML = DAYS.map(function(d){ return '<option>'+d+'</option>'; }).join('');
+      el('fBiz').innerHTML = '<option>전체 (' + ({infra:161,usage:161,api:155})[cur] + ')</option>' + BIZ.map(function(b){ return '<option>'+esc(b)+'</option>'; }).join('');
+      el('fPat').innerHTML = '<option>전체 ('+T.patCount+')</option>' + T.patterns.map(function(p){ return '<option>'+p.c+' · '+esc(p.n)+'</option>'; }).join('');
+    }
+
+    /* ===== 요약·패턴 ===== */
+    function curPat(){ return sel ? TABS[cur].patterns.filter(function(p){return p.c===sel;})[0] : null; }
+    function subnoteText(){
+      var T=TABS[cur], p=curPat();
+      return '기준일 2026-09-10 · 전체 사업자 · ' + (p ? (p.c+' · '+p.n) : (T.patCount+' 패턴 전체'));
+    }
+    function renderSummary(){
+      var T = TABS[cur], p = curPat();
+      var s = T.summary.map(function(x){ return {label:x.label, val:x.val, unit:x.unit}; });
+      if(p){ // 패턴 선택 시 이상 건수·탐지율을 해당 패턴 기준으로 표시
+        s[1].val = (p.v==='-') ? '-' : p.v;
+        s[2].val = (p.r===null) ? '-' : p.r.replace('%','');
+      }
+      el('anSummary').innerHTML = s.map(function(x){
+        return '<div class="an-sum"><div class="an-sum__label">'+esc(x.label)+'</div>'
+          + '<div class="an-sum__num">'+x.val+'<span class="u">'+esc(x.unit)+'</span></div></div>';
+      }).join('');
+      el('anSubnote').textContent = subnoteText();
+    }
+    /* 상용 컴포넌트: .mini-card (선택 시 .active + aria-pressed) */
+    function renderPatterns(){
+      var T = TABS[cur];
+      el('anPatterns').innerHTML = T.patterns.map(function(p){
+        var on = (p.c===sel);
+        var val = (p.v==='-') ? '-' : (p.v + (p.u ? ' '+esc(p.u) : ''));
+        var rate = (p.r===null) ? '— 비율 미산정' : p.r;
+        return '<button type="button" class="mini-card'+(on?' active':'')+'" aria-pressed="'+(on?'true':'false')+'" data-code="'+p.c+'">'
+          + '<span class="mini-pat"><span class="mini-code">'+p.c+'</span><span>'+esc(p.n)+'</span></span>'
+          + '<strong class="mini-cnt">'+val+'</strong>'
+          + '<span class="mini-rate">'+rate+'</span></button>';
+      }).join('');
+    }
+
+    /* ===== 차트 (예시 시리즈: 실측 총계에 정합하는 결정적 분포) ===== */
+    function initChart(id){ var box=el(id); if(!box||typeof echarts==='undefined') return null; return echarts.getInstanceByDom(box)||echarts.init(box); }
+    function totalAnom(){ // 이상 충전기/사업자 총계(숫자) — 패턴 선택 시 해당 패턴 기준
+      var p=curPat();
+      var raw = p ? p.v : TABS[cur].summary[1].val;
+      var v = String(raw).replace(/,/g,''); return parseInt(v,10)||1000;
+    }
+    function distribute(total, labels, key){ // 결정적 내림차순 분포
+      var w=[], sum=0; for(var i=0;i<labels.length;i++){ var r=0.35+rnd(seed(cur+key+labels[i])% 233280 + i*7); w.push(r/(i*0.35+1)); sum+=w[w.length-1]; }
+      return w.map(function(x){ return Math.max(1, Math.round(total*x/sum)); });
+    }
+    function renderTop15(){
+      var inst=initChart('chTop15'); if(!inst) return;
+      var labels=BIZ.slice(0,15);
+      var cnt=distribute(Math.round(totalAnom()*0.62), labels, 'top').sort(function(a,b){return b-a;});
+      var isRate=toggles.top15==='rate';
+      var base=totalAnom();
+      var data=isRate? cnt.map(function(v){ return Math.round(v/base*1000)/10; }) : cnt;
+      var color=TABS[cur].name==='연계 API'?'#e05c6e':'#2C7FDF';
+      inst.setOption({ grid:{left:120,right:28,top:10,bottom:10}, tooltip:{trigger:'axis'},
+        xAxis:{type:'value', axisLabel:{formatter:isRate?'{value}%':'{value}'}, splitLine:{lineStyle:{color:'#eef2f7'}}},
+        yAxis:{type:'category', inverse:true, data:labels, axisLabel:{fontSize:11,color:'#5a6675'}, axisTick:{show:false}},
+        series:[{ type:'bar', data:data, itemStyle:{color:color,borderRadius:[0,4,4,0]}, barWidth:'58%',
+          label:{show:true,position:'right',fontSize:10,color:'#8a94a0',formatter:isRate?'{c}%':function(p){return p.value.toLocaleString();}} }] }, true);
+    }
+    function renderRegion(){
+      var inst=initChart('chRegion'); if(!inst) return;
+      var T=TABS[cur], labels=T.charts.reg;
+      var cnt=distribute(Math.round(totalAnom()*0.9), labels, 'reg');
+      var isRate=toggles.region==='rate', base=totalAnom();
+      var data=isRate? cnt.map(function(v){ return Math.round(v/base*1000)/10; }) : cnt;
+      inst.setOption({ grid:{left:44,right:20,top:14,bottom:56}, tooltip:{trigger:'axis'},
+        xAxis:{type:'category', data:labels, axisLabel:{fontSize:11,color:'#5a6675',interval:0,rotate: labels.length>10?40:0}, axisTick:{show:false}},
+        yAxis:{type:'value', axisLabel:{formatter:isRate?'{value}%':'{value}'}, splitLine:{lineStyle:{color:'#eef2f7'}}},
+        series:[{ type:'bar', data:data, itemStyle:{color:'#17a2a0',borderRadius:[4,4,0,0]}, barWidth:'54%' }] }, true);
+    }
+    function renderTrend(){
+      var inst=initChart('chTrend'); if(!inst) return;
+      var T=TABS[cur], span=parseInt(toggles.trend,10), p=curPat();
+      var top = p ? [p] : T.patterns.filter(function(x){return x.v!=='0'&&x.v!=='-';}).slice(0,4);
+      var xs=[]; for(var i=span-1;i>=0;i--){ var d=new Date(2026,8,10); d.setDate(d.getDate()-i); xs.push((d.getMonth()+1)+'/'+d.getDate()); }
+      var colors=['#2C7FDF','#e05c6e','#f2a03d','#2fb36b'];
+      el('chTrendTtl').textContent = p ? (p.c+' 패턴 추이') : '패턴별 추이';
+      var series=top.map(function(p,idx){
+        var base=parseInt(p.v.replace(/,/g,''),10)||1000;
+        var arr=xs.map(function(x,j){ return Math.round(base*(0.82+0.36*rnd(seed(cur+p.c+x)%233280+j*5))); });
+        return { type:'line', name:p.c+' '+p.n, data:arr, smooth:true, symbol:'circle', symbolSize:5,
+                 lineStyle:{width:2,color:colors[idx]}, itemStyle:{color:colors[idx]} };
+      });
+      inst.setOption({ grid:{left:56,right:24,top:34,bottom:span>30?40:28}, tooltip:{trigger:'axis'},
+        legend:{top:0,textStyle:{fontSize:11}}, xAxis:{type:'category',data:xs,boundaryGap:false,axisLabel:{fontSize:10,color:'#8a94a0',interval: span>30?'auto':0}},
+        yAxis:{type:'value',axisLabel:{color:'#8a94a0'},splitLine:{lineStyle:{color:'#eef2f7'}}}, series:series }, true);
+      el('chTrendSub').textContent = ({7:'최근 7일',30:'최근 1달',90:'최근 3개월'})[span] + ' · 집계 기준일 기준';
+    }
+    function renderCharts(){
+      var T=TABS[cur];
+      el('chTop15Ttl').textContent=T.charts.topTtl; el('chTop15Sub').textContent=T.charts.topSub;
+      el('chRegionTtl').textContent=T.charts.regTtl; el('chRegionSub').textContent=T.charts.regSub;
+      renderTop15(); renderRegion(); renderTrend();
+    }
+
+    /* ===== 목록(표) 뷰 ===== */
+    var PAGE_SIZE = 20;
+    function pick(arr, s){ return arr[Math.floor(rnd(s)*arr.length)]; }
+    function listTotal(){
+      var L=LIST[cur], p=curPat();
+      if(cur==='api'){ return p ? (L.apiTotals[p.c]||0) : L.total; }
+      if(p){ var v=parseInt(String(p.v).replace(/,/g,''),10); return isNaN(v)?0:v; }
+      return L.total;
+    }
+    function C(t,c){ return {t:t, c:c||''}; }
+    function rowsForPage(){
+      // 대상 패턴 집합: 선택 시 해당 패턴, 아니면 건수>0 패턴에서 순환
+      var pats = sel ? [sel] : TABS[cur].patterns.filter(function(p){return p.v!=='0'&&p.v!=='-';}).map(function(p){return p.c;});
+      if(!pats.length) return [];
+      var total = listTotal(); if(total<=0) return [];
+      var start=(page-1)*PAGE_SIZE, out=[];
+      for(var i=0;i<PAGE_SIZE;i++){
+        var gi=start+i; if(gi>=total) break;
+        var code = pats[gi % pats.length];
+        var pat = TABS[cur].patterns.filter(function(p){return p.c===code;})[0];
+        var s = seed(cur+code+gi)%233280 + gi*13;
+        var biz = pick(BIZ, s);
+        var staId = 'AB'+(1000+Math.floor(rnd(s+1)*8999));
+        var chgId = ('0'+(1+Math.floor(rnd(s+2)*6))).slice(-2);
+        var staNm = biz.split(' ')[0]+' '+pick(STA,s+3);
+        var bigo = BIGO[code]||'';
+        if(cur==='infra'){
+          out.push([C(code,'code'), C(esc(biz)), C(staId), C(esc(staNm)), C(chgId), C(esc(pick(ADDR,s+4))), C(pick(TYPE,s+5)), C(pick(CAP,s+6)), C(pick(SUBS,s+7)), C(esc(bigo),'remark')]);
+        } else if(cur==='usage'){
+          out.push([C(code,'code'), C(esc(pat.n)), C(esc(biz)), C(staId), C(esc(staNm)), C(chgId), C('-','dim'), C('-','dim'), C('-','dim'), C('-','dim'), C('-','dim'), C('-','dim'), C(esc(bigo),'remark')]);
+        } else { // api
+          var url=pick(URLS,s+3), hh=('0'+Math.floor(rnd(s+4)*24)).slice(-2), mm=('0'+Math.floor(rnd(s+5)*60)).slice(-2);
+          out.push([C(code,'code'), C(esc(pat.n)), C(esc(biz)), C(esc(url)), C('2026. 09. 10. '+hh+':'+mm), C('REQ'), C(String(1+Math.floor(rnd(s+6)*300))), C(esc(bigo),'remark')]);
+        }
+      }
+      return out;
+    }
+    function renderList(){
+      var L=LIST[cur];
+      el('anListTitle').textContent = L.sec;
+      el('anListSub').textContent = subnoteText() + ' · 총 ' + listTotal().toLocaleString() + '건';
+      el('anListHead').innerHTML = '<tr>' + L.cols.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('') + '</tr>';
+      var rows = rowsForPage();
+      if(!rows.length){
+        el('anListBody').innerHTML = '<tr><td class="an-empty" colspan="'+L.cols.length+'">조회 결과가 없습니다.</td></tr>';
+        el('anPager').innerHTML=''; return;
+      }
+      el('anListBody').innerHTML = rows.map(function(r){
+        return '<tr>' + r.map(function(cell){ return '<td'+(cell.c?' class="'+cell.c+'"':'')+'>'+cell.t+'</td>'; }).join('') + '</tr>';
+      }).join('');
+      renderPager();
+    }
+    function renderPager(){
+      var total=listTotal(), pages=Math.ceil(total/PAGE_SIZE);
+      if(pages<=1){ el('anPager').innerHTML=''; return; }
+      var h='<button data-p="prev"'+(page<=1?' disabled':'')+'>‹ 이전</button>';
+      var nums=[];
+      for(var i=1;i<=Math.min(3,pages);i++) nums.push(i);
+      if(page>3 && page<pages) nums.push(page);
+      if(pages>3) nums.push(pages);
+      nums = nums.filter(function(v,i,a){return a.indexOf(v)===i;}).sort(function(a,b){return a-b;});
+      var prev=0;
+      nums.forEach(function(n){ if(prev && n-prev>1) h+='<span class="dots">…</span>'; h+='<button data-p="'+n+'"'+(n===page?' class="is-active"':'')+'>'+n.toLocaleString()+'</button>'; prev=n; });
+      h+='<button data-p="next"'+(page>=pages?' disabled':'')+'>다음 ›</button>';
+      el('anPager').innerHTML=h;
+    }
+
+    function renderBody(){ // 차트/목록 전환
+      var isList = (view==='list');
+      document.querySelector('.an-charts').hidden = isList;
+      el('anList').hidden = !isList;
+      el('anListBtn').textContent = isList ? '차트 보기' : '목록 조회';
+      if(isList){ renderList(); }
+      else { renderCharts(); setTimeout(function(){ ['chTop15','chRegion','chTrend'].forEach(function(id){ var i=echarts.getInstanceByDom(el(id)); if(i) i.resize(); }); }, 0); }
+    }
+
+    /* ===== 이상탐지 기준 모달 ===== */
+    var gm=el('anGuide');
+    function openGuide(){
+      var g=TABS[cur].guide;
+      el('anGuideTtl').textContent=g.title; el('anGuideSub').textContent=g.sub;
+      el('anGuideCats').innerHTML='<b>'+g.cats.split('&nbsp;')[0]+'</b>'+g.cats.slice(g.cats.indexOf('&nbsp;'));
+      el('anGuideRows').innerHTML=g.rows.map(function(r){
+        return '<tr><td class="code">'+r[0]+'</td><td class="pname">'+esc(r[1])+'</td><td>'+esc(r[2])+'</td>'
+          + '<td class="method">'+esc(r[3]).replace(/\n/g,'<br>')+'</td></tr>';
+      }).join('');
+      gm.hidden=false; document.body.style.overflow='hidden'; el('anGuide').querySelector('.an-gmodal__body').scrollTop=0;
+    }
+    function closeGuide(){ gm.hidden=true; document.body.style.overflow=''; }
+    gm.addEventListener('click', function(e){ if(e.target===gm || e.target.hasAttribute('data-close')) closeGuide(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !gm.hidden) closeGuide(); });
+
+    /* ===== 탭/전체 렌더 ===== */
+    function syncPatDropdown(){
+      var s=el('fPat'); if(!sel){ s.selectedIndex=0; return; }
+      for(var i=0;i<s.options.length;i++){ if(s.options[i].textContent.indexOf(sel+' ·')===0){ s.selectedIndex=i; return; } }
+    }
+    function renderAll(){
+      var T=TABS[cur];
+      el('anTitle').textContent=T.name; el('anCrumbTab').textContent=T.name;
+      document.title = T.name + ' · 무공해차 빅데이터 플랫폼';
+      renderSubtabs(); renderFilters(); syncPatDropdown(); renderSummary(); renderPatterns(); renderBody();
+    }
+    /* 요약·패턴·본문만 갱신(패턴 선택/조회 시) */
+    function refresh(){ syncPatDropdown(); renderSummary(); renderPatterns(); renderBody(); }
+
+    function selectPattern(code){ // 토글: 같은 카드 재클릭 시 해제
+      sel = (sel===code) ? null : code;
+      page = 1; refresh();
+    }
+
+    function anGoTab(k){ cur=k; sel=null; page=1; view='chart'; toggles={top15:'cnt',region:'cnt',trend:'7'};
+      try{ history.replaceState(null,'','#'+cur); }catch(_){} renderAll(); }
+    el('anLnb').addEventListener('click', function(e){
+      var b=e.target.closest('.portal-lnb__depth2'); if(!b) return; anGoTab(b.getAttribute('data-tab'));
+    });
+    el('anLnb').addEventListener('keydown', function(e){
+      var b=e.target.closest('.portal-lnb__depth2'); if(!b) return;
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); anGoTab(b.getAttribute('data-tab')); }
+    });
+
+    /* 패턴 카드 클릭 → 하단(요약·차트·목록) 해당 패턴 기준 조회 */
+    el('anPatterns').addEventListener('click', function(e){
+      var c=e.target.closest('.mini-card'); if(!c) return;
+      selectPattern(c.getAttribute('data-code'));
+    });
+    el('anPatterns').addEventListener('keydown', function(e){
+      var c=e.target.closest('.mini-card'); if(!c) return;
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectPattern(c.getAttribute('data-code')); }
+    });
+
+    /* 차트 토글 */
+    document.querySelectorAll('.an-toggle').forEach(function(tg){
+      tg.addEventListener('click', function(e){
+        var b=e.target.closest('button'); if(!b) return;
+        tg.querySelectorAll('button').forEach(function(x){x.classList.remove('is-active');}); b.classList.add('is-active');
+        var key=tg.getAttribute('data-toggle'); toggles[key]=b.getAttribute('data-v');
+        if(view!=='chart') return;
+        if(key==='top15') renderTop15(); else if(key==='region') renderRegion(); else renderTrend();
+      });
+    });
+
+    /* 목록 페이지네이션 */
+    el('anPager').addEventListener('click', function(e){
+      var b=e.target.closest('button'); if(!b||b.disabled) return;
+      var p=b.getAttribute('data-p'), pages=Math.ceil(listTotal()/PAGE_SIZE);
+      if(p==='prev') page=Math.max(1,page-1); else if(p==='next') page=Math.min(pages,page+1); else page=parseInt(p,10);
+      renderList();
+    });
+    el('anExcel').addEventListener('click', function(){ alert('Excel 다운로드는 준비 중입니다. (프로토타입)'); });
+
+    /* 필터 */
+    el('fPat').addEventListener('change', function(){
+      var v=this.value; var m=v.match(/^([PUA]\d\d)/); sel = m? m[1] : null; page=1; refresh();
+    });
+    el('fGo').addEventListener('click', function(){ page=1; refresh(); });
+    el('fReset').addEventListener('click', function(){ sel=null; page=1; renderFilters(); refresh(); });
+    el('anGuideBtn').addEventListener('click', openGuide);
+    /* 목록 조회 ↔ 차트 보기 전환 */
+    el('anListBtn').addEventListener('click', function(){ view = (view==='list')?'chart':'list'; page=1; renderBody(); });
+
+    window.addEventListener('resize', function(){ if(view!=='chart') return; ['chTop15','chRegion','chTrend'].forEach(function(id){ var i=echarts.getInstanceByDom(el(id)); if(i) i.resize(); }); });
+
+    // 초기 탭(해시 우선)
+    var hash=(location.hash||'').replace('#',''); if(TABS[hash]) cur=hash;
+    renderAll();
+  })();
+  </script>
+</body>
+</html>

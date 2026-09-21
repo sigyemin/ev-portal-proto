@@ -131,6 +131,10 @@
       h.push('<li><a href="member-auth.html?targetSiteId=' + esc(m.id) + '">' + esc(m.t) + '</a></li>');
     });
     h.push('</ul></li>');
+    /* [ISS-130] 업무지원시스템 통계의 개방처인 '빅데이터 플랫폼'으로 진입(로그인 시에만 노출 · 대민 공개 페이지라 본인인증 불필요) */
+    h.push('<li class="gnb__sub-item">');
+    h.push('<a href="bigdata-platform.html" class="gnb__sub-link">' + esc((currentLang() === 'en') ? 'Big Data Platform' : '빅데이터 플랫폼') + '</a>');
+    h.push('</li>');
     h.push('</ul></div></div>');
     return h.join('');
   }

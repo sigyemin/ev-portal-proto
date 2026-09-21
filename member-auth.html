@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>본인인증</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260921a">
   <link rel="stylesheet" href="assets/css/page-loading.css">
   <link rel="stylesheet" href="assets/css/datepicker-select.css">
   <link rel="stylesheet" href="assets/css/board-grid.css">
@@ -45,6 +45,11 @@
   font-size: 0.9375rem;
   line-height: 1.5;
 }
+</style>
+<style>
+/* [PROTO] 본인인증 연동 전 데모 이동 블록 — 운영 미노출 */
+.proto-jump { margin-top: 20px; padding: 16px 18px; border: 1px dashed #1d6f42; border-radius: 8px; background: #f4fbf7; }
+.proto-jump__text { font-size: 14px; color: #1d6f42; margin: 0 0 10px; }
 </style>
 </head>
 <body>
@@ -137,6 +142,15 @@
                   <span class="button__label">정부OTP 사용 신청</span>
                 </a>
               </div>
+              <!-- [PROTO] 본인인증 연동 전 데모 이동용. 운영 화면에는 없는 영역이며 연동 시 제거한다. -->
+              <div class="proto-jump" id="protoJump" hidden>
+                <p class="proto-jump__text"><b>프로토타입 전용</b> — 실제 인증은 연동 후 동작합니다. 화면 확인용으로 바로 이동합니다.</p>
+                <div class="button-group">
+                  <a class="button button--primary" id="protoJumpLink" href="admin-board-discount.html">
+                    <span class="button__label">통합관리시스템으로 이동 (PROTO)</span>
+                  </a>
+                </div>
+              </div>
             </section>
           </div>
 
@@ -222,6 +236,17 @@
       var m = /[?&]targetSiteId=([A-Za-z0-9_-]{0,20})/.exec(window.location.search);
       var tgt = document.getElementById('targetSiteId');
       if (m && tgt) tgt.value = m[1];
+
+      /* [PROTO] 프로토타입에 관리자 화면이 있는 시스템만 데모 이동 버튼을 띄운다. */
+      var PROTO_TARGET = { 'D0002': 'admin-board-discount.html' };
+      /* targetSiteId 가 없으면(주소 직접 입력 등) 프로토타입에 유일하게 있는 통합관리시스템으로 본다. */
+      var key = (m && m[1]) ? m[1] : 'D0002';
+      var dest = PROTO_TARGET[key];
+      var jump = document.getElementById('protoJump');
+      if (dest && jump) {
+        document.getElementById('protoJumpLink').setAttribute('href', dest);
+        jump.hidden = false;
+      }
     } catch (e) {}
 
     var btnPcc = document.getElementById('btnPccAuth');
@@ -261,7 +286,7 @@
 <script src="assets/js/i18n/i18n.js?v=20260827a"></script>
 <script src="assets/js/ui-common.js?v=20260827a"></script>
 <script src="js/common/fileAttach.js?v=20260827a"></script>
-<script src="js/menu-data.js?v=20260827a"></script>
+<script src="js/menu-data.js?v=20260921a"></script>
 <script src="js/shell.js?v=20260827a"></script>
 </body>
 </html>

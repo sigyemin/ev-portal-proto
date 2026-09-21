@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>추석 추가할인 알림 — 상세</title>
+  <link rel="stylesheet" href="assets/css/style.css?v=20260921a">
+  <link rel="stylesheet" href="assets/css/page-loading.css">
+  <link rel="stylesheet" href="assets/css/datepicker-select.css">
+  <link rel="stylesheet" href="assets/css/board-grid.css">
+  <link rel="stylesheet" href="assets/css/vendors/swiper-bundle.min.css">
+  <link rel="stylesheet" href="assets/css/map-list.css">
+  <link rel="stylesheet" href="assets/css/i18n-en.css">
+  <link rel="stylesheet" href="assets/css/aiChat.css">
+  <script src="js/lib/jquery/jquery-3.5.1.min.js?v=20260827a"></script>
+  <script src="js/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js?v=20260827a"></script>
+  <script src="js/swiper-bundle.min.js?v=20260827a"></script>
+  <script src="js/common/common_util.js?v=20260827a"></script>
+<style>
+/* 본문 안 이미지 자리 표시 (프로토타입 — 실제로는 작성자가 등록한 이미지) */
+.img-ph { display: flex; align-items: center; justify-content: center; height: 220px; margin: 18px 0;
+          background: #f1f3f5; border: 1px dashed #c2ccd6; border-radius: 6px; color: #8b95a1; font-size: 14px; }
+
+/* 댓글 — 본 게시판 신규 컴포넌트 (기존 게시판에 없음) */
+.cmt { margin-top: 48px; }
+.cmt__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
+.cmt__head h2 { font-size: 20px; font-weight: 700; }
+.cmt__count { color: #1d6f42; font-weight: 700; }
+.cmt__guide { margin-left: auto; font-size: 14px; color: #6b7684; }
+.cmt__write { border: 1px solid #dde2e8; border-radius: 8px; padding: 16px; background: #fbfcfd; }
+.cmt__write textarea { width: 100%; min-height: 84px; border: 1px solid #dde2e8; border-radius: 6px; padding: 12px; resize: vertical; font: inherit; }
+.cmt__write-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.cmt__byte { font-size: 13px; color: #8b95a1; }
+.cmt__list { margin-top: 24px; border-top: 2px solid #333d4b; }
+.cmt__item { border-bottom: 1px solid #e5e8eb; padding: 18px 4px; }
+.cmt__meta { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #6b7684; margin-bottom: 8px; }
+.cmt__writer { font-weight: 700; color: #333d4b; }
+.cmt__body { line-height: 1.6; }
+.cmt__login { border: 1px dashed #c2ccd6; border-radius: 8px; padding: 24px; text-align: center; color: #6b7684; background: #fbfcfd; }
+.cmt__act { margin-left: auto; display: flex; gap: 6px; }
+.cmt__act button { height: 26px; padding: 0 10px; font-size: 13px; color: #4b5563; background: #fff;
+                   border: 1px solid #dde2e8; border-radius: 4px; cursor: pointer; }
+.cmt__act button:hover { background: #f5f7f9; }
+.cmt__mine { font-size: 12px; color: #1d6f42; border: 1px solid #1d6f42; border-radius: 3px; padding: 1px 5px; }
+.cmt__edit textarea { width: 100%; min-height: 72px; border: 1px solid #dde2e8; border-radius: 6px; padding: 10px; font: inherit; resize: vertical; }
+.cmt__edit-foot { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+.cmt__pager { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 22px; }
+.cmt__pager button { min-width: 32px; height: 32px; padding: 0 8px; font-size: 14px; color: #4b5563;
+                     background: #fff; border: 1px solid #dde2e8; border-radius: 4px; cursor: pointer; }
+.cmt__pager button.is-active { background: #1d6f42; border-color: #1d6f42; color: #fff; font-weight: 700; }
+.cmt__pager button:disabled { color: #c2ccd6; cursor: default; }
+</style>
+</head>
+<body>
+<div id="header-slot"></div>
+<div class="contents-wrapper">
+        <!-- 상단 공통 영역 -->
+        <div class="page-header">
+          <div class="page-header__inner">
+            <!-- breadcrumb -->
+            <nav class="breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a href="index.html" class="breadcrumb__link">
+                    <i class="svg-icon home"></i>
+                    <span class="hidden">홈</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>소통·지원</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="#" class="breadcrumb__link">
+                    <span>알림·공지</span>
+                  </a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a href="notice-discount.html" class="breadcrumb__link">
+                    <span>추석 추가할인 알림</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+            <!-- subject  -->
+            <div class="page-header__subject">
+              <h1 class="heading-subject">추석 추가할인 알림</h1>
+              <p class="page-header__description">충전사업자가 등록한 충전요금 추가할인 안내입니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 각 페이지별 컨텐츠 -->
+        <div class="contents">
+            <!-- 게시판 상세화면 (공지사항 상세 generalView 와 동일 구성) -->
+            <div class="board-view">
+              <!-- 게시글 제목 -->
+              <div class="board-header">
+                <h2 class="heading-title">OO충전(주) 추석연휴기간 전기차 충전요금 추가할인 안내</h2>
+                <!-- 게시글 정보 -->
+                <div class="data-info">
+                  <dl class="data-info__list">
+                    <dt class="data-info__title">
+                      <i class="svg-icon file" aria-hidden="true"></i>
+                      작성자
+                    </dt>
+                    <dd class="data-info__text">OO충전(주)</dd>
+                    <dt class="data-info__title">
+                      <i class="svg-icon calendar" aria-hidden="true"></i>
+                      등록일
+                    </dt>
+                    <dd class="data-info__text">2026.09.22</dd>
+                  </dl>
+                  <dl class="data-info__list">
+                    <dt class="data-info__title">
+                      <i class="svg-icon eye" aria-hidden="true"></i>
+                      조회수
+                    </dt>
+                    <dd class="data-info__text">1,284</dd>
+                    <dt class="data-info__title">
+                      <i class="svg-icon attachment" aria-hidden="true"></i>
+                      첨부파일
+                    </dt>
+                    <dd class="data-info__text">2건</dd>
+                  </dl>
+                </div>
+              </div>
+
+              <!-- 게시글 본문 — 관리자가 에디터로 작성한 내용이 그대로 표시된다 -->
+              <div class="board-content">
+                <div class="inner-cms">
+                  <p>OO충전(주)는 추석연휴기간(9.24.~9.27) 11시부터 14시까지 아래와 같이 전기차 충전요금을 할인할 예정임을 알려드립니다.</p>
+                  <p>&nbsp;</p>
+                  <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                      <tr>
+                        <th style="border:1px solid #dde2e8;background:#f5f7f9;padding:8px 10px;">충전소명 (충전소ID)</th>
+                        <th style="border:1px solid #dde2e8;background:#f5f7f9;padding:8px 10px;">충전기</th>
+                        <th style="border:1px solid #dde2e8;background:#f5f7f9;padding:8px 10px;">할인 내용</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;">OO휴게소(하행) (PW099001)</td>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;text-align:center;">전체</td>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;">급속 347.2원/kWh → 300.0원/kWh</td>
+                      </tr>
+                      <tr>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;">OO시청 공영주차장 (PW099002)</td>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;text-align:center;">01, 02</td>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;">완속 294.3원/kWh → 250.0원/kWh</td>
+                      </tr>
+                      <tr>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;">OO아파트 (CV099003)</td>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;text-align:center;">전체</td>
+                        <td style="border:1px solid #dde2e8;padding:8px 10px;">할인기간 중 10% 할인</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p>&nbsp;</p>
+                  <div class="img-ph">충전요금 할인 안내 이미지 (작성자가 에디터로 넣은 이미지가 이 자리에 표시됩니다)</div>
+                  <p>할인은 위 기간·시간대에 한해 적용되며, 충전기 사정에 따라 일부 충전기는 제외될 수 있습니다. 회원카드 결제와 신용카드 결제 모두 동일하게 적용되며 로밍 이용 시에는 적용되지 않습니다.</p>
+                  <p>전체 할인 대상 충전소는 <a href="#">OO충전(주) 홈페이지</a>에서 확인하실 수 있습니다. 할인 적용 관련 문의는 OO충전(주) 고객센터(1600-0000)로 연락해 주시기 바랍니다.</p>
+                </div>
+              </div>
+
+              <!-- 첨부파일 -->
+              <div class="board-attach">
+                <div class="board-attach__header">
+                  <strong class="board-attach__title">첨부파일 (2)</strong>
+                  <div class="checkbox">
+                    <input type="checkbox" id="allChecked" class="checkbox__input">
+                    <label for="allChecked" class="checkbox__label">전체선택</label>
+                  </div>
+                </div>
+                <div class="board-attach__container">
+                  <ul class="attach-list">
+                    <li class="attach-list__item">
+                      <div class="checkbox">
+                        <input type="checkbox" id="filChk_0" class="checkbox__input">
+                        <label for="filChk_0" class="checkbox__label">
+                          <i class="svg-icon file" aria-hidden="true"></i>
+                          <span class="attach-list__name">추석연휴 충전요금 할인 대상 충전소 목록.pdf</span>
+                        </label>
+                      </div>
+                      <span class="attach-list__size">PDF · 146.1 KB</span>
+                    </li>
+                    <li class="attach-list__item">
+                      <div class="checkbox">
+                        <input type="checkbox" id="filChk_1" class="checkbox__input">
+                        <label for="filChk_1" class="checkbox__label">
+                          <i class="svg-icon file" aria-hidden="true"></i>
+                          <span class="attach-list__name">추석연휴 충전요금 할인 안내문.hwpx</span>
+                        </label>
+                      </div>
+                      <span class="attach-list__size">HWPX · 72.8 KB</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="button-group">
+                  <button type="button" class="button button--secondary" id="btnAttachDownload">
+                    <i class="svg-icon download" aria-hidden="true"></i>
+                    <span class="button__label">다운로드</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 댓글 (본 게시판 신규 — 공지사항에 없는 기능) -->
+              <div class="cmt">
+                <div class="cmt__head">
+                  <h2>댓글 <span class="cmt__count">0</span></h2>
+                  <span class="cmt__guide">로그인한 회원만 작성할 수 있으며, 작성자 이름은 표시되지 않습니다.</span>
+                </div>
+
+                <!-- 로그인 상태 : 작성 폼 -->
+                <div class="cmt__write" id="cmtWrite">
+                  <label for="cmtBody" class="hidden">댓글 내용</label>
+                  <textarea id="cmtBody" maxlength="500" placeholder="할인 적용 여부나 이용 후기를 남겨 주세요."></textarea>
+                  <div class="cmt__write-foot">
+                    <span class="cmt__byte"><b id="cmtLen">0</b> / 500자</span>
+                    <button type="button" class="button button--primary" id="cmtSubmit">
+                      <span class="button__label">등록</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 비로그인 상태 : 로그인 유도 (프로토타입 전환용) -->
+                <div class="cmt__login" id="cmtLogin" hidden>
+                  댓글은 로그인한 회원만 작성할 수 있습니다.
+                  <button type="button" class="button button--secondary" style="margin-left:8px;">
+                    <span class="button__label">로그인</span>
+                  </button>
+                </div>
+
+                <ul class="cmt__list" id="cmtList"></ul>
+                <div class="cmt__pager" id="cmtPager"></div>
+              </div>
+              <!-- //댓글 -->
+
+              <!-- 목록 -->
+              <div class="button-group">
+                <button type="button" class="button button--large button--primary" onclick="location.href='notice-discount.html';">
+                  <span class="button__label">목록</span>
+                </button>
+              </div>
+
+              <!-- 이전글 · 다음글 -->
+              <dl class="board-preview">
+                <dt class="board-preview__title">
+                  <i class="svg-icon angle-up"></i>
+                  이전글
+                </dt>
+                <dd class="board-preview__text">
+                  <a href="notice-discount-view.html" class="board-preview__link">△△에너지 추석연휴 충전요금 할인 대상 충전소 안내</a>
+                </dd>
+                <dt class="board-preview__title">
+                  <i class="svg-icon angle-down"></i>
+                  다음글
+                </dt>
+                <dd class="board-preview__text">다음 글이 없습니다.</dd>
+              </dl>
+
+              <!-- 문의 안내 -->
+              <div class="board-helper">
+                <div class="board-helper__call">
+                  <i class="svg-icon call" aria-hidden="true"></i>
+                  <span class="board-helper__label">통합 콜센터</span>
+                  <a href="tel:1661-0970" title="통합 콜센터 전화" class="board-helper__call-number">1661-0970</a>
+                </div>
+                <a href="inquiry-qna.html" class="board-helper__link">
+                  <i class="svg-icon inquiry" aria-hidden="true"></i>
+                  <span class="board-helper__label">질의응답 게시판</span>
+                </a>
+              </div>
+            </div>
+            <!-- //게시판 상세화면 -->
+         </div>
+      </div>
+
+<script>
+$(function () {
+  var PER = 5;          // 한 쪽에 보여 줄 댓글 수
+  var page = 1;
+  var seq = 100;
+
+  /* 프로토타입 더미 — mine:true 는 로그인한 본인이 작성한 댓글 */
+  var CMTS = [
+    { id: 8, mine: false, dt: '2026.09.25 09:05', body: '연휴에 이런 할인 좋네요. 다른 사업자도 했으면 좋겠습니다.' },
+    { id: 7, mine: true,  dt: '2026.09.24 18:20', body: '할인 시간대가 11~14시라 퇴근길에는 못 쓰네요. 저녁 시간대도 검토 부탁드립니다.' },
+    { id: 6, mine: false, dt: '2026.09.24 16:02', body: '충전기 화면에도 할인 요금이 그대로 떴습니다. 확인했습니다.' },
+    { id: 5, mine: false, dt: '2026.09.24 13:42', body: 'OO시청 주차장 02번 충전기는 할인 전 요금으로 결제됐습니다. 확인 부탁드립니다.' },
+    { id: 4, mine: false, dt: '2026.09.24 12:10', body: 'OO휴게소에서 오늘 낮에 충전했는데 할인 적용 확인했습니다. 감사합니다.' },
+    { id: 3, mine: false, dt: '2026.09.24 10:55', body: '아파트 충전기도 대상인지 궁금합니다.' },
+    { id: 2, mine: false, dt: '2026.09.23 21:14', body: '미리 공지해 주셔서 연휴 이동 계획 잡기 좋았습니다.' },
+    { id: 1, mine: false, dt: '2026.09.23 09:30', body: '할인 대상 충전소가 더 늘어나면 좋겠습니다.' }
+  ];
+
+  function esc(s) { return $('<div>').text(s == null ? '' : s).html(); }
+
+  function stampNow() {
+    var n = new Date();
+    var p = function (v) { return (v < 10 ? '0' : '') + v; };
+    return n.getFullYear() + '.' + p(n.getMonth() + 1) + '.' + p(n.getDate())
+         + ' ' + p(n.getHours()) + ':' + p(n.getMinutes());
+  }
+
+  function render() {
+    var total = CMTS.length;
+    var pages = Math.max(1, Math.ceil(total / PER));
+    if (page > pages) page = pages;
+    $('.cmt__count').text(total);
+
+    var rows = CMTS.slice((page - 1) * PER, page * PER);
+    var html = rows.map(function (c) {
+      var act = c.mine
+        ? '<span class="cmt__act">'
+          + '<button type="button" class="js-cmt-edit" data-id="' + c.id + '">수정</button>'
+          + '<button type="button" class="js-cmt-del" data-id="' + c.id + '">삭제</button>'
+          + '</span>'
+        : '';
+      var mine = c.mine ? ' <span class="cmt__mine">내 댓글</span>' : '';
+      return '<li class="cmt__item" data-id="' + c.id + '">'
+           + '<div class="cmt__meta"><span class="cmt__writer">이용자</span>' + mine
+           + '<span>' + c.dt + '</span>' + act + '</div>'
+           + '<p class="cmt__body">' + esc(c.body) + '</p>'
+           + '</li>';
+    }).join('');
+    $('#cmtList').html(html || '<li class="cmt__item" style="text-align:center;color:#8b95a1;">등록된 댓글이 없습니다.</li>');
+
+    var p = ['<button type="button" class="js-pg" data-p="' + (page - 1) + '"' + (page === 1 ? ' disabled' : '') + '>이전</button>'];
+    for (var i = 1; i <= pages; i++) {
+      p.push('<button type="button" class="js-pg' + (i === page ? ' is-active' : '') + '" data-p="' + i + '">' + i + '</button>');
+    }
+    p.push('<button type="button" class="js-pg" data-p="' + (page + 1) + '"' + (page === pages ? ' disabled' : '') + '>다음</button>');
+    $('#cmtPager').html(total > 0 ? p.join('') : '');
+  }
+
+  $('#cmtBody').on('input', function () { $('#cmtLen').text($(this).val().length); });
+
+  $('#cmtSubmit').on('click', function () {
+    var v = $.trim($('#cmtBody').val());
+    if (!v) { alert('댓글 내용을 입력해 주세요.'); return; }
+    CMTS.unshift({ id: ++seq, mine: true, dt: stampNow(), body: v });
+    $('#cmtBody').val(''); $('#cmtLen').text('0');
+    page = 1;
+    render();
+  });
+
+  $('#cmtPager').on('click', '.js-pg', function () {
+    var p = Number($(this).data('p'));
+    if (!p) return;
+    page = p;
+    render();
+    $('.cmt')[0].scrollIntoView({ block: 'start' });
+  });
+
+  $('#cmtList').on('click', '.js-cmt-del', function () {
+    if (!confirm('댓글을 삭제하시겠습니까?')) return;
+    var id = Number($(this).data('id'));
+    CMTS = CMTS.filter(function (c) { return c.id !== id; });
+    render();
+  });
+
+  $('#cmtList').on('click', '.js-cmt-edit', function () {
+    var id = Number($(this).data('id'));
+    var c = CMTS.filter(function (x) { return x.id === id; })[0];
+    if (!c) return;
+    var $li = $('#cmtList .cmt__item[data-id="' + id + '"]');
+    $li.find('.cmt__act').hide();
+    $li.find('.cmt__body').replaceWith(
+      '<div class="cmt__edit">'
+      + '<textarea maxlength="500">' + esc(c.body) + '</textarea>'
+      + '<div class="cmt__edit-foot">'
+      + '<button type="button" class="button button--secondary js-edit-cancel"><span class="button__label">취소</span></button>'
+      + '<button type="button" class="button button--primary js-edit-save" data-id="' + id + '"><span class="button__label">저장</span></button>'
+      + '</div></div>'
+    );
+  });
+
+  $('#cmtList').on('click', '.js-edit-cancel', function () { render(); });
+
+  $('#cmtList').on('click', '.js-edit-save', function () {
+    var id = Number($(this).data('id'));
+    var v = $.trim($(this).closest('.cmt__edit').find('textarea').val());
+    if (!v) { alert('댓글 내용을 입력해 주세요.'); return; }
+    CMTS.forEach(function (c) { if (c.id === id) c.body = v; });
+    render();
+  });
+
+  // 첨부파일 전체선택 (운영 board-download.js 동작 재현)
+  $('#allChecked').on('change', function () {
+    $('.attach-list .checkbox__input').prop('checked', this.checked);
+  });
+  $('#btnAttachDownload').on('click', function () {
+    var n = $('.attach-list .checkbox__input:checked').length;
+    if (!n) { alert('다운로드할 첨부파일을 선택해 주세요.'); return; }
+    alert('프로토타입입니다. 실제 다운로드는 동작하지 않습니다.');
+  });
+
+  render();
+});
+</script>
+<div id="footer-slot"></div>
+<script src="assets/js/i18n/i18n.js?v=20260827a"></script>
+<script src="assets/js/ui-common.js?v=20260827a"></script>
+<script src="js/common/fileAttach.js?v=20260827a"></script>
+<script src="js/menu-data.js?v=20260921a"></script>
+<script src="js/shell.js?v=20260827a"></script>
+</body>
+</html>

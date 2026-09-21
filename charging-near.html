@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>충전소 찾기</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260921a">
   <link rel="stylesheet" href="assets/css/page-loading.css">
   <link rel="stylesheet" href="assets/css/datepicker-select.css">
   <link rel="stylesheet" href="assets/css/board-grid.css">
@@ -263,11 +263,13 @@
               <div class="element-group">
                 <span class="element-label">검색 반경</span>
                 <div class="element-group__control">
+                  <!-- 반경 옵션은 차종별로 다름 — 전기: 1/3/5/10(기본1) · 수소: 3/5/10/20(기본5). data-rtype 로 표시 토글 -->
                   <div class="radios">
-                    <div class="radio radio--chip"><input type="radio" id="kilometer1" name="kilometer" value="1" class="radio__input" /><label for="kilometer1" class="radio__label"><span>1km</span></label></div>
-                    <div class="radio radio--chip"><input type="radio" id="kilometer5" name="kilometer" value="5" class="radio__input" /><label for="kilometer5" class="radio__label"><span>5km</span></label></div>
-                    <div class="radio radio--chip"><input type="radio" id="kilometer10" name="kilometer" value="10" checked class="radio__input" /><label for="kilometer10" class="radio__label"><span>10km</span></label></div>
-                    <div class="radio radio--chip"><input type="radio" id="kilometer20" name="kilometer" value="20" class="radio__input" /><label for="kilometer20" class="radio__label"><span>20km</span></label></div>
+                    <div class="radio radio--chip" data-rtype="ev"><input type="radio" id="kilometer1" name="kilometer" value="1" checked class="radio__input" /><label for="kilometer1" class="radio__label"><span>1km</span></label></div>
+                    <div class="radio radio--chip" data-rtype="ev h2"><input type="radio" id="kilometer3" name="kilometer" value="3" class="radio__input" /><label for="kilometer3" class="radio__label"><span>3km</span></label></div>
+                    <div class="radio radio--chip" data-rtype="ev h2"><input type="radio" id="kilometer5" name="kilometer" value="5" class="radio__input" /><label for="kilometer5" class="radio__label"><span>5km</span></label></div>
+                    <div class="radio radio--chip" data-rtype="ev h2"><input type="radio" id="kilometer10" name="kilometer" value="10" class="radio__input" /><label for="kilometer10" class="radio__label"><span>10km</span></label></div>
+                    <div class="radio radio--chip" data-rtype="h2"><input type="radio" id="kilometer20" name="kilometer" value="20" class="radio__input" /><label for="kilometer20" class="radio__label"><span>20km</span></label></div>
                   </div>
                 </div>
               </div>
@@ -280,8 +282,15 @@
                 <div class="element-group">
                   <label for="evBand" class="element-label">충전방식</label>
                   <div class="element-group__control">
-                    <select id="evBand" class="select"><option value="">전체</option><option value="fast">급속</option><option value="slow">완속</option></select>
-                    <p class="near-bandnote">※ 충전방식은 실제 <b>5단계</b>(완속 · 중속 · 급속 50~99 · 급속+ 100~199 · 초급속 200↑)로 구분되며, 세부 단계는 카드의 충전기 구성과 지도 범례에서 확인됩니다. 필터는 상위 급속/완속으로 좁혀 선택합니다.</p>
+                    <select id="evBand" class="select">
+                      <option value="">전체</option>
+                      <option value="slow">완속 (~30kW)</option>
+                      <option value="mid">중속 (30~50kW)</option>
+                      <option value="fast">급속 (50~100kW)</option>
+                      <option value="fastplus">급속+ (100~200kW)</option>
+                      <option value="ultra">초급속 (200kW~)</option>
+                    </select>
+                    <p class="near-bandnote">※ 상용 서버 기준 <b>5단계 분류</b>(완속 · 중속 · 급속 · 급속+ · 초급속). 선택 시 해당 출력의 충전기를 보유한 충전소만 지도·목록에 표시됩니다.</p>
                   </div>
                 </div>
                 <div class="element-group">
@@ -368,7 +377,7 @@
 <script>
 var EV_MAP_URLS = (function () {
     var base = location.href.replace(/[^/]*$/, '');
-    return { list: base + 'data/chlist.json', stat: base + 'data/stat.json', info: 'MOCK_INFO', bookmark: 'MOCK_BOOKMARK', bookList: 'MOCK_BOOKLIST', priceGuide: 'charging-fee.html', worker: base + 'js/monitor/evMapWorker2.js' };
+    return { list: base + 'data/chlist.json?v=20260910c', stat: base + 'data/stat.json', info: 'MOCK_INFO', bookmark: 'MOCK_BOOKMARK', bookList: 'MOCK_BOOKLIST', priceGuide: 'charging-fee.html', worker: base + 'js/monitor/evMapWorker2.js' };
   })();
 var H2_MAP_URLS = (function () {
     var base = location.href.replace(/[^/]*$/, '');
@@ -399,7 +408,7 @@ function buildEvFilters() {
         orgme: $('#orgme').is(':checked') ? 'Y' : 'N',
         orgetc: $('#orgetc').is(':checked') ? 'Y' : 'N',
         statType: $('#evStatType').val(),
-        band: $('#evBand').val(),
+        band: '',   // 충전방식(5분류)은 클라이언트에서 필터(NearMobile.setBand) — 워커엔 밴드 미전달(전체 조회)
         is24: $('#serviceCheck1').is(':checked'),
         isSmart: $('#serviceCheck2').is(':checked'),
         search: $('#nearSearch').val()
@@ -419,7 +428,13 @@ var NearMobile = (function () {
     var lastResults = [];
     var lastCoords = null;
     var sortMode = 'dist';        // dist | avail | price
+    var bandFilter = '';          // '' | slow | mid | fast | fastplus | ultra (상용 5분류, 클라이언트 필터)
     var map = null, vsource = null, meFeat = null;
+
+    // 출력(po) → 상용 5밴드 (EvMapMarker.powerBand 와 동일 임계값)
+    function bandOf(po) { var kw = parseInt(po, 10) || 0; if (kw < 30) return 'slow'; if (kw < 50) return 'mid'; if (kw < 100) return 'fast'; if (kw < 200) return 'fastplus'; return 'ultra'; }
+    function stationHasBand(sid) { if (!bandFilter) return true; var list = (chargersBySid && chargersBySid[sid]) || []; return list.some(function (c) { return bandOf(c.po) === bandFilter; }); }
+    function visibleResults() { return lastResults.filter(function (s) { return stationHasBand(s.sid); }); }
 
     // charger 상태 정규화 — 통합지도와 동일 규칙(EvMapMarker.normalizeStat: cst/lm/cm → 5종)
     function statOf(c) {
@@ -442,7 +457,7 @@ var NearMobile = (function () {
     // chlist.json 을 1회 색인 — 카드 enrich(상태·요금·충전기 구성)용. 워커/엔진과 별개(읽기 전용)
     function ensureChargers() {
         if (chargersBySid) return $.Deferred().resolve(chargersBySid).promise();
-        return $.getJSON('data/chlist.json').then(function (d) {
+        return $.getJSON('data/chlist.json?v=20260910c').then(function (d) {
             chargersBySid = {};
             (d.chargerList || []).forEach(function (c) {
                 (chargersBySid[c.sid] = chargersBySid[c.sid] || []).push(c);
@@ -510,8 +525,12 @@ var NearMobile = (function () {
 
     function renderCards() {
         var $ul = $('#nearCards');
-        if (!lastResults.length) { $ul.html('<li class="near-empty">반경 내 충전소가 없습니다. 반경을 넓히거나 필터를 조정해 보세요.</li>'); $('#nearTotal').text(0); return; }
-        var arr = applySort(lastResults);
+        var vis = visibleResults();
+        if (!vis.length) {
+            var msg = lastResults.length ? '선택한 충전방식의 충전소가 없습니다. 충전방식을 바꾸거나 반경을 넓혀 보세요.' : '반경 내 충전소가 없습니다. 반경을 넓히거나 필터를 조정해 보세요.';
+            $ul.html('<li class="near-empty">' + msg + '</li>'); $('#nearTotal').text(0); return;
+        }
+        var arr = applySort(vis);
         $('#nearTotal').text(arr.length);
         $ul.html(arr.map(cardHtml).join(''));
     }
@@ -547,7 +566,7 @@ var NearMobile = (function () {
             meFeat.setStyle(meStyle());
             vsource.addFeature(meFeat);
         }
-        lastResults.forEach(function (s) {
+        visibleResults().forEach(function (s) {
             var lat = parseFloat(s.x), lng = parseFloat(s.y);
             if (isNaN(lat) || isNaN(lng)) return;
             var f = new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat])) });
@@ -580,6 +599,8 @@ var NearMobile = (function () {
         },
         setSort: function (m, label) { sortMode = m; $('#nearSortLabel').text(label); renderCards(); },
         getSort: function () { return sortMode; },
+        setBand: function (b) { bandFilter = b || ''; renderCards(); drawMap(); },
+        getBand: function () { return bandFilter; },
         redraw: function () { renderCards(); drawMap(); },
         zoom: function (d) { if (map) { var v = map.getView(); v.animate({ zoom: (v.getZoom() || 12) + d, duration: 200 }); } },
         recenter: function () { if (map && lastCoords) map.getView().animate({ center: ol.proj.fromLonLat([lastCoords.lng, lastCoords.lat]), duration: 300 }); }
@@ -696,6 +717,23 @@ $(function () {
 
     initBottomSheet();
 
+    // ---- 차종별 반경 옵션/기본값 (전기: 1/3/5/10 기본1 · 수소: 3/5/10/20 기본5) ----
+    var RADIUS_DEFAULT = { ev: '1', h2: '5' };
+    var RADIUS_OPTS = { ev: ['1', '3', '5', '10'], h2: ['3', '5', '10', '20'] };
+    var BAND_LABEL5 = { '': '충전방식', slow: '완속', mid: '중속', fast: '급속', fastplus: '급속+', ultra: '초급속' };
+    var currentType = 'ev';
+    function setRadiusForType(type, doSearch) {
+        currentType = type;
+        $('.near-filter .radio[data-rtype]').each(function () {
+            $(this).toggle(('' + $(this).data('rtype')).split(' ').indexOf(type) > -1);
+        });
+        $('#kilometer' + RADIUS_DEFAULT[type]).prop('checked', true);
+        var rc = document.querySelector('.near-chip[data-chip="radius"]');
+        if (rc) rc.childNodes[0].textContent = RADIUS_DEFAULT[type] + 'km 이내 ';
+        if (doSearch) EvMapNear.search();
+    }
+    setRadiusForType('ev', false);   // 로드 = 전기 1km (엔진 초기 조회는 마크업 기본 checked=1km 로 반영됨)
+
     // 검색
     $('#nearSearchBtn').on('click', function () { EvMapNear.search(); });
     $('#nearSearch').on('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); EvMapNear.search(); } });
@@ -706,32 +744,37 @@ $(function () {
     $('#nearZoomIn').on('click', function () { NearMobile.zoom(1); });
     $('#nearZoomOut').on('click', function () { NearMobile.zoom(-1); });
 
-    // 칩: 전기/수소
+    // 칩: 전기/수소 — 유형 전환 + 반경 옵션/기본값 교체 + 밴드 필터 초기화(수소는 충전방식 칩 숨김)
     $('.near-chip[data-chip="energy"]').on('click', function () {
-        var isEv = $(this).text().trim().indexOf('전기') === 0;
-        var next = isEv ? 'h2' : 'ev';
+        var next = currentType === 'ev' ? 'h2' : 'ev';
         EvMapNear.activate(next);
-        $(this).contents().first()[0].textContent = (next === 'ev' ? '전기' : '수소');
+        NearMobile.setBand('');
+        var bandChip = document.querySelector('.near-chip[data-chip="band"]');
+        bandChip.classList.add('is-off'); bandChip.childNodes[0].textContent = '충전방식 ';
+        $(bandChip).toggle(next === 'ev');
+        $('#evBand').val('');
+        setRadiusForType(next, true);
+        this.childNodes[0].textContent = (next === 'ev' ? '전기' : '수소') + ' ';
     });
-    // 칩: 충전방식(급속/완속)
+    // 칩: 충전방식 — 상용 5분류(완속/중속/급속/급속+/초급속) 클라이언트 필터
     $('.near-chip[data-chip="band"]').on('click', function () {
         var el = this;
         chipMenu(el, [
-            { label: '전체', val: '' }, { label: '급속', val: 'fast' }, { label: '완속', val: 'slow' }
+            { label: '전체', val: '' }, { label: '완속', val: 'slow' }, { label: '중속', val: 'mid' },
+            { label: '급속', val: 'fast' }, { label: '급속+', val: 'fastplus' }, { label: '초급속', val: 'ultra' }
         ], function (o) {
             $('#evBand').val(o.val);
+            NearMobile.setBand(o.val);
             el.classList.toggle('is-off', o.val === '');
-            el.childNodes[0].textContent = (o.val === '' ? '충전방식' : o.label) + ' ';
+            el.childNodes[0].textContent = BAND_LABEL5[o.val] + ' ';
             if (window.__updateFilterCount) window.__updateFilterCount();
-            EvMapNear.search();
         }, $('#evBand').val());
     });
-    // 칩: 반경
+    // 칩: 반경 — 현재 유형의 옵션만 노출
     $('.near-chip[data-chip="radius"]').on('click', function () {
         var el = this;
-        chipMenu(el, [
-            { label: '1km 이내', val: '1' }, { label: '5km 이내', val: '5' }, { label: '10km 이내', val: '10' }, { label: '20km 이내', val: '20' }
-        ], function (o) {
+        var opts = RADIUS_OPTS[currentType].map(function (v) { return { label: v + 'km 이내', val: v }; });
+        chipMenu(el, opts, function (o) {
             $('#kilometer' + o.val).prop('checked', true).trigger('change');
             el.childNodes[0].textContent = o.label + ' ';
         }, $('input[name="kilometer"]:checked').val());
@@ -752,6 +795,14 @@ $(function () {
     $('#nearFilter').on('click', '[data-close]', function () { $('#nearFilter').removeClass('is-open').attr('aria-hidden', 'true'); });
     $('#nearFilterApply').on('click', function () {
         $('#nearFilter').removeClass('is-open').attr('aria-hidden', 'true');
+        // 충전방식(5분류)은 클라이언트 필터 — 칩과 동기화
+        var bv = $('#evBand').val();
+        NearMobile.setBand(bv);
+        var bandChip = document.querySelector('.near-chip[data-chip="band"]');
+        if (bandChip) { bandChip.classList.toggle('is-off', bv === ''); bandChip.childNodes[0].textContent = BAND_LABEL5[bv] + ' '; }
+        // 반경 칩 라벨 동기화
+        var rc = document.querySelector('.near-chip[data-chip="radius"]');
+        if (rc) rc.childNodes[0].textContent = ($('input[name="kilometer"]:checked').val() || RADIUS_DEFAULT[currentType]) + 'km 이내 ';
         updateFilterCount();
         EvMapNear.search();
     });
@@ -775,11 +826,12 @@ $(function () {
 
     // 상세 필터 초기화
     $('.near-filter .button--reset').on('click', function () {
-        $('#kilometer10').prop('checked', true);
         $('#evStatType, #evBand, #h2Oper, #h2Ctp, #h2Vk').val('');
         $('#orgme, #orgetc').prop('checked', true);
         $('#serviceCheck1, #serviceCheck2').prop('checked', false);
-        $('.near-chip[data-chip="band"]').addClass('is-off').get(0).childNodes[0].textContent = '급속/완속 ';
+        NearMobile.setBand('');
+        $('.near-chip[data-chip="band"]').addClass('is-off').get(0).childNodes[0].textContent = '충전방식 ';
+        setRadiusForType(currentType, false);   // 현재 유형 기본 반경으로
         updateFilterCount();
         EvMapNear.search();
     });
