@@ -64,7 +64,7 @@ window.EV_MENU = [
       { t: "보도자료", h: "notice-press.html" },
       { t: "홍보자료", h: "notice-promo.html" },
       { t: "공개자료", h: "notice-data.html" },
-      { t: "추석 추가할인 알림", h: "notice-discount.html" }
+      { t: "특별기간 할인 알림", h: "notice-discount.html" }
     ]},
     { t: "민원·문의", h: "inquiry-qna.html", kids: [
       { t: "FAQ (자주 묻는 질문)", h: "inquiry-faq.html" },

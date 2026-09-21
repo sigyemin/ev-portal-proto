@@ -236,22 +236,26 @@
     ' <nav id="gnb" class="nav-gnb" aria-label="주요 메뉴">__GNB__</nav>' +
     ' </div> </div> </header>';
 
+  /* 푸터 — 「디지털 정부 UI/UX 가이드라인」(25.8.) 컴포넌트/아이덴티티/푸터 배치 준수
+     구조: 컨테이너 > 서비스 로고 > 연락처 > 유틸리티 링크 > 정책 링크 > 저작권 정보
+     가이드 02: 로고·연락처·유틸리티 링크는 하나의 그룹으로 인지되도록 묶고,
+                정책 링크와 저작권은 그 다음 순서로 분리해 제공한다. (색상·스타일은 기존 유지) */
   var FOOTER =
-    '<footer class="footer"> <div class="footer__top"> <div class="footer__inner">' +
+    '<footer class="footer">' +
+    /* 그룹 1 — 서비스 로고 · 연락처 · 유틸리티 링크 */
+    ' <div class="footer__top"> <div class="footer__inner">' +
+    ' <div class="footer__info">' +
     ' <div class="footer__logo"> <img src="assets/images/common/logo-footer.svg" alt="무공해차 통합누리집 로고"> </div>' +
-    ' <nav class="footer__nav" aria-label="푸터 메뉴"> <ul class="footer__nav-list">' +
-    ' <li class="footer__nav-item"><a href="policy-privacy.html" class="footer__nav-link footer__nav-link--privacy">개인정보처리방침</a></li>' +
-    ' <li class="footer__nav-item"><a href="#" class="footer__nav-link">이메일 무단수집거부</a></li>' +
-    ' <li class="footer__nav-item"><a href="#" class="footer__nav-link">영상정보처리기기 운영관리지침</a></li>' +
-    ' <li class="footer__nav-item"><a href="inquiry-complaint.html" class="footer__nav-link">불편민원신고센터</a></li>' +
-    ' </ul> </nav> </div> </div>' +
-    ' <div class="footer__bottom"> <div class="footer__inner"> <div class="footer__info">' +
     ' <address class="footer__address">' +
     ' <p>[22689] 인천광역시 서해구 환경로 42(오류동 종합환경연구단지)</p>' +
     ' <p>대표전화 : (누리집콜센터) 1661-0970</p>' +
     ' <p>급속충전시설 이용관련문의 및 회원카드 발급문의 한국자동차환경협회 : 1661-9408</p>' +
     ' </address>' +
-    ' <p class="footer__copyright">Copyright 2026 KECO All Rights Reserved.</p> </div>' +
+    ' <nav class="footer__nav" aria-label="유틸리티 링크"> <ul class="footer__nav-list">' +
+    ' <li class="footer__nav-item"><a href="sitemap.html" class="footer__nav-link">사이트맵</a></li>' +
+    ' <li class="footer__nav-item"><a href="inquiry-complaint.html" class="footer__nav-link">불편민원신고센터</a></li>' +
+    ' </ul> </nav>' +
+    ' </div>' +
     ' <div class="footer__related">' +
     ' <a href="http://www.mcee.go.kr/" target="_blank" class="footer__related-link" title="기후에너지환경부 홈페이지로 이동 (새창 열림)">' +
     ' <img src="assets/images/common/logo-mcee.svg" alt="기후에너지환경부"> </a>' +
@@ -259,7 +263,18 @@
     ' <img src="assets/images/common/logo-keco.svg" alt="한국환경공단"> </a>' +
     ' <a href="http://www.aea.or.kr/" target="_blank" class="footer__related-link" title="한국자동차환경협회 홈페이지로 이동 (새창 열림)">' +
     ' <img src="assets/images/common/logo-aea.svg" alt="한국자동차환경협회"> </a>' +
-    ' </div> </div> </div> </footer>';
+    ' </div>' +
+    ' </div> </div>' +
+    /* 그룹 2 — 정책 링크 · 저작권 정보 */
+    ' <div class="footer__bottom"> <div class="footer__inner">' +
+    ' <nav class="footer__nav" aria-label="정책 링크"> <ul class="footer__nav-list">' +
+    ' <li class="footer__nav-item"><a href="policy-privacy.html" class="footer__nav-link footer__nav-link--privacy">개인정보처리방침</a></li>' +
+    ' <li class="footer__nav-item"><a href="#" class="footer__nav-link">이메일 무단수집거부</a></li>' +
+    ' <li class="footer__nav-item"><a href="#" class="footer__nav-link">영상정보처리기기 운영관리지침</a></li>' +
+    ' </ul> </nav>' +
+    ' <p class="footer__copyright">Copyright 2026 KECO All Rights Reserved.</p>' +
+    ' </div> </div>' +
+    '</footer>';
 
   /* ------------------------------------------------------------
      메가메뉴 open/close
