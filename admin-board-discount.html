@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>추석 추가할인 알림 관리 | 통합관리시스템 | EV 업무포털</title>
+<title>추석 추가할인 관리 | 통합관리시스템 | EV 업무포털</title>
 <link rel="stylesheet" href="css/admin-pub.css?v=20260721a">
 <link rel="stylesheet" href="css/admin-shell.css?v=20260723b">
 <style>
@@ -22,18 +22,20 @@
   .ck__b { display:inline-flex; align-items:center; justify-content:center; min-width:26px; height:24px;
            padding:0 5px; font-size:12px; color:#475569; background:#fff; border:1px solid #e2e8f0; border-radius:4px; }
   .ck__sel { min-width:70px; justify-content:space-between; }
+  .adm-btn.danger { border-color:#c0392b; color:#c0392b; }
+  .adm-btn.danger:hover { background:#fdf2f2; }
   .ck__area { width:100%; min-height:220px; border:0; padding:12px; font-size:13px; font-family:inherit; resize:vertical; box-sizing:border-box; }
 </style>
 </head>
 <body>
-<!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 추석 추가할인 알림 (신설)
+<!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 추석 추가할인 관리 (신설)
      게시판 자체는 보도자료 게시판을 복제해 신설. 공개여부는 미사용, 작성자는 로그인 계정의 소속 자동.
      기준: 실화면 통합관리시스템 > 시스템관리 > 게시판 관리 > 보도자료 (2026-09 캡처).
      신규 개발 범위는 댓글뿐. 작성 권한은 CPO가 이미 보유한 통합관리시스템 권한을 그대로 사용(권한 신설 없음). -->
 <div class="adm-wrap">
   <aside class="adm-side" id="admSide"></aside>
   <main class="adm-main">
-    <h1 class="adm-h1">추석 추가할인 알림 관리 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
+    <h1 class="adm-h1">추석 추가할인 관리 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
     <p class="adm-desc">대민 누리집 「소통·지원 &gt; 알림·공지 &gt; 추석 추가할인 알림」 게시판의 게시물을 관리합니다. 게시물은 충전사업자와 공단이 등록합니다.</p>
 
     <!-- ── 목록 화면 (보도자료 목록과 동일) ─────────────────────────── -->
@@ -113,6 +115,7 @@
         </div>
         <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
           <button type="button" class="adm-btn primary" id="eSave">등록(mock)</button>
+          <button type="button" class="adm-btn danger" id="eDel" hidden>삭제</button>
           <button type="button" class="adm-btn" id="eBack">목록</button>
         </div>
       </div>
@@ -126,6 +129,7 @@
         <li><strong>게시판 신설</strong> : <strong>보도자료 게시판을 복제</strong>해 신설. AS-IS BLBD(게시판 마스터)+ARTC(게시물) 공용 구조에 게시판 구분만 추가. TNCM_MENU에 신규 메뉴 등록 필요(시스템관리 &gt; 게시판 관리).</li>
         <li>★<strong>등록·수정 화면 = 보도자료와 동일</strong> — 제목 / 작성자 / 작성일 / 첨부파일 / 내용(에디터) 순. 보도자료에 있는 <strong>공개여부만 사용하지 않는다</strong>(정책 결정). 공지사항의 공지글·새소식여부는 애초에 보도자료에 없다. <strong>에디터는 기존 것을 그대로 쓰며 기능 제한을 두지 않는다.</strong></li>
         <li><strong>첨부파일</strong> : 보도자료와 같이 한 줄로 두고 복수 선택을 허용한다. ※ 보도자료 등록 화면의 첨부 입력 방식(단일 행 / 공지사항식 12행)은 확인 필요.</li>
+        <li><strong>버튼</strong> : 등록 모드는 [등록][목록], 수정 모드는 [수정][삭제][목록]. 삭제 시 대민 누리집에서도 즉시 내려간다.</li>
         <li><strong>목록 화면 = 보도자료와 동일</strong> — 번호 / 제목 / 작성자 / 작성일 / 첨부 / 게시물ID. 검색 조건은 작성자(소속) · 검색어.</li>
         <li><strong>대민 IA</strong> : 소통·지원 &gt; 알림·공지 하위 <strong>다섯 번째</strong>(공지사항/보도자료/홍보자료/공개자료 다음).</li>
         <li>★<strong>작성자 = 로그인 계정의 소속</strong> — 사용자가 입력하지 않고 계정에 연결된 소속(충전사업자 / 한국환경공단)을 그대로 가져와 읽기전용으로 넣는다. 이 값이 <strong>목록 필터의 기준</strong>이 된다. 계정↔소속 매핑 컬럼은 개발 협의.</li>
@@ -143,7 +147,7 @@
 </div>
 
 <script src="js/admin-shell.js?v=20260721b"></script>
-<script src="js/admin-menu-ntp.js?v=20260921a"></script>
+<script src="js/admin-menu-ntp.js?v=20260921b"></script>
 <script>
 (function(){
   'use strict';
@@ -207,6 +211,7 @@
       $('eDate').textContent = row.dt;
       $('eBody').value = GUIDE + '\n\n(할인 대상과 요금을 본문에 직접 작성합니다. 표·이미지·링크 모두 사용할 수 있습니다.)';
       $('eSave').textContent = '수정(mock)';
+      $('eDel').hidden = false;
     } else {
       $('editHead').textContent = '등록';
       $('eTitle').value = '';
@@ -214,6 +219,7 @@
       $('eDate').textContent = '2026-09-22';
       $('eBody').value = '';
       $('eSave').textContent = '등록(mock)';
+      $('eDel').hidden = true;
     }
   }
 
@@ -230,6 +236,11 @@
   $('btnNew').addEventListener('click', function(){ showEdit(null); });
   $('eBack').addEventListener('click', showList);
   $('eSave').addEventListener('click', function(){ alert('프로토타입입니다. 실제로 저장되지 않습니다.'); });
+  $('eDel').addEventListener('click', function(){
+    if (!confirm('이 게시물을 삭제하시겠습니까? 삭제하면 대민 누리집에서도 즉시 내려갑니다.')) return;
+    alert('프로토타입입니다. 실제로 삭제되지 않습니다.');
+    showList();
+  });
   $('fSearch').addEventListener('click', renderList);
   $('fReset').addEventListener('click', function(){
     $('fWriter').value = 'all'; $('fKw').value = '';

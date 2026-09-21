@@ -121,7 +121,7 @@ window.ADMIN_MENU_NTP = [
       { label:'질의응답(건의사항)', href:'admin-board-qna.html' },
       { label:'서식다운로드', href:'admin-board-forms.html', badge:'신설' },
       { label:'사용자매뉴얼', href:'admin-board-manual.html', badge:'신설' },
-      { label:'추석 추가할인 알림', href:'admin-board-discount.html', badge:'신설' },
+      { label:'추석 추가할인 관리', href:'admin-board-discount.html', badge:'신설' },
       { label:'FAQ' },{ label:'수소충전소 Help Desk' },{ label:'상담관리' },{ label:'공개자료' },{ label:'요청자료(지자체)' }
     ]},
     { label:'메인 관리', children:[ { label:'팝업' },{ label:'배너' },{ label:'자주 찾는 서비스' } ]},
