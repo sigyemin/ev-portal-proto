@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var CACHE_V = '20260921h';
+  var CACHE_V = '20260922e';
 
   /* ------------------------------------------------------------
      로그인 상태(프로토타입 전용 · localStorage)
@@ -205,17 +205,9 @@
     return h.join('');
   }
 
-  /* 공식 배너 — 「디지털 정부 UI/UX 가이드라인」(25.8.) 컴포넌트/아이덴티티
-     · 헤더 구조 ②(p.234). 건너뛰기 링크 다음에 온다(p.226 접근성 01).
-     · 문구·스타일 변형 금지(p.224 사용성 03) — 표준 문장 그대로.
-     · 헤더 고정 시 공식 배너는 함께 고정하지 않으므로(p.242 사용성 11)
-       sticky 가 걸린 .header 의 '형제'로 배치한다. */
-  var GOV_BANNER =
-    '<div class="gov-banner">' +
-    ' <div class="gov-banner__inner">' +
-    ' <img src="assets/images/common/flag-kr.svg" alt="" aria-hidden="true" class="gov-banner__flag">' +
-    ' <p class="gov-banner__text">이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>' +
-    ' </div> </div>';
+  /* 공식 배너(가이드 구조 ②)는 적용하지 않기로 했다 — 2026-09-22 사용자 결정.
+     가이드에서도 서비스 판단에 맡기는 선택 요소다. 되살릴 때는 이 자리에
+     .gov-banner 블록을 만들어 HEADER 앞에 붙이면 된다(krds-identity.css 에 스타일 유지). */
 
   /* 헤더 — 가이드 p.234 '구조' 그대로 3행으로 배치한다.
        행1 : ④ 유틸리티 링크 그룹  (언어 · 글자/화면 설정) — 우측 상단, 디바이더 구분
@@ -224,7 +216,6 @@
      DOM 은 모바일 슬라이드 패널(.header__nav)을 살리기 위해 최소로만 손대고,
      데스크톱 3행 배치는 krds-identity.css 의 grid 가 담당한다. */
   var HEADER =
-    GOV_BANNER +
     '<header class="header"> <div class="header__inner"> <div class="header__logo">' +
     ' <a href="index.html" class="header__logo-link">' +
     ' <img src="assets/images/common/logo-header.svg" alt="무공해차 통합누리집"> </a> </div>' +
@@ -237,28 +228,39 @@
     /* ④ 유틸리티 링크 그룹 — 언어 · 글자/화면 설정 (우측 상단) */
     ' <div class="header__utility">' +
     /* 모바일 전용 사본 — 좁은 화면에서는 헤더에 자리가 없어 슬라이드 패널 쪽에 노출한다.
-       데스크톱에서는 CSS 로 숨긴다(가이드상 로그인은 ⑥ 자리). */
+       CSS order 로 유틸(언어·글자크기) 아래 줄에 따로 놓는다. 데스크톱에서는 숨긴다. */
     ' <div class="header__member header__member--mobile">__AUTH__</div>' +
     ' <div class="dropdown dropdown--lang"> <div class="dropdown-selector">' +
     ' <button type="button" class="dropdown-selector__button" aria-haspopup="listbox" aria-expanded="false">' +
     ' <i class="svg-icon global" aria-hidden="true"></i>' +
-    ' <span class="dropdown-selector__button-label">KOR</span>' +
+    ' <span class="dropdown-selector__button-label">한국어</span>' +
     ' <i class="svg-icon angle-down" aria-hidden="true"></i> </button> </div>' +
     ' <div class="dropdown-container" role="listbox"> <ul class="dropdown-container__list">' +
     ' <li class="dropdown-container__item dropdown-container__item--selected">' +
     ' <button type="button" class="dropdown-container__button" role="option" aria-selected="true">' +
-    ' <span class="dropdown-container__label">KOR</span> </button> </li>' +
+    ' <span class="dropdown-container__label">한국어</span> </button> </li>' +
     ' <li class="dropdown-container__item">' +
     ' <button type="button" class="dropdown-container__button" role="option" aria-selected="false">' +
-    ' <span class="dropdown-container__label">ENG</span> </button> </li> </ul> </div> </div>' +
+    ' <span class="dropdown-container__label">ENGLISH</span> </button> </li> </ul> </div> </div>' +
     ' <div class="zoom-control">' +
     ' <button type="button" class="button button--xsmall button--zoom-plus" aria-label="글씨크기 크게">' +
     ' <span class="button__label">큰글씨</span> <i class="svg-icon zoom-plus" aria-hidden="true"></i> </button>' +
     ' <button type="button" class="button button--xsmall button--zoom-minus" aria-label="글씨크기 작게">' +
     ' <span class="button__label">글씨크기 작게</span> <i class="svg-icon zoom-minus" aria-hidden="true"></i> </button>' +
-    ' </div> </div>' +
+    ' </div>' +
+    /* 메인 공지 팝업 다시 열기 — 운영 header.jsp 와 동일한 컴포넌트·위치
+       (.header__utility 안 zoom-control 다음, button--xsmall button--link) */
+    ' <button type="button" id="btnMainNoticeOpen" class="button button--xsmall button--link" aria-haspopup="dialog">' +
+    ' <span class="button__label">POPUP</span> </button>' +
+    ' </div>' +
     /* ⑦ 메인 메뉴 */
-    ' <nav id="gnb" class="nav-gnb" aria-label="주요 메뉴">__GNB__</nav>' +
+    /* ⑦ 메인 메뉴 + 사이트맵 버튼 — 운영 header.jsp 와 동일하게 nav 안에 둔다.
+       좁은 화면에서는 style.css 가 숨기고 .button--menu(슬라이드 메뉴)가 그 역할을 한다. */
+    ' <nav id="gnb" class="nav-gnb" aria-label="주요 메뉴">__GNB__' +
+    ' <a href="sitemap.html" class="button button--xlarge button--icon button--borderless button--sitemap">' +
+    ' <i class="svg-icon menu"></i>' +
+    ' <span class="button__label">사이트맵</span> </a>' +
+    ' </nav>' +
     ' </div> </div> </header>';
 
   /* 푸터 — 「디지털 정부 UI/UX 가이드라인」(25.8.) 컴포넌트/아이덴티티/푸터 배치 준수
@@ -315,10 +317,111 @@
        로고는 서비스 로고가 아닌 운영 주체 기관 로고(p.230 사용성 02). */
     ' <section class="footer__identifier" aria-label="운영기관 식별자">' +
     ' <div class="footer__identifier-inner">' +
-    ' <span class="footer__identifier-logo"><img src="assets/images/common/logo-keco.svg" alt="한국환경공단"></span>' +
+    ' <span class="footer__identifier-logo"><img src="assets/images/common/logo-keco.svg" alt=""></span>' +
+    ' <div class="footer__identifier-body">' +
+    ' <strong class="footer__identifier-name">한국환경공단</strong>' +
     ' <p class="footer__identifier-text">이 누리집은 한국환경공단에서 운영하는 누리집입니다.</p>' +
+    ' </div>' +
     ' </div> </section>' +
     '</footer>';
+
+  /* ------------------------------------------------------------
+     메인 공지 팝업 (전 화면 공통)
+     - 운영의 메인 팝업(#modalMainNotice)은 프로토에서 서버 콘텐츠가 없어 쓰지 않는다.
+       대신 셸이 같은 컴포넌트로 공지 팝업을 제공해 어느 화면에서든 열 수 있게 한다.
+     - 메인 화면에서는 진입 시 자동으로 뜨고, 「오늘 하루 열지 않기」를 누르면 그날은 뜨지 않는다.
+       유틸의 「공지 팝업」 버튼으로는 언제든 다시 열 수 있다.
+     - 스크롤 잠금은 팝업이 실제로 열려 있는 동안에만 건다(닫으면 반드시 해제).
+     ------------------------------------------------------------ */
+  var NOTICE_KEY = 'evax.proto.noticePopup.hideUntil';
+
+  var NOTICE_POPUP =
+    '<div class="modal-container" id="modalProtoNotice" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="protoNoticeTitle">' +
+    ' <div class="modal" tabindex="0" style="width: 620px">' +
+    ' <div class="modal__header">' +
+    ' <h1 class="modal__header-title" id="protoNoticeTitle">추석연휴 전기차 충전요금 할인정보 안내</h1>' +
+    ' </div>' +
+    ' <div class="modal__body">' +
+    ' <div class="inner-cms">' +
+    ' <p>추석연휴 기간 충전사업자(CPO)별 충전요금 추가할인 정보를 한곳에서 확인하실 수 있도록 ' +
+    '「추석기간 전기차 충전요금 추가할인 알림」 게시판을 운영합니다.</p>' +
+    ' <p>&nbsp;</p>' +
+    ' <p>할인기간·시간, 할인요금(할인율), 적용 충전기 등 세부내용은 사업자마다 다르므로 ' +
+    '충전 전에 게시글을 확인해 주시기 바랍니다.</p>' +
+    ' </div>' +
+    ' </div>' +
+    ' <div class="modal__footer">' +
+    ' <button type="button" class="button button--secondary" id="protoNoticeHide">' +
+    ' <span class="button__label">오늘 하루 열지 않기</span> </button>' +
+    ' <a href="notice-discount.html" class="button button--primary">' +
+    ' <span class="button__label">게시판 바로가기</span> </a>' +
+    ' </div>' +
+    ' <div class="modal__close">' +
+    ' <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기" id="protoNoticeClose">' +
+    ' <i class="svg-icon close"></i> <span class="button__label">팝업닫기</span> </button>' +
+    ' </div>' +
+    ' </div> </div>';
+
+  function noticeEl() { return document.getElementById('modalProtoNotice'); }
+
+  function openNotice() {
+    var el = noticeEl();
+    if (!el) return;
+    el.classList.add('is-active');
+    el.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    var m = el.querySelector('.modal');
+    if (m) { try { m.focus(); } catch (e) {} }
+  }
+
+  function closeNotice() {
+    var el = noticeEl();
+    if (!el) return;
+    el.classList.remove('is-active');
+    el.setAttribute('aria-hidden', 'true');
+    /* 다른 모달이 열려 있지 않을 때만 스크롤 잠금을 푼다 */
+    if (!document.querySelector('.modal-container.is-active')) {
+      document.body.classList.remove('no-scroll');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+  }
+
+  function noticeHiddenToday() {
+    try {
+      var v = window.localStorage.getItem(NOTICE_KEY);
+      return !!v && v === new Date().toISOString().slice(0, 10);
+    } catch (e) { return false; }
+  }
+
+  function injectNoticePopup() {
+    if (noticeEl()) return;
+    var holder = document.createElement('div');
+    holder.innerHTML = NOTICE_POPUP;
+    var el = holder.firstChild;
+    document.body.appendChild(el);   /* wrapper 밖 — 플로팅 규칙과 동일 */
+
+    el.addEventListener('click', function (e) {
+      if (e.target === el) closeNotice();                 /* 딤드 클릭 */
+    });
+    var btnClose = document.getElementById('protoNoticeClose');
+    if (btnClose) btnClose.addEventListener('click', closeNotice);
+    var btnHide = document.getElementById('protoNoticeHide');
+    if (btnHide) btnHide.addEventListener('click', function () {
+      try { window.localStorage.setItem(NOTICE_KEY, new Date().toISOString().slice(0, 10)); } catch (e) {}
+      closeNotice();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && el.classList.contains('is-active')) closeNotice();
+    });
+
+    var opener = document.getElementById('btnMainNoticeOpen');
+    if (opener) opener.addEventListener('click', openNotice);
+
+    /* 메인 화면에서는 진입 시 자동 노출 */
+    var isMain = /(^|\/)(index\.html)?(\?|#|$)/.test(location.pathname.split('/').pop() || 'index.html');
+    if (isMain && !noticeHiddenToday()) setTimeout(openNotice, 600);
+  }
 
   /* ------------------------------------------------------------
      메가메뉴 open/close
@@ -568,6 +671,7 @@
     bindAuthZone();
     injectAuthbarCss();
     buildAuthbar();
+    injectNoticePopup();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);

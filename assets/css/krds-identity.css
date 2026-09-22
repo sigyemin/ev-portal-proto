@@ -102,6 +102,26 @@
   width: 72px;
   height: auto;
 }
+.footer__identifier .footer__identifier-body {
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 4px 18px;
+}
+/* 로고 오른쪽에 운영기관명을 텍스트로 함께 둔다(로고 안 글자가 작아 판독이 어렵다) */
+.footer__identifier .footer__identifier-name {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #d4d4d4;
+}
 .footer__identifier .footer__identifier-text {
   margin: 0;
   font-size: 0.8125rem;
@@ -109,16 +129,14 @@
   color: #9aa0a6;
 }
 @media (max-width: 64rem) {
+  /* 좁은 화면에서도 로고와 문구는 한 줄(로고 왼쪽 · 텍스트 오른쪽)로 둔다.
+     오른쪽은 플로팅 버튼과 겹치지 않도록 여백을 둔다. */
   .footer__identifier .footer__identifier-inner {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-align: start;
-        -ms-flex-align: start;
-            align-items: flex-start;
-    gap: 6px;
-    padding: 0.75rem 1.25rem;
+    gap: 10px;
+    padding: 0.75rem 3.5rem 0.75rem 1.25rem;
+  }
+  .footer__identifier .footer__identifier-name {
+    font-size: 0.8125rem;
   }
   .footer__identifier .footer__identifier-logo img {
     width: 64px;
@@ -242,6 +260,10 @@
   .header__nav > .nav-gnb {
     grid-area: gnb;
     width: 100%;
+  }
+  /* 사이트맵 버튼(운영 컴포넌트) — 메인 메뉴 줄 오른쪽 끝으로 민다 */
+  .header .nav-gnb .button--sitemap {
+    margin-left: auto;
   }
 }
 
@@ -443,5 +465,84 @@
   .footer .footer__site .svg-icon {
     width: 16px;
     height: 16px;
+  }
+}
+
+/* ------------------------------------------------------------
+   모바일 슬라이드 메뉴 유틸 영역 — 2026-09-22 요청
+     윗줄 : 유틸(언어 · 글자·화면 설정)
+     아랫줄 : 로그인 · 회원가입   ← 구분선으로 가른다
+   데스크톱 전체메뉴 버튼은 좁은 화면에서 숨긴다(.button--menu 가 대신한다).
+   ------------------------------------------------------------ */
+@media (max-width: 64rem) {
+  .header__utility {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    height: auto;
+    padding: 0;
+    gap: 0;
+  }
+  .header__utility > .dropdown--lang {
+    -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+            order: 1;
+  }
+  .header__utility > .zoom-control {
+    -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+            order: 2;
+  }
+  /* 유틸 줄 */
+  .header__utility > .dropdown--lang,
+  .header__utility > .zoom-control {
+    min-height: 44px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .header__utility > .dropdown--lang {
+    padding-left: 1.25rem;
+  }
+  .header__utility > .zoom-control {
+    margin-left: 16px;
+  }
+  /* 로그인 줄 — 한 줄을 통째로 쓰고 위쪽에 구분선 */
+  .header__utility > .header__member--mobile {
+    -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+            order: 3;
+    -ms-flex-preferred-size: 100%;
+        flex-basis: 100%;
+    width: 100%;
+    min-height: 44px;
+    padding: 0 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+  }
+  /* 줄이 나뉘었으므로 그룹 사이 세로 디바이더는 쓰지 않는다 */
+  .header__utility > * + *::before,
+  .header__utility .header__member--mobile .utility-menu::before {
+    display: none;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   공지 팝업 버튼(운영 컴포넌트 .header__utility .button--link)
+   운영은 좁은 화면에서 감추지만, 슬라이드 메뉴 유틸 줄에서도 쓸 수 있게 되살린다.
+   ------------------------------------------------------------ */
+@media (max-width: 64rem) {
+  .header__utility .button--link {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+            order: 2;
+    -ms-flex-item-align: center;
+        align-self: center;
+    margin-left: 16px;
   }
 }

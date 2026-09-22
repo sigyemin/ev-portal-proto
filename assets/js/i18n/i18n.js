@@ -40,7 +40,8 @@
 	function syncDropdown() {
 		var $dd = $('.dropdown--lang');
 		if (!$dd.length) return;
-		var current = lang === 'en' ? 'ENG' : 'KOR';
+		/* 표기는 해당 언어 그대로 쓴다(가이드 p.239 — 국기 대신 언어 이름) */
+		var current = lang === 'en' ? 'ENGLISH' : '한국어';
 		$dd.find('.dropdown-selector__button-label').text(current);
 		$dd.find('.dropdown-container__button').each(function () {
 			var isCur = $(this).find('.dropdown-container__label').text() === current;
@@ -52,7 +53,7 @@
 	$(function () {
 		syncDropdown();
 		$(document).on('click', '.dropdown--lang .dropdown-container__button', function () {
-			var sel = $(this).find('.dropdown-container__label').text() === 'ENG' ? 'en' : 'ko';
+			var sel = $(this).find('.dropdown-container__label').text() === 'ENGLISH' ? 'en' : 'ko';
 			if (sel !== lang) {
 				try { window.localStorage.setItem(STORAGE_KEY, sel); } catch (e) {}
 				window.location.reload();
