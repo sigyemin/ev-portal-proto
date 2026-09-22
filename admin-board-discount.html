@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>특별기간 할인 알림 관리 | 통합관리시스템 | EV 업무포털</title>
+<title>추석기간 전기차 충전요금 추가할인 알림 관리 | 통합관리시스템 | EV 업무포털</title>
 <link rel="stylesheet" href="css/admin-pub.css?v=20260721a">
 <link rel="stylesheet" href="css/admin-shell.css?v=20260723b">
 <style>
@@ -28,15 +28,15 @@
 </style>
 </head>
 <body>
-<!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 특별기간 할인 알림 관리 (신설)
+<!-- [DEV] 통합관리시스템 > 시스템관리 > 게시판 관리 > 추석기간 전기차 충전요금 추가할인 알림 관리 (신설)
      게시판 자체는 보도자료 게시판을 복제해 신설. 공개여부는 미사용, 작성자는 로그인 계정의 소속 자동.
      기준: 실화면 통합관리시스템 > 시스템관리 > 게시판 관리 > 보도자료 (2026-09 캡처).
      신규 개발 범위는 댓글뿐. 작성 권한은 CPO가 이미 보유한 통합관리시스템 권한을 그대로 사용(권한 신설 없음). -->
 <div class="adm-wrap">
   <aside class="adm-side" id="admSide"></aside>
   <main class="adm-main">
-    <h1 class="adm-h1">특별기간 할인 알림 관리 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
-    <p class="adm-desc">대민 누리집 「소통·지원 &gt; 알림·공지 &gt; 특별기간 할인 알림」 게시판의 게시물을 관리합니다. 게시물은 충전사업자와 공단이 등록합니다.</p>
+    <h1 class="adm-h1">추석기간 전기차 충전요금 추가할인 알림 관리 <span class="new-badge" style="vertical-align:middle;">신설</span></h1>
+    <p class="adm-desc">대민 누리집 「소통·지원 &gt; 알림·공지 &gt; 추석기간 전기차 충전요금 추가할인 알림」 게시판의 게시물을 관리합니다. 게시물은 충전사업자와 공단이 등록합니다.</p>
 
     <!-- ── 목록 화면 (보도자료 목록과 동일) ─────────────────────────── -->
     <div id="listWrap">
@@ -147,7 +147,7 @@
 </div>
 
 <script src="js/admin-shell.js?v=20260721b"></script>
-<script src="js/admin-menu-ntp.js?v=20260921c"></script>
+<script src="js/admin-menu-ntp.js?v=20260922a"></script>
 <script>
 (function(){
   'use strict';
@@ -161,13 +161,16 @@
     activeHref:'admin-board-discount.html'
   });
 
-  var GUIDE = 'OO충전(주)는 추석연휴기간(9.24.~9.27) 11시부터 14시까지 아래와 같이 전기차 충전요금을 할인할 예정임을 알려드립니다.';
+  /* [개발 반영 필요] 내용란 표준 문구
+     등록 화면을 열면 에디터 본문 첫 줄에 이 문장이 항상 들어가 있어야 한다.
+     충전사업자는 ○○○ 자리에 회사명을 넣고, 아래에 세부 할인내용을 이어 쓴다. */
+  var GUIDE = '○○○사는 추석연휴 기간(9.24.~9.27.) 11시부터 14시까지 아래와 같이 전기차 충전요금을 추가 할인할 예정임을 알려드립니다';
 
   var ROWS = [
+    { no:1, title:'추석연휴 전기차 충전요금 할인정보 안내', notice:true, writer:'한국환경공단',   dt:'2026-09-22', file:false, artc:'25698', cmt:0 },
     { no:4, title:'OO충전(주) 추석연휴기간 전기차 충전요금 추가할인 안내', writer:'OO충전(주)',   dt:'2026-09-22', file:false, artc:'25701', cmt:3 },
     { no:3, title:'△△에너지 추석연휴 충전요금 할인 대상 충전소 안내',     writer:'△△에너지',   dt:'2026-09-22', file:true,  artc:'25700', cmt:1 },
-    { no:2, title:'□□모빌리티 고속도로 휴게소 충전기 할인 안내',           writer:'□□모빌리티', dt:'2026-09-21', file:false, artc:'25699', cmt:0 },
-    { no:1, title:'특별기간 할인 알림 게시판 이용 안내',                    writer:'한국환경공단',   dt:'2026-09-21', file:false, artc:'25698', cmt:0 }
+    { no:2, title:'□□모빌리티 고속도로 휴게소 충전기 할인 안내',           writer:'□□모빌리티', dt:'2026-09-21', file:false, artc:'25699', cmt:0 }
   ];
 
 
@@ -190,7 +193,7 @@
     $('listCount').textContent = rows.length;
     $('listBody').innerHTML = rows.map(function(r){
       return '<tr>'
-        + '<td class="c">' + r.no + '</td>'
+        + '<td class="c">' + (r.notice ? '<span class="new-badge">공지</span>' : r.no) + '</td>'
         + '<td><a href="#" class="js-edit" data-no="' + r.no + '">' + esc(r.title) + '</a></td>'
         + '<td class="c">' + esc(r.writer) + '</td>'
         + '<td class="c">' + r.dt + '</td>'
@@ -217,7 +220,8 @@
       $('eTitle').value = '';
       $('eWriter').value = 'OO충전(주)';
       $('eDate').textContent = '2026-09-22';
-      $('eBody').value = '';
+      /* 등록 화면을 열면 표준 문구가 이미 들어가 있다 */
+      $('eBody').value = GUIDE + '\n\n';
       $('eSave').textContent = '등록(mock)';
       $('eDel').hidden = true;
     }

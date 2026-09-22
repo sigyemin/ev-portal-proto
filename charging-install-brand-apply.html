@@ -19,7 +19,7 @@
   <script src="js/common/common_util.js?v=20260827a"></script>
   <script src="js/proto-api.js?v=20260827a"></script>
   <script src="js/proto-data.js?v=20260827a"></script>
-  <script src="js/proto-mock.js?v=20260827a"></script>
+  <script src="js/proto-mock.js?v=20260921g"></script>
   <!-- [DEV][공모신청 폼] 브랜드 사업 신청서 작성 페이지 전용 스코프 스타일 (근거: 화면 목업, charging-install-brand.html 상세페이지에서 진입) -->
   <style>
     .apply-note{color:#6b7280;font-size:13px;margin-top:8px;line-height:1.5}
@@ -41,22 +41,11 @@
     /* 수량 표 */
     .qty-table input{width:100%;height:40px;border:1px solid #d0d5dd;border-radius:6px;padding:0 10px;text-align:center;font-size:14px}
     /* 입력 내용 확인 / 첨부 확인 박스 */
-    .confirm-box{border:1px solid #fde68a;background:#fffbeb;border-radius:10px;padding:18px 20px;margin-top:18px}
-    .confirm-box__title{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:#92400e;margin:0 0 6px}
-    .confirm-box__desc{color:#92400e;font-size:13.5px;margin:0 0 12px;line-height:1.55}
-    .confirm-box__list{display:flex;flex-direction:column;gap:10px}
     .confirm-item{display:flex;align-items:flex-start;gap:10px}
     .confirm-item .checkbox{flex:none;margin-top:1px}
     .confirm-item__text{font-size:14px;color:#374151;line-height:1.5}
     .confirm-item__text b{color:#92400e}
     /* 첨부 행 */
-    .attach-row{display:grid;grid-template-columns:280px 1fr auto;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid #eef0f2}
-    .attach-row__label{font-weight:700;font-size:14px;color:#1f2937}
-    .attach-row__label .no{display:block;color:#6b7280;font-weight:600;font-size:13px;margin-bottom:2px}
-    .attach-row__label .req{color:#e5484d}
-    .attach-row__file{height:44px;border:1px solid #d0d5dd;border-radius:6px;display:flex;align-items:center;padding:0 14px;color:#9ca3af;font-size:14px;background:#fff}
-    .attach-row__file.is-selected{color:#1f2937}
-    .attach-row__note{grid-column:2 / 4;color:#6b7280;font-size:13px}
     .submit-lead{text-align:center;font-weight:800;font-size:18px;color:#1f2937;margin:28px 0 16px}
   </style>
 </head>
@@ -281,19 +270,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr class="fastCntTr">
                 <th scope="row">설치수량</th>
-                <td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td>
-                <td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td>
-                <td>0</td>
+                <td><input type="text" name="chrgr50_100kwCnt" data-chrger="50_100" data-amtobj="chrgr50_100kwAmt" title="50kW 초과~100kW 미만 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr100kwCnt" data-chrger="100" data-amtobj="chrgr100kwAmt" title="100kW 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr100kw2Cnt" data-chrger="100_2" data-amtobj="chrgr100kw2Amt" title="100kW(2ch) 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr200kwCnt" data-chrger="200" data-amtobj="chrgr200kwAmt" title="200kW 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr200kw2Cnt" data-chrger="200_2" data-amtobj="chrgr200kw2Amt" title="200kW(2ch) 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr350kwCnt" data-chrger="350" data-amtobj="chrgr350kwAmt" title="350kW 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr600kwCnt" data-chrger="600" data-amtobj="chrgr600kwAmt" title="600kW 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td data-totfastcnt="Y">0</td>
               </tr>
-              <tr>
+              <tr class="fastAmtTr">
                 <th scope="row">보조금액</th>
-                <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                <td data-chrgramt="chrgr50_100kwAmt">0</td>
+                <td data-chrgramt="chrgr100kwAmt">0</td>
+                <td data-chrgramt="chrgr100kw2Amt">0</td>
+                <td data-chrgramt="chrgr200kwAmt">0</td>
+                <td data-chrgramt="chrgr200kw2Amt">0</td>
+                <td data-chrgramt="chrgr350kwAmt">0</td>
+                <td data-chrgramt="chrgr600kwAmt">0</td>
+                <td data-totfastamt="Y">0</td>
               </tr>
             </tbody>
           </table>
         </div>
+          <p class="board-toolbar__notice" style="margin-top:8px">※ 보조금액은 신청연도 단가 기준으로 <b>시스템에서 자동 산정</b>됩니다. (프로토타입은 산정 서버 미연동)</p>
       </section>
 
       <!-- 중속충전기 설치 수량 -->
@@ -302,13 +304,26 @@
         <div class="table-wrapper">
           <table class="table text-center qty-table">
             <caption>중속충전기 용량별 설치수량 및 보조금액 입력표</caption>
-            <thead><tr><th scope="col" style="width:160px">구분</th><th scope="col">30kW</th><th scope="col">50kW</th><th scope="col" style="width:140px">합계</th></tr></thead>
+            <thead><tr><th scope="col" style="width:160px">구분</th><th scope="col">30kW</th><th scope="col">50kW</th><th scope="col">50kW(2ch)</th><th scope="col" style="width:140px">합계</th></tr></thead>
             <tbody>
-              <tr><th scope="row">설치수량</th><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td>0</td></tr>
-              <tr><th scope="row">보조금액</th><td><input type="text" value="0" /></td><td>0</td><td>0</td></tr>
+              <tr class="medCntTr">
+                <th scope="row">설치수량</th>
+                <td><input type="text" name="chrgr30kwCnt" id="chrgr30kwCnt" title="30kW 설치수량" maxlength="4" placeholder="0" class="text-input medCnt" /></td>
+                <td><input type="text" name="chrgr50kwCnt" id="chrgr50kwCnt" data-chrger="50" data-amtobj="chrgr50kwAmt" title="50kW 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td><input type="text" name="chrgr50kw2Cnt" id="chrgr50kw2Cnt" data-chrger="50" data-amtobj="chrgr50kw2Amt" title="50kW(2ch) 설치수량" maxlength="4" placeholder="0" class="text-input" /></td>
+                <td data-totmedcnt="Y">0</td>
+              </tr>
+              <tr class="medAmtTr">
+                <th scope="row">보조금액</th>
+                <td><input type="text" name="chrgr30kwAmt" id="chrgr30kwAmt" title="30kW 보조금액" maxlength="15" placeholder="0" class="text-input medAmt" /></td>
+                <td data-chrgramt="chrgr50kwAmt">0</td>
+                <td data-chrgramt="chrgr50kw2Amt">0</td>
+                <td data-totmedamt="Y">0</td>
+              </tr>
             </tbody>
           </table>
         </div>
+          <p class="board-toolbar__notice" style="margin-top:8px">※ 보조금액은 신청연도 단가 기준으로 <b>시스템에서 자동 산정</b>됩니다. (프로토타입은 산정 서버 미연동)</p>
       </section>
 
       <!-- 완속충전기 설치 수량 -->
@@ -319,28 +334,38 @@
             <caption>완속충전기 용량별 설치수량 및 보조금액 입력표</caption>
             <thead><tr><th scope="col" style="width:160px">구분</th><th scope="col">7kW</th><th scope="col">11kW</th><th scope="col" style="width:140px">합계</th></tr></thead>
             <tbody>
-              <tr><th scope="row">설치수량</th><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td>0</td></tr>
-              <tr><th scope="row">보조금액</th><td><input type="text" value="0" /></td><td><input type="text" value="0" /></td><td>0</td></tr>
+              <tr class="slowCntTr">
+                <th scope="row">설치수량</th>
+                <td><input type="text" name="chrgr7kwCnt" title="7kW 설치수량" maxlength="4" placeholder="0" class="text-input slowCnt" /></td>
+                <td><input type="text" name="chrgr11kwCnt" title="11kW 설치수량" maxlength="4" placeholder="0" class="text-input slowCnt" /></td>
+                <td data-totslowcnt="Y">0</td>
+              </tr>
+              <tr class="slowAmtTr">
+                <th scope="row">보조금액</th>
+                <td><input type="text" name="chrgr7kwAmt" title="7kW 보조금액" maxlength="15" placeholder="0" class="text-input slowAmt" /></td>
+                <td><input type="text" name="chrgr11kwAmt" title="11kW 보조금액" maxlength="15" placeholder="0" class="text-input slowAmt" /></td>
+                <td data-totslowamt="Y">0</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- 입력 내용 확인 (재구성: 체크박스 3개 유지 · 각 문구 명확화) -->
-        <div class="confirm-box">
-          <p class="confirm-box__title"><i class="svg-icon info" aria-hidden="true"></i>입력 내용 확인</p>
-          <p class="confirm-box__desc">신청서 제출 전, 입력한 사업내용을 아래 항목에 따라 확인해 주세요.</p>
-          <div class="confirm-box__list">
-            <div class="confirm-item">
-              <div class="checkbox"><input type="checkbox" id="cfmReview" class="checkbox__input" /><label for="cfmReview" class="checkbox__label"><span class="hidden">검토완료</span></label></div>
-              <span class="confirm-item__text"><b>[검토완료]</b> 입력한 사업내용을 최종 검토하였습니다.</span>
+        <!-- 안내사항 — 운영 fcBsnsApplyForm.jsp notifications--warning 동일 -->
+        <div class="notifications notifications--warning">
+          <strong class="notifications__title">
+            <i class="svg-icon info" aria-hidden="true"></i>
+            입력 내용 확인
+          </strong>
+          <div class="notifications__description">
+            <p>위 입력한 사업내용은 제출서류(공모신청서 별첨서류(엑셀) 등)와 일치해야 합니다.</p>
+            <div class="checkbox">
+              <input type="checkbox" name="noticeChk1" id="noticeChk1" value="Y" class="checkbox__input" />
+              <label for="noticeChk1" class="checkbox__label"><span>확인</span></label>
             </div>
-            <div class="confirm-item">
-              <div class="checkbox"><input type="checkbox" id="cfmMatch" class="checkbox__input" /><label for="cfmMatch" class="checkbox__label"><span class="hidden">확인</span></label></div>
-              <span class="confirm-item__text"><b>[확인]</b> 입력한 사업내용이 제출서류(공모신청서 별첨서류(엑셀) 등)와 일치함을 확인합니다.</span>
-            </div>
-            <div class="confirm-item">
-              <div class="checkbox"><input type="checkbox" id="cfmResp" class="checkbox__input" /><label for="cfmResp" class="checkbox__label"><span class="hidden">확인</span></label></div>
-              <span class="confirm-item__text"><b>[확인]</b> 시스템 입력값과 제출파일 간 상이로 발생하는 문제의 책임이 신청자에게 있음을 확인합니다.</span>
+            <p>시스템 입력값과 파일간 상이로 인한 문제의 책임은 신청자에게 있습니다.</p>
+            <div class="checkbox">
+              <input type="checkbox" name="noticeChk2" id="noticeChk2" value="Y" class="checkbox__input" />
+              <label for="noticeChk2" class="checkbox__label"><span>확인</span></label>
             </div>
           </div>
         </div>
@@ -352,26 +377,152 @@
           <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>신청자격 증빙서류 (사업수행기관)</h2>
           <a href="/file/zip/brndBsnsZip_20260529.zip" download class="button button--secondary"><i class="svg-icon download" aria-hidden="true"></i><span class="button__label">제출 서류 양식 다운로드</span></a>
         </div>
-        <div class="confirm-box">
-          <p class="confirm-box__title"><i class="svg-icon info" aria-hidden="true"></i>첨부파일 제출 전 확인사항</p>
-          <div class="confirm-item" style="margin-bottom:10px">
-            <div class="checkbox"><input type="checkbox" id="atchConfirm" class="checkbox__input" /><label for="atchConfirm" class="checkbox__label"><span class="hidden">확인</span></label></div>
-            <span class="confirm-item__text"><b>[확인]</b> 본인은 첨부파일 용량 제한(총 900MB 이하) 및 임시저장 등 입력 유의사항을 확인하였으며, 이에 따라 첨부파일을 제출하겠습니다.</span>
+        <!-- 안내사항 -->
+        <div class="notifications notifications--warning">
+          <strong class="notifications__title">
+            <i class="svg-icon info" aria-hidden="true"></i>
+            첨부파일 제출 전 확인사항
+          </strong>
+          <div class="notifications__description">
+            <p>본인은 첨부파일 용량 제한(총 900MB 이하) 및 임시저장 등 입력 유의사항을 확인하였으며, 이에 따라 첨부파일을 제출하겠습니다.</p>
+            <div class="checkbox">
+              <input type="checkbox" name="noticeChk4" id="noticeChk4" value="Y" class="checkbox__input" />
+              <label for="noticeChk4" class="checkbox__label"><span>확인</span></label>
+            </div>
+            <ul class="bullet bullet--dotted">
+              <li>첨부파일의 총합 용량이 900MB를 초과할 경우 업로드가 제한될 수 있으므로, 압축·해상도 조정 등을 통해 용량을 축소하여 제출해 주시기 바랍니다.</li>
+              <li>작성 중 입력 내용의 유실을 방지하기 위해, 수시로 [임시 저장] 기능을 활용해 주시기 바랍니다.</li>
+            </ul>
           </div>
-          <ul class="bullet bullet--dotted" style="color:#92400e">
-            <li>첨부파일의 총합 용량이 900MB를 초과할 경우 업로드가 제한될 수 있으므로, 압축·해상도 조정 등을 통해 용량을 축소하여 제출해 주시기 바랍니다.</li>
-            <li>작성 중 입력 내용의 유실을 방지하기 위해, 수시로 [임시 저장] 기능을 활용해 주시기 바랍니다.</li>
-          </ul>
         </div>
-        <div class="attach-list" style="margin-top:8px">
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부1]</span>전기신사업자등록증 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부2]</span>콜센터 및 유지관리 위탁 계약서 등 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부3]</span>충전정보시스템 연계 화면 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부4]</span>OCPP 1.6 인증서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부5]</span>토지(건축물)등기부등본 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부6]</span>EV이음 협약서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부7]</span>공동수급협정서 등</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부8]</span>전기승합차 보급사업 신청서</div><div class="attach-row__note">※ 해당 공모에 신청한 경우에만 제출합니다.</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+        <div class="board-write">
+                <table class="table table--form">
+                  <caption>신청자격 증빙서류 파일첨부</caption>
+                  <colgroup><col style="width: 24%" /><col /></colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">[첨부1] <br />전기신사업자등록증 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId1" id="attchFileId1" title="[첨부1] 전기신사업자등록증 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId1" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부2] <br />콜센터 및 유지관리 위탁 계약서 등 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId2" id="attchFileId2" title="[첨부2] 콜센터 및 유지관리 위탁 계약서 등 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId2" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부3] <br />충전정보시스템 연계 화면 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId3" id="attchFileId3" title="[첨부3] 충전정보시스템 연계 화면 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId3" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부4] <br />OCPP 1.6 인증서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId4" id="attchFileId4" title="[첨부4] OCPP 1.6 인증서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId4" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부5] <br />토지(건축물)등기부등본 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId5" id="attchFileId5" title="[첨부5] 토지(건축물)등기부등본 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId5" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부6] <br />EV이음 협약서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId6" id="attchFileId6" title="[첨부6] EV이음 협약서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId6" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부7] <br />공동수급협정서 등</th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId7" id="attchFileId7" title="[첨부7] 공동수급협정서 등 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId7" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부8] <br />전기승합차 보급사업 신청서</th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId31" id="attchFileId31" title="[첨부8] 전기승합차 보급사업 신청서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId31" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                        <div class="attach-guide"><p class="bullet bullet--refer">해당 공모에 신청한 경우에만 제출합니다.</p></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
         </div>
       </section>
 
@@ -381,23 +532,253 @@
           <h2 class="heading-title"><i class="svg-icon symbol-electricity" aria-hidden="true"></i>평가 증빙서류</h2>
           <p class="apply-required-guide"><span class="req">*</span> 는 필수 항목입니다.</p>
         </div>
-        <div class="attach-list">
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부1]</span>공모신청서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부2]</span>사업계획서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부3]</span>현장조사 보고서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부4]</span>정량평가 항목 자가 평가표 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부5]</span>성능개선 실적 및 충전시설 운영계획 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부6]</span>사업자등록증 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부7]</span>법인 등기부등본 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부8]</span>법인 인감증명서, 사용인감계 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부9]</span>신용평가등급 확인서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부10]</span>CILI 부지등급 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부11]</span>충전기 공동이용(로밍) 협약서 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부12]</span>설치지점별 설계도면 등</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부13]</span>제품 사양설명서, 원가산출내역서 등 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부14]</span>제품 KC인증서, 형식승인인증서 등 <span class="req">*</span></div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부15]</span>기타 증명 서류</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
-          <div class="attach-row"><div class="attach-row__label"><span class="no">[첨부16]</span>원본파일</div><div class="attach-row__file">선택된 파일 없음</div><button type="button" class="button button--secondary"><span class="button__label">파일선택</span></button></div>
+        <div class="board-write">
+                <table class="table table--form">
+                  <caption>평가 증빙서류 파일첨부</caption>
+                  <colgroup><col style="width: 24%" /><col /></colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">[첨부1] <br />공모신청서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId8" id="attchFileId8" title="[첨부1] 공모신청서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId8" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부2] <br />사업계획서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId9" id="attchFileId9" title="[첨부2] 사업계획서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId9" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부3] <br />현장조사 보고서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId10" id="attchFileId10" title="[첨부3] 현장조사 보고서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId10" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부4] <br />정량평가 항목 자가 평가표 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId11" id="attchFileId11" title="[첨부4] 정량평가 항목 자가 평가표 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId11" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부5] <br />성능개선 실적 및 충전시설 운영계획 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId12" id="attchFileId12" title="[첨부5] 성능개선 실적 및 충전시설 운영계획 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId12" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부6] <br />사업자등록증 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId13" id="attchFileId13" title="[첨부6] 사업자등록증 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId13" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부7] <br />법인 등기부등본 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId14" id="attchFileId14" title="[첨부7] 법인 등기부등본 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId14" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부8] <br />법인 인감증명서, 사용인감계 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId15" id="attchFileId15" title="[첨부8] 법인 인감증명서, 사용인감계 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId15" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부9] <br />신용평가등급 확인서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId16" id="attchFileId16" title="[첨부9] 신용평가등급 확인서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId16" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부10] <br />CILI 부지등급 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId17" id="attchFileId17" title="[첨부10] CILI 부지등급 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId17" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부11] <br />충전기 공동이용(로밍) 협약서 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId18" id="attchFileId18" title="[첨부11] 충전기 공동이용(로밍) 협약서 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId18" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부12] <br />설치지점별 설계도면 등</th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId19" id="attchFileId19" title="[첨부12] 설치지점별 설계도면 등 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId19" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부13] <br />제품 사양설명서, 원가산출내역서 등 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId20" id="attchFileId20" title="[첨부13] 제품 사양설명서, 원가산출내역서 등 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId20" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부14] <br />제품 KC인증서, 형식승인인증서 등 <strong class="required">필수입력</strong></th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId21" id="attchFileId21" title="[첨부14] 제품 KC인증서, 형식승인인증서 등 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId21" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부15] <br />기타 증명 서류</th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId26" id="attchFileId26" title="[첨부15] 기타 증명 서류 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId26" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">[첨부16] <br />원본파일</th>
+                      <td>
+                        <div class="file-attach">
+                          <div class="file-attach__input">
+                            <input type="file" name="attchFileId27" id="attchFileId27" title="[첨부16] 원본파일 파일 첨부" class="file-input" />
+                            <span class="file-input__name" aria-live="polite">선택된 파일 없음</span>
+                            <button type="button" aria-label="첨부파일 삭제" class="button button--icon button--borderless button--delete"><i class="svg-icon item-delete" aria-hidden="true"></i></button>
+                          </div>
+                          <div class="file-attach__upload">
+                            <label for="attchFileId27" title="파일선택" class="button button--secondary"><span class="button__label">파일선택</span></label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
         </div>
         <ul class="bullet bullet--refer" style="margin-top:12px"><li>지방자치단체는 [첨부 6, 7] 서류 제출 및 평가에서 제외됩니다.</li></ul>
       </section>
@@ -415,13 +796,57 @@
 </div>
 
 <script>
+  /* [DEV][공모신청 폼] 충전기 설치수량·보조금액 계산
+     운영 fcBsnsApplyForm.jsp 의 fnCalcSbsidy / fnCalcFastTotal / fnCalcMedTotal / fnCalcSlowTotal 재현.
+     운영은 설치수량을 바꾸면 selectCalcSbsidy.ajax(year, chrgrQy, ratingCpctyCd, chrgrGb) 로
+     신청연도 단가를 조회해 보조금액을 채운다. 프로토타입은 산정 서버가 없어 보조금액 자동칸은 0 으로 둔다.
+     ※ 2026-09-21 요청 반영 : 중속에 50kW(2ch) 신설. 단가(ratingCpctyCd)는 50kW 와 동일하게 '50' 을 보낸다. */
+  function fnNum(v) { return Number(String(v || '').replace(/[^0-9]/g, '')) || 0; }
+  function fnComma(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+  function fnCalcFastTotal() {
+    var cnt = 0, amt = 0;
+    $('.fastCntTr input[data-chrger]').each(function () { cnt += fnNum($(this).val()); });
+    $('.fastAmtTr td[data-chrgramt]').each(function () { amt += fnNum($(this).text()); });
+    $('td[data-totfastcnt]').text(fnComma(cnt));
+    $('td[data-totfastamt]').text(fnComma(amt));
+  }
+  /* 중속 : 30kW 는 설치수량·보조금액 모두 직접 입력, 50kW·50kW(2ch) 는 보조금액 자동 산정 */
+  function fnCalcMedTotal() {
+    var cnt = fnNum($('#chrgr30kwCnt').val()) + fnNum($('#chrgr50kwCnt').val()) + fnNum($('#chrgr50kw2Cnt').val());
+    var amt = fnNum($('#chrgr30kwAmt').val())
+            + fnNum($('.medAmtTr td[data-chrgramt="chrgr50kwAmt"]').text())
+            + fnNum($('.medAmtTr td[data-chrgramt="chrgr50kw2Amt"]').text());
+    $('td[data-totmedcnt]').text(fnComma(cnt));
+    $('td[data-totmedamt]').text(fnComma(amt));
+  }
+  /* 완속 : 설치수량·보조금액 모두 직접 입력 */
+  function fnCalcSlowTotal() {
+    var cnt = 0, amt = 0;
+    $('.slowCnt').each(function () { cnt += fnNum($(this).val()); });
+    $('.slowAmt').each(function () { amt += fnNum($(this).val()); });
+    $('td[data-totslowcnt]').text(fnComma(cnt));
+    $('td[data-totslowamt]').text(fnComma(amt));
+  }
+
+  $(function () {
+    /* 숫자만 입력 */
+    $(document).on('input', '.qty-table input[type="text"]', function () {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    $(document).on('input change', '.fastCntTr input[data-chrger]', fnCalcFastTotal);
+    $(document).on('input change', '.medCntTr input, .medAmt', fnCalcMedTotal);
+    $(document).on('input change', '.slowCnt, .slowAmt', fnCalcSlowTotal);
+    fnCalcFastTotal(); fnCalcMedTotal(); fnCalcSlowTotal();
+  });
+
   // [DEV][공모신청 폼] 제출 — 입력 내용 확인 3종 + 첨부 확인 체크 후 진행(프로토타입 안내)
   function fnSubmitApply() {
-    if (!($('#cfmReview').is(':checked') && $('#cfmMatch').is(':checked') && $('#cfmResp').is(':checked'))) {
+    if (!($('#noticeChk1').is(':checked') && $('#noticeChk2').is(':checked'))) {
       alert('입력 내용 확인 항목에 모두 체크해 주세요.');
       return;
     }
-    if (!$('#atchConfirm').is(':checked')) {
+    if (!$('#noticeChk4').is(':checked')) {
       alert('첨부파일 제출 전 확인사항에 체크해 주세요.');
       return;
     }
@@ -432,7 +857,7 @@
 <script src="assets/js/i18n/i18n.js?v=20260827a"></script>
 <script src="assets/js/ui-common.js?v=20260827a"></script>
 <script src="js/common/fileAttach.js?v=20260827a"></script>
-<script src="js/menu-data.js?v=20260921b"></script>
-<script src="js/shell.js?v=20260921a"></script>
+<script src="js/menu-data.js?v=20260922a"></script>
+<script src="js/shell.js?v=20260921h"></script>
 </body>
 </html>

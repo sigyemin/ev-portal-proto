@@ -549,6 +549,16 @@
       }
     }, true);
 
+    /* 메인 공지 팝업은 프로토에서 쓰지 않으므로 DOM 에서 아예 걷어낸다.
+       숨기기만 하면 mainNoticePopup.js 가 더미 응답을 받아 openModal() 을 호출하고,
+       화면에 안 보이는 채로 body.no-scroll(= overflow:hidden !important) 만 남아
+       메인 페이지 스크롤이 잠긴다. 그 스크립트는 요소가 없으면 즉시 return 한다. */
+    (function () {
+      var mn = document.getElementById('modalMainNotice');
+      if (mn && mn.parentNode) mn.parentNode.removeChild(mn);
+      document.body.classList.remove('no-scroll');
+    })();
+
     /* 서버 콘텐츠가 없는 모달은 기본 닫힘 */
     ['#modalMainNotice', '.modal-container.is-active'].forEach(function (sel) {
       document.querySelectorAll(sel).forEach(function (el) {

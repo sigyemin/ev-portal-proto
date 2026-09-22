@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>특별기간 할인 알림</title>
+<title>추석기간 전기차 충전요금 추가할인 알림</title>
   <link rel="stylesheet" href="assets/css/style.css?v=20260921a">
   <link rel="stylesheet" href="assets/css/page-loading.css">
   <link rel="stylesheet" href="assets/css/datepicker-select.css">
@@ -44,15 +44,15 @@
                 </li>
                 <li class="breadcrumb__item">
                   <a href="#" class="breadcrumb__link">
-                    <span>특별기간 할인 알림</span>
+                    <span>추석기간 전기차 충전요금 추가할인 알림</span>
                   </a>
                 </li>
               </ol>
             </nav>
             <!-- subject  -->
             <div class="page-header__subject">
-              <h1 class="heading-subject">특별기간 할인 알림</h1>
-              <p class="page-header__description">충전사업자가 특별기간 충전요금 할인 계획을 안내합니다. 게시글을 읽고 댓글로 의견을 남길 수 있습니다.</p>
+              <h1 class="heading-subject">추석기간 전기차 충전요금 추가할인 알림</h1>
+              <p class="page-header__description">추석기간 추가 충전요금 할인 혜택을 안내합니다. 로그인 회원은 게시글에 댓글을 남길 수 있습니다.</p>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@
               <!-- 게시판 도구모음 -->
               <div class="board-toolbar">
                 <div class="board-toolbar__total">
-                  <p class="total-number">총 <b class="total-number__total">4</b>건</p>
+                  <p class="total-number">총 <b class="total-number__total">3</b>건</p>
                 </div>
               </div>
               <!-- //게시판 도구모음 -->
@@ -109,7 +109,7 @@
               <!-- 게시판 목록 -->
               <div class="board-list">
                 <table class="table text-center">
-                  <caption>특별기간 할인 알림 목록 — 번호, 제목, 작성자, 등록일, 용량, 다운로드</caption>
+                  <caption>추석기간 전기차 충전요금 추가할인 알림 목록 — 번호, 제목, 작성자, 등록일, 용량, 다운로드</caption>
                   <colgroup>
                     <col style="width: 9%" />
                     <col />
@@ -129,6 +129,14 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <tr class="is-notice">
+                      <td><span class="badge badge--primary badge--small">공지</span></td>
+                      <td class="text-left"><a href="notice-discount-notice.html"><b>추석연휴 전기차 충전요금 할인정보 안내</b></a></td>
+                      <td>한국환경공단</td>
+                      <td>2026.09.22</td>
+                      <td>-</td>
+                      <td></td>
+                    </tr>
                     <tr>
                       <td>4</td>
                       <td class="text-left"><a href="notice-discount-view.html">OO충전(주) 추석연휴기간 전기차 충전요금 추가할인 안내</a></td>
@@ -149,14 +157,6 @@
                       <td>2</td>
                       <td class="text-left"><a href="notice-discount-view.html">□□모빌리티 고속도로 휴게소 충전기 할인 안내</a></td>
                       <td>□□모빌리티</td>
-                      <td>2026.09.21</td>
-                      <td>-</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td class="text-left"><a href="notice-discount-view.html">특별기간 할인 알림 게시판 이용 안내</a></td>
-                      <td>한국환경공단</td>
                       <td>2026.09.21</td>
                       <td>-</td>
                       <td></td>
@@ -210,7 +210,7 @@
 
 <script>
 $(function () {
-  var $rows = $('.board-list tbody tr');
+  var $rows = $('.board-list tbody tr').not('.is-notice');   /* 공지 고정행은 검색·집계 대상이 아니다 */
 
   function apply() {
     var cpo = $('#searchCpo').val();
@@ -244,7 +244,7 @@ $(function () {
 <script src="assets/js/i18n/i18n.js?v=20260827a"></script>
 <script src="assets/js/ui-common.js?v=20260827a"></script>
 <script src="js/common/fileAttach.js?v=20260827a"></script>
-<script src="js/menu-data.js?v=20260921b"></script>
-<script src="js/shell.js?v=20260921a"></script>
+<script src="js/menu-data.js?v=20260922a"></script>
+<script src="js/shell.js?v=20260921h"></script>
 </body>
 </html>

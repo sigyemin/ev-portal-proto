@@ -1,0 +1,447 @@
+@charset "utf-8";
+/* ============================================================
+   KRDS 아이덴티티 보완 — 「디지털 정부 UI/UX 가이드라인」 수정본('25.8.)
+   근거 : 컴포넌트 / 아이덴티티
+          - 공식 배너        p.221~226
+          - 운영기관 식별자  p.227~232
+          - 헤더             p.233~245
+          - 푸터             p.246~252
+   원칙 : 기존 납품 style.css 의 색·타이포는 건드리지 않는다.
+          여기에는 가이드가 요구하는 "신설 구획"과 "배치"만 정의한다.
+   적용 : js/shell.js 가 이 파일을 런타임에 주입한다(대민 전 화면 공통).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   공식 배너 (헤더 구조 ②)  — p.234 구조 / p.224 사용성 03
+   · 건너뛰기 링크 다음, 헤더보다 위에 온다 (p.226 접근성 01)
+   · 헤더 고정 시 배너는 함께 고정하지 않는다 (p.242 사용성 11)
+     → .header(sticky) 의 형제로 두어 스크롤 시 배너만 올라가게 한다.
+   ------------------------------------------------------------ */
+.gov-banner {
+  width: 100%;
+  background-color: #f4f5f6;
+  border-bottom: 1px solid #e5e8eb;
+}
+.gov-banner__inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  min-height: 34px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.gov-banner__text {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #4b5563;
+}
+@media (max-width: 64rem) {
+  .gov-banner__inner {
+    min-height: 30px;
+  }
+  .gov-banner__text {
+    font-size: 0.75rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   유틸리티 링크 그룹 디바이더 — p.237 사용성 06
+   서로 관련되지 않은 링크 그룹(언어 / 로그인·회원가입 / 글자크기)을
+   디바이더로 구분한다. 색·간격 외 기존 레이아웃은 유지.
+   ------------------------------------------------------------ */
+.header__utility > * + * {
+  position: relative;
+}
+.header__utility > * + *::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 1px;
+  height: 12px;
+  background-color: #d9dde2;
+}
+@media (max-width: 64rem) {
+  .header__utility > * + *::before {
+    left: -7px;
+    background-color: rgba(255, 255, 255, 0.45);
+  }
+}
+
+/* ------------------------------------------------------------
+   운영기관 식별자 (푸터 최하단 구획) — p.229 구조 / p.231 사용성 03
+   · <section> 으로 제공하고 푸터 내부의 가장 마지막 구획에 둔다 (p.232 접근성 01)
+   · 지나치게 주의를 끌지 않도록 푸터보다 낮은 명도의 배경 (p.230 사용성 01)
+   · 로고는 서비스 로고가 아니라 운영 주체 기관 로고 (p.230 사용성 02)
+   ------------------------------------------------------------ */
+.footer__identifier {
+  background-color: #1f1f1f;
+  border-top: 1px solid #3a3a3a;
+}
+.footer__identifier .footer__identifier-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 12px;
+}
+.footer__identifier .footer__identifier-logo img {
+  display: block;
+  width: 72px;
+  height: auto;
+}
+.footer__identifier .footer__identifier-text {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #9aa0a6;
+}
+@media (max-width: 64rem) {
+  .footer__identifier .footer__identifier-inner {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    gap: 6px;
+    padding: 0.75rem 1.25rem;
+  }
+  .footer__identifier .footer__identifier-logo img {
+    width: 64px;
+  }
+  .footer__identifier .footer__identifier-text {
+    font-size: 0.75rem;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   ① 건너뛰기 링크 — p.234 구조 ① / p.245 접근성 01
+   납품 style.css 에 이미 규격대로 구현돼 있다(.skip-accessibility —
+   평소 화면 밖으로 숨겼다가 Tab 포커스 시 최상단 띠로 노출).
+   문서 최상단·공식 배너 이전이라는 위치 요건도 충족하므로 여기서는
+   스타일을 덮어쓰지 않는다. shell.js 가 링크 순서만 본문→주요 메뉴로 맞춘다.
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   ② 공식 배너 — 태극기 + 표준 문구
+   ------------------------------------------------------------ */
+.gov-banner__flag {
+  display: block;
+  width: 20px;
+  height: auto;
+  margin-right: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ------------------------------------------------------------
+   헤더 3행 배치 — p.234 '구조'
+     행1  ④ 유틸리티 링크 그룹 (언어 · 글자/화면 설정)      — 우측
+     행2  ③ 서비스 아이덴티티(좌)  ⑥ 아이콘과 레이블(우)
+     행3  ⑦ 메인 메뉴                                      — 전체 폭
+   .header__nav 는 모바일 슬라이드 패널이라 DOM 을 유지한 채
+   데스크톱에서만 display:contents 로 풀어 grid 아이템이 되게 한다.
+   ------------------------------------------------------------ */
+@media (min-width: 64.0625rem) {
+  .header__inner {
+    display: -ms-grid;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "util   util"
+      "logo   member"
+      "gnb    gnb";
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    height: auto;
+    row-gap: 2px;
+    padding-bottom: 4px;
+  }
+  .header__nav {
+    display: contents;
+  }
+  .header__utility {
+    grid-area: util;
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+  }
+  .header__logo {
+    grid-area: logo;
+    padding: 6px 0 10px;
+  }
+  /* 슬라이드 패널 쪽 사본은 데스크톱에서 감춘다 */
+  .header__utility .header__member--mobile {
+    display: none;
+  }
+  /* 감춘 사본 다음 요소가 첫 항목이 되므로 그 앞 디바이더는 그리지 않는다 */
+  .header__utility > .header__member--mobile + *::before {
+    display: none;
+  }
+  .header__inner > .header__member {
+    grid-area: member;
+    justify-self: end;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 16px;
+    font-size: 0.9375rem;
+  }
+  .header__inner > .header__member .utility-menu {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* 목록 앞(로그인 왼쪽) 디바이더는 유틸리티 행과 붙어 있을 때 쓰던 것이라 지운다.
+     항목 사이 디바이더(.utility-menu__item::before)는 그대로 살린다. */
+  .header__inner > .header__member .utility-menu::before {
+    display: none;
+  }
+  /* 로그인 상태에서는 「OOO님」 과 메뉴 사이를 디바이더로 가른다 (p.237 사용성 06) */
+  .header__inner > .header__member .user-profile + .utility-menu::before {
+    display: block;
+  }
+  .header__inner > .header__member .utility-menu .utility-menu__item {
+    margin-left: 16px;
+    padding-left: 16px;
+  }
+  .header__inner > .header__member .utility-menu__link {
+    font-weight: 600;
+    color: #1d1d1d;
+    text-decoration: none;
+  }
+  .header__inner > .header__member .user-profile {
+    white-space: nowrap;
+  }
+  .header__inner > .nav-gnb,
+  .header__nav > .nav-gnb {
+    grid-area: gnb;
+    width: 100%;
+  }
+}
+
+/* 모바일(≤64rem) — .header__nav 는 기존 슬라이드 패널 그대로 두고,
+   로그인·회원가입만 헤더 상단(로고 우측)에 노출한다. */
+@media (max-width: 64rem) {
+  .header__inner {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  /* 좁은 화면: 헤더에는 자리가 없으므로 슬라이드 패널 쪽 사본만 쓴다 */
+  .header__inner > .header__member {
+    display: none;
+  }
+  .header__inner > .header__member .utility-menu::before {
+    display: none;
+  }
+  .header__utility .header__member--mobile {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+    gap: 10px;
+    font-size: 0.8125rem;
+  }
+  .header__inner > .header__member .utility-menu {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .header__inner > .header__member .utility-menu__link {
+    color: #1d1d1d;
+    text-decoration: none;
+  }
+}
+
+/* ⑦ 메인 메뉴는 로고 아래 왼쪽부터 배치한다 (p.234 구조) */
+@media (min-width: 64.0625rem) {
+  .header .nav-gnb,
+  .header .nav-gnb .gnb {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+  }
+  .header .nav-gnb .gnb .gnb__item:first-child .gnb__link {
+    padding-left: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   ⑦ 메인 메뉴 드롭다운 표시 — p.234 구조도
+   하위 메뉴(메가메뉴)를 가진 항목임을 아래 방향 꺾쇠로 알린다.
+   ------------------------------------------------------------ */
+.gnb .gnb__link .gnb__link-arrow {
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+@media (min-width: 64.0625rem) {
+  .gnb .gnb__item.gnb__item--active > .gnb__link .gnb__link-arrow {
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+  }
+}
+@media (max-width: 64rem) {
+  /* 모바일 슬라이드 메뉴는 레이블과 꺾쇠가 양끝으로 벌어진다(기존 space-between) */
+  .gnb .gnb__link .gnb__link-arrow {
+    margin-left: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   푸터 그룹 1 — p.246 구조도 / p.249 사용성 02
+   좌 : ② 서비스 로고 → ③ 연락처
+   우 : ④ 유틸리티 링크(사이트맵·불편민원신고센터) + 관련 기관 바로가기
+   ------------------------------------------------------------ */
+.footer .footer__links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  gap: 14px;
+}
+.footer .footer__nav-list--stack {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  gap: 6px;
+}
+@media (max-width: 64rem) {
+  .footer .footer__links {
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    gap: 10px;
+  }
+  .footer .footer__nav-list--stack {
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+/* ------------------------------------------------------------
+   관련 사이트 (related_site) — p.246 구조도 최상단 영역
+   기관 바로가기를 가로로 한 칸씩 나눠 배치한다. 칸은 세로 구분선으로 가른다.
+   ------------------------------------------------------------ */
+.footer .footer__sites {
+  border-bottom: 1px solid #3f3f3f;
+}
+.footer .footer__sites-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.footer .footer__site {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 0px;
+          flex: 1 1 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border-left: 1px solid #3f3f3f;
+  font-size: 0.9375rem;
+  color: #d4d4d4;
+  text-decoration: none;
+}
+.footer .footer__site:last-child {
+  border-right: 1px solid #3f3f3f;
+}
+.footer .footer__site:hover,
+.footer .footer__site:focus {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.footer .footer__site .svg-icon {
+  width: 18px;
+  height: 18px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  background-color: #9aa0a6;
+}
+.footer .footer__site:hover .svg-icon,
+.footer .footer__site:focus .svg-icon {
+  background-color: #ffffff;
+}
+@media (max-width: 64rem) {
+  .footer .footer__sites-inner {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    padding: 0;
+  }
+  .footer .footer__site {
+    min-height: 44px;
+    padding: 0 1.25rem;
+    border-left: 0;
+    border-bottom: 1px solid #3f3f3f;
+    font-size: 0.875rem;
+  }
+  .footer .footer__site:last-child {
+    border-right: 0;
+  }
+  .footer .footer__site .svg-icon {
+    width: 16px;
+    height: 16px;
+  }
+}

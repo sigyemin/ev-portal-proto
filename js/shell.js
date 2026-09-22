@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var CACHE_V = '20260827a';
+  var CACHE_V = '20260921h';
 
   /* ------------------------------------------------------------
      로그인 상태(프로토타입 전용 · localStorage)
@@ -80,20 +80,16 @@
 
   /* 유틸영역만 교체 렌더(새로고침 없음). 언어 드롭다운/글씨크기 컨트롤은 보존. */
   function renderAuthZone() {
-    var util = document.querySelector('.header__utility');
-    if (!util) return;
-    var old = util.querySelectorAll('.user-profile, .utility-menu');
-    Array.prototype.forEach.call(old, function (n) { n.parentNode.removeChild(n); });
-
-    var holder = document.createElement('div');
-    holder.innerHTML = authZoneHtml(readAuth());
-    translateIfEn(holder);
-
-    var anchor = util.querySelector('.zoom-control');
-    while (holder.firstChild) {
-      var node = holder.removeChild(holder.firstChild);
-      if (anchor) util.insertBefore(node, anchor); else util.appendChild(node);
-    }
+    /* 로그인 영역은 가이드 구조 ⑥(아이콘과 레이블) 자리 = .header__member */
+    var zones = document.querySelectorAll('.header__member');
+    if (!zones.length) return;
+    Array.prototype.forEach.call(zones, function (zone) {
+      zone.innerHTML = '';
+      var holder = document.createElement('div');
+      holder.innerHTML = authZoneHtml(readAuth());
+      translateIfEn(holder);
+      while (holder.firstChild) zone.appendChild(holder.removeChild(holder.firstChild));
+    });
     syncAuthbar();
     renderAdminGnb();
   }
@@ -119,7 +115,8 @@
   ];
 
   function adminGnbHtml(label) {
-    var h = ['<a href="#" class="gnb__link">' + esc(label) + '</a>'];
+    var h = ['<a href="#" class="gnb__link">' + esc(label) +
+      '<i class="svg-icon angle-down gnb__link-arrow" aria-hidden="true"></i></a>'];
     h.push('<div class="gnb__sub"><div class="gnb__sub-inner">');
     h.push('<h2 class="gnb__sub-title">' + esc(label) + '</h2>');
     h.push('<ul class="gnb__sub-list">');
@@ -184,7 +181,9 @@
     var h = ['<ul class="gnb">'];
     M.forEach(function (top) {
       h.push('<li class="gnb__item">');
-      h.push('<a href="#" class="gnb__link">' + top.t + '</a>');
+      /* 드롭다운(메가메뉴)이 있음을 아래 방향 꺾쇠로 표시 — 가이드 p.234 구조 ⑦ */
+      h.push('<a href="#" class="gnb__link">' + top.t +
+        '<i class="svg-icon angle-down gnb__link-arrow" aria-hidden="true"></i></a>');
       h.push('<div class="gnb__sub"><div class="gnb__sub-inner">');
       h.push('<h2 class="gnb__sub-title">' + top.t + '</h2>');
       h.push('<ul class="gnb__sub-list">');
@@ -206,14 +205,40 @@
     return h.join('');
   }
 
+  /* 공식 배너 — 「디지털 정부 UI/UX 가이드라인」(25.8.) 컴포넌트/아이덴티티
+     · 헤더 구조 ②(p.234). 건너뛰기 링크 다음에 온다(p.226 접근성 01).
+     · 문구·스타일 변형 금지(p.224 사용성 03) — 표준 문장 그대로.
+     · 헤더 고정 시 공식 배너는 함께 고정하지 않으므로(p.242 사용성 11)
+       sticky 가 걸린 .header 의 '형제'로 배치한다. */
+  var GOV_BANNER =
+    '<div class="gov-banner">' +
+    ' <div class="gov-banner__inner">' +
+    ' <img src="assets/images/common/flag-kr.svg" alt="" aria-hidden="true" class="gov-banner__flag">' +
+    ' <p class="gov-banner__text">이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>' +
+    ' </div> </div>';
+
+  /* 헤더 — 가이드 p.234 '구조' 그대로 3행으로 배치한다.
+       행1 : ④ 유틸리티 링크 그룹  (언어 · 글자/화면 설정) — 우측 상단, 디바이더 구분
+       행2 : ③ 서비스 아이덴티티(로고, 좌)  ⑥ 아이콘과 레이블(로그인·회원가입, 우)
+       행3 : ⑦ 메인 메뉴 (전체 폭)
+     DOM 은 모바일 슬라이드 패널(.header__nav)을 살리기 위해 최소로만 손대고,
+     데스크톱 3행 배치는 krds-identity.css 의 grid 가 담당한다. */
   var HEADER =
+    GOV_BANNER +
     '<header class="header"> <div class="header__inner"> <div class="header__logo">' +
     ' <a href="index.html" class="header__logo-link">' +
-    ' <img src="assets/images/common/logo-header.svg" alt="무공해차 통합누리집 로고"> </a> </div>' +
+    ' <img src="assets/images/common/logo-header.svg" alt="무공해차 통합누리집"> </a> </div>' +
     ' <button type="button" class="button button--icon button--borderless button--menu"' +
     ' aria-label="모바일 메뉴 열기" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-menu">' +
     ' <i class="svg-icon menu" aria-hidden="true"></i> <span class="button__label">메뉴열기</span> </button>' +
-    ' <div class="header__nav"> <div class="header__utility">' +
+    /* ⑥ 아이콘과 레이블 — 로그인 · 회원가입 (로고와 같은 행 우측) */
+    ' <div class="header__member">__AUTH__</div>' +
+    ' <div class="header__nav">' +
+    /* ④ 유틸리티 링크 그룹 — 언어 · 글자/화면 설정 (우측 상단) */
+    ' <div class="header__utility">' +
+    /* 모바일 전용 사본 — 좁은 화면에서는 헤더에 자리가 없어 슬라이드 패널 쪽에 노출한다.
+       데스크톱에서는 CSS 로 숨긴다(가이드상 로그인은 ⑥ 자리). */
+    ' <div class="header__member header__member--mobile">__AUTH__</div>' +
     ' <div class="dropdown dropdown--lang"> <div class="dropdown-selector">' +
     ' <button type="button" class="dropdown-selector__button" aria-haspopup="listbox" aria-expanded="false">' +
     ' <i class="svg-icon global" aria-hidden="true"></i>' +
@@ -226,13 +251,13 @@
     ' <li class="dropdown-container__item">' +
     ' <button type="button" class="dropdown-container__button" role="option" aria-selected="false">' +
     ' <span class="dropdown-container__label">ENG</span> </button> </li> </ul> </div> </div>' +
-    '__AUTH__' +
     ' <div class="zoom-control">' +
     ' <button type="button" class="button button--xsmall button--zoom-plus" aria-label="글씨크기 크게">' +
     ' <span class="button__label">큰글씨</span> <i class="svg-icon zoom-plus" aria-hidden="true"></i> </button>' +
     ' <button type="button" class="button button--xsmall button--zoom-minus" aria-label="글씨크기 작게">' +
     ' <span class="button__label">글씨크기 작게</span> <i class="svg-icon zoom-minus" aria-hidden="true"></i> </button>' +
     ' </div> </div>' +
+    /* ⑦ 메인 메뉴 */
     ' <nav id="gnb" class="nav-gnb" aria-label="주요 메뉴">__GNB__</nav>' +
     ' </div> </div> </header>';
 
@@ -242,6 +267,22 @@
                 정책 링크와 저작권은 그 다음 순서로 분리해 제공한다. (색상·스타일은 기존 유지) */
   var FOOTER =
     '<footer class="footer">' +
+    /* 관련 사이트 — 가이드 p.246 구조도 최상단 related_site 영역.
+       기관 바로가기를 가로로 한 칸씩 나눠 배치한다. */
+    ' <div class="footer__sites"> <div class="footer__sites-inner">' +
+    ' <a href="http://www.mcee.go.kr/" target="_blank" rel="noopener" class="footer__site" title="기후에너지환경부 누리집으로 이동 (새창 열림)">' +
+    ' <span class="footer__site-name">기후에너지환경부</span>' +
+    ' <i class="svg-icon external-link" aria-hidden="true"></i>' +
+    ' <span class="hidden">새창 열림</span> </a>' +
+    ' <a href="https://www.keco.or.kr" target="_blank" rel="noopener" class="footer__site" title="한국환경공단 누리집으로 이동 (새창 열림)">' +
+    ' <span class="footer__site-name">한국환경공단</span>' +
+    ' <i class="svg-icon external-link" aria-hidden="true"></i>' +
+    ' <span class="hidden">새창 열림</span> </a>' +
+    ' <a href="http://www.aea.or.kr/" target="_blank" rel="noopener" class="footer__site" title="한국자동차환경협회 누리집으로 이동 (새창 열림)">' +
+    ' <span class="footer__site-name">한국자동차환경협회</span>' +
+    ' <i class="svg-icon external-link" aria-hidden="true"></i>' +
+    ' <span class="hidden">새창 열림</span> </a>' +
+    ' </div> </div>' +
     /* 그룹 1 — 서비스 로고 · 연락처 · 유틸리티 링크 */
     ' <div class="footer__top"> <div class="footer__inner">' +
     ' <div class="footer__info">' +
@@ -251,18 +292,13 @@
     ' <p>대표전화 : (누리집콜센터) 1661-0970</p>' +
     ' <p>급속충전시설 이용관련문의 및 회원카드 발급문의 한국자동차환경협회 : 1661-9408</p>' +
     ' </address>' +
-    ' <nav class="footer__nav" aria-label="유틸리티 링크"> <ul class="footer__nav-list">' +
+    ' </div>' +
+    /* ④ 유틸리티 링크 — 가이드 p.246 구조도상 연락처 맞은편(우측). */
+    ' <div class="footer__links">' +
+    ' <nav class="footer__nav" aria-label="유틸리티 링크"> <ul class="footer__nav-list footer__nav-list--stack">' +
     ' <li class="footer__nav-item"><a href="sitemap.html" class="footer__nav-link">사이트맵</a></li>' +
     ' <li class="footer__nav-item"><a href="inquiry-complaint.html" class="footer__nav-link">불편민원신고센터</a></li>' +
     ' </ul> </nav>' +
-    ' </div>' +
-    ' <div class="footer__related">' +
-    ' <a href="http://www.mcee.go.kr/" target="_blank" class="footer__related-link" title="기후에너지환경부 홈페이지로 이동 (새창 열림)">' +
-    ' <img src="assets/images/common/logo-mcee.svg" alt="기후에너지환경부"> </a>' +
-    ' <a href="https://www.keco.or.kr" target="_blank" class="footer__related-link" title="한국환경공단 홈페이지로 이동 (새창 열림)">' +
-    ' <img src="assets/images/common/logo-keco.svg" alt="한국환경공단"> </a>' +
-    ' <a href="http://www.aea.or.kr/" target="_blank" class="footer__related-link" title="한국자동차환경협회 홈페이지로 이동 (새창 열림)">' +
-    ' <img src="assets/images/common/logo-aea.svg" alt="한국자동차환경협회"> </a>' +
     ' </div>' +
     ' </div> </div>' +
     /* 그룹 2 — 정책 링크 · 저작권 정보 */
@@ -274,6 +310,14 @@
     ' </ul> </nav>' +
     ' <p class="footer__copyright">Copyright 2026 KECO All Rights Reserved.</p>' +
     ' </div> </div>' +
+    /* 구획 3 — 운영기관 식별자 (p.229 구조 / p.231 사용성 03 / p.232 접근성 01)
+       푸터 내부의 가장 마지막 구획에 <section> 으로 둔다.
+       로고는 서비스 로고가 아닌 운영 주체 기관 로고(p.230 사용성 02). */
+    ' <section class="footer__identifier" aria-label="운영기관 식별자">' +
+    ' <div class="footer__identifier-inner">' +
+    ' <span class="footer__identifier-logo"><img src="assets/images/common/logo-keco.svg" alt="한국환경공단"></span>' +
+    ' <p class="footer__identifier-text">이 누리집은 한국환경공단에서 운영하는 누리집입니다.</p>' +
+    ' </div> </section>' +
     '</footer>';
 
   /* ------------------------------------------------------------
@@ -425,10 +469,13 @@
        - 플로팅/프로토 전용 UI 는 wrapper 바깥에 둔다
          (footer.jsp:56 "접근성 및 레이아웃 안정성을 위해 footer/wrapper 외부로 이동").
      ------------------------------------------------------------ */
+  /* 구조 ① 건너뛰기 링크 — p.234 / p.245 접근성 01
+     공식 배너보다 앞(문서 최상단)에 둔다. 평소에는 화면에서 감춰 두고
+     키보드 Tab 으로 포커스가 닿는 순간 최상단 띠로 나타난다. */
   var SKIP_HTML =
     '<div class="skip-accessibility">' +
-    '<a href="#gnb" class="skip-accessibility__link" data-i18n="header.skipGnb">주요 메뉴 바로가기</a>' +
     '<a href="#main" class="skip-accessibility__link" data-i18n="header.skip">본문 바로가기</a>' +
+    '<a href="#gnb" class="skip-accessibility__link" data-i18n="header.skipGnb">주요 메뉴 바로가기</a>' +
     '</div>';
 
   function injectSkipLinks() {
@@ -474,7 +521,9 @@
 
     var wrapper = document.createElement('div');
     wrapper.className = 'wrapper';
-    document.body.insertBefore(wrapper, header);
+    var banner = document.querySelector('body > .gov-banner');
+    document.body.insertBefore(wrapper, banner || header);
+    if (banner) wrapper.appendChild(banner);   /* 공식 배너도 래퍼 안, 헤더 앞 */
 
     var main = document.createElement('main');
     main.id = 'main';
@@ -490,9 +539,22 @@
     fireResize();
   }
 
+  /* 가이드라인 보완 스타일(공식 배너·유틸리티 디바이더·운영기관 식별자)을
+     전 화면 공통으로 적용한다. 각 HTML 을 고치지 않고 셸이 주입한다. */
+  function injectIdentityCss() {
+    if (document.getElementById('krds-identity-css')) return;
+    var l = document.createElement('link');
+    l.id = 'krds-identity-css';
+    l.rel = 'stylesheet';
+    l.href = 'assets/css/krds-identity.css?v=' + CACHE_V;
+    document.head.appendChild(l);
+  }
+
   function inject() {
+    injectIdentityCss();
     var h = document.getElementById('header-slot');
-    if (h) h.outerHTML = HEADER.replace('__GNB__', gnbHtml()).replace('__AUTH__', authZoneHtml(readAuth()));
+    if (h) h.outerHTML = HEADER.replace('__GNB__', gnbHtml())
+      .split('__AUTH__').join(authZoneHtml(readAuth()));
     var f = document.getElementById('footer-slot');
     if (f) f.outerHTML = FOOTER;
 
