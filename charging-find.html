@@ -267,6 +267,9 @@
           <div class="board-toolbar">
             <div class="board-toolbar__total">
               <p class="total-number">총 <b class="total-number__total">0</b>건</p>
+              <!-- 집계 기준 안내 — 지도·목록은 공개 충전기만 보여준다(아파트·회사 전용 등 비공개분 제외).
+                   데이터·통계 대시보드는 전체 충전기 기준이라 숫자가 다르다. -->
+              <p class="map-list-basis">* 비공개 충전기 제외</p>
             </div>
             <div class="board-toolbar__options">
               <button type="button" title="Excel 다운로드" class="button button--icon button--secondary">
@@ -408,6 +411,10 @@
   color: #1B5E9E;
 }
 @media print { .dev-note { display: none; } }
+
+/* 집계 기준 안내 — 총 건수 옆, 작게 */
+.board-toolbar__total { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.map-list-basis { margin: 0; font-size: 0.75rem; line-height: 1.4; color: #747E90; }
 </style>
 <details class="dev-note">
   <summary><span class="dev-note__tag">개발 안내</span> 통합지도(전기차) 개선 &mdash; 프로토타입 전용 · 실제 화면 비노출</summary>
@@ -889,7 +896,7 @@ $(function () {
 <script src="assets/js/i18n/i18n.js?v=20260922b"></script>
 <script src="assets/js/ui-common.js?v=20260828d"></script>
 <script src="js/common/fileAttach.js?v=20260828d"></script>
-<script src="js/menu-data.js?v=20260922a"></script>
+<script src="js/menu-data.js?v=20260922b"></script>
 <script src="js/shell.js?v=20260922e"></script>
 
 <script>

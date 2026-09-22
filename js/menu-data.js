@@ -49,7 +49,7 @@ window.EV_MENU = [
   ]},
   { t: "데이터·통계", mids: [
     { t: "통계 대시보드", h: "data.html", kids: [
-      { t: "무공해차 보급 현황", h: "data.html#realTime" },
+      { t: "무공해차 보급 현황", h: "data.html#locationSubsidyStatus" },
       { t: "충전 인프라 현황", h: "data.html#chargeInfraStatus" }
     ]},
     { t: "빅데이터 플랫폼", h: "bigdata-platform.html" }
