@@ -18,7 +18,7 @@
   <script src="js/swiper-bundle.min.js?v=20260827a"></script>
   <script src="js/common/common_util.js?v=20260827a"></script>
   <script src="js/proto-api.js?v=20260827a"></script>
-  <script src="js/proto-data.js?v=20260827a"></script>
+  <script src="js/proto-data.js?v=20261008a"></script>
   <script src="js/proto-mock.js?v=20260921g"></script>
 </head>
 <body>
@@ -190,10 +190,11 @@
                   <colgroup>
                     <col style="width: 4%" />
                     <col style="width: 5%" />
-                    <col style="width: 14%" />
+                    <col style="width: 13%" />
                     <col style="width: 10%" />
                     <col style="width: 11%" />
-                    <col style="width: 13%" />
+                    <col style="width: 12%" />
+                    <col style="width: 9%" />
                     <col style="width: 11%" />
                     <col />
                   </colgroup>
@@ -212,6 +213,7 @@
                       <th scope="col">카드유형</th>
                       <th scope="col">차량번호</th>
                       <th scope="col">결제카드</th>
+                      <th scope="col">포인트 결제</th>
                       <th scope="col">카드상태</th>
                       <th scope="col">관리</th>
                     </tr>
@@ -227,8 +229,31 @@
                 <li>'한전등록회원'과 '결제실패 내역이 있는 카드'는 일괄등록이 되지 않습니다.</li>
                 <li>분실/정지 신청은 결제 실패 내역이 없는 사용가능 카드만 가능합니다.</li>
                 <li>발급 대기 중인 신청 건은 회원카드 번호가 '미발급'으로 표시되며, 결제카드는 카드 발급 후 등록할 수 있습니다.</li>
+                <li>포인트 결제는 결제카드가 등록된 회원카드만 신청할 수 있고, 카드 1장당 포인트사 1개사만 등록됩니다.</li>
                 <li>발급이 완료된 카드의 신청·발급 이력은 관리의 '발급조회'에서 확인할 수 있습니다.</li>
               </ul>
+            </div>
+            <!-- [프로토타입 전용] 포인트결제 알럿 미리보기 — 실 서비스에는 없는 요소.
+                 본인인증·포인트사 인증 전문이 없어 화면에서 도달하지 않는 알럿까지 전부 확인하기 위한 시연 컨트롤이다. -->
+            <style>
+              /* [프로토타입 전용] 미리보기 버튼이 좁은 화면에서 잘리지 않도록 줄바꿈시킨다 */
+              #pointAlertPreview .button-group { flex-wrap: wrap; }
+              #pointAlertPreview .proto-authbar__badge { margin-right: 4px; vertical-align: 1px; }
+            </style>
+            <div class="board-description" id="pointAlertPreview">
+              <ul class="bullet bullet--refer">
+                <li><span class="proto-authbar__badge">PROTO</span> 화면 시연용 · 실 서비스에는 없는 요소입니다. 포인트결제 알럿(개발전달 자료 4-3)을 바로 열어 확인합니다.</li>
+              </ul>
+              <div class="button-group">
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointNoBill"><span class="button__label">결제카드 미등록</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointNoCi"><span class="button__label">실명인증 없음</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointNameDiff"><span class="button__label">실명 불일치</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointNoKind"><span class="button__label">포인트사 미선택</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointSuccess"><span class="button__label">인증 성공</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointFail"><span class="button__label">인증 실패</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointRemove"><span class="button__label">해제 확인</span></button>
+                <button type="button" class="button button--tertiary js-point-alert" data-alert="alertPointPcc"><span class="button__label">본인인증 안내</span></button>
+              </div>
             </div>
             <!-- //게시판 목록 -->
             <!-- 페이징 -->
@@ -947,6 +972,201 @@
       </div>
       <!-- //mu-modal -->
 
+      <!-- mu-modal : 포인트결제 등록 (회원카드 1장당 포인트사 1개사) -->
+      <div class="modal-container" id="modalPointRegist" role="dialog" aria-modal="true" aria-labelledby="modalPointRegistTitle">
+        <div class="modal" tabindex="0">
+          <div class="modal__header">
+            <h1 class="modal__header-title" id="modalPointRegistTitle">포인트결제 등록</h1>
+            <p class="modal__header-description">충전요금을 등록한 포인트로 먼저 결제합니다.</p>
+          </div>
+          <div class="modal__body">
+            <table class="table table--form">
+              <caption>포인트결제 등록 대상 회원카드</caption>
+              <colgroup>
+                <col style="width: 30%" />
+                <col />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">회원카드 번호</th>
+                  <td><span id="pointCardNo"></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">차량번호</th>
+                  <td><span id="pointCarId"></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">포인트사 <strong class="required">필수입력</strong></th>
+                  <td>
+                    <div class="element-group">
+                      <div class="element-group__control">
+                        <div class="radios">
+                          <div class="radio radio--chip">
+                            <input type="radio" id="pointKindLP" name="pointKind" value="LP" class="radio__input" />
+                            <label for="pointKindLP" class="radio__label"><span>엘포인트</span></label>
+                          </div>
+                          <div class="radio radio--chip">
+                            <input type="radio" id="pointKindOK" name="pointKind" value="OK" class="radio__input" />
+                            <label for="pointKindOK" class="radio__label"><span>OK캐쉬백</span></label>
+                          </div>
+                          <div class="radio radio--chip">
+                            <input type="radio" id="pointKindHP" name="pointKind" value="HP" class="radio__input" />
+                            <label for="pointKindHP" class="radio__label"><span>해피포인트</span></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="board-description">
+              <ul class="bullet bullet--refer">
+                <li>포인트 등록은 본인 명의의 포인트사 중 1개사만 등록 가능합니다.</li>
+                <li>충전요금보다 포인트가 부족하면 간편결제로 결제합니다.</li>
+                <li>등록 시 선택한 포인트사에 회원 인증을 요청합니다.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="button button--large button--secondary button--close"><span>취소</span></button>
+            <button type="button" class="button button--large button--primary" id="btnPointRegist"><span>등록</span></button>
+          </div>
+          <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+          <div class="modal__close">
+            <button type="button" class="button button--icon button--borderless button--close" title="팝업 닫기">
+              <i class="svg-icon close"></i>
+              <span class="button__label">팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-modal -->
+
+      <!-- mu-alert : 포인트결제 (개발전달 자료 4-3) -->
+      <!-- 결제카드 미등록 카드에서 등록 시도 -->
+      <div class="modal-container" id="alertPointNoBill" role="alertdialog" aria-modal="true" aria-labelledby="alertPointNoBillDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon infomation" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointNoBillDesc">결제카드가 등록된 경우만 포인트결제 등록이 가능합니다.</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--primary button--close"><span>확인</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 실명인증(CI) 없음 -->
+      <div class="modal-container" id="alertPointNoCi" role="alertdialog" aria-modal="true" aria-labelledby="alertPointNoCiDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon infomation" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointNoCiDesc">실명인증 후 포인트 등록을 진행하시겠습니까?</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--secondary button--close"><span>취소</span></button>
+            <button type="button" class="button button--large button--primary" id="btnPointPcc"><span>본인인증</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 본인인증 화면 안내 (프로토타입 범위) -->
+      <div class="modal-container" id="alertPointPcc" role="alertdialog" aria-modal="true" aria-labelledby="alertPointPccDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon infomation" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointPccDesc">프로토타입에서는 본인인증 화면을 제공하지 않습니다.</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--primary button--close"><span>확인</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 본인인증 실명과 회원가입 이름 불일치 -->
+      <div class="modal-container" id="alertPointNameDiff" role="alertdialog" aria-modal="true" aria-labelledby="alertPointNameDiffDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon alert-fail" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointNameDiffDesc">본인 인증 실명과 회원가입 이름이 달라서 포인트 결제를 이용할 수 없습니다.</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--primary button--close"><span>확인</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포인트사 미선택 (확인하면 등록 모달로 복귀) -->
+      <div class="modal-container" id="alertPointNoKind" role="alertdialog" aria-modal="true" aria-labelledby="alertPointNoKindDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon infomation" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointNoKindDesc">등록할 포인트를 선택해 주세요.</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--primary" id="btnPointNoKindOk"><span>확인</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포인트사 회원인증 성공 -->
+      <div class="modal-container" id="alertPointSuccess" role="alertdialog" aria-modal="true" aria-labelledby="alertPointSuccessDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon alert-success" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointSuccessDesc">포인트 회원 인증에 성공하였습니다.</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--primary button--close"><span>확인</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포인트사 회원인증 실패 -->
+      <div class="modal-container" id="alertPointFail" role="alertdialog" aria-modal="true" aria-labelledby="alertPointFailDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon alert-fail" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointFailDesc">포인트 회원 인증에 실패하였습니다.</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--primary button--close"><span>확인</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포인트결제 해제 확인 -->
+      <div class="modal-container" id="alertPointRemove" role="alertdialog" aria-modal="true" aria-labelledby="alertPointRemoveDesc">
+        <div class="alert" tabindex="0">
+          <div class="alert__icon">
+            <i class="svg-icon infomation" aria-hidden="true"></i>
+          </div>
+          <div class="alert__body">
+            <p class="alert__description" id="alertPointRemoveDesc">등록된 포인트결제를 삭제하시겠습니까?</p>
+          </div>
+          <div class="alert__footer">
+            <button type="button" class="button button--large button--secondary button--close"><span>취소</span></button>
+            <button type="button" class="button button--large button--primary" id="btnPointRemove"><span>해제</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- //mu-alert -->
+
 <form id="applyActionForm" name="applyActionForm" method="post" action="/mngInqire/memberCard/cud.do">
   <input type="hidden" name="mode" value="" />
   <input type="hidden" name="card_req_seq" value="" />
@@ -1017,11 +1237,21 @@ $(function () {
   var detailCardNo = '';  // 결제카드 상세조회 대상
   var detailBillKey = '';
   var detailPayYn = '';
+  var pointTarget = null;                     // 포인트결제 등록·해제 대상 회원카드 행
+  var POINT_NAME = { LP: '엘포인트', OK: 'OK캐쉬백', HP: '해피포인트' };
   var regiBillCardBusy = false;  // 카드등록 요청 진행 중 (중복 요청·중복 청구 방지)
 
   // ui-common 은 openModal 만 전역으로 노출하므로 닫기는 공통 닫기 버튼 클릭으로 트리거한다
   function fnCloseModal() {
     $('.modal-container.is-active').find('.modal__close .button--close').trigger('click');
+  }
+
+  // 알럿은 modal__close 영역이 없으므로 알럿 자체의 공통 닫기 버튼으로 트리거한다
+  // (취소/확인 버튼이 없는 알럿은 ui-common 의 딤드 클릭 경로로 닫는다)
+  function fnCloseAlert() {
+    var $btn = $('.modal-container.is-active').find('.alert .button--close').first();
+    if ($btn.length) $btn.trigger('click');
+    else $('.dimmed').trigger('click');
   }
 
   function fnEsc(v) {
@@ -1130,6 +1360,30 @@ $(function () {
     return html;
   }
 
+  // 포인트결제: 결제카드(빌키)가 등록된 카드만 포인트사 1개사를 등록할 수 있다 (개발전달 4-1 · R1·R2)
+  // TODO 미정(개발 협의): 카드 상태별 허용 — ASIS 는 결제카드 유무만 검사하므로 정지·분실·해지 카드도 등록 버튼이 노출된다
+  function fnPointCell(row) {
+    var key = fnEsc(fnPlainNo(row.CARD_NO));
+
+    if (!row.BILL_KEY) {
+      return '<span class="text-warning">미등록</span>'
+           + '<span class="text-description">결제카드 등록 후 가능</span>';
+    }
+
+    if (row.POINT_KIND) {
+      return '<div class="badge badge--light badge--primary"><span class="badge__label">'
+           + (fnEsc(row.POINT_KIND_NM) || fnEsc(row.POINT_KIND)) + '</span></div>'
+           + '<div class="button-group">'
+           + '<button type="button" class="button button--tertiary js-point-remove" data-key="' + key + '"><span class="button__label">해제</span></button>'
+           + '</div>';
+    }
+
+    return '<div class="badge badge--light"><span class="badge__label">미사용</span></div>'
+         + '<div class="button-group">'
+         + '<button type="button" class="button button--tertiary js-point-regist" data-key="' + key + '"><span class="button__label">등록</span></button>'
+         + '</div>';
+  }
+
   // 카드상태: 사용가능/사용불가(분실·정지) + 결제실패·재결제 내역
   function fnStatusCell(row) {
     var key = fnEsc(fnPlainNo(row.CARD_NO));
@@ -1205,7 +1459,7 @@ $(function () {
     $('#checkAllCards').prop('checked', false);
 
     if (!list.length) {
-      $body.html(fnDataNone(8,
+      $body.html(fnDataNone(9,
         '<p class="data-none__description">보유한 회원카드와 진행 중인 신청 건이 없습니다.<br>기후에너지환경부 무공해차 통합 회원카드를 신청하면 전국 모든 충전소를 로밍 수수료 없이 이용할 수 있습니다.</p>'
         + '<div class="button-group">'
         + '<a href="' + APPLY_URL + '" class="button button--tertiary button--large"><span class="button__label">회원카드 신청하기</span></a>'
@@ -1233,6 +1487,7 @@ $(function () {
             + '<td>' + (fnEsc(row.CARD_TYPE_NM) || '-') + '</td>'
             + '<td>' + carId + '</td>'
             + '<td>' + (isApply ? noPayment : fnBillCell(row)) + '</td>'
+            + '<td>' + (isApply ? noPayment : fnPointCell(row)) + '</td>'
             + '<td>' + (isApply ? fnApplyStatusCell(row) : fnStatusCell(row)) + '</td>'
             + '<td>' + (isApply ? fnApplyManageCell(row) : fnCardManageCell(row)) + '</td>'
             + '</tr>';
@@ -1276,7 +1531,7 @@ $(function () {
         fnRenderPaging($('#sectionMyCard'), totalCount, cardPage, fnGetCardList);
       },
       error: function () {
-        $('#cardListBody').html(fnListError(8));
+        $('#cardListBody').html(fnListError(9));
       }
     });
   }
@@ -1824,6 +2079,48 @@ $(function () {
 
   /* ---------------- 이벤트 (ajax 로 그린 행 — 위임 바인딩) ---------------- */
 
+  /* ---------------- 포인트결제 등록·해제 ---------------- */
+  // 서버 연동 시 등록 POST /mngInqire/memberCard/billCard/regiBillPoint.ajax (pointCardNo, pointKind),
+  // 해제 POST /mngInqire/memberCard/billCard/removePointCard.ajax (card_no) 를 호출한다.
+  // 프로토타입에서는 목업 행(PROTO_DATA.memberCard)을 갱신한 뒤 목록을 다시 조회한다.
+
+  function fnOpenPointRegist(row, opener) {
+    pointTarget = row;
+
+    $('#pointCardNo').text(row.CARDNO || row.CARD_NO || '');
+    $('#pointCarId').text(row.CAR_ID || '-');
+    $('input[name=pointKind]').prop('checked', false);
+
+    openModal('#modalPointRegist', { width: 560, opener: opener });
+  }
+
+  // 등록은 선택한 포인트사에 회원인증을 요청한다(R5). 프로토타입은 인증 성공으로 처리한다
+  function fnPointRegist() {
+    var kind = $('input[name=pointKind]:checked').val() || '';
+
+    if (!kind) {
+      openModal('#alertPointNoKind', { width: 420 });
+      return;
+    }
+    if (!pointTarget) return;
+
+    pointTarget.POINT_KIND = kind;
+    pointTarget.POINT_KIND_NM = POINT_NAME[kind] || kind;
+
+    openModal('#alertPointSuccess', { width: 420 });
+    fnGetCardList(cardPage);
+  }
+
+  function fnPointRemove() {
+    if (!pointTarget) { fnCloseAlert(); return; }   // 미리보기로 연 경우
+
+    pointTarget.POINT_KIND = '';
+    pointTarget.POINT_KIND_NM = '';
+
+    fnCloseAlert();
+    fnGetCardList(cardPage);
+  }
+
   function fnRowOf(el) {
     return cardMap[$(el).data('key')];
   }
@@ -1840,6 +2137,19 @@ $(function () {
       if (r) fnOpenCardRegist(r.CARDNO || r.CARD_NO, 'N', r.KP_YN, Number(r.CNT) || 0, Number(r.S_MON) || 0, this);
     })
     .on('click', '.js-bill-change', function () { var r = fnRowOf(this); if (r) fnOpenPayment(r, this); })
+    .on('click', '.js-point-regist', function () {
+      var r = fnRowOf(this);
+      if (!r) return;
+      if (!r.BILL_KEY) { openModal('#alertPointNoBill', { width: 420, opener: this }); return; }   // R2
+      if (r.CI_YN !== 'Y') { pointTarget = r; openModal('#alertPointNoCi', { width: 420, opener: this }); return; }   // R3
+      fnOpenPointRegist(r, this);
+    })
+    .on('click', '.js-point-remove', function () {
+      var r = fnRowOf(this);
+      if (!r) return;
+      pointTarget = r;
+      openModal('#alertPointRemove', { width: 420, opener: this });   // R8
+    })
     .on('click', '.js-fail-list', function () { var r = fnRowOf(this); if (r) fnOpenFailList(r, this); })
     .on('click', '.js-repay-list', function () { var r = fnRowOf(this); if (r) fnOpenRepayList(r, this); });
 
@@ -1901,6 +2211,37 @@ $(function () {
   $('#btnRegiBillCard').on('click', function (e) {
     e.stopImmediatePropagation();
     fnRegiBillCard();
+  });
+
+  // 포인트결제 등록 확인 (검증 실패 시 모달 유지 — 공통 footer 자동 닫힘 차단)
+  $('#btnPointRegist').on('click', function (e) {
+    e.stopImmediatePropagation();
+    fnPointRegist();
+  });
+
+  // 포인트사 미선택 알럿 확인 → 등록 모달로 복귀 (미리보기로 연 경우는 닫기만)
+  $('#btnPointNoKindOk').on('click', function (e) {
+    e.stopImmediatePropagation();
+    if (!pointTarget) { fnCloseAlert(); return; }
+    openModal('#modalPointRegist', { width: 560 });
+  });
+
+  // 실명인증(CI) 없음 → 본인인증 (프로토타입은 안내 알럿까지)
+  $('#btnPointPcc').on('click', function (e) {
+    e.stopImmediatePropagation();
+    openModal('#alertPointPcc', { width: 420 });
+  });
+
+  // 포인트결제 해제 확인
+  $('#btnPointRemove').on('click', function (e) {
+    e.stopImmediatePropagation();
+    fnPointRemove();
+  });
+
+  // [프로토타입 전용] 알럿 미리보기 — 대상 카드를 비워 확정 버튼이 데이터를 바꾸지 않게 한다
+  $('#pointAlertPreview').on('click', '.js-point-alert', function () {
+    pointTarget = null;
+    openModal('#' + $(this).data('alert'), { width: 420, opener: this });
   });
 
   $('input[name=s_card_kind]').on('change', fnCardKindSelect);

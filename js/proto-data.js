@@ -188,7 +188,11 @@
     { cd: "1", nm: "사용가능" }, { cd: "1", nm: "사용가능" },
     { cd: "3", nm: "분실정지" }, { cd: "2", nm: "발급대기" }
   ];
-  /* 필드명은 회원카드 화면 렌더 함수(fnBillCell/fnStatusCell)가 읽는 키를 그대로 따른다 */
+  /* 포인트결제: 회원카드 1장당 포인트사 1곳(LP 엘포인트 · OK OK캐쉬백 · HP 해피포인트)
+     결제카드(BILL_KEY)가 없는 카드는 포인트를 등록할 수 없다(개발전달 R2) → 빈값으로 고정 */
+  var CARD_POINT = ["", "HP", "", ""];
+  var POINT_NM = { LP: "엘포인트", OK: "OK캐쉬백", HP: "해피포인트" };
+  /* 필드명은 회원카드 화면 렌더 함수(fnBillCell/fnPointCell/fnStatusCell)가 읽는 키를 그대로 따른다 */
   var memberCard = [
     ["9451 0021 3388 1204", "12가3456", "아이오닉 6", "신한 1234"],
     ["9451 0021 3388 2277", "34나7890", "EV6", "국민 5678"],
@@ -206,6 +210,9 @@
       BILL_KEY: hasBill ? "BK" + (1000 + i) : "",
       BILL_CARD_CD_NM: hasBill ? r[3].split(" ")[0] + "카드" : "",
       BILL_CARD_MEMO: hasBill ? "****-" + r[3].split(" ")[1] : "",
+      POINT_KIND: hasBill ? CARD_POINT[i] : "",
+      POINT_KIND_NM: hasBill ? (POINT_NM[CARD_POINT[i]] || "") : "",
+      CI_YN: "Y",          /* 실명인증 여부는 회원 단위(TNCM_MEMBER.CI_VAL) — 전 카드 동일 */
       KP_YN: "N",
       USE_YN: st.cd === "1" ? "Y" : "N",
       LOSS_YN: st.cd === "3" ? "Y" : "N",

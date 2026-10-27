@@ -26,6 +26,8 @@
 <style>
   /* 공통 .board-list .ag-grid 높이 제한(670px)이 아코디언 내부 그리드에 겹침을 유발해 페이지 한정 해제 */
   #localAccordion .ag-grid { height: auto; max-height: none; }
+  /* 차종 요약: 버튼처럼 보이던 배지 대신 글자 한 줄 — 검색 조건으로 걸러진 모델 수 */
+  .accordion--subsidy .accordion-button .local-models { margin: 0; font-weight: 400; font-size: 0.9375rem; line-height: 1.5; color: #525252; text-align: left; }
 </style>
 
       <div class="contents-wrapper">
@@ -179,7 +181,7 @@
                         <b class="location__district">종로구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11010" class="accordion-collapse" aria-labelledby="accHeader_11010">
@@ -198,7 +200,7 @@
                         <b class="location__district">중구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11020" class="accordion-collapse" aria-labelledby="accHeader_11020">
@@ -217,7 +219,7 @@
                         <b class="location__district">성동구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11030" class="accordion-collapse" aria-labelledby="accHeader_11030">
@@ -236,7 +238,7 @@
                         <b class="location__district">강남구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11040" class="accordion-collapse" aria-labelledby="accHeader_11040">
@@ -255,7 +257,7 @@
                         <b class="location__district">송파구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11050" class="accordion-collapse" aria-labelledby="accHeader_11050">
@@ -274,7 +276,7 @@
                         <b class="location__district">마포구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11060" class="accordion-collapse" aria-labelledby="accHeader_11060">
@@ -293,7 +295,7 @@
                         <b class="location__district">노원구</b>
                         <span class="location__city">서울특별시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_11070" class="accordion-collapse" aria-labelledby="accHeader_11070">
@@ -312,7 +314,7 @@
                         <b class="location__district">해운대구</b>
                         <span class="location__city">부산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_26010" class="accordion-collapse" aria-labelledby="accHeader_26010">
@@ -331,7 +333,7 @@
                         <b class="location__district">부산진구</b>
                         <span class="location__city">부산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_26020" class="accordion-collapse" aria-labelledby="accHeader_26020">
@@ -350,7 +352,7 @@
                         <b class="location__district">사하구</b>
                         <span class="location__city">부산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_26030" class="accordion-collapse" aria-labelledby="accHeader_26030">
@@ -369,7 +371,7 @@
                         <b class="location__district">남구</b>
                         <span class="location__city">부산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_26040" class="accordion-collapse" aria-labelledby="accHeader_26040">
@@ -388,7 +390,7 @@
                         <b class="location__district">기장군</b>
                         <span class="location__city">부산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_26050" class="accordion-collapse" aria-labelledby="accHeader_26050">
@@ -407,7 +409,7 @@
                         <b class="location__district">수성구</b>
                         <span class="location__city">대구광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_27010" class="accordion-collapse" aria-labelledby="accHeader_27010">
@@ -426,7 +428,7 @@
                         <b class="location__district">달서구</b>
                         <span class="location__city">대구광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_27020" class="accordion-collapse" aria-labelledby="accHeader_27020">
@@ -445,7 +447,7 @@
                         <b class="location__district">북구</b>
                         <span class="location__city">대구광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_27030" class="accordion-collapse" aria-labelledby="accHeader_27030">
@@ -464,7 +466,7 @@
                         <b class="location__district">동구</b>
                         <span class="location__city">대구광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_27040" class="accordion-collapse" aria-labelledby="accHeader_27040">
@@ -483,7 +485,7 @@
                         <b class="location__district">달성군</b>
                         <span class="location__city">대구광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_27050" class="accordion-collapse" aria-labelledby="accHeader_27050">
@@ -502,7 +504,7 @@
                         <b class="location__district">남동구</b>
                         <span class="location__city">인천광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_28010" class="accordion-collapse" aria-labelledby="accHeader_28010">
@@ -521,7 +523,7 @@
                         <b class="location__district">연수구</b>
                         <span class="location__city">인천광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_28020" class="accordion-collapse" aria-labelledby="accHeader_28020">
@@ -540,7 +542,7 @@
                         <b class="location__district">서구</b>
                         <span class="location__city">인천광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_28030" class="accordion-collapse" aria-labelledby="accHeader_28030">
@@ -559,7 +561,7 @@
                         <b class="location__district">부평구</b>
                         <span class="location__city">인천광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_28040" class="accordion-collapse" aria-labelledby="accHeader_28040">
@@ -578,7 +580,7 @@
                         <b class="location__district">강화군</b>
                         <span class="location__city">인천광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_28050" class="accordion-collapse" aria-labelledby="accHeader_28050">
@@ -597,7 +599,7 @@
                         <b class="location__district">동구</b>
                         <span class="location__city">광주광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_29010" class="accordion-collapse" aria-labelledby="accHeader_29010">
@@ -616,7 +618,7 @@
                         <b class="location__district">서구</b>
                         <span class="location__city">광주광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_29020" class="accordion-collapse" aria-labelledby="accHeader_29020">
@@ -635,7 +637,7 @@
                         <b class="location__district">남구</b>
                         <span class="location__city">광주광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_29030" class="accordion-collapse" aria-labelledby="accHeader_29030">
@@ -654,7 +656,7 @@
                         <b class="location__district">북구</b>
                         <span class="location__city">광주광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_29040" class="accordion-collapse" aria-labelledby="accHeader_29040">
@@ -673,7 +675,7 @@
                         <b class="location__district">광산구</b>
                         <span class="location__city">광주광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_29050" class="accordion-collapse" aria-labelledby="accHeader_29050">
@@ -692,7 +694,7 @@
                         <b class="location__district">유성구</b>
                         <span class="location__city">대전광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_30010" class="accordion-collapse" aria-labelledby="accHeader_30010">
@@ -711,7 +713,7 @@
                         <b class="location__district">서구</b>
                         <span class="location__city">대전광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_30020" class="accordion-collapse" aria-labelledby="accHeader_30020">
@@ -730,7 +732,7 @@
                         <b class="location__district">중구</b>
                         <span class="location__city">대전광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_30030" class="accordion-collapse" aria-labelledby="accHeader_30030">
@@ -749,7 +751,7 @@
                         <b class="location__district">대덕구</b>
                         <span class="location__city">대전광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_30040" class="accordion-collapse" aria-labelledby="accHeader_30040">
@@ -768,7 +770,7 @@
                         <b class="location__district">남구</b>
                         <span class="location__city">울산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_31010" class="accordion-collapse" aria-labelledby="accHeader_31010">
@@ -787,7 +789,7 @@
                         <b class="location__district">북구</b>
                         <span class="location__city">울산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_31020" class="accordion-collapse" aria-labelledby="accHeader_31020">
@@ -806,7 +808,7 @@
                         <b class="location__district">중구</b>
                         <span class="location__city">울산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_31030" class="accordion-collapse" aria-labelledby="accHeader_31030">
@@ -825,7 +827,7 @@
                         <b class="location__district">울주군</b>
                         <span class="location__city">울산광역시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_31040" class="accordion-collapse" aria-labelledby="accHeader_31040">
@@ -844,7 +846,7 @@
                         <b class="location__district">세종특별자치시</b>
                         <span class="location__city">세종특별자치시</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_36010" class="accordion-collapse" aria-labelledby="accHeader_36010">
@@ -863,7 +865,7 @@
                         <b class="location__district">수원시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41010" class="accordion-collapse" aria-labelledby="accHeader_41010">
@@ -882,7 +884,7 @@
                         <b class="location__district">성남시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41020" class="accordion-collapse" aria-labelledby="accHeader_41020">
@@ -901,7 +903,7 @@
                         <b class="location__district">고양시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41030" class="accordion-collapse" aria-labelledby="accHeader_41030">
@@ -920,7 +922,7 @@
                         <b class="location__district">용인시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41040" class="accordion-collapse" aria-labelledby="accHeader_41040">
@@ -939,7 +941,7 @@
                         <b class="location__district">화성시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41050" class="accordion-collapse" aria-labelledby="accHeader_41050">
@@ -958,7 +960,7 @@
                         <b class="location__district">부천시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41060" class="accordion-collapse" aria-labelledby="accHeader_41060">
@@ -977,7 +979,7 @@
                         <b class="location__district">안산시</b>
                         <span class="location__city">경기도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_41070" class="accordion-collapse" aria-labelledby="accHeader_41070">
@@ -996,7 +998,7 @@
                         <b class="location__district">청주시</b>
                         <span class="location__city">충청북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_43010" class="accordion-collapse" aria-labelledby="accHeader_43010">
@@ -1015,7 +1017,7 @@
                         <b class="location__district">충주시</b>
                         <span class="location__city">충청북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_43020" class="accordion-collapse" aria-labelledby="accHeader_43020">
@@ -1034,7 +1036,7 @@
                         <b class="location__district">제천시</b>
                         <span class="location__city">충청북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_43030" class="accordion-collapse" aria-labelledby="accHeader_43030">
@@ -1053,7 +1055,7 @@
                         <b class="location__district">음성군</b>
                         <span class="location__city">충청북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_43040" class="accordion-collapse" aria-labelledby="accHeader_43040">
@@ -1072,7 +1074,7 @@
                         <b class="location__district">천안시</b>
                         <span class="location__city">충청남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_44010" class="accordion-collapse" aria-labelledby="accHeader_44010">
@@ -1091,7 +1093,7 @@
                         <b class="location__district">아산시</b>
                         <span class="location__city">충청남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_44020" class="accordion-collapse" aria-labelledby="accHeader_44020">
@@ -1110,7 +1112,7 @@
                         <b class="location__district">서산시</b>
                         <span class="location__city">충청남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_44030" class="accordion-collapse" aria-labelledby="accHeader_44030">
@@ -1129,7 +1131,7 @@
                         <b class="location__district">당진시</b>
                         <span class="location__city">충청남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_44040" class="accordion-collapse" aria-labelledby="accHeader_44040">
@@ -1148,7 +1150,7 @@
                         <b class="location__district">목포시</b>
                         <span class="location__city">전라남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_46010" class="accordion-collapse" aria-labelledby="accHeader_46010">
@@ -1167,7 +1169,7 @@
                         <b class="location__district">여수시</b>
                         <span class="location__city">전라남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_46020" class="accordion-collapse" aria-labelledby="accHeader_46020">
@@ -1186,7 +1188,7 @@
                         <b class="location__district">순천시</b>
                         <span class="location__city">전라남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_46030" class="accordion-collapse" aria-labelledby="accHeader_46030">
@@ -1205,7 +1207,7 @@
                         <b class="location__district">나주시</b>
                         <span class="location__city">전라남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_46040" class="accordion-collapse" aria-labelledby="accHeader_46040">
@@ -1224,7 +1226,7 @@
                         <b class="location__district">포항시</b>
                         <span class="location__city">경상북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_47010" class="accordion-collapse" aria-labelledby="accHeader_47010">
@@ -1243,7 +1245,7 @@
                         <b class="location__district">구미시</b>
                         <span class="location__city">경상북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_47020" class="accordion-collapse" aria-labelledby="accHeader_47020">
@@ -1262,7 +1264,7 @@
                         <b class="location__district">경주시</b>
                         <span class="location__city">경상북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_47030" class="accordion-collapse" aria-labelledby="accHeader_47030">
@@ -1281,7 +1283,7 @@
                         <b class="location__district">안동시</b>
                         <span class="location__city">경상북도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_47040" class="accordion-collapse" aria-labelledby="accHeader_47040">
@@ -1300,7 +1302,7 @@
                         <b class="location__district">창원시</b>
                         <span class="location__city">경상남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_48010" class="accordion-collapse" aria-labelledby="accHeader_48010">
@@ -1319,7 +1321,7 @@
                         <b class="location__district">김해시</b>
                         <span class="location__city">경상남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_48020" class="accordion-collapse" aria-labelledby="accHeader_48020">
@@ -1338,7 +1340,7 @@
                         <b class="location__district">진주시</b>
                         <span class="location__city">경상남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_48030" class="accordion-collapse" aria-labelledby="accHeader_48030">
@@ -1357,7 +1359,7 @@
                         <b class="location__district">양산시</b>
                         <span class="location__city">경상남도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_48040" class="accordion-collapse" aria-labelledby="accHeader_48040">
@@ -1376,7 +1378,7 @@
                         <b class="location__district">제주시</b>
                         <span class="location__city">제주특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_50010" class="accordion-collapse" aria-labelledby="accHeader_50010">
@@ -1395,7 +1397,7 @@
                         <b class="location__district">서귀포시</b>
                         <span class="location__city">제주특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_50020" class="accordion-collapse" aria-labelledby="accHeader_50020">
@@ -1414,7 +1416,7 @@
                         <b class="location__district">춘천시</b>
                         <span class="location__city">강원특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_51010" class="accordion-collapse" aria-labelledby="accHeader_51010">
@@ -1433,7 +1435,7 @@
                         <b class="location__district">원주시</b>
                         <span class="location__city">강원특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_51020" class="accordion-collapse" aria-labelledby="accHeader_51020">
@@ -1452,7 +1454,7 @@
                         <b class="location__district">강릉시</b>
                         <span class="location__city">강원특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_51030" class="accordion-collapse" aria-labelledby="accHeader_51030">
@@ -1471,7 +1473,7 @@
                         <b class="location__district">속초시</b>
                         <span class="location__city">강원특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_51040" class="accordion-collapse" aria-labelledby="accHeader_51040">
@@ -1490,7 +1492,7 @@
                         <b class="location__district">전주시</b>
                         <span class="location__city">전북특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_52010" class="accordion-collapse" aria-labelledby="accHeader_52010">
@@ -1509,7 +1511,7 @@
                         <b class="location__district">익산시</b>
                         <span class="location__city">전북특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_52020" class="accordion-collapse" aria-labelledby="accHeader_52020">
@@ -1528,7 +1530,7 @@
                         <b class="location__district">군산시</b>
                         <span class="location__city">전북특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_52030" class="accordion-collapse" aria-labelledby="accHeader_52030">
@@ -1547,7 +1549,7 @@
                         <b class="location__district">정읍시</b>
                         <span class="location__city">전북특별자치도</span>
                       </div>
-                      <div class="badges"><span class="badge">전기승용</span><span class="badge">전기화물</span><span class="badge">전기승합</span></div>
+                      <p class="local-models"></p>
                     </button>
                   </h3>
                   <div id="accCollapse_52040" class="accordion-collapse" aria-labelledby="accHeader_52040">
@@ -1673,6 +1675,7 @@
 
     renderPagination(pageCount);
     refreshOpenGrids();
+    refreshSummaries(Object.keys(visible));
   }
 
   function renderPagination(pageCount) {
@@ -1792,26 +1795,35 @@
     });
   }
 
-  function loadLocalModels($item) {
-    var localCd = String($item.data('localCd'));
-    if (modelRowsByLocal[localCd]) {
-      renderLocalGrid(localCd);
-      return;
-    }
+  function fetchLocalModels(localCd, done) {
+    if (modelRowsByLocal[localCd]) { done(); return; }
     $.ajax({
       type: 'POST',
       url: '/buySupprt/getLocalCarModelPrice.ajax',
       dataType: 'json',
       data: { year: YEAR1, local_cd: localCd },
-      success: function(data) {
-        modelRowsByLocal[localCd] = buildModelRows(data || {});
-        renderLocalGrid(localCd);
-      },
-      error: function() {
-        modelRowsByLocal[localCd] = [];
-        renderLocalGrid(localCd);
-      }
+      success: function(data) { modelRowsByLocal[localCd] = buildModelRows(data || {}); done(); },
+      error: function() { modelRowsByLocal[localCd] = []; done(); }
     });
+  }
+
+  function loadLocalModels($item) {
+    var localCd = String($item.data('localCd'));
+    fetchLocalModels(localCd, function() { renderLocalGrid(localCd); renderModelSummary(localCd); });
+  }
+
+  // 접힌 줄의 차종 요약: 「차종: 전기승용 3, 전기화물 2」 — 검색 조건(차종·규격·모델명)으로 걸러진 모델 수
+  function renderModelSummary(localCd) {
+    var rows = gridFilterRows(modelRowsByLocal[localCd] || []);
+    var cnt = {};
+    rows.forEach(function(r) { cnt[r.carType] = (cnt[r.carType] || 0) + 1; });
+    var parts = Object.keys(CAR_NM).filter(function(ct) { return cnt[ct]; })
+      .map(function(ct) { return CAR_NM[ct] + ' ' + cnt[ct]; });
+    $('#accHeader_' + localCd + ' .local-models').text(parts.length ? '차종: ' + parts.join(', ') : '조건에 맞는 모델이 없습니다');
+  }
+
+  function refreshSummaries(cds) {
+    cds.forEach(function(cd) { fetchLocalModels(cd, function() { renderModelSummary(cd); }); });
   }
 
   // 필터 변경 시 이미 열린(로드된) 그리드들의 행도 갱신
